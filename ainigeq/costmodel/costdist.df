@@ -1,0 +1,1535 @@
+ADD TABLE "xxdcs_mstr"
+  AREA "TRANSACTION"
+  LABEL "差异分摊主表"
+  DESCRIPTION "差异分摊主表"
+  DUMP-NAME "xxdcs_ms"
+
+ADD FIELD "xxdcs_period" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "peirod"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdcs_element" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "element"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "element"
+  ORDER 20
+
+ADD FIELD "xxdcs_amt" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 4
+  SQL-WIDTH 17
+  COLUMN-LABEL "amt"
+  DECIMALS 2
+  ORDER 30
+
+ADD FIELD "xxdcs_dept" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "dept"
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "dept"
+  ORDER 40
+
+ADD FIELD "xxdcs__chr1" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxdcs__chr2" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxdcs__chr3" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxdcs__chr4" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxdcs__chr5" OF "xxdcs_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxdcs__dte1" OF "xxdcs_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxdcs__dte2" OF "xxdcs_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxdcs__dte3" OF "xxdcs_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxdcs__dte4" OF "xxdcs_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD FIELD "xxdcs__dte5" OF "xxdcs_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxdcs__dec1" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxdcs__dec2" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxdcs__dec3" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 170
+
+ADD FIELD "xxdcs__dec4" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 180
+
+ADD FIELD "xxdcs__dec5" OF "xxdcs_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 20
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 190
+
+ADD FIELD "xxdcs__int1" OF "xxdcs_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxdcs__int2" OF "xxdcs_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxdcs__int3" OF "xxdcs_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "xxdcs__int4" OF "xxdcs_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 24
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD FIELD "xxdcs__int5" OF "xxdcs_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xxdcs__log1" OF "xxdcs_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 26
+  SQL-WIDTH 1
+  ORDER 250
+
+ADD FIELD "xxdcs__log2" OF "xxdcs_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 27
+  SQL-WIDTH 1
+  ORDER 260
+
+ADD INDEX "xxdcs_period" ON "xxdcs_mstr" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxdcs_dept" ASCENDING 
+  INDEX-FIELD "xxdcs_element" ASCENDING 
+  INDEX-FIELD "xxdcs_period" ASCENDING ABBREVIATED 
+
+ADD TABLE "xxpoc_mstr"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxpoc_ms" 
+
+ADD FIELD "xxpoc_period" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Period"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpoc_part" OF "xxpoc_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxpoc_start" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "start date"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "起始日期"
+  ORDER 30
+
+ADD FIELD "xxpoc_end" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "结束日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxpoc_rcvd" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "收料数量"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxpoc_tax_amt" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "含税额"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxpoc_std_amt" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "标准金额"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxpoc__chr01" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxpoc__chr02" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxpoc__chr03" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxpoc__chr04" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxpoc__chr05" OF "xxpoc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxpoc__dec02" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "xxpoc__dec03" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxpoc__dec04" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxpoc__dec05" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxpoc__int01" OF "xxpoc_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxpoc__int02" OF "xxpoc_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxpoc__int03" OF "xxpoc_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxpoc__int04" OF "xxpoc_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxpoc__int05" OF "xxpoc_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxpoc__log01" OF "xxpoc_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 24
+  SQL-WIDTH 1
+  ORDER 220
+
+ADD FIELD "xxpoc__log02" OF "xxpoc_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 25
+  SQL-WIDTH 1
+  ORDER 230
+
+ADD FIELD "xxpoc__log03" OF "xxpoc_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 26
+  SQL-WIDTH 1
+  ORDER 240
+
+ADD FIELD "xxpoc__log04" OF "xxpoc_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 27
+  SQL-WIDTH 1
+  ORDER 250
+
+ADD FIELD "xxpoc__log05" OF "xxpoc_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 28
+  SQL-WIDTH 1
+  ORDER 260
+
+ADD FIELD "xxpoc__dte01" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "xxpoc__dte02" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 30
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "xxpoc__dte03" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 290
+
+ADD FIELD "xxpoc__dte04" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "xxpoc__dte05" OF "xxpoc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xxpoc_amt" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "采购金额"
+  POSITION 34
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 320
+
+ADD FIELD "xxpoc_dif_amt" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "价差金额"
+  POSITION 35
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 330
+
+ADD FIELD "xxpoc_unit_diff" OF "xxpoc_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "单位价差"
+  POSITION 36
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 340
+
+ADD INDEX "xxpoc_per_part" ON "xxpoc_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxpoc_period" ASCENDING 
+  INDEX-FIELD "xxpoc_part" ASCENDING 
+
+ADD TABLE "xxpocd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxpoc_de"
+
+ADD FIELD "xxpocd_period" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "期间"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpocd_ldiff" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "期初价差"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxpocd_cdiff" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "本期价差"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpocd_part" OF "xxpocd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "料号"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxpocd_tdiff" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "价差合计"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxpocd_qty_lloc" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "期初库存"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxpocd_rcvd" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "收料数量"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxpocd_avg_diff" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "平均价差"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxpocd__char01" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxpocd__chr02" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxpocd__chr03" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxpocd__chr04" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxpocd__chr05" OF "xxpocd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxpocd__date01" OF "xxpocd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxpocd__date02" OF "xxpocd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxpocd__date03" OF "xxpocd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xxpocd__date04" OF "xxpocd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxpocd__date05" OF "xxpocd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxpocd__dec01" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 20
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 190
+
+ADD FIELD "xxpocd__dec02" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 200
+
+ADD FIELD "xxpocd__dec03" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "xxpocd__dec04" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 220
+
+ADD FIELD "xxpocd__dec05" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 24
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 230
+
+ADD FIELD "xxpocd__int01" OF "xxpocd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xxpocd__int02" OF "xxpocd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xxpocd__int03" OF "xxpocd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 27
+  SQL-WIDTH 4
+  ORDER 260
+
+ADD FIELD "xxpocd__int04" OF "xxpocd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "xxpocd__int05" OF "xxpocd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "xxpocd__log01" OF "xxpocd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 30
+  SQL-WIDTH 1
+  ORDER 290
+
+ADD FIELD "xxpocd__log02" OF "xxpocd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 31
+  SQL-WIDTH 1
+  ORDER 300
+
+ADD FIELD "xxpocd__log03" OF "xxpocd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 32
+  SQL-WIDTH 1
+  ORDER 310
+
+ADD FIELD "xxpocd_adiff" OF "xxpocd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "平均价差"
+  POSITION 33
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 320
+
+ADD INDEX "xxpocd_period_part" ON "xxpocd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxpocd_period" ASCENDING 
+  INDEX-FIELD "xxpocd_part" ASCENDING 
+
+ADD TABLE "xxdwb_det"
+  AREA "TRANSACTION"
+  DESCRIPTION "制令入库物料明细表"
+  DUMP-NAME "xxdwb_de"
+
+ADD FIELD "xxdwb_period" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Period"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdwb_root" OF "xxdwb_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Root"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxdwb_part" OF "xxdwb_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxdwb_woid" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WOLOT"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxdwb_qty_rct" OF "xxdwb_det" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "qty_rct"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxdwb_qty_per" OF "xxdwb_det" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "qty_per"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxdwb__chr01" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxdwb__chr02" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxdwb__chr03" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxdwb__chr04" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxdwb__chr05" OF "xxdwb_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxdwb__dec01" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxdwb__dec02" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "xxdwb__dec03" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxdwb__dec04" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxdwb__dec05" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxdwb__int01" OF "xxdwb_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxdwb__int02" OF "xxdwb_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxdwb__int03" OF "xxdwb_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxdwb__int04" OF "xxdwb_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxdwb__int05" OF "xxdwb_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxdwb__dte01" OF "xxdwb_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 24
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "xxdwb__dte02" OF "xxdwb_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD FIELD "xxdwb__dte03" OF "xxdwb_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xxdwb__dte04" OF "xxdwb_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 27
+  SQL-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xxdwb__dte05" OF "xxdwb_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 260
+
+ADD FIELD "xxdwb__log01" OF "xxdwb_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 29
+  SQL-WIDTH 1
+  ORDER 270
+
+ADD FIELD "xxdwb__log02" OF "xxdwb_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 30
+  SQL-WIDTH 1
+  ORDER 280
+
+ADD FIELD "xxdwb__log03" OF "xxdwb_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 31
+  SQL-WIDTH 1
+  ORDER 290
+
+ADD FIELD "xxdwb_dis_rate" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "分配比例"
+  POSITION 32
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 300
+
+ADD FIELD "xxdwb_dis_amt" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "分摊金额"
+  POSITION 33
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 310
+
+ADD FIELD "xxdwb_unit_cost" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "单位盈亏成本"
+  POSITION 34
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 320
+
+ADD FIELD "xxdwb_qty_tag" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "盘点差异量"
+  POSITION 35
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 330
+
+ADD FIELD "xxdwb_cst" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "标准成本"
+  POSITION 36
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 340
+
+ADD FIELD "xxdwb_qty_all" OF "xxdwb_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "本月累计用量"
+  POSITION 37
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 350
+
+ADD INDEX "xxdwb_prw" ON "xxdwb_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxdwb_period" ASCENDING 
+  INDEX-FIELD "xxdwb_root" ASCENDING 
+  INDEX-FIELD "xxdwb_woid" ASCENDING 
+  INDEX-FIELD "xxdwb_part" ASCENDING 
+
+ADD TABLE "xxdcsd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxdcsd_d"
+
+ADD FIELD "xxdcsd_element" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdcsd_amt" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 20
+
+ADD FIELD "xxdcsd_dept" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxdcsd_part" OF "xxdcsd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxdcsd_lot" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxdcsd_op" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxdcsd_qty" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxdcsd_run" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxdcsd_period" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxdcsd_dist_base" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "分配基数"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxdcsd_dist_rate" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "分配比例"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "xxdcsd_dist_amt" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "分配金额"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxdcsd__char01" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxdcsd__char02" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxdcsd__char03" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxdcsd__char04" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxdcsd__char05" OF "xxdcsd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxdcsd__date01" OF "xxdcsd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxdcsd__date02" OF "xxdcsd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxdcsd__date03" OF "xxdcsd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxdcsd__date04" OF "xxdcsd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxdcsd__date05" OF "xxdcsd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "xxdcsd__dec01" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 24
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 230
+
+ADD FIELD "xxdcsd__dec02" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 240
+
+ADD FIELD "xxdcsd__dec03" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 26
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 250
+
+ADD FIELD "xxdcsd__dec04" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 27
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 260
+
+ADD FIELD "xxdcsd__dec05" OF "xxdcsd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 270
+
+ADD FIELD "xxdcsd__int01" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "xxdcsd__int02" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 4
+  ORDER 290
+
+ADD FIELD "xxdcsd__int03" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "xxdcsd__int04" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xxdcsd__int05" OF "xxdcsd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 320
+
+ADD FIELD "xxdcsd__log01" OF "xxdcsd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 34
+  SQL-WIDTH 1
+  ORDER 330
+
+ADD FIELD "xxdcsd__log02" OF "xxdcsd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 35
+  SQL-WIDTH 1
+  ORDER 340
+
+ADD FIELD "xxdcsd__log03" OF "xxdcsd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 36
+  SQL-WIDTH 1
+  ORDER 350
+
+ADD INDEX "xxdcsd_pedp" ON "xxdcsd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxdcsd_period" ASCENDING 
+  INDEX-FIELD "xxdcsd_element" ASCENDING 
+  INDEX-FIELD "xxdcsd_dept" ASCENDING 
+  INDEX-FIELD "xxdcsd_part" ASCENDING 
+
+ADD INDEX "xxdcsd_period" ON "xxdcsd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxdcsd_period" ASCENDING 
+
+ADD TABLE "xxdch_hst"
+  AREA "TRANSACTION"
+  LABEL "xxdch_hst"
+  DUMP-NAME "xxdcs_hs"
+
+ADD FIELD "xxdch_period" OF "xxdch_hst" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "peirod"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdch_type" OF "xxdch_hst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxdch_part" OF "xxdch_hst" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxdch_qty_rct" OF "xxdch_hst" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "qty_rct"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "xxdch_qty_loc" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxdch_qty_chg" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxdch_cost" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxdch_qty_iss" OF "xxdch_hst" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxdch_cost_loc" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxdch__char" OF "xxdch_hst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 110
+
+ADD FIELD "xxdch__date" OF "xxdch_hst" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 120
+
+ADD FIELD "xxdch__int" OF "xxdch_hst" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 110
+  EXTENT 5
+  ORDER 140
+
+ADD FIELD "xxdch__log" OF "xxdch_hst" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 15
+  SQL-WIDTH 24
+  EXTENT 3
+  ORDER 150
+
+ADD FIELD "xxdch__dec" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 140
+  EXTENT 5
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "xxdch_cost_chg" OF "xxdch_hst" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD INDEX "xxdch_prid_type_part" ON "xxdch_hst" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxdch_period" ASCENDING 
+  INDEX-FIELD "xxdch_type" ASCENDING 
+  INDEX-FIELD "xxdch_part" ASCENDING 
+
+ADD TABLE "xxdcl_hst"
+  AREA "TRANSACTION"
+  LABEL "location hist"
+  DUMP-NAME "xxdcl_hs"
+
+ADD FIELD "xxdcl_period" OF "xxdcl_hst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdcl_part" OF "xxdcl_hst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxdcl_qty_oh" OF "xxdcl_hst" AS decimal 
+  DESCRIPTION "The nettable quantity on hand for this item at this site."
+  FORMAT "->>,>>>,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty On Hand"
+  POSITION 4
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 30
+
+ADD INDEX "xxdcl_per_part" ON "xxdcl_hst" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxdcl_period" ASCENDING 
+  INDEX-FIELD "xxdcl_part" ASCENDING 
+
+ADD TABLE "xxdcq_hst"
+  AREA "TRANSACTION"
+  LABEL "月用量历史记录"
+  DUMP-NAME "xxdcq_hs"
+
+ADD FIELD "xxdcq_period" OF "xxdcq_hst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Period"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdcq_par" OF "xxdcq_hst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxdcq_part" OF "xxdcq_hst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxdcq_comp" OF "xxdcq_hst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxdcq_qty_per" OF "xxdcq_hst" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxdcq_qty_iss" OF "xxdcq_hst" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxdcq_qty_rct" OF "xxdcq_hst" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxdcq_layer" OF "xxdcq_hst" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD INDEX "xxdchq_period_par_part" ON "xxdcq_hst" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxdcq_period" ASCENDING 
+  INDEX-FIELD "xxdcq_par" ASCENDING 
+  INDEX-FIELD "xxdcq_part" ASCENDING 
+
+ADD INDEX "xxdcq_period_part_layer" ON "xxdcq_hst" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxdcq_period" ASCENDING 
+  INDEX-FIELD "xxdcq_part" ASCENDING 
+  INDEX-FIELD "xxdcq_layer" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000028529

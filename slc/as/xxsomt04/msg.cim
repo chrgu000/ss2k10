@@ -1,0 +1,25 @@
+@@batchload mgmsgmt.p
+ch
+81010
+按上/下箭头选择，按左/右箭头修改，按N全部为NO。
+@@end
+@@batchload mgmsgmt.p
+ch
+81011
+订单号码不可为空
+@@end
+@@batchload mgmsgmt.p
+ch
+81012
+订单#不存在
+@@end
+@@batchload mgmsgmt.p
+ch
+81000
+订单无明细项，是否要继续？
+@@end
+@@batchload mgmsgmt.p
+ch
+81001
+确定要复制订单？
+@@end

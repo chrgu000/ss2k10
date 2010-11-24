@@ -1,0 +1,477 @@
+@@batchload mgcodemt.p
+xxdcs_element
+labor
+人工费用
+@@end
+@@batchload mgcodemt.p
+xxdcs_element
+overhead
+盘点差异
+@@end
+@@batchload mgcodemt.p
+xxdcs_element
+subcontr
+采购差异
+@@end
+@@batchload mgcodemt.p
+xxdcs_element
+burden
+制造费用
+@@end
+@@batchload mgcodemt.p
+pl__chr05
+P
+"零件"
+@@end
+@@batchload mgcodemt.p
+pl__chr05
+S
+"半成品"
+@@end
+@@batchload mgcodemt.p
+pl__chr05
+F
+"产品"
+@@end
+@@batchload gplbldmt.p
+"pl__chr05"
+"type"
+@@end
+@@batchload mgdlfhmt.p
+- pl__chr05
+xxlu111.p
+type
+@@end
+@@batchload gplbldmt.p
+period xxdccrp.p
+period
+@@end
+@@batchload gplbldmt.p
+period xxpocdrp.p
+period
+@@end
+@@batchload gplbldmt.p
+period xxdchrp.p
+period
+@@end
+@@batchload gplbldmt.p
+prid
+period
+@@end
+@@batchload gplbldmt.p
+date1 xxpocdrp.p
+dates
+@@end
+@@batchload gplbldmt.p
+ptln1 xxpocdrp.p
+PROD_LINE
+@@end
+@@batchload gplbldmt.p
+ptln2 xxpocdrp.p
+to
+@@end
+@@batchload mgdlfhmt.p
+- ptln1
+gplu343.p
+Department
+@@end
+@@batchload mgdlfhmt.p
+- prlinef
+gplu343.p
+"产品类"
+@@end
+@@batchload mgdlfhmt.p
+- prlinet
+gplu343.p
+"产品类"
+@@end
+@@batchload mgdlfhmt.p
+- ptln2
+gplu343.p
+Department
+@@end
+@@batchload gplbldmt.p
+datef xxwobmep.p
+dates
+@@end
+@@batchload gplbldmt.p
+datet xxwobmep.p
+to
+@@end
+@@batchload gplbldmt.p
+ptln1 xxwobmep.p
+PROD_LINE
+@@end
+@@batchload gplbldmt.p
+prlinef
+PRODUCT_LINE
+@@end
+@@batchload gplbldmt.p
+ptln2 xxwobmep.p
+to
+@@end
+@@batchload gplblmt.p
+ch
+"ELEMENT_DCS"
+"分配因素" "因素"
+@@end
+@@batchload gplbldmt.p
+elem xxdcdtep.p
+"ELEMENT_DCS"
+@@end
+@@batchload gplbldmt.p
+datef xxdcdtep.p
+dates
+@@end
+@@batchload gplbldmt.p
+datet xxdcdtep.p
+to
+@@end
+@@batchload gplbldmt.p
+ptln1 xxdcdtep.p
+PROD_LINE
+@@end
+@@batchload gplbldmt.p
+ptln2 xxdcdtep.p
+to
+@@end
+@@batchload gplblmt.p
+ch
+vReloc
+"重算库存" "重算"
+@@end
+@@batchload gplbldmt.p
+vreloc
+vreloc
+@@end
+@@batchload gplblmt.p
+CH
+PERIOD
+"期间" "期间" "期!间"
+@@END
+@@batchload gplbldmt.p
+"xxdch_period"
+"period"
+@@end
+@@batchload gplblmt.p
+CH
+TYPE
+"类型" "T" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_type"
+"type"
+@@end
+@@batchload gplblmt.p
+CH
+PART
+"零件" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_part"
+"part"
+@@end
+@@batchload gplblmt.p
+CH
+QTY_RECEIVED
+"收货量" "收货量" "收货量"
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_rct"
+"QTY_RECEIVED"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_QTY_ISS
+"出库数量" "出库量" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_iss"
+"xxdch_qty_iss"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_INVENTORY
+"期初库存" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_loc"
+"BEGINING_INVENTORY"
+@@end
+@@batchload gplbldmt.p
+"xxdch_qty_chg"
+"loc_qty_chg"
+@@end
+@@batchload gplblmt.p
+CH
+UNIT_COST
+"单位成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost"
+"unit_cost"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_COST_CHG
+"单位价差" "价差" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_chg"
+"xxdch_cost_chg"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_COST
+"期初成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_loc"
+"BEGINING_COST"
+@@end
+@@batchload gplblmt.p
+CH
+COMMENT
+"说明" "说明" ""
+@@END
+@@batchload gplbldmt.p
+"xxdchdesc"
+"comment"
+@@end
+@@batchload gplblmt.p
+CH
+PERIOD
+"期间" "期间" "期!间"
+@@END
+@@batchload gplbldmt.p
+"xxdch_period"
+"period"
+@@end
+@@batchload gplblmt.p
+CH
+TYPE
+"类型" "T" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_type"
+"type"
+@@end
+@@batchload gplblmt.p
+CH
+PART
+"零件" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_part"
+"part"
+@@end
+@@batchload gplblmt.p
+CH
+QTY_RECEIVED
+"收货量" "收货量" "收货量"
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_rct"
+"QTY_RECEIVED"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_QTY_ISS
+"出库数量" "出库量" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_iss"
+"xxdch_qty_iss"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_INVENTORY
+"期初库存" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_loc"
+"BEGINING_INVENTORY"
+@@end
+@@batchload gplblmt.p
+CH
+LOC_QTY_CHG
+"" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_chg"
+"loc_qty_chg"
+@@end
+@@batchload gplblmt.p
+CH
+UNIT_COST
+"单位成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost"
+"unit_cost"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_COST_CHG
+"单位价差" "价差" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_chg"
+"xxdch_cost_chg"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_COST
+"期初成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_loc"
+"BEGINING_COST"
+@@end
+@@batchload gplblmt.p
+CH
+COMMENT
+"说明" "说明" ""
+@@END
+@@batchload gplbldmt.p
+"xxdchdesc"
+"comment"
+@@end
+@@batchload gplblmt.p
+CH
+PERIOD
+"期间" "期间" "期!间"
+@@END
+@@batchload gplbldmt.p
+"xxdch_period"
+"period"
+@@end
+@@batchload gplblmt.p
+CH
+TYPE
+"类型" "T" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_type"
+"type"
+@@end
+@@batchload gplblmt.p
+CH
+PART
+"零件" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_part"
+"part"
+@@end
+@@batchload gplblmt.p
+CH
+QTY_RECEIVED
+"收货量" "收货量" "收货量"
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_rct"
+"QTY_RECEIVED"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_QTY_ISS
+"出库数量" "出库量" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_iss"
+"xxdch_qty_iss"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_INVENTORY
+"期初库存" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_loc"
+"BEGINING_INVENTORY"
+@@end
+@@batchload gplblmt.p
+CH
+LOC_QTY_CHG
+"" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_qty_chg"
+"loc_qty_chg"
+@@end
+@@batchload gplblmt.p
+CH
+UNIT_COST
+"单位成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost"
+"unit_cost"
+@@end
+@@batchload gplblmt.p
+CH
+XXDCH_COST_CHG
+"单位价差" "价差" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_chg"
+"xxdch_cost_chg"
+@@end
+@@batchload gplblmt.p
+CH
+BEGINING_COST
+"期初成本" "" ""
+@@END
+@@batchload gplbldmt.p
+"xxdch_cost_loc"
+"BEGINING_COST"
+@@end
+@@batchload gplblmt.p
+CH
+COMMENT
+"说明" "说明" ""
+@@END
+@@batchload gplbldmt.p
+"xxdchdesc"
+"comment"
+@@end
+@@batchload gplblmt.p
+ch
+"xxdcs_element"
+"分配因素" "因素"
+@@end
+@@batchload mgdlfhmt.p
+- xxdcs_element
+xxlu110.p
+element
+@@end
+@@batchload mgdlfhmt.p
+- element1
+xxlu110.p
+element
+@@end
+@@batchload mgdlfhmt.p
+- element2
+xxlu110.p
+element
+@@end
+@@batchload mgdlfhmt.p
+- elem xxdcdtep.p
+xxlu110.p
+element
+@@end
+@@batchload mgdlfhmt.p
+- dept2
+gplu318.p
+dept
+@@end
+@@batchload mgdlfhmt.p
+- xxdcs_dept
+gplu318.p
+dept
+@@end
+@@batchload gplbldmt.p
+"frz_flag" "xxdcscl.p"
+"FREEZE/UNFREEZE"
+@@end

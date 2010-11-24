@@ -1,0 +1,18 @@
+1.装入表结构xxiv.df
+2.装入基础资料.36.15.2 (init.cim)
+3.xxcmivmt.p 发票维护
+4.xxcmivco.p 发票装入
+5.xxarpamt.p 客户付款维护主程序 (放开)ard_tax
+6.xxarpaiq.p 客户付款维护查询
+7.其他程序为 客户付款的相关程序
+
+program and data list
+init.cim
+xxarpamt.p
+xxarpamta.p
+xxarpamtc.p
+xxarpamtm.p
+xxaxrpaiq.p
+xxcmivco.p
+xxcmivmt.p
+xxiv.df

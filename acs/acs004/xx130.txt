@@ -1,0 +1,33 @@
+mgbwmt.p
+名称：XX130
+描述条件: SHIP_FROM
+         货物发自
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+更有效的浏览: Yes
+查找浏览: Yes
+查看: ad_mstr
+      Address Master
+之处:ad_domain = global_domain and
+     (ad_addr = global_addr or ad_ref = global_addr)
+选择的字段:ad_mstr.ad_addr
+           ad_mstr.ad_sort
+返回值列: 1               排序列: 1
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 序列: 1
+  表: ad_mstr   Address Master
+  字段名称: ad_addr
+  The unique code that identifies an address.
+
+ 标签期限: ADDRESS_CODE                         地址
+             地址代码
+最长长度: 12
+     格式: x(12)                                x(8)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 序列: 2
+   表: ad_mstr                              Address Master
+字段名称: ad_sort
+         The name used for sorting reports and inquiries.
+标签期限: COMMENT                              排序名
+             说明
+最长长度: 12
+格式: x(12)                           x(28)

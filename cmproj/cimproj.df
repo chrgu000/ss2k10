@@ -1,0 +1,375 @@
+ADD TABLE "xxar_hst"
+  AREA "TRANSACTION"
+  LABEL "回款记录"
+  DUMP-NAME "xxar_hst"
+
+ADD FIELD "xxar_sysnbr" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "内部编号"
+  POSITION 2
+  MAX-WIDTH 24
+  ORDER 10
+
+ADD FIELD "xxar_ivnbr" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "发票号"
+  POSITION 3
+  MAX-WIDTH 24
+  ORDER 20
+
+ADD FIELD "xxar_rcnbr" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "回款单号"
+  POSITION 4
+  MAX-WIDTH 24
+  ORDER 30
+
+ADD FIELD "xxar_rc_amt" OF "xxar_hst" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "回款金额"
+  POSITION 5
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "xxar_slsid" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "业务员"
+  POSITION 6
+  MAX-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxar_dept" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "部门"
+  POSITION 7
+  MAX-WIDTH 24
+  ORDER 60
+
+ADD FIELD "xxar_date" OF "xxar_hst" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "回款日期"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxar_bdate" OF "xxar_hst" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "冲账日期"
+  POSITION 9
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxar_close_cs" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "结款客户编号"
+  POSITION 10
+  MAX-WIDTH 24
+  ORDER 90
+
+ADD FIELD "xxar_bill" OF "xxar_hst" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "结算单位"
+  POSITION 11
+  MAX-WIDTH 24
+  ORDER 100
+
+ADD INDEX "xxar_sysnbr" ON "xxar_hst" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxar_sysnbr" ASCENDING ABBREVIATED 
+
+ADD TABLE "xxivd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxivd_det"
+
+ADD FIELD "xxivd_sonbr" OF "xxivd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "订单内部号"
+  POSITION 2
+  MAX-WIDTH 24
+  ORDER 10
+
+ADD FIELD "xxivd_act_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "实际销售额"
+  POSITION 3
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 20
+
+ADD FIELD "xxivd_ivtaxamt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "含税发票额"
+  POSITION 4
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 30
+
+ADD FIELD "xxivd_close_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "已开票额"
+  POSITION 5
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 40
+
+ADD FIELD "xxivd_open_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "未开票额"
+  POSITION 6
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 50
+
+ADD FIELD "xxivd_cfora_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<,"
+  INITIAL "0"
+  LABEL "已开待核额"
+  POSITION 7
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 60
+
+ADD FIELD "xxivd_sysnbr" OF "xxivd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "订单系统号"
+  POSITION 8
+  MAX-WIDTH 24
+  ORDER 70
+
+ADD FIELD "xxivd_rmks" OF "xxivd_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 9
+  MAX-WIDTH 80
+  ORDER 80
+
+ADD FIELD "xxivd_confim_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "确定订单额"
+  POSITION 10
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 90
+
+ADD FIELD "xxivd_plan_amt" OF "xxivd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "估算订单额"
+  POSITION 11
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 100
+
+ADD INDEX "xxivd_sys_so" ON "xxivd_det" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxivd_sysnbr" ASCENDING 
+  INDEX-FIELD "xxivd_sonbr" ASCENDING ABBREVIATED 
+
+ADD TABLE "xxiv_mstr"
+  AREA "TRANSACTION"
+  LABEL "销售发票"
+  DUMP-NAME "xxiv_mstr"
+
+ADD FIELD "xxiv_sysnbr" OF "xxiv_mstr" AS character 
+  FORMAT "x(14)"
+  INITIAL ""
+  LABEL "发票系统号"
+  POSITION 2
+  MAX-WIDTH 28
+  ORDER 10
+
+ADD FIELD "xxiv_nbr" OF "xxiv_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "发票号"
+  POSITION 3
+  MAX-WIDTH 24
+  ORDER 20
+
+ADD FIELD "xxiv_ref" OF "xxiv_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "发票单号"
+  POSITION 4
+  MAX-WIDTH 24
+  ORDER 30
+
+ADD FIELD "xxiv_bill" OF "xxiv_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "结算单位"
+  POSITION 5
+  MAX-WIDTH 24
+  ORDER 40
+
+ADD FIELD "xxiv_rmks" OF "xxiv_mstr" AS character 
+  FORMAT "x(80)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 6
+  MAX-WIDTH 160
+  ORDER 50
+
+ADD FIELD "xxiv_type" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "发票类型"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxiv_dept" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "部门"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxiv_slspsn" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "业务员"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxiv_actype" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "财务类型"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxiv_date" OF "xxiv_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "发票日期"
+  POSITION 11
+  MAX-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxiv_promise_date" OF "xxiv_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "约定付款日期"
+  POSITION 12
+  MAX-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxiv_userid" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "开票人"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxiv_audit" OF "xxiv_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "审核人"
+  POSITION 14
+  MAX-WIDTH 24
+  ORDER 130
+
+ADD FIELD "xxiv_terms_days" OF "xxiv_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "付款期限"
+  POSITION 15
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxiv__dec01" OF "xxiv_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxiv__dec02" OF "xxiv_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 17
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxiv__dec03" OF "xxiv_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 170
+
+ADD FIELD "xxiv__dte01" OF "xxiv_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  MAX-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxiv__dte02" OF "xxiv_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 20
+  MAX-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxiv__chr01" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 21
+  MAX-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xxiv__chr02" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xxiv__chr03" OF "xxiv_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 23
+  MAX-WIDTH 16
+  ORDER 220
+
+ADD INDEX "xxiv_sysnbr" ON "xxiv_mstr" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxiv_sysnbr" ASCENDING 
+
+.
+PSC
+cpstream=CP936
+.
+0000006717

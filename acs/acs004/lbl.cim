@@ -1,0 +1,53 @@
+@@batchload gplblmt.p
+ch
+"Ship-From"
+"供应商发货自" "发货自" "发自"
+@@end
+@@batchload gplblmt.p
+tw
+"Ship-From"
+"供应商发货自" "发货自" "发自"
+@@end
+@@batchload gplbldmt.p
+po__chr01
+Ship-From
+@@end
+@@batchload gplbldmt.p
+po_nbr xxpopomt.p
+order
+@@end
+@@batchload mgdlfhmt.p
+- po__chr01
+xxlu130
+-
+@@end
+@@batchload mgmsgmt.p
+ch
+80401
+非法的Ship-From
+@@end
+@@batchload mgmsgmt.p
+tw
+80401
+非法的Ship-From
+@@end
+@@batchload mgmsgmt.p
+us
+80401
+Invalid Ship-From
+@@end
+@@batchload mgmsgmt.p
+ch
+80402
+"货物发自地址不存在, 是否要加"
+@@end
+@@batchload mgmsgmt.p
+tw
+80402
+"货物发自地址不存在, 是否要加"
+@@end
+@@batchload mgmsgmt.p
+us
+80402
+"Ship-From does not exist.  Do you wish to add"
+@@end

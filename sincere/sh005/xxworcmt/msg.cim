@@ -1,0 +1,45 @@
+@@batchload mgmsgmt.p
+"ch"
+"9100"
+"加工单或ID号未指明"
+@@end
+@@batchload mgmsgmt.p
+"ch"
+"9102"
+"单据类型不可为空"
+@@end
+@@batchload mgmsgmt.p
+"ch"
+"9104"
+"单据类型#未找到"
+@@end
+@@batchload mgmsgmt.p
+"ch"
+"9106"
+"单据#不符合控制档编码规则"
+@@end
+@@batchload mgmsgmt.p
+"ch"
+"9108"
+"入库数量大于工单订单数量-已完成数量"
+@@end
+@@batchload mgmsgmt.p
+"ch"
+"9110"
+"没有可供打印的记录"
+@@end
+@@batchload mgdlfhmt.p
+- "v_type" "xxworcmt.p"
+"xxlu300.p"
+-
+@@end
+@@batchload mgdlfhmt.p
+- "tw_site" "xxworcmt.p"
+"gplu348.p"
+-
+@@end
+@@batchload mgdlfhmt.p
+- "tw_loc" "xxworcmt.p"
+"gplu164.p"
+-
+@@end

@@ -1,0 +1,86 @@
+@@batchload mgmemt.p
+ch
+0
+29
+"客制化程序" - 29
+@@end
+@@batchload mgmemt.p
+ch
+A
+29
+"客制化程序" - A.29
+@@end
+@@batchload mgmemt.p
+ch
+29
+1
+"成本模块" - 29.1
+@@end
+@@batchload mgmemt.p
+ch
+"29.1"
+1
+"成本初次分摊" - "29.1.1"
+2
+"成本逐层分摊至产成品" - "xxdccrp.p"
+11
+"计划外出库(盘点)" - "xxicunis.p"
+18
+"成本报表" - "29.1.18"
+23
+"零件成本冻结" - "xxdcscl.p"
+24
+"系统控制" - "29.1.24"
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+ch
+"29.1.1"
+1
+"采购收货计算（明细/汇总）" - "xxporp01.p"
+2
+"采购价差分摊" - "xxpocdrp.p"
+3
+"盘点差异分摊" - "xxwobmep.p"
+5
+"费用分配因素维护" - "xxdcsmt.p"
+6
+"费用分配因素查询" - "xxdcsiq.p"
+7
+"费用分配因素报表" - "xxdcsrp.p"
+8
+"费用分配" - "xxdcdtep.p"
+13
+"零件成本计算" - "xxdchrp.p"
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+ch
+"29.1.18"
+1
+"计划外入库报表" - "xxicrurp.p"
+2
+"计划外出库报表" - "xxiciurp.p"
+3
+"采购收货报表" - "xxporp01.p"
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+ch
+"29.1.24"
+1
+"产品类维护" - "xxplmt.p"
+2
+"期初数据装入" - "xxdcsinit.p"
+4
+"总账日历维护" - "glcalmt.p"
+.
+.
+.
+@@end
