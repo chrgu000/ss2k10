@@ -52,6 +52,10 @@
 "ITEM_NUMBER"
 @@end
 @@batchload gplbldmt.p
+"v_pt_desc1" "xxworcmt.p"
+"ITEM_NUMBER"
+@@end
+@@batchload gplbldmt.p
 "tw_qty_ord"
 "ORDER_QUANTITY"
 @@end

@@ -5,10 +5,11 @@
 /* REVISION: 0A$1 LAST MODIFIED: 10/11/10   BY: zy                           */
 /* REVISION: 0A$2 LAST MODIFIED: 10/26/10   BY: zy                           */
 /* REVISION: 0BYI LAST MODIFIED: 11/18/10   BY: zy add expir ctrl         *bi*/
+/* REVISION: 0BYI LAST MODIFIED: 11/24/10   BY: zy                        *bo*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
-
-{mfdtitle.i "101115.1"}
+/* 101124.1 remove expir ctrl and display pt_desc to report.              *bo*/
+{mfdtitle.i "101124.1"}
 {gplabel.i}
 
 &SCOPED-DEFINE xxworcmt_b_1 "Sel"
@@ -72,27 +73,27 @@ if v_wot = hi_char then assign v_wot = "".
 if v_idt = hi_char then assign v_idt = "".
 display v_sel v_wof v_type v_nbr with frame a.
 
-/*bi*/ DEFINE VARIABLE vdays AS INTEGER.
-/*bi*/ DEFINE VARIABLE vLicCode as character.
-/*bi*/ {gprunp.i "xxexctrl" "P" "setExpirDate" "(input date(11,12,2010))"}
-/*bi*/ {gprunp.i "xxexctrl" "P" "getExpirDays" "(input today,output vdays)"}
-/*bi*/ {gprunp.i "xxexctrl" "P" "getLicenseCode" "(output vLicCode)"}
-/*bi*/ if vdays < 0 then do:
-/*bi*/   {pxmsg.i &MSGNUM=9211 &MSGARG1=vLicCode &ERRORLEVEL=4}
-/*bi*/ end.
-/*bi*/ else if vdays <= 5 then do:
-/*bi*/   {pxmsg.i &MSGNUM=9210 &MSGARG1=vLicCode &MSGARG2=vdays &ERRORLEVEL=2}
-/*bi*/ end.
+/*bi DEFINE VARIABLE vdays AS INTEGER.                                       */
+/*bi DEFINE VARIABLE vLicCode as character.                                  */
+/*bi {gprunp.i "xxexctrl" "P" "setExpirDate" "(input date(11,12,2010))"}     */
+/*bi {gprunp.i "xxexctrl" "P" "getExpirDays" "(input today,output vdays)"}   */
+/*bi {gprunp.i "xxexctrl" "P" "getLicenseCode" "(output vLicCode)"}          */
+/*bi if vdays < 0 then do:                                                   */
+/*bi   {pxmsg.i &MSGNUM=9211 &MSGARG1=vLicCode &ERRORLEVEL=4}                */
+/*bi end.                                                                    */
+/*bi else if vdays <= 5 then do:                                             */
+/*bi   {pxmsg.i &MSGNUM=9210 &MSGARG1=vLicCode &MSGARG2=vdays &ERRORLEVEL=2} */
+/*bi end.                                                                    */
 
 mainloop:
 repeat:
 
    do on error undo, retry: /* retry 1 */
       update v_wof v_wot v_idf v_idt with frame a.
-/*bi*/ if vdays < 0 then do:
-/*bi*/   {pxmsg.i &MSGNUM=9211 &MSGARG1=vLicCode &ERRORLEVEL=4}
-/*bi*/   undo,retry.
-/*bi*/ end.
+/*bi   if vdays < 0 then do:                                                 */
+/*bi     {pxmsg.i &MSGNUM=9211 &MSGARG1=vLicCode &ERRORLEVEL=4}              */
+/*bi     undo,retry.                                                         */
+/*bi   end.                                                                  */
       if v_wof = "" and v_idf = "" then do:
          {mfmsg.i 9100 3}
          next-prompt v_wof with frame a.
