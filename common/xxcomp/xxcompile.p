@@ -1,12 +1,10 @@
 /* xxcompile.p - compile procedure - replaced by xxc.p                       */
-/* REVISION: 09$5 LAST MODIFIED: 09/20/10   BY: zy                           */
-/* REVISION: 0A$1 LAST MODIFIED: 10/11/10   BY: zy                           */
-/* REVISION: 0A$2 LAST MODIFIED: 10/26/10   BY: zy                           */
 /* REVISION: 0BYI LAST MODIFIED: 11/18/10   BY: zy ·ÀÖ¹ÖØ¸´±àÒë           *bi*/
+/* REVISION: 0BYO LAST MODIFIED: 11/24/10   BY: zy ·ÀÖ¹ÖØ¸´±àÒëÄ¬ÈÏcancel *bo*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0BYI"}
+{mfdtitle.i "0BYO"}
 /*bi*/ define variable icomptimes as integer.
 define temp-table tmp_fl
   fields fl_type as character
@@ -126,15 +124,24 @@ DO:
     define variable ret as logical.
     session:set-wait-stat("genreal").
     assign logsdir vlanguage.
-/*bi*/ assign ret = false.
+/*bi*/ assign ret = ?.
 /*bi*/ if icomptimes > 0 then do:
 /*bi*/    message "Compile General Question!" fill(" ",16) skip(1)
 /*bi*/        "You alerdy compiled" trim(string(icomptimes,">9")) "times."
-/*bi*/        fill(" ",12) skip
-/*bi*/        "Compile it again?" fill(" ",24)
-/*bi*/         VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+/*bi          fill(" ",12) skip                                              */
+/*bo*/        fill(" ",12) skip(1)
+/*bo          "Compile it again?" fill(" ",24)                               */
+/*bo           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO                     */
+/*bo*/        "Compile it again(yes/no)" fill(" ",16) skip
+/*bo*/        "or quit This procedure(cancel)?" fill(" ",10)
+/*bo*/         VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO-CANCEL
 /*bi*/         title "Compile Repeat" UPDATE ret.
-/*bi*/    if not ret then return.
+/*bo      if not ret then return.                                            */
+/*bo*/    case ret:
+/*bo*/         when false then return.
+/*bo*/         when true  then.
+/*bo*/         otherwise  apply "window-close" to frame a.
+/*bo*/    end case.
 /*bi*/ end.
 /*bi*/ icomptimes = icomptimes + 1.
     if search(vworkfile) <> ? then do:
