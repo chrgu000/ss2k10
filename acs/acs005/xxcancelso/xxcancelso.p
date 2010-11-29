@@ -1,13 +1,10 @@
 /* xxcancelso.p - deleted so report                                          */
-/* REVISION: 1.0      LAST MODIFIED: 09/27/10   BY: zy                       */
+/* REVISION: 1.0      LAST MODIFIED: 10/03/10   BY: zy                       */
 /*-Revision end--------------------------------------------------------------*/
 
 &SCOPED-DEFINE amt_p_1 "amt".
 /* DISPLAY TITLE */
 {mfdtitle.i "101003.1"}
-
-/* CONSIGNMENT INVENTORY VARIABLES */
-{pocnvars.i}
 
 define variable nbr      like so_nbr no-undo.
 define variable nbr1     like so_nbr no-undo.
@@ -39,14 +36,6 @@ with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-
-/* DETERMINE IF SUPPLIER CONSIGNMENT IS ACTIVE */
-{gprun.i ""gpmfc01.p""
-         "(input ENABLE_SUPPLIER_CONSIGNMENT,
-           input 11,
-           input ADG,
-           input SUPPLIER_CONSIGN_CTRL_TABLE,
-           output using_supplier_consignment)"}
 
 /* REPORT BLOCK */
 {wbrp01.i}
@@ -95,17 +84,7 @@ repeat:
 
    {mfphead.i}
 /* SET EXTERNAL LABELS */
-if conf then do:
-  for each xxso_mstr exclusive-lock where xxso_domain = global_domain
-       and xxso_nbr >= nbr and xxso_nbr <= nbr1
-       and xxso_cust >= cust and xxso_cust <= cust1:
-       for each xxsod_det exclusive-lock where xxsod_domain = global_domain
-            and xxsod_nbr = xxso_nbr:
-            delete xxsod_det.
-       end.
-       delete xxso_mstr.
-  end.
-end.
+
 for each xxso_mstr no-lock where xxso_domain = global_domain
      and xxso_nbr >= nbr and xxso_nbr <= nbr1
      and xxso_cust >= cust and xxso_cust <= cust1
@@ -170,9 +149,6 @@ for each xxso_mstr no-lock where xxso_domain = global_domain
                xxsod_price
                amt
                amtsel
-/*             xxso_userid_del                                        */
-/*             xxso_date_del                                          */
-/*             string(xxso_time_del,"hh:mm:ss") @ xxso_time_del       */
                with frame b stream-io.
                if not last-of(xxsod_nbr) then
                down 1 with fram b.
@@ -215,13 +191,21 @@ for each xxso_mstr no-lock where xxso_domain = global_domain
                "" @ xxsod_price
                "" @ amt
                "" @ amtsel
-/*             xxso_userid_del                                       */
-/*             xxso_date_del                                         */
-/*             string(xxso_time_del,"hh:mm:ss") @ xxso_time_del      */
                with frame b stream-io.
    END.
   END.
    /* REPORT TRAILER  */
    {mfrtrail.i}
+if conf then do:
+  for each xxso_mstr exclusive-lock where xxso_domain = global_domain
+       and xxso_nbr >= nbr and xxso_nbr <= nbr1
+       and xxso_cust >= cust and xxso_cust <= cust1:
+       for each xxsod_det exclusive-lock where xxsod_domain = global_domain
+            and xxsod_nbr = xxso_nbr:
+            delete xxsod_det.
+       end.
+       delete xxso_mstr.
+  end.
+end.
 end.
 {wbrp04.i &frame-spec = a}
