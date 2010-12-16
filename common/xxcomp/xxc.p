@@ -147,6 +147,9 @@ input close.
 {gprun.i ""xxcompil.p""}
 os-delete comp.txt no-error.
 os-delete comp.tmp no-error.
+os-delete utdir.log no-error.
+os-delete utcompil.log no-error.
+os-delete value(vworkfile) no-error.
 leave.
 end. /*mainLoop*/
 
