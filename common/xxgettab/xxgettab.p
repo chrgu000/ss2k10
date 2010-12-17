@@ -6,29 +6,76 @@
 {mfdtitle.i "0CYH"}
 
 define variable db_name as character format "x(24)".
-define variable sfile as character format "x(32)".
+define variable sfile   as character format "x(32)".
 
 form
    db_name colon 20 label "DATABASE"
    sfile   colon 20 label "TABLE"
 with frame a side-labels width 80 attr-space.
 
-/* SET EXTERNAL LABELS */
+find first qaddb.flh_mstr NO-LOCK WHERE flh_field = "sfile" no-error.
+if not available qaddb.flh_mstr then do:
+    create qaddb.flh_mstr.
+    assign flh_field = "sfile"
+           flh_exec = "xxswtbl.p"
+           flh_y = 7
+           flh_down = 6.
+end.
+
+find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
+       and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+if available qad_wkfl then do:
+   assign qad_charfld[1] = ""
+          qad_charfld[2] = "".
+end.
+
+ON VALUE-CHANGED OF sfile IN FRAME a
+DO:
+   assign db_name sfile.
+   find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
+          and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+   if available qad_wkfl then do:
+      assign qad_charfld[1] = db_name
+             qad_charfld[2] = sfile.
+   end.
+   else do:
+     create qad_wkfl.
+     assign qad_domain = global_domain
+            qad_key1 = "xxgettable"
+            qad_key2 = global_userid
+            qad_charfld[1] = db_name
+            qad_charfld[2] = sfile.
+   end.
+END.
 setFrameLabels(frame a:handle).
 
 {wbrp01.i}
 assign
    db_name = sdbname("qaddb").
 repeat:
-if c-application-mode <> 'web' then
+if c-application-mode <> 'web' then.
    update db_name with frame a.
    update sfile with frame a.
+   assign db_name sfile.
+   find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
+          and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+   if available qad_wkfl then do:
+      assign qad_charfld[1] = db_name
+             qad_charfld[2] = sfile.
+   end.
+   else do:
+     create qad_wkfl.
+     assign qad_domain = global_domain
+            qad_key1 = "xxgettable"
+            qad_key2 = global_userid
+            qad_charfld[1] = db_name
+            qad_charfld[2] = sfile.
+   end.
 {wbrp06.i &command = update &fields = " db_name sfile" &frm = "a"}
 
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
 end.
-
    /* SELECT PRINTER */
 /*   {mfselprt.i "printer" 80}   */
       /* OUTPUT DESTINATION SELECTION */
@@ -47,8 +94,7 @@ end.
       &defineVariables = "yes"}
 
    {mfphead2.i}
-/* {xxgettab.i &DataBaseName = db_name &TableName = sfile}  */
-   create alias dictdb for database value(db_name).
+create alias dictdb for database value(db_name).
 
 for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
     display _file-name _desc _Tbl-Type with frame x side-labels width 254.
