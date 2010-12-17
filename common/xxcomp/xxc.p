@@ -1,9 +1,10 @@
 /* xxc.p - compile procedure                                                 */
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
+/* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0BYJ"}
+{mfdtitle.i "0CYH"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -84,7 +85,7 @@ end.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
-display xrcDir filef filet bproPath lng destdir with Frame z.
+display xrcDir filef filet bproPath lower(lng) @ lng destdir with Frame z.
 ENABLE  xrcDir filef filet bproPath lng destdir WITH Frame z.
 
 mainLoop:
@@ -164,7 +165,7 @@ if available qad_wkfl then do:
            filef   = qad_charfld[3]
            filet   = qad_charfld[4].
 end.
-assign lng = global_user_lang.
+assign lng = lower(global_user_lang).
 if xrcdir <> "" and index(bpropath,xrcdir) = 0
    then do:
         assign bpropath = xrcdir + "," + propath.
