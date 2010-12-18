@@ -72,7 +72,7 @@ if c-application-mode <> 'web' then.
             qad_charfld[2] = sfile.
    end.
 {wbrp06.i &command = update &fields = " db_name sfile" &frm = "a"}
-
+assign db_name sfile.
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
 end.
@@ -92,10 +92,8 @@ end.
       &withEmail = "yes"
       &withWinprint = "yes"
       &defineVariables = "yes"}
-
-   {mfphead2.i}
+{mfphead2.i}
 create alias dictdb for database value(db_name).
-
 for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
     display _file-name _desc _Tbl-Type with frame x side-labels width 254.
     FOR EACH _FIELD OF _FILE BY _ORDER:
