@@ -1,4 +1,5 @@
-/* xxlbldiq.p - label detail query                                             */
+/* xxlbldiq.p - label detail query                                           */
+/*V8:ConvertMode=Report                                                      */
 /* REVISION: 1.0      LAST MODIFIED: 09/20/10   BY: zy                       */
 
 /* DISPLAY TITLE */

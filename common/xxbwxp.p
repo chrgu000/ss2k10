@@ -1,4 +1,5 @@
 /* xxbwxp.p - convert browse to create record.                               */
+/*V8:ConvertMode=Maintenance                                                 */
 /* REVISION:0AY2      LAST MODIFIED: 10/15/10   BY: zy                       */
 
 /* display title */
@@ -23,18 +24,10 @@ with frame a side-labels attr-space width 80.
 setFrameLabels(frame a:handle).
 
 repeat:
-
    if brwnamet   = hi_char then brwnamet   = "".
-
-   update
-      brwnamef
-      brwnamet
-      COMBINED
-   with frame a.
-
+   update brwnamef brwnamet COMBINED with frame a.
       if COMBINED
       then do:
-
          /*  FILE NAME CREATION  IS CHANGED. GENERATED  FILE NAME   IS       */
          /*  INDEPENDENT  OF PROGRESS -D PARAMETER  AND  UNIFORM IN ALL      */
          /*  OTHER PROGRAMS  .                                               */
@@ -58,7 +51,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
 end.
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType                = "page"
+   {gpselout.i &printType                = "Printer"
                &printWidth               = 90
                &pagedFlag                = " "
                &stream                   = " "

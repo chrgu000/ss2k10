@@ -1,6 +1,6 @@
 /* xxbwmta.p - convert browse to procedure file                              */
+/*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 1.0      LAST MODIFIED: 09/20/10   BY: zy                       */
-
 /* 此程序用于将Browse转换为.p的程序以免多次重复做browse.                     */
 
 DEFINE INPUT PARAMETER Vbrowse AS CHARACTER.
