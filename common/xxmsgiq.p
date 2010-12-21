@@ -1,50 +1,35 @@
-/* xxmsgiq.p - MESSAGE INQUIRY                                               */
+/* xxmsgrp.p - Message REPORT                                                */
 /*V8:ConvertMode=Report                                                      */
-/* REVISION: 1.0      LAST MODIFIED: 09/20/10   BY: zy                       */
+/* REVISION: 09Y1 LAST MODIFIED: 09/20/10   BY: zy                           */
+/* REVISION: 0CYK LAST MODIFIED: 12/17/10   BY: zy                           */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "09Y1"}
+{mfdtitle.i "0CYK"}
 
-define variable nbr    as   integer  format ">>>>>>9".
-define variable lang   like msg_lang.
+define variable nbr_from as integer  format ">>>>>>9".
+define variable lang    like msg_lang.
 define variable lngdesc like lng_desc.
-define variable incl   as   character format "x(24)".
-define variable dcount as   integer.
-DEFINE BUTTON   bfree  LABEL "œ–÷√".
-/* DISPLAY TITLE */
+define variable ans_include as character format "x(24)".
+define variable ipd_include as character format "x(24)".
+define variable dcount as integer.
+define variable idle  as logical.
 
 form
-   space(1)
-   lang  colon 10 format "x(4)" lngdesc
-   nbr   colon 10
-   incl  colon 28 bfree
-with frame a side-labels width 80.
-enable bfree with frame a.
+   lang        colon 10 format "x(4)" lngdesc colon 32
+   nbr_from    colon 10
+   ans_include colon 32
+   ipd_include colon 32 skip(1)
+   idle        colon 20
+with frame a side-labels width 80 attr-space.
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-on "choose":U of bfree do:
-  define variable i as integer.
-  define variable v as character format "x(78)".
-  assign lang.
-  for each msg_mstr where msg_lang = lang break by msg_lang:
-  i = i + 1.
-   if i <> msg_nbr and not last-of (msg_lang) then do:
-      assign v = v + " " + string(i,"->>>>>>9").
-      if length(v) >= 72 then do:
-          display v column-label
-                  "                           °æœ–÷√œ˚œ¢∫≈¬Î√˜œ∏°ø"
-                  with frame x 17 down.
-          assign v = "".
-      end.
-   end.
-  end.
-end.
-lang = global_user_lang.
 
 {wbrp01.i}
-
 repeat:
- assign lang = global_user_lang.
+  assign lang = global_user_lang.
  find first lng_mstr no-lock where lng_lang = lang no-error.
  if available lng_mstr then do:
     display lng_lang @ lang lng_desc @ lngdesc with frame a.
@@ -62,15 +47,25 @@ repeat:
  if available lng_mstr then do:
     display lng_lang @ lang lng_desc @ lngdesc with frame a.
  end.
-   if c-application-mode <> 'web' then
-      update nbr incl with frame a.
 
-   {wbrp06.i &command = update &fields = " lang nbr incl" &frm = "a"}
+   if c-application-mode <> 'web' then
+      update nbr_from ans_include ipd_include idle with frame a.
+
+   {wbrp06.i &command = update
+             &fields = " nbr_from ans_include ipd_include idle"
+             &frm = "a"}
+
+   if (c-application-mode <> 'web') or
+      (c-application-mode = 'web' and
+      (c-web-request begins 'data'))
+   then do:
+
+   end.
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "terminal"
+   {gpselout.i &printType = "printer"
                &printWidth = 80
-               &pagedFlag = " "
+               &pagedFlag = "nopage"
                &stream = " "
                &appendToFile = " "
                &streamedOutputToTerminal = " "
@@ -82,32 +77,42 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
 
-   dcount = 0.
+   {mfphead.i}
 
-   for each msg_mstr where
-            msg_lang = lang and
-            msg_nbr >= nbr and (index(msg_desc,incl) > 0 or incl = "")
-   no-lock with frame f-a:
-
+    dcount = 0.
+if idle then do:
+  define variable i as integer.
+  define variable v as character format "x(78)".
+  for each msg_mstr where msg_lang = lang break by msg_lang:
+  i = i + 1.
+   if i <> msg_nbr and not last-of (msg_lang) then do:
+      assign v = v + " " + string(i,"->>>>>>9").
+      if length(v) >= 72 then do:
+          display v column-label
+                  "                           °æø’œ–œ˚œ¢∫≈¬Î√˜œ∏°ø"
+                  with frame x 17 down.
+          assign v = "".
+      end.
+   end.
+  end.
+end.
+else do:
+   for each msg_mstr where msg_lang = lang and msg_nbr >= nbr_from and
+           (index(msg_desc,ans_include) > 0 or ans_include = "") and
+           (index(msg_desc,ipd_include) > 0 or ipd_include = "")
+           no-lock with frame f-a:
       {mfrpchk.i}
-
       setFrameLabels(frame f-a:handle). /* SET EXTERNAL LABELS */
-
       display
          msg_nbr format "->>>>>9"
          msg_desc
       with width 80.
-
       dcount = dcount + 1.
-
       if dev <> "terminal" and dcount modulo 5 = 0 then
          put skip(1).
-
    end.
-
-   {mfreset.i}
-   {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
-
+end.
+   {mfrtrail.i}
 end.
 
 {wbrp04.i &frame-spec = a}
