@@ -2,6 +2,7 @@
 /*V8:ConvertMode=Report                                                      */
 /* save variable into qad_wkfl                                               */
 /* REVISION: 1.0      LAST MODIFIED: 09/20/10   BY: zy                       */
+/* REVISION:Y0BG LAST MODIFIED: 10/27/10 BY: zy                  *cn         */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 {mfdtitle.i "09Y1"}
 
@@ -121,8 +122,13 @@ if avail qad_wkfl then do:
                                  and qad_intfld[2] <> 99999999
          repeat_process = qad_logfld[1]
          pause_seconds  = qad_intfld[3]
-         process_file   = qad_logfld[2]
-         file_name      = qad_charfld[1].
+         process_file   = qad_logfld[2].
+/*cn*/   if opsys = "unix" then do:
+/*cn*/      assign file_name = qad_charfld[1].
+/*cn*/   end.
+/*cn*/   else if opsys = "msdos" or opsys = "win32" then do:
+/*cn*/      assign file_name = qad_charfld[2].
+/*cn*/   end.
 end.
 
 /* Set up input and output streams */
@@ -435,8 +441,10 @@ do transaction:
             qad_intfld[2] = to_id
             qad_logfld[1] = repeat_process
             qad_intfld[3] = pause_seconds
-            qad_logfld[2] = process_file
-            qad_charfld[1] = file_name.
+            qad_logfld[2] = process_file.
+/*cn*/   if opsys = "unix" then assign qad_charfld[1] = file_name.
+/*cn*/   if opsys = "msdos" or opsys = "win32" then
+/*cn*/      assign qad_charfld[2] = file_name.
    end.
    else do:
      create qad_wkfl.
@@ -447,8 +455,10 @@ do transaction:
             qad_intfld[2] = to_id
             qad_logfld[1] = repeat_process
             qad_intfld[3] = pause_seconds
-            qad_logfld[2] = process_file
-            qad_charfld[1] = file_name.
+            qad_logfld[2] = process_file.
+/*cn*/   if opsys = "unix" then assign qad_charfld[1] = file_name.
+/*cn*/   if opsys = "msdos" or opsys = "win32" then
+/*cn*/      assign qad_charfld[2] = file_name.
    end.
 end.
 

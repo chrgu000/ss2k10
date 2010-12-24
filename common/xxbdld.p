@@ -1,6 +1,7 @@
 /* xxmgbdld.p - Load batch CIM data into database for future processing.      */
 /*V8:ConvertMode=Maintenance                                                  */
 /* REVISION:Y0BG LAST MODIFIED: 10/27/10 BY: zy                  *bg          */
+/* REVISION:Y0BG LAST MODIFIED: 10/27/10 BY: zy                  *cn          */
 /*-Revision end---------------------------------------------------------------*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character           */
 
@@ -56,14 +57,19 @@ define variable l_sudden_exit like mfc_logical no-undo.
 /* DELETING the qad_wkfl RECORD, WHEN THE USER EXITS BY */
 /* PRESSING THE EXIT/X BUTTON OR EXITING FROM USER MENU */
 
-/*zy*/ do transaction:
-/*zy*/ /*initial variable*/
-/*zy*/ find first qad_wkfl exclusive-lock where qad_domain = global_domain and
-/*zy*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-/*zy*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
-/*zy*/   assign sourcename = qad_charfld[1].
-/*zy*/ end.
-/*zy*/ end. /*do transaction:*/
+/*cn*/ do transaction:
+/*cn*/ /*initial variable*/
+/*cn*/ find first qad_wkfl exclusive-lock where qad_domain = global_domain and
+/*cn*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
+/*cn*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
+/*cn*/   if opsys = "unix" then do:
+/*cn*/      assign sourcename = qad_charfld[1].
+/*cn*/   end.
+/*cn*/   else if opsys = "msdos" or opsys = "win32" then do:
+/*cn*/      assign sourcename = qad_charfld[2].
+/*cn*/   end.
+/*cn*/ end.
+/*cn*/ end. /*do transaction:*/
 
 if not session:batch-mode
 then do:
@@ -367,28 +373,32 @@ repeat on stop undo, retry:
          readkey stream batchdata.
       end.
    end.
-/*zy*/ do transaction:
-/*zy*/ /* 备份变量以便装入时使用. */
-/*zy*/ release qad_wkfl.
-/*zy*/ find first qad_wkfl exclusive-lock where qad_domain = global_domain and
-/*zy*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-/*zy*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
-/*zy*/   assign qad_intfld[1] = f_id
-/*zy*/          qad_intfld[2] = l_id
-/*bg*/          qad_logfld[2] = no
-/*zy*/          qad_charfld[1] = sourcename.
-/*zy*/ end.
-/*zy*/ else do:
-/*zy*/   create qad_wkfl.
-/*zy*/   assign qad_domain = global_domain
-/*zy*/          qad_key1 = "mgbdpro"
-/*zy*/          qad_key2 = global_userid
-/*zy*/          qad_intfld[1] = f_id
-/*zy*/          qad_intfld[2] = l_id
-/*bg*/          qad_logfld[2] = no
-/*zy*/          qad_charfld[1] = sourcename.
-/*zy*/ end.
-/*zy*/ end. /*do transaction:*/
+/*cn*/ do transaction:
+/*cn*/ /* 备份变量以便装入时使用. */
+/*cn*/ release qad_wkfl.
+/*cn*/ find first qad_wkfl exclusive-lock where qad_domain = global_domain and
+/*cn*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
+/*cn*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
+/*cn*/   assign qad_intfld[1] = f_id
+/*cn*/          qad_intfld[2] = l_id
+/*cn*/          qad_logfld[2] = no.
+/*cn*/   if opsys = "unix" then assign qad_charfld[1] = sourcename.
+/*cn*/   if opsys = "msdos" or opsys = "win32" then
+/*cn*/      assign qad_charfld[2] = sourcename.
+/*cn*/ end.
+/*cn*/ else do:
+/*cn*/   create qad_wkfl.
+/*cn*/   assign qad_domain = global_domain
+/*cn*/          qad_key1 = "mgbdpro"
+/*cn*/          qad_key2 = global_userid
+/*cn*/          qad_intfld[1] = f_id
+/*cn*/          qad_intfld[2] = l_id
+/*cn*/          qad_logfld[2] = no.
+/*cn*/   if opsys = "unix" then assign qad_charfld[1] = sourcename.
+/*cn*/   if opsys = "msdos" or opsys = "win32" then
+/*cn*/      assign qad_charfld[2] = sourcename.
+/*cn*/ end.
+/*cn*/ end. /*do transaction:*/
    input stream batchdata close.
    display sets_entered f_id l_id with frame a.
 end.
