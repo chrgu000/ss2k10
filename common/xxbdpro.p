@@ -1,4 +1,5 @@
 /* xxbdpro.p - Process CIM batch data that has been loaded into the database */
+/*V8:ConvertMode=Report                                                      */
 /* save variable into qad_wkfl                                               */
 /* REVISION: 1.0      LAST MODIFIED: 09/20/10   BY: zy                       */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */

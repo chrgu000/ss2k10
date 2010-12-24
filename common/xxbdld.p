@@ -1,10 +1,10 @@
 /* xxmgbdld.p - Load batch CIM data into database for future processing.      */
+/*V8:ConvertMode=Maintenance                                                  */
 /* REVISION:Y0BG LAST MODIFIED: 10/27/10 BY: zy                  *bg          */
 /*-Revision end---------------------------------------------------------------*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character           */
 
 /*bg:直接处理来自文件设置为NO,方便CIM_PRO处理                                 */
-
 /*bg*/{mfdtitle.i "0BYG"}
 /* ********** Begin Translatable Strings Definitions ********* */
 
