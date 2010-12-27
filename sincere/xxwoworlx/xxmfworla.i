@@ -142,7 +142,7 @@ for each pkdet
        if available pt_mstr and pt_um = "EA" then  assign
                  oldwod_qty_req = wod_qty_req
                  wod_qty_req = round(wod_qty_req , 0).
-	         else assign
+           else assign
                  oldwod_qty_req = wod_qty_req
                  wod_qty_req = round(wod_qty_req , 2).
 /*ss - 100726.1-e*/
@@ -231,7 +231,7 @@ for each pkdet
               if pt_um = "EA" then  assign
                  oldwod_qty_req = wod_qty_req
                  wod_qty_req = round(wod_qty_req + (qty * assy_qty) / bombatch, 0).
-	         else assign
+           else assign
                  oldwod_qty_req = wod_qty_req
                  wod_qty_req = round(wod_qty_req + (qty * assy_qty) / bombatch, 2).
      end.
@@ -239,7 +239,7 @@ for each pkdet
               if pt_um = "EA" then  assign
                  oldwod_qty_req = 0
                  wod_qty_req = round( (qty * assy_qty) / bombatch, 0).
-	         else assign
+           else assign
                  oldwod_qty_req = 0
                  wod_qty_req = round( (qty * assy_qty) / bombatch, 2).
      end.
@@ -262,8 +262,8 @@ for each pkdet
            if pt_um = "EA" then
             assign
                wod_qty_req = round(wod_qty_req * yield_pct * .01, 0).
-	       else  wod_qty_req = round(wod_qty_req * yield_pct * .01, 2).
-	       wod_yield_pct = yield_pct.
+         else  wod_qty_req = round(wod_qty_req * yield_pct * .01, 2).
+         wod_yield_pct = yield_pct.
 
  /**ss - 100727.1 - e ****************************************************************/
          end.  /* if use_op_yield...*/

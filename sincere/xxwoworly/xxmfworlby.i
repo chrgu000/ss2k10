@@ -442,13 +442,12 @@ end. /*FOR EACH*/
     end.
 assign ldqtyoh = 0.
 if can-find (first tmp_wod where twd_part = tmp.tmp_part) then do:
-   find pt_mstr where pt_mstr.pt_domain = global_domain and
-        pt_part = tmp.tmp_part no-lock no-error.
+   find first icc_ctrl where icc_domain = global_domain no-lock no-error.
    for each ld_det no-lock where ld_domain = global_domain and
-            ld_site = pt_site and ld_loc = s_wodloc AND ld_part = tmp.tmp_part:
+            ld_site = icc_site and ld_loc = tmp_loc AND ld_part = tmp_part:
      assign ldqtyoh = ldqtyoh + ld_qty_oh.
    end.
-    display
+   display
    /*          linex  label "LN" format ">>9"  */
        tmp.tmp_part    label  "Áã¼þ"
        tmp.tmp_desc    label  "ËµÃ÷"

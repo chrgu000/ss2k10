@@ -40,8 +40,8 @@
 /* REVISION: 9.1     LAST MODIFIED: 08/13/00    BY: *N0KR* myb              */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                  */
 /* Revision: 1.13     BY: Katie Hilbert  DATE: 04/01/01 ECO: *P008*         */
-/* Revision: 1.15  BY: Tiziana Giustozzi DATE: 09/16/01 ECO: *N12M* */
-/* $Revision: 1.17 $ BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00G* */
+/* Revision: 1.15  BY: Tiziana Giustozzi DATE: 09/16/01 ECO: *N12M* */ /*
+$Revision: 1.17 $ BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00G* */
 
 /*-Revision end---------------------------------------------------------------*/
 
@@ -442,45 +442,33 @@ end. /*FOR EACH*/
       RUN PAK1.
    end.
    assign ldqtyoh = 0.
+   find first icc_ctrl where icc_domain = global_domain no-lock no-error.
    for each ld_det no-lock where ld_domain = global_domain and
-            ld_site = pt_site and ld_loc = s_wodloc AND ld_part = tmp.tmp_part:
-      accum ld_qty_oh(total).
+            ld_site = icc_site and ld_loc = tmp_loc AND ld_part = tmp_part:
+     assign ldqtyoh = ldqtyoh + ld_qty_oh.
    end.
-   assign ldqtyoh = accum total(ld_qty_oh).
    display
-/*          linex  label "LN" format ">>9"  */
-    tmp.tmp_part    label  "零件"
-    tmp.tmp_desc    label  "说明"
-    tmp.tmp_um        label  "单位"
-    tmp.tmp_qtyx_per  label "用量"        format ">>>9.99"
-    tmp.tmp_qtyx           label  "需求量"  format "->>>>,>>9.99"
-    ldqtyoh label "QTY_ON_HAND"
-    "_________"  @  tmp.tmp_qtyx1 label "实发数量"
-    "__________"  @  tmp.tmp_loc  label "领料人"
-  /*    temp.tmp_type
-         temp.tmp_iss */
+          tmp.tmp_part     label "零件"
+          tmp.tmp_desc     label "说明"
+          tmp.tmp_um       label "单位"
+          tmp.tmp_qtyx_per format ">>>9.99" label "用量"
+          tmp.tmp_qtyx     format "->>>>,>>9.99" label "需求量"
+          ldqtyoh          label "库存量"
+          "_________" @ tmp.tmp_qtyx1 label "实发数量"
+          "__________" @ tmp.tmp_loc  label "领料人"
           with frame ttmp width 162.
-          down   with frame ttmp.
+          down with frame ttmp.
       put skip(1).
       setFrameLabels(frame ttmp:handle).
   if page-size - line-counter <= 8 then do:
-        RUN PAK.
-        page.
-         display
-         wo_nbr  wo_lot
-         wo_part
-         wod_iss_date
-         wo_due_date
-         wo_des
-         wo_qty
-         wo_um
-         tmp_loc
-         wcdesc
-      with frame picklist.
-        end.
-
+     RUN PAK.
+     page.
+     display wo_nbr wo_lot wo_part wod_iss_date wo_due_date
+             wo_des wo_qty wo_um tmp_loc wcdesc
+             with frame picklist.
+  end.
       linex = linex + 1.
-    end.  /* for each tmp */
+end.  /* for each tmp */
 
 /*PAK ADDED ENDED**************************************************/
 
@@ -551,25 +539,23 @@ hide frame picklist.
 /*ss  - 100727.1 b*/
 
 PROCEDURE PAK:
-         put skip( page-size - line-counter - 5 ).
-         put space(0) "-----------------------------------------------------------------------------------------------------------------------------"  skip.
-        put skip(1) "制单人:" at 1.
-         put global_userid .
-   put "部门主管:" at 32.
-         put "发料员:" at  60  skip.
-           put "白色联:财务 ,  粉红色联:仓库 ,   蓝色联:车间"  /*space(30) "打印时间:" today space(1) string(Time,"hh:mm:ss")    skip(0)*/ .
-
+   put unformat skip(page-size - line-counter - 5).
+   put unformat space(0) fill("-",125)skip.
+   put unformat skip(1) "制单人:" at 1.
+   put unformat global_userid .
+   put unformat "部门主管:" at 32.
+   put unformat "发料员:" at 60 skip.
+   put unformat "白色联:财务 ,  粉红色联:仓库 ,   蓝色联:车间".
 END PROCEDURE.
 
 PROCEDURE PAK1:
-         put skip( page-size - line-counter - 6).
-/*         put "------------工单领料单 尾页-------------------" at  30  skip.*/
-         put space(0) "-----------------------------------------------------------------------------------------------------------------------------"  skip.
-          put skip(1) "制单人:" at 1.
-         put global_userid .
-   put "部门主管:" at 32.
-         put "发料员:" at  60  skip.
-           put "白色联:财务 ,  粉红色联:仓库 ,   蓝色联:车间" space(30)  /*"打印时间:" today space(1) string(Time,"hh:mm:ss")*/    skip(0).
-          page .
+   put unformat skip(page-size - line-counter - 6).
+   put unformat space(0) fill("-",125) skip.
+   put unformat skip(1) "制单人:" at 1.
+   put unformat global_userid .
+   put unformat "部门主管:" at 32.
+   put unformat "发料员:" at 60 skip.
+   put unformat "白色联:财务 ,  粉红色联:仓库 ,   蓝色联:车间" space(30) skip(0).
+   page .
 END PROCEDURE.
 /*ss  - 100727.1 e*/

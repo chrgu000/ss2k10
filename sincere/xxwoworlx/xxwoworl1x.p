@@ -167,7 +167,7 @@ do transaction on error undo, leave:
          assign
             page_counter = page-number - 1
             wo_recno = recid(wo_mstr).
-	 /*ss - 100716.1 - b*
+   /*ss - 100716.1 - b*
          {gprun.i ""woworlb.p"" }
  *ss - 100716.1 - e*/
  /*ss - 100716.1 - b*/
