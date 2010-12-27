@@ -105,8 +105,9 @@ for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
                _index-field._index-recid = RECID(_index)
          BREAK BY _index._file-recid:
          IF FIRST-OF(_index._file-recid) THEN
-         DISPLAY _index._Index-Name _index._Unique
-                 _index._Idxowner   _index._Active.
+         DISPLAY _index._Index-Name
+                 yes WHEN recid(qaddb._index) = _Prime-Index LABEL "Primary-idx"
+                 _index._Unique _index._Idxowner   _index._Active.
          FIND FIRST _field NO-LOCK WHERE
               recid(_field) = _index-field._field-recid NO-ERROR.
          DISPLAY _index-field._Index-Seq  _field._field-name
