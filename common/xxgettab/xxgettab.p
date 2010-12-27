@@ -76,9 +76,9 @@ assign db_name sfile.
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
 end.
-   /* SELECT PRINTER */
-/*   {mfselprt.i "printer" 80}   */
-      /* OUTPUT DESTINATION SELECTION */
+   /* SELECT PRINTER                */
+   /*{mfselprt.i "printer" 80}      */
+   /* OUTPUT DESTINATION SELECTION  */
    {gpselout.i &printType = "Printer"
       &printWidth = 254
       &pagedFlag = "nopage"
@@ -106,7 +106,7 @@ for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
          BREAK BY _index._file-recid:
          IF FIRST-OF(_index._file-recid) THEN
          DISPLAY _index._Index-Name
-                 yes WHEN recid(qaddb._index) = _Prime-Index LABEL "Primary-idx"
+                 yes WHEN recid(_index) = _Prime-Index LABEL "Primary-idx"
                  _index._Unique _index._Idxowner   _index._Active.
          FIND FIRST _field NO-LOCK WHERE
               recid(_field) = _index-field._field-recid NO-ERROR.
