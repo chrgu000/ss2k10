@@ -462,11 +462,13 @@ end. /*FOR EACH*/
        RUN PAK1.
    end.
    assign ldqtyoh = 0.
+   find first icc_ctrl where icc_domain = global_domain no-lock no-error.
+   find first pt_mstr where pt_domain = global_domain and pt_part = tmp_part
+        no-lock no-error.
    for each ld_det no-lock where ld_domain = global_domain and
-            ld_site = pt_site and ld_loc = tmp_loc AND ld_part = tmp.tmp_part:
-      accum ld_qty_oh(total).
+            ld_site = icc_site and ld_loc = pt_loc AND ld_part = tmp.tmp_part:
+       assign ldqtyoh = ldqtyoh + ld_qty_oh.
    end.
-   assign ldqtyoh = accum total(ld_qty_oh).
    display
 /*          linex  label "LN" format ">>9"  */
       tmp.tmp_part     label "零件"
@@ -474,7 +476,7 @@ end. /*FOR EACH*/
       tmp.tmp_um       label "单位"
       tmp.tmp_qtyx_per label "用量" format ">>>9.99"
       tmp.tmp_qtyx     label "需求量" format "->>>>,>>9.99"
-      ldqtyoh          label "QTY_ON_HAND"
+      ldqtyoh          label "ON_HAND"
       "_________"  @  tmp.tmp_qtyx1 label "实发数量"
       "__________"  @  tmp.tmp_loc  label "领料人"
   /*    temp.tmp_type
