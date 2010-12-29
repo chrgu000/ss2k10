@@ -1,11 +1,12 @@
 /* xxc.p - compile procedure                                                 */
-/*V8:ConvertMode=Maintenance                                                  */
+/*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
+/* REVISION: 0CYT LAST MODIFIED: 12/29/10   BY: zy def os def field rec path */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0CYH"}
+{mfdtitle.i "0CYT"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -78,7 +79,12 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
        find first qad_wkfl exclusive-lock where qad_domain = global_domain
               and qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
        if available qad_wkfl then do:
-          assign destDir:screen-value = qad_charfld[2].
+          if opsys = "unix" then do:
+            assign destDir:screen-value = qad_charfld[2].
+          end.
+          else do:
+            assign destDir:screen-value = qad_charfld1[2].
+          end.
           assign destDir.
        end.
    end.
@@ -122,12 +128,19 @@ do on error undo, retry:
                    qad_key1 = qadkey1
                    qad_key2 = global_userid.
         end.
-        assign qad_charfld[1] = xrcdir
-               qad_charfld[2] = destDir when destDir <> ""
-                            and destDir <> vClientDir
-               qad_charfld[3] = filef
+        assign qad_charfld[3] = filef
                qad_charfld[4] = filet
                qad_charfld[5] = vClientDir.
+        if opsys = "msdos" or opsys = "win32" then do:
+           assign qad_charfld1[1] = xrcdir
+                  qad_charfld1[2] = destDir when destDir <> ""
+                                and destDir <> vClientDir.
+        end.
+        if opsys = "unix" then do:
+           assign qad_charfld[1] = xrcdir
+                  qad_charfld[2] = destDir when destDir <> ""
+                               and destDir <> vClientDir.
+        end.
 end.
 assign ProPath = replace(bpropath,chr(10),",").
 
@@ -165,6 +178,10 @@ if available qad_wkfl then do:
            destDir = qad_charfld[2] when qad_charfld[2] <> ""
            filef   = qad_charfld[3]
            filet   = qad_charfld[4].
+    if opsys = "msdos" or opsys = "win32" then do:
+       assign xrcdir  = qad_charfld1[1] when qad_charfld1[1] <> ""
+              destDir = qad_charfld1[2] when qad_charfld1[2] <> "".
+    end.
 end.
 assign lng = lower(global_user_lang).
 if xrcdir <> "" and index(bpropath,xrcdir) = 0
