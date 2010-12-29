@@ -1,6 +1,7 @@
 /* xxcompile.p - compile procedure - replaced by xxc.p                       */
 /* REVISION: 0BYI LAST MODIFIED: 11/18/10   BY: zy ∑¿÷π÷ÿ∏¥±‡“Î           *bi*/
 /* REVISION: 0BYO LAST MODIFIED: 11/24/10   BY: zy ∑¿÷π÷ÿ∏¥±‡“Îƒ¨»œcancel *bo*/
+/*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 

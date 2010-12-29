@@ -1,5 +1,6 @@
 /* xxcompil.i - INCLUDE FILE TO MOVE FILES FOR UTCOMPIL                      */
 /*            - Modify from utcompil.i                                       */
+/*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */

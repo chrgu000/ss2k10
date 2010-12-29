@@ -1,4 +1,5 @@
 /* xxc.p - compile procedure                                                 */
+/*V8:ConvertMode=Maintenance                                                  */
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
