@@ -3,10 +3,11 @@
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
 /* REVISION: 0CYT LAST MODIFIED: 12/29/10   BY: zy def os def field rec path */
+/* REVISION: 0CYT LAST MODIFIED: 12/31/10   BY: zy trim path                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0CYT"}
+{mfdtitle.i "0CYU"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -72,18 +73,18 @@ end.
 
 ON "CTRL-]" OF destDir IN FRAME z DO:
    if destDir <> vClientDir then do:
-      assign destDir:screen-value = vClientDir.
-      assign destDir.
+      assign destDir:screen-value = trim(vClientDir).
+      assign destDir = trim(destDir).
    end.
    else do:
        find first qad_wkfl exclusive-lock where qad_domain = global_domain
               and qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
        if available qad_wkfl then do:
           if opsys = "unix" then do:
-            assign destDir:screen-value = qad_charfld[2].
+            assign destDir:screen-value = trim(qad_charfld[2]).
           end.
           else do:
-            assign destDir:screen-value = qad_charfld1[2].
+            assign destDir:screen-value = trim(qad_charfld1[2]).
           end.
           assign destDir.
        end.
@@ -119,7 +120,7 @@ do on error undo, retry:
       next-prompt destDir with frame z.
       undo,retry.
    end.
-   assign xrcDir = lower(xrcDir).
+   assign xrcDir = lower(trim(xrcDir)).
    find first qad_wkfl exclusive-lock where qad_domain = global_domain
           and qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
         if not available qad_wkfl then do:
@@ -133,16 +134,16 @@ do on error undo, retry:
                qad_charfld[5] = vClientDir.
         if opsys = "msdos" or opsys = "win32" then do:
            assign qad_charfld1[1] = xrcdir
-                  qad_charfld1[2] = destDir when destDir <> ""
+                  qad_charfld1[2] = trim(destDir) when destDir <> ""
                                 and destDir <> vClientDir.
         end.
         if opsys = "unix" then do:
            assign qad_charfld[1] = xrcdir
-                  qad_charfld[2] = destDir when destDir <> ""
+                  qad_charfld[2] = trim(destDir) when destDir <> ""
                                and destDir <> vClientDir.
         end.
 end.
-assign ProPath = replace(bpropath,chr(10),",").
+assign ProPath = replace(trim(bpropath),chr(10),",").
 
 /*generate vworkfile.*/
 input from OS-DIR (xrcDir).
@@ -174,33 +175,33 @@ find first qad_wkfl no-lock where qad_domain = global_domain
        and qad_key1 = qadkey1 and qad_key2 = global_userid
        no-error.
 if available qad_wkfl then do:
-    assign xrcdir  = qad_charfld[1] when qad_charfld[1] <> ""
-           destDir = qad_charfld[2] when qad_charfld[2] <> ""
+    assign xrcdir  = trim(qad_charfld[1]) when qad_charfld[1] <> ""
+           destDir = trim(qad_charfld[2]) when qad_charfld[2] <> ""
            filef   = qad_charfld[3]
            filet   = qad_charfld[4].
     if opsys = "msdos" or opsys = "win32" then do:
        assign xrcdir  = qad_charfld1[1] when qad_charfld1[1] <> ""
-              destDir = qad_charfld1[2] when qad_charfld1[2] <> "".
+              destDir = trim(qad_charfld1[2]) when qad_charfld1[2] <> "".
     end.
 end.
 assign lng = lower(global_user_lang).
 if xrcdir <> "" and index(bpropath,xrcdir) = 0
    then do:
-        assign bpropath = xrcdir + "," + propath.
+        assign bpropath = xrcdir + "," + trim(propath).
         assign propath = bpropath.
    end.
    else do:
-        assign bpropath = propath.
+        assign bpropath = trim(propath).
    end.
 if destdir <> "" and index(bpropath,destdir) = 0
    then do:
-       assign bpropath = xrcdir + "," + propath.
+       assign bpropath = xrcdir + "," + trim(propath).
        assign propath = bpropath.
    end.
    else do:
-       assign bpropath = propath.
+       assign bpropath = trim(propath).
    end.
-bProPath = replace(propath,",",chr(10)).
+bProPath = replace(trim(propath),",",chr(10)).
 END PROCEDURE.
 
 /* ¶ÁÈ¡ÊôÐÔÖµ */
@@ -220,7 +221,7 @@ DEFINE VARIABLE vdir    AS CHARACTER NO-UNDO.
 DEFINE VARIABLE vinput  AS CHARACTER NO-UNDO.
 
 ASSIGN vfile = ""
-       vpropath = PROPATH.
+       vpropath = trim(propath).
 /* ÕÒmfgutil.iniµµ */
 DO WHILE index(vpropath,",") > 0:
     ASSIGN vdir = substring(vpropath,1,INDEX(vpropath,",") - 1).
