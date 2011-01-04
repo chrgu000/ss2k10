@@ -21,8 +21,7 @@ define variable pur_diff as decimal format "->>>>>>>>>>9.99<<<" no-undo.
 
 for each prh_hist no-lock where prh_rcp_date >= idatef and
          prh_rcp_date<= idatet and prh_vend >= ivendf and prh_vend <= ivendt
-      break by prh_part   :
-      /* SET EXTERNAL LABELS */
+      break by prh_part:
 
     ASSIGN voucheredTax = 1
            tax_amt = 0.
@@ -45,7 +44,7 @@ for each prh_hist no-lock where prh_rcp_date >= idatef and
          tot_std_amt = tot_std_amt + prh_pur_std * prh_rcvd.
   if last-of(prh_part) then do:
       display prh_part column-label "零件号"
-              prh_rcvd column-label "收货数量"
+              tot_rcvd column-label "收货数量"
               tot_tax_amt column-label "金额(含税)"
               tot_amt column-label "金额(不含税)"
               tot_std_amt column-label "标准金额"

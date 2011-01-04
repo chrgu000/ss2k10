@@ -113,7 +113,7 @@ form
    pl_prod_line   colon 25
    batchdelete no-label colon 60
    pl_desc        colon 25 skip(1)
-   pl_taxable     colon 25 
+   pl_taxable     colon 25
    pl__chr05      colon 50
    pl_taxc        colon 25
    default_sub    colon 25 override_sub  colon 50

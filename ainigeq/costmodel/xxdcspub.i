@@ -44,7 +44,7 @@ procedure getglcstat:
 
     for FIRST qad_wkfl no-lock where
       qad_key1 = vkey1 AND qad_key2 = vkey2:
-       ASSIGN /* oicstat =  (qad_decfld[4] = 1) */       		    
+       ASSIGN /* oicstat =  (qad_decfld[4] = 1) */
               odcsstat = (qad_decfld[9] = 1). /* 用于锁定月分摊资料 */
    end.
    oicstat = yes.

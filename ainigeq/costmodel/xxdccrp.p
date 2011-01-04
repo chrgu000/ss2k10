@@ -15,11 +15,11 @@ define variable iLayer  as integer no-undo.
 DEFINE VARIABLE lperiod AS CHARACTER NO-UNDO. /* 上一期间 */
 define variable lastPeriodQty  as decimal no-undo. /*上期库存*/
 define variable currperiodqty  as decimal no-undo.
-define variable lpovhcost like sct_cst_tot no-undo.  
-define variable lpsubcost like sct_cst_tot no-undo.  
-define variable lpbdncost like sct_cst_tot no-undo.  
-define variable lplbrcost like sct_cst_tot no-undo.  
-define variable lpmtlcost like sct_cst_tot no-undo.  
+define variable lpovhcost like sct_cst_tot no-undo.
+define variable lpsubcost like sct_cst_tot no-undo.
+define variable lpbdncost like sct_cst_tot no-undo.
+define variable lplbrcost like sct_cst_tot no-undo.
+define variable lpmtlcost like sct_cst_tot no-undo.
 define variable currperiodcost like sct_cst_tot no-undo.
 define variable tagqty  like tr_qty_loc no-undo.
 define variable sctmtl  like sct_mtl_tl no-undo.
@@ -95,7 +95,7 @@ for each xxdcq_hst no-lock where xxdcq_period = period:
 end.
 
 /***自下往上计算自制件成本***/
-do while ilayer > 0: 
+do while ilayer > 0:
 for each pt_mstr no-lock:
    if can-find(first xxdcq_hst use-index xxdcq_period_part_layer no-lock where xxdcq_period = period
                  and xxdcq_layer= ilayer and xxdcq_part = pt_part)
@@ -103,7 +103,7 @@ for each pt_mstr no-lock:
         assign lastPeriodQty = 0 /*期初库存量*/.
         find first xxdcl_hst no-lock where xxdcl_period = lperiod and xxdcl_part = pt_part no-error.
         if available xxdcl_hst then do:
-           assign lastPeriodQty = xxdcl_qty_oh. 
+           assign lastPeriodQty = xxdcl_qty_oh.
         end.
 
         assign sctmtl = 0. /* 工单制造件成本 */
@@ -116,7 +116,7 @@ for each pt_mstr no-lock:
            assign sctmtl = sctmtl + xxpocd_adiff.
         end.
 
-        /* overhead/subcontrt采购价差  盘点差异计算 */   
+        /* overhead/subcontrt采购价差  盘点差异计算 */
 
         assign lpovhcost = 0.
         find first xxdch_hst no-lock where xxdch_period = lperiod
@@ -124,7 +124,7 @@ for each pt_mstr no-lock:
                and xxdch_part = pt_part no-error.
         if available xxdch_hst then do:
            assign lpovhcost = xxdch_cost.
-        end. /*期初盘点差异成本*/ 
+        end. /*期初盘点差异成本*/
 
         assign lpsubcost = 0.
         find first xxdch_hst no-lock where xxdch_period = lperiod
@@ -132,16 +132,16 @@ for each pt_mstr no-lock:
                and xxdch_part = pt_part no-error.
         if available xxdch_hst then do:
            assign lpovhcost = xxdch_cost.
-        end. /*期初盘点差异成本*/         
+        end. /*期初盘点差异成本*/
 
-        /* 本期差异额 */ 
+        /* 本期差异额 */
 /*      assign currperiodqty = 0. */
         assign ovhcst = 0
                subcst = 0.
         for each xxdcq_hst no-lock where xxdcq_period = period and xxdcq_part = pt_part:
-            assign ftjshj = xxdcq_qty_rct * xxdcq_qty_per. 
+            assign ftjshj = xxdcq_qty_rct * xxdcq_qty_per.
             for each xxdch_hst no-lock where xxdch_period = period
-                   and (xxdch_type = "overhead" or xxdch_type = "subcontr") 
+                   and (xxdch_type = "overhead" or xxdch_type = "subcontr")
                    and xxdch_part = xxdcq_comp:
                if xxdch_type = "overhead" then do:
                   assign ovhcst = ovhcst + xxdch_cost * ftjshj.
@@ -151,7 +151,7 @@ for each pt_mstr no-lock:
                end.
             end.
         end.
-        
+
         /* 本期入库量 */
         assign currperiodqty = 0.
         for each xxdcq_hst no-lock where xxdcq_period = period and xxdcq_part = pt_part
@@ -208,7 +208,7 @@ for each pt_mstr no-lock:
         end.
 /* overhead   盘点差异计算 */
         assign vrun = 0.
-        for each ro_det no-lock where ro_routing = xxdcq_par 
+        for each ro_det no-lock where ro_routing = xxdcq_par
             and (ro_start <= today or ro_start = ?)
             and (ro_end >= today or ro_end = ?) :
             assign vrun = vrun + ro_run.
@@ -218,9 +218,9 @@ for each pt_mstr no-lock:
                bdncst = 0
                lbrcst = 0.
         for each xxdcq_hst no-lock where xxdcq_period = period and xxdcq_part = pt_part:
-            assign ftjshj = xxdcq_qty_rct * xxdcq_qty_per. 
+            assign ftjshj = xxdcq_qty_rct * xxdcq_qty_per.
             for each xxdch_hst no-lock where xxdch_period = period
-                   and (xxdch_type = "material" or xxdch_type = "labor" or xxdch_type = "burden") 
+                   and (xxdch_type = "material" or xxdch_type = "labor" or xxdch_type = "burden")
                    and xxdch_part = xxdcq_comp:
                if xxdch_type = "material" then do:
                   assign mtlcst = mtlcst + xxdch_cost * ftjshj * vrun.
@@ -240,7 +240,7 @@ for each pt_mstr no-lock:
                and xxdch_part = pt_part no-error.
         if available xxdch_hst then do:
            assign lpmtlcost = xxdch_cost.
-        end. /*期初盘点差异成本*/         
+        end. /*期初盘点差异成本*/
 
         find first xxdch_hst exclusive-lock where xxdch_period = period
                    and xxdch_type = "material" and xxdch_part = pt_part no-error.
@@ -271,7 +271,7 @@ for each pt_mstr no-lock:
                and xxdch_part = pt_part no-error.
         if available xxdch_hst then do:
            assign lplbrcost = xxdch_cost.
-        end. /*期初盘点差异成本*/         
+        end. /*期初盘点差异成本*/
 
         find first xxdch_hst exclusive-lock where xxdch_period = period
                    and xxdch_type = "labor" and xxdch_part = pt_part no-error.
@@ -302,7 +302,7 @@ for each pt_mstr no-lock:
                and xxdch_part = pt_part no-error.
         if available xxdch_hst then do:
            assign lpbdncost = xxdch_cost.
-        end. /*期初盘点差异成本*/         
+        end. /*期初盘点差异成本*/
 
         find first xxdch_hst exclusive-lock where xxdch_period = period
                    and xxdch_type = "burden" and xxdch_part = pt_part no-error.
@@ -353,6 +353,6 @@ END.
 {mfrtrail.i}
 end.
 
- 
+
 
 {wbrp04.i &frame-spec = a}

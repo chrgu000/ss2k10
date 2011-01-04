@@ -131,8 +131,8 @@ define variable new_file as logical no-undo.
 
 define variable process_file as logical initial yes
    label "Process Direct From File".
-define variable file_name as character format "x(40)" 
-	 initial "/mnt/hgfs/work/init.cim"
+define variable file_name as character format "x(40)"
+   initial "/mnt/hgfs/work/init.cim"
    label "Input File Name".
 define stream cim_load.
 define variable bdl_recno as recid no-undo.

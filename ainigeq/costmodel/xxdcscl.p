@@ -16,7 +16,7 @@ define variable xxdchdesc as character no-undo.
 
 form
    prid     colon 16 validate (can-find (first xxpoc_mstr where
-   			    xxpoc_period = prid) ,"请输入正确的期间")
+            xxpoc_period = prid) ,"请输入正确的期间")
    frz_flag colon 46
    date1    colon 16
    date2    colon 46

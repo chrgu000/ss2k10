@@ -38,7 +38,7 @@ setFrameLabels(frame a:handle).
 
 ON LEAVE OF prid IN FRAME a /* Fill 1 */
 DO:
-  ASSIGN prid. 
+  ASSIGN prid.
   RUN getPeriodDate(INPUT prid,OUTPUT datef,OUTPUT datet).
   DISPLAY datef datet WITH FRAME a.
 END.

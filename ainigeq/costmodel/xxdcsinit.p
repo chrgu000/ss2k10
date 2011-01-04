@@ -69,14 +69,14 @@ empty temp-table tmpc.
 input from value(fname).
 repeat:
 create tmpc.
-import delimiter "," 
+import delimiter ","
                     tmpc_part
-                    tmpc_qty 
-                    tmpc_mtl 
-                    tmpc_lbr 
-                    tmpc_bdn 
-                    tmpc_ovh 
-                    tmpc_sub 
+                    tmpc_qty
+                    tmpc_mtl
+                    tmpc_lbr
+                    tmpc_bdn
+                    tmpc_ovh
+                    tmpc_sub
         no-error.
 end.
 input close.
@@ -89,7 +89,7 @@ for each tmpc no-lock where tmpc_part >= "0" and tmpc_part <= "ZZZZZ":
       assign xxdcl_part   = tmpc_part
              xxdcl_period = lperiod
              xxdcl_qty    = tmpc_qty.
-  end. 
+  end.
   if available pt_mstr then do:
       find first xxdch_hst no-lock where xxdch_period = period
              and xxdch_type = "material" and xxdch_part = tmpc_part.
