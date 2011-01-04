@@ -1,13 +1,14 @@
 /* xxc.p - compile procedure                                                 */
 /*V8:ConvertMode=Maintenance                                                 */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
 /* REVISION: 0CYT LAST MODIFIED: 12/29/10   BY: zy def os def field rec path */
 /* REVISION: 0CYT LAST MODIFIED: 12/31/10   BY: zy trim path                 */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 0CYT LAST MODIFIED: 01/04/11   BY: zy check xrcpath exists      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0CYU"}
+{mfdtitle.i "11Y4"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -89,6 +90,23 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
           assign destDir.
        end.
    end.
+end.
+
+on RETURN of xrcdir in frame z do:
+   assign xrcdir.
+   assign xrcdir = lower(trim(xrcDir)).
+   FILE-INFO:FILE-NAME = xrcdir.
+   if FILE-INFO:FILE-TYPE <> "DRW" then do:
+      message "Directory [" + xrcdir + "] not found!".
+      next-prompt xrcDir with frame z.
+      undo,retry.
+   end.
+   else do:
+      message "".
+      run setpropath.
+      assign bpropath = replace(trim(bpropath),",",chr(10)).
+   end.
+   display bpropath with frame z.
 end.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
@@ -185,14 +203,7 @@ if available qad_wkfl then do:
     end.
 end.
 assign lng = lower(global_user_lang).
-if xrcdir <> "" and index(bpropath,xrcdir) = 0
-   then do:
-        assign bpropath = xrcdir + "," + trim(propath).
-        assign propath = bpropath.
-   end.
-   else do:
-        assign bpropath = trim(propath).
-   end.
+run setpropath.
 if destdir <> "" and index(bpropath,destdir) = 0
    then do:
        assign bpropath = xrcdir + "," + trim(propath).
@@ -203,6 +214,20 @@ if destdir <> "" and index(bpropath,destdir) = 0
    end.
 bProPath = replace(trim(propath),",",chr(10)).
 END PROCEDURE.
+
+procedure setpropath:
+assign xrcdir = lower(trim(xrcDir)).
+if xrcdir <> "" and index(bpropath,xrcdir + chr(10)) = 0
+   then do:
+        assign bpropath = xrcdir + "," + trim(propath).
+        assign bpropath = replace(bpropath,".,","").
+        assign bpropath = ".," + bpropath.
+        assign propath  = bpropath.
+   end.
+   else do:
+        assign bpropath = trim(propath).
+   end.
+end procedure.
 
 /* ∂¡»° Ù–‘÷µ */
 FUNCTION getKey RETURNS CHARACTER(ikey AS CHARACTER,iSource AS CHARACTER):
