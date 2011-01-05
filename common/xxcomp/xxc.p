@@ -73,6 +73,7 @@ on Leave of destDir in frame z do:
 end.
 
 ON "CTRL-]" OF destDir IN FRAME z DO:
+   assign destDir.
    if destDir <> vClientDir then do:
       assign destDir:screen-value = trim(vClientDir).
       assign destDir = trim(destDir).
