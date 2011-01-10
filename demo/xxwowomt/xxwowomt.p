@@ -357,6 +357,8 @@ repeat:
                wo_site
                joint_label
             with frame a.
+/*110106.1*/ if canAccessPart(wo_part) then do:
+/*110106.1*/      view frame b.
             display
                wo_qty_ord
                wo_qty_comp
@@ -375,7 +377,10 @@ repeat:
                wocmmts
                wo_var
             with frame b.
-
+/*110106.1*/ end.
+/*110106.1*/ else do:
+/*110106.1*/   hide frame b no-pause.
+/*110106.1*/ end.
          end.
       end.
 
@@ -672,7 +677,8 @@ global_domain  no-error.
          wo_type
          wo_site
       with frame a.
-
+/*110106.1*/ if canAccessPart(wo_part) then do:
+/*110106.1*/      view frame b.
       display
          wo_qty_ord
          wo_qty_comp
@@ -694,7 +700,10 @@ global_domain  no-error.
 
       /* UPDATE FRAME B */
       {gprun.i ""wowomtj.p""}
-
+/*110106.1*/ end.
+/*110106.1*/ else do:
+/*110106.1*/   hide frame b no-pause. 
+/*110106.1*/ end.
       if undo_all then
          undo mainloop, retry mainloop.
 

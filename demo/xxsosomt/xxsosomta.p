@@ -159,7 +159,7 @@
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
-/* no longer required should be deleted and no in-line patch markers should   */
+/* no longer required should be deleted and no in-Line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
@@ -835,7 +835,9 @@ repeat on endkey undo, leave:
                   /* DETERMINE DISCOUNT DISPLAY FORMAT AND SET VARIABLE
                    * discount ACCORDINGLY */
                   {gppidisc.i pic_so_fact sod_disc_pct pic_so_rfact}
-
+/*110106.1*/ clear frame d.
+/*110106.1*/ clear frame c.
+/*110106.1*/ if canAccessPart(sod_part) then do:
                   display
                      line
                      sod_part
@@ -887,7 +889,11 @@ repeat on endkey undo, leave:
                      sod_fix_pr
                      sod_order_category
                   with frame d.
-
+/*110106.1*/ end.
+/*110106.1*/ else do:
+/*110106.1*/       display  line
+/*110106.1*/                sod_part with frame c.
+/*110106.1*/ end.
                   /* AS ABOVE, RMA RECEIPT LINES ARE RETURNS, AND  */
                   /* HAVE NEGATIVE SOD_QTY'S, HOWEVER, THESE QTYS  */
                   /* MUST DISPLAY POSITIVE TO THE USER.            */

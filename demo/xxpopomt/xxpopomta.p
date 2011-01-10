@@ -616,10 +616,10 @@ repeat on endkey undo, leave:
 
             if pod_desc <> "" then
                desc1 = pod_desc.
-
             {pxrun.i &PROC='uiDisplayFrameCandD'
                      &NOAPPERROR=True
                      &CATCHERROR=True}
+ 
          end. /* IF RETURN-VALUE = {&SUCCESS-RESULT}  */
 
          if c-application-mode <> "API" then
@@ -1966,7 +1966,10 @@ PROCEDURE uiDisplayFrameCandD :
       l_display_disc = l_min_disc.
    else
       l_display_disc = pod_disc_pct. /*61*/
-
+      
+/*110106.1*/ clear frame d.
+/*110106.1*/ clear frame c.
+/*110106.1*/ if canAccessPart(pod_part) then do:
    if c-application-mode <> "API" then
       display
          line
@@ -1978,7 +1981,10 @@ PROCEDURE uiDisplayFrameCandD :
          pod_pur_cost
          l_display_disc @ pod_disc_pct
       with frame c.
-
+/*110106.1*/ end.
+/*110106.1*/ else do:
+/*110106.1*/      display line pod_site pod_part with frame c.
+/*110106.1*/ end.
    /* Single Line Entry. */
    if sngl_ln then do:
 /*@TO DO Also Run in writeData popoxd1.p*/
@@ -1988,7 +1994,7 @@ PROCEDURE uiDisplayFrameCandD :
                         input rndmthd,
                         output ext_cost)"
                &NOAPPERROR=True &CATCHERROR=True}
-
+/*110106.1*/ if canAccessPart(pod_part) then do:
       if c-application-mode <> "API" then
          display
             pod_qty_rcvd
@@ -2021,7 +2027,7 @@ PROCEDURE uiDisplayFrameCandD :
             podcmmts
             ext_cost when (ext_cost <> ? )
          with frame d.
-
+/*110106.1*/ end.
       if pod_blanket <> "" then do:
          msg_var1 = pod_blanket.
          if pod_blnkt_ln <> 0 then do:
