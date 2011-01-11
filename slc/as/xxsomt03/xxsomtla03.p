@@ -464,9 +464,9 @@ do on error undo, leave:
          sod_part
          (sod_qty_ord * -1) @ sod_qty_ord
          sod_um
-         sod_list_pr  when (not new_line) 
-         discount                         
-         sod_price    when (not new_line) 
+         sod_list_pr  when (not new_line)
+         discount
+         sod_price    when (not new_line)
       with frame c.
    else
       display
@@ -2020,8 +2020,8 @@ do on error undo, leave:
             {&SOSOMTLA-P-TAG16}
 /*aq*/  /*   set               */
 /*aq*/  /*      sod_price      */
-/*aq*/  /*   with frame c.     */ 
-            
+/*aq*/  /*   with frame c.     */
+
             {&SOSOMTLA-P-TAG17}
 
          end. /* IF  (new_order OR reprice_dtl)... */

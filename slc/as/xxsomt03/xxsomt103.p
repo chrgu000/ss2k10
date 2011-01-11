@@ -268,10 +268,8 @@ end. /* TRANSACTION 10 */
 do transaction on error undo, retry:
 
    /* SET UP PRICING BY LINE VALUES */
-   for first mfc_ctrl
-      fields(mfc_domain mfc_char mfc_field mfc_logical)
-      where mfc_domain = global_domain and mfc_field = "soc_pc_line"
-   no-lock:
+   for first mfc_ctrl fields(mfc_domain mfc_char mfc_field mfc_logical)
+      where mfc_domain = global_domain and mfc_field = "soc_pc_line" no-lock:
       soc_pc_line = mfc_logical.
    end. /* FOR FIRST MFC_CTRL */
 

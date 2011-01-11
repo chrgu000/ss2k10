@@ -223,12 +223,12 @@ repeat with frame {&framename}:
                next.
             end.
 /*SS 20080522 - B*/
-						find {&detfile} where recid({&detfile}) = sw_frame_recid[frame-line]
-      			exclusive-lock no-error.
-      			if avail {&detfile} then do:
+            find {&detfile} where recid({&detfile}) = sw_frame_recid[frame-line]
+            exclusive-lock no-error.
+            if avail {&detfile} then do:
 /*SS 20080522 - E*/
-            	{&cursordown}
-          	end.
+              {&cursordown}
+            end.
             next.
          end.
 
@@ -261,7 +261,7 @@ repeat with frame {&framename}:
          end.
 /*SS 20080522*/ if avail {&detfile} then do:
          {&cursordown}
-				end.
+        end.
          next.
 
       end. /* CURSOR DOWN */
@@ -279,12 +279,12 @@ repeat with frame {&framename}:
             color display normal {&display1} with frame {&framename}.
             up.
 /*SS 20080522 - B*/
-						find {&detfile} where recid({&detfile}) = sw_frame_recid[frame-line]
-      			exclusive-lock no-error.
-      			if avail {&detfile} then do:
+            find {&detfile} where recid({&detfile}) = sw_frame_recid[frame-line]
+            exclusive-lock no-error.
+            if avail {&detfile} then do:
 /*SS 20080522 - E*/
             {&cursorup}
-          	end.
+            end.
             next.
          end.
 
@@ -316,8 +316,8 @@ repeat with frame {&framename}:
             if not ifui then input clear.    /*CLEAR TYPEAHEAD*/
          end.
 /*SS 20080522*/ if avail {&detfile} then do:
-				 {&cursorup}
-					end.
+         {&cursorup}
+          end.
          next.
 
       end. /* CURSOR UP */
@@ -432,10 +432,10 @@ repeat with frame {&framename}:
                   next.
                end.
 /*SS 20080925 - B*/
-								find {&detfile} where recid({&detfile}) 
-								                    = sw_frame_recid[frame-line]
-            		no-lock no-error.
-								{&CURSORDOWN}
+                find {&detfile} where recid({&detfile})
+                                    = sw_frame_recid[frame-line]
+                no-lock no-error.
+                {&CURSORDOWN}
 /*SS 20080925 - E*/
                next.
             end.
@@ -468,7 +468,7 @@ repeat with frame {&framename}:
             end.
 
 /*SS 20080925 - B*/
-								{&CURSORDOWN}
+                {&CURSORDOWN}
 /*SS 20080925 - E*/
             next.
          end.

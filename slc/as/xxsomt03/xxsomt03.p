@@ -15,7 +15,7 @@ SS - 100510.1 - RNE */
    如果订单价格为零不允许做SO单。
 SS - 101111.1 - ZYE */
 
-{mfdtitle.i "101111.1"}
+{mfdtitle.i "110112.1"}
 
 {xxdeclre.i "new"}
 {xxdeclre1.i}
@@ -89,10 +89,8 @@ with frame c side-labels with width 80 attr-space.
 /*  end.                                              */
 
 assign
-    cust = "1919"
     xxchannel = "S4"
-    reqdate = today
-    .
+    reqdate = today.
 
 mainloop:
 repeat:
@@ -144,10 +142,10 @@ repeat:
     find first so_mstr where so_domain = global_domain and so_nbr = sonbr
          no-lock no-error.
     if avail so_mstr then do:
-        if so_cust <> "1919" then do:
-            message "客户不是进出口".
-            undo, retry.
-        end.
+/*        if so_cust <> "1919" then do:                        */
+/*            message "客户不是进出口".                        */
+/*            undo, retry.                                     */
+/*        end.                                                 */
 
         cust = so_cust.
         shipto = so_ship.
@@ -161,7 +159,6 @@ repeat:
         update cust shipto xxchannel reqdate curr part with frame a.
 
         find first cm_mstr where cm_domain = global_domain and cm_addr = cust
-            and cm_addr = "1919"
             no-lock no-error.
         if not avail cm_mstr then do:
             {pxmsg.i &msgnum = 3 &errorlevel = 3}
