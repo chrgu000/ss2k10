@@ -1,401 +1,597 @@
-/* xxporcrp.p - RECEIVER PRINT AND UPDATE                                    */
-/*            - copy forom xxporcrp.p                                        */
-/* REVISION: 0BYP LAST MODIFIED: 12/01/10   BY: zy                           */
-/* Environment: Progress:10.1B   QAD:eb21sp6    Interface:Character          */
-/* REVISION END                                                              */
+/* ss - 100713.1 by: jack */
+/* ss - 100728.1 by: jack */
+/* ss - 100809.1 by: jack */
+/* ss - 101111.1 by: jack */  /* 增加打印时间*/
+/*
+{mfdtitle.i "100714.1 "}
+*/
+/*
+{mfdtitle.i "100728.4"}
+*/
+/*
+{mfdtitle.i "100809.1"}
+*/
+{mfdtitle.i "101111.1"}
 
-/* DISPLAY TITLE */
-{mfdtitle.i "101201.1"}
-
-/* ********** Begin Translatable Strings Definitions ********* */
-
-&SCOPED-DEFINE porcrp_p_6 "Unprinted Receivers Only"
-/* MaxLen: Comment: */
-
-&SCOPED-DEFINE porcrp_p_8 "Print Receipt Trailer"
-/* MaxLen: Comment: */
-
-&SCOPED-DEFINE porcrp_p_9 "List All Comments"
-/* MaxLen: Comment: */
-
-&SCOPED-DEFINE porcrp_p_11 "List Work Order Shortages"
-/* MaxLen: Comment: */
-
-&SCOPED-DEFINE porcrp_p_12 "Print Approvals"
-/* MaxLen: Comment: */
-
-/* ********** End Translatable Strings Definitions ********* */
-
-define new shared variable convertmode as character no-undo.
-define new shared variable rndmthd like rnd_rnd_mthd.
-define new shared variable oldcurr like po_curr.
-/* CORRECT INITIAL TAX TYPE TO INDICATE RECEIPT (21) NOT RETURN (25)*/
-define new shared variable tax_tr_type     like tx2d_tr_type no-undo
-   initial '21'.
-define shared variable nbr like prh_nbr.
-define shared variable nbr1 like prh_nbr.
-define variable vend like prh_vend.
-define variable vend1 like prh_vend.
-define variable rcvr like prh_receiver.
-define variable rcvr1 like prh_receiver.
-define variable rcv_date like prh_rcp_date.
-define variable rcv_date1 like prh_rcp_date.
-define variable new_only like mfc_logical initial yes.
-define variable revision like po_rev.
-define variable buyer like po_buyer.
-define variable tranqty like tr_qty_chg.
-define variable pdate like prh_rcp_date.
 define variable pages as integer.
-define variable old_receiver like prh_receiver.
-define variable location like pt_loc.
-define variable det_lines as integer.
-define variable vendor as character format "x(38)" extent 6.
-define variable vend_phone like ad_phone.
-define variable duplicate as character format "x(11)" label "".
-define variable newline like mfc_logical initial yes.
-define variable continue_yn like mfc_logical initial no.
-define variable mc-error-number like msg_nbr no-undo.
+DEFINE shared VARIABLE nbr      LIKE prh_nbr.   /* 工单 */
+DEFINE shared VARIABLE nbr1     LIKE prh_nbr.
+DEFINE VARIABLE rcvr     LIKE prh_receiver.  /* 收货单 */
+DEFINE VARIABLE rcvr1    LIKE prh_receiver.
+DEFINE VARIABLE vend     LIKE prh_vend.      /* 供应商 */
+DEFINE VARIABLE vend1    LIKE prh_vend.
+DEFINE VARIABLE rcv_date LIKE prh_rcp_date.  /* 收货日期 */
+DEFINE VARIABLE rcv_date1 LIKE prh_rcp_date.
+DEFINE VAR v_date AS DATE .
+DEFINE  variable page-start as integer FORMAT ">>9" .
 
-define new shared variable prh_recno as recid.
+DEFINE VARIABLE NEW_only1 AS LOGICAL  INITIAL yes.  /* 仅打印新的 */
+DEFINE VARIABLE printcmts AS LOGICAL INITIAL yes. /* 打印全部说明 */
+DEFINE VAR v_logical1 AS LOGICAL INITIAL YES .  /* 按供应商打印*/
 
-define variable printwo like mfc_logical initial yes.
-define variable rmks like po_rmks.
-define new shared variable printcmts like mfc_logical initial no.
-define variable i as integer.
-define variable cont_lbl as character format "x(12)".
-define new shared variable tr_count as integer.
-define new shared variable print_approval like mfc_logical initial yes
-   label {&porcrp_p_12}.
-define new shared variable print_trlr like mfc_logical initial no
-   label {&porcrp_p_8}.
-define new shared variable maint like mfc_logical initial false no-undo.
-define new shared variable po_recno as recid. /* USED FOR RCVR NBR */
-define new shared variable receivernbr like prh_receiver.
-define new shared variable eff_date like glt_effdate.
+DEFINE VARIABLE duplicate AS CHARACTER FORMAT "x(11)" LABEL "". /* 重复标志 */  
+DEFINE VARIABLE vendor   LIKE ad_name.                 /* 供应商名称 */
+DEFINE VARIABLE rmks     LIKE po_rmks.                 /* 备注 */
+DEFINE VARIABLE verision AS INTEGER FORMAT "9" INITIAL 0.           /* 版本 */
+DEFINE VARIABLE char1    AS CHARACTER FORMAT "x(12)" LABEL "品质判定" . 
+DEFINE VARIABLE char2 AS CHARACTER FORMAT "x(12)" LABEL "确认者".   
+
+DEFINE VARIABLE l_tr_type LIKE tr_type.       /* 交易类型 */
+DEFINE VARIABLE loc     LIKE pod_loc.               /* 库位 */
+DEFINE VARIABLE trsite  LIKE tr_site.                /* 地点 */
+
+
+DEFINE VARIABLE v_line AS INT FORMAT ">9" .
+DEFINE VARIABLE total-rcvd      LIKE prh_rcvd.     /* 接收数量合计 */
+DEFINE VARIABLE total-ps_qty    LIKE prh_ps_qty. /* 装箱单数量合计 */
+DEFINE VAR v_serial LIKE tr_serial .
+DEFINE VAR v_rev LIKE pod_rev .
+DEFINE VAR v_name LIKE ad_name .
+DEFINE VAR v_cmmt AS CHAR FORMAT "x(76)" .
+
+DEFINE VAR v_desc AS CHAR FORMAT "x(48)" .
+DEFINE VAR i AS INT .
+
 define buffer prhhist for prh_hist.
-define new shared variable fiscal_id      like prh_receiver.
-define new shared variable fiscal_rec     as logical initial false.
-define new shared variable msg            as character format "x(60)".
+DEFINE  VARIABLE prh_recno AS RECID.
+/*ss-min001*/  define variable companyname  as char format "x(28)".
+/*ss-min001*/  define variable xdnname      like xdn_name.
+/*ss-min001*/  define variable xdnisonbr    like xdn_isonbr.
+/*ss-min001*/  define variable xdnisover    like xdn_isover.
+/*ss-min001*/  define variable xdntrain1    like xdn_train1 .
+/*ss-min001*/  define variable xdntrain2    like xdn_train2 .
+/*ss-min001*/  define variable xdntrain3    like xdn_train3 .
+/*ss-min001*/  define variable xdntrain4    like xdn_train4 .
+/*ss-min001*/  define variable xdntrain5    like xdn_train5 .
+/*ss-min001*/  define variable xdnpage1    like xdn_page1 .
+/*ss-min001*/  define variable xdnpage2    like xdn_page2 .
+/*ss-min001*/  define variable xdnpage3    like xdn_page3 .
+/*ss-min001*/  define variable xdnpage4    like xdn_page4 .
+/*ss-min001*/  define variable xdnpage5    like xdn_page5 .
+/*ss-min001*/  define variable xdnpage6    like xdn_page6 .
 
-define variable oldsession as character no-undo.
-define variable l_prh_recno as recid no-undo.
+DEFINE TEMP-TABLE tmp_det NO-UNDO
+    FIELD tmp_receiver  LIKE prh_receiver   LABEL "收货单"
+    FIELD tmp_nbr LIKE prh_nbr
+    FIELD tmp_line LIKE prh_line
+    FIELD tmp_vend      LIKE prh_vend       LABEL "供应商编号"
+    FIELD tmp_name      LIKE ad_name        LABEL "供应商名称"
+    FIELD tmp_rcp_date  LIKE prh_rcp_date   LABEL "收货日期"
+   FIELD tmp_rev  LIKE pod_rev
+    FIELD tmp_serial LIKE ld_lot
+    FIELD tmp_desc1 LIKE pt_desc1
+    FIELD tmp_desc2 LIKE pt_desc2
+    FIELD tmp_um LIKE prh_um
+    FIELD tmp_part AS CHAR FORMAT "x(14)"
+    FIELD tmp_rcvd  AS DECIMAL FORMAT  "->>,>>>,>>>.99"
+    FIELD tmp_domain LIKE prh_domain
+    /* ss - 100809.1 -b */
+    FIELD tmp_cmmt AS CHAR FORMAT "x(76)" 
+    /* ss - 100809.1 -e */
+   .
 
-define variable err-flag as integer no-undo.
-define variable old_db like si_db no-undo.
+/* ss - 100809. 1-b */
+DEFINE VAR v_rcp_date AS DATE .
+/* ss - 100809.1 -e */
+/* ss - 101111.1 -b
+/* ss - 100809.1 -b */
+ FORM  HEADER
+                        " SINCERE-HOME" AT  45
+                            "BG-CC-11"   AT 1   "采   购   收  货  单"   at 40     "收货日期:"  AT 70  v_rcp_date             
+                          "供应商:"        AT 1      v_name   AT 10 
+                          "打印日期:"   AT 70     v_date
 
-assign cont_lbl = "*** " + getTermLabel("CONTINUE",4) + " ***".
-find first gl_ctrl  where gl_ctrl.gl_domain = global_domain no-lock no-error.
+                          "序号 收货单号  物料编码     物料描述                                           单位    数量        备注"  AT 1 
+                       "------------------------------------------------------------------------------------------------------------------------" AT 1 
+                                WITH FRAME phead1 PAGE-TOP NO-BOX  WIDTH 120.
+                           
+                           /*    DISPLAY tmp_rcp_date tmp_name  v_date  WITH FRAME phead1 . */
+                  
 
-{pocurvar.i "NEW"}
-{txcurvar.i "NEW"}
-/* DEFINE TRAILER VARS AS NEW, SO THAT CORRECT _OLD FORMATS */
-/* CAN BE ASSIGNED BASED ON INITIAL DEFINE                  */
-{potrldef.i "NEW"}
-assign
-   nontax_old         = nontaxable_amt:format
-   taxable_old        = taxable_amt:format
-   lines_tot_old      = lines_total:format
-   tax_tot_old        = tax_total:format
-   order_amt_old      = order_amt:format
-   prepaid_old        = po_prepaid:format.
+ss - 101111.1 -e */
+/* ss - 101111.1 -b */
+/* ss - 100809.1 -b */
+ FORM  HEADER
+                        " SINCERE-HOME" AT  45
+                            "BG-CC-11"   AT 1   "采   购   收  货  单"   at 40     "收货日期:"  AT 70  v_rcp_date          
+                          "供应商:"        AT 1      v_name   AT 10 
+                          "打印日期:"   AT 70     v_date  SPACE(1) "时间:"  STRING(TIME,"hh:mm:ss")   
 
-form
-   nbr            colon 15
-   nbr1           label {t001.i} colon 49
-   rcvr           colon 15
-   rcvr1          label {t001.i} colon 49
-   vend           colon 15
-   vend1          label {t001.i} colon 49
-   rcv_date       colon 15
-   rcv_date1      label {t001.i} colon 49
-   skip(1)
-   new_only       colon 30 label {&porcrp_p_6}
-   printcmts      colon 30 label {&porcrp_p_9}
-   print_approval colon 30
-   printwo        colon 30 label {&porcrp_p_11}
-   print_trlr     colon 30
-with frame a attr-space side-labels width 80.
+                          "序号 收货单号  物料编码     物料描述                                           单位    数量        备注"  AT 1 
+                       "------------------------------------------------------------------------------------------------------------------------" AT 1 
+                                WITH FRAME phead1 PAGE-TOP NO-BOX  WIDTH 120.
+                           
+                           /*    DISPLAY tmp_rcp_date tmp_name  v_date  WITH FRAME phead1 . */
+                  
 
-/* SET EXTERNAL LABELS */
-setFrameLabels(frame a:handle).
+/* ss - 101111.1 -e */
+                   
+/* ss - 100809.1 -e */
 
-convertmode = "REPORT".
 
-view frame a.
-find first poc_ctrl  where poc_ctrl.poc_domain = global_domain no-lock no-error.
-if available poc_ctrl and poc_rcv_typ = 0 then do:
-   continue_yn = no.
-   bell.
-   {mfmsg01.i 353 2 continue_yn}
-   if continue_yn = no then leave.
-end.
+FORM
+    nbr     COLON 15 LABEL "采购单"
+    nbr1    COLON 45 LABEL "至"
+    rcvr    COLON 15 LABEL "收货单"
+    rcvr1   COLON 45 LABEL "至"
+    vend    COLON 15 LABEL "供应商"
+    vend1   COLON 45 LABEL "至"
+    
+    rcv_date    COLON 15 LABEL "收货日期"
+    rcv_date1   COLON 45 LABEL "至"
+    loc          COLON 15 LABEL "库位"      "库位需要输入"    COLON 30
+   NEW_only1    COLON 30 LABEL "仅打印新的"
+    v_logical1 COLON 30 LABEL "合并打印"
+    /*
+    printcmts   COLON 30 LABEL "打印全部说明"
+    */
 
-assign
-   rcv_date   = today
-   rcv_date1  = today
-   oldcurr    = ""
-   oldsession = SESSION:numeric-format.
+    WITH FRAME a WIDTH 80 SIDE-LABEL.
 
-repeat:
-   if nbr1 = hi_char then nbr1 = "".
-   if rcvr1 = hi_char then rcvr1 = "".
-   if vend1 = hi_char then vend1 = "".
-   if rcv_date = low_date then rcv_date = ?.
-   if rcv_date1 = hi_date then rcv_date1 = ?.
+{wbrp01.i}
 
-   update
-      nbr nbr1 rcvr rcvr1 vend vend1 rcv_date rcv_date1 new_only
-      printcmts print_approval printwo
-      print_trlr
-   with frame a.
+rcv_date    = TODAY    .  
+rcv_date1   = TODAY.
 
-   bcdparm = "".
-   {mfquoter.i nbr}
-   {mfquoter.i nbr1}
-   {mfquoter.i rcvr}
-   {mfquoter.i rcvr1}
-   {mfquoter.i vend}
-   {mfquoter.i vend1}
-   {mfquoter.i rcv_date}
-   {mfquoter.i rcv_date1}
-   {mfquoter.i new_only}
-   {mfquoter.i printcmts}
-   {mfquoter.i print_approval}
-   {mfquoter.i printwo}
-   {mfquoter.i print_trlr}
+REPEAT :
+    IF nbr1 = hi_char   THEN nbr1 = "".
+    IF rcvr1 = hi_char  THEN rcvr1 = "".
+    IF vend = hi_char   THEN vend1 = "".
+  
+    IF rcv_date = low_date  THEN rcv_date = ?.
+    IF rcv_date1 = hi_date THEN rcv_date1 = ?.
 
-   if nbr1 = "" then nbr1 = hi_char.
-   if rcvr1 = "" then rcvr1 = hi_char.
-   if vend1 = "" then vend1 = hi_char.
-   if rcv_date = ? then rcv_date = low_date.
-   if rcv_date1 = ? then rcv_date1 = hi_date.
+    UPDATE
+        nbr     nbr1
+        rcvr    rcvr1
+        vend    vend1
+      
+        rcv_date    rcv_date1
+          loc 
+        NEW_only1
+        v_logical1
+        /*
+        printcmts
+        */
+        WITH FRAME a.
+    {wbrp06.i &COMMAND = UPDATE &FIELDS =" nbr nbr1
+                                            rcvr rcvr1
+                                            vend vend1
+                                         
+                                            rcv_date rcv_date1
+                                            loc   
+                                            NEW_only1
+                                           v_logical1
+                                            /*
+                                            printcmts 
+                                            */ " &frm = "a"}
+    bcdparm = "".
+    {mfquoter.i nbr}
+    {mfquoter.i nbr1}
+    {mfquoter.i rcvr}
+    {mfquoter.i rcvr1}
+    {mfquoter.i vend}
+    {mfquoter.i vend1}
+    {mfquoter.i loc}
+    {mfquoter.i rcv_date}
+    {mfquoter.i rcv_date1}
+    {mfquoter.i NEW_only1}
+         {mfquoter.i v_logical1 }
+        /*
+    {mfquoter.i printcmts}
+    */
 
-   /* SELECT PRINTER */
-   {mfselbpr.i "printer" 80}
+    IF nbr1     = "" THEN nbr1      = hi_char.
+    IF rcvr1    = "" THEN rcvr1     = hi_char.
+    IF vend1    = "" THEN vend1     = hi_char.
+    IF rcv_date = ?  THEN rcv_date  = low_date.
+    IF rcv_date1= ?  THEN rcv_date1 = hi_date.
 
-   assign
-      pages = 0
-      pdate = today
-      old_receiver = ?.
+  /*  REPEAT ON ENDKEY UNDO,LEAVE: */
+    /*
+       {mfselbpr.i "printer" 123} 
+       */
 
-   for each prh_hist no-lock
-      where prh_hist.prh_domain = global_domain
-      and   ((prh_nbr          >= nbr)
-      and   (prh_nbr           <= nbr1)
-      and   (prh_receiver      >= rcvr)
-      and   (prh_receiver      <= rcvr1)
-      and   (prh_vend          >= vend)
-      and   (prh_vend          <= vend1)
-      and   (prh_rcp_date      >= rcv_date)
-      and   (prh_rcp_date      <= rcv_date1)
-      and   (prh_print = yes   or not new_only))
-   use-index prh_rcp_date
-   break by prh_receiver by prh_nbr by prh_line:
+     {gpselout.i &printType = "printer"
+               &printWidth = 132
+               &pagedFlag = " "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "yes"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 0
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
 
-      if (oldcurr <> prh_curr) or (oldcurr = "") then do:
+ /* {gpselout.i &printType = "printer"
+                &printWidth = 180
+                &pagedFlag = " "
+                &stream = " "
+                &appendToFile = " "
+                &streamedOutputToTerminal = " "
+                &withBatchOption = "yes"
+                &displayStatementType = 1
+                &withCancelMessage = "yes"
+                &pageBottomMargin = 6
+                &withEmail = "yes"
+                &withWinprint = "yes"
+                &defineVariables = "yes"}
+                */
+        
+        /* 清空临时表 */
+        FOR EACH tmp_det:
+            DELETE tmp_det.
+        END.
+        
+   v_date = TODAY .
 
-         if prh_curr = gl_base_curr then
-            rndmthd = gl_rnd_mthd.
-         else do:
-            /* GET ROUNDING METHOD FROM CURRENCY MASTER */
-            {gprunp.i "mcpl" "p" "mc-get-rnd-mthd"
-               "(input prh_curr,
-                        output rndmthd,
-                        output mc-error-number)"}
-            if mc-error-number <> 0 then do:
-               {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=4}
-               if c-application-mode <> "WEB" then
-                  pause.
-               next.
-            end.
-         end.
 
-         /* DETERMINE CURRENCY DISPLAY AMERICAN OR EUROPEAN        */
-         find rnd_mstr  where rnd_mstr.rnd_domain = global_domain and
-         rnd_rnd_mthd = rndmthd no-lock no-error.
-         if not available rnd_mstr then do:
-            {pxmsg.i &MSGNUM=863 &ERRORLEVEL=4}  /* ROUND METHOD RECORD NOT FOUND */
-            next.
-         end.
-         /* IF RND_DEC_PT = COMMA FOR DECIMAL POINT */
-         /* THIS IS A EUROPEAN STYLE CURRENCY */
-         if (rnd_dec_pt = "," )
-            then SESSION:numeric-format = "European".
-         else SESSION:numeric-format = "American".
-         {pocurfmt.i}
-         oldcurr = prh_curr.
-      end.
+        
+        FOR EACH prh_hist  USE-INDEX prh_rcp_date   NO-LOCK
+            WHERE prh_domain = global_domain 
+	        And prh_nbr >= nbr
+                AND prh_nbr <= nbr1
+                AND prh_receiver >= rcvr
+                AND prh_receiver <= rcvr1
+                AND prh_vend >= vend
+                AND prh_vend <= vend1
+                AND prh_rcp_date >= rcv_date
+                AND prh_rcp_date <= rcv_date1
+                AND (prh_print = YES OR NOT NEW_only1)
+                AND prh_rcp_type <> "R",
+            EACH pt_mstr NO-LOCK WHERE pt_domain = prh_domain AND pt_part = prh_part AND pt_loc = loc
+             BREAK BY prh_receiver BY prh_nbr BY prh_line :
 
-      assign
-         prh_recno = recid(prh_hist)
-         duplicate = ""
-         revision  = 0
-         buyer     = ""
-         rmks      = "".
+                    ASSIGN prh_recno = RECID(prh_hist).
+        
+                    FIND FIRST tr_hist WHERE tr_domain = prh_domain AND tr_type = "rct-po" AND tr_nbr = prh_nbr AND tr_line = prh_line AND tr_lot = prh_receiver NO-LOCK NO-ERROR .
+                    IF AVAILABLE tr_hist  THEN  DO:
+                        v_serial = tr_serial  +  "/" + tr_ref .
+                    END.
+                    ELSE
+                        v_serial = "" .
+                    IF v_serial = "/" THEN
+                        v_serial = "" .
+        
+                        FIND FIRST pod_det WHERE pod_domain = prh_domain AND pod_nbr = prh_nbr AND pod_line = prh_line NO-LOCK NO-ERROR .
+                        IF AVAILABLE pod_det THEN DO:
+                            v_rev = pod_rev .
+        
+                        END.
+                        ELSE 
+                            v_rev = "" .
+        
+                         FIND FIRST ad_mstr WHERE ad_domain = GLOBAL_domain AND ad_addr = prh_vend NO-LOCK NO-ERROR .
+                         IF AVAILABLE ad_mstr THEN
+                             v_name = ad_name .
+                         ELSE 
+                             v_name = "" .
 
-      if prh_print = no then
-      duplicate = "*" + caps(getTermLabel("DUPLICATE",9)) + "*".
+                        CREATE tmp_det .
+                        ASSIGN
+                            tmp_receiver = prh_receiver
+                            tmp_nbr = prh_nbr
+                            tmp_line = prh_line
+                            tmp_part = prh_part
+                            tmp_desc1 = pt_desc1
+                            tmp_desc2 = pt_desc2
+                            tmp_um = prh_um
+                            tmp_rcvd = prh_rcvd
+                            tmp_serial = v_serial
+                            tmp_rcp_date = prh_rcp_date
+                            tmp_name = v_name
+                            tmp_rev = v_rev
+                            tmp_vend = prh_vend
+                            tmp_domain = prh_domain
+                            .
+                 /* ss - 100809.1 -b */
+                        IF AVAILABLE pod_det  THEN DO:
+                            FIND FIRST cmt_det WHERE cmt_domain = GLOBAL_domain AND cmt_indx = pod_cmtindx NO-LOCK NO-ERROR .
+                            IF AVAILABLE cmt_det  THEN
+                                tmp_cmmt = RIGHT-TRIM (cmt_cmmt[1])  + RIGHT-TRIM( cmt_cmm[2])  .
+                            ELSE 
+                                FIND cd_det WHERE cd_domain = GLOBAL_domain AND cd_ref = tmp_part AND cd_type =  "pt"  NO-LOCK NO-ERROR .
+                                IF AVAILABLE cd_det  THEN
+                                     tmp_cmmt = RIGHT-TRIM (cd_cmmt[1])  + RIGHT-TRIM( cd_cmm[2])  .
 
-      find po_mstr  where po_mstr.po_domain = global_domain and  po_nbr =
-      prh_nbr no-lock no-error.
-      if available po_mstr then
-      assign
-         revision = po_rev
-         buyer    = po_buyer
-         rmks     = po_rmks.
 
-      assign vendor = "".
-      find ad_mstr  where ad_mstr.ad_domain = global_domain and  ad_addr =
-      prh_vend
-         no-lock no-wait no-error.
-      if available ad_mstr then do:
-         assign
-            vendor[1]  = ad_name
-            vendor[2]  = ad_line1
-            vendor[3]  = ad_line2
-            vendor[4]  = ad_line3
-            vendor[6]  = ad_country
-            vend_phone = ad_phone.
-         {mfcsz.i vendor[5] ad_city ad_state ad_zip}
-         {mfaddr.i
-            vendor[1]
-            vendor[2]
-            vendor[3]
-            vendor[4]
-            vendor[5]
-            vendor[6]}.
-      end.
+                        END.
+                        ELSE 
+                            tmp_cmmt = "" .
+                /* ss - 100809.1 -e */
+       
 
-      form header
 
-         getTermLabel("R_E_C_E_I_V_E_R",20)   at 33 format "x(20)"
-         getTermLabelRtColon("PAGE_OF_REPORT",8) to 62
-         string(page-number - pages)
-         duplicate           at 68
+                find prhhist where recid(prhhist) = prh_recno exclusive-lock.
+                /* CHANGE PRINT FLAG TO "NO" */
+                if available prhhist then
+                    prhhist.prh_print = no.
+        END.
 
-         getTermLabel("SUPPLIER",15) + ": " +
-         prh_vend at 11 format "x(25)"
-         getTermLabelRtColon("RECEIVER",20) to 68 format "x(20)"
-         prh_receiver
-         vendor[1]           at 11
 
-         getTermLabelRtColon("RECEIPT_DATE",18) to 68 format "x(18)"
-         prh_rcp_date
-         vendor[2]           at 11
+        /* 显示报表内容 */
+ 
+     
+    IF v_logical1  THEN  DO:
+    
+        FOR EACH tmp_det NO-LOCK BREAK BY tmp_domain  BY tmp_vend  BY tmp_part BY tmp_rcp_date :
+            
+            IF FIRST-OF(tmp_rcp_date) THEN DO:
+                
+                v_line = 0 .
+                 pages = PAGE-NUMBER - 1.
+                 page-start = 1 .
+                    
+                 /* ss - 100809.1 -b
+                      FORM  HEADER
+                        " SINCERE-HOME" AT  45
+                            "BG-CC-11"   AT 1   "采   购   收  货  单"   at 40     "收货日期:"  AT 70  tmp_rcp_date             
+                          "供应商:"        AT 1      tmp_name   AT 10 
+                          "打印日期:"   AT 70     v_date
+                  
+                                WITH FRAME phead1 PAGE-TOP NO-BOX  WIDTH 120.
+                           
+                           /*    DISPLAY tmp_rcp_date tmp_name  v_date  WITH FRAME phead1 . */
+                      VIEW FRAME phead1 .
+               
 
-         getTermLabelRtColon("PRINT_DATE",18) to 68 format "x(18)"
-         pdate
-         vendor[3]           at 11
 
-         getTermLabelRtColon("PURCHASE_ORDER",18) to 68 format "x(18)"
-         prh_nbr
-         vendor[4]           at 11
+                  
+                      PUT "序号 收货单号  物料编码     物料描述                                           单位    数量        备注"  AT 1 .
+                       PUT "------------------------------------------------------------------------------------------------------------------------" AT 1 .
+                       ss - 100809.1 -e */
+                 /* ss - 100809.1 -b */
+                 v_name = tmp_name .
+                 v_rcp_date = tmp_rcp_date .
 
-         getTermLabelRtColon("PURCHASE_ORDER_REVISION",18) to 68 format "x(18)"
-         revision
-         vendor[5]           at 11
-         vendor[6]           at 11
-         vend_phone          at 11
+                 VIEW FRAME phead1 .
+                 /* ss - 100809.1 -e */
+           END.  /* tmp_rcp_date  */    /* first-of(tmp_rcp_date) */
 
-         getTermLabelRtColon("SHIP_DATE",18) to 68 format "x(18)"
-         prh_ship_date
-         skip
+           v_line = v_line + 1 .
+           
+           IF PAGE-SIZE - LINE-COUNTER < 9  THEN DO:
+                  PUT "------------------------------------------------------------------------------------------------------------------------" AT 1 .
+                     PUT      "白色联(财务) " AT 5        " 粉红色联(仓库)" AT 20      " 蓝色联(品管)" AT 35            " 绿色联(估价)"  AT 52          " 黄色联(供应商)" AT 67   .  
+                      PUT       "仓库收货确认:"   AT 20             "品管验货确认:"  AT 52  "页码:" TO 90  page-start   FORMAT ">>9"  " end "     SKIP.
+             page-start = page-start + 1 .
+                      PAGE .
+                      /* ss - 100809.1 -b */
+		          VIEW FRAME phead1 .
+       
+           END.
+           
+           /* ss - 100809.1 -b
+            FIND FIRST cmt_det WHERE cmt_domain = global_domain AND cmt_ref =  tmp_part  AND cmt_type = "1" AND cmt_seq = 0 NO-LOCK NO-ERROR .
+             IF AVAILABLE cmt_det THEN DO:
+             v_cmmt =  RIGHT-TRIM (cmt_cmmt[1])  + RIGHT-TRIM( cmt_cmm[2]) .
+            END.
+           ELSE 
+             v_cmmt = "" .
+             ss - 100809.1 -e */
 
-         getTermLabel("PACKING_SLIP",25) + ": " +
-         prh_ps_nbr  at 11 format "x(39)"
-         getTermLabel("REMARKS",25) + ": " +
-         rmks at 11 format "x(67)"
-         skip(1)
-      with frame phead1 page-top width 80.
-      view frame phead1.
+           PUT UNFORMATTED  v_line AT 1 tmp_receiver AT 6  tmp_part AT 16  tmp_desc1 + ","  +  tmp_desc2 AT 30    tmp_um AT 84  tmp_rcvd AT 92    SKIP .
+           PUT  UNFORMATTED  /* ss - 100809.1 -b v_cmmt ss - 100809.1 -e */  /* ss - 100809.1 -b */ tmp_cmmt /* ss - 100809.1 -e */ AT 1   tmp_nbr + "/" + STRING(tmp_line) + "/" + tmp_rev AT 78  tmp_serial AT 95 SKIP .
+       
+           IF LAST-OF(tmp_rcp_date) THEN DO:
+                     /* ss - 100728.1 -b
+                      put skip(page-size - line-counter - 3).
+                      ss - 100728.1 -e */
+               /* ss - 100728.1 -b */
+                put skip(page-size - line-counter - 9).
+               /* ss - 100728.1 -e */
+                      PUT "------------------------------------------------------------------------------------------------------------------------" AT 1 .
+                    PUT      "白色联(财务) " AT 5        " 粉红色联(仓库)" AT 20      " 蓝色联(品管)" AT 35            " 绿色联(估价)"  AT 52          " 黄色联(供应商)" AT 67   .  
+                      PUT       "仓库收货确认:"   AT 20             "品管验货确认:"  AT 52 "页码:" TO 90  page-start   FORMAT ">>9"  " end "     SKIP.
+                /* ss - 100728.1 -b */
+                /*      PUT SKIP(1). */
+                      /* ss - 100728.1 -e */
+                  IF NOT LAST-OF(tmp_domain) THEN    DO :
+                       PAGE .
+                    
+                  END.
 
-      if first-of (prh_receiver) then do:
-         assign
-            pages        = page-number - 1
-            old_receiver = prh_receiver.
+                  
+           END.
+      
+                 {mfrpchk.i}
+                     /*
+               {mfrpexit.i}
+               */
+           END.
+            
+      
+    END .  /* v_logical1 */
+    ELSE DO:
 
-         old_db = global_db.
-         find first pod_det  where pod_det.pod_domain = global_domain and
-         pod_nbr = po_nbr no-lock no-error.
-         if available pod_det then do:
-            if global_db <> pod_po_db then do:
-               {gprun.i ""gpalias3.p"" "(pod_po_db, output err-flag)" }
-            end.
-         end. /* IF AVAILABLE POD_DET */
+      
 
-         if available po_mstr then do:
-            /* PRINT ALL COMMENTS */
-            if printcmts then do:
-               {gprun.i ""pohdcmt.p"" "(input po_nbr, input 'RP' )"}
-            end. /* IF PRINTCMTS */
-            /* PRINT RECEIVER COMMENTS ONLY */
-            else do:
-               {gprun.i ""pohdcmt.p"" "(input po_nbr, input 'RC' )"}
-            end. /* ELSE */
-         end. /* IF AVAILABLE PO_MSTR */
+   
 
-         if old_db <> global_db then do:
-            {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
-         end. /* IF OLD_DB <> GLOBAL_DB */
+        FOR EACH tmp_det  WHERE tmp_receiver <> "" NO-LOCK BREAK BY tmp_domain BY  tmp_receiver :
 
-      end. /* IF FIRST-OF (PRH_RECEIVER) */
+            IF FIRST-OF(tmp_receiver) THEN DO:
+                
+                v_line = 0 .
+                 pages = PAGE-NUMBER - 1.
+                 page-start = 1 .
+               
+             /* ss - 100809. 1-b 
+                     FORM     HEADER   
+                          " SINCERE-HOME" AT  45
+                            "BG-CC-11"   AT 1   "采   购   收  货  单"   at 40     "收货日期:"  AT 70  tmp_rcp_date             
+                          "供应商:"        AT 1      tmp_name   AT 10 
+                          "打印日期:"   AT 70    v_date
+                      
+                       
+                                WITH FRAME phead11 PAGE-TOP  NO-BOX WIDTH 120.
+                   
+                            ss - 100809.1 -e */                                                                                                              
+               
+                     /*   DISPLAY tmp_rcp_date tmp_name  v_date  WITH FRAME phead11 . */
+                 /* ss - 100809. 1-b */
+                  v_name = tmp_name .
+                 v_rcp_date = tmp_rcp_date .
+                 /* ss - 100809. 1-e */       
+                     VIEW FRAME phead1 .
+                 
+                     
+                 /* ss -100730.1 -b 
+                  PUT       " SINCERE-HOME" AT  45   .
+                   PUT         "BG-CC-11"   AT 1   "采   购   收  货  单"   at 40     "收货日期:"  AT 70  tmp_rcp_date      .       
+                  PUT        "供应商:"        AT 1      tmp_name   AT 10  
+                          "打印日期:"   AT 70    v_date                             .
+               */
+                        /* ss - 100809.1 -b  
+                        PUT "序号 收货单号  物料编码     物料描述                                           单位    数量        备注"  AT 1 .
+                       PUT "-------------------------------------------------------------------------------------------------------" /* -----------------" */ AT 1 .
+                       ss - 100809.1 -e */
+           
+                          
 
-      /* DISPLAY PO RECEIPT LINE INFORMATION */
-      {gprun.i ""porcrpb.p""}
+           END.  /* tmp_rcp_date  */    /* first-of(tmp_rcp_date) */
 
-      /* DISPLAY TRANSACTION HISTORY DETAIL FOR LOT/SERIAL NBRS */
-      if tr_count > 1 then do:
-         prh_recno = recid(prh_hist).
-         {gprun.i ""porcrpc.p""}
+           v_line = v_line + 1 .
+           
+    
+           IF PAGE-SIZE - LINE-COUNTER < 9 THEN DO:
+                   PUT "------------------------------------------------------------------------------------------------------------------------" AT 1 .
+                         PUT      "白色联(财务) " AT 5        " 粉红色联(仓库)" AT 20      " 蓝色联(品管)" AT 35            " 绿色联(估价)"  AT 52          " 黄色联(供应商)" AT 67   .  
+                      PUT       "仓库收货确认:"   AT 20             "品管验货确认:"  AT 52  "页码:" TO 90  page-start   FORMAT ">>9"  " end "     SKIP.
+                  page-start = page-start + 1 .
+                      
+               PAGE .
+                     
+                     VIEW FRAME phead1 .
+           END.
+     /*************************************************************************************************************   
+	find first cd_det where cd_ref = pod_part and cd_type = "PT" and cd_seq = 1 no-lock no-error.
+		if available cd_det then do:
+		if cd_cmmt[1] <> "" then 
+			PUT cd_cmmt[1] AT 5 SKIP . 
+		if cd_cmmt[2] <> "" then 
+			PUT cd_cmmt[2] AT 5 SKIP . 
+		if cd_cmmt[3] <> "" then 
+			PUT cd_cmmt[3] AT 5 SKIP . 
+		if cd_cmmt[4] <> "" then 
+			PUT cd_cmmt[4] AT 5 SKIP . 
+		if cd_cmmt[5] <> "" then 
+			PUT cd_cmmt[5] AT 5 SKIP . 
+		if cd_cmmt[6] <> "" then 
+			PUT cd_cmmt[6] AT 5 SKIP . 
+		if cd_cmmt[7] <> "" then 
+			PUT cd_cmmt[7] AT 5 SKIP . 
+		if cd_cmmt[8] <> "" then 
+			PUT cd_cmmt[8] AT 5 SKIP . 
+		if cd_cmmt[9] <> "" then 
+			PUT cd_cmmt[9] AT 5 SKIP . 
+		if cd_cmmt[10] <> "" then 
+			PUT cd_cmmt[10] AT 5 SKIP . 
+		if cd_cmmt[11] <> "" then 
+			PUT cd_cmmt[11] AT 5 SKIP . 
+		if cd_cmmt[12] <> "" then 
+			PUT cd_cmmt[12] AT 5 SKIP . 
+		if cd_cmmt[13] <> "" then 
+			PUT cd_cmmt[13] AT 5 SKIP . 
+		if cd_cmmt[14] <> "" then 
+			PUT cd_cmmt[14] AT 5 SKIP . 
+		if cd_cmmt[15] <> "" then 
+			PUT cd_cmmt[15] AT 5 SKIP . 
+		end.
+****************************************************************************************/
+/* ss - 100809.1 -b
+	find first cd_det where cd_ref = pod_part and cd_type = "PT" and cd_seq = 1 no-lock no-error.
+             IF AVAILABLE cd_det  THEN DO:
+             v_cmmt =  RIGHT-TRIM (cd_cmmt[1] )  + RIGHT-TRIM( cd_cmmt[1] ) .
+            END.
+           ELSE 
+             v_cmmt = "" .
+             ss - 100809.1 -e */
+         
 
-      end.  /* (IF TR_COUNT > 1) */
+           PUT  UNFORMATTED  v_line AT 1 tmp_receiver AT 6  tmp_part AT 16  tmp_desc1 + "," +   tmp_desc2 AT 30    tmp_um AT 84  tmp_rcvd AT 92    SKIP .
+        
+           PUT  UNFORMATTED  /* ss - 100809.1 -b v_cmmt ss - 100809.1 -e */  /* ss - 100809.1 -b */ tmp_cmmt /* ss - 100809.1 -e */ AT 1   tmp_nbr + "/" + STRING(tmp_line) + "/" + tmp_rev AT 78  tmp_serial AT 95 SKIP .
 
-      if printwo then do:
-         l_prh_recno = recid(prh_hist).
-         {gprun.i ""porcrpwo.p"" "(prh_part,l_prh_recno)"}
+        
+           IF LAST-OF(tmp_receiver) THEN DO:
+               /* ss - 100728.1 -b
+                      put skip(page-size - line-counter - 3).
+                      ss - 100728.1 -e */
+               /* ss - 100728.1 -b */
+          /*  put skip(page-size - line-counter - 3).  /* 3 */  */
 
-      end.
+              /* ss - 100730.1 -b */
+               /*
+               DO WHILE PAGE-SIZE -  LINE-COUNTER  > 3  :  
+                   PUT LINE-COUNTER  SKIP  .
+          /*     IF LINE-COUNTER = 23  THEN
+                   PAGE .
+                   */
+               END.
+               */
+          /*     PUT SKIP(10) . */
+               
+               /* ss - 100730.1 -e */
+          
+             put skip(page-size - line-counter -  9).  /* 4 */   /* 9 */
+              
 
-      {mfrpexit.i}
+                      PUT    "------------------------------------------------------------------------------------------------------------------------" AT 1 . 
+                      PUT      "白色联(财务) " AT 5        " 粉红色联(仓库)" AT 20      " 蓝色联(品管)" AT 35            " 绿色联(估价)"  AT 52          " 黄色联(供应商)" AT 67   .  
+                      PUT       "仓库收货确认:"   AT 20             "品管验货确认:"  AT 52  "页码:" TO 90  page-start   FORMAT ">>9"  " end "     SKIP.
+       /*
+                      PUT "test"  AT 1 SKIP .
+                      PUT "test" SKIP .
+                      PUT "cc" SKIP .
+                      */
+                      
+                      /* ss - 100728.1 -b */
+                  /*  PUT  SKIP(1).  /* 100730.1 */  */
+                     
+               IF NOT LAST-OF(tmp_domain)  THEN   DO :   
+                   PAGE .
+                
+               END.
+                
+           END.
+        
+         {mfrpchk.i}  
 
-      /* TRAILER */
-      if last-of(prh_receiver) and print_trlr then do:
-         find po_mstr  where po_mstr.po_domain = global_domain and  po_nbr =
-         prh_nbr no-lock.
-         assign
-            undo_trl2   = true
-            po_recno    = recid(po_mstr)
-            receivernbr = prh_receiver.
+             /*   {mfrpexit.i}  */
+           
+        END.
+         /* ss - 100730.1 -b */
+     /*   {mfrpchk.i} */
+       
+    END.  /* v_logical1 = no  */
+    
+ /*     {xxmfrtrail.i} */
+    {mfreset.i}   
+    {mfgrptrm.i}    /* ss - 100730.1 -b */ 
 
-         {gprun.i ""porctrl2.p""}
-         if undo_trl2 then undo, leave.
-      end.
-      else
-         if page-size - line-counter < 4 then page.
-      put skip (1).
-      /*V8-*/
-      /*H0J4
-      * /*H090*/       if last-of (prh_receiver) then
-      * /*H090*/          display skip(1) "End of Report" at 33
-      * /*H090*/          with frame rfoot width 132.
-      *H0J4*/
-      /*V8+*/
-      if not last(prh_receiver) and
-         last-of (prh_receiver) then do:
-         page.
-         assign
-            pdate        = today
-            old_receiver = ?.
-      end.
-
-      find prhhist where recid(prhhist) = prh_recno exclusive-lock.
-      /* CHANGE PRINT FLAG TO "NO" */
-      if available prhhist then
-         prhhist.prh_print = no.
-
-   end.
-   /* End Processing prh_hist */
-   {mfreset.i}
-
-end.
-SESSION:numeric-format = oldsession.
+END.
+{wbrp04.i &frame-spec = a}
