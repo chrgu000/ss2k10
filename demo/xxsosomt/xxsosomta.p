@@ -171,7 +171,7 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
 {gprunpdf.i "mcpl" "p"}
-/*110106.1*/ {xxpartbomfunc.i}
+/*110106.1*/ {xxaccesspt.i}
 /* CHANGES MADE TO THIS PROGRAM MAY ALSO NEED TO BE MADE */
 /* TO PROGRAM fseomta.p.                                 */
 
@@ -837,7 +837,7 @@ repeat on endkey undo, leave:
                   {gppidisc.i pic_so_fact sod_disc_pct pic_so_rfact}
 /*110106.1*/ clear frame d.
 /*110106.1*/ clear frame c.
-/*110106.1*/ if canAccessPart(sod_part) then do:
+/*110106.1*/ if accesspt(sod_part,"pt_promo") then do:
                   display
                      line
                      sod_part
@@ -911,7 +911,7 @@ repeat on endkey undo, leave:
 
             end.    /* editing */
 /*110106.1*/ if available sod_det then do:
-/*110106.1*/     if not(canAccessPart(sod_part)) then do:
+/*110106.1*/     if not(accesspt(sod_part,"pt_promo")) then do:
 /*110106.1*/         clear frame c.
 /*110106.1*/         clear frame d.
 /*110106.1*/         {pxmsg.i &msgnum = 90010}
@@ -1165,7 +1165,7 @@ repeat on endkey undo, leave:
 
          assign sod_part.
 
-/*110106.1*/    if not(canAccessPart(sod_part)) then do:
+/*110106.1*/    if not(accesspt(sod_part,"pt_promo")) then do:
 /*110106.1*/        {pxmsg.i &msgnum = 90010}
 /*110106.1*/        clear frame d.
 /*110106.1*/        undo, retry.

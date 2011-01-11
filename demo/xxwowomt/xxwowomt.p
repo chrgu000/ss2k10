@@ -115,7 +115,7 @@
 
 &SCOPED-DEFINE wowomt_p_3 "Adjust Co/By Order Dates"
 /* MaxLen: Comment: */
-/*110106.1*/ {xxpartbomfunc.i}
+/*110106.1*/ {xxaccesspt.i}
 /* ********** End Translatable Strings Definitions ********* */
 
 define new shared variable comp like ps_comp.
@@ -357,7 +357,7 @@ repeat:
                wo_site
                joint_label
             with frame a.
-/*110106.1*/ if canAccessPart(wo_part) then do:
+/*110106.1*/ if accesspt(wo_part,"pt_part_type") then do:
 /*110106.1*/      view frame b.
             display
                wo_qty_ord
@@ -391,7 +391,7 @@ repeat:
 /*110106.1*/           and (wo_nbr = input wo_nbr or input wo_nbr = "") 
 /*110106.1*/    no-error.
 /*110106.1*/    if available wo_mstr then do:
-/*110106.1*/       if not(canAccessPart(wo_part)) then do:
+/*110106.1*/       if not(accesspt(wo_part,"pt_part_type")) then do:
 /*110106.1*/           {pxmsg.i &msgnum = 90010}
 /*110106.1*/           undo, retry.
 /*110106.1*/       end.
@@ -677,7 +677,7 @@ global_domain  no-error.
          wo_type
          wo_site
       with frame a.
-/*110106.1*/ if canAccessPart(wo_part) then do:
+/*110106.1*/ if accesspt(wo_part,"pt_part_type") then do:
 /*110106.1*/      view frame b.
       display
          wo_qty_ord

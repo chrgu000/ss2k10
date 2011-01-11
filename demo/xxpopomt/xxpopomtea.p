@@ -63,7 +63,7 @@
 /* EXTERNAL LABEL INCLUDE */
 {gplabel.i}
 
-/*110106.1*/ {xxpartbomfunc.i}
+/*110106.1*/ {xxaccesspt.i}
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE popomtea_p_1 "Comments"
@@ -272,7 +272,7 @@ do on endkey undo, leave on error undo, retry:
          {xxmfnp05.i vp_mstr vp_partvend
             " vp_mstr.vp_domain = global_domain and vp_part  = reqpart and
             vp_vend = po_vend"
-            vp_vend_part "input pod_part" " " canAccessPart(vp_part) }
+            vp_vend_part "input pod_part" " " AccessPt(vp_part,"pt_group") }
 
          if recno <> ? then do:
             pur_cost = ?.
@@ -391,7 +391,7 @@ do on endkey undo, leave on error undo, retry:
       pod_part
       pod_disc_pct = disc
       pod_so_job   = so_job.
-/*110106.1*/ if not canaccesspart(pod_part) then do:
+/*110106.1*/ if not accesspt(pod_part,"pt_group") then do:
 /*110106.1*/     {pxmsg.i &msgnum = 90010}
 /*110106.1*/     undo, retry.
 /*110106.1*/ end.

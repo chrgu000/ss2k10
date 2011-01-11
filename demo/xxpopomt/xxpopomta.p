@@ -226,7 +226,7 @@
 {cxcustom.i "POPOMTA.P"}
 {gplabel.i}
 {pxmaint.i}
-/*110106.1*/ {xxpartbomfunc.i}
+/*110106.1*/ {xxaccesspt.i}
 /* ********** Begin Translatable Strings Definitions ********* */
 {&POPOMTA-P-TAG1}
 /* ********** End Translatable Strings Definitions ********* */
@@ -1089,7 +1089,7 @@ repeat on endkey undo, leave:
           l_pod_site    = pod_site.
 
             end. /* if po_stat <> "c" and po_stat <> "x" and */
-/*110106.1*/    if not(canAccessPart(pod_part)) then do:
+/*110106.1*/    if not(accesspt(pod_part,"pt_group")) then do:
 /*110106.1*/        {pxmsg.i &msgnum = 90010}
 /*110106.1*/        undo, retry.
 /*110106.1*/    end.      
@@ -1969,7 +1969,7 @@ PROCEDURE uiDisplayFrameCandD :
       
 /*110106.1*/ clear frame d.
 /*110106.1*/ clear frame c.
-/*110106.1*/ if canAccessPart(pod_part) then do:
+/*110106.1*/ if accesspt(pod_part,"pt_group") then do:
    if c-application-mode <> "API" then
       display
          line
@@ -1994,7 +1994,7 @@ PROCEDURE uiDisplayFrameCandD :
                         input rndmthd,
                         output ext_cost)"
                &NOAPPERROR=True &CATCHERROR=True}
-/*110106.1*/ if canAccessPart(pod_part) then do:
+/*110106.1*/ if accesspt(pod_part,"pt_group") then do:
       if c-application-mode <> "API" then
          display
             pod_qty_rcvd

@@ -38,7 +38,7 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {pxmaint.i}
 {cxcustom.i "WOWOMTC.P"}
-/*110106.1*/ {xxpartbomfunc.i}
+/*110106.1*/ {xxaccesspt.i}
 {pxphdef.i wocmnrtn}
 
 define shared variable comp            like ps_comp.
@@ -201,7 +201,7 @@ do transaction with frame a:
       find pt_mstr  where pt_mstr.pt_domain = global_domain and  pt_part =
       wo_part no-lock no-error.
 
-/*110106.1*/    if not(canAccessPart(wo_part)) then do:
+/*110106.1*/    if not(accesspt(wo_part,"pt_part_type")) then do:
 /*110106.1*/        {pxmsg.i &msgnum = 90010}
 /*110106.1*/        undo, retry.
 /*110106.1*/    end.
