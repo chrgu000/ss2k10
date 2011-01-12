@@ -15,6 +15,10 @@ SS - 100510.1 - RNE */
    如果订单价格为零不允许做SO单。
 SS - 101111.1 - ZYE */
 
+/* SS - 110112.1 - ZYB
+   产生确认订单。客户不锁定
+SS - 110112.1 - ZYE */
+
 {mfdtitle.i "110112.1"}
 
 {xxdeclre.i "new"}
@@ -87,7 +91,12 @@ with frame c side-labels with width 80 attr-space.
 /*      end.                                          */
 /*      return.                                       */
 /*  end.                                              */
-
+ON LEAVE OF cust IN FRAME a DO:
+   if cust:screen-value <> "" and shipto:screen-value = "" then do:
+      assign shipto:screen-value = cust:screen-value.
+      assign shipto.
+   end.
+END.
 assign
     xxchannel = "S4"
     reqdate = today.
@@ -292,7 +301,7 @@ repeat:
                            tt_f1 = string(today) + " " + string(reqdate)
                                  + " - " + string(reqdate) + " - " + " - "
                                  + " - " +  part + " - " + " - " + site + " "
-                                 + xxchannel + " - - " + curr.
+                                 + xxchannel + " - yes " + curr.
                 end.
                 else do:
                     create tt_tb. assign    tt_sel = 3 tt_f1 = "-".
