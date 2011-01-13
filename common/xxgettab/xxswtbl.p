@@ -1,4 +1,5 @@
 /* xxswtbl - SCROLLING INQUIRY ON PROGRESS TABLE CP FROM swdb.p              */
+/*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy                           */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */

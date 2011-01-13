@@ -1,4 +1,5 @@
 /* xxgettab.p - getTable Fileds and index                                    */
+/*V8:ConvertMode=Report                                                      */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy                           */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
@@ -98,7 +99,7 @@ for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
     display _file-name _desc _Tbl-Type with frame x side-labels width 254.
     FOR EACH _FIELD OF _FILE BY _ORDER:
      DISPLAY _ORDER _FIELD-NAME _FORMAT _EXTENT _DATA-TYPE _INITIAL _LABEL
-             _COL-LABEL _desc WITH WIDTH 254 STREAM-IO.
+             _COL-LABEL _desc WITH WIDTH 254.
     END.
     FOR EACH _index WHERE _index._file-recid = RECID(_file):
       FOR EACH _index-field NO-LOCK WHERE
@@ -112,7 +113,7 @@ for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
               recid(_field) = _index-field._field-recid NO-ERROR.
          DISPLAY _index-field._Index-Seq  _field._field-name
                  _index-field._Ascending
-                 WITH WIDTH 254 STREAM-IO.
+                 WITH WIDTH 254.
       END.
  END.
 end.
