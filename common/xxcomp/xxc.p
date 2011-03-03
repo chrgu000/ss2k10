@@ -26,8 +26,8 @@ define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
 define variable bpropath   as character view-as editor no-box size 50 by 6.
-define variable filef      as character format "x(12)".
-define variable filet      as character format "x(12)".
+define variable filef      as character format "x(22)".
+define variable filet      as character format "x(22)".
 define variable vClientDir as character no-undo.
 
 run inivar.
@@ -41,7 +41,7 @@ form
    xrcDir   colon 22 label {&xxcomp_p_1}
    SKIP(1)
    filef    colon 22 label {&xxcomp_p_2}
-   filet    colon 40 label {&xxcomp_p_3}
+   filet    colon 50 label {&xxcomp_p_3}
    skip(1)
    bproPath colon 22 label {&xxcomp_p_4}
    skip(1)
