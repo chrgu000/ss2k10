@@ -8,7 +8,7 @@
 /* REVISION: 0CYT LAST MODIFIED: 01/04/11   BY: zy check xrcpath exists      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "11Y4"}
+{mfdtitle.i "13Y1"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -26,6 +26,9 @@ define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
 define variable bpropath   as character view-as editor no-box size 50 by 6.
+/****gui format
+define variable bpropath   as character bgcolor 15 view-as editor size 50 by 6.
+****/
 define variable filef      as character format "x(22)".
 define variable filet      as character format "x(22)".
 define variable vClientDir as character no-undo.
