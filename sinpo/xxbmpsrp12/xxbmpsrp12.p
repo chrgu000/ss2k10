@@ -124,7 +124,7 @@ for each tempb no-lock:
     if tmpb_sort > vmax then assign vmax = tmpb_sort.
 end.
 {mfphead.i}
-put unformat fill(" ",405).
+put unformat fill(" ",315).
 for each tempb no-lock break by tmpb_sort:
     if first-of(tmpb_sort) then do:
        put unformat fill(" ",14 - int(length(tmpb_wc) / 2))
@@ -139,18 +139,12 @@ put unformat getTermLabel("DESCRIPTION",72) at 39.
 put unformat getTermLabel("QUANTITY_PER",17) at 118.
 put unformat getTermLabel("TBM_COMP",18) at 130.
 put unformat getTermLabel("DESCRIPTION",75) at 149.
-put unformat getTermLabel("TBM_CQTY",14) at 229.
-put unformat getTermLabel("TBM_COST",14) at 244.
-put unformat getTermLabel("TBM_SET",14) at 259.
-put unformat getTermLabel("TBM_RUN",14) at 274.
-put unformat getTermLabel("RUN_TIME",14)  at 289.
-put unformat getTermLabel("TBM_MTL_CST",14) at 304.
-put unformat getTermLabel("TBM_LBR_CST",14) at 318.
-put unformat getTermLabel("TBM_BDN_CST",14) at 334.
-put unformat getTermLabel("TBM_CST",14) at 349.
-put unformat getTermLabel("TBM_UNIT_COST",14) at 363.
-put unformat getTermLabel("TBM_SETDIF",14) at 378.
-put unformat getTermLabel("TBM_RUNDIF",14) at 393.
+put unformat getTermLabel("TBM_CQTY",14) at 231.
+put unformat getTermLabel("TBM_SET",14) at 247.
+put unformat getTermLabel("TBM_RUN",14) at 261.
+put unformat getTermLabel("RUN_TIME",14)  at 277.
+put unformat getTermLabel("TBM_SETDIF",14) at 291.
+put unformat getTermLabel("TBM_RUNDIF",14) at 307.
 put unformat fill(" ",3).
 for each tempb no-lock break by tmpb_sort:
     if first-of(tmpb_sort) then do:
@@ -164,8 +158,8 @@ put unformat fill("-",18) " ".
 put unformat fill("-",72) " ".
 put unformat fill("-",17) " ".
 put unformat fill("-",18) " ".
-put unformat fill("-",75) " ".
-do i = 1 to 12 + vmax * 2:
+put unformat fill("-",78) " ".
+do i = 1 to 6 + vmax * 2:
 put unformat fill("-",14) " ".
 end.
 put skip.
@@ -192,22 +186,16 @@ for each tmpbom no-lock break by vpar by tbm_part by tbm_sn
     put unformat tbm_comp at 130.
     put unformat vpsdesc at 149.
     put unformat string(tbm_cqty,"->>>>>>>9.9<<<<") at 229.
-    put unformat string(tbm_cost,"->>>>>>>9.9<<<<") at 244.
-    put unformat string(tbm_set,"->>>>>>>9.9<<<<") at 259.
-    put unformat string(tbm_run,"->>>>>>>9.9<<<<") at 274.
-    put unformat string(tbm_run * tbm_pqty,"->>>>>>>9.9<<<<") at 289.
-    put unformat string(tbm_mtl_cst,"->>>>>>>9.9<<<<") at 304.
-    put unformat string(tbm_lbr_cst,"->>>>>>>9.9<<<<") at 318.
-    put unformat string(tbm_bdn_cst,"->>>>>>>>9.9<<<<") at 334.
-    put unformat string(tbm_cst,"->>>>>>>9.9<<<<") at 349.
-    put unformat string(tbm_unit_cost,"->>>>>>>9.9<<<<") at 360.
-    put unformat string(tbm_setdif,"->>>>>>>9.9<<<<") at 375.
-    put unformat string(tbm_rundif,"->>>>>>>9.9<<<<") at 390.
+    put unformat string(tbm_set,"->>>>>>>9.9<<<<") at 244.
+    put unformat string(tbm_run,"->>>>>>>9.9<<<<") at 259.
+    put unformat string(tbm_run * tbm_pqty,"->>>>>>>9.9<<<<") at 274.
+    put unformat string(tbm_setdif,"->>>>>>>9.9<<<<") at 289.
+    put unformat string(tbm_rundif,"->>>>>>>9.9<<<<") at 304.
     do i = 1 to vmax:
        put unformat string(tbm_wcset[i],"->>>>>>>9.9<<<<")
-                    at 405 + (i - 1) * 30.
+                    at 320 + (i - 1) * 30.
        put unformat string(tbm_wcrun[i] * tbm_pqty,"->>>>>>>9.9<<<<")
-                    at 420 + (i - 1) * 30.
+                    at 335 + (i - 1) * 30.
        assign v_wcset[i] = v_wcset[i] + tbm_wcset[i]
               v_wcrun[i] = v_wcrun[i] + tbm_wcrun[i] * tbm_pqty.
     end.
@@ -232,23 +220,17 @@ for each tmpbom no-lock break by vpar by tbm_part by tbm_sn
        put unformat getTermLabelRt("TOTAL",10) at 20.
        put unformat string(accum total(tbm_pqty),"->>>>>>>9.9<<<<") at 118.
        put unformat string(accum total(tbm_cqty),"->>>>>>>9.9<<<<") at 229.
-       put unformat string(accum total(tbm_cost),"->>>>>>>9.9<<<<") at 244.
-       put unformat string(accum total(tbm_set),"->>>>>>>9.9<<<<") at 259.
-       put unformat string(accum total(tbm_run),"->>>>>>>9.9<<<<") at 274.
+       put unformat string(accum total(tbm_set),"->>>>>>>9.9<<<<") at 244.
+       put unformat string(accum total(tbm_run),"->>>>>>>9.9<<<<") at 259.
        put unformat string(accum total(tbm_run * tbm_pqty),"->>>>>>>9.9<<<<")
-                    at 289.
-       put unformat string(accum total(tbm_mtl_cst),"->>>>>>>9.9<<<<") at 304.
-       put unformat string(accum total(tbm_lbr_cst),"->>>>>>>9.9<<<<") at 318.
-       put unformat string(accum total(tbm_bdn_cst),"->>>>>>>9.9<<<<") at 334.
-       put unformat string(accum total(tbm_cst),"->>>>>>>9.9<<<<") at 349.
-       put unformat string(accum total(tbm_unit_cost),"->>>>>>>9.9<<<<") at 360.
-       put unformat string(accum total(tbm_setdif),"->>>>>>>9.9<<<<") at 375.
-       put unformat string(accum total(tbm_rundif),"->>>>>>>9.9<<<<") at 390.
+                    at 274.
+       put unformat string(accum total(tbm_setdif),"->>>>>>>9.9<<<<") at 289.
+       put unformat string(accum total(tbm_rundif),"->>>>>>>9.9<<<<") at 304.
        do i = 1 to vmax:
            put unformat string(v_wcset[i],"->>>>>>>9.9<<<<")
-               at 405 + (i - 1) * 30.
+               at 320 + (i - 1) * 30.
            put unformat string(v_wcrun[i],"->>>>>>>9.9<<<<")
-               at 420 + (i - 1) * 30.
+               at 335 + (i - 1) * 30.
        end.
        put skip.
     end.
