@@ -125,7 +125,7 @@ repeat with frame a:
                 tce_osuser
                 tce_userid
                 tce_date
-                tce_time
+                string(tce_time,"HH:MM:SS") @ tce_time
                 tce_prog
                 tce_stack
                 tce_key0
@@ -177,7 +177,7 @@ repeat with frame a:
                 tce_osuser
                 tce_userid
                 tce_date
-                tce_time
+                string(tce_time,"HH:MM:SS") @ tce_time
                 tce_prog
                 tce_stack
                 tce_key0
