@@ -3,7 +3,6 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 11YJ LAST MODIFIED: 01/19/11   BY: zy                           */
 /* REVISION END                                                              */
-
 procedure addtcehst:
     define input parameter tbl  as character.
     define input parameter fld  as character.

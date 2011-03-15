@@ -38,6 +38,7 @@ define variable wtfile as character.
 define variable vsrcfile as character.
 define variable vfile as character.
 define variable incdecl as integer.
+define variable vcmd as character.
 
 assign keyfield=getTermLabel("KEY_FIELD",20).
 form
@@ -265,17 +266,24 @@ repeat with frame a:
      assign vsrcfile = getSrcDir().
      if vsrcfile <> "" then assign vsrcfile = vsrcfile + "/".
      assign vsrcfile = vsrcfile + getTrigname(input tabname,input "d").
+     assign incdecl = 0.
      if search(vsrcFile) <> ? then do:
         incdecl = 1.
         input from value(vsrcfile).
-        output to value(dtfile).
         repeat:
             import delimiter "(())(())" vfile.
-            if index(vfile,"mfdeclre.i") > 0 then incdecl = 1.
-            put unformat vfile skip.
+            if index(vfile,"mfdeclre.i") > 0 then incdecl = 2.
         end.
-        output close.
         input close.
+        if opsys = "unix" then do:
+           assign vcmd = "cp " + search(vsrcfile) + " ./" + dtfile.
+           unix silent value(vcmd).
+        end.
+        else
+        if opsys = "msdos" or opsys = "win32" then do:
+           assign vcmd ="copy " + search(vsrcfile) + " .\" + dtfile.
+           dos silent value(vcmd).
+        end.
      end.
      else assign incdecl = 0.
      RUN gentrig(input incdecl,
@@ -302,17 +310,24 @@ repeat with frame a:
      assign vsrcfile = getSrcDir().
      if vsrcfile <> "" then assign vsrcfile = vsrcfile + "/".
      assign vsrcfile = vsrcfile + getTrigname(input tabname,input "w").
+     assign incdecl = 0.
      if search(vsrcFile) <> ? then do:
         incdecl = 1.
         input from value(vsrcfile).
-        output to value(wtfile).
         repeat:
             import delimiter "(())(())" vfile.
-            if index(vfile,"mfdeclre.i") > 0 then incdecl = 1.
-            put unformat vfile skip.
+            if index(vfile,"mfdeclre.i") > 0 then incdecl = 2.
         end.
-        output close.
         input close.
+        if opsys = "unix" then do:
+           assign vcmd ="cp " + search(vsrcfile) + " ./" + wtfile.
+           unix silent value(vcmd).
+        end.
+        else
+        if opsys = "msdos" or opsys = "win32" then do:
+           assign vcmd ="copy " + search(vsrcfile) + " .\" + wtfile.
+           dos silent value(vcmd).
+        end.
      end.
      else assign incdecl = 0.
      RUN gentrig(input incdecl,

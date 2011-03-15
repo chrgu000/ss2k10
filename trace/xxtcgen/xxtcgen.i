@@ -27,21 +27,22 @@ procedure genTrig:
   define variable vbef as character.
   define variable vaft as character.
   output to value(ifilename) append.
-       if incmfdeclre = 0 then do: /**not found*/
-          if itype = "w" then do:
-             put unformat "TRIGGER PROCEDURE for write of ".
-             put unformat itab " old buffer OLD_" itab "." skip.
-          end.
-          else if itype = "d" then do:
-             put unformat "TRIGGER PROCEDURE FOR DELETE OF " itab "." skip.
-          end.
+    put skip.
+    if incmfdeclre = 0 then do: /**not found*/
+       if itype = "w" then do:
+          put unformat "TRIGGER PROCEDURE for write of ".
+          put unformat itab " old buffer OLD_" itab "." skip.
        end.
-       if incmfdeclre < 2 then put unformat "~{mfdeclre.i~}"SKIP.
-       put unformat "~{xxtrace.i~}" SKIP.
-       put unformat "xxtrig:" skip.
-       put unformat "do:" SKIP FILL(" ",4).
-       put unformat 'if not can-find(first tcr_reg no-lock where tcr_table'.
-       put unformat  ' = "' itab '"' SKIP FILL(" ",22).
+       else if itype = "d" then do:
+          put unformat "TRIGGER PROCEDURE FOR DELETE OF " itab "." skip.
+       end.
+    end.
+    if incmfdeclre < 2 then put unformat "~{mfdeclre.i~}"SKIP.
+    put unformat "~{xxtrace.i~}" SKIP.
+    put unformat "xxtrig:" skip.
+    put unformat "do:" SKIP FILL(" ",4).
+    put unformat 'if not can-find(first tcr_reg no-lock where tcr_table'.
+    put unformat  ' = "' itab '"' SKIP FILL(" ",22).
     IF itype = "C" or itype = "D" THEN DO:
        put unformat 'and tcr_type = "' itype '")then leave xxtrig.' skip.
        run printdet(input itab,
