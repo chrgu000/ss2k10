@@ -1,44 +1,8 @@
-/* ictriq.p - TRANSACTION INQUIRY                                             */
-/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.16.1.1 $                                                          */
-/*V8:ConvertMode=Report                                                       */
-/* REVISION: 1.0      LAST MODIFIED: 05/01/86   BY: PML                       */
-/* REVISION: 6.0      LAST MODIFIED: 04/10/90   BY: MLB *D021*                */
-/* REVISION: 6.0      LAST MODIFIED: 07/15/91   BY: WUG *D771*                */
-/* REVISION: 6.0      LAST MODIFIED: 10/03/91   BY: alb *D887*                */
-/* REVISION: 7.0      LAST MODIFIED: 10/30/91   BY: pma *F003*                */
-/* REVISION: 7.0      LAST MODIFIED: 02/10/92   BY: pma *F192*                */
-/* REVISION: 7.0      LAST MODIFIED: 03/30/92   by: jms *F335*                */
-/* REVISION: 7.0      LAST MODIFIED: 04/08/92   by: dld *F358*                */
-/* REVISION: 7.0      LAST MODIFIED: 07/16/92   by: pma *F773*                */
-/* Revision: 7.       Last edit: 11/19/92       By: jcd *G339*                */
-/* REVISION: 7.3      LAST MODIFIED: 09/22/94   by: jzs *GM54*                */
-/* REVISION: 7.3      LAST MODIFIED: 09/22/94   by: jzs *GM95*                */
-/* REVISION: 7.3      LAST MODIFIED: 03/17/95   by: str *G0FB*                */
-/* REVISION: 8.6      LAST MODIFIED: 10/04/96   BY: *K003* Steve Goeke        */
-/* REVISION: 8.6      LAST MODIFIED: 01/10/97   BY: *H0QP* Julie Milligan     */
-/* REVISION: 8.6      LAST MODIFIED: 10/09/97   BY: gyk *K0PJ*                */
-/* REVISION: 9.0      LAST MODIFIED: 03/10/99   BY: *M0B8* Hemanth Ebenezer   */
-/* REVISION: 9.0      LAST MODIFIED: 03/13/99   BY: *M0BD* Alfred Tan         */
-/* REVISION: 9.1      LAST MODIFIED: 10/25/99   BY: *N002* Steve Nugent       */
-/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
-/* REVISION: 9.1      LAST MODIFIED: 08/13/00   BY: *N0KS* Mark Brown         */
-/* Old ECO marker removed, but no ECO header exists *F0PN*                    */
-/* Old ECO marker removed, but no ECO header exists *K04X*                    */
-/* Revision: 1.12  BY: Jean Miller DATE: 04/06/02 ECO: *P056* */
-/* Revision: 1.14  BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00G* */
-/* Revision: 1.15  BY: Pawel Grzybowski   DATE: 04/08/03 ECO: *P0YY* */
-/* Revision: 1.16  BY: Michael Hansen     DATE: 07/14/04 ECO: *Q06H*          */
-/* $Revision: 1.16.1.1 $  BY: John Pison  DATE: 12/18/06 ECO: *Q10F*          */
-/*-Revision end---------------------------------------------------------------*/
-
-/******************************************************************************/
-/* All patch markers and commented out code have been removed from the source */
-/* code below. For all future modifications to this file, any code which is   */
-/* no longer required should be deleted and no in-line patch markers should   */
-/* be added.  The ECO marker should only be included in the Revision History. */
-/******************************************************************************/
+/* xxtciq cp from ictriq.p - trace log INQUIRY                               */
+/*V8:ConvertMode=Report                                                      */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 11Y1 LAST MODIFIED: 01/20/11   BY: zy check xrcpath exists      */
+/*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
 {mfdtitle.i "11Y1"}
