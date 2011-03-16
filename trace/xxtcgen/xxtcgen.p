@@ -281,7 +281,7 @@ repeat with frame a:
         end.
         else
         if opsys = "msdos" or opsys = "win32" then do:
-           assign vcmd ="copy " + search(vsrcfile) + " .\" + dtfile.
+           assign vcmd ="copy " + search(vsrcfile) + " .~\" + dtfile.
            dos silent value(vcmd).
         end.
      end.
@@ -325,7 +325,7 @@ repeat with frame a:
         end.
         else
         if opsys = "msdos" or opsys = "win32" then do:
-           assign vcmd ="copy " + search(vsrcfile) + " .\" + wtfile.
+           assign vcmd ="copy " + search(vsrcfile) + " .~\" + wtfile.
            dos silent value(vcmd).
         end.
      end.
