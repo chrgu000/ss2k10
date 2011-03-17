@@ -37,7 +37,8 @@ procedure genTrig:
           put unformat "TRIGGER PROCEDURE FOR DELETE OF " itab "." skip.
        end.
     end.
-    if incmfdeclre < 2 then put unformat "~{mfdeclre.i~}"SKIP.
+    if incmfdeclre <= 1 then put unformat "~{mfdeclre.i~}"SKIP.
+    if incmfdeclre = 2 then put unformat "~{xxdeclre.i~}"SKIP.
     put unformat "~{xxtrace.i~}" SKIP.
     put unformat "xxtrig:" skip.
     put unformat "do:" SKIP FILL(" ",4).

@@ -272,7 +272,8 @@ repeat with frame a:
         input from value(vsrcfile).
         repeat:
             import delimiter "(())(())" vfile.
-            if index(vfile,"mfdeclre.i") > 0 then incdecl = 2.
+            if index(vfile,"mgdomain.i") > 0 then incdecl = 2.
+            if index(vfile,"mfdeclre.i") > 0 then incdecl = 3.
         end.
         input close.
         if opsys = "unix" then do:
@@ -316,7 +317,8 @@ repeat with frame a:
         input from value(vsrcfile).
         repeat:
             import delimiter "(())(())" vfile.
-            if index(vfile,"mfdeclre.i") > 0 then incdecl = 2.
+            if index(vfile,"mgdomain.i") > 0 then incdecl = 2.
+            if index(vfile,"mfdeclre.i") > 0 then incdecl = 3.
         end.
         input close.
         if opsys = "unix" then do:
