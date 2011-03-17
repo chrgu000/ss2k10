@@ -11,9 +11,9 @@ procedure addtcehst:
     define input parameter bef  as character.
     define input parameter rid  as integer.
     define input parameter dom  as character.
-    define input parameter part like pt_part.
-    define input parameter site like si_site.
-    define input parameter nbr  like wo_nbr.
+    define input parameter part like pt_mstr.pt_part.
+    define input parameter site like si_mstr.si_site.
+    define input parameter nbr  like wo_mstr.wo_nbr.
     define input parameter key0 as character.
     define input parameter key1 as character.
     define input parameter key2 as character.
