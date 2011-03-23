@@ -1,5 +1,7 @@
 /*xxexcel-rp001.p                                                            */
 /* revision: 110314.1   created on: 20110314   by: softspeed roger xiao      */
+/*V8:ConvertMode=Report                                                      */ 
+/* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*----rev history------------------------------------------------------------*/
 /* ss - 110314.1  by: roger xiao                                             */
 /*-revision end--------------------------------------------------------------*/
@@ -9,20 +11,20 @@
 define var v_prgname like execname no-undo.
 
 
-def var effdate      like tr_effdate no-undo.
-def var effdate1     like tr_effdate no-undo.
-def var v_site       as char format "x(1)"  init "1" no-undo.
-def var cust1        as char  no-undo.
-def var cust2        as char  no-undo.
+def var effdate  like tr_effdate no-undo.
+def var effdate1 like tr_effdate no-undo.
+def var v_site   as char format "x(1)"  init "1" no-undo.
+def var cust1    as char  no-undo.
+def var cust2    as char  no-undo.
 
-define var v_part      like cp_part.         /* 昭和图号     */
-define var v_qty_case  like xxsod_qty_ord.   /* 容器数 = 标签数 = 二维码数*/
-define var v_time_a    like xxsod_due_time1. /* 传票时间     */
-define var v_time_b    like xxsod_due_time1. /* 装车车间     */
-define var v_time_c    like xxsod_due_time1. /* 发货时间     */
-define var v_time_d    like xxsod_due_time1. /* 运输时间     */
-define var v_time_e    like xxsod_due_time1. /* 到货时间     */
-define var v_time_f    like xxsod_due_time1. /* 备货完成时间 */
+define var v_part     like cp_part.         /* 昭和图号     */
+define var v_qty_case like xxsod_qty_ord.   /* 容器数 = 标签数 = 二维码数*/
+define var v_time_a   like xxsod_due_time1. /* 传票时间     */
+define var v_time_b   like xxsod_due_time1. /* 装车车间     */
+define var v_time_c   like xxsod_due_time1. /* 发货时间     */
+define var v_time_d   like xxsod_due_time1. /* 运输时间     */
+define var v_time_e   like xxsod_due_time1. /* 到货时间     */
+define var v_time_f   like xxsod_due_time1. /* 备货完成时间 */
 
 
 /* Attention: xxsod_det 存的全是字符!!! */
@@ -43,8 +45,7 @@ end function.
 /*由字符日期到日期*/
 function xdate2d returns date (input v_cdate as char):
    define var v_ddate as date no-undo.
-
-   if index(v_cdate ,"-") = 0 then v_ddate = ? .
+   if index(v_cdate ,"-") = 0 then v_ddate = ?.
    else do:
        v_ddate = date(integer(entry(2,v_cdate,"-")),
                       integer(entry(3,v_cdate,"-")),
@@ -155,9 +156,9 @@ export delimiter "~011"
 
 for each xxsod_det
         where (/*客户图号56100开头的为油泵,都记入一厂 */
-                  (v_site = "1" and (index(cust1,xxsod_cust) > 0 or (index(cust2,xxsod_cust) > 0 and xxsod_part begins "56100" ) )  )
+                  (v_site = "1" and (index(cust1,xxsod_cust) > 0 or (index(cust2,xxsod_cust) > 0 and xxsod_part begins "56100" )))
                   or
-                  (v_site = "2" and (index(cust2,xxsod_cust) > 0 and (not xxsod_part begins "56100" ) )  )
+                  (v_site = "2" and (index(cust2,xxsod_cust) > 0 and (not xxsod_part begins "56100" )))
               )
         and date(int(entry(2,xxsod_due_date1,"-")),int(entry(3,xxsod_due_date1,"-")),int(entry(1,xxsod_due_date1, "-"))) >= effdate
         and date(int(entry(2,xxsod_due_date1,"-")),int(entry(3,xxsod_due_date1,"-")),int(entry(1,xxsod_due_date1, "-"))) <= effdate1

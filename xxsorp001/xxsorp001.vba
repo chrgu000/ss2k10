@@ -146,7 +146,8 @@ Sub ship01()
         
         If Left(ActiveWorkbook.Worksheets(ws).Cells(i, 9).Value, 5) = "56100" Then
             rngstr = Chr(side + 64) & Trim(Str(mvL)) & ":" & Chr(side + 71) & Trim(Str(mvL))
-            ns.Range(rngstr).Interior.ThemeColor = xlThemeColorAccent6
+'           ns.Range(rngstr).Interior.ThemeColor = xlThemeColorAccent6
+					  ns.Range(rngstr).Interior.ColorIndex = 43
         End If
         
                 
