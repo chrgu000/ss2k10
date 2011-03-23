@@ -83,21 +83,21 @@ repeat:
                 &definevariables = "yes"}
 mainloop:
 do on error undo, return error on endkey undo, return error:
-export delimiter "~011" "生效日期" xdate2c(effdat) + "-" + xdate2c(effdate1) 
+export delimiter "~011" "生效日期" xdate2c(effdate) + "-" + xdate2c(effdate1) 
 								 "供应商" vend + "-" + vend1.
 export delimiter "~t" "供应商" "名称" "图号" "订单数量" "箱数" "保险价" skip.
 for each pod_det no-lock where pod_due_date >= effdate and
          pod_due_date <= effdate1 and pod_stat <> "X" and pod_stat <> "C"
    ,each po_mstr no-lock where po_nbr = pod_nbr and
          po_vend >= vend and po_vend <= vend1
-    break by pod_part by po_vend:
-    if first-of(po_vend) then do:
+    break by po_vend by pod_part:
+    if first-of(pod_part) then do:
        assign qty_ord = 0
               qty_rcvd = 0.
     end.
     assign qty_ord = qty_ord + pod_qty_ord
            qty_rcvd = qty_rcvd + pod_qty_rcvd.
-    if last-of(po_ven) then do:
+    if last-of(pod_part) then do:
        assign vprice = 0.
        find first pt_mstr no-lock where pt_part = pod_part no-error.
        find first vd_mstr no-lock where vd_addr = po_vend no-error.
@@ -110,6 +110,7 @@ for each pod_det no-lock where pod_due_date >= effdate and
               pt_ord_mult vprice.
     end.
 end.
+put unformatted skip(1) "报表结束"  skip .
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}
