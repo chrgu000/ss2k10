@@ -1,0 +1,106 @@
+ADD TABLE "xxcn_det"
+  AREA "REFERENCE"
+  LABEL "Container List Master"
+  DUMP-NAME "xxcn_det"
+
+ADD FIELD "xxcn_vend" OF "xxcn_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Supplier"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "Supplier"
+  ORDER 10
+
+ADD FIELD "xxcn_spc" OF "xxcn_det" AS character 
+  FORMAT "x(16)"
+  INITIAL ""
+  LABEL "Specifications"
+  POSITION 3
+  SQL-WIDTH 32
+  ORDER 20
+
+ADD FIELD "xxcn_desc" OF "xxcn_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 4
+  SQL-WIDTH 40
+  ORDER 30
+
+ADD FIELD "xxcn__chr01" OF "xxcn_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxch__chr02" OF "xxcn_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxch__chr03" OF "xxcn_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxcn__dec01" OF "xxcn_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxcn__dec02" OF "xxcn_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxcn__dte01" OF "xxcn_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxcn__dte02" OF "xxcn_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxcn__int01" OF "xxcn_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxcn__int02" OF "xxcn_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD INDEX "xxcn_vend_spc" ON "xxcn_det" 
+  AREA "REFERENCE_IDX"
+  PRIMARY
+  INDEX-FIELD "xxcn_vend" ASCENDING 
+  INDEX-FIELD "xxcn_spc" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=GB2312
+.
+0000001842
