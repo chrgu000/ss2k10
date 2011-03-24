@@ -50,6 +50,7 @@ repeat:
                 &definevariables = "yes"}
 mainloop:
 do on error undo, return error on endkey undo, return error:
+put unformat "提货指示书-供应商容器表" skip.
 export delimiter "~t" "供应商" vend + "-" + vend1.
 export delimiter "~t" "供应商" "容器规格" "容器名称" skip.
 for each xxcn_det no-lock:

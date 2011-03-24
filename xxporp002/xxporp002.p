@@ -83,14 +83,16 @@ repeat:
                 &definevariables = "yes"}
 mainloop:
 do on error undo, return error on endkey undo, return error:
-export delimiter "~011" "生效日期" xdate2c(effdate) + "-" + xdate2c(effdate1) 
-								 "供应商" vend + "-" + vend1.
-export delimiter "~t" "供应商" "名称" "图号" "订单数量" "箱数" "保险价" skip.
+put unformat "提货指示书-资料表" skip.
+export delimiter "~011" "生效日期" xdate2c(effdate) + "至" + xdate2c(effdate1)
+                 "供应商" vend + "至" + vend1.
+export delimiter "~t" "生效日期" "供应商" "名称" "图号"
+       "订单数量" "定单倍数" "托盘数量" "保险价" skip.
 for each pod_det no-lock where pod_due_date >= effdate and
          pod_due_date <= effdate1 and pod_stat <> "X" and pod_stat <> "C"
    ,each po_mstr no-lock where po_nbr = pod_nbr and
          po_vend >= vend and po_vend <= vend1
-    break by po_vend by pod_part:
+    break by pod_due_date by po_vend by pod_part:
     if first-of(pod_part) then do:
        assign qty_ord = 0
               qty_rcvd = 0.
@@ -106,8 +108,8 @@ for each pod_det no-lock where pod_due_date >= effdate and
        if available vp_mstr then do:
           assign vprice = vp__dec01.
        end.
-       export Delimiter "~t" po_vend vd_sort pod_part qty_ord - qty_rcvd
-              pt_ord_mult vprice.
+       export Delimiter "~t" pod_due_date po_vend vd_sort pod_part
+              qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice.
     end.
 end.
 put unformatted skip(1) "报表结束"  skip .
