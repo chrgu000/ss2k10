@@ -69,8 +69,8 @@ repeat:
       proc_name = "src/" + proc_name.
    end.
 
-   if index(".p.w.t",substring(proc_name,length(proc_name) - 2)) > 0 then do:
-      rfile = substring(proc_name,1,index(proc_name,".") - 1) + ".r".
+   if index(proc_name,".p") > 0 then do:
+      rfile = substring(proc_name,1,index(proc_name,".p") - 1) + ".r".
    end.
    else do:
       rfile = proc_name + ".r".
