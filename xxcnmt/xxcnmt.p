@@ -9,11 +9,13 @@
 {mfdtitle.i "110323.1"}
 
 define variable del-yn like mfc_logical initial no.
+define variable vdsort like vd_sort.
 
 /* DISPLAY SELECTION FORM */
 form
-   xxcn_vend colon 25
+   xxcn_vend colon 25 vdsort no-label
    xxcn_spc  colon 25 skip(1)
+   xxcn_type colon 25
    xxcn_desc colon 25
 with frame a side-labels width 80 attr-space.
 
@@ -29,13 +31,20 @@ repeat with frame a:
       /* FIND NEXT/PREVIOUS RECORD */
       {mfnp.i xxcn_det xxcn_vend xxcn_vend xxcn_spc xxcn_spc xxcn_vend_spc}
 
-      if recno <> ? then display xxcn_vend xxcn_spc xxcn_desc.
-   end. 
-	 if not can-find(first vd_mstr no-lock where vd_addr = input xxcn_vend) 
-	 	 then do:
-	   {pxmsg.i &MSGNUM=2 &ERRORLEVEL=3} 
+      if recno <> ? then display xxcn_vend xxcn_spc xxcn_type xxcn_desc.
+   end.
+   if not can-find(first vd_mstr no-lock where vd_addr = input xxcn_vend)
+     then do:
+     {pxmsg.i &MSGNUM=2 &ERRORLEVEL=3}
       undo, retry.
-	 end. 
+   end.
+   find first vd_mstr no-lock where vd_addr = input xxcn_vend no-error.
+   if available vd_mstr then do:
+      display vd_sort @ vdsort with frame a.
+   end.
+   else do:
+      display "" @ vdsort with frame a.
+   end.
    /* ADD/MOD/DELETE  */
    find xxcn_det using xxcn_vend where xxcn_spc = input xxcn_spc no-error.
    if not available xxcn_det then do:
@@ -45,14 +54,14 @@ repeat with frame a:
    end.
    recno = recid(xxcn_det).
 
-   display xxcn_vend xxcn_spc xxcn_desc.
+   display xxcn_vend xxcn_spc xxcn_type xxcn_desc.
 
    ststatus = stline[2].
    status input ststatus.
    del-yn = no.
 
    do on error undo, retry:
-      set xxcn_desc go-on("F5" "CTRL-D" ).
+      set xxcn_type xxcn_desc go-on("F5" "CTRL-D" ).
 
       /* DELETE */
       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")

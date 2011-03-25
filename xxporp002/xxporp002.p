@@ -15,6 +15,7 @@ define variable vprice   as   decimal.
 define variable qty_open like pod_qty_ord label {&sosoiq_p_1}.
 define variable qty_ord  like pod_qty_ord.
 define variable qty_rcvd like pod_qty_rcvd.
+define variable vdsort   like vd_sort.
 /* Attention: xxsod_det 存的全是字符!!! */
 
 /*由日期到字符格式,for output to excel*/
@@ -108,7 +109,28 @@ for each pod_det no-lock where pod_due_date <= effdate and
               qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice.
     end.
 end.
-put unformatted skip(1) "报表结束"  skip .
+/* put unformatted skip(1) "报表结束" skip. */
+
+put unformat skip(2) "提货指示书-供应商容器表" skip.
+export delimiter "~t" "供应商" "容器规格" "容器名称" "供应商简称" "类别" skip.
+for each xxcn_det no-lock:
+  find first vd_mstr no-lock where vd_addr = xxcn_vend no-error.
+  if available vd_mstr then do:
+     assign vdsort = vd_sort.
+  end.
+  else do:
+     assign vdsort = "".
+  end.
+  	find first code_mstr no-lock where code_fldname = "xxcn_type" and
+						 code_value = xxcn_type no-error.
+	if available code_mstr then do:						 
+		 export delimiter "~t" xxcn_vend xxcn_spc xxcn_desc vdsort code_cmmt.
+	end.
+	else do:
+		 export delimiter "~t" xxcn_vend xxcn_spc xxcn_desc vdsort.
+	end. 
+end.
+put unformatted skip(1) "报表结束" skip.
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}

@@ -52,9 +52,16 @@ mainloop:
 do on error undo, return error on endkey undo, return error:
 put unformat "提货指示书-供应商容器表" skip.
 export delimiter "~t" "供应商" vend + "-" + vend1.
-export delimiter "~t" "供应商" "容器规格" "容器名称" skip.
+export delimiter "~t" "供应商" "容器规格" "容器名称" "类别" skip.
 for each xxcn_det no-lock:
-	export delimiter "~t" xxcn_vend xxcn_spc xxcn_desc.
+	find first code_mstr no-lock where code_fldname = "xxcn_type" and
+						 code_value = xxcn_type no-error.
+	if available code_mstr then do:						 
+		 export delimiter "~t" xxcn_vend xxcn_spc xxcn_desc code_cmmt.
+	end.
+	else do:
+		 export delimiter "~t" xxcn_vend xxcn_spc xxcn_desc.
+	end.
 end.
 put unformatted skip(1) "报表结束"  skip .
 end. /* mainloop: */

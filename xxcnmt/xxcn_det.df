@@ -3,7 +3,7 @@ ADD TABLE "xxcn_det"
   LABEL "Container List Master"
   DUMP-NAME "xxcn_det"
 
-ADD FIELD "xxcn_vend" OF "xxcn_det" AS character 
+ADD FIELD "xxcn_vend" OF "xxcn_det" AS character
   FORMAT "x(8)"
   INITIAL ""
   LABEL "Supplier"
@@ -12,52 +12,54 @@ ADD FIELD "xxcn_vend" OF "xxcn_det" AS character
   COLUMN-LABEL "Supplier"
   ORDER 10
 
-ADD FIELD "xxcn_spc" OF "xxcn_det" AS character 
+ADD FIELD "xxcn_type" OF "xxcn_det" AS character
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 3
+  SQL-WIDTH 16
+  VALEXP "{gpcodsec.v xxcn_type}"
+  VALMSG "ERROR: VALUE IS NOT IN GENERALIZED CODES OR ACCESS NOT ALLOWED."
+  ORDER 30
+
+ADD FIELD "xxcn_spc" OF "xxcn_det" AS character
   FORMAT "x(16)"
   INITIAL ""
   LABEL "Specifications"
-  POSITION 3
+  POSITION 4
   SQL-WIDTH 32
   ORDER 20
 
-ADD FIELD "xxcn_desc" OF "xxcn_det" AS character 
+ADD FIELD "xxcn_desc" OF "xxcn_det" AS character
   FORMAT "x(20)"
   INITIAL ""
   LABEL "Description"
-  POSITION 4
-  SQL-WIDTH 40
-  ORDER 30
-
-ADD FIELD "xxcn__chr01" OF "xxcn_det" AS character 
-  FORMAT "x(8)"
-  INITIAL ""
   POSITION 5
-  SQL-WIDTH 16
+  SQL-WIDTH 40
   ORDER 40
 
-ADD FIELD "xxch__chr02" OF "xxcn_det" AS character 
+ADD FIELD "xxcn__chr01" OF "xxcn_det" AS character
   FORMAT "x(8)"
   INITIAL ""
   POSITION 6
   SQL-WIDTH 16
   ORDER 50
 
-ADD FIELD "xxch__chr03" OF "xxcn_det" AS character 
+ADD FIELD "xxch__chr02" OF "xxcn_det" AS character
   FORMAT "x(8)"
   INITIAL ""
   POSITION 7
   SQL-WIDTH 16
   ORDER 60
 
-ADD FIELD "xxcn__dec01" OF "xxcn_det" AS decimal 
-  FORMAT "->>,>>9.99"
-  INITIAL "0"
+ADD FIELD "xxch__chr03" OF "xxcn_det" AS character
+  FORMAT "x(8)"
+  INITIAL ""
   POSITION 8
-  SQL-WIDTH 17
-  DECIMALS 2
+  SQL-WIDTH 16
   ORDER 70
 
-ADD FIELD "xxcn__dec02" OF "xxcn_det" AS decimal 
+ADD FIELD "xxcn__dec01" OF "xxcn_det" AS decimal
   FORMAT "->>,>>9.99"
   INITIAL "0"
   POSITION 9
@@ -65,42 +67,50 @@ ADD FIELD "xxcn__dec02" OF "xxcn_det" AS decimal
   DECIMALS 2
   ORDER 80
 
-ADD FIELD "xxcn__dte01" OF "xxcn_det" AS date 
-  FORMAT "99/99/99"
-  INITIAL ?
+ADD FIELD "xxcn__dec02" OF "xxcn_det" AS decimal
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
   POSITION 10
-  SQL-WIDTH 4
+  SQL-WIDTH 17
+  DECIMALS 2
   ORDER 90
 
-ADD FIELD "xxcn__dte02" OF "xxcn_det" AS date 
+ADD FIELD "xxcn__dte01" OF "xxcn_det" AS date
   FORMAT "99/99/99"
   INITIAL ?
   POSITION 11
   SQL-WIDTH 4
   ORDER 100
 
-ADD FIELD "xxcn__int01" OF "xxcn_det" AS integer 
-  FORMAT "->,>>>,>>9"
-  INITIAL "0"
+ADD FIELD "xxcn__dte02" OF "xxcn_det" AS date
+  FORMAT "99/99/99"
+  INITIAL ?
   POSITION 12
   SQL-WIDTH 4
   ORDER 110
 
-ADD FIELD "xxcn__int02" OF "xxcn_det" AS integer 
+ADD FIELD "xxcn__int01" OF "xxcn_det" AS integer
   FORMAT "->,>>>,>>9"
   INITIAL "0"
   POSITION 13
   SQL-WIDTH 4
   ORDER 120
 
-ADD INDEX "xxcn_vend_spc" ON "xxcn_det" 
+ADD FIELD "xxcn__int02" OF "xxcn_det" AS integer
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD INDEX "xxcn_vend_spc" ON "xxcn_det"
   AREA "REFERENCE_IDX"
   PRIMARY
-  INDEX-FIELD "xxcn_vend" ASCENDING 
-  INDEX-FIELD "xxcn_spc" ASCENDING ABBREVIATED 
+  INDEX-FIELD "xxcn_vend" ASCENDING
+  INDEX-FIELD "xxcn_spc" ASCENDING ABBREVIATED
 
 .
 PSC
 cpstream=GB2312
 .
-0000001842
+0000002087
