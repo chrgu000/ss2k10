@@ -1,17 +1,18 @@
 /* xxgettab.p - getTable Fileds and index                                    */
 /*V8:ConvertMode=Report                                                      */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy                           */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 0CYH LAST MODIFIED: 13/26/11   BY: zy                        *2L*/
+/* Environment: Progress:10.1C   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0CYH"}
+{mfdtitle.i "12YL"}
 
 define variable db_name as character format "x(24)".
 define variable sfile   as character format "x(32)".
 
 form
-   db_name colon 20 label "DATABASE"
-   sfile   colon 20 label "TABLE"
+  sfile   colon 20 label "TABLE"
+  db_name colon 20 label "DATABASE"
 with frame a side-labels width 80 attr-space.
 
 find first qaddb.flh_mstr NO-LOCK WHERE flh_field = "sfile" no-error.
@@ -55,8 +56,7 @@ assign
    db_name = sdbname("qaddb").
 repeat:
 if c-application-mode <> 'web' then.
-   update db_name with frame a.
-   update sfile with frame a.
+   update sfile db_name with frame a.
    assign db_name sfile.
    find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
           and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
@@ -72,7 +72,7 @@ if c-application-mode <> 'web' then.
             qad_charfld[1] = db_name
             qad_charfld[2] = sfile.
    end.
-{wbrp06.i &command = update &fields = " db_name sfile" &frm = "a"}
+{wbrp06.i &command = update &fields = " sfile db_name " &frm = "a"}
 assign db_name sfile.
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
@@ -115,7 +115,12 @@ for each dictdb._File no-lock where (_FILE-NAME = sfile or sfile = ""):
                  _index-field._Ascending
                  WITH WIDTH 254.
       END.
- END.
+    END.
+/*2L*/ FOR EACH _FIELD OF _FILE where
+/*2L*/    (_FIELD._Valexp <> "" and _FIELD._Valexp <> ?) BY _ORDER:
+/*2L*/     DISPLAY _ORDER _FIELD-NAME _FIELD._Valexp _FIELD._Valmsg
+/*2L*/             WITH WIDTH 254.
+/*2L*/ END.
 end.
    {mftrl080.i}
 end.
