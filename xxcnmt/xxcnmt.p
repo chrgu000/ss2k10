@@ -31,7 +31,16 @@ repeat with frame a:
       /* FIND NEXT/PREVIOUS RECORD */
       {mfnp.i xxcn_det xxcn_vend xxcn_vend xxcn_spc xxcn_spc xxcn_vend_spc}
 
-      if recno <> ? then display xxcn_vend xxcn_spc xxcn_type xxcn_desc.
+      if recno <> ? then do:
+         display xxcn_vend xxcn_spc xxcn_type xxcn_desc.
+         find first vd_mstr no-lock where vd_addr = input xxcn_vend no-error.
+         if available vd_mstr then do:
+            display vd_sort @ vdsort with frame a.
+         end.
+         else do:
+            display "" @ vdsort with frame a.
+         end.
+      end.
    end.
    if not can-find(first vd_mstr no-lock where vd_addr = input xxcn_vend)
      then do:
