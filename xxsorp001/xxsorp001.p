@@ -1,6 +1,6 @@
 /*xxexcel-rp001.p                                                            */
 /* revision: 110314.1   created on: 20110314   by: softspeed roger xiao      */
-/*V8:ConvertMode=Report                                                      */ 
+/*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*----rev history------------------------------------------------------------*/
 /* ss - 110314.1  by: roger xiao                                             */
@@ -156,12 +156,19 @@ export delimiter "~011"
 
 for each xxsod_det
         where (/*客户图号56100开头的为油泵,都记入一厂 */
-                  (v_site = "1" and (index(cust1,xxsod_cust) > 0 or (index(cust2,xxsod_cust) > 0 and xxsod_part begins "56100" )))
+                  (v_site = "1" and (index(cust1,xxsod_cust) > 0 or
+                                    (index(cust2,xxsod_cust) > 0 and
+                                     xxsod_part begins "56100" )))
                   or
-                  (v_site = "2" and (index(cust2,xxsod_cust) > 0 and (not xxsod_part begins "56100" )))
+                  (v_site = "2" and (index(cust2,xxsod_cust) > 0 and
+                                     (not xxsod_part begins "56100" )))
               )
-        and date(int(entry(2,xxsod_due_date1,"-")),int(entry(3,xxsod_due_date1,"-")),int(entry(1,xxsod_due_date1, "-"))) >= effdate
-        and date(int(entry(2,xxsod_due_date1,"-")),int(entry(3,xxsod_due_date1,"-")),int(entry(1,xxsod_due_date1, "-"))) <= effdate1
+        and date(int(entry(2,xxsod_due_date1,"-")),
+                 int(entry(3,xxsod_due_date1,"-")),
+                 int(entry(1,xxsod_due_date1, "-"))) >= effdate
+        and date(int(entry(2,xxsod_due_date1,"-")),
+                 int(entry(3,xxsod_due_date1,"-")),
+                 int(entry(1,xxsod_due_date1, "-"))) <= effdate1
     no-lock
     break by xxsod_due_date1 by xxsod_due_time1 :
 
@@ -173,33 +180,45 @@ for each xxsod_det
     no-lock no-error.
 
     assign
-    /* 昭和图号 */  v_part    = if avail cp_mstr then cp_part else "Error"
-    /* 传票时间 */  v_time_a  = string(xtime(xxsod_due_time ),"HH:MM")
+    /* 昭和图号 */
+    v_part    = if avail cp_mstr then cp_part else "Error"
+    /* 传票时间 */
+    v_time_a  = string(xtime(xxsod_due_time ),"HH:MM")
+    /* 装车车间 */
+    v_time_b  = if (xtime(xxsod_due_time1) - 50 * 60) < 0 then
+                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " "
+                  + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 50 * 60)),
+                            "HH:MM")
+                else
+                    string((xtime(xxsod_due_time1) - 50 * 60),"HH:MM")
+    /* 发货时间 */
+    v_time_c  = if (xtime(xxsod_due_time1) - 40 * 60) < 0 then
+                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " "
+                  + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 40 * 60)),
+                            "HH:MM")
+                else
+                    string((xtime(xxsod_due_time1) - 40 * 60),"HH:MM")
+    /* 运输时间 */
+    v_time_d  = if (xtime(xxsod_due_time1) - 10 * 60) < 0 then
+                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " "
+                  + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 10 * 60)),
+                            "HH:MM")
+                else
+                     string((xtime(xxsod_due_time1) - 10 * 60),"HH:MM")
+    /* 到货时间 */
+    v_time_e  = string(xtime(xxsod_due_time1),"HH:MM")
+    /* 备货完成 */
+    v_time_f  = if xtime(xxsod_due_time1) < 10 * 60 * 60 then ""
+              else string(xtime(xxsod_due_time1) - 80 * 60,"HH:MM")
+    .
 
-    /* 装车车间 */  v_time_b  = if (xtime(xxsod_due_time1) - 50 * 60) < 0 then
-                                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " " + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 50 * 60)),"HH:MM")
-                                else
-                                    string((xtime(xxsod_due_time1) - 50 * 60),"HH:MM")
-
-    /* 发货时间 */  v_time_c  = if (xtime(xxsod_due_time1) - 40 * 60) < 0 then
-                                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " " + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 40 * 60)),"HH:MM")
-                                else
-                                    string((xtime(xxsod_due_time1) - 40 * 60),"HH:MM")
-
-    /* 运输时间 */  v_time_d  = if (xtime(xxsod_due_time1) - 10 * 60) < 0 then
-                                    xdate2c(xdate2d(xxsod_due_date1) - 1 ) + " " + string((24 * 60 * 60 + (xtime(xxsod_due_time1) - 10 * 60)),"HH:MM")
-                                else
-                                    string((xtime(xxsod_due_time1) - 10 * 60),"HH:MM")
-
-    /* 到货时间 */  v_time_e  = string(xtime(xxsod_due_time1),"HH:MM")
-    /* 备货完成 */  v_time_f  = if xtime(xxsod_due_time1) < 10 * 60 * 60 then "" else string(xtime(xxsod_due_time1) - 80 * 60,"HH:MM")
-                    .
-
-
-/*????????????????????
-v_qty_case
-*/
-
+    find first xxcased_det no-lock where xxcased_part = xxsod_part no-error.
+    if available xxcased_det then do:
+       assign v_qty_case = xxcased_qty_per.
+    end.
+    else do:
+       assign v_qty_case = 0.
+    end.
 
     export delimiter "~011"
         xxsod_cust
@@ -215,12 +234,8 @@ v_qty_case
         xxsod_qty_ord
         v_qty_case
         .
-
 end. /*for each xxsod_det*/
-
-
 put unformatted skip(1) "报表结束"  skip .
-
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}
