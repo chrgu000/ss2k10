@@ -13,10 +13,10 @@ define variable vdsort like vd_sort.
 
 /* DISPLAY SELECTION FORM */
 form
-   xxcn_vend colon 25 vdsort no-label
-   xxcn_spc  colon 25 skip(1)
-   xxcn_type colon 25
-   xxcn_desc colon 25
+   xxcn_vend format "x(8)" colon 25 vdsort no-label
+   xxcn_spc  format "x(20)" colon 25 skip(1)
+   xxcn_type format "x(4)" colon 25
+   xxcn_desc format "x(40)" colon 25
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
