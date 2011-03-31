@@ -23,7 +23,7 @@ ADD FIELD "xxcn_type" OF "xxcn_det" AS character
   ORDER 30
 
 ADD FIELD "xxcn_spc" OF "xxcn_det" AS character
-  FORMAT "x(16)"
+  FORMAT "x(20)"
   INITIAL ""
   LABEL "Specifications"
   POSITION 4
@@ -31,7 +31,7 @@ ADD FIELD "xxcn_spc" OF "xxcn_det" AS character
   ORDER 20
 
 ADD FIELD "xxcn_desc" OF "xxcn_det" AS character
-  FORMAT "x(20)"
+  FORMAT "x(40)"
   INITIAL ""
   LABEL "Description"
   POSITION 5
