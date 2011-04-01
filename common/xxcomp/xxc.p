@@ -8,7 +8,7 @@
 /* REVISION: 0CYT LAST MODIFIED: 01/04/11   BY: zy check xrcpath exists      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "13Y1"}
+{mfdtitle.i "14Y1"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -145,7 +145,8 @@ do on error undo, retry:
        undo,retry.
    end.
    if index(propath,destDir) = 0 then do:
-      message "Destination Directory Error,Pleaes check propath config!".
+      message "Destination directory Error,Pleaes check propath setting!".
+      message "Destination directory must in propath list.".
       next-prompt destDir with frame z.
       undo,retry.
    end.
