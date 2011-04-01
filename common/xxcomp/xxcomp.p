@@ -1,6 +1,12 @@
-{mfdtitle.i "f+"}
-def var filepath as char format "x(30)" init "/root/test".
-def var destpath as char format "x(30)" init "/app/mfgpro/eb21sp5".
+/* xxcomp.p - compile procedure                                              */
+/*V8:ConvertMode=Maintenance                                                 */
+/* REVISION: 14Y1 LAST MODIFIED: 04/01/11 BY:ZY 参数记录在qad_wkfl           */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION END                                                              */
+
+{mfdtitle.i "14Y1"}
+def var filepath as char format "x(30)".
+def var destpath as char format "x(40)".
 def var filefrom as char format "x(10)".
 def var fileto   as char format "x(10)".
 def var lang     as char format "x(2)" init "ch".
@@ -25,14 +31,14 @@ def var tmp_compilepath5 as char.
 def var jj as inte.
 def var old_propath as char.
 def var old_compilepath as char.
-
+if old_compilepath = "" then old_compilepath = propath.
 def temp-table tt
     field tt_file as char.
 
 form
     filepath colon 23 label "Source Directory" skip(1)
     filefrom colon 16 label "File"
-    fileto   colon 49   label "To"     skip(1)
+    fileto   colon 49 label "To"     skip(1)
     compilepath1 colon 16 label "Compile Propath"
     compilepath2 colon 16 no-label
     compilepath3 colon 16 no-label
@@ -44,43 +50,94 @@ form
     with frame a side-labels width 80 title "Compile Program".
 
     view frame a.
+
+on value-changed of lang in frame a do:
+   IF LASTKEY = KEYCODE("u") OR LASTKEY = KEYCODE("U") then do:
+      assign lang:screen-value in frame a = "us".
+      assign lang.
+   end.
+   IF LASTKEY = KEYCODE("c") OR LASTKEY = KEYCODE("C") then do:
+      assign lang:screen-value in frame a = "ch".
+      assign lang.
+   end.
+   IF LASTKEY = KEYCODE("t") OR LASTKEY = KEYCODE("T") then do:
+      assign lang:screen-value in frame a = "tw".
+      assign lang.
+   end.
+end.
+
+on Entry of destpath in frame a do:
+   status input "Ctrl-] to change default value.".
+end.
+on Leave of destpath in frame a do:
+   status input "".
+end.
+ON "CTRL-]" OF destpath IN FRAME a DO:
+   define variable qadpath as character.
+   run getQADPath(output qadpath).
+   if destpath <> qadpath then do:
+      assign destpath:screen-value = qadpath.
+      assign destpath.
+   end.
+   else do:
+       find first qad_wkfl exclusive-lock where qad_domain = "xxcomp_param" and
+             qad_key1 = "xxcomp_param" no-error.
+       if available qad_wkfl then do:
+          assign destpath:screen-value = qad_charfld[6].
+          assign destpath.
+       end.
+   end.
+end.
     /*提起参数文档*/
         unix silent value ( "cd" ).
         unix silent value ( "rm -f comp.tmp").
         unix silent value ( "pwd > comp.tmp").
   input from comp.tmp.
-             import unformatted v_tmp2.
-        input close.
+        import unformatted v_tmp2.
+  input close.
     compcfg = "".
-  FILE-INFO:FILE-NAME = v_tmp2 + "/comp.txt".
-  if FILE-INFO:FILE-TYPE <> ? then do:
-    /*读参数文件*/
-    input from value(v_tmp2 + "/comp.txt" ) NO-CONVERT.
-                     import unformatted compcfg.
-    input close.
-
-    /*message entry(1,compcfg,"@") VIEW-AS ALERT-BOX. */
-    assign filepath   = entry(1,compcfg,"@").
-    assign filefrom   = entry(2,compcfg,"@").
-    assign fileto   = entry(3,compcfg,"@").
-    assign old_compilepath  = entry(4,compcfg,"@").
-    assign lang   = entry(5,compcfg,"@").
-    assign destpath   = entry(6,compcfg,"@").
-  end.
+/*  FILE-INFO:FILE-NAME = v_tmp2 + "/comp.txt".                              */
+/*  if FILE-INFO:FILE-TYPE <> ? then do:                                     */
+/*    /*读参数文件*/                                                         */
+/*    input from value(v_tmp2 + "/comp.txt" ) NO-CONVERT.                    */
+/*                     import unformatted compcfg.                           */
+/*    input close.                                                           */
+/*                                                                           */
+/*    /*message entry(1,compcfg,"@") VIEW-AS ALERT-BOX. */                   */
+/*    assign filepath   = entry(1,compcfg,"@").                              */
+/*    assign filefrom   = entry(2,compcfg,"@").                              */
+/*    assign fileto   = entry(3,compcfg,"@").                                */
+/*    assign old_compilepath  = entry(4,compcfg,"@").                        */
+/*    assign lang   = entry(5,compcfg,"@").                                  */
+/*    assign destpath   = entry(6,compcfg,"@").                              */
+/*  end.                                                                     */
+find first qad_wkfl no-lock where qad_domain = "xxcomp_param" and
+           qad_key1 = "xxcomp_param" no-error.
+if available qad_wkfl then do:
+   assign filePath = qad_charfld[1]
+          filefrom = qad_charfld[2]
+          fileto   = qad_charfld[3]
+          old_compilepath = qad_charfld[4]
+          lang = qad_charfld[5].
+          if qad_charfld[6] <> "" then
+             destpath = qad_charfld[6].
+          else do:
+             run getQADPath(output destpath).
+          end.
+end.
 main-loop:
 repeat with frame a :
-  if fileto <> "" and substr(fileto,length(fileto) - 1 ,2) = "zz" then fileto = substr(fileto,1,length(fileto) - 2 ).
-  display
-  filepath
-  filefrom
-  fileto
-
-  lang
-  destpath
+  display filepath
+          filefrom
+          fileto
+          lang
+          destpath
   with frame a.
 
   DO jj = 1 to 5:
-    compilepath[jj] = substring(old_compilepath, (jj - 1) * compilepathlength + 1 ,compilepathlength ).
+    compilepath[jj] = substring(old_compilepath,
+                                (jj - 1) * compilepathlength + 1,
+                                compilepathlength ).
   END.  /* END DO */
   compilepath1 = compilepath[1].
   compilepath2 = compilepath[2].
@@ -89,10 +146,10 @@ repeat with frame a :
   compilepath5 = compilepath[5].
 
   display compilepath1
-    compilepath2
-    compilepath3
-    compilepath4
-    compilepath5
+          compilepath2
+          compilepath3
+          compilepath4
+          compilepath5
     with frame a.
 
   old_propath =  propath.
@@ -106,18 +163,19 @@ repeat with frame a :
         assign filepath = FILE-INFO:FULL-PATHNAME.
         disp filepath.
 
-        if fileto = "zzzz88" then fileto = "".
-  if fileto <> "" and substr(fileto,length(fileto) - 1 ,2) = "zz" then fileto = substr(fileto,1,length(fileto) - 2 ).
+        if fileto = CHR(255) then fileto = "".
         update filefrom fileto.
-        if fileto = "" then fileto = "zzzz88".
-        if fileto = filefrom then fileto = fileto + "zz".
+        if fileto = "" then fileto = CHR(255).
+        if fileto = filefrom then fileto = fileto + CHR(255).
 
-  /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath--BEGIN*/
+ /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath */
   comppath:
   repeat on endkey  undo main-loop , retry main-loop:
     if old_compilepath = "" then old_compilepath = filepath.
     DO jj = 1 to 5:
-      compilepath[jj] = substring(old_compilepath, (jj - 1) * compilepathlength + 1 ,compilepathlength ).
+      compilepath[jj] = substring(old_compilepath,
+                                  (jj - 1) * compilepathlength + 1,
+                                  compilepathlength).
     END.  /* END DO */
     compilepath1 = compilepath[1].
     compilepath2 = compilepath[2].
@@ -142,16 +200,20 @@ repeat with frame a :
             tmp_compilepath1 = input compilepath1.
             if length(input compilepath2) >= 60 then do:
             tmp_compilepath2 = compilepath2.
-            compilepath2 = substr(substring(tmp_compilepath1,60) + compilepath2,1,60).
+            compilepath2 =
+                substr(substring(tmp_compilepath1,60) + compilepath2,1,60).
             if length(input compilepath3) >= 60 then do:
             tmp_compilepath3 = compilepath3.
-            compilepath3 = substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
+            compilepath3 =
+                substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
             if length(input compilepath4) >= 60 then do:
             tmp_compilepath4 = compilepath4.
-            compilepath4 = substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
+            compilepath4 =
+                substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
             if length(input compilepath5) >= 60 then do:
             tmp_compilepath5 = compilepath5.
-            compilepath5 = substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
+            compilepath5 =
+                substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
             END.
             else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
             END.
@@ -162,7 +224,8 @@ repeat with frame a :
             else compilepath2 = substring(tmp_compilepath1,60) + compilepath2.
 
           end.
-          display  compilepath2 compilepath3 compilepath4 compilepath5 with frame a.
+          display compilepath2 compilepath3 compilepath4 compilepath5
+          with frame a.
         end.  /*if ( chr(lastkey) >= "a" and ch*/
         apply lastkey.
       end.
@@ -171,19 +234,20 @@ repeat with frame a :
         readkey.
         if ( lastkey >= 40 and lastkey <= 123 )
            then do:
-
             if length(input compilepath2) >= 60 then do:
-            tmp_compilepath2 = input compilepath2.
-
+               tmp_compilepath2 = input compilepath2.
             if length(input compilepath3) >= 60 then do:
-            tmp_compilepath3 = compilepath3.
-            compilepath3 = substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
+               tmp_compilepath3 = compilepath3.
+               compilepath3 =
+                   substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
             if length(input compilepath4) >= 60 then do:
-            tmp_compilepath4 = compilepath4.
-            compilepath4 = substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
+               tmp_compilepath4 = compilepath4.
+               compilepath4 =
+                   substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
             if length(input compilepath5) >= 60 then do:
-            tmp_compilepath5 = compilepath5.
-            compilepath5 = substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
+               tmp_compilepath5 = compilepath5.
+               compilepath5 =
+                  substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
             END.
             else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
             END.
@@ -206,11 +270,13 @@ repeat with frame a :
             tmp_compilepath3 = input compilepath3.
 
             if length(input compilepath4) >= 60 then do:
-            tmp_compilepath4 = compilepath4.
-            compilepath4 = substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
+               tmp_compilepath4 = compilepath4.
+               compilepath4 =
+                  substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
             if length(input compilepath5) >= 60 then do:
-            tmp_compilepath5 = compilepath5.
-            compilepath5 = substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
+               tmp_compilepath5 = compilepath5.
+               compilepath5 =
+                  substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
             END.
             else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
             END.
@@ -231,8 +297,9 @@ repeat with frame a :
               tmp_compilepath4 = input compilepath4.
 
               if length(input compilepath5) >= 60 then do:
-              tmp_compilepath5 = compilepath5.
-              compilepath5 = substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
+                 tmp_compilepath5 = compilepath5.
+                 compilepath5 =
+                    substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
               END.
               else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
             END.
@@ -271,15 +338,19 @@ repeat with frame a :
       next comppath.
     end.
     ii = 0.
-    if substring(old_compilepath,length(old_compilepath),1) = "," then  /*去掉最少一个逗号*/
-      assign old_compilepath = substring(old_compilepath,1,length(old_compilepath) - 1).
+    /*去掉最少一个逗号*/
+    if substring(old_compilepath,length(old_compilepath),1) = "," then
+      assign old_compilepath =
+             substring(old_compilepath,1,length(old_compilepath) - 1).
     DO jj = 1 to length(old_compilepath):
       if substring(old_compilepath,jj,1) = "," then ii = ii + 1.
     END.  /* END DO */
     DO jj = 1 to ii + 1 :
       FILE-INFO:FILE-NAME = entry(jj,old_compilepath,",").
-      if FILE-INFO:FILE-TYPE = ? and entry(jj,old_compilepath,",") <> "." then do:
-        message "No such direction , " + entry(jj,old_compilepath,",") + " Please try again!" VIEW-AS ALERT-BOX.
+      if FILE-INFO:FILE-TYPE = ? and entry(jj,old_compilepath,",") <> "."
+      then do:
+        message "No such direction , " + entry(jj,old_compilepath,",")
+              + " Please try again!" VIEW-AS ALERT-BOX.
         next comppath.
       end.
     END.  /* END DO */
@@ -287,7 +358,7 @@ repeat with frame a :
     assign propath = old_compilepath + "," + propath.
     leave comppath.
   end.
-  /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath--END*/
+ /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath-*/
         /*input from comp.tmp.
              import unformatted v_tmp.
         input close.*/
@@ -300,16 +371,17 @@ repeat with frame a :
              end.
         input close.
         output to value(v_tmp2 + "/comp.lst").
-        for each tt where tt_file <> "" and tt_file >= filefrom and tt_file <= fileto :
-    tt_file = trim(tt_file).
+        for each tt where tt_file <> "" and tt_file >= filefrom
+             and tt_file <= fileto :
+             tt_file = trim(tt_file).
              if (index(tt_file,".p") = 0 and index(tt_file,".w") = 0 and
                 index(tt_file,".P") = 0 and index(tt_file,".W") = 0) or (
-     substring(tt_file,length(tt_file) - 1 ,2) <> ".p" and
-     substring(tt_file,length(tt_file) - 1 ,2) <> ".P" and
-     substring(tt_file,length(tt_file) - 1 ,2) <> ".w" and
-     substring(tt_file,length(tt_file) - 1 ,2) <> ".W"  )
+                substring(tt_file,length(tt_file) - 1 ,2) <> ".p" and
+                substring(tt_file,length(tt_file) - 1 ,2) <> ".P" and
+                substring(tt_file,length(tt_file) - 1 ,2) <> ".w" and
+                substring(tt_file,length(tt_file) - 1 ,2) <> ".W"  )
                 then do:
-                 delete tt.
+                     delete tt.
              end.
              else do:
                  if substr(filepath,length(filepath),1) = "/" then
@@ -340,7 +412,8 @@ repeat with frame a :
       assign destpath = FILE-INFO:FULL-PATHNAME.
       disp destpath.
       ii = length(filepath).
-      for each tt where tt_file <> "" and tt_file >= filepath + "/" + filefrom and tt_file <= filepath + "/" + fileto :
+      for each tt where tt_file <> "" and tt_file >= filepath + "/" + filefrom
+           and tt_file <= filepath + "/" + fileto:
         v_tmp = destpath + "/" + lang.
         FILE-INFO:FILE-NAME = v_tmp.
         if FILE-INFO:FILE-TYPE = ? then do:
@@ -385,43 +458,45 @@ repeat with frame a :
   /*开始逐个编译--END*/
     end.
     assign propath = old_propath.
+    unix silent value ( "rm -f comp.tmp").
+    unix silent value ( "rm -f comp.lst").
 end.
 
-  run gen_comp.  /*重新生成参数文件*/
+run gen_comp.  /*重新生成参数文件*/
 
-procedure gen_comp :
-  unix silent value ( "rm -f " + v_tmp2 + "/comp.txt" ).
-  output to value(v_tmp2 + "/comp.txt" ).
-  ii = length(filepath).
-  v_format = "x("  + string(ii) + ")".
-  put filepath format v_format at 1.   put "@".
-
-  if filefrom <> "" then do:
-    ii = length(filefrom).
-    v_format = "x("  + string(ii) + ")".
-    put filefrom format v_format.    put "@".
+procedure gen_comp:
+  define variable vdestpath as character.
+  find first qad_wkfl exclusive-lock where qad_domain = "xxcomp_param" and
+             qad_key1 = "xxcomp_param" no-error.
+  if not available qad_wkfl then do:
+     create qad_wkfl.
+     assign qad_domain = "xxcomp_param"
+            qad_key1 = "xxcomp_param".
   end.
-  else put "@".
+   assign qad_charfld[1] = filePath
+          qad_charfld[2] = filefrom
+          qad_charfld[3] = if fileto = "" then CHR(255) else fileto
+          qad_charfld[4] = old_compilepath
+          qad_charfld[5] = lang.
+   run getQADPath(output vdestpath).
+   if vdestpath <> destpath then qad_charfld[6] = destpath.
+end procedure.
 
-  if filefrom <> "" then do:
-    if fileto <> "" and substr(fileto,length(fileto) - 1 ,2) = "zz" then fileto = substr(fileto,1,length(fileto) - 2 ).
-    ii = length(fileto).
-    v_format = "x("  + string(ii) + ")".
-    put fileto format v_format.    put "@".
-  end.
-  else put "@".
-  ii = length(old_compilepath).
-  v_format = "x("  + string(ii) + ")".
-  put old_compilepath format v_format.   put "@".
-
-  ii = length(lang).
-  v_format = "x("  + string(ii) + ")".
-  put lang format v_format.    put "@".
-
-  ii = length(destpath).
-  v_format = "x("  + string(ii) + ")".
-  put destpath format v_format.
-  put skip.
-
-   output close.
-end.
+procedure getQADPath:
+  define output parameter vpropath as character.
+  define variable vdir as character.
+  define variable vfile as character.
+  assign vpropath = propath.
+  DO WHILE index(vpropath,",") > 0:
+    ASSIGN vdir = substring(vpropath,1,INDEX(vpropath,",") - 1).
+    if index(vdir,"bbi") > 0 or index(vdir,"xrc") > 0 or index(vdir,"src") > 0
+    then do:
+       assign vfile = substring(vdir,1,length(vdir) - 3) + "mfgutil.ini".
+       IF SEARCH(vfile) <> ? and substring(vfile,1,1) <> "." THEN DO:
+          ASSIGN vpropath = SUBSTRING(vpropath,1,INDEX(vpropath,",") - 5).
+          leave.
+       END.
+    END.
+    ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
+END.
+end procedure .
