@@ -1,0 +1,1201 @@
+/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
+/* INVENTORY LABLE PRINT */
+/* Generate date / time  2006-10-24 10:21:05 */
+define variable sectionid as integer init 0 .
+define variable WMESSAGE  as char format "x(80)" init "".
+define variable wtm_num   as char format "x(20)" init "0".
+define variable wtm_fm    as char format "x(16)".
+define variable wsection as char format "x(16)".
+define variable i as integer .
+
+define variable wtimeout as integer init 99999 .
+find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="wtimeout" no-lock no-error. /*  Timeout - All Level */
+if AVAILABLE(code_mstr) Then wtimeout = 60 * decimal(code_cmmt).
+find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="xslap04wtimeout" no-lock no-error. /*  Timeout - Program Level */
+if AVAILABLE(code_mstr) Then wtimeout = 60 * decimal(code_cmmt).
+
+mainloop:
+REPEAT:
+     /* CYCLE COUNTER -SECTION ID -- START*/
+      sectionid = sectionid + 1 .
+     /* SECTION ID -- END  */
+
+     /* START  LINE :1002  地點[SITE]  */
+     V1002L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1002           as char format "x(50)".
+        define variable PV1002          as char format "x(50)".
+        define variable L10021          as char format "x(40)".
+        define variable L10022          as char format "x(40)".
+        define variable L10023          as char format "x(40)".
+        define variable L10024          as char format "x(40)".
+        define variable L10025          as char format "x(40)".
+        define variable L10026          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        {xsdfsite.i}
+        V1002 = wDefSite.
+        V1002 = ENTRY(1,V1002,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1002 = ENTRY(1,V1002,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        IF aPASS = "Y" then
+        leave V1002L.
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+
+                /* LABEL 1 - START */ 
+                L10021 = "地點設定有誤" .
+                display L10021          format "x(40)" skip with fram F1002 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L10022 = "1.沒有設定默認地點" .
+                display L10022          format "x(40)" skip with fram F1002 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                L10023 = "2.權限設定有誤" .
+                display L10023          format "x(40)" skip with fram F1002 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                L10024 = "  請查核" .
+                display L10024          format "x(40)" skip with fram F1002 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1002 no-box.
+        Update V1002
+        WITH  fram F1002 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V1002 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1002.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1002.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        IF not trim(V1002) = "E" THEN DO:
+                display skip "Error , Retry " @ WMESSAGE NO-LABEL with fram F1002.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1002.
+        pause 0.
+        leave V1002L.
+     END.
+     PV1002 = V1002.
+     /* END    LINE :1002  地點[SITE]  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :1200  工單號碼[WO]  */
+     V1200L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1200           as char format "x(50)".
+        define variable PV1200          as char format "x(50)".
+        define variable L12001          as char format "x(40)".
+        define variable L12002          as char format "x(40)".
+        define variable L12003          as char format "x(40)".
+        define variable L12004          as char format "x(40)".
+        define variable L12005          as char format "x(40)".
+        define variable L12006          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+         If sectionid > 1 Then 
+        V1200 = PV1200 .
+        V1200 = ENTRY(1,V1200,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+
+        /* --CYCLE TIME SKIP -- START  */
+         if sectionid > 1 then leave V1200L .
+        /* --CYCLE TIME SKIP -- END  */
+
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1200 no-box.
+
+                /* LABEL 1 - START */ 
+                L12001 = "工單號碼?" .
+                display L12001          format "x(40)" skip with fram F1200 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L12002 = "" . 
+                display L12002          format "x(40)" skip with fram F1200 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L12003 = "" . 
+                display L12003          format "x(40)" skip with fram F1200 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L12004 = "" . 
+                display L12004          format "x(40)" skip with fram F1200 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1200 no-box.
+        Update V1200
+        WITH  fram F1200 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F1200.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(WO_MSTR) = ? THEN find first WO_MSTR where 
+                              INDEX("F",WO_STATUS) = 0 AND  
+                              WO_NBR >=  INPUT V1200
+                               no-lock no-error.
+                  ELSE find next WO_MSTR where 
+                              INDEX("F",WO_STATUS) = 0  
+                               no-lock no-error.
+                  IF AVAILABLE WO_MSTR then display skip 
+            WO_NBR @ V1200 trim(WO_PART) @ WMESSAGE NO-LABEL with fram F1200.
+                  else   display skip "" @ WMESSAGE with fram F1200.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(WO_MSTR) = ? THEN find first WO_MSTR where 
+                              INDEX("F",WO_STATUS) = 0 AND  
+            WO_NBR <=  INPUT V1200
+                               no-lock no-error.
+                  ELSE find prev WO_MSTR where 
+                              INDEX("F",WO_STATUS) = 0 
+                               no-lock no-error.
+                  IF AVAILABLE WO_MSTR then display skip 
+            WO_NBR @ V1200 trim(WO_PART) @ WMESSAGE NO-LABEL with fram F1200.
+                  else   display skip "" @ WMESSAGE with fram F1200.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V1200 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1200.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1200.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1200.
+        pause 0.
+        leave V1200L.
+     END.
+     PV1200 = V1200.
+     /* END    LINE :1200  工單號碼[WO]  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :1300  料品[ITEM]-INV  */
+     V1300L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1300           as char format "x(50)".
+        define variable PV1300          as char format "x(50)".
+        define variable L13001          as char format "x(40)".
+        define variable L13002          as char format "x(40)".
+        define variable L13003          as char format "x(40)".
+        define variable L13004          as char format "x(40)".
+        define variable L13005          as char format "x(40)".
+        define variable L13006          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+         If sectionid > 1 Then 
+        V1300 = PV1300 .
+        V1300 = ENTRY(1,V1300,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        IF V1200 <> "" then
+        leave V1300L.
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+
+                /* LABEL 1 - START */ 
+                L13001 = "料品 或 料品+批號?" .
+                display L13001          format "x(40)" skip with fram F1300 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L13002 = "" . 
+                display L13002          format "x(40)" skip with fram F1300 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L13003 = "" . 
+                display L13003          format "x(40)" skip with fram F1300 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L13004 = "" . 
+                display L13004          format "x(40)" skip with fram F1300 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1300 no-box.
+        Update V1300
+        WITH  fram F1300 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F1300.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where 
+                              PT_PART >=  INPUT V1300
+                               no-lock no-error.
+                  ELSE find next PT_MSTR where 
+                               no-lock no-error.
+                  IF AVAILABLE PT_MSTR then display skip 
+            PT_PART @ V1300 PT_DESC1 @ WMESSAGE NO-LABEL with fram F1300.
+                  else   display skip "" @ WMESSAGE with fram F1300.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where 
+            PT_PART <=  INPUT V1300
+                               no-lock no-error.
+                  ELSE find prev PT_MSTR where 
+                               no-lock no-error.
+                  IF AVAILABLE PT_MSTR then display skip 
+            PT_PART @ V1300 PT_DESC1 @ WMESSAGE NO-LABEL with fram F1300.
+                  else   display skip "" @ WMESSAGE with fram F1300.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V1300 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1300.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1300.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        find first PT_MSTR where PT_PART = ENTRY(1, V1300, "@")  no-lock no-error.
+        IF NOT AVAILABLE PT_MSTR then do:
+                display skip "Error,Retry" @ WMESSAGE NO-LABEL with fram F1300.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1300.
+        pause 0.
+        leave V1300L.
+     END.
+     IF INDEX(V1300,"@" ) = 0 then V1300 = V1300 + "@".
+     PV1300 = V1300.
+     V1300 = ENTRY(1,V1300,"@").
+     /* END    LINE :1300  料品[ITEM]-INV  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :1310  料品[ITEM]-WO  */
+     V1310L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1310           as char format "x(50)".
+        define variable PV1310          as char format "x(50)".
+        define variable L13101          as char format "x(40)".
+        define variable L13102          as char format "x(40)".
+        define variable L13103          as char format "x(40)".
+        define variable L13104          as char format "x(40)".
+        define variable L13105          as char format "x(40)".
+        define variable L13106          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1310 = ENTRY(1,V1310,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        IF V1200 = "" then
+        leave V1310L.
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1310 no-box.
+
+                /* LABEL 1 - START */ 
+                L13101 = "料品 或 料品+批號?" .
+                display L13101          format "x(40)" skip with fram F1310 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L13102 = "" . 
+                display L13102          format "x(40)" skip with fram F1310 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L13103 = "" . 
+                display L13103          format "x(40)" skip with fram F1310 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L13104 = "" . 
+                display L13104          format "x(40)" skip with fram F1310 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1310 no-box.
+        Update V1310
+        WITH  fram F1310 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F1310.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(TR_HIST) = ? THEN find first TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO"
+and tr_site = V1002 AND  
+                              TR_PART >=  INPUT V1310
+                               no-lock no-error.
+                  ELSE find next TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO"
+and tr_site = V1002  
+                               no-lock no-error.
+                  IF AVAILABLE TR_HIST then display skip 
+            TR_PART @ V1310 Trim(TR_PART) @ WMESSAGE NO-LABEL with fram F1310.
+                  else   display skip "" @ WMESSAGE with fram F1310.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(TR_HIST) = ? THEN find first TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO"
+and tr_site = V1002 AND  
+            TR_PART <=  INPUT V1310
+                               no-lock no-error.
+                  ELSE find prev TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO"
+and tr_site = V1002 
+                               no-lock no-error.
+                  IF AVAILABLE TR_HIST then display skip 
+            TR_PART @ V1310 Trim(TR_PART) @ WMESSAGE NO-LABEL with fram F1310.
+                  else   display skip "" @ WMESSAGE with fram F1310.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V1310 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1310.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1310.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        find first TR_HIST where TR_NBR = V1200 and tr_site = V1002 and TR_TYPE = "ISS-WO" and TR_PART = ENTRY(1, V1310, "@")  no-lock no-error.
+        IF NOT AVAILABLE TR_HIST then do:
+                display skip "該物料沒過料" @ WMESSAGE NO-LABEL with fram F1310.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1310.
+        pause 0.
+        leave V1310L.
+     END.
+     IF INDEX(V1310,"@" ) = 0 then V1310 = V1310 + "@".
+     PV1310 = V1310.
+     V1310 = ENTRY(1,V1310,"@").
+     /* END    LINE :1310  料品[ITEM]-WO  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :1500  批號[LOT]-INV  */
+     V1500L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1500           as char format "x(50)".
+        define variable PV1500          as char format "x(50)".
+        define variable L15001          as char format "x(40)".
+        define variable L15002          as char format "x(40)".
+        define variable L15003          as char format "x(40)".
+        define variable L15004          as char format "x(40)".
+        define variable L15005          as char format "x(40)".
+        define variable L15006          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        if INDEX(PV1300,"@") <> 0 then
+        V1500 = ENTRY(2, PV1300, "@").
+        V1500 = ENTRY(1,V1500,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1500 = ENTRY(1,V1500,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        IF V1200 <> "" then
+        leave V1500L.
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
+
+                /* LABEL 1 - START */ 
+                L15001 = "批號?" .
+                display L15001          format "x(40)" skip with fram F1500 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L15002 = "料品:" + trim( V1300 ) .
+                display L15002          format "x(40)" skip with fram F1500 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L15003 = "" . 
+                display L15003          format "x(40)" skip with fram F1500 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L15004 = "" . 
+                display L15004          format "x(40)" skip with fram F1500 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1500 no-box.
+        Update V1500
+        WITH  fram F1500 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F1500.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(LD_DET) = ? THEN find first LD_DET where 
+                              LD_PART = V1300 AND LD_SITE = V1002 AND  
+                              LD_LOT >=  INPUT V1500
+                               no-lock no-error.
+                  ELSE find next LD_DET where 
+                              LD_PART = V1300 AND LD_SITE = V1002  
+                               no-lock no-error.
+                  IF AVAILABLE LD_DET then display skip 
+            LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
+                  else   display skip "" @ WMESSAGE with fram F1500.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(LD_DET) = ? THEN find first LD_DET where 
+                              LD_PART = V1300 AND LD_SITE = V1002 AND  
+            LD_LOT <=  INPUT V1500
+                               no-lock no-error.
+                  ELSE find prev LD_DET where 
+                              LD_PART = V1300 AND LD_SITE = V1002 
+                               no-lock no-error.
+                  IF AVAILABLE LD_DET then display skip 
+            LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
+                  else   display skip "" @ WMESSAGE with fram F1500.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V1500 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1500.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1500.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        find first LD_DET where LD_PART = V1300 AND LD_LOT = V1500 AND LD_SITE = V1002  no-lock no-error.
+        IF NOT AVAILABLE LD_DET then do:
+                display skip "沒有庫存,不可打印" @ WMESSAGE NO-LABEL with fram F1500.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        IF not ( IF INDEX(V1500,"@" ) <> 0 then ENTRY(2,V1500,"@") else V1500 ) <> "" THEN DO:
+                display skip "沒有庫存,不可打印" @ WMESSAGE NO-LABEL with fram F1500.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1500.
+        pause 0.
+        leave V1500L.
+     END.
+     IF INDEX(V1500,"@" ) <> 0 then V1500 = ENTRY(2,V1500,"@").
+     PV1500 = V1500.
+     /* END    LINE :1500  批號[LOT]-INV  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :1510  批號[LOT]-WO  */
+     V1510L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1510           as char format "x(50)".
+        define variable PV1510          as char format "x(50)".
+        define variable L15101          as char format "x(40)".
+        define variable L15102          as char format "x(40)".
+        define variable L15103          as char format "x(40)".
+        define variable L15104          as char format "x(40)".
+        define variable L15105          as char format "x(40)".
+        define variable L15106          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        if INDEX(PV1310,"@") <> 0 then
+        V1510 = ENTRY(2, PV1310, "@").
+        V1510 = ENTRY(1,V1510,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1510 = ENTRY(1,V1510,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        IF V1200 = "" then
+        leave V1510L.
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
+
+                /* LABEL 1 - START */ 
+                L15101 = "批號?" .
+                display L15101          format "x(40)" skip with fram F1510 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L15102 = "料品:" + trim( V1310 ) .
+                display L15102          format "x(40)" skip with fram F1510 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L15103 = "" . 
+                display L15103          format "x(40)" skip with fram F1510 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L15104 = "" . 
+                display L15104          format "x(40)" skip with fram F1510 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F1510 no-box.
+        Update V1510
+        WITH  fram F1510 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F1510.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(TR_HIST) = ? THEN find first TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO" and TR_PART = V1310 AND TR_SITE = V1002 AND  
+                              TR_SERIAL >=  INPUT V1510
+                               no-lock no-error.
+                  ELSE find next TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO" and TR_PART = V1310 AND TR_SITE = V1002  
+                               no-lock no-error.
+                  IF AVAILABLE TR_HIST then display skip 
+            TR_SERIAL @ V1510 trim(TR_SERIAL) + "/" + trim(string(TR_QTY_CHG)) @ WMESSAGE NO-LABEL with fram F1510.
+                  else   display skip "" @ WMESSAGE with fram F1510.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(TR_HIST) = ? THEN find first TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO" and TR_PART = V1310 AND TR_SITE = V1002 AND  
+            TR_SERIAL <=  INPUT V1510
+                               no-lock no-error.
+                  ELSE find prev TR_HIST where 
+                              TR_NBR = V1200 and TR_TYPE = "ISS-WO" and TR_PART = V1310 AND TR_SITE = V1002 
+                               no-lock no-error.
+                  IF AVAILABLE TR_HIST then display skip 
+            TR_SERIAL @ V1510 trim(TR_SERIAL) + "/" + trim(string(TR_QTY_CHG)) @ WMESSAGE NO-LABEL with fram F1510.
+                  else   display skip "" @ WMESSAGE with fram F1510.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V1510 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1510.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1510.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        find first TR_HIST where TR_NBR = V1200 and TR_TYPE = "ISS-WO" and TR_PART = V1310 AND TR_SITE = V1002  no-lock no-error.
+        IF NOT AVAILABLE TR_HIST then do:
+                display skip "該物料未曾發料" @ WMESSAGE NO-LABEL with fram F1510.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1510.
+        pause 0.
+        leave V1510L.
+     END.
+     IF INDEX(V1510,"@" ) <> 0 then V1510 = ENTRY(2,V1510,"@").
+     PV1510 = V1510.
+     /* END    LINE :1510  批號[LOT]-WO  */
+
+
+   /* Additional Labels Format */
+   /* Internal Cycle Input :9010    */
+   V9010LMAINLOOP:
+   REPEAT:
+     /* START  LINE :9010  條碼上的數量[QTY ON LABEL]  */
+     V9010L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V9010           as char format "x(50)".
+        define variable PV9010          as char format "x(50)".
+        define variable L90101          as char format "x(40)".
+        define variable L90102          as char format "x(40)".
+        define variable L90103          as char format "x(40)".
+        define variable L90104          as char format "x(40)".
+        define variable L90105          as char format "x(40)".
+        define variable L90106          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        V9010 = "0".
+        V9010 = ENTRY(1,V9010,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V9010 = ENTRY(1,V9010,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
+
+                /* LABEL 1 - START */ 
+                L90101 = "條碼上數量" .
+                display L90101          format "x(40)" skip with fram F9010 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L90102 = "料品:" + trim( V1300 ) .
+                display L90102          format "x(40)" skip with fram F9010 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                L90103 = "批號:" + Trim(V1500) .
+                display L90103          format "x(40)" skip with fram F9010 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L90104 = "" . 
+                display L90104          format "x(40)" skip with fram F9010 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F9010 no-box.
+        Update V9010
+        WITH  fram F9010 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V9010 = "e" THEN  LEAVE V9010LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F9010.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F9010.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        If V9010 = "" OR V9010 = "-" OR V9010 = "." OR V9010 = ".-" OR V9010 = "-." then do:
+                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F9010.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        DO i = 1 to length(V9010).
+                If index("0987654321.-", substring(V9010,i,1)) = 0 then do:
+                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F9010.
+                pause 0 before-hide.
+                undo, retry.
+                end.
+        end.
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F9010.
+        pause 0.
+        leave V9010L.
+     END.
+     PV9010 = V9010.
+     /* END    LINE :9010  條碼上的數量[QTY ON LABEL]  */
+
+
+   /* Additional Labels Format */
+     /* START  LINE :9020  條碼個數[NO OF LABEL]  */
+     V9020L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V9020           as char format "x(50)".
+        define variable PV9020          as char format "x(50)".
+        define variable L90201          as char format "x(40)".
+        define variable L90202          as char format "x(40)".
+        define variable L90203          as char format "x(40)".
+        define variable L90204          as char format "x(40)".
+        define variable L90205          as char format "x(40)".
+        define variable L90206          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        V9020 = "1".
+        V9020 = ENTRY(1,V9020,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V9020 = ENTRY(1,V9020,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9020 no-box.
+
+                /* LABEL 1 - START */ 
+                L90201 = "條碼張數?" .
+                display L90201          format "x(40)" skip with fram F9020 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L90202 = "料品:" + trim( V1300 ) .
+                display L90202          format "x(40)" skip with fram F9020 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                L90203 = "批號:" + Trim(V1500) .
+                display L90203          format "x(40)" skip with fram F9020 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L90204 = "" . 
+                display L90204          format "x(40)" skip with fram F9020 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F9020 no-box.
+        Update V9020
+        WITH  fram F9020 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V9020 = "e" THEN  LEAVE V9010LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F9020.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F9020.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        If V9020 = "" OR V9020 = "-" OR V9020 = "." OR V9020 = ".-" OR V9020 = "-." then do:
+                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F9020.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        DO i = 1 to length(V9020).
+                If index("0987654321.-", substring(V9020,i,1)) = 0 then do:
+                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F9020.
+                pause 0 before-hide.
+                undo, retry.
+                end.
+        end.
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F9020.
+        pause 0.
+        leave V9020L.
+     END.
+     PV9020 = V9020.
+     /* END    LINE :9020  條碼個數[NO OF LABEL]  */
+
+
+   wtm_num = V9020.
+   /* Additional Labels Format */
+     /* START  LINE :9030  打印機[PRINTER]  */
+     V9030L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V9030           as char format "x(50)".
+        define variable PV9030          as char format "x(50)".
+        define variable L90301          as char format "x(40)".
+        define variable L90302          as char format "x(40)".
+        define variable L90303          as char format "x(40)".
+        define variable L90304          as char format "x(40)".
+        define variable L90305          as char format "x(40)".
+        define variable L90306          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        find first upd_det where upd_nbr = "LAP03" and upd_select = 99 no-lock no-error.
+If AVAILABLE ( upd_det ) then
+        V9030 = UPD_DEV.
+        V9030 = ENTRY(1,V9030,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+         If sectionid > 1 Then 
+        V9030 = PV9030 .
+        V9030 = ENTRY(1,V9030,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+
+        /* --FIRST TIME SKIP -- START  */
+         if sectionid = 1 then leave V9030L.
+        /* --FIRST TIME SKIP -- END  */
+
+
+        /* --CYCLE TIME SKIP -- START  */
+         if sectionid > 1 then leave V9030L .
+        /* --CYCLE TIME SKIP -- END  */
+
+                display "[庫存標簽打印]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9030 no-box.
+
+                /* LABEL 1 - START */ 
+                L90301 = "打印機?" .
+                display L90301          format "x(40)" skip with fram F9030 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L90302 = "" . 
+                display L90302          format "x(40)" skip with fram F9030 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L90303 = "" . 
+                display L90303          format "x(40)" skip with fram F9030 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L90304 = "" . 
+                display L90304          format "x(40)" skip with fram F9030 no-box.
+                /* LABEL 4 - END */ 
+                display "輸入或按E退出 "      format "x(40)" skip
+        skip with fram F9030 no-box.
+        Update V9030
+        WITH  fram F9030 NO-LABEL
+        /* ROLL BAR START */
+        EDITING:
+        readkey pause wtimeout.
+        if lastkey = -1 then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+        display skip "^" @ WMESSAGE NO-LABEL with fram F9030.
+            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+            THEN DO:
+                  IF recid(PRD_DET) = ? THEN find first PRD_DET where 
+                              PRD_DEV >=  INPUT V9030
+                               no-lock no-error.
+                  ELSE find next PRD_DET where 
+                               no-lock no-error.
+                  IF AVAILABLE PRD_DET then display skip 
+            PRD_DEV @ V9030 PRD_DESC @ WMESSAGE NO-LABEL with fram F9030.
+                  else   display skip "" @ WMESSAGE with fram F9030.
+            END.
+            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+            THEN DO:
+                  IF recid(PRD_DET) = ? THEN find first PRD_DET where 
+            PRD_DEV <=  INPUT V9030
+                               no-lock no-error.
+                  ELSE find prev PRD_DET where 
+                               no-lock no-error.
+                  IF AVAILABLE PRD_DET then display skip 
+            PRD_DEV @ V9030 PRD_DESC @ WMESSAGE NO-LABEL with fram F9030.
+                  else   display skip "" @ WMESSAGE with fram F9030.
+            END.
+            APPLY LASTKEY.
+        END.
+        /* ROLL BAR END */
+
+
+        /* PRESS e EXIST CYCLE */
+        IF V9030 = "e" THEN  LEAVE V9010LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F9030.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F9030.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+        find first PRD_DET where PRD_DEV = V9030  no-lock no-error.
+        IF NOT AVAILABLE PRD_DET then do:
+                display skip "Printer Error " @ WMESSAGE NO-LABEL with fram F9030.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F9030.
+        pause 0.
+        leave V9030L.
+     END.
+     PV9030 = V9030.
+     /* END    LINE :9030  打印機[PRINTER]  */
+
+
+   /* Additional Labels Format */
+     Define variable ts9030 AS CHARACTER FORMAT "x(100)".
+     Define variable av9030 AS CHARACTER FORMAT "x(100)".
+     PROCEDURE lap049030l.
+        /* Define Labels Path  Start */
+        Define variable LabelsPath as character format "x(100)" init "/mfgpro/rf/labels/".
+        Find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="LabelsPath"no-lock no-error.
+        If AVAILABLE(code_mstr) Then LabelsPath = trim ( code_cmmt ).
+        If substring(LabelsPath, length(LabelsPath), 1) <> "/" Then 
+        LabelsPath = LabelsPath + "/".
+        /* Define Labels Path  END */
+     INPUT FROM VALUE(LabelsPath + "lap04" + trim ( wtm_fm ) ).
+     wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
+     output to value( trim(wsection) + ".l") .
+     Do While True:
+              IMPORT UNFORMATTED ts9030.
+        av9030 = V9010.
+       IF INDEX(ts9030,"$Q") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$Q") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$Q") + length("$Q"), LENGTH(ts9030) - ( index(ts9030 ,"$Q" ) + length("$Q") - 1 ) ).
+       END.
+        av9030 = V1200.
+       IF INDEX(ts9030,"$R") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$R") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$R") + length("$R"), LENGTH(ts9030) - ( index(ts9030 ,"$R" ) + length("$R") - 1 ) ).
+       END.
+       find first pt_mstr where pt_part = trim( IF V1200 <> "" THEN V1310 ELSE V1300 )  no-lock no-error.
+If AVAILABLE ( pt_mstr )  then
+        av9030 = trim(pt_desc1).
+       IF INDEX(ts9030,"$F") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$F") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$F") + length("$F"), LENGTH(ts9030) - ( index(ts9030 ,"$F" ) + length("$F") - 1 ) ).
+       END.
+        av9030 = IF V1200 <> "" THEN V1310 ELSE V1300.
+       IF INDEX(ts9030,"$P") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$P") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$P") + length("$P"), LENGTH(ts9030) - ( index(ts9030 ,"$P" ) + length("$P") - 1 ) ).
+       END.
+       find first pt_mstr where pt_part = trim( IF V1200 <> "" THEN V1310 ELSE V1300 )  no-lock no-error.
+If AVAILABLE ( pt_mstr )  then
+        av9030 = pt_um.
+       IF INDEX(ts9030,"$U") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$U") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$U") + length("$U"), LENGTH(ts9030) - ( index(ts9030 ,"$U" ) + length("$U") - 1 ) ).
+       END.
+        av9030 = IF V1200 <> "" THEN V1510 ELSE V1500.
+       IF INDEX(ts9030,"$L") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$L") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$L") + length("$L"), LENGTH(ts9030) - ( index(ts9030 ,"$L" ) + length("$L") - 1 ) ).
+       END.
+        av9030 = trim(IF V1200 <> "" THEN V1310 ELSE V1300) + "@" + trim(IF V1200 <> "" THEN V1510 ELSE V1500).
+       IF INDEX(ts9030,"&B") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "&B") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"&B") + length("&B"), LENGTH(ts9030) - ( index(ts9030 ,"&B" ) + length("&B") - 1 ) ).
+       END.
+       find first pt_mstr where pt_part = trim( IF V1200 <> "" THEN V1310 ELSE V1300 )  no-lock no-error.
+If AVAILABLE ( pt_mstr )  then
+        av9030 = trim(pt_desc2).
+       IF INDEX(ts9030,"$E") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$E") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$E") + length("$E"), LENGTH(ts9030) - ( index(ts9030 ,"$E" ) + length("$E") - 1 ) ).
+       END.
+        av9030 = string(today).
+       IF INDEX(ts9030,"$D") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$D") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$D") + length("$D"), LENGTH(ts9030) - ( index(ts9030 ,"$D" ) + length("$D") - 1 ) ).
+       END.
+        av9030 = V1200.
+       IF INDEX(ts9030,"$O") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$O") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$O") + length("$O"), LENGTH(ts9030) - ( index(ts9030 ,"$O" ) + length("$O") - 1 ) ).
+       END.
+        av9030 = if length( trim ( IF V1200 <> "" THEN V1510 ELSE V1500 ) ) >= 8 then substring ( trim ( IF V1200 <> "" THEN V1510 ELSE V1500 ),7,2) else "00".
+       IF INDEX(ts9030,"&M") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "&M") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"&M") + length("&M"), LENGTH(ts9030) - ( index(ts9030 ,"&M" ) + length("&M") - 1 ) ).
+       END.
+       find first pt_mstr where pt_part = ( IF V1200 <> "" THEN V1310 ELSE V1300 )  no-lock no-error.
+If AVAILABLE ( pt_mstr )  then
+        av9030 = if pt_drwg_loc <> "" then "ENV DIR:" + trim (pt_drwg_loc) else "".
+       IF INDEX(ts9030,"&E") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "&E") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"&E") + length("&E"), LENGTH(ts9030) - ( index(ts9030 ,"&E" ) + length("&E") - 1 ) ).
+       END.
+       find first pt_mstr where pt_part = V1300  no-lock no-error.
+If AVAILABLE ( pt_mstr )  then
+        av9030 = if pt_avg_int <> 0 and pt_avg_int <> 90 then "保質期:" + trim ( string ( pt_avg_int ) ) + "月" else "".
+       IF INDEX(ts9030,"&D") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "&D") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"&D") + length("&D"), LENGTH(ts9030) - ( index(ts9030 ,"&D" ) + length("&D") - 1 ) ).
+       END.
+       put unformatted ts9030 skip.
+     End.
+     INPUT CLOSE.
+     OUTPUT CLOSE.
+     unix silent value ("chmod 777  " + trim(wsection) + ".l").
+     END PROCEDURE.
+     run lap049030l.
+     do i = 1 to integer(wtm_num):
+       find first PRD_DET where PRD_DEV = V9030 no-lock no-error.
+       IF AVAILABLE PRD_DET then do:
+         unix silent value (trim(prd_path) + " " + trim(wsection) + ".l").
+       end.
+     End.
+   /* Internal Cycle END :9030    */
+   END.
+   pause 0 before-hide.
+end.
