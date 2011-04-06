@@ -4,16 +4,16 @@
 /* REVISION: 14Y2 LAST MODIFIED: 11/19/10   BY: zy                           */
 
 {mfdtitle.i "14Y2"}
-&SCOPED-DEFINE xxmeiq_p_1 "INCLUDE"
+&SCOPED-DEFINE xxmeiq_p_1 "cdrefUDE"
 
 define variable lang like lng_lang.
-define variable incl as character format "x(20)" label {&xxmeiq_p_1}.
+define variable cdref as character format "x(20)" label {&xxmeiq_p_1}.
 define variable dcount as integer no-undo.
 
 form
    space(1)
    lang
-   incl
+   cdref
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -26,9 +26,9 @@ lang = global_user_lang.
 repeat:
 
    if c-application-mode <> 'web' then
-      update lang incl with frame a.
+      update lang cdref with frame a.
 
-   {wbrp06.i &command = update &fields = " lang incl " &frm = "a"}
+   {wbrp06.i &command = update &fields = " lang cdref " &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
@@ -48,7 +48,7 @@ repeat:
    dcount = 0.
 
    for each mnt_det no-lock where mnt_lang = lang and
-            index(mnt_label,incl) > 0,
+            index(mnt_label,cdref) > 0,
        each mnd_det no-lock where mnd_nbr = mnt_nbr and
             mnd_select = mnt_select
     with frame f-a:

@@ -157,7 +157,7 @@ status input.
 procedure dispFrameb:
    define input parameter itable as character.
    define input parameter ifield as character.
-   clear frame b.
+   clear frame b no-pause.
    hide frame b.
    for each tcr_reg no-lock where tcr_table = itable and tcr_field >= ifield:
        if tcr_type = "W" then do:

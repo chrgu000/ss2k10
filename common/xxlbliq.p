@@ -5,18 +5,18 @@
 /* DISPLAY TITLE */
 {mfdtitle.i "09Y1"}
 define variable lang   like lbl_lang.
-define variable vterm  like lbl_term format "x(16)".
-define variable incl   as   character format "x(12)".
+define variable lblterm  like lbl_term format "x(16)".
+define variable cdref  as   character format "x(12)".
 define variable dcount as   integer.
 /* DISPLAY TITLE */
 
 form
    space(1)
    lang format "x(4)"
-   vterm colon 24
-   incl 
+   lblterm colon 24
+   cdref
 with frame a side-labels width 80.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
@@ -27,9 +27,9 @@ lang = global_user_lang.
 repeat:
 
    if c-application-mode <> 'web' then
-      update lang vterm incl with frame a.
+      update lang lblterm cdref with frame a.
 
-   {wbrp06.i &command = update &fields = " lang vterm incl" &frm = "a"}
+   {wbrp06.i &command = update &fields = " lang lblterm cdref" &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
@@ -50,7 +50,7 @@ repeat:
 
    for each lbl_mstr where
             lbl_lang = lang and
-            lbl_term >= vterm and (index(lbl_long,incl) > 0 or incl = "")
+            lbl_term >= lblterm and (index(lbl_long,cdref) > 0 or cdref = "")
    no-lock with frame b:
 
       {mfrpchk.i}
@@ -62,7 +62,8 @@ repeat:
 
       dcount = dcount + 1.
 
-      if dev <> "terminal" and dev <> "page" and dev<> "printer" and dcount modulo 5 = 0 then
+      if dev <> "terminal" and dev <> "page" and dev<> "printer"
+         and dcount modulo 5 = 0 then
          put skip(1).
 
    end.
