@@ -71,6 +71,19 @@ on value-changed of lang in frame a do:
       assign lang.
    end.
 end.
+on Entry of lang in frame a do:
+   status input "Ctrl-D to Delete default value sets.".
+end.
+ON "CTRL-D" OF lang IN FRAME a DO:
+   DEFINE VARIABLE ret AS LOGICAL NO-UNDO.
+   {mfmsg01.i 11 2 ret}
+   if ret then do:
+      for each qad_wkfl where qad_domain = "xxcomp_param" and
+            qad_key1 = "xxcomp_param" exclusive-lock:
+          delete qad_wkf.
+      end.
+   end.
+end.
 on Entry of destpath in frame a do:
    status input "Ctrl-] to change default value.".
 end.
