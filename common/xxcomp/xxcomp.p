@@ -5,33 +5,40 @@
 /* REVISION END                                                              */
 
 {mfdtitle.i "14Y1"}
-def var filepath as char format "x(30)".
-def var destpath as char format "x(40)".
-def var filefrom as char format "x(10)".
-def var fileto   as char format "x(10)".
-def var lang     as char format "x(2)" init "ch".
-def var v_tmp as char format "x(40)".
-def var v_tmp2 as char format "x(40)".
-def var compcfg as char format "x(80)".
-def var ii as inte.
-def var v_format as char.
-
-def var compilepath as char  format "x(60)" extent 5 label "Compile Propath".
-def var compilepath1 as char format "x(60)".
-def var compilepath2 as char format "x(60)".
-def var compilepath3 as char format "x(60)".
-def var compilepath4 as char format "x(60)".
-def var compilepath5 as char format "x(60)".
-def var compilepathlength as inte init 60.
-def var tmp_compilepath1 as char.
-def var tmp_compilepath2 as char.
-def var tmp_compilepath3 as char.
-def var tmp_compilepath4 as char.
-def var tmp_compilepath5 as char.
-def var jj as inte.
-def var old_propath as char.
-def var old_compilepath as char.
-if old_compilepath = "" then old_compilepath = propath.
+define variable filepath as character format "x(30)".
+define variable destpath as character format "x(40)".
+define variable filefrom as character format "x(10)".
+define variable fileto   as character format "x(10)".
+define variable lang     as character format "x(2)" init "ch".
+define variable v_tmp as character format "x(40)".
+define variable v_tmp2 as character format "x(40)".
+define variable compcfg as character format "x(80)".
+define variable ii as integer.
+define variable v_format as character.
+define variable vdevice as character.
+define variable vsysusr as character.
+define variable compilepath as character  format "x(60)" extent 5
+       label "Compile Propath".
+define variable compilepath1 as character format "x(60)".
+define variable compilepath2 as character format "x(60)".
+define variable compilepath3 as character format "x(60)".
+define variable compilepath4 as character format "x(60)".
+define variable compilepath5 as character format "x(60)".
+define variable compilepathlength as integer initial 60.
+define variable tmp_compilepath1 as character.
+define variable tmp_compilepath2 as character.
+define variable tmp_compilepath3 as character.
+define variable tmp_compilepath4 as character.
+define variable tmp_compilepath5 as character.
+define variable jj as integer.
+define variable old_propath as character.
+define variable old_compilepath as character.
+if old_compilepath = "" then do:
+      run getQADPath(output old_compilepath).
+      assign old_compilepath = ".," + old_compilepath + ","
+                             + old_compilepath + "/bbi,"
+                             + old_compilepath + "/xrc".
+end.
 def temp-table tt
     field tt_file as char.
 
@@ -47,9 +54,8 @@ form
     skip(1)
     lang     colon 22 label "Language Code" skip
     destpath colon 22 label "Destination Directory"
-    with frame a side-labels width 80 title "Compile Program".
-
-    view frame a.
+with frame a side-labels width 80 title "Compile Program".
+view frame a.
 
 on value-changed of lang in frame a do:
    IF LASTKEY = KEYCODE("u") OR LASTKEY = KEYCODE("U") then do:
@@ -65,7 +71,6 @@ on value-changed of lang in frame a do:
       assign lang.
    end.
 end.
-
 on Entry of destpath in frame a do:
    status input "Ctrl-] to change default value.".
 end.
@@ -80,18 +85,20 @@ ON "CTRL-]" OF destpath IN FRAME a DO:
       assign destpath.
    end.
    else do:
-       find first qad_wkfl exclusive-lock where qad_domain = "xxcomp_param" and
-             qad_key1 = "xxcomp_param" no-error.
+       find first qad_wkfl where qad_domain = "xxcomp_param" and
+             qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
+             qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
+             exclusive-lock no-error.
        if available qad_wkfl then do:
           assign destpath:screen-value = qad_charfld[6].
           assign destpath.
        end.
    end.
 end.
-    /*提起参数文档*/
-        unix silent value ( "cd" ).
-        unix silent value ( "rm -f comp.tmp").
-        unix silent value ( "pwd > comp.tmp").
+  /*提起参数文档*/
+  unix silent value ( "cd" ).
+  unix silent value ( "rm -f comp.tmp").
+  unix silent value ( "pwd > comp.tmp").
   input from comp.tmp.
         import unformatted v_tmp2.
   input close.
@@ -111,8 +118,11 @@ end.
 /*    assign lang   = entry(5,compcfg,"@").                                  */
 /*    assign destpath   = entry(6,compcfg,"@").                              */
 /*  end.                                                                     */
-find first qad_wkfl no-lock where qad_domain = "xxcomp_param" and
-           qad_key1 = "xxcomp_param" no-error.
+run getUserInfo(output vsysusr,output vdevice).
+find first qad_wkfl where qad_domain = "xxcomp_param" and
+           qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
+           qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
+           no-lock no-error.
 if available qad_wkfl then do:
    assign filePath = qad_charfld[1]
           filefrom = qad_charfld[2]
@@ -124,6 +134,9 @@ if available qad_wkfl then do:
           else do:
              run getQADPath(output destpath).
           end.
+end.
+else do:
+   run getQADPath(output destpath).
 end.
 main-loop:
 repeat with frame a :
@@ -162,7 +175,12 @@ repeat with frame a :
     else do:
         assign filepath = FILE-INFO:FULL-PATHNAME.
         disp filepath.
-
+        if index(old_compilepath,filepath) = 0 then do:
+           run getQADPath(output old_compilepath).
+           assign old_compilepath = ".," + filepath + "," + old_compilepath
+                                  + ","  + old_compilepath + "/bbi,"
+                                  + old_compilepath + "/xrc".
+        end.
         if fileto = CHR(255) then fileto = "".
         update filefrom fileto.
         if fileto = "" then fileto = CHR(255).
@@ -311,9 +329,8 @@ repeat with frame a :
       else if frame-field = "compilepath5" then do:
         status input.
         readkey.
-        if ( lastkey >= 40 and lastkey <= 123 )
-           then do:
-.
+        if ( lastkey >= 40 and lastkey <= 123 ) then do:
+             .
         end.  /*if ( chr(lastkey) >= "a" and ch*/
         apply lastkey.
       end.
@@ -379,7 +396,7 @@ repeat with frame a :
                 substring(tt_file,length(tt_file) - 1 ,2) <> ".p" and
                 substring(tt_file,length(tt_file) - 1 ,2) <> ".P" and
                 substring(tt_file,length(tt_file) - 1 ,2) <> ".w" and
-                substring(tt_file,length(tt_file) - 1 ,2) <> ".W"  )
+                substring(tt_file,length(tt_file) - 1 ,2) <> ".W")
                 then do:
                      delete tt.
              end.
@@ -466,14 +483,20 @@ run gen_comp.  /*重新生成参数文件*/
 
 procedure gen_comp:
   define variable vdestpath as character.
-  find first qad_wkfl exclusive-lock where qad_domain = "xxcomp_param" and
-             qad_key1 = "xxcomp_param" no-error.
+  find first qad_wkfl where qad_domain = "xxcomp_param" and
+             qad_key1 = "xxcomp_param" and qad_key2 = trim(vdevice) and
+             qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
+             exclusive-lock no-error.
   if not available qad_wkfl then do:
      create qad_wkfl.
      assign qad_domain = "xxcomp_param"
-            qad_key1 = "xxcomp_param".
+            qad_key1 = "xxcomp_param"
+            qad_key2 = trim(vdevice)
+            qad_key3 = trim(vsysusr)
+            qad_key4 = trim(global_userid).
   end.
-   assign qad_charfld[1] = filePath
+   assign qad_key5 = mfguser
+          qad_charfld[1] = filePath
           qad_charfld[2] = filefrom
           qad_charfld[3] = if fileto = "" then CHR(255) else fileto
           qad_charfld[4] = old_compilepath
@@ -499,4 +522,14 @@ procedure getQADPath:
     END.
     ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
 END.
-end procedure .
+end procedure.
+
+procedure getUserInfo:
+    define output parameter osysusr as character.
+    define output parameter odevice as character.
+    FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
+        EACH qaddb._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
+      assign osysusr = _connect-name
+             odevice = _connect-device.
+    END.
+end procedure.
