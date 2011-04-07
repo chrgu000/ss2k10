@@ -1,6 +1,7 @@
 /* xxcomp.p - compile procedure                                              */
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 14Y1 LAST MODIFIED: 04/01/11 BY:ZY 参数记录在qad_wkfl           */
+/* REVISION: 0CYH LAST MODIFIED: 13/26/11 BY:zy Add EB common             *EB*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
@@ -78,7 +79,8 @@ ON "CTRL-D" OF lang IN FRAME a DO:
    DEFINE VARIABLE ret AS LOGICAL NO-UNDO.
    {mfmsg01.i 11 2 ret}
    if ret then do:
-      for each qad_wkfl where qad_domain = "xxcomp_param" and
+      for each qad_wkfl where
+/*eb      		  qad_domain = "xxcomp_param" and                              */
             qad_key1 = "xxcomp_param" exclusive-lock:
           delete qad_wkf.
       end.
@@ -98,7 +100,8 @@ ON "CTRL-]" OF destpath IN FRAME a DO:
       assign destpath.
    end.
    else do:
-       find first qad_wkfl where qad_domain = "xxcomp_param" and
+       find first qad_wkfl where
+/*eb         qad_domain = "xxcomp_param" and                                 */
              qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
@@ -132,7 +135,8 @@ end.
 /*    assign destpath   = entry(6,compcfg,"@").                              */
 /*  end.                                                                     */
 run getUserInfo(output vsysusr,output vdevice).
-find first qad_wkfl where qad_domain = "xxcomp_param" and
+find first qad_wkfl where
+/*eb       qad_domain = "xxcomp_param" and                                   */
            qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
            qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
            no-lock no-error.
@@ -496,13 +500,15 @@ run gen_comp.  /*重新生成参数文件*/
 
 procedure gen_comp:
   define variable vdestpath as character.
-  find first qad_wkfl where qad_domain = "xxcomp_param" and
+  find first qad_wkfl where
+/*eb         qad_domain = "xxcomp_param" and                                 */
              qad_key1 = "xxcomp_param" and qad_key2 = trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
   if not available qad_wkfl then do:
      create qad_wkfl.
-     assign qad_domain = "xxcomp_param"
+     assign
+/*eb         qad_domain = "xxcomp_param" and                                 */
             qad_key1 = "xxcomp_param"
             qad_key2 = trim(vdevice)
             qad_key3 = trim(vsysusr)
