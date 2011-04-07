@@ -2,6 +2,7 @@
 /*V8:ConvertMode=Report                                                      */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy                           */
 /* REVISION: 0CYH LAST MODIFIED: 13/26/11   BY: zy                        *2L*/
+/* REVISION: 0CYH LAST MODIFIED: 13/26/11   BY: zy        Add EB common   *EB*/
 /* Environment: Progress:10.1C   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
@@ -24,8 +25,9 @@ if not available qaddb.flh_mstr then do:
            flh_down = 6.
 end.
 
-find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
-       and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+find first qaddb.qad_wkfl exclusive-lock where
+/*eb       qad_domain = global_domain and                                    */
+           qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
    assign qad_charfld[1] = ""
           qad_charfld[2] = "".
@@ -34,15 +36,17 @@ end.
 ON VALUE-CHANGED OF sfile IN FRAME a
 DO:
    assign db_name sfile.
-   find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
-          and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+   find first qaddb.qad_wkfl exclusive-lock where
+/*eb          qad_domain = global_domain and                                 */
+              qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
       assign qad_charfld[1] = db_name
              qad_charfld[2] = sfile.
    end.
    else do:
      create qad_wkfl.
-     assign qad_domain = global_domain
+     assign
+/*eb        qad_domain = global_domain                                       */
             qad_key1 = "xxgettable"
             qad_key2 = global_userid
             qad_charfld[1] = db_name
@@ -58,15 +62,17 @@ repeat:
 if c-application-mode <> 'web' then.
    update sfile db_name with frame a.
    assign db_name sfile.
-   find first qaddb.qad_wkfl exclusive-lock where qad_domain = global_domain
-          and qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
+   find first qaddb.qad_wkfl exclusive-lock where
+/*eb          qad_domain = global_domain and                                 */
+              qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
       assign qad_charfld[1] = db_name
              qad_charfld[2] = sfile.
    end.
    else do:
      create qad_wkfl.
-     assign qad_domain = global_domain
+     assign
+/*eb        qad_domain = global_domain                                       */
             qad_key1 = "xxgettable"
             qad_key2 = global_userid
             qad_charfld[1] = db_name
