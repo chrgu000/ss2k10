@@ -6,10 +6,10 @@
 /* REVISION END                                                              */
 
 {mfdtitle.i "14YB"}
-define variable filepath as character format "x(30)".
-define variable destpath as character format "x(40)".
-define variable filefrom as character format "x(10)".
-define variable fileto   as character format "x(10)".
+define variable filepath as character format "x(54)".
+define variable destpath as character format "x(54)".
+define variable filefrom as character format "x(24)".
+define variable fileto   as character format "x(24)".
 define variable lang     as character format "x(2)".
 define variable v_tmp    as character format "x(40)".
 define variable v_tmp2   as character format "x(40)".
@@ -45,18 +45,19 @@ define temp-table tt
        field tt_file as char.
 
 form
-    filepath colon 23 label "Source Directory" skip(1)
-    filefrom colon 16 label "File"
-    fileto   colon 49 label "To"     skip(1)
+    filepath     colon 22 label "Source Directory" skip(1)
+    filefrom     colon 16 label "File"
+    fileto       colon 49 label {t001.i} skip(1)
     compilepath1 colon 16 label "Compile Propath"
     compilepath2 colon 16 no-label
     compilepath3 colon 16 no-label
     compilepath4 colon 16 no-label
     compilepath5 colon 16 no-label
     skip(1)
-    lang     colon 22 label "Language Code" skip
-    destpath colon 22 label "Destination Directory"
+    lang         colon 22 label "Language Code" skip
+    destpath     colon 22 label "Destination Directory"
 with frame a side-labels width 80 title "Compile Program".
+setFrameLabels(frame a:handle).
 view frame a.
 
 on value-changed of lang in frame a do:
@@ -73,10 +74,7 @@ on value-changed of lang in frame a do:
       assign lang.
    end.
 end.
-on Entry of lang in frame a do:
-   status input "Ctrl-D to Delete default value sets.".
-end.
-ON "CTRL-D" OF lang IN FRAME a DO:
+ON "CTRL-D" OF destpath IN FRAME a DO:
    {mfmsg01.i 11 2 delParam}
    if delParam then do:
       for each qad_wkfl where
@@ -84,10 +82,12 @@ ON "CTRL-D" OF lang IN FRAME a DO:
                qad_key1 = "xxcomp_param" exclusive-lock:
           delete qad_wkf.
       end.
+      return.
    end.
 end.
 on Entry of destpath in frame a do:
    status input "Ctrl-] to change default value.".
+   {pxmsg.i &MSGTEXT='"Ctrl-D to delete saved param."' &ERRORLEVEL=1}
 end.
 on Leave of destpath in frame a do:
    status input "".
