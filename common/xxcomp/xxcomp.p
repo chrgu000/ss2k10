@@ -11,14 +11,14 @@ define variable destpath as character format "x(40)".
 define variable filefrom as character format "x(10)".
 define variable fileto   as character format "x(10)".
 define variable lang     as character format "x(2)" init "ch".
-define variable v_tmp as character format "x(40)".
-define variable v_tmp2 as character format "x(40)".
-define variable compcfg as character format "x(80)".
+define variable v_tmp    as character format "x(40)".
+define variable v_tmp2   as character format "x(40)".
+define variable compcfg  as character format "x(80)".
 define variable ii as integer.
 define variable v_format as character.
-define variable vdevice as character.
-define variable vsysusr as character.
-define variable compilepath as character  format "x(60)" extent 5
+define variable vdevice  as character.
+define variable vsysusr  as character.
+define variable compilepath  as character  format "x(60)" extent 5
        label "Compile Propath".
 define variable compilepath1 as character format "x(60)".
 define variable compilepath2 as character format "x(60)".
@@ -26,11 +26,11 @@ define variable compilepath3 as character format "x(60)".
 define variable compilepath4 as character format "x(60)".
 define variable compilepath5 as character format "x(60)".
 define variable compilepathlength as integer initial 60.
-define variable tmp_compilepath1 as character.
-define variable tmp_compilepath2 as character.
-define variable tmp_compilepath3 as character.
-define variable tmp_compilepath4 as character.
-define variable tmp_compilepath5 as character.
+define variable tmp_compilepath1  as character.
+define variable tmp_compilepath2  as character.
+define variable tmp_compilepath3  as character.
+define variable tmp_compilepath4  as character.
+define variable tmp_compilepath5  as character.
 define variable jj as integer.
 define variable old_propath as character.
 define variable old_compilepath as character.
@@ -80,7 +80,7 @@ ON "CTRL-D" OF lang IN FRAME a DO:
    {mfmsg01.i 11 2 ret}
    if ret then do:
       for each qad_wkfl where
-/*eb      		  qad_domain = "xxcomp_param" and                              */
+/*eb            qad_domain = "xxcomp_param" and                              */
             qad_key1 = "xxcomp_param" exclusive-lock:
           delete qad_wkf.
       end.
@@ -492,10 +492,9 @@ repeat with frame a :
   /*开始逐个编译--END*/
     end.
     assign propath = old_propath.
-    unix silent value ( "rm -f comp.tmp").
-    unix silent value ( "rm -f comp.lst").
 end.
-
+os-delete comp.tmp.
+os-delete comp.lst.
 run gen_comp.  /*重新生成参数文件*/
 
 procedure gen_comp:
@@ -538,9 +537,9 @@ procedure getQADPath:
           ASSIGN vpropath = SUBSTRING(vpropath,1,INDEX(vpropath,",") - 5).
           leave.
        END.
-    END.
+    end.
     ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
-END.
+  END.
 end procedure.
 
 procedure getUserInfo:
