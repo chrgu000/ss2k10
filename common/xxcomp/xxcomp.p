@@ -1,16 +1,16 @@
 /* xxcomp.p - compile procedure                                              */
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 14Y1 LAST MODIFIED: 04/01/11 BY:ZY 参数记录在qad_wkfl           */
-/* REVISION: 0CYH LAST MODIFIED: 13/26/11 BY:zy Add EB common             *EB*/
+/* REVISION: 14YB LAST MODIFIED: 04/11/11 BY:zy Add EB common             *EB*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "14Y1"}
+{mfdtitle.i "14YB"}
 define variable filepath as character format "x(30)".
 define variable destpath as character format "x(40)".
 define variable filefrom as character format "x(10)".
 define variable fileto   as character format "x(10)".
-define variable lang     as character format "x(2)" init "ch".
+define variable lang     as character format "x(2)".
 define variable v_tmp    as character format "x(40)".
 define variable v_tmp2   as character format "x(40)".
 define variable compcfg  as character format "x(80)".
@@ -18,7 +18,7 @@ define variable ii as integer.
 define variable v_format as character.
 define variable vdevice  as character.
 define variable vsysusr  as character.
-define variable compilepath  as character  format "x(60)" extent 5
+define variable compilepath  as character format "x(60)" extent 5
        label "Compile Propath".
 define variable compilepath1 as character format "x(60)".
 define variable compilepath2 as character format "x(60)".
@@ -34,14 +34,15 @@ define variable tmp_compilepath5  as character.
 define variable jj as integer.
 define variable old_propath as character.
 define variable old_compilepath as character.
+DEFINE VARIABLE delParam AS LOGICAL NO-UNDO initial no.
 if old_compilepath = "" then do:
       run getQADPath(output old_compilepath).
       assign old_compilepath = ".," + old_compilepath + ","
                              + old_compilepath + "/bbi,"
                              + old_compilepath + "/xrc".
 end.
-def temp-table tt
-    field tt_file as char.
+define temp-table tt
+       field tt_file as char.
 
 form
     filepath colon 23 label "Source Directory" skip(1)
@@ -76,12 +77,11 @@ on Entry of lang in frame a do:
    status input "Ctrl-D to Delete default value sets.".
 end.
 ON "CTRL-D" OF lang IN FRAME a DO:
-   DEFINE VARIABLE ret AS LOGICAL NO-UNDO.
-   {mfmsg01.i 11 2 ret}
-   if ret then do:
+   {mfmsg01.i 11 2 delParam}
+   if delParam then do:
       for each qad_wkfl where
-/*eb            qad_domain = "xxcomp_param" and                              */
-            qad_key1 = "xxcomp_param" exclusive-lock:
+/*eb*/         qad_domain = "xxcomp_param" and
+               qad_key1 = "xxcomp_param" exclusive-lock:
           delete qad_wkf.
       end.
    end.
@@ -101,7 +101,7 @@ ON "CTRL-]" OF destpath IN FRAME a DO:
    end.
    else do:
        find first qad_wkfl where
-/*eb         qad_domain = "xxcomp_param" and                                 */
+/*eb*/       qad_domain = "xxcomp_param" and
              qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
@@ -135,8 +135,9 @@ end.
 /*    assign destpath   = entry(6,compcfg,"@").                              */
 /*  end.                                                                     */
 run getUserInfo(output vsysusr,output vdevice).
+assign lang = lc(global_user_lang).
 find first qad_wkfl where
-/*eb       qad_domain = "xxcomp_param" and                                   */
+/*eb*/     qad_domain = "xxcomp_param" and
            qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
            qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
            no-lock no-error.
@@ -448,17 +449,17 @@ repeat with frame a :
       ii = length(filepath).
       for each tt where tt_file <> "" and tt_file >= filepath + "/" + filefrom
            and tt_file <= filepath + "/" + fileto:
-        v_tmp = destpath + "/" + lang.
+        v_tmp = destpath + "/" + lc(lang).
         FILE-INFO:FILE-NAME = v_tmp.
         if FILE-INFO:FILE-TYPE = ? then do:
-          unix silent value ( "mkdir " + v_tmp ).
+          unix silent value ( "mkdir " + v_tmp).
         end.
-        v_tmp = destpath + "/" + lang + "/" + substring(tt_file,ii + 2 ,2).
+        v_tmp = destpath + "/" + lc(lang) + "/" + substring(tt_file,ii + 2 ,2).
 
         status input "Compiling " + tt_file.
         FILE-INFO:FILE-NAME = v_tmp.
         if FILE-INFO:FILE-TYPE = ? then do:
-          unix silent value ( "mkdir " + v_tmp ).
+          unix silent value ( "mkdir " + v_tmp).
         end.
         compile value(tt_file) save into value(v_tmp) /*no-error*/.
 
@@ -495,19 +496,22 @@ repeat with frame a :
 end.
 os-delete comp.tmp.
 os-delete comp.lst.
-run gen_comp.  /*重新生成参数文件*/
+
+if not delParam then do:
+   run gen_comp.  /*重新生成参数文件*/
+end.
 
 procedure gen_comp:
   define variable vdestpath as character.
   find first qad_wkfl where
-/*eb         qad_domain = "xxcomp_param" and                                 */
+/*eb*/       qad_domain = "xxcomp_param" and
              qad_key1 = "xxcomp_param" and qad_key2 = trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
   if not available qad_wkfl then do:
      create qad_wkfl.
      assign
-/*eb         qad_domain = "xxcomp_param" and                                 */
+/*eb*/      qad_domain = "xxcomp_param"
             qad_key1 = "xxcomp_param"
             qad_key2 = trim(vdevice)
             qad_key3 = trim(vsysusr)
