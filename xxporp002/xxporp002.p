@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*ע�⣺cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110314"}
+{mfdtitle.i "110314.1"}
 &SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable effdate  like tr_effdate no-undo label "DUE_DATE".

@@ -7,7 +7,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*注意：cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110314"}
+{mfdtitle.i "110314.1"}
 define var v_prgname like execname no-undo.
 
 
@@ -141,7 +141,7 @@ export delimiter "~011"
 
 export delimiter "~011"
     "客户编码"
-    "传票日期"
+    "发货日期"
     "传票时间"
     "装车车间"
     "发货时间"
@@ -152,6 +152,7 @@ export delimiter "~011"
     "昭和图号"
     "部品数量"
     "容器数量"
+    "传票日期"
     .
 
 for each xxsod_det
@@ -211,15 +212,15 @@ for each xxsod_det
     v_time_f  = if xtime(xxsod_due_time1) < 10 * 60 * 60 then ""
               else string(xtime(xxsod_due_time1) - 80 * 60,"HH:MM")
     .
-
-    find first xxcased_det no-lock where xxcased_part = xxsod_part no-error.
-    if available xxcased_det then do:
-       assign v_qty_case = xxcased_qty_per.
-    end.
-    else do:
-       assign v_qty_case = 0.
-    end.
-
+/*                                                                             */
+/*    find first xxcased_det no-lock where xxcased_part = xxsod_part no-error. */
+/*    if available xxcased_det then do:                                        */
+/*       assign v_qty_case = xxcased_qty_per.                                  */
+/*    end.                                                                     */
+/*    else do:                                                                 */
+/*       assign v_qty_case = 0.                                                */
+/*    end.                                                                     */
+/*                                                                             */
     export delimiter "~011"
         xxsod_cust
         xxsod_due_date1
@@ -233,6 +234,7 @@ for each xxsod_det
         v_part
         xxsod_qty_ord
         v_qty_case
+        xxsod_due_date
         .
 end. /*for each xxsod_det*/
 put unformatted skip(1) "报表结束"  skip .
