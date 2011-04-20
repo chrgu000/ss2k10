@@ -1,0 +1,1036 @@
+ADD TABLE "xxpsc_ctrl"
+    AREA "CONTROL"
+    Description "生产排程控制表"
+    DUMP-NAME  "xxpsc_ctrl"
+
+ADD FIELD "xxpsc_site" of "xxpsc_ctrl" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  "gsa01"
+    LABEL  "地点"
+
+ADD FIELD "xxpsc_time_chg" of "xxpsc_ctrl" as integer
+    Description ""
+    FORMAT  ">>>,>>9"
+    INITIAL  "5"
+    LABEL  "固定换线时间"
+
+ADD FIELD "xxpsc_time_delay" of "xxpsc_ctrl" as integer
+    Description "此时间以内不算加班"
+    FORMAT  ">>>,>>9"
+    INITIAL  "15"
+    LABEL  "延迟下班时间"
+
+ADD FIELD "xxpsc_time_overtime" of "xxpsc_ctrl" as integer
+    Description "最小加班计算单位"
+    FORMAT  ">>>,>>9"
+    INITIAL  "30"
+    LABEL  "加班时间单位"
+
+ADD FIELD "xxpsc_time_stock" of "xxpsc_ctrl" as integer
+    Description "默认取今天凌晨两点的库存"
+    FORMAT  ">>>,>>9"
+    INITIAL  "7200"
+    LABEL  "理论库存时间点"
+
+ADD FIELD "xxpsc_mod_date" of "xxpsc_ctrl" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxpsc_mod_user" of "xxpsc_ctrl" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxpsc__chr01" of "xxpsc_ctrl" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__chr02" of "xxpsc_ctrl" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__chr03" of "xxpsc_ctrl" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__int01" of "xxpsc_ctrl" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__int02" of "xxpsc_ctrl" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__int03" of "xxpsc_ctrl" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__dte01" of "xxpsc_ctrl" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__dte02" of "xxpsc_ctrl" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__dte03" of "xxpsc_ctrl" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__dec01" of "xxpsc_ctrl" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsc__dec02" of "xxpsc_ctrl" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsc__dec03" of "xxpsc_ctrl" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsc__log01" of "xxpsc_ctrl" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsc__log02" of "xxpsc_ctrl" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxpsc_site" on "xxpsc_ctrl"
+    AREA "CONTROL_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxpsc_site"  ASCENDING
+
+
+ADD TABLE "xxcase_mstr"
+    AREA "STATIC"
+    Description "容器主表"
+    DUMP-NAME  "xxcase_mstr"
+
+ADD FIELD "xxcase_site" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "地点"
+
+ADD FIELD "xxcase_nbr" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "容器编号"
+
+ADD FIELD "xxcase_desc" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(18)"
+    INITIAL  ""
+    LABEL  "描述"
+
+ADD FIELD "xxcase_qty_ord" of "xxcase_mstr" as integer
+    Description ""
+    FORMAT  ">>>,>>>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "容器数"
+
+ADD FIELD "xxcase_mod_date" of "xxcase_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxcase_mod_user" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxcase__chr01" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__chr02" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__chr03" of "xxcase_mstr" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__int01" of "xxcase_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__int02" of "xxcase_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__int03" of "xxcase_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__dte01" of "xxcase_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__dte02" of "xxcase_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__dte03" of "xxcase_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__dec01" of "xxcase_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcase__dec02" of "xxcase_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcase__dec03" of "xxcase_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcase__log01" of "xxcase_mstr" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcase__log02" of "xxcase_mstr" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxcase_nbr" on "xxcase_mstr"
+    AREA "STATIC_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxcase_site"  ASCENDING
+    INDEX-FIELD  "xxcase_nbr"  ASCENDING
+
+
+ADD TABLE "xxcased_det"
+    AREA "STATIC"
+    Description "容器明细表"
+    DUMP-NAME  "xxcased_det"
+
+ADD FIELD "xxcased_site" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "地点"
+
+ADD FIELD "xxcased_nbr" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "容器编号"
+
+ADD FIELD "xxcased_part" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(18)"
+    INITIAL  ""
+    LABEL  "物料编号"
+
+ADD FIELD "xxcased_qty_per" of "xxcased_det" as integer
+    Description ""
+    FORMAT  ">>>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "容量"
+
+ADD FIELD "xxcased_mod_date" of "xxcased_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxcased_mod_user" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxcased__chr01" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__chr02" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__chr03" of "xxcased_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__int01" of "xxcased_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__int02" of "xxcased_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__int03" of "xxcased_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__dte01" of "xxcased_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__dte02" of "xxcased_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__dte03" of "xxcased_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__dec01" of "xxcased_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcased__dec02" of "xxcased_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcased__dec03" of "xxcased_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxcased__log01" of "xxcased_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxcased__log02" of "xxcased_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxcased_nbr" on "xxcased_det"
+    AREA "STATIC_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxcased_site"  ASCENDING
+    INDEX-FIELD  "xxcased_nbr"  ASCENDING
+    INDEX-FIELD  "xxcased_part"  ASCENDING
+
+ADD INDEX "xxcased_part" on "xxcased_det"
+    AREA "STATIC_IDX"
+    INDEX-FIELD  "xxcased_part"  ASCENDING
+    INDEX-FIELD  "xxcased_nbr"  ASCENDING
+
+
+ADD TABLE "xxrest_det"
+    AREA "TRANSACTION"
+    Description "休息时间"
+    DUMP-NAME  "xxrest_det"
+
+ADD FIELD "xxrest_site" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  "gsa01"
+    LABEL  "地点"
+
+ADD FIELD "xxrest_line" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "生产线"
+
+ADD FIELD "xxrest_shift" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "班次"
+
+ADD FIELD "xxrest_seq" of "xxrest_det" as integer
+    Description "第几次休息,开工为第0次"
+    FORMAT  ">>>,>>9"
+    INITIAL  "0"
+    LABEL  "休息顺序"
+
+ADD FIELD "xxrest_start" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "开始日期"
+
+ADD FIELD "xxrest_end" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "结束日期"
+
+ADD FIELD "xxrest_time_start" of "xxrest_det" as integer
+    Description ""
+    FORMAT  ">>>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "休息开始"
+
+ADD FIELD "xxrest_time_length" of "xxrest_det" as integer
+    Description "分钟"
+    FORMAT  ">>>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "休息时长"
+
+ADD FIELD "xxrest_mod_date" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxrest_mod_user" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxrest__chr01" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__chr02" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__chr03" of "xxrest_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__int01" of "xxrest_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__int02" of "xxrest_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__int03" of "xxrest_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__dte01" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__dte02" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__dte03" of "xxrest_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__dec01" of "xxrest_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxrest__dec02" of "xxrest_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxrest__dec03" of "xxrest_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxrest__log01" of "xxrest_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxrest__log02" of "xxrest_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxrest_line" on "xxrest_det"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxrest_site"  ASCENDING
+    INDEX-FIELD  "xxrest_line"  ASCENDING
+    INDEX-FIELD  "xxrest_shift"  ASCENDING
+    INDEX-FIELD  "xxrest_seq"  ASCENDING
+    INDEX-FIELD  "xxrest_start"  ASCENDING
+
+
+ADD TABLE "xxovd_det"
+    AREA "TRANSACTION"
+    Description "法定加班上限"
+    DUMP-NAME  "xxovd_det"
+
+ADD FIELD "xxovd_site" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  "gsa01"
+    LABEL  "地点"
+
+ADD FIELD "xxovd_line" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "生产线"
+
+ADD FIELD "xxovd_day" of "xxovd_det" as integer
+    Description ""
+    FORMAT  ">>>,>>9"
+    INITIAL  "2"
+    LABEL  "日加班"
+
+ADD FIELD "xxovd_month" of "xxovd_det" as integer
+    Description ""
+    FORMAT  ">>>,>>9"
+    INITIAL  "36"
+    LABEL  "月加班"
+
+ADD FIELD "xxovd_last" of "xxovd_det" as integer
+    Description ""
+    FORMAT  ">>>,>>9"
+    INITIAL  "6"
+    LABEL  "持续天数"
+
+ADD FIELD "xxovd_mod_date" of "xxovd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxovd_mod_user" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxovd__chr01" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__chr02" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__chr03" of "xxovd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__int01" of "xxovd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__int02" of "xxovd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__int03" of "xxovd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__dte01" of "xxovd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__dte02" of "xxovd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__dte03" of "xxovd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__dec01" of "xxovd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxovd__dec02" of "xxovd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxovd__dec03" of "xxovd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxovd__log01" of "xxovd_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxovd__log02" of "xxovd_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxovd_line" on "xxovd_det"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxovd_site"  ASCENDING
+    INDEX-FIELD  "xxovd_line"  ASCENDING
+
+
+ADD TABLE "xxpsq_det"
+    AREA "TRANSACTION"
+    Description "固定生产顺序"
+    DUMP-NAME  "xxpsq_det"
+
+ADD FIELD "xxpsq_site" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  "gsa01"
+    LABEL  "地点"
+
+ADD FIELD "xxpsq_line" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "生产线"
+
+ADD FIELD "xxpsq_part" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(18)"
+    INITIAL  ""
+    LABEL  "零件编号"
+
+ADD FIELD "xxpsq_seq" of "xxpsq_det" as integer
+    Description ""
+    FORMAT  ">>>,>>9"
+    INITIAL  "0"
+    LABEL  "顺序"
+
+ADD FIELD "xxpsq_mod_date" of "xxpsq_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxpsq_mod_user" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxpsq__chr01" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__chr02" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__chr03" of "xxpsq_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__int01" of "xxpsq_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__int02" of "xxpsq_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__int03" of "xxpsq_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__dte01" of "xxpsq_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__dte02" of "xxpsq_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__dte03" of "xxpsq_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__dec01" of "xxpsq_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsq__dec02" of "xxpsq_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsq__dec03" of "xxpsq_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpsq__log01" of "xxpsq_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpsq__log02" of "xxpsq_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxpsq_line" on "xxpsq_det"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxpsq_site"  ASCENDING
+    INDEX-FIELD  "xxpsq_line"  ASCENDING
+    INDEX-FIELD  "xxpsq_seq"  ASCENDING
+
+ADD INDEX "xxpsq_line_part" on "xxpsq_det"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xxpsq_site"  ASCENDING
+    INDEX-FIELD  "xxpsq_line"  ASCENDING
+    INDEX-FIELD  "xxpsq_part"  ASCENDING
+
+ADD INDEX "xxpsq_part" on "xxpsq_det"
+    AREA "TRANSACTION_IDX"
+    INDEX-FIELD  "xxpsq_site"  ASCENDING
+    INDEX-FIELD  "xxpsq_part"  ASCENDING
+
+
+ADD TABLE "xxpbd_det"
+    AREA "TRANSACTION"
+    Description "排程批量"
+    DUMP-NAME  "xxpbd_det"
+
+ADD FIELD "xxpbd_part" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(18)"
+    INITIAL  ""
+    LABEL  "零件编号"
+
+ADD FIELD "xxpbd_site" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  "gsa01"
+    LABEL  "地点"
+
+ADD FIELD "xxpbd_qty_lot" of "xxpbd_det" as integer
+    Description "最小单位为1,默认为容器容量"
+    FORMAT  ">>>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "经济批量"
+
+ADD FIELD "xxpbd_qty_min" of "xxpbd_det" as decimal
+    Description ""
+    FORMAT  ">>>,>>9.99"
+    INITIAL  "2.5"
+    LABEL  "库存下限"
+    DECIMALS 10
+
+ADD FIELD "xxpbd_qty_max" of "xxpbd_det" as decimal
+    Description ""
+    FORMAT  ">>>,>>9.99"
+    INITIAL  "3"
+    LABEL  "库存上限"
+    DECIMALS 10
+
+ADD FIELD "xxpbd_mod_date" of "xxpbd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "today"
+    LABEL  "最后修改时间"
+
+ADD FIELD "xxpbd_mod_user" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "最后修改人"
+
+ADD FIELD "xxpbd__chr01" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__chr02" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__chr03" of "xxpbd_det" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__int01" of "xxpbd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__int02" of "xxpbd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__int03" of "xxpbd_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__dte01" of "xxpbd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__dte02" of "xxpbd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__dte03" of "xxpbd_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__dec01" of "xxpbd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpbd__dec02" of "xxpbd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpbd__dec03" of "xxpbd_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "备用字段"
+    DECIMALS 10
+
+ADD FIELD "xxpbd__log01" of "xxpbd_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+ADD FIELD "xxpbd__log02" of "xxpbd_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "备用字段"
+
+
+ADD INDEX "xxpbd_part" on "xxpbd_det"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxpbd_part"  ASCENDING
+    INDEX-FIELD  "xxpbd_site"  ASCENDING
+
+ADD INDEX "xxpbd_site" on "xxpbd_det"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xxpbd_site"  ASCENDING
+    INDEX-FIELD  "xxpbd_part"  ASCENDING
+
+
+
+.
+PSC
+cpstream=GB2312
+.
+
