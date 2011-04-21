@@ -1,9 +1,11 @@
 /* xxrestmt.p - 生产线休息时间维护  */
 /*----rev history-------------------------------------------------------------------------------------*/
 /* SS - 110328.1  By: Roger Xiao */ /* created */
+/* SS - 110421.1  By: Roger Xiao */ /* bug fixed */
 /*-Revision end---------------------------------------------------------------*/
 
-{mfdtitle.i "110328.1"}
+{mfdtitle.i "110421.1"}
+
 
 define var site               like xxrest_site .
 define var v_line             like xxrest_line  .
@@ -20,14 +22,14 @@ form
     v_line                    colon 18  label "生产线"   ln_desc no-label
     v_shift                   colon 18  label "班次"
     v_seq                     colon 18  label "休息时点"
-    v_start                   colon 18  label "生效日期"
-    xxrest_end                colon 18  label "到期日期"
+    v_start                   colon 18  label "生效日期"  
+    xxrest_end                colon 18  label "到期日期" 
     skip(1)
-    v_time_start              colon 18  label "休息开始时间"
+    v_time_start              colon 18  label "休息开始时间" 
     xxrest_time_length        colon 18  label "休息时长"  "(分钟)"
-with frame a
-side-labels
-width 80 .
+with frame a             
+side-labels              
+width 80 .               
 
 view frame a.
 
@@ -39,26 +41,27 @@ repeat with frame a:
     ststatus = stline[1].
     status input ststatus.
 
-    update
+    update 
         site
         v_line
         v_shift
         v_seq
-        v_start
+        v_start 
     with frame a editing:
          if frame-field = "site" then do:
              {mfnp11.i xxrest_det  xxrest_line xxrest_site " input site"  }
              if recno <> ? then do:
                 find first si_mstr where si_site = xxrest_site no-lock no-error.
                 if avail si_mstr then disp si_desc with frame a .
-                disp
+                v_time_start = entry(1,string(xxrest_time_start,"hh:mm"),":") + entry(2,string(xxrest_time_start,"hh:mm"),":") .
+                disp 
                     xxrest_site  @ site
-                    xxrest_line  @ v_line
-                    xxrest_shift @ v_shift
-                    xxrest_seq   @ v_seq
-                    xxrest_start @ v_start
-                    xxrest_end
-                    string(xxrest_time_start,"hh:mm") @  v_time_start
+                    xxrest_line  @ v_line     
+                    xxrest_shift @ v_shift     
+                    xxrest_seq   @ v_seq     
+                    xxrest_start @ v_start     
+                    xxrest_end        
+                    v_time_start
                     xxrest_time_length
                 with frame a .
              end . /* if recno <> ? then  do: */
@@ -68,15 +71,16 @@ repeat with frame a:
              if recno <> ? then do:
                 find first ln_mstr where ln_line = xxrest_line and ln_site = xxrest_site no-lock no-error.
                 if avail ln_mstr then disp ln_desc with frame a .
-                disp
+                v_time_start = entry(1,string(xxrest_time_start,"hh:mm"),":") + entry(2,string(xxrest_time_start,"hh:mm"),":") .
+                disp 
                     xxrest_site  @ site
-                    xxrest_line  @ v_line
-                    xxrest_shift @ v_shift
-                    xxrest_seq   @ v_seq
-                    xxrest_start @ v_start
-                    xxrest_end
-                    string(xxrest_time_start,"hh:mm") @  v_time_start
-                    xxrest_time_length
+                    xxrest_line  @ v_line     
+                    xxrest_shift @ v_shift     
+                    xxrest_seq   @ v_seq     
+                    xxrest_start @ v_start     
+                    xxrest_end        
+                    v_time_start
+                    xxrest_time_length   
                 with frame a .
              end . /* if recno <> ? then  do: */
          end.
@@ -105,44 +109,44 @@ repeat with frame a:
 
     setloop:
     do on error undo ,retry on endkey undo, leave:
-        find first xxrest_det
-          where xxrest_site   = site
+        find first xxrest_det 
+          where xxrest_site   = site 
             and xxrest_line   = v_line
             and xxrest_shift  = v_shift
-            and xxrest_seq    = v_seq
+            and xxrest_seq    = v_seq 
             and xxrest_start  = v_start
         exclusive-lock no-error .
         if not avail xxrest_det then do :
-                {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
+                {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1} 
                 create xxrest_det .
-                assign xxrest_site   = site
-                       xxrest_line   = v_line
-                       xxrest_shift  = v_shift
-                       xxrest_seq    = v_seq
-                       xxrest_start  = v_start
+                assign xxrest_site   = site       
+                       xxrest_line   = v_line     
+                       xxrest_shift  = v_shift    
+                       xxrest_seq    = v_seq      
+                       xxrest_start  = v_start    
                        .
         end.
         else do:
-            {pxmsg.i &MSGNUM=10 &ERRORLEVEL=1}
+            {pxmsg.i &MSGNUM=10 &ERRORLEVEL=1} 
         end.
 
-        v_time_start = if xxrest_time_start <> 0 then string(xxrest_time_start,"hh:mm") else "" .
-
-        disp
+        v_time_start = entry(1,string(xxrest_time_start,"hh:mm"),":") + entry(2,string(xxrest_time_start,"hh:mm"),":") .
+        
+        disp 
                     xxrest_site  @ site
-                    xxrest_line  @ v_line
-                    xxrest_shift @ v_shift
-                    xxrest_seq   @ v_seq
-                    xxrest_start @ v_start
-                    xxrest_end
+                    xxrest_line  @ v_line     
+                    xxrest_shift @ v_shift     
+                    xxrest_seq   @ v_seq     
+                    xxrest_start @ v_start     
+                    xxrest_end        
                     v_time_start
-                    xxrest_time_length
-        with frame a .
+                    xxrest_time_length   
+        with frame a . 
 
-        update
-                    xxrest_end
+        update 
+                    xxrest_end        
                     v_time_start
-                    xxrest_time_length
+                    xxrest_time_length 
         go-on (F5 CTRL-D)
         with frame a .
 
@@ -172,13 +176,13 @@ repeat with frame a:
             undo,retry.
         end.
 
-        if integer(substring(v_time_start,2,2)) > 59 then do:
+        if integer(substring(v_time_start,3,2)) > 59 then do:
             message "错误:时间格式有误(分钟),请重新输入" .
             next-prompt v_time_start with frame a .
             undo,retry.
         end.
-
-        assign  xxrest_mod_date   = today
+        
+        assign  xxrest_mod_date   = today 
                 xxrest_mod_user   = global_userid
                 xxrest_time_start = integer(substring(v_time_start,1,2)) * 60 * 60 +  integer(substring(v_time_start,3,2)) * 60
                 .
