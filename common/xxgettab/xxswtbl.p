@@ -1,13 +1,13 @@
 /* xxswtbl - SCROLLING INQUIRY ON PROGRESS TABLE CP FROM swdb.p              */
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy                           */
-/* REVISION: 0CYH LAST MODIFIED: 13/26/11   BY: zy        Add EB common   *EB*/
+/* REVISION: 0CYH LAST MODIFIED: 03/26/11   BY: zy        Add EB common   *EB*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
 define shared variable global_user_lang_dir like lng_mstr.lng_dir.
 define shared variable global_userid as character.
-/*eb define shared variable global_domain as character.                      */
+/*EB*/ define shared variable global_domain as character.
 
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
@@ -36,8 +36,8 @@ view frame b.
 status input off.
 status default stline[4].
 
-find first qaddb.qad_wkfl no-lock where 
-/*eb  		 qad_domain = global_domain and                                    */
+find first qaddb.qad_wkfl no-lock where
+/*EB*/       qad_domain = global_domain and
            qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
 if available qad_wkfl and qad_charfld[1] <> "" then do:
    create alias dictdb for database value(qad_charfld[1]).

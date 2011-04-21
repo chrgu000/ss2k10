@@ -4,7 +4,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp12     Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "1CYH"} 
+{mfdtitle.i "1CYH"}
 define variable db_name as character format "x(24)".
 define variable sfile   as character format "x(32)".
 
@@ -22,8 +22,8 @@ if not available qaddb.flh_mstr then do:
            flh_down = 6.
 end.
 
-find first qaddb.qad_wkfl exclusive-lock where qad_key1 = "xxgettable" and 
-					 qad_key2 = global_userid no-error.
+find first qaddb.qad_wkfl exclusive-lock where qad_key1 = "xxgettable" and
+           qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
    assign qad_charfld[1] = ""
           qad_charfld[2] = "".
@@ -32,8 +32,8 @@ end.
 ON VALUE-CHANGED OF sfile IN FRAME a
 DO:
    assign db_name sfile.
-   find first qaddb.qad_wkfl exclusive-lock where qad_key1 = "xxgettable" and 
-   						qad_key2 = global_userid no-error.
+   find first qaddb.qad_wkfl exclusive-lock where qad_key1 = "xxgettable" and
+              qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
       assign qad_charfld[1] = db_name
              qad_charfld[2] = sfile.
@@ -57,7 +57,7 @@ if c-application-mode <> 'web' then.
    update sfile with frame a.
    assign db_name sfile.
    find first qaddb.qad_wkfl exclusive-lock where qad_key1 = "xxgettable" and
-   				    qad_key2 = global_userid no-error.
+              qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
       assign qad_charfld[1] = db_name
              qad_charfld[2] = sfile.
