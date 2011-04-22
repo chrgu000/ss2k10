@@ -25,33 +25,33 @@ if not available qaddb.flh_mstr then do:
            flh_down = 6.
 end.
 
-find first qaddb.qad_wkfl exclusive-lock where
-/*EB*/     qad_domain = global_domain and
-           qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
-if available qad_wkfl then do:
-   assign qad_charfld[1] = ""
-          qad_charfld[2] = "".
-end.
-
-ON VALUE-CHANGED OF sfile IN FRAME a DO:
-   assign sesc_db sfile.
-   find first qaddb.qad_wkfl exclusive-lock where
-/*EB*/        qad_domain = global_domain and
-              qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
-   if available qad_wkfl then do:
-      assign qad_charfld[1] = sesc_db
-             qad_charfld[2] = sfile.
-   end.
-   else do:
-     create qad_wkfl.
-     assign
-/*EB*/      qad_domain = global_domain
-            qad_key1 = "xxgettable"
-            qad_key2 = global_userid
-            qad_charfld[1] = sesc_db
-            qad_charfld[2] = sfile.
-   end.
-END.
+/* find first qaddb.qad_wkfl exclusive-lock where                               */
+/* /*EB*/     qad_domain = global_domain and                                    */
+/*            qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.    */
+/* if available qad_wkfl then do:                                               */
+/*    assign qad_charfld[1] = ""                                                */
+/*           qad_charfld[2] = "".                                               */
+/* end.                                                                         */
+/*                                                                              */
+/* ON VALUE-CHANGED OF sfile IN FRAME a DO:                                     */
+/*    assign sesc_db sfile.                                                     */
+/*    find first qaddb.qad_wkfl exclusive-lock where                            */
+/* /*EB*/        qad_domain = global_domain and                                 */
+/*               qad_key1 = "xxgettable" and qad_key2 = global_userid no-error. */
+/*    if available qad_wkfl then do:                                            */
+/*       assign qad_charfld[1] = sesc_db                                        */
+/*              qad_charfld[2] = sfile.                                         */
+/*    end.                                                                      */
+/*    else do:                                                                  */
+/*      create qad_wkfl.                                                        */
+/*      assign                                                                  */
+/* /*EB*/      qad_domain = global_domain                                       */
+/*             qad_key1 = "xxgettable"                                          */
+/*             qad_key2 = global_userid                                         */
+/*             qad_charfld[1] = sesc_db                                         */
+/*             qad_charfld[2] = sfile.                                          */
+/*    end.                                                                      */
+/* END.                                                                         */
 setFrameLabels(frame a:handle).
 
 {wbrp01.i}
@@ -60,25 +60,25 @@ assign
 repeat:
 if c-application-mode <> 'web' then.
    update sfile sesc_db with frame a.
-   assign sesc_db sfile.
-   find first qaddb.qad_wkfl exclusive-lock where
-/*EB*/        qad_domain = global_domain and
-              qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
-   if available qad_wkfl then do:
-      assign qad_charfld[1] = sesc_db
-             qad_charfld[2] = sfile.
-   end.
-   else do:
-     create qad_wkfl.
-     assign
-/*EB*/      qad_domain = global_domain
-            qad_key1 = "xxgettable"
-            qad_key2 = global_userid
-            qad_charfld[1] = sesc_db
-            qad_charfld[2] = sfile.
-   end.
+/*   assign sesc_db sfile.  */
+/*    find first qaddb.qad_wkfl exclusive-lock where                              */
+/* /*EB*/        qad_domain = global_domain and                                   */
+/*               qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.   */
+/*    if available qad_wkfl then do:                                              */
+/*       assign qad_charfld[1] = sesc_db                                          */
+/*              qad_charfld[2] = sfile.                                           */
+/*    end.                                                                        */
+/*    else do:                                                                    */
+/*      create qad_wkfl.                                                          */
+/*      assign                                                                    */
+/* /*EB*/      qad_domain = global_domain                                         */
+/*             qad_key1 = "xxgettable"                                            */
+/*             qad_key2 = global_userid                                           */
+/*             qad_charfld[1] = sesc_db                                           */
+/*             qad_charfld[2] = sfile.                                            */
+/*    end.                                                                        */
 {wbrp06.i &command = update &fields = " sfile sesc_db " &frm = "a"}
-assign sesc_db sfile.
+/* assign sesc_db sfile. */
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
 end.

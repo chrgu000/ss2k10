@@ -7,7 +7,7 @@
 
 define shared variable global_user_lang_dir like lng_mstr.lng_dir.
 define shared variable global_userid as character.
-/*EB*/ define shared variable global_domain as character.
+/*EB define shared variable global_domain as character.                 */
 
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
@@ -36,17 +36,18 @@ view frame b.
 status input off.
 status default stline[4].
 
-find first qaddb.qad_wkfl no-lock where
-/*EB*/       qad_domain = global_domain and
-           qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.
-if available qad_wkfl and qad_charfld[1] <> "" then do:
-   create alias dictdb for database value(qad_charfld[1]).
-end.
-else do:
-   create alias dictdb for database qaddb no-error.
-end.
-for each dictdb._File no-lock where (index(_file-name,qad_charfld[2])>0 or
-    qad_charfld[2] = ""):
+/* find first qaddb.qad_wkfl no-lock where                                    */
+/* /*EB*/       qad_domain = global_domain and                                */
+/*            qad_key1 = "xxgettable" and qad_key2 = global_userid no-error.  */
+/* if available qad_wkfl and qad_charfld[1] <> "" then do:                    */
+/*    create alias dictdb for database value(qad_charfld[1]).                 */
+/* end.                                                                       */
+/* else do:                                                                   */
+/*    create alias dictdb for database qaddb no-error.                        */
+/* end.                                                                       */
+create alias dictdb for database value(input sesc_db).
+for each dictdb._File no-lock where (index(_file-name,sfile)>0 or
+    sfile = ""):
     display _FILE-NAME @ sfile _desc @ v_desc with frame b.
     down 1 with frame b.
 end.
