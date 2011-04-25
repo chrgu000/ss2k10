@@ -7,7 +7,7 @@
 
 define variable brwnamef like brwf_det.brw_name no-undo.
 define variable brwnamet like brwf_det.brw_name no-undo.
-define variable COMBINED  as   logical label "Combined" no-undo .
+define variable COMBINED as logical label "Combined" no-undo .
 define variable filename as character format "x(40)" no-undo.
 
 define stream history.
@@ -47,7 +47,7 @@ repeat:
 os-delete value(filename) no-error.
 FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
      and brw_mstr.brw_name <= brwnamet :
-   {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input filename)"}
+   {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input filename,input no)"}
 end.
 
    /* OUTPUT DESTINATION SELECTION */
