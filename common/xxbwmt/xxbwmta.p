@@ -31,18 +31,18 @@ put unformat "~{pxmsg.i &MSGNUM=2316 &ERRORLEVEL=1 &CONFIRM=yn "
              "&CONFIRM-TYPE='LOGICAL'~}" skip.
 put unformat "hide message no-pause." skip.
 put unformat "if not yn then leave." skip(1).
-end if.
+end.
 FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
     put unformat "find first brw_mstr exclusive-lock where ".
     put unformat "brw_mstr.brw_name = '" Vbrowse "' no-error." SKIP.
     put unformat "if not available brw_mstr then do:" skip.
     put unformat "          create brw_mstr." SKIP.
-    put unformat "          assign brw_mstr.brw_name  = '".
+    put unformat "          assign brw_mstr.brw_name = '".
     put unformat brw_name "'."  skip.
     put unformat "end." SKIP.
     IF brw_mstr.brw_desc <> "" THEN
-    put unformat "assign brw_mstr.brw_desc      = '" brw_desc "'." skip.
-    put unformat "assign brw_mstr.brw_view      = '" brw_view "'" skip.
+    put unformat "assign brw_mstr.brw_desc = '" brw_desc "'." skip.
+    put unformat "assign brw_mstr.brw_view = '" brw_view "'" skip.
     IF brw_mstr.brw_cansee <> "" THEN
     put unformat "       brw_mstr.brw_cansee    = '" brw_cansee "'" skip.
     put unformat "       brw_mstr.brw_filter    = '" brw_filter "'" skip.
@@ -70,11 +70,11 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put unformat "brwt_det.brw_name = '" Vbrowse "' no-error." SKIP.
         put unformat "if not available brwt_det then do:" skip.
         PUT UNFORMAT "          create brwt_det." SKIP.
-        put unformat "          assign brwt_det.brw_name      = '".
+        put unformat "          assign brwt_det.brw_name = '".
         put unformat brwt.brw_name "'." skip.
         put unformat "end." skip.
-        put unformat "assign brwt_det.brwt_seq      = " brwt_seq skip.
-        put unformat "       brwt_det.brwt_table    = '" brwt_table "'".
+        put unformat "assign brwt_det.brwt_seq   = " brwt_seq skip.
+        put unformat "       brwt_det.brwt_table = '" brwt_table "'".
         IF brwt_det.brwt_join <> "" THEN
         put unformat skip "       brwt_det.brwt_join     = '" brwt_join "'".
         IF brwt_det.brwt_where <> "" THEN
@@ -98,19 +98,19 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put unformat "brwf_det.brwf_seq = " brwf_det.brwf_seq " no-error." skip.
         put unformat "if not available brwf_det then do:" skip.
         PUT UNFORMAT "          create brwf_det." SKIP.
-        put unformat "          assign brwf_det.brw_name        = '".
+        put unformat "          assign brwf_det.brw_name = '".
         put unformat brw_name "'" skip.
-        put unformat "                 brwf_det.brwf_seq        = ".
+        put unformat "                 brwf_det.brwf_seq = ".
         put unformat brwf_seq "."skip.
         put unformat "end." skip.
-        put unformat "assign brwf_det.brwf_field      = '" brwf_field "'" .
+        put unformat "assign brwf_det.brwf_field    = '" brwf_field "'" .
         put skip.
-        put unformat "       brwf_det.brwf_datatype   = '" brwf_datatype "'".
+        put unformat "       brwf_det.brwf_datatype = '" brwf_datatype "'".
         put skip.
-        put unformat "       brwf_det.brwf_format     = '" brwf_format  "'".
+        put unformat "       brwf_det.brwf_format   = '" brwf_format  "'".
         put skip.
         IF brwf_det.brwf_label <> "" THEN
-        put unformat "       brwf_det.brwf_label      = '" brwf_label "'".
+        put unformat "       brwf_det.brwf_label    = '" brwf_label "'".
         put skip.
         IF brwf_det.brwf_col_label <> "" THEN
         put unformat "       brwf_det.brwf_col_label  = '" brwf_col_label "'".
@@ -119,29 +119,29 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put unformat "       brwf_det.brwf_expression = '" brwf_expression "'".
         put skip.
         IF brwf_det.brwf_table <> "" THEN
-        put unformat "       brwf_det.brwf_table      = '" brwf_table "'".
+        put unformat "       brwf_det.brwf_table    = '" brwf_table "'".
         put skip.
-        put unformat "       brwf_det.brwf_select     = "  brwf_select skip.
-        put unformat "       brwf_det.brwf_sort       = "  brwf_sort   skip.
+        put unformat "       brwf_det.brwf_select   = "  brwf_select skip.
+        put unformat "       brwf_det.brwf_sort     = "  brwf_sort   skip.
         IF brwf_det.brwf_userid <> "" THEN
-        put unformat "       brwf_det.brwf_userid     = '" brwf_userid "'".
+        put unformat "       brwf_det.brwf_userid   = '" brwf_userid "'".
         put skip.
-        put unformat "       brwf_det.brwf_mod_date   = today".
+        put unformat "       brwf_det.brwf_mod_date = today".
         put skip.
         IF brwf_det.brwf_user1 <> "" THEN
-        put unformat "       brwf_det.brwf_user1      = '" brwf_user1 "'" skip.
+        put unformat "       brwf_det.brwf_user1    = '" brwf_user1 "'" skip.
         IF brwf_det.brwf_user2 <> "" THEN
-        put unformat "       brwf_det.brwf_user2      = '" brwf_user2 "'" skip.
+        put unformat "       brwf_det.brwf_user2    = '" brwf_user2 "'" skip.
         IF brwf_det.brwf__qadc01 <> "" THEN
-        put unformat "       brwf_det.brwf__qadc01    = '" brwf__qadc01 "'".
+        put unformat "       brwf_det.brwf__qadc01  = '" brwf__qadc01 "'".
         put skip.
         IF brwf_det.brwf__qadc02 <> "" THEN
-        put unformat "       brwf_det.brwf__qadc02    = '" brwf__qadc02 "'".
+        put unformat "       brwf_det.brwf__qadc02  = '" brwf__qadc02 "'".
         put skip.
-        put unformat "       brwf_det.brwf_enable     = " brwf_enable "." skip.
+        put unformat "       brwf_det.brwf_enable   = " brwf_enable "." skip.
     END.
 END.
 if vfname = "" then do:
 put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
-end if.
+end.
 output close.

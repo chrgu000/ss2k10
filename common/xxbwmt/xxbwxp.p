@@ -3,7 +3,7 @@
 /* REVISION:0AY2      LAST MODIFIED: 10/15/10   BY: zy                       */
 
 /* display title */
-{mfdtitle.i "0AY2"}
+{mfdtitle.i "14Y1"}
 
 define variable brwnamef like brwf_det.brw_name no-undo.
 define variable brwnamet like brwf_det.brw_name no-undo.
@@ -31,16 +31,10 @@ repeat:
          /*  FILE NAME CREATION  IS CHANGED. GENERATED  FILE NAME   IS       */
          /*  INDEPENDENT  OF PROGRESS -D PARAMETER  AND  UNIFORM IN ALL      */
          /*  OTHER PROGRAMS  .                                               */
-         filename = "xxbw"
-            + string(month(today),"99")
-            + string(day(today),"99")
-            + ".p".
-
-         display
-            filename
-         with frame a.
+         filename = "xxbwx" + string(month(today),"99")
+            + string(day(today),"99") + ".p".
+         display filename with frame a.
          update filename with frame a.
-
       end. /* IF COMBINED */
 
    if brwnamet = "" then brwnamet = hi_char.
@@ -60,8 +54,8 @@ output close.
 FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
      and brw_mstr.brw_name <= brwnamet :
    {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input filename)"}
-end.
-output to value(filename).
+END.
+output to value(filename) APPEND.
 put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
 output close.
 
