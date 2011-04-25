@@ -7,7 +7,7 @@
 
 {mfdtitle.i "110422.1"}
 {pxmaint.i}
-{xxlnmt.i}
+{xxlnwkmt.i}
 {pxphdef.i lnlnxr}
 
 define new shared variable cmtindx     like lnd_cmtindx.
@@ -16,10 +16,7 @@ define variable shiftdesc like code_cmmt.
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
-define variable tStart as character format "99:99".
-define variable tEnd as character format "99:99".
-define variable iStart as integer.
-define variable iEnd   as character.
+
 /* Display Forms */
 form
    ln_line colon 20 label "Production Line"
@@ -33,14 +30,14 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   tStart   colon 20
-   tEnd     at 41
+   xxlnw_sn colon 20
+   xxlnw_Start   colon 20
+   xxlnw_End     at 41
    xxlnw_rstmin  colon 20
-   xxlnw_wktime  at 41
-   xxlnw_type    colon 20 shiftdesc no-label
-   xxlnw_typenbr colon 20
+   xxlnw_type    colon 20 shiftdesc no-label at 26
+   xxlnw_wktime  colon 20
 with frame bb side-labels width 80
-title color normal (getFrameTitle("Time",14)).
+title color normal (getFrameTitle("PRODUCTION_HOURS",14)).
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame bb:handle).
@@ -55,6 +52,7 @@ repeat:
       ln_site
    with frame a
    editing:
+       clear frame bb no-pause.
       if frame-field = "ln_line" then do:
          {mfnp.i ln_mstr ln_line ln_line ln_site ln_site ln_linesite}
          if recno <> ? then do:
@@ -131,10 +129,8 @@ repeat:
             ln_rate
          go-on (F5 CTRL-D) with frame a.
 
-         if lastkey = keycode("F5")
-         or lastkey = keycode("CTRL-D")
-         then do:
-            del-yn = yes.
+         if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
+            del-yn = no.
             /* Please confirm delete */
             {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
             if del-yn = no then undo set1.
@@ -204,13 +200,13 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         tStart
+         xxlnw_sn
       editing:
 
-         if frame-field = "tStart" then do: 
+         if frame-field = "xxlnw_sn" then do:
             {mfnp06.i xxlnw_det xxlnw_line
                "xxlnw_line = input ln_line and xxlnw_site = input ln_site"
-               xxlnw_start "s2t(tStart)" """" """"}
+               xxlnw_sn "input xxlnw_sn" """" """"}
 
             if recno <> ? then do:
                assign shiftdesc = "".
@@ -220,13 +216,13 @@ repeat:
                   assign shiftdesc = code_cmmt.
                end.
                display
-                    string(xxlnw_start,"HH:MM") @ tStart
+                    xxlnw_sn
+                    xxlnw_start
                     xxlnw_end
                     xxlnw_rstmin
                     xxlnw_wktime
                     xxlnw_type
                     shiftdesc
-                    xxlnw_typenbr
                with frame bb.
 
 
@@ -243,7 +239,7 @@ repeat:
       find xxlnw_det
          where xxlnw_line = ln_line
            and xxlnw_site = ln_site
-           and xxlnw_start = s2t(tStart)
+           and xxlnw_sn  = input xxlnw_sn
       exclusive-lock no-error.
 
       if not available xxlnw_det then do:
@@ -251,7 +247,7 @@ repeat:
          assign
                 xxlnw_line = ln_line
                 xxlnw_site = ln_site
-                xxlnw_start = s2t(tStart).
+                xxlnw_sn.
       end.
       assign shiftdesc = "".
       find first code_mstr no-lock where code_fldname = "xxlnw_type"
@@ -260,13 +256,13 @@ repeat:
          assign shiftdesc = code_cmmt.
       end.
       display
-              string(xxlnw_start,"HH:MM") @ tStart
+              xxlnw_sn
+              xxlnw_start
               xxlnw_end
               xxlnw_rstmin
               xxlnw_wktime
               xxlnw_type
               shiftdesc
-              xxlnw_typenbr
       with frame bb.
 
       set2:
@@ -276,19 +272,21 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set
+         set xxlnw_start
              xxlnw_end
              xxlnw_rstmin
-             xxlnw_wktime
              xxlnw_type
-             xxlnw_typenbr
          go-on (F5 CTRL-D) with frame bb.
-
-         if lastkey = keycode("F5")
-         or lastkey = keycode("CTRL-D")
-         then do:
-
-            del-yn = yes.
+         assign xxlnw_stime = s2t(xxlnw_start)
+                xxlnw_etime = s2t(xxlnw_end).
+         if xxlnw_stime > xxlnw_etime and xxlnw_type = "N" then do:
+            assign xxlnw_etime = xxlnw_etime + con24h.
+         end.
+         assign xxlnw_wktime =
+                howLong(input (xxlnw_etime - xxlnw_stime - xxlnw_rstmin * 60),
+                        input "H").
+         if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
+            del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */
             /*  DELETING IT.                                                 */
             hide message.
@@ -297,6 +295,7 @@ repeat:
             if del-yn = no then undo set2.
             else do:
                 delete xxlnw_det.
+                clear frame bb no-pause.
             end.
          end.  /* if lastkey */
 

@@ -5,6 +5,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
+define variable con24h as integer initial 86400.
 /** 整数到时数 **/
 FUNCTION getHours RETURN INTEGER(tme AS INTEGER):
 /*------------------------------------------------------------------------------
@@ -90,4 +91,23 @@ FUNCTION s2t RETURNS INTEGER(ichar AS CHARACTER):
     RETURN INT(SUBSTRING(c,1,2)) * 60 * 60 +
            INT(SUBSTRING(c,3,2)) * 60 +
            INT(SUBSTRING(c,5,2)).
+END FUNCTION.
+
+FUNCTION howLong RETURNS Decimal(iLong as integer,iType as Character):
+/*------------------------------------------------------------------------------
+  Purpose: 计算整数所用的时长
+    Notes: iLong是时长整数,iType= "D,H,M,S("")"
+------------------------------------------------------------------------------*/
+define variable vType as integer.
+    assign vType = 1.
+    if iType = "M" then do:
+       assign vType = 60.
+    end.
+    else if iType = "H" then do:
+       assign vType = 3600.
+    end.
+    else if iType = "D" then do:
+       assign vtype = 86400.
+    end.
+    return (iLong / vType).
 END FUNCTION.

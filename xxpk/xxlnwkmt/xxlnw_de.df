@@ -1,0 +1,179 @@
+ADD TABLE "xxlnw_det"
+  AREA "STATIC"
+  LABEL "Assembly Line Work Schedule Detail"
+  DUMP-NAME "xxlnw_de"
+
+ADD FIELD "xxlnw_site" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxlnw_line" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxlnw_sn" OF "xxlnw_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Serial"
+  POSITION 4
+  SQL-WIDTH 4
+  VALEXP "xxlnw_sn > 0"
+  VALMSG "ERROR: VALUE MUST GREATER THAN ZERO. Please re-enter."
+  ORDER 30
+
+ADD FIELD "xxlnw_start" OF "xxlnw_det" AS character 
+  FORMAT "99:99:99"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 20
+  ORDER 40
+
+ADD FIELD "xxlnw_stime" OF "xxlnw_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxlnw_end" OF "xxlnw_det" AS character 
+  FORMAT "99:99:99"
+  INITIAL ""
+  LABEL "End Time"
+  POSITION 7
+  SQL-WIDTH 20
+  ORDER 60
+
+ADD FIELD "xxlnw_etime" OF "xxlnw_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxlnw_wktime" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "work time"
+  POSITION 9
+  SQL-WIDTH 4
+  DECIMALS 5
+  ORDER 80
+
+ADD FIELD "xxlnw_rstmin" OF "xxlnw_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "reset minutes"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxlnw_type" OF "xxlnw_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 2
+  VALEXP "{gpcode.v xxlnw_type}"
+  VALMSG "ERROR: VALUE MUST EXIST IN GENERALIZED CODES. Please re-enter."
+  ORDER 100
+
+ADD FIELD "xxlnw_typenbr" OF "xxlnw_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "86400"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxlnw__chr01" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxlnw__chr02" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxlnw__chr03" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxlnw__chr04" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxlnw__chr05" OF "xxlnw_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxlnw__dec01" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxlnw__dec02" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xxlnw__dec03" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxlnw__dec04" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxlnw__dec05" OF "xxlnw_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD INDEX "xxlnw_linesite" ON "xxlnw_det" 
+  AREA "STATIC_IDX"
+  PRIMARY
+  INDEX-FIELD "xxlnw_line" ASCENDING 
+  INDEX-FIELD "xxlnw_site" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxlnw_siteline" ON "xxlnw_det" 
+  AREA "STATIC_IDX"
+  INDEX-FIELD "xxlnw_site" ASCENDING 
+  INDEX-FIELD "xxlnw_line" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003396
