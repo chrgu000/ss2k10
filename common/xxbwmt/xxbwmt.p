@@ -1141,7 +1141,7 @@ repeat:
       /* GENERATE BROWSE */
       {gprun.i 'mgpl009e.p' "(input brw_mstr.brw_name)"}
 
-      {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input '',input yes)"}
+      {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input '')"}
    end. /* DO TRANSACTION */
 
 end. /* MAINLOOP */
