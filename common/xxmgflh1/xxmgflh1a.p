@@ -22,22 +22,19 @@ DEFINE TEMP-TABLE tt1
    .
 
 EMPTY TEMP-TABLE tt1.
-
 INPUT FROM VALUE(FILE_name).
-REPEAT :
+REPEAT:
    CREATE tt1.
    IMPORT DELIMITER "~011" tt1.
 END.
 INPUT CLOSE.
 
-FOR EACH tt1 NO-LOCK
-   BREAK BY tt1_lang
-   BY tt1_field
-   BY tt1_call_pg
-   BY tt1_line
-   :
+FOR EACH tt1 NO-LOCK BREAK BY tt1_lang
+   BY tt1_field BY tt1_call_pg BY tt1_line:
    IF FIRST-OF(tt1_call_pg) THEN DO:
-      FIND FIRST flhm_mst WHERE flhm_lang = tt1_lang AND flhm_field = tt1_field AND flhm_call_pg = tt1_call_pg NO-LOCK NO-ERROR.
+      FIND FIRST flhm_mst WHERE flhm_lang = tt1_lang AND
+                 flhm_field = tt1_field AND flhm_call_pg = tt1_call_pg
+           NO-LOCK NO-ERROR.
       IF NOT AVAILABLE flhm_mst THEN DO:
          CREATE flhm_mst.
          ASSIGN
@@ -47,12 +44,10 @@ FOR EACH tt1 NO-LOCK
             .
       END.
 
-      FOR EACH flhd_det 
-         WHERE flhd_lang = tt1_lang
-         AND flhd_field = tt1_field
-         AND flhd_call_pg = tt1_call_pg
-         AND flhd_type = "user"
-         :
+      FOR EACH flhd_det WHERE flhd_lang = tt1_lang AND
+               flhd_field = tt1_field AND
+               flhd_call_pg = tt1_call_pg AND
+               flhd_type = "user":
          DELETE flhd_det.
       END.
    END. /* IF FIRST-OF(tt1_call_pg) THEN DO: */
