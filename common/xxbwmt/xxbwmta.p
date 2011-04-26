@@ -21,7 +21,7 @@ IF NOT CAN-FIND(FIRST brw_mstr NO-LOCK WHERE brw_name = Vbrowse) THEN DO:
     RETURN.
 END.
 if vfname = "" then do:
-put unformat "~/*V8:ConvertMode=Maintenance                          *~/" skip.
+put unformat "~/*V8:ConvertMode=Maintenance" fill(" ",50) "*~/" skip.
 put unformat "~{mfdtitle.i """ substring(string(year(today),"9999"),3,2)
              string(month(today),"99")
              string(day(today),"99") ".1" """~}" skip.
@@ -144,7 +144,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
     END.
 END.
 if vfname = "" then do:
-put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
+put unformat "end.  ~/* repeat with frame a: *~/" skip.
 put unformat "status input." skip.
 end.
 output close.

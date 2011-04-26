@@ -5,18 +5,18 @@
 /* display title */
 {mfdtitle.i "14Y1"}
 
-define variable brwnamef like brwf_det.brw_name no-undo.
-define variable brwnamet like brwf_det.brw_name no-undo.
-define variable COMBINED as logical label "Combined" no-undo .
+define variable browse1 like brwf_det.brw_name no-undo.
+define variable browse2 like brwf_det.brw_name no-undo.
+define variable consolidate as logical label "consolidate" no-undo .
 define variable filename as character format "x(40)" no-undo.
 
 define stream history.
-
+{}
 form
-   brwnamef colon 21
-   brwnamet colon 55 label "To"
+   browse1 colon 21
+   browse2 colon 42 label {t001.i}
    skip(1)
-   COMBINED colon 21 skip
+   consolidate colon 21 skip
    filename colon 21
 with frame a side-labels attr-space width 80.
 
@@ -24,9 +24,9 @@ with frame a side-labels attr-space width 80.
 setFrameLabels(frame a:handle).
 
 repeat:
-   if brwnamet   = hi_char then brwnamet   = "".
-   update brwnamef brwnamet COMBINED with frame a.
-      if COMBINED
+   if browse2   = hi_char then browse2   = "".
+   update browse1 browse2 consolidate with frame a.
+      if consolidate
       then do:
          /*  FILE NAME CREATION  IS CHANGED. GENERATED  FILE NAME   IS       */
          /*  INDEPENDENT  OF PROGRESS -D PARAMETER  AND  UNIFORM IN ALL      */
@@ -35,12 +35,13 @@ repeat:
             + string(day(today),"99") + ".p".
          display filename with frame a.
          update filename with frame a.
-      end. /* IF COMBINED */
+      end. /* IF consolidate */
 
-   if brwnamet = "" then brwnamet = hi_char.
+if browse2 = "" then browse2 = hi_char.
+if filename <> "" then do:
 os-delete value(filename) no-error.
 output to value(filename).
-put unformat "~/*V8:ConvertMode=Maintenance                          *~/" skip.
+put unformat "~/*V8:ConvertMode=Maintenance" fill(" ",50) "*~/" skip.
 put unformat "~{mfdtitle.i """ substring(string(year(today),"9999"),3,2)
              string(month(today),"99")
              string(day(today),"99") ".1" """~}" skip.
@@ -53,8 +54,9 @@ put unformat "repeat with frame a:" skip.
 put unformat "update yn." skip.
 put unformat "if not yn then leave." skip(1).
 output close.
-FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
-     and brw_mstr.brw_name <= brwnamet :
+end.
+FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= browse1
+     and brw_mstr.brw_name <= browse2 :
    {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input filename)"}
 END.
 output to value(filename) APPEND.
@@ -78,8 +80,8 @@ output close.
                &defineVariables          = "yes"}
    {mfphead.i}
 
-FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
-     and brw_mstr.brw_name <= brwnamet with frame b width 90:
+FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= browse1
+     and (brw_mstr.brw_name <= browse2 or browse2 = "") with frame b width 90:
    display brw_mstr.brw_name brw_mstr.brw_desc brw_mstr.brw_view brw_userid
    brw_mod_date.
 end.
