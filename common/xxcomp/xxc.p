@@ -185,8 +185,8 @@ output to value(vWorkFile).
 repeat:
    import delimiter " " vFilename.
    if vFileName[3] = "F" and
-      index(".p",substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
-      vFileName[1] >=filef and (vFileName[1] <= filet or filet = "")
+      index(".p.w.P.W",substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
+      vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
    then do:
       put unformat vFileName[1] skip.
    end.
@@ -290,8 +290,8 @@ IF SEARCH(vfile) <> ? THEN DO:
         IF vincomp THEN DO:
            IF destDir   = "" THEN
               destDir   = getKey(INPUT "DestDir",INPUT vinput).
-           IF xrcDir     = "" THEN
-              xrcDir = getKey(INPUT "SourceDir",INPUT vinput).
+           IF xrcDir    = "" THEN
+              xrcDir    = getKey(INPUT "SourceDir",INPUT vinput).
            IF vWorkFile  = "" THEN
               vWorkFile  = getKey(INPUT "WorkFile",INPUT vinput).
            IF VClientDir = "" THEN
