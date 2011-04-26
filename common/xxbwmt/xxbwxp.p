@@ -40,15 +40,17 @@ repeat:
    if brwnamet = "" then brwnamet = hi_char.
 os-delete value(filename) no-error.
 output to value(filename).
+put unformat "~/*V8:ConvertMode=Maintenance                          *~/" skip.
 put unformat "~{mfdtitle.i """ substring(string(year(today),"9999"),3,2)
              string(month(today),"99")
              string(day(today),"99") ".1" """~}" skip.
 put unformat "define variable yn like mfc_logical no-undo." skip.
 put unformat "~{gpcdget.i ""UT""~}" skip(1).
-put unformat "do on error undo, retry:" skip.
-put unformat "~{pxmsg.i &MSGNUM=2316 &ERRORLEVEL=1 &CONFIRM=yn "
-             "&CONFIRM-TYPE='LOGICAL'~}" skip.
-put unformat "hide message no-pause." skip.
+put unformat "Form yn colon 40" skip.
+put unformat "with frame a side-labels width 80 attr-space." skip.
+put unformat "setFrameLabels(frame a:handle)." skip(1).
+put unformat "repeat with frame a:" skip.
+put unformat "update yn." skip.
 put unformat "if not yn then leave." skip(1).
 output close.
 FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
@@ -57,6 +59,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= brwnamef
 END.
 output to value(filename) APPEND.
 put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
+put unformat "status input." skip.
 output close.
 
    /* OUTPUT DESTINATION SELECTION */
