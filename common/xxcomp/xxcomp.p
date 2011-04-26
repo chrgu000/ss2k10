@@ -1,6 +1,5 @@
 /* xxcomp.p - compile procedure                                              */
 /*V8:ConvertMode=Maintenance                                                 */
-/* REVISION: 14Y1 LAST MODIFIED: 04/01/11 BY:ZY 参数记录在qad_wkfl           */
 /* REVISION: 14YB LAST MODIFIED: 04/11/11 BY:zy Add EB common             *EB*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
@@ -78,7 +77,7 @@ ON "CTRL-D" OF destpath IN FRAME a DO:
    {mfmsg01.i 11 2 delParam}
    if delParam then do:
       for each qad_wkfl where
-/*eb*/         qad_domain = "xxcomp_param" and
+/*EB           qad_domain = "xxcomp_param" and                               */
                qad_key1 = "xxcomp_param" exclusive-lock:
           delete qad_wkf.
       end.
@@ -101,7 +100,7 @@ ON "CTRL-]" OF destpath IN FRAME a DO:
    end.
    else do:
        find first qad_wkfl where
-/*eb*/       qad_domain = "xxcomp_param" and
+/*EB         qad_domain = "xxcomp_param" and                                 */
              qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
@@ -137,7 +136,7 @@ end.
 run getUserInfo(output vsysusr,output vdevice).
 assign lang = lc(global_user_lang).
 find first qad_wkfl where
-/*eb*/     qad_domain = "xxcomp_param" and
+/*EB       qad_domain = "xxcomp_param" and                                   */
            qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
            qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
            no-lock no-error.
@@ -504,14 +503,14 @@ end.
 procedure gen_comp:
   define variable vdestpath as character.
   find first qad_wkfl where
-/*eb*/       qad_domain = "xxcomp_param" and
+/*EB         qad_domain = "xxcomp_param" and                                 */
              qad_key1 = "xxcomp_param" and qad_key2 = trim(vdevice) and
              qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
              exclusive-lock no-error.
   if not available qad_wkfl then do:
      create qad_wkfl.
      assign
-/*eb*/      qad_domain = "xxcomp_param"
+/*EB        qad_domain = "xxcomp_param"                                      */
             qad_key1 = "xxcomp_param"
             qad_key2 = trim(vdevice)
             qad_key3 = trim(vsysusr)

@@ -1,14 +1,15 @@
 /* xxc.p - compile procedure                                                 */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
-/* REVISION: 0CYH LAST MODIFIED: 12/17/10   BY: zy language be lower case    */
-/* REVISION: 0CYT LAST MODIFIED: 12/29/10   BY: zy def os def field rec path */
-/* REVISION: 0CYT LAST MODIFIED: 12/31/10   BY: zy trim path                 */
-/* REVISION: 0CYT LAST MODIFIED: 01/04/11   BY: zy check xrcpath exists      */
+/* REVISION: 0BYJ LAST MODIFIED: 11/19/10 BY: zy                             */
+/* REVISION: 0CYH LAST MODIFIED: 12/17/10 BY: zy language be lower case      */
+/* REVISION: 0CYT LAST MODIFIED: 12/29/10 BY: zy def os def field rec path   */
+/* REVISION: 0CYV LAST MODIFIED: 12/31/10 BY: zy trim path                   */
+/* REVISION: 14Y1 LAST MODIFIED: 01/04/11 BY: zy check xrcpath exists        */
+/* REVISION: 14YP LAST MODIFIED: 01/04/11 BY: zy Add EB common            *EB*/
 /* REVISION END                                                              */
 
-{mfdtitle.i "14Y1"}
+{mfdtitle.i "14YP"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -82,8 +83,9 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
       assign destDir = trim(destDir).
    end.
    else do:
-       find first qad_wkfl exclusive-lock where qad_domain = global_domain
-              and qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
+       find first qad_wkfl exclusive-lock where
+/*EB        qad_domain = global_domain and                                   */
+                  qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
        if available qad_wkfl then do:
           if opsys = "unix" then do:
             assign destDir:screen-value = trim(qad_charfld[2]).
@@ -151,13 +153,15 @@ do on error undo, retry:
       undo,retry.
    end.
    assign xrcDir = lower(trim(xrcDir)).
-   find first qad_wkfl exclusive-lock where qad_domain = global_domain
-          and qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
+   find first qad_wkfl exclusive-lock where
+/*EB          qad_domain = global_domain                                     */
+              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
         if not available qad_wkfl then do:
            create qad_wkfl.
-           assign  qad_domain = global_domain
-                   qad_key1 = qadkey1
-                   qad_key2 = global_userid.
+           assign
+/*EB              qad_domain = global_domain                                 */
+                  qad_key1 = qadkey1
+                  qad_key2 = global_userid.
         end.
         assign qad_charfld[3] = filef
                qad_charfld[4] = filet
@@ -201,9 +205,9 @@ end. /*mainLoop*/
 
 PROCEDURE iniForm:
 /*优先取QAD_WKFL存储的*/
-find first qad_wkfl no-lock where qad_domain = global_domain
-       and qad_key1 = qadkey1 and qad_key2 = global_userid
-       no-error.
+find first qad_wkfl no-lock where
+/*EB       qad_domain = global_domain and                                    */
+           qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
     assign xrcdir  = trim(qad_charfld[1]) when qad_charfld[1] <> ""
            destDir = trim(qad_charfld[2]) when qad_charfld[2] <> ""
