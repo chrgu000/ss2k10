@@ -26,9 +26,9 @@ define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
-define variable bpropath   as character view-as editor no-box size 50 by 6.
+define variable bpropath   as character view-as editor no-box size 50 by 7.
 /****gui format
-define variable bpropath   as character bgcolor 15 view-as editor size 50 by 6.
+define variable bpropath   as character bgcolor 15 view-as editor size 50 by 7.
 ****/
 define variable filef      as character format "x(22)".
 define variable filet      as character format "x(22)".
