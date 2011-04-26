@@ -285,6 +285,15 @@ repeat:
          assign xxlnw_wktime =
                 howLong(input (xxlnw_etime - xxlnw_stime - xxlnw_rstmin * 60),
                         input "H").
+         display
+              xxlnw_sn
+              xxlnw_start
+              xxlnw_end
+              xxlnw_rstmin
+              xxlnw_wktime
+              xxlnw_type
+              shiftdesc
+      	 with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */

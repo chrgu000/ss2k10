@@ -1,4 +1,4 @@
-/*V8:ConvertMode=Maintenance                          */
+/*V8:ConvertMode=Maintenance                                                  */
 {mfdtitle.i "110426.1"}
 define variable yn like mfc_logical no-undo.
 {gpcdget.i "UT"}
@@ -72,5 +72,5 @@ assign brwf_det.brwf_field    = 'code_cmmt'
        brwf_det.brwf_mod_date = today
        brwf_det.brwf__qadc01  = '12'
        brwf_det.brwf_enable   = no.
-end.  /* DO ON ERROR UNDO, RETRY */
+end.  /* repeat with frame a: */
 status input.

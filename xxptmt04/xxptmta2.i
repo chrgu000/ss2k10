@@ -38,3 +38,5 @@
    pt_promo       colon 15 label "Promo Group"
    pt_break_cat   colon 58
    pt__chr01      colon 15 format "x(48)"
+   pt__chr09      colon 15 format "x(20)"
+   pt__chr10      colon 58 format "x(4)"
