@@ -66,8 +66,8 @@ repeat:
 /*4R*/       down 1.
 /*4R*/    end.
 /*4R*/    for each lbld_det no-lock where lbld_term = lbl_term with frame b:
-/*4R*/        display lbld_execname @ lbl_long format "x(42)"
-/*4R*/                lbld_fieldname @ lbl_medium format "x(42)".
+/*4R*/        display lbld_fieldname @ lbl_long format "x(42)"
+/*4R*/                lbld_execname @ lbl_medium format "x(42)".
 /*4R*/        down 1.
 /*4R*/    end.
 /*4R*/ END.
