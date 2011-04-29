@@ -1,0 +1,135 @@
+@@batchload gplblmt.p
+"ch"
+"xxcs0001"
+"商品序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0002"
+"商品编码" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0003"
+"商品名称" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0004"
+"父商品编码" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0005"
+"父商品序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0006"
+"子商品编码" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0007"
+"子商品序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0008"
+"手册编号" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0009"
+"手册序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0010"
+"父手册序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0011"
+"子手册序" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0012"
+"出口计划单" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0013"
+"进出口清单" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0014"
+"公司零件编号" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0015"
+"至" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0016"
+"父公司零件" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0017"
+"子公司零件" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0018"
+"进口日期" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0019"
+"出口日期" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0020"
+"报关日期" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0021"
+"生效日期" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0022"
+"申报单号" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0023"
+"报关单类型" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0024"
+"报关单号" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0025"
+"年" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0026"
+"月" - - - - -
+@@end
+@@batchload gplblmt.p
+"ch"
+"xxcs0027"
+"供应商" - - - - -
+@@end

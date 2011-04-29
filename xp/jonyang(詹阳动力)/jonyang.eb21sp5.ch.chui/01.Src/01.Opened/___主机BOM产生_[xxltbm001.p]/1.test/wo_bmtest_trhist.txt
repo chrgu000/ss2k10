@@ -1,0 +1,37 @@
+
+Order              ID       Type     Item Number        Loc Qty Change Lot/Serial
+------------------ -------- -------- ------------------ -------------- ------------------
+bmtest             bm1      ISS-WO   23 22300 00 10              -20.0
+bmtest             bm1      ISS-WO   23 22500 00 10              -20.0
+bmtest             bm1      ISS-WO   ZP142-N-200-10              -10.0
+bmtest             bm1      ISS-WO   ZP142-N-205-00              -10.0
+bmtest             bm1      ISS-WO   ZP142-N-206-00              -10.0
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990002
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990004
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990005
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990006
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990007
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990008
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990009
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990010
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990003
+bmtest             bm1      RCT-WO   JYL210E-50-4                  1.0 9990001
+
+bmtest             bm2      ISS-WO   W14E.6.3-3                  -20.0
+bmtest             bm2      ISS-WO   A0705-0304                  -10.0
+bmtest             bm2      ISS-WO   61001322                   -200.0
+bmtest             bm2      RCT-WO   ZP142-N-200-10               10.0
+
+bmtest             bm3      ISS-WO   61002942                   -100.0
+bmtest             bm3      ISS-WO   E0801-0110                 -120.0
+bmtest             bm3      ISS-WO   A1001-0610                  -10.0
+bmtest             bm3      RCT-WO   ZP142-N-205-00               10.0
+
+bmtest             bm4      ISS-WO   W42.6.4.2-2                -320.0
+bmtest             bm4      ISS-WO   GY230-003-00                -20.0
+bmtest             bm4      ISS-WO   E1009-0150                  -40.0
+bmtest             bm4      ISS-WO   E0801-0110                  -80.0
+bmtest             bm4      ISS-WO   B0228-0255                  -40.0
+bmtest             bm4      ISS-WO   61002541                   -240.0
+bmtest             bm4      ISS-WO   23 24100 04 00              -40.0
+bmtest             bm4      RCT-WO   ZP142-N-206-00               20.0

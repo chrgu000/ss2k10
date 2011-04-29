@@ -1,0 +1,867 @@
+/* xxbcrp002.p 出货计划单生成                                              */
+/* REVISION: 1.0         Last Modified: 2008/10/27   By: Roger   NO ECO    */ 
+/*-Revision end------------------------------------------------------------*/
+
+/*所有table&逻辑未考虑参考号*/
+
+
+
+{mfdtitle.i "2+ "}
+
+
+define variable xapplication as com-handle. /*for excel*/  
+define variable xworkbook as com-handle.    /*for excel*/  
+define variable xworksheet as com-handle.   /*for excel*/  
+define variable x_row as integer init 1.    /*for excel*/  
+define variable x_col as integer init 1.    /*for excel*/  
+
+define var date  as date .
+define var date1 as date .
+define var nbr  as char format "x(8)" .
+define var ship_to as char format "x(8)"  .
+define var sonbr like so_nbr .
+define var sonbr1 like so_nbr . 
+define var soline like sod_line format ">>>".
+define var soline1 like sod_line format ">>>".
+define var part  like pt_part .
+define var part1 like pt_part .
+
+define var v_ii as integer . 
+define var v_qty_tmp like ld_qty_oh .
+define var v_qty_lad like ld_qty_oh .
+define var v_update  like mfc_logical no-undo.               /*for updateall */
+define var yn        like mfc_logical no-undo.               /*for dispall */
+define var yn2       like mfc_logical no-undo.               /*for dispall */
+define var aa_from_recno as recid format "->>>>>>9".   /*for dispall */       
+define var first_sw_call as logical initial true.     /*for dispall */ 
+
+
+define temp-table temp1 
+    field t1_shipto   like so_ship 
+    field t1_due_Date like sod_due_date 
+    field t1_sonbr    like so_nbr
+    field t1_soline   like sod_line
+    field t1_part     like sod_part 
+    field t1_site     like sod_site
+    field t1_um_conv  like sod_um_conv
+    field t1_qty_open like sod_qty_ord 
+    field t1_qty_oh   like sod_qty_ord 
+    field t1_qty_shp   like sod_qty_ord 
+    field t1_select    as char format "x(1)"
+    .
+
+define temp-table temp2
+    field t2_part like ld_part 
+    field t2_site like ld_site 
+    field t2_qty  like ld_qty_oh 
+    .
+
+define temp-table temp3
+    field t3_part like ld_part 
+    field t3_site like ld_site
+    field t3_loc  like ld_loc
+    field t3_lot  like ld_lot
+    field t3_qty  like ld_qty_oh 
+    field t3_qty2 like ld_qty_oh 
+    .
+
+define temp-table temp4
+    field t4_part like ld_part 
+    field t4_site like ld_site
+    field t4_loc  like ld_loc
+    field t4_lot  like ld_lot
+    field t4_qty  like ld_qty_oh 
+    .
+
+
+/*GUI preprocessor Frame A define A*/
+&SCOPED-DEFINE PP_FRAME_NAME 
+
+FORM  
+    RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+    RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+    SKIP(.1)  
+
+    nbr         colon 18 label "计划单号" 
+    ship_to     colon 18 label "交运地"
+    date        colon 18 label "到期日"
+    date1       colon 50 label "至"
+    sonbr       colon 18 label "订单号"
+    sonbr1      colon 50 label "至"
+    soline      colon 18 label "订单项"
+    soline1     colon 50 label "至"
+    part        colon 18 label "零件号"
+    part1       colon 50 label "至"
+    
+    skip(2)
+    "说明: 1.仅限状态为(Active)的项目号 " colon 15 
+    "      2.仅限状态为(Normal)的库位"    colon 15
+    "      3.仅限已确认且未结的订单项次"  colon 15
+    "      4.所有数量的显示单位为库存单位"    colon 15
+    "      5.预备料数大于零才产生出货计划"    colon 15
+
+    SKIP(4)  
+with frame a side-labels width 80 NO-BOX THREE-D .
+
+DEFINE VARIABLE F-a-title AS CHARACTER.
+F-a-title = "".
+RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+RECT-FRAME:HEIGHT-PIXELS in frame a =
+FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. 
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+/*setFrameLabels(frame a:handle).*/
+
+find last xpk_mstr no-lock no-error .
+nbr = if avail xpk_mstr then xpk_nbr else "" .
+
+{wbrp01.i}
+mainloop:
+repeat: 
+    for each temp1 : delete temp1 .  end.
+    for each temp2 : delete temp2 .  end.
+    for each temp3 : delete temp3 .  end.
+    for each temp4 : delete temp4 .  end.
+
+    clear frame a no-pause .
+    disp nbr ship_to with frame a  .
+
+    update nbr with frame a editing:
+        {mfnp.i xpk_mstr nbr xpk_nbr nbr xpk_nbr xpk_nbr2 }
+        IF recno <> ?  THEN DO:
+            DISP xpk_nbr @ nbr xpk_shipto @ ship_to
+            with frame a.
+        END.  /*if recno<> ?*/
+    end. 
+    assign nbr .
+
+    if nbr <> "" then do: /*检查单号是否存在,直接打印*/
+        find first xpk_mstr where xpk_nbr = input nbr no-lock no-error .
+        if not avail xpk_mstr then do:
+            message "无效计划单号" view-as alert-box.
+            undo,retry .
+        end.
+        else assign nbr = xpk_nbr ship_to = xpk_shipto .
+        message "重复打印" .
+
+        run printb  .  /*重复打印到excel*/
+    end. /*if nbr <> "" */
+    else do:  /*if nbr = "" */ /*查找so和库存,新增,打印,更新*/
+        message "新增记录" .
+        update 
+            ship_to 
+        with frame a editing:
+            {mfnp.i ad_mstr ship_to ad_addr ship_to ad_addr ad_addr }
+            IF recno <> ?  THEN DO:
+                DISP ad_addr @ ship_to  
+                with frame a.
+            END.  /*if recno<> ?*/
+        end.
+        assign ship_to .
+        if ship_to = "" or (ship_to <> "" and not can-find(first ad_mstr where ad_addr = ship_to no-lock)) then do:
+            message "无效交运地" view-as alert-box .
+            undo,retry.
+        end.
+
+
+        if date        = low_date then date  = ?.
+        if date1       = hi_date  then date1 = ?.
+        if sonbr1      = hi_char  then sonbr1      = "".
+        if soline1     = 9999     then soline1     = 0.
+        if part1       = hi_char  then part1       = "".
+
+        update 
+            date date1 sonbr sonbr1 soline soline1 part part1 
+        with frame a .
+
+        if date  = ?  then date  = low_date.
+        if date1 = ?  then date1 = hi_date.
+        if sonbr1      = "" then sonbr1      = hi_char .
+        if soline1     = 0  then soline1     = 9999    .
+        if part1       = "" then part1       = hi_char .
+
+
+        run selectall.  /*寻找未结记录*/
+
+
+        excelloop:  /*excel预览后,不更新的话,还可以再修改*/
+        do on error undo, return error on endkey undo, return error:
+            run dispall.    /*清单筛选*/
+                hide message no-pause.
+                if yn2 then yn = no.
+                if yn = no then undo mainloop ,retry.   
+            run printa.     /*excel预览*/
+            run updateall . /*更新*/
+                if v_update = no then undo excelloop,retry excelloop . 
+        end. /*excelloop*/
+    end.  /*if nbr = "" */
+
+end. /* mainloop */
+{wbrp04.i &frame-spec = a}
+
+
+
+
+
+
+
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+procedure selectall : 
+do on error undo, return error on endkey undo, return error:
+    
+    /*需求*/
+    for each so_mstr where so_nbr >= sonbr and so_nbr <= sonbr1 
+                     and so_ship = ship_to
+                     /*and so_conf_date <> ?
+                     and so_to_inv = no*/ no-lock ,
+        each sod_Det where sod_nbr = so_nbr 
+                     and sod_line >= soline and sod_line <= soline1
+                     and sod_due_Date >= date and sod_due_Date <= date1 
+                     and sod_part >= part and sod_part <= part1 
+                     and (sod_qty_ord * sod_um_conv - sod_qty_ship ) > 0 
+                     /*and sod_qty_inv = 0 */
+                     and sod_confirm = yes 
+                     no-lock ,
+        each pt_mstr where pt_part = sod_part 
+                     and pt_status = "Active" no-lock 
+        break by so_ship /*仅一个shipto*/ by sod_due_date by sod_nbr by sod_line by sod_part :
+        
+        v_qty_lad = 0 .
+        for each lad_det where lad_dataset = "sod_det" and lad_nbr = sod_nbr and lad_line = string(sod_line)  no-lock:
+            v_qty_lad = v_qty_lad + (lad_qty_all + lad_qty_pick ) .
+        end.
+
+        if (sod_qty_ord * sod_um_conv - sod_qty_ship ) - v_qty_lad >= 0 then do:
+            find first temp1 where t1_sonbr = sod_nbr and t1_soline = sod_line no-lock no-error .
+            if not avail temp1 then do:
+                create temp1 .
+                assign 
+                    t1_shipto    = so_ship
+                    t1_sonbr     = so_nbr
+                    t1_soline    = sod_line
+                    t1_part      = sod_part
+                    t1_site      = sod_site
+                    t1_due_date  = sod_due_date
+                    t1_um_conv   = sod_um_conv
+                    t1_qty_open  = (sod_qty_ord * sod_um_conv - sod_qty_ship - v_qty_lad ) .
+            end.
+        end.
+
+        
+    end. /*for each so_mstr*/
+
+    /*roger备注: 需求(so)按地点,因而库存仅是本地点下的库存,如果需求存在多地点情况,则显示会同part多笔记录(不显示site)*/
+    /*供给(有效库存扣除已被实际备料数)*/ 
+    for each temp1 break by t1_site by t1_part :
+        if first-of(t1_part) then do:
+            for each ld_det where ld_site = t1_site and ld_part = t1_part  and ld_qty_oh > 0 and ld_status = "normal" no-lock :
+                find first temp3 where t3_part = ld_part and t3_site = ld_site and t3_loc = ld_loc and t3_lot = ld_lot no-error .
+                if not avail temp3 then do:
+                    create temp3.
+                    assign  t3_site = ld_site 
+                            t3_part = ld_part 
+                            t3_loc  = ld_loc
+                            t3_lot  = ld_lot 
+                            t3_qty  = ld_qty_oh - ld_qty_all 
+                            .
+                end.
+                else do:
+                    t3_qty  = t3_qty + (ld_qty_oh - ld_qty_all) .
+                end.
+            end.
+        end.
+    end. /*for each temp1*/
+
+    /*供给中(每个批次扣除其他计划备料数(未实际备料))*/
+    for each temp3 :
+        v_qty_tmp = 0.
+        for each xpk_mstr use-index xpk_slot where xpk_stat = "" and xpk_part = t3_part and xpk_site = t3_site and xpk_loc = t3_loc and xpk_lot = t3_lot no-lock:
+            v_qty_tmp = v_qty_tmp + xpk_qty_shp .
+        end.
+        t3_qty = max(0,t3_qty - v_qty_tmp).
+        t3_qty2 = t3_qty .
+
+    end.
+
+   
+
+    for each temp3 where t3_qty <= 0 : delete temp3 . end.
+    
+    for each temp3 where t3_qty > 0  break by t3_site by t3_part :
+        if first-of(t3_part) then v_qty_tmp = 0 .
+        v_qty_tmp = v_qty_tmp + t3_qty .
+        if last-of(t3_part) then do:
+                find first temp2 where t2_part = t3_part and t2_site = t3_site no-error .
+                if not avail temp2 then do:
+                    create temp2.
+                    assign  t2_site = t3_site 
+                            t2_part = t3_part 
+                            t2_qty  = v_qty_tmp .
+                end.
+                else do:
+                    t2_qty = t2_qty + v_qty_tmp .
+                end.
+        end.
+    end.
+
+    /*需求从供给中备料*/
+    for each temp1 break by t1_shipto by t1_part by t1_due_Date by t1_sonbr by t1_soline :
+        find first temp2 where t2_part = t1_part and t2_site = t1_site and t2_qty > 0 no-error .
+        if avail temp2 then do:
+            t1_qty_oh  = t2_qty .
+            if t1_qty_open >= t2_qty then do:
+                t1_qty_shp = t2_qty .
+                t2_qty     = 0 .
+            end.
+            else do:
+                t1_qty_shp = t1_qty_open .
+                t2_qty     =  t2_qty - t1_qty_open .
+            end. 
+        end.
+        
+    end. /*for each temp1*/
+end. 
+end procedure. /*selectall*/
+
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+
+procedure dispall : 
+disploop:
+repeat :
+
+    form
+       t1_select       column-label "*"
+       t1_due_date     column-label "到期日"
+       t1_sonbr        column-label "订单"
+       t1_soline       column-label "项" format ">>>"
+       t1_site         column-label "地点" 
+       t1_part         column-label "零件号"
+       /*t1_um_conv      column-label "转换因子"*/
+       t1_qty_open     column-label "未备料"
+       t1_qty_oh       column-label "库存数"
+       t1_qty_shp      column-label "预备料" /*validate ( t1_qty_shp < t1_qty_open , "预备料数不可超过未备料数")*/
+    with frame y 
+    row 4 centered overlay three-d  .
+
+    yn = no.
+    yn2 = no. 
+    view frame y .
+    sw:
+    do on endkey undo, leave: /*xp001*/  
+        message "请按 'enter'或'space' 键选择.".         
+        {xxswxp001.i
+            &detfile      = temp1
+            &scroll-field = temp1.t1_select
+            &framename    = "y"
+            &framesize    = 10
+            &framewidth   = 78
+            &sel_on       = ""*""
+            &sel_off      = """"
+            &display1     = temp1.t1_select
+            &display2     = t1_due_date
+            &display3     = t1_sonbr
+            &display4     = t1_soline
+            &display5     = t1_site
+            &display6     = t1_part
+            &display7     = " /*t1_um_conv*/ t1_qty_open"
+            &display8     = t1_qty_oh
+            &display9     = t1_qty_shp
+            &exitlabel    = sw
+            &exit-flag    = first_sw_call 
+            &record-id    = aa_from_recno
+            &include2       = "v_qty_tmp = t1_qty_shp .
+                               update t1_qty_shp with frame y. 
+                               if t1_qty_shp > t1_qty_open then do:
+                                    message '    预备料数不可超过订单未备料数!           ' view-as alert-box.
+                                    t1_qty_shp = v_qty_tmp .
+                                    undo,retry.
+                               end.
+                               t1_select = '' .
+                               disp t1_select with frame y .
+                              "
+        }
+        if keyfunction(lastkey) = "end-error"
+            or lastkey = keycode("f4")
+            or keyfunction(lastkey) = "."
+            or lastkey = keycode("ctrl-e") then do:
+            yn2 = no.
+            {pxmsg.i &msgnum=36 &errorlevel=1 &confirm=yn2 } /* 请确认退出 */
+            if yn2  then do:
+                undo disploop, leave .
+            end.
+                
+        end.        
+        else do:
+            yn = no.
+            {pxmsg.i &msgnum=12 &errorlevel=1 &confirm=yn } /* 所有信息是否正确 */
+            if yn = no then do:
+                yn2 = no.
+                {pxmsg.i &msgnum=36 &errorlevel=1 &confirm=yn2 } /* 请确认退出 */
+                if yn2  then do:
+                    undo disploop, leave .
+                end.
+                else undo sw, retry.
+            end.
+            if yn = yes then leave disploop.
+        end.
+    end. /*sw*/
+
+    hide message no-pause.
+    hide frame y no-pause.   
+
+end. 
+end procedure. /*dispall*/
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+
+procedure getpknbr : 
+do transaction:
+    find last usrw_wkfl where usrw_key1 = "bcpknbr" and usrw_key2 = "bcpknbr" exclusive-lock no-error .
+    if not avail usrw_wkfl then do:
+
+        find last xpk_mstr no-lock no-error . /*防止误删而再重新跳号*/
+        nbr = if avail xpk_mstr then string(integer(xpk_nbr) + 1, "99999999") else "00000001" .
+
+        create usrw_wkfl .
+        assign usrw_key1 = "bcpknbr" 
+               usrw_key2 = "bcpknbr" 
+               usrw_key3 = nbr  
+               usrw_key4 = "**流水号:for出货计划单,不允许删除**!".
+
+        nbr = string(integer(usrw_key3) ,"99999999") .
+    end.
+    else do:
+        nbr = string(integer(usrw_key3) + 1 ,"99999999") .
+        usrw_key3 = nbr .
+    end.
+    release usrw_wkfl .
+end.
+end procedure. /*getpknbr*/
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+
+procedure printa: 
+do on error undo, return error on endkey undo, return error:
+    nbr = "PREVIEW" .
+    create "excel.application" xapplication.
+    xworkbook = xapplication:workbooks:add().
+    xworksheet = xapplication:sheets:item(1).  
+    x_row = 1.
+    x_col = 1.
+    xworksheet:range("a1:o1"):select.
+    xworksheet:range("a1:o1"):merge.
+    xworksheet:range("a1"):value = "出货计划明细报表". 
+    xworksheet:Cells(1, 1):HorizontalAlignment = 3 .
+    xworksheet:range("a1"):Font:Bold = True .
+    xworksheet:range("a1"):font:size=20 .
+    xworksheet:Rows("1:1"):EntireRow:AutoFit . 
+ 
+    xworksheet:range("a2") = "计划单号:"  + nbr .
+    xworksheet:range("b2:d2"):select.
+    xworksheet:range("b2:d2"):merge.
+    xworksheet:range("b2") = "*" + nbr + "*" .   
+    xworksheet:range("b2"):Font:name = "3 of 9 Barcode" .
+    xworksheet:range("b2"):font:size = 18 .
+    xworksheet:range("e2") = "Ship-To:".
+    xworksheet:range("f2") = "'" + ship_to .
+
+    x_row = 3.
+    x_col = 1.
+    xworksheet:cells(x_row,x_col) = "条码".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "订单".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "项".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "到期日".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "零件号".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "说明1".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "说明2".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "未备料数".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "预备料数".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "地点".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "库位".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "批号".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "可用库存".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "本批备料数".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "本批剩余".
+    x_col = x_col + 1.
+
+    v_ii = 0 .
+    
+    for each temp1 where t1_qty_shp >0  
+        break by t1_shipto by t1_part by t1_due_Date by t1_sonbr by t1_soline :
+            find first pt_mstr where pt_part = t1_part no-lock no-error .
+            
+            v_qty_tmp = 0.
+            if v_ii = x_row then x_row = x_row + 1 . /*如果单行,则多跳一行*/
+            x_row = x_row + 1.
+            x_col = 1.
+            v_ii = x_row. /*单行值*/
+            xworksheet:cells(x_row,x_col) = "*" + nbr + string(t1_soline,"999") + t1_sonbr  +  "*".
+            xworksheet:cells(x_row,x_col):Font:name = "3 of 9 Barcode" .
+            xworksheet:cells(x_row,x_col):font:size = 18 .
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + t1_sonbr.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) =  t1_soline .
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + string(year(t1_due_date),"9999") + "-" + string(month(t1_due_date),'99') + "-" + string(day(t1_due_date),'99').
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + t1_part.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + if avail pt_mstr then pt_desc1 else "" .
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + if avail pt_mstr then pt_desc2 else "" .
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = t1_qty_open.
+            x_col = x_col + 1.  
+            xworksheet:cells(x_row,x_col) = t1_qty_shp .
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + t1_site .
+            x_col = x_col + 1.
+            
+            find first temp3 where t3_site = t1_site and t3_part = t1_part and t3_qty > 0 no-error .
+            if not avail temp3 then do:
+                xworksheet:cells(x_row,x_col) = "**无可用库存**".
+            end. 
+            else do:  /*if avail temp3*/
+                v_qty_tmp = t1_qty_shp .
+                for each temp3 where t3_site = t1_site and t3_part = t1_part and t3_qty > 0 break by t3_lot :
+                    if v_qty_tmp >= t3_qty then do:
+                        xworksheet:cells(x_row,x_col) = "'" + t3_loc.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) = "'" + t3_lot.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) =  t3_qty.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) =  t3_qty.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) =  0.
+                        x_col = x_col + 1.
+                        
+                        
+                        x_col = 11 .
+                        v_qty_tmp = v_qty_tmp - t3_qty .
+                        t3_qty = 0 .
+                    end.
+                    else do:
+                        xworksheet:cells(x_row,x_col) = "'" + t3_loc.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) = "'" + t3_lot.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) = t3_qty.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) = v_qty_tmp.
+                        x_col = x_col + 1.
+                        xworksheet:cells(x_row,x_col) = t3_qty - v_qty_tmp .
+                        x_col = x_col + 1.
+                        
+                        
+                        x_col = 1 .                    
+                        t3_qty = t3_qty - v_qty_tmp  .
+                        v_qty_tmp = 0 .
+                    end.
+
+                    if v_qty_tmp = 0 then leave .
+                    x_row = x_row + 1.
+                end. /*for each temp3*/
+            end. /*if avail temp3*/
+
+            
+
+    end. /*for each temp1*/
+    nbr = "" .
+    xworksheet:Columns:EntireColumn:AutoFit . 
+    xworksheet:cells(1,1):select.
+
+    xapplication:visible = true.   
+    release object xworksheet.
+    release object xworkbook.
+    release object xapplication.
+
+end.
+end procedure. /*printa*/
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+
+procedure printb: 
+do on error undo, return error on endkey undo, return error:
+
+    create "excel.application" xapplication.
+    xworkbook = xapplication:workbooks:add().
+    xworksheet = xapplication:sheets:item(1).  
+    x_row = 1.
+    x_col = 1.
+    xworksheet:range("a1:o1"):select.
+    xworksheet:range("a1:o1"):merge.
+    xworksheet:range("a1"):value = "出货计划明细报表". 
+    xworksheet:Cells(1, 1):HorizontalAlignment = 3 .
+    xworksheet:range("a1"):Font:Bold = True .
+    xworksheet:range("a1"):font:size=20 .
+    xworksheet:Rows("1:1"):EntireRow:AutoFit . 
+ 
+    xworksheet:range("a2") = "计划单号:"  + nbr .
+    xworksheet:range("b2:d2"):select.
+    xworksheet:range("b2:d2"):merge.
+    xworksheet:range("b2") = "*" + nbr + "*" .   
+    xworksheet:range("b2"):Font:name = "3 of 9 Barcode" .
+    xworksheet:range("b2"):font:size = 18 .
+    xworksheet:range("e2") = "Ship-To:".
+    xworksheet:range("f2") = "'" + ship_to .
+    xworksheet:range("k2") = "' **重复打印**" .
+
+
+    x_row = 3.
+    x_col = 1.
+    xworksheet:cells(x_row,x_col) = "条码".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "订单".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "项".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "到期日".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "零件号".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "说明1".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "说明2".
+    x_col = x_col + 1.
+    xworksheet:cells(x_row,x_col) = "未备料数".                   
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "预备料数".                   
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "地点".                       
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "库位".                       
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "批号".                       
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "可用库存".                   
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "本批备料数".                 
+    x_col = x_col + 1.                                            
+    xworksheet:cells(x_row,x_col) = "本批剩余".                   
+    x_col = x_col + 1.
+    
+
+    for each xpk_mstr where xpk_nbr = nbr no-lock 
+        break by xpk_nbr by xpk_shipto by xpk_site by xpk_loc by xpk_part 
+        by xpk_due_Date by xpk_sonbr by xpk_soline by xpk_lot  :
+            find first pt_mstr where pt_part = xpk_part no-lock no-error .
+           
+
+            x_row = x_row + 1.
+            x_col = 1.
+
+            if (not first(xpk_nbr)) 
+                and first-of(xpk_soline)
+            then do:
+                x_row = x_row + 1.
+            end.
+
+            if xworksheet:cells(x_row - 1 ,x_col):value <> "*" + xpk_nbr + string(xpk_soline,"999") + xpk_sonbr  +  "*" then do:
+                xworksheet:cells(x_row,x_col) = "*" + xpk_nbr + string(xpk_soline,"999") + xpk_sonbr  +  "*".
+                xworksheet:cells(x_row,x_col):Font:name = "3 of 9 Barcode" .
+                xworksheet:cells(x_row,x_col):font:size = 18 .
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + xpk_sonbr.
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) =  xpk_soline .
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + string(year(xpk_due_date),"9999") + "-" + string(month(xpk_due_date),'99') + "-" + string(day(xpk_due_date),'99').
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + xpk_part.
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + if avail pt_mstr then pt_desc1 else "" .
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + if avail pt_mstr then pt_desc2 else "" .
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = xpk_qty_open.
+                x_col = x_col + 1.  
+                xworksheet:cells(x_row,x_col) = xpk_qty_all .
+                x_col = x_col + 1.
+                xworksheet:cells(x_row,x_col) = "'" + xpk_site .
+                x_col = x_col + 1.
+            end.
+            else do:
+                x_col = x_col + 10 .
+            end.
+
+            xworksheet:cells(x_row,x_col) = "'" + xpk_loc.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) = "'" + xpk_lot.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) =  xpk_qty_oh.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) =  xpk_qty_shp.
+            x_col = x_col + 1.
+            xworksheet:cells(x_row,x_col) =  max(0,xpk_qty_oh - xpk_qty_shp).
+            x_col = x_col + 1.
+
+
+    end. /*for each temp1*/
+
+    xworksheet:Columns:EntireColumn:AutoFit . 
+    xworksheet:cells(1,1):select.
+
+    xapplication:visible = true.   
+    release object xworksheet.
+    release object xworkbook.
+    release object xapplication.
+
+end.
+end procedure. /*printb*/
+
+
+/*-----------------------------------------------------------------------------------------------------------------------------------*/
+
+procedure updateall : 
+do on error undo, return error on endkey undo, return error:
+    v_update = no.
+    {pxmsg.i &msgnum=32 &errorlevel=1 &confirm=v_update } /* 请确认更新 */
+    if v_update then do:
+            
+            run getpknbr .
+            
+            /*此段照搬printa,区别只在t3_qty 与 t3_qty2 */
+            for each temp1 where t1_qty_shp >0  
+                break by t1_shipto by t1_part by t1_due_Date by t1_sonbr by t1_soline : 
+                    
+                    v_qty_tmp = 0.
+                    find first temp3 where t3_site = t1_site and t3_part = t1_part and t3_qty2 > 0 no-error .
+                    if not avail temp3 then do:
+                        create xpk_mstr .
+                        assign 
+                            xpk_nbr      = nbr 
+                            xpk_sonbr    = t1_sonbr
+                            xpk_soline   = t1_soline
+                            xpk_due_date = t1_due_date
+                            xpk_shipto   = t1_shipto
+                            xpk_part     = t1_part
+                            xpk_qty_open = t1_qty_open
+                            xpk_qty_all  = t1_qty_shp
+                            xpk_site     = t1_site 
+                            xpk_crt_Date = today
+                            xpk_crt_user = global_userid
+                            xpk_crt_time = time
+                            xpk_loc      = "**无可用库存**" .
+                    end. 
+                    else do:  /*if avail temp3*/
+                        v_qty_tmp = t1_qty_shp .
+                        for each temp3 where t3_site = t1_site and t3_part = t1_part and t3_qty2 > 0 break by t3_lot :
+                            if v_qty_tmp >= t3_qty2 then do:
+
+                                find first xpk_mstr 
+                                    where xpk_nbr    = nbr 
+                                    and xpk_sonbr    = t1_sonbr 
+                                    and xpk_soline   = t1_soline
+                                    and xpk_site     = t1_site 
+                                    and xpk_loc      = t3_loc
+                                    and xpk_lot      = t3_lot
+                                no-error .
+                                if not avail xpk_mstr then do:
+                                    create xpk_mstr .
+                                    assign 
+                                        xpk_nbr      = nbr 
+                                        xpk_sonbr    = t1_sonbr
+                                        xpk_soline   = t1_soline
+                                        xpk_due_date = t1_due_date
+                                        xpk_shipto   = t1_shipto
+                                        xpk_part     = t1_part
+                                        xpk_qty_open = t1_qty_open
+                                        xpk_qty_all  = t1_qty_shp
+                                        xpk_site     = t1_site 
+                                        xpk_crt_Date = today
+                                        xpk_crt_user = global_userid
+                                        xpk_crt_time = time
+                                        xpk_loc      = t3_loc
+                                        xpk_lot      = t3_lot 
+                                        xpk_qty_oh   = t3_qty2
+                                        xpk_qty_shp  = t3_qty2 
+                                        .
+                                end.
+                                else do: /*应该是不存在"同soline+同批次"这种情况*/
+                                        xpk_qty_oh  = xpk_qty_oh + t3_qty2 .
+                                        xpk_qty_shp = xpk_qty_shp + t3_qty2 .
+                                end.
+                                
+                                v_qty_tmp = v_qty_tmp - t3_qty2 .
+                                t3_qty2 = 0 .
+                            end.
+                            else do:
+
+                                find first xpk_mstr 
+                                    where xpk_nbr    = nbr 
+                                    and xpk_sonbr    = t1_sonbr 
+                                    and xpk_soline   = t1_soline
+                                    and xpk_site     = t1_site 
+                                    and xpk_loc      = t3_loc
+                                    and xpk_lot      = t3_lot
+                                no-error .
+                                if not avail xpk_mstr then do:
+                                    create xpk_mstr .
+                                    assign 
+                                        xpk_nbr      = nbr 
+                                        xpk_sonbr    = t1_sonbr
+                                        xpk_soline   = t1_soline
+                                        xpk_due_date = t1_due_date
+                                        xpk_shipto   = t1_shipto
+                                        xpk_part     = t1_part
+                                        xpk_qty_open = t1_qty_open
+                                        xpk_qty_all  = t1_qty_shp
+                                        xpk_site     = t1_site 
+                                        xpk_crt_Date = today
+                                        xpk_crt_user = global_userid
+                                        xpk_crt_time = time
+                                        xpk_loc      = t3_loc
+                                        xpk_lot      = t3_lot 
+                                        xpk_qty_oh   = t3_qty2
+                                        xpk_qty_shp  = v_qty_tmp 
+                                        .
+                                end.
+                                else do: /*应该是不存在"同soline+同批次"这种情况*/
+                                        xpk_qty_oh  = xpk_qty_oh + t3_qty2 .
+                                        xpk_qty_shp = xpk_qty_shp + v_qty_tmp .
+                                end.
+                                                                                 
+                                t3_qty2 = t3_qty2 - v_qty_tmp  .
+                                v_qty_tmp = 0 .
+                            end.
+
+                            if v_qty_tmp = 0 then leave .
+                        end. /*for each temp3*/
+                    end. /*if avail temp3*/
+
+            end. /*for each temp1*/
+            
+            message "新产生出货计划单号:" nbr  view-as alert-box .
+
+    end.  /*if v_update then*/  
+end. 
+end procedure. /*updateall*/

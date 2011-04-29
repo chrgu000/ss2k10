@@ -1,0 +1,190 @@
+ADD TABLE "xrc_mstr"
+  AREA "TRANSACTION"
+  LABEL "xrc_mstr"
+  DESCRIPTION ""
+  DUMP-NAME "xrc_mstr"
+
+ADD FIELD "xrc_domain" OF "xrc_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "域"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xrc_nbr" OF "xrc_mstr" AS character 
+  FORMAT "x(9)"
+  INITIAL ""
+  LABEL "单号"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xrc_date_mod" OF "xrc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "修改日期"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xrc_date_print" OF "xrc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "打印日期"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xrc_user_mod" OF "xrc_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "修改人"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xrc_user_print" OF "xrc_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "打印人"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xrc_site" OF "xrc_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xrc_date_rct" OF "xrc_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "入库日期"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD INDEX "xrc_nbr" ON "xrc_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xrc_domain" ASCENDING 
+  INDEX-FIELD "xrc_nbr" ASCENDING 
+
+ADD TABLE "xrcd_det"
+  AREA "TRANSACTION"
+  LABEL "xrcd_det"
+  DUMP-NAME "xrcd_det"
+
+ADD FIELD "xrcd_domain" OF "xrcd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "域"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xrcd_nbr" OF "xrcd_det" AS character 
+  FORMAT "x(9)"
+  INITIAL ""
+  LABEL "单号"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xrcd_line" OF "xrcd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "行"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xrcd_wolot" OF "xrcd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单ID"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xrcd_wonbr" OF "xrcd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单号"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xrcd_part" OF "xrcd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件号"
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xrcd_qty_rct" OF "xrcd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "入库数"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xrcd_loc" OF "xrcd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "库位"
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xrcd_site" OF "xrcd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xrcd_qty_open" OF "xrcd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "短缺量"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD INDEX "xrcd_nbr" ON "xrcd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xrcd_domain" ASCENDING 
+  INDEX-FIELD "xrcd_nbr" ASCENDING 
+  INDEX-FIELD "xrcd_line" ASCENDING 
+
+ADD INDEX "xrcd_wolot" ON "xrcd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xrcd_domain" ASCENDING 
+  INDEX-FIELD "xrcd_wolot" ASCENDING 
+  INDEX-FIELD "xrcd_nbr" ASCENDING 
+
+ADD INDEX "xrcd_wonbr" ON "xrcd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xrcd_domain" ASCENDING 
+  INDEX-FIELD "xrcd_wonbr" ASCENDING 
+  INDEX-FIELD "xrcd_wolot" ASCENDING 
+  INDEX-FIELD "xrcd_nbr" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003135

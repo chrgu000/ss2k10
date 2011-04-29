@@ -1,0 +1,3 @@
+abs__chr03,abs__chr04,abs__chr05字段,
+abs__chr06留空或存在库位
+可启用通用代码控制

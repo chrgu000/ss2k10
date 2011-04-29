@@ -1,0 +1,59 @@
+
+for each bom_mstr where bom_par = "1101016221300000" or bom_par =
+"1101016221100000" :
+disp bom_par bom__dec01 .
+update bom__dec01.
+
+for first pt_mstr where pt_domain = "05" and  pt_part = "6041010162213003" :
+disp pt_part pt_comm_code.
+update pt_comm_code.
+
+
+
+
+{mfdtitle.i "1+ "}
+output to "/tmp/iss.txt" .
+for each tr_hist 
+        where tr_domain = global_domain 
+        and tr_effdate >= date(02,01,2009)
+        and tr_type = "iss-wo" 
+        and tr_part = "6041010162213003"
+        no-lock  break by tr_lot by tr_part :
+    disp tr_type tr_effdate tr_lot tr_part tr_site tr_loc tr_qty_loc tr_trnbr  with width 300.
+end.
+output close.
+
+
+{mfdtitle.i "1+ "}
+define var v_qty like tr_qty_loc .
+output to "/tmp/iss-total.txt" .
+for each tr_hist 
+where tr_domain = global_domain 
+and tr_effdate >= date(02,01,2009)
+and tr_type = "iss-wo" 
+and tr_part = "6041010162213003"
+no-lock  break by tr_lot by tr_part :
+if first-of(tr_part) then  v_qty = 0 . 
+v_qty = v_qty + tr_qty_loc .
+if last-of(tr_part) then 
+disp tr_type tr_lot tr_part v_qty  with width 300.
+end.
+output close.
+
+{mfdtitle.i "1+ "}
+define var v_qty like tr_qty_loc .
+output to "/tmp/rct-total.txt" .
+for each tr_hist 
+where tr_domain = global_domain 
+and tr_effdate >= date(02,01,2009)
+and tr_type = "rct-wo" 
+and (tr_lot = "4022145" or tr_lot = "4023724" )
+no-lock  break by tr_lot by tr_part :
+if first-of(tr_part) then  v_qty = 0 . 
+v_qty = v_qty + tr_qty_loc .
+if last-of(tr_part) then 
+disp tr_type tr_lot tr_part v_qty  with width 300.
+end.
+output close.
+
+

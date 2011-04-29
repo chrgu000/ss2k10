@@ -1,0 +1,21 @@
+添加Sequence             Roger Xiao 2009/04/20
+----------------------------------------------
+手工方式:
+1.单用户模式使用SFCDB.
+2.进入DB Dictionary
+3.确认编辑的是SFCDB,不是其他DB
+4.执行Schema---Sequence Editor... 
+5.add Sequence for 工单关联号     : sfc_sq01 
+6.add Sequence for 历史记录流水号 : sfc_sq02
+7.保存,退出DB Dictionary
+QAD一般用法:设定最大值,并可达到最大值后,循环.
+
+----------------------------------------------
+dump/load方式:
+1.单用户模式使用SFCDB.
+2.进入DB Dictionary
+3.确认编辑的是SFCDB,不是其他DB
+4.执行Admin---Load Data and Definitions
+	   ---Data Definitions (.df file)...
+5.选择已编辑好的Sequence.df,执行导入
+7.保存,退出DB Dictionary

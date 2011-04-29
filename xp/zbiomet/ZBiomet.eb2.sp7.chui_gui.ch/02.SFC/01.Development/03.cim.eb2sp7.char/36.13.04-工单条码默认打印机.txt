@@ -1,0 +1,16 @@
+@@batchload mgupmt.p
+"用户名"   "菜单路径" "菜单选择项"
+"excel"
+@@end
+@@batchload mgupmt.p
+"用户名"   "菜单路径" "菜单选择项"
+"excel"
+@@end
+@@batchload mgupmt.p
+"用户名"   "菜单路径" "菜单选择项"
+"excel"
+@@end
+@@batchload mgupmt.p
+"用户名"   "菜单路径" "菜单选择项"
+"excel"
+@@end

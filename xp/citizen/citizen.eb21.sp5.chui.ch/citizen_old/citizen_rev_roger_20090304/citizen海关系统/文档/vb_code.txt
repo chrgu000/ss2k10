@@ -1,0 +1,355 @@
+
+Sub Contract_Data_Update_MPAZ()
+'给Mtdhb的使用单元格定位
+Workbooks("NEW CONTRACT EDIT MP AZ.xls").Activate
+Dim n As Integer
+Dim i As Integer
+Dim y As Integer
+Dim x As Integer
+Application.ScreenUpdating = False
+Worksheets("Mtdhb").Select
+x = Sheets("Mtdhb").Range("a7").End(xlDown).Row
+y = Sheets("Mtdhb").Range("g1").End(xlToRight).Column
+
+
+ 'COPY料件和成品的项目到其他表格
+With Sheets("Mtdhb")
+.Range(.Cells(1, 1), .Cells(x, 7)).Copy Worksheets("Mtdzb").Range("a1")
+.Range(.Cells(1, 8), .Cells(6, y)).Copy Worksheets("Mtdzb").Range("h1")
+.Range(.Cells(1, 1), .Cells(x, 7)).Copy Worksheets("Mgjdhb").Range("a1")
+.Range(.Cells(1, 8), .Cells(6, y)).Copy Worksheets("Mgjdhb").Range("h1")
+.Range(.Cells(1, 1), .Cells(x, 7)).Copy Worksheets("Zljcb").Range("a1")
+.Range(.Cells(1, 8), .Cells(6, y)).Copy Worksheets("Zljcb").Range("h1")
+.Range(.Cells(1, 8), .Cells(6, y)).Copy Worksheets("Ljhlzb").Range("h1")
+.Range(.Cells(1, 1), .Cells(x, 7)).Copy Worksheets("Ljhlzb").Range("a1")
+End With
+
+'计算每台单重表的重量
+Sheets("Mtdzb").Select
+With Sheets("Mtdzb")
+   .Range(.Cells(7, 8), .Cells(x, y)).Formula = "=IF(IF(Mtdhb!$F7=""ASSY PARTS"",Mtdhb!$G7*Mtdhb!H7,0)=0,"""",IF(Mtdhb!$F7=""ASSY PARTS"",Mtdhb!$G7*Mtdhb!H7,0))"
+   .Range(Cells(x + 1, 8), Cells(x + 1, y)).Formula = "=IF(H4=""KG"",ROUND(SUM(H7:H" & x & "),4),ROUND(SUM(H7:H" & x & "),6))"
+   .Range(Cells(x + 2, 8), Cells(x + 2, y)).Formula = "=IF(H4=""KG"",ROUND(1/H" & x + 1 & ",3),"""")"
+   .Range(Cells(7, 8), Cells(x + 2, y)).Value = Range(Cells(7, 8), Cells(x + 2, y)).Value
+   .Cells(x + 1, 7) = "W/U："
+   .Cells(x + 2, 7) = "PCS/KG："
+End With
+
+'计算每公斤单耗表
+Sheets("Mgjdhb").Select
+Stop
+With Sheets("Mgjdhb")
+   .Range(Cells(7, 8), Cells(x, y)).Formula = "=IF(IF(0<IF(H$4=""KG"",Mtdhb!H7*Mtdzb!H$" & x + 2 & ",Mtdhb!H7)<0.00001,0.00001,IF(H$4=""KG"",Mtdhb!H7*Mtdzb!H$" & x + 2 & ",Mtdhb!H7))>0,ROUND(IF(0<IF(H$4=""KG"",Mtdhb!H7*Mtdzb!H$" & x + 2 & ",Mtdhb!H7)<0.00001,0.00001,IF(H$4=""KG"",Mtdhb!H7*Mtdzb!H$" & x + 2 & ",Mtdhb!H7)),5),"""")"
+   .Range(Cells(7, 8), Cells(x, y)).Value = Range(Cells(7, 8), Cells(x, y)).Value
+   .Range(.Cells(1, 1), .Cells(x - 3, y)).Borders.LineStyle = xlContinuous
+End With
+'重量知否为1的确认
+Sheets("Zljcb").Select
+With Sheets("Zljcb")
+   .Range(Cells(7, 8), Cells(x, y)).Formula = "=IF(ROUND(IF($F7=""ASSY PARTS"",$G7*Mgjdhb!H7,""0""),9)>0,ROUND(IF($F7=""ASSY PARTS"",$G7*Mgjdhb!H7,""0""),9),"""")"
+   .Range(Cells(x + 1, 8), Cells(x + 1, y)).Formula = "=IF(H4=""KG"",ROUND(SUM(H7:H" & x & "),9),ROUND(SUM(H7:H" & x & "),9))"
+   .Range(Cells(x + 3, 8), Cells(x + 3, y)).Formula = "=IF(H4<>""KG"",ROUND(ROUNDUP(H" & x + 1 & ",2)-H" & x + 1 & ",9),"""")"
+   .Range(Cells(x + 4, 8), Cells(x + 4, y)).Formula = "=IF(H4<>""KG"",ROUNDUP(H" & x + 1 & ",2),"""")"
+   .Range(Cells(7, 8), Cells(x + 4, y)).Value = Range(Cells(7, 8), Cells(x + 4, y)).Value
+   .Cells(x + 1, 6) = "F/W:"
+   .Cells(x + 2, 6) = "S/W:"
+   .Cells(x + 3, 6) = "T/W:"
+   .Cells(x + 4, 6) = "F/W:"
+End With
+Stop
+'每公斤单耗补正
+   For y1 = 8 To y
+   If y1 = 145 Then Stop
+      Sheets("Zljcb").Select
+      If Cells(4, y1) <> "KG" Then
+           Cells(x + 1, y1).Interior.ColorIndex = 34
+           If Cells(4, y1) <> "KG" And Cells(x + 3, y1).Value > 0 Then
+             K31 = Sheets("Zljcb").Cells(x + 3, y1).Value
+              Worksheets("Mgjdhb").Select
+               h10 = Application.WorksheetFunction.Match("打印机钢铁零件（底板等）/", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h11 = Application.WorksheetFunction.Match("打印机塑胶零件（减速轮等）", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h12 = Application.WorksheetFunction.Match("电子游戏机塑胶零件/(手柄、按键、按钮等)", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h13 = Application.WorksheetFunction.Match("焊锡", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h14 = Application.WorksheetFunction.Match("电子游戏机钢铁零件/(手柄、按键、按钮等)", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h15 = Application.WorksheetFunction.Match("电子游戏机塑胶零件/(手柄、按键、按钮等)2", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h16 = Application.WorksheetFunction.Match("电子游戏机钢铁零件/(手柄、按键、按钮等)2", Range(Cells(1, 3), Cells(x, 3)), 0)
+                If Cells(h10, y1).Value > 0 Then
+                    Cells(h10, y1) = Application.WorksheetFunction.RoundDown(Cells(h10, y1) + K31, 5)
+                  ElseIf Cells(h11, y1).Value > 0 Then
+                    Cells(h11, y1) = Application.WorksheetFunction.RoundDown(Cells(h11, y1) + K31, 5)
+                  ElseIf Cells(h12, y1).Value > 0 Then
+                    Cells(h12, y1) = Application.WorksheetFunction.RoundDown(Cells(h12, y1) + K31, 5)
+                  'ElseIf Cells(h13, y1).Value > 0 Then
+                   ' Cells(h13, y1) = Application.WorksheetFunction.RoundDown(Cells(h13, y1) + K31, 5)
+                  ElseIf Cells(h14, y1).Value > 0 Then
+                    Cells(h14, y1) = Application.WorksheetFunction.RoundDown(Cells(h14, y1) + K31, 5)
+                  ElseIf Cells(h15, y1).Value > 0 Then
+                    Cells(h15, y1) = Application.WorksheetFunction.RoundDown(Cells(h15, y1) + K31, 5)
+                  ElseIf Cells(h16, y1).Value > 0 Then
+                    Cells(h16, y1) = Application.WorksheetFunction.RoundDown(Cells(h16, y1) + K31, 5)
+                  ElseIf Cells(h13, y1).Value > 0 Then
+                    Cells(h13, y1) = Application.WorksheetFunction.RoundDown(Cells(h13, y1) + K31, 5)
+                End If
+           End If
+         'ElseIf Cells(4, y1) = "KG" And Cells(X + 1, 8).Value >= 1.05 And Cells(X + 1, 8).Value <= 0.995 Then
+          ' Cells(X + 1, y1).Interior.ColorIndex = 3
+      End If
+      
+      If Sheets("Zljcb").Cells(4, y1) = "KG" And Sheets("Zljcb").Cells(x + 1, y1).Value <> 1 Then
+             K30 = Application.WorksheetFunction.Round(1 - Sheets("Zljcb").Cells(x + 1, y1).Value, 7)
+             Worksheets("Mgjdhb").Select
+               h10 = Application.WorksheetFunction.Match("打印机钢铁零件（底板等）/", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h11 = Application.WorksheetFunction.Match("打印机塑胶零件（减速轮等）", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h12 = Application.WorksheetFunction.Match("电子游戏机塑胶零件/(手柄、按键、按钮等)", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h13 = Application.WorksheetFunction.Match("焊锡", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h14 = Application.WorksheetFunction.Match("电子游戏机钢铁零件/(手柄、按键、按钮等)", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h15 = Application.WorksheetFunction.Match("电子游戏机塑胶零件/(手柄、按键、按钮等)2", Range(Cells(1, 3), Cells(x, 3)), 0)
+               h16 = Application.WorksheetFunction.Match("电子游戏机钢铁零件/(手柄、按键、按钮等)2", Range(Cells(1, 3), Cells(x, 3)), 0)
+                If Cells(h10, y1).Value > 0.015 Then
+                    Cells(h10, y1) = Application.WorksheetFunction.RoundDown(Cells(h10, y1) + K30, 5)
+                  ElseIf Cells(h11, y1).Value > 0.015 Then
+                    Cells(h11, y1) = Application.WorksheetFunction.RoundDown(Cells(h11, y1) + K30, 5)
+                  ElseIf Cells(h12, y1).Value > 0.015 Then
+                    Cells(h12, y1) = Application.WorksheetFunction.RoundDown(Cells(h12, y1) + K30, 5)
+                  'ElseIf Cells(h13, y1).Value > 0.015 Then
+                    'Cells(h13, y1) = Application.WorksheetFunction.RoundDown(Cells(h13, y1) + K30, 5)
+                  ElseIf Cells(h14, y1).Value > 0.015 Then
+                    Cells(h14, y1) = Application.WorksheetFunction.RoundDown(Cells(h14, y1) + K30, 5)
+                  ElseIf Cells(h15, y1).Value > 0 Then
+                    Cells(h15, y1) = Application.WorksheetFunction.RoundDown(Cells(h15, y1) + K30, 5)
+                  ElseIf Cells(h16, y1).Value > 0 Then
+                    Cells(h16, y1) = Application.WorksheetFunction.RoundDown(Cells(h16, y1) + K30, 5)
+                  ElseIf Cells(h13, y1).Value > 0.015 Then
+                    Cells(h13, y1) = Application.WorksheetFunction.RoundDown(Cells(h13, y1) + K30, 5)
+                End If
+      End If
+      With Sheets("Zljcb")
+      If .Cells(4, y1) = "KG" And .Cells(x + 1, y1).Value < 0.99 Then
+         .Cells(x + 1, y1).Interior.ColorIndex = 3
+        ElseIf .Cells(4, y1) = "KG" And 1.01 <= .Cells(x + 1, y1).Value Then
+         .Cells(x + 1, y1).Interior.ColorIndex = 3
+       ' ElseIf .Cells(4, y1) <> "KG" Then
+         '.Cells(X + 1, y1).Interior.ColorIndex = 34
+        Else
+         .Cells(x + 1, y1).Interior.ColorIndex = 34
+       End If
+       End With
+      Next
+    
+Stop
+'重算重量
+Sheets("Zljcb").Select
+With Sheets("Zljcb")
+   .Range(Cells(7, 8), Cells(x, y)).Formula = "=IF(ROUND(IF($F7=""ASSY PARTS"",$G7*Mgjdhb!H7,""0""),6)>0,ROUND(IF($F7=""ASSY PARTS"",$G7*Mgjdhb!H7,""0""),9),"""")"
+   .Range(Cells(x + 2, 8), Cells(x + 2, y)).Formula = "=IF(H4=""KG"",ROUND(SUM(H7:H" & x & "),9),ROUND(SUM(H7:H" & x & "),9))"
+   .Range(Cells(7, 8), Cells(x + 2, y)).Value = Range(Cells(7, 8), Cells(x + 2, y)).Value
+   
+    For y1 = 8 To y
+      If Cells(4, y1) = "KG" And Cells(x + 2, y1).Value > 1 Then
+          Cells(x + 2, y1).Interior.ColorIndex = 3
+         Else
+          Cells(x + 2, y1).Interior.ColorIndex = 34
+      End If
+    Next
+ End With
+       
+
+'计算料件耗量总表
+Sheets("Ljhlzb").Select
+With Sheets("Ljhlzb")
+   .Range(Cells(7, 8), Cells(x, y)).Formula = "=IF(ROUND(Mgjdhb!H7*Mgjdhb!H$5,5)>0,ROUND(Mgjdhb!H7*Mgjdhb!H$5,5),"""")"
+   .Range(Cells(x + 2, 8), Cells(x + 2, y)).Formula = "=IF(H4=""KG"",ROUND(SUM(H7:H" & x & "),5),ROUND(SUM(H7:H" & x & "),3))"
+   '.Range(Cells(7, y + 1), Cells(X, y + 1)).Formula = "=ROUND(SUM(H7:DN7 ),5)"
+   .Range(Cells(7, y + 1), Cells(x, y + 1)).Formula = "=ROUND(SUM(RC[-" & y - 7 & "]:RC[-1]),5)"
+   .Range(Cells(7, y + 2), Cells(x, y + 2)).Formula = "=round(RC[-1]*RC[-" & y - 3 & "],5)"
+   .Range(Cells(7, 8), Cells(x, y + 2)).Value = Range(Cells(7, 8), Cells(x, y + 2)).Value
+ End With
+ 
+ '设定进口备案清单
+ Sheets("Ljbaqd").Select
+With Sheets("Ljbaqd")
+   .Range(Cells(4, 1), Cells(x - 3, 5)).Value = Range(Sheets("Mtdhb").Cells(7, 1), Sheets("Mtdhb").Cells(x, 5)).Value
+   .Range(Cells(4, 6), Cells(x - 3, 7)).Value = Range(Sheets("Ljhlzb").Cells(7, y + 1), Sheets("Ljhlzb").Cells(x, y + 2)).Value
+   .Cells(x - 2, 6) = "Total Inport(USD)："
+   .Cells(x - 2, 7).Value = "=round(SUM(G4:G" & x - 4 & "),5)"
+   .Cells(x - 2, 7).Value = Cells(x - 2, 7).Value
+   .Range(.Cells(4, 1), .Cells(x - 3, 7)).Borders.LineStyle = xlContinuous
+   .Range(.Cells(3, 1), .Cells(x - 3, 7)).Font.Name = "新宋体"
+   .Range(.Cells(3, 1), .Cells(x - 3, 7)).Font.Size = 12
+   .Range(.Cells(3, 1), .Cells(x - 3, 7)).Font.Bold = True
+   For n = 3 To x - 3
+   If (.Cells(n, 1).Row) Mod 2 = 1 Then
+      .Range(.Cells(n, 1), .Cells(n, 7)).Interior.ColorIndex = 6
+End If
+Next n
+ End With
+ 
+ 
+
+   'Cells(7, 8).Activate
+'ActiveCell.FormulaR1C1 = "=IF(IF(Mtdhb!RC6=""ASSY PARTS"",Mtdhb!RC7*Mtdhb!RC,0)=0,"""",IF(Mtdhb!RC6=""ASSY PARTS"",Mtdhb!RC7*Mtdhb!RC,0))"
+    'Range("H7").Select
+   ' Selection.AutoFill Destination:=Range(Cells(7, 8), Cells(X, 8)), Type:=xlFillDefault
+'Cells(X + 1, 8).Activate
+   'ActiveCell.FormulaR1C1 = "=IF(R[-" & X - 3 & "]C=""KG"",ROUND(SUM(R[-" & X - 6 & "]C:R[-1]C),6),ROUND(SUM(R[-" & X - 6 & "]C:R[-1]C),3))"
+'Cells(X + 2, 8).Activate
+   'ActiveCell.FormulaR1C1 = "=IF(R[-" & X - 2 & "]C=""KG"",ROUND(1/R[-1]C,3),"""")"
+   ' Range(Cells(7, 8), Cells(X + 2, 8)).Select
+   ' Selection.AutoFill Destination:=Range(Cells(7, 8), Cells(X + 2, y)), Type:=xlFillDefault
+  '  Range(Cells(7, 8), Cells(X + 2, y)).Value = Range(Cells(7, 8), Cells(X + 2, y)).Valu
+
+
+'计算万成品备案价值
+Worksheets("Mgjdhb").Select
+
+For i = 8 To y
+b = 0
+For n = 7 To x
+b = b + (Cells(n, 5).Value * Cells(n, i).Value)
+Next n
+Sheets("Wcpbaqd").Cells(i - 4, 6).Value = Application.WorksheetFunction.Round(b * 1.4, 2)
+Next i
+For n = 3 To x
+If (Cells(n, 1).Row) Mod 2 = 1 Then
+Range(Cells(n, 1), Cells(n, y)).Interior.ColorIndex = 6
+End If
+Next n
+
+
+'计算完成品出口总值
+Stop
+Worksheets("Wcpbaqd").Select
+For i = 8 To y
+n2 = n2 + 1
+Worksheets("Wcpbaqd").Cells(n2 + 3, 9).Value = Sheets("Mtdhb").Cells(6, i).Value
+Next i
+e = 0
+For n = 1 To 5
+For i = 8 To y
+Cells(i - 4, n).Value = Sheets("Mtdhb").Cells(n, i).Value
+Next i
+Next n
+i1 = 0
+For n2 = 4 To y - 4
+i1 = i1 + 1
+Worksheets("Wcpbaqd").Cells(n2, 7) = Sheets("Mtdhb").Cells(5, i1 + 7).Value * Worksheets("Wcpbaqd").Cells(n2, 6).Value
+If Cells(n2, 4) <> "KG" Then
+Cells(n2, 8).Value = Sheets("Zljcb").Cells(x + 4, i1 + 7).Value
+End If
+e = e + Cells(n2, 7).Value
+Next n2
+Cells(n2, 7).Value = Application.WorksheetFunction.Round(e, 2)
+Cells(n2, 6) = "Total Outport(USD)："
+
+
+
+F = 0
+g = 0
+For n3 = 4 To y - 4
+If Cells(n3, 4) = "KG" Then
+F = F + Cells(n3, 5).Value
+ Else
+  g = g + Cells(n3, 5).Value
+End If
+Next n3
+
+Cells(n3 + 1, 7).Value = F
+Cells(n3 + 2, 7).Value = g
+Cells(n3 + 1, 6) = "Total Outport KG："
+Cells(n3 + 2, 6) = "Total Outport PCS："
+Cells(n3 + 3, 6) = "KG OF HARF YEAR"
+Cells(n3 + 3, 7) = "900000"
+Cells(n3 + 4, 6) = "PCS OF HARF YEAR"
+Cells(n3 + 4, 7) = "500000"
+If Cells(n3 + 1, 7) < Cells(n3 + 3, 7) Then
+Cells(n3 + 1, 8) = "MEET PRODUCTION ABILITY"
+Cells(n3 + 1, 8).Interior.ColorIndex = 34
+With Cells(n3 + 1, 8).Font
+.ColorIndex = 52
+.Name = "新宋体"
+.Size = 16
+.Bold = True
+.Superscript = 0
+End With
+Else
+Cells(n3 + 1, 8) = "OUT OF PRODUCTION ABILITY"
+With Cells(n3 + 1, 8).Interior
+        .ColorIndex = 36
+        .Pattern = xlSolid
+    End With
+With Cells(n3 + 1, 8).Font
+.ColorIndex = 3
+.Name = "新宋体"
+.Size = 15
+.Bold = True
+.Superscript = 0
+End With
+End If
+
+
+If Cells(n3 + 2, 7) < Cells(n3 + 4, 7) Then
+Cells(n3 + 2, 8) = "MEET PRODUCTION ABILITY"
+Cells(n3 + 2, 8).Select
+Selection.Interior.ColorIndex = 34
+With Selection.Font
+.ColorIndex = 52
+.Name = "新宋体"
+.Size = 16
+.Bold = True
+.Superscript = 0
+End With
+Else
+Cells(n3 + 2, 8) = "OUT OF PRODUCTION ABILITY"
+Cells(n3 + 2, 8).Select
+With Selection.Interior
+        .ColorIndex = 36
+        .Pattern = xlSolid
+    End With
+With Selection.Font
+.ColorIndex = 3
+.Name = "新宋体"
+.Size = 16
+.Bold = True
+.Superscript = 0
+End With
+End If
+
+
+
+'划线
+Worksheets("Wcpbaqd").Select
+Range(Cells(3, 1), Cells(y - 4, 8)).Select
+Range(Cells(3, 1), Cells(y - 4, 8)).Borders.LineStyle = xlContinuous
+With Range(Cells(4, 1), Cells(y + 3, 7)).Font
+.Name = "新宋体"
+.Size = 12
+.ColorIndex = 1
+.Bold = True
+.Superscript = 0
+End With
+With Range(Cells(4, 8), Cells(y - 4, 7)).Font
+.Name = "新宋体"
+.Size = 12
+.ColorIndex = 1
+.Bold = True
+.Superscript = 0
+End With
+For n = 3 To y - 4
+If (Cells(n, 1).Row) Mod 2 = 1 Then
+Range(Cells(n, 1), Cells(n, 8)).Interior.ColorIndex = 6
+End If
+Next n
+
+
+
+
+
+
+
+'显示运行结果
+MsgBox "CONGRADUATIONS。", 64
+
+
+'恢复屏幕更新
+Application.ScreenUpdating = True
+End Sub

@@ -1,0 +1,408 @@
+08/01/15 14:10:33       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xrev_hist ==========================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                         Dump     Table Field Index Table
+Name                          Name     Flags Count Count Label
+----------------------------- -------- ----- ----- ----- -------------------
+xrev_hist                     xrev_his          83     4 xrev_hist
+
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xrev_hist ==========================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                       Data Type   Flags
+----- -------------------------------- ----------- -----
+   10 xrev_domain                      char
+   20 xrev_idx                         inte        i
+   30 xrev_key1                        char        i
+   40 xrev_key2                        char        i
+   50 xrev_key3                        char        i
+   60 xrev_key4                        char        i
+   70 xrev_key5                        char        i
+   80 xrev_key6                        char        i
+   90 xrev_key7                        char        i
+  100 xrev_key8                        char        i
+  110 xrev_chr01                       char
+  120 xrev_chr02                       char
+  130 xrev_chr03                       char
+  140 xrev_chr04                       char
+  150 xrev_chr05                       char
+  160 xrev_chr06                       char
+  170 xrev_chr07                       char
+  180 xrev_chr08                       char
+  190 xrev_chr09                       char
+  200 xrev_chr10                       char
+  210 xrev_chr11                       char
+  220 xrev_chr12                       char
+  230 xrev_chr13                       char
+  240 xrev_chr14                       char
+  250 xrev_chr15                       char
+  260 xrev_chr16                       char
+  270 xrev_chr17                       char
+  280 xrev_chr18                       char
+  290 xrev_chr19                       char
+  300 xrev_chr20                       char
+  310 xrev_dte01                       date
+  320 xrev_dte02                       date
+  330 xrev_dte03                       date
+  340 xrev_dte04                       date
+  350 xrev_dte05                       date
+  360 xrev_dte06                       date
+  370 xrev_dte07                       date
+  380 xrev_dte08                       date
+  390 xrev_int01                       inte
+  400 xrev_int02                       inte
+  410 xrev_int03                       inte
+  420 xrev_int04                       inte
+  430 xrev_int05                       inte
+  440 xrev_int06                       inte
+  450 xrev_int07                       inte
+  460 xrev_int08                       inte
+  470 xrev_dec01                       deci-10
+  480 xrev_dec02                       deci-10
+  490 xrev_dec03                       deci-10
+  500 xrev_dec04                       deci-10
+  510 xrev_dec05                       deci-10
+  520 xrev_dec06                       deci-10
+  530 xrev_dec07                       deci-10
+  540 xrev_dec08                       deci-10
+  550 xrev_dec09                       deci-10
+  560 xrev_dec10                       deci-10
+  570 xrev_dec11                       deci-10
+  580 xrev_dec12                       deci-10
+  590 xrev_dec13                       deci-10
+  600 xrev_dec14                       deci-10
+  610 xrev_dec15                       deci-10
+  620 xrev_dec16                       deci-10
+  630 xrev_dec17                       deci-10
+  640 xrev_dec18                       deci-10
+  650 xrev_dec19                       deci-10
+  660 xrev_dec20                       deci-10
+  670 xrev_log01                       logi
+  680 xrev_log02                       logi
+  690 xrev_log03                       logi
+  700 xrev_log04                       logi
+  710 xrev_log05                       logi
+  720 xrev_log06                       logi
+  730 xrev_log07                       logi
+  740 xrev_log08                       logi
+  750 xrev_recno1                      reci
+  760 xrev_recno2                      reci
+  770 xrev_user1                       char
+  780 xrev_user2                       char
+  790 xrev_date1                       date
+  800 xrev_date2                       date
+  810 xrev_time1                       inte
+  820 xrev_time2                       inte
+  830 xrev_release                     logi
+
+Field Name                       Format
+-------------------------------- -----------------------------
+xrev_domain                      x(8)
+xrev_idx                         >>>>>9
+xrev_key1                        x(8)
+xrev_key2                        x(8)
+xrev_key3                        x(8)
+xrev_key4                        x(8)
+xrev_key5                        x(8)
+xrev_key6                        x(8)
+xrev_key7                        x(8)
+xrev_key8                        x(8)
+xrev_chr01                       x(8)
+xrev_chr02                       x(8)
+xrev_chr03                       x(8)
+xrev_chr04                       x(8)
+xrev_chr05                       x(8)
+xrev_chr06                       x(8)
+xrev_chr07                       x(8)
+xrev_chr08                       x(8)
+xrev_chr09                       x(8)
+xrev_chr10                       x(8)
+xrev_chr11                       x(8)
+xrev_chr12                       x(8)
+xrev_chr13                       x(8)
+xrev_chr14                       x(8)
+xrev_chr15                       x(8)
+xrev_chr16                       x(8)
+xrev_chr17                       x(8)
+xrev_chr18                       x(8)
+xrev_chr19                       x(8)
+xrev_chr20                       x(8)
+xrev_dte01                       99/99/99
+xrev_dte02                       99/99/99
+xrev_dte03                       99/99/99
+xrev_dte04                       99/99/99
+xrev_dte05                       99/99/99
+xrev_dte06                       99/99/99
+xrev_dte07                       99/99/99
+xrev_dte08                       99/99/99
+xrev_int01                       ->,>>>,>>9
+xrev_int02                       ->,>>>,>>9
+xrev_int03                       ->,>>>,>>9
+xrev_int04                       ->,>>>,>>9
+xrev_int05                       ->,>>>,>>9
+xrev_int06                       ->,>>>,>>9
+xrev_int07                       ->,>>>,>>9
+xrev_int08                       ->,>>>,>>9
+xrev_dec01                       ->>>,>>>,>>9.99<<<
+xrev_dec02                       ->>>,>>>,>>9.99<<<
+xrev_dec03                       ->>>,>>>,>>9.99<<<
+xrev_dec04                       ->>>,>>>,>>9.99<<<
+xrev_dec05                       ->>>,>>>,>>9.99<<<
+xrev_dec06                       ->>>,>>>,>>9.99<<<
+xrev_dec07                       ->>>,>>>,>>9.99<<<
+xrev_dec08                       ->>>,>>>,>>9.99<<<
+xrev_dec09                       ->>>,>>>,>>9.99<<<
+xrev_dec10                       ->>>,>>>,>>9.99<<<
+xrev_dec11                       ->>>,>>>,>>9.99<<<
+xrev_dec12                       ->>>,>>>,>>9.99<<<
+xrev_dec13                       ->>>,>>>,>>9.99<<<
+xrev_dec14                       ->>>,>>>,>>9.99<<<
+xrev_dec15                       ->>>,>>>,>>9.99<<<
+xrev_dec16                       ->>>,>>>,>>9.99<<<
+xrev_dec17                       ->>>,>>>,>>9.99<<<
+xrev_dec18                       ->>>,>>>,>>9.99<<<
+xrev_dec19                       ->>>,>>>,>>9.99<<<
+xrev_dec20                       ->>>,>>>,>>9.99<<<
+xrev_log01                       yes/no
+xrev_log02                       yes/no
+xrev_log03                       yes/no
+xrev_log04                       yes/no
+xrev_log05                       yes/no
+xrev_log06                       yes/no
+xrev_log07                       yes/no
+xrev_log08                       yes/no
+xrev_recno1                      >>>>>>9
+xrev_recno2                      >>>>>>9
+xrev_user1                       x(8)
+xrev_user2                       x(8)
+xrev_date1                       99/99/99
+xrev_date2                       99/99/99
+xrev_time1                       ->,>>>,>>9
+xrev_time2                       ->,>>>,>>9
+xrev_release                     yes/no
+
+Field Name                       Initial
+-------------------------------- -----------------------------
+xrev_domain
+xrev_idx                         0
+xrev_key1
+xrev_key2
+xrev_key3
+xrev_key4
+xrev_key5
+xrev_key6
+xrev_key7
+xrev_key8
+xrev_chr01
+xrev_chr02
+xrev_chr03
+xrev_chr04
+xrev_chr05
+xrev_chr06
+xrev_chr07
+xrev_chr08
+xrev_chr09
+xrev_chr10
+xrev_chr11
+xrev_chr12
+xrev_chr13
+xrev_chr14
+xrev_chr15
+xrev_chr16
+xrev_chr17
+xrev_chr18
+xrev_chr19
+xrev_chr20
+xrev_dte01                       ?
+xrev_dte02                       ?
+xrev_dte03                       ?
+xrev_dte04                       ?
+xrev_dte05                       ?
+xrev_dte06                       ?
+xrev_dte07                       ?
+xrev_dte08                       ?
+xrev_int01                       0
+xrev_int02                       0
+xrev_int03                       0
+xrev_int04                       0
+xrev_int05                       0
+xrev_int06                       0
+xrev_int07                       0
+xrev_int08                       0
+xrev_dec01                       0
+xrev_dec02                       0
+xrev_dec03                       0
+xrev_dec04                       0
+xrev_dec05                       0
+xrev_dec06                       0
+xrev_dec07                       0
+xrev_dec08                       0
+xrev_dec09                       0
+xrev_dec10                       0
+xrev_dec11                       0
+xrev_dec12                       0
+xrev_dec13                       0
+xrev_dec14                       0
+xrev_dec15                       0
+xrev_dec16                       0
+xrev_dec17                       0
+xrev_dec18                       0
+xrev_dec19                       0
+xrev_dec20                       0
+xrev_log01                       no
+xrev_log02                       no
+xrev_log03                       no
+xrev_log04                       no
+xrev_log05                       no
+xrev_log06                       no
+xrev_log07                       no
+xrev_log08                       no
+xrev_recno1                      ?
+xrev_recno2                      ?
+xrev_user1
+xrev_user2
+xrev_date1                       ?
+xrev_date2                       ?
+xrev_time1                       0
+xrev_time2                       0
+xrev_release                     no
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xrev_domain                    domain                 ?
+xrev_idx                       ?                      ?
+xrev_key1                      ?                      ?
+xrev_key2                      ?                      ?
+xrev_key3                      ?                      ?
+xrev_key4                      ?                      ?
+xrev_key5                      ?                      ?
+xrev_key6                      ?                      ?
+xrev_key7                      ?                      ?
+xrev_key8                      ?                      ?
+xrev_chr01                     ?                      ?
+xrev_chr02                     ?                      ?
+xrev_chr03                     ?                      ?
+xrev_chr04                     ?                      ?
+xrev_chr05                     ?                      ?
+xrev_chr06                     ?                      ?
+xrev_chr07                     ?                      ?
+xrev_chr08                     ?                      ?
+xrev_chr09                     ?                      ?
+xrev_chr10                     ?                      ?
+xrev_chr11                     ?                      ?
+xrev_chr12                     ?                      ?
+xrev_chr13                     ?                      ?
+xrev_chr14                     ?                      ?
+xrev_chr15                     ?                      ?
+xrev_chr16                     ?                      ?
+xrev_chr17                     ?                      ?
+xrev_chr18                     ?                      ?
+xrev_chr19                     ?                      ?
+xrev_chr20                     ?                      ?
+xrev_dte01                     ?                      ?
+xrev_dte02                     ?                      ?
+xrev_dte03                     ?                      ?
+xrev_dte04                     ?                      ?
+xrev_dte05                     ?                      ?
+xrev_dte06                     ?                      ?
+xrev_dte07                     ?                      ?
+xrev_dte08                     ?                      ?
+xrev_int01                     ?                      ?
+xrev_int02                     ?                      ?
+xrev_int03                     ?                      ?
+xrev_int04                     ?                      ?
+xrev_int05                     ?                      ?
+xrev_int06                     ?                      ?
+xrev_int07                     ?                      ?
+xrev_int08                     ?                      ?
+xrev_dec01                     ?                      ?
+xrev_dec02                     ?                      ?
+xrev_dec03                     ?                      ?
+xrev_dec04                     ?                      ?
+xrev_dec05                     ?                      ?
+xrev_dec06                     ?                      ?
+xrev_dec07                     ?                      ?
+xrev_dec08                     ?                      ?
+xrev_dec09                     ?                      ?
+xrev_dec10                     ?                      ?
+xrev_dec11                     ?                      ?
+xrev_dec12                     ?                      ?
+xrev_dec13                     ?                      ?
+xrev_dec14                     ?                      ?
+xrev_dec15                     ?                      ?
+xrev_dec16                     ?                      ?
+xrev_dec17                     ?                      ?
+xrev_dec18                     ?                      ?
+xrev_dec19                     ?                      ?
+xrev_dec20                     ?                      ?
+xrev_log01                     ?                      ?
+xrev_log02                     ?                      ?
+xrev_log03                     ?                      ?
+xrev_log04                     ?                      ?
+xrev_log05                     ?                      ?
+xrev_log06                     ?                      ?
+xrev_log07                     ?                      ?
+xrev_log08                     ?                      ?
+xrev_recno1                    ?                      ?
+xrev_recno2                    ?                      ?
+xrev_user1                     ?                      ?
+xrev_user2                     ?                      ?
+xrev_date1                     ?                      ?
+xrev_date2                     ?                      ?
+xrev_time1                     ?                      ?
+xrev_time2                     ?                      ?
+xrev_release                   ?                      ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xrev_hist ==========================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+      xrev_idx                           1 + xrev_idx
+
+      xrev_key1                          1 + xrev_key1
+
+p     xrev_key3                          3 + xrev_key1
+                                           + xrev_key2
+                                           + xrev_key3
+
+      xrev_key8                          8 + xrev_key1
+                                           + xrev_key2
+                                           + xrev_key3
+                                           + xrev_key4
+                                           + xrev_key5
+                                           + xrev_key6
+                                           + xrev_key7
+                                           + xrev_key8
+
+** Index Name: xrev_idx
+ Storage Area: TRANSACTION
+** Index Name: xrev_key1
+ Storage Area: TRANSACTION
+** Index Name: xrev_key3
+ Storage Area: TRANSACTION
+** Index Name: xrev_key8
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xrev_hist ==========================
+
+

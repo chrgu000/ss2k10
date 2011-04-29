@@ -1,0 +1,288 @@
+ADD TABLE "xic_det"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "xic_det"
+
+ADD FIELD "xic_domain" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xic_nbr" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xic_type" OF "xic_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xic_part" OF "xic_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xic_loc_from" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xic_loc_to" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xic_qty_from" OF "xic_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 70
+
+ADD FIELD "xic_qty_to" OF "xic_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 80
+
+ADD FIELD "xic_um" OF "xic_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xic_print" OF "xic_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xic_flag" OF "xic_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 12
+  SQL-WIDTH 1
+  ORDER 110
+
+ADD FIELD "xic_lot_from" OF "xic_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xic_lot_to" OF "xic_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xic_ref_from" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xic_ref_to" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xic_remark" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xic_line" OF "xic_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xic_date" OF "xic_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "xic_user1" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 21
+  SQL-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xic_user2" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 22
+  SQL-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xic_site_from" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xic_site_to" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xic_ln_line" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xic_eff_date" OF "xic_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xic_rsn" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 260
+
+ADD FIELD "xic__chr01" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 28
+  SQL-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xic__chr02" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xic__dec01" OF "xic_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 290
+
+ADD FIELD "xic__dec02" OF "xic_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 31
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 300
+
+ADD FIELD "xic__dte01" OF "xic_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xic__dte02" OF "xic_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 320
+
+ADD FIELD "xic__log01" OF "xic_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 34
+  SQL-WIDTH 1
+  ORDER 330
+
+ADD FIELD "xic__log02" OF "xic_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 35
+  SQL-WIDTH 1
+  ORDER 340
+
+ADD FIELD "xic_usrid1" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 36
+  SQL-WIDTH 16
+  ORDER 360
+
+ADD FIELD "xic_usrid2" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 37
+  SQL-WIDTH 16
+  ORDER 370
+
+ADD FIELD "xic_addr" OF "xic_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "addr"
+  POSITION 38
+  SQL-WIDTH 16
+  ORDER 350
+
+ADD INDEX "xic_type_nbr" ON "xic_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xic_domain" ASCENDING 
+  INDEX-FIELD "xic_type" ASCENDING 
+  INDEX-FIELD "xic_nbr" ASCENDING 
+  INDEX-FIELD "xic_line" ASCENDING 
+
+ADD INDEX "xic_line" ON "xic_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xic_domain" ASCENDING 
+  INDEX-FIELD "xic_nbr" ASCENDING 
+  INDEX-FIELD "xic_line" ASCENDING 
+
+ADD INDEX "xic_nbr" ON "xic_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xic_domain" ASCENDING 
+  INDEX-FIELD "xic_nbr" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000005025

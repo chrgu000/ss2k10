@@ -1,0 +1,77 @@
+/* gplu990.p - GLT_REF Lookup UI                                            */
+/* Copyright 1986-2007 QAD Inc., Carpinteria, CA, USA.                      */
+/* All rights reserved worldwide.  This is an unpublished work.             */
+/* $Revision: 1.80 $    */
+/*V8:ConvertMode=NoConvert                                                  */
+/********************************** History *********************************
+ * $Revision: 1.2 $    Default User             DATE: 07/01/24  ECO: *XXXX*
+ ****************************************************************************/
+
+{mfdeclre.i}
+
+&SCOPED-DEFINE BR-TITLE "GLT_REF"
+
+&SCOPED-DEFINE BR-NAME gp990
+&SCOPED-DEFINE Q-DRAG-BACK-COL 1
+
+&SCOPED-DEFINE Q-FIRST-TABLE glt_det
+&SCOPED-DEFINE Q-FIRST-FIELD-LIST (glt_ref glt_line glt_amt glt__qadc01 glt_acct)
+&SCOPED-DEFINE Q-NUM-TABLES 1
+
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-1 b-1.glt_ref
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-1 glt_det.glt_ref
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-1 tt-glt_ref
+&SCOPED-DEFINE BR-K-COL-LABEL-1 COLUMN-LABEL
+&SCOPED-DEFINE BR-COLUMN-LABEL-1 "总帐参考号"
+&SCOPED-DEFINE BR-FIELD-TYPE-1 character
+&SCOPED-DEFINE BR-FIELD-FRMT-1 FORMAT "x(14)"
+&SCOPED-DEFINE BR-FIELD-WIDTH-1 15
+
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-2 b-1.glt_line
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-2 glt_det.glt_line
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-2 tt-glt_line
+&SCOPED-DEFINE BR-K-COL-LABEL-2 COLUMN-LABEL
+&SCOPED-DEFINE BR-COLUMN-LABEL-2 "项"
+&SCOPED-DEFINE BR-FIELD-TYPE-2 integer
+&SCOPED-DEFINE BR-FIELD-FRMT-2 FORMAT ">>>9"
+&SCOPED-DEFINE BR-FIELD-WIDTH-2 5
+
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-3 b-1.glt_amt
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-3 glt_det.glt_amt
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-3 tt-glt_amt
+&SCOPED-DEFINE BR-K-COL-LABEL-3 COLUMN-LABEL
+&SCOPED-DEFINE BR-COLUMN-LABEL-3 "金额"
+&SCOPED-DEFINE BR-FIELD-TYPE-3 decimal
+&SCOPED-DEFINE BR-FIELD-FRMT-3 FORMAT "->>,>>>,>>>,>>9.99"
+&SCOPED-DEFINE BR-FIELD-WIDTH-3 19
+
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-4 b-1.glt__qadc01
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-4 glt_det.glt__qadc01
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-4 tt-glt__qadc01
+&SCOPED-DEFINE BR-K-COL-LABEL-4 COLUMN-LABEL
+&SCOPED-DEFINE BR-COLUMN-LABEL-4 "glt__qadc01"
+&SCOPED-DEFINE BR-FIELD-TYPE-4 character
+&SCOPED-DEFINE BR-FIELD-FRMT-4 FORMAT "x(8)"
+&SCOPED-DEFINE BR-FIELD-WIDTH-4 9
+
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-5 b-1.glt_acct
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-5 glt_det.glt_acct
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-5 tt-glt_acct
+&SCOPED-DEFINE BR-K-COL-LABEL-5 COLUMN-LABEL
+&SCOPED-DEFINE BR-COLUMN-LABEL-5 "帐户"
+&SCOPED-DEFINE BR-FIELD-TYPE-5 character
+&SCOPED-DEFINE BR-FIELD-FRMT-5 FORMAT "x(8)"
+&SCOPED-DEFINE BR-FIELD-WIDTH-5 9
+
+&SCOPED-DEFINE Q-NUM-FILT-VALS 5
+&SCOPED-DEFINE BR-MAX-FIELD-WIDTH 19
+&SCOPED-DEFINE BR-BROWSE-WIDTH 57
+&SCOPED-DEFINE WHERE-CLAUSE glt_domain = global_domain and glt_doc = global_part 
+&SCOPED-DEFINE BR-INDEXED-FIELDS 1
+
+{wbbr01.i &string-4 = 'LOOKUP'}
+if c-application-mode <> 'WEB' then do:
+   {lookup.i}
+end.
+
+

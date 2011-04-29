@@ -1,0 +1,62 @@
+/*
+databases= "qaddb"
+config= query
+version= 2.1A
+results.status-area= true 
+results.toolbar= true 
+results.summary= false
+results.governor= 0
+results.govergen= false
+results.detail-level= 0
+results.name= "总帐事务查询-销售发票事务"
+results.view-as= browse
+results.table[1]= "qaddb.glt_det" "53968" "" "/*CHARACTER,qaddb.glt_det.glt_domain,=,:域*/ TRUE      
+    and /*DATE,qaddb.glt_det.glt_effdate,RANGE,:日期*/ TRUE
+    AND qaddb.glt_det.glt_tr_type = ""SO""" no ""
+results.field[1]= "qaddb.glt_det.glt_acct" "Account" "x(8)" "" "character" "" "1" ",,,,,,,,"
+results.field[2]= "qaddb.glt_det.glt_sub" "Sub-Acct" "x(8)" "" "character" "" "1" ",,,,,,,,"
+results.field[3]= "qaddb.glt_det.glt_cc" "CC" "x(4)" "" "character" "" "1" ",,,,,,,,"
+results.field[4]= "qaddb.glt_det.glt_entity" "Enty" "x(4)" "" "character" "" "1" ",,,,,,,,"
+results.field[5]= "qaddb.glt_det.glt_desc" "Description" "x(24)" "" "character" "" "1" ",,,,,,,,"
+results.field[6]= "qaddb.glt_det.glt_amt" "Amount" "->>,>>>,>>>,>>9.99" "t1" "decimal" "" "1" ",,,,,,,,"
+results.field[7]= "qaddb.glt_det.glt_ref" "GL Reference" "x(14)" "" "character" "" "1" ",,,,,,,,"
+results.field[8]= "qaddb.glt_det.glt_batch" "Batch" "x(8)" "" "character" "" "1" ",,,,,,,,"
+results.field[9]= "qaddb.glt_det.glt_addr" "Address" "x(8)" "" "character" "" "1" ",,,,,,,,"
+results.field[10]= "qaddb.glt_det.glt_doc" "Document" "x(16)" "" "character" "" "1" ",,,,,,,,"
+results.order[1]= "qaddb.glt_det.glt_acct" "ascending"
+results.order[2]= "qaddb.glt_det.glt_effdate" "ascending"
+export.type= PROGRESS
+export.use-headings= no 
+export.fixed-width= no 
+export.prepass= no 
+export.base-date= ?
+export.record-start= ""
+export.record-end= "32,13,10"
+export.field-delimiter= "34"
+export.field-separator= "32"
+export.delimit-type= "*"
+export.description= "PROGRESS Export"
+label.type= "Default layout"
+label.dimension= "3-1/2""x15/16"""
+label.left-margin= 0
+label.label-width= 35
+label.total-height= 5
+label.vert-space= 1
+label.horz-space= 0
+label.number-across= 1
+label.number-copies= 1
+label.omit-blank= true 
+report.format= "Letter"
+report.dimension= "8-1/2 x 11 in"
+report.time= 0:00
+report.left-margin= 1
+report.page-size= 60
+report.page-width= 127
+report.column-spacing= 1
+report.line-spacing= 1
+report.top-margin= 1
+report.before-body= 1
+report.after-body= 1
+report.page-eject= ""
+*/
+

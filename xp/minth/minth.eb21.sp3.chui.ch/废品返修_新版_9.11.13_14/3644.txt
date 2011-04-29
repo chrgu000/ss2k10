@@ -1,0 +1,45 @@
+@@batchload mgmemt.p
+"ch"
+"9.11"
+13
+"次品返修-品名不变" - "xxscrapmt001.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"9.11"
+14
+"次品返修-品名改变" - "xxscrapmt002.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"9.11"
+15
+"次品清单明细报表" - "xxscraprp001.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"9.11"
+16
+"报废单打印" - "xxscraprp002.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"9.11"
+17
+"报废明细报表" - "xxscraprp003.p" -
+.
+.
+.
+@@end

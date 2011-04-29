@@ -1,0 +1,12 @@
+@@batchload sscfcrf1.p
+"0"
+"所有发生额"
+@@end
+@@batchload sscfcrf1.p
+"1"
+"借方发生额"
+@@end
+@@batchload sscfcrf1.p
+"2"
+"贷方发生额"
+@@end

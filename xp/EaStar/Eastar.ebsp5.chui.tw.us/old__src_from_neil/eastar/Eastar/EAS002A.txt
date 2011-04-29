@@ -1,0 +1,387 @@
+Specification Confirmation Sheet
+
+
+
+Specification Submit Date: 6 JAN, 2003
+Type of Specification (Please tick the appropriate):
+(X)  Customization                       ( )   MFG/PRO Data Conversion                  ( )  MFG/PRO CIM Load
+( )  System Installation                ( )  Others (Please Specify) 
+Customer
+Eastar (H.K.) Ltd.
+Specification No.
+EAS002
+Version
+A
+Title
+採購單列印
+O.S. Version
+Linux 
+MFG/PRO
+Version
+eB(SP5)
+Database Type
+ Progress 9.1D
+Please kindly confirm on the customization specification and fax to us within 5 days from the 'Submit Date'.  This confirmation serves as a formal approval to proceed on the program coding.
+
+Prepared By:   Karen Hui
+(Technical Consultant)
+Signature:    Karen Hui
+Date:   6 Jan, 2003
+
+Endorsed By:   Ricky Ho
+(Programmer / Technical Consultant)
+Signature:   Ricky Ho
+Date:  6 Jan, 2003
+
+
+Confirmed By:      Ken Tung
+(Customer)
+Signature:      Ken Tung
+
+Date:      15 Jan 03
+
+
+
+I. 目標
+修改採購單列印程式的文件格式，根據客戶提供資料編制? 
+
+II. 程式修改參考
+程式修改是根據MFG/PRO版本eB SP5 Char 模式，Linux 平臺? 
+所有相應的修改將詳於列於程式修改參考編號.EAS002A.
+
+III. 語言:  TW
+
+IV. 修改內容
+
+* 主程式編號為xxpoporp03t.p
+* 根據客戶提供的採購單格式進行修改
+* 表頭的公司名稱?地址?報表名稱(采购订单)?表頭備註(请提供以下物料﹐此物料必須符合有关标准和采购)?以及表尾的备注
+(我司在出货单或取消订单的权利?
+          备注﹕请在送货单上注明物料編号﹐订单編号﹒并提供材质证明书及产地?)
+?簽署欄會直接編寫在程式內再列印於採購單上?
+* 增加選項 - 列印標題，默認首選項為 'yes'?
+* 必須每頁列印項目包括公司名稱?地址?報表名稱(采购订单)?供應商公司名稱及地址﹑订单編号﹑修改日期﹑订单日期﹑采购员﹑頁数?付款方?收货方﹑簽署欄?
+* 備註(请提供以下物料﹐此物料必符合有関标准和采购单上的条款?)﹑條款﹑付款方式及表尾备注﹐總頁數﹐最後一頁列印?
+* 増加列印標題選項，預設值為 'yes'即代表列印標題(包括公司名稱﹑地址及報表名稱PURCHASE ORDER)，如 選擇  'no'即代表不列印標題﹐但需列印空行?
+* 在列印後需顯示問題 'PO Has Been Printed ?', 指定定義為 'No', 用戶如更改為 'Yes', 程式才把欄位 'po_print' 更改為 'Yes.' ?
+* 列印 UNIT,  使用設定於36.2.13 通用代碼維護的註解, 例如: 採購單單位為 'EA', 在通用代碼維護找尋欄位'um_um', 及可輸入值為'EA'?
+
+
+
+
+
+
+
+
+* 增加列印東星或依時得標頭選項 '列印東星(T)/依時得(C):  T '﹐
+如選擇 'T'便列印 '           E A S T A R (HONG KONG) L I M I T E D                    '
+                                                                                      东星电子公司                                          
+                                 广东省东莞市茶山镇横江第二工业区Ａ座                                
+                                      TEL:(0769)6643874 FAX:(0769)6644135                                                                               
+采 购 订 单           
+
+           如選擇 'C' 便列印 '       东 莞 依 时 得 电 子 有 限 公 司                '
+
+                                   广东省东莞市茶山镇石大公路橫江第二工业区 A 座
+                                   TEL: (0769) 6643874       FAX: (0769) 6644135
+                                         采 购 订 单
+* 其它則使用標準邏輯?
+
+
+
+
+
+
+V. 輸入畫面顯示及標準
+
+0        10        20        30        40        50        60        70       80
+	|--------|---------|---------|---------|---------|---------|---------|---------|
+	12345678901234567890123456789012345678901234567890123456789012345678901234567890
+xxpoporp03.p b+                    5.10 採購單列印                     01/03/03
++------------------------------------------------------------------------------+
+|        採購單:                               至:                             |
+|        供應商:                               至:                             |
+|        採購員:                               至:                             |
+|      訂單日期:   /  /                        至:   /  /                      |
+|          語言:                               至:                             |
+|                                                                              |
+|          只列印未結的PO: Y          列印功能特性與配件組合: N                |
+|      僅限未列印的採購單: Y                     包括保留稅 : Y                |
+| Include Schedule Orders: N                      PO排序依據: Site             |
+|            列印付款地址: Y                        表格代碼: 1                |
+|           包含 EMT 訂單: N                            更新: Y                |
+|                列印標題：Y                                                   |
+| 列印東星(T)/依時得(C) 標題: T                                                |
+| 訊息:                                                                        |
+|                                                                              |
+|                                                               輸出:          |
+|                                                           批處理ID:          |
++------------------------------------------------------------------------------+
+F1=執行 2=援助 3=插入 4=結束 6=選單 7=還原 8=清除 11=複製
+|                                                                              |
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
++------------------------------------------------------------------------------+
+
+
+
+
+
+* 報表版面設計
+         
+01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456
++        10        20        30        40        50        60        70        80        90       100   106
++---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|-----+
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+|                                 E A S T A R (HONG KONG) L I M I T E D                                   |
+|                                             东星电子公司                                                |
+|                                     广东省东莞市茶山镇横江第二工业区Ａ座                                |
+|                                  TEL:(0769)6643874 FAX:(0769)6644135                                    |
+|                                              采 购 订 单                                                |
+| +--------------------------------------+                                                                |
+| |TO:XXXXXXXXXXXXXXXXXXXXXXXXXXXX       |[1]                             订单编号：XX999999.R99 [6]      |
+| |Address:XXXXXXXXXXXXXXXXXXXXXXXXXXXX  |                                                                |
+| |        XXXXXXXXXXXXXXXXXXXXXXXXXXXX  |[2]                             修改日期:   99-XXX-99 [7]       |
+| |        XXXXXXXXXXXXXXXXXXXXXXXXXXXX  |                                订单日期:   99-XXX-99 [8]       |
+| |ATTN: XXXXXXXXXXXXXXXXXXXXXXXX        |[3]                                                             |
+| |TEL : XXXXXXXXXXXXXXXX          [4]   |                              [9] 采购員:  XXXXXXXXXXXXXXXXXXXX |                                                                | |FAX : XXXXXXXXXXXXXXXX          [5]   |                              [10] 页数:   第 99页             |
+| +--------------------------------------+                                                                |
+| +----------------------------+                                           +----------------------------+ |
+| |付款方：                    |                                           |收货方：                    | |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|                                           |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|   [11]                             [12]   |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|                                           |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| +----------------------------+                                           +----------------------------+ |
+|                                                                                                         |
+| 请提供以下物料，此物料必須符合有关标准和采购单上的条款。[13]                                            | 
+|                                                                                                         |
+|         物料编号/说明                  送货日期          数量      单位      单价           总价        |
+| ------------------------------------------------------------------------------------------------------- |
+|     [14]XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                       XXX [15]       XXX [16]    |
+|[17]999  XXXXXXXXXXXXXXXXXX  [18]       99/99/99[19] -99,999,999[20]XXXXX -99,999.99[22]-9999,999.999   |
+|         XXXXXXXXXXXXXXXXXXXXXXXX[24]                               [21]                         [23]    |
+|         XXXXXXXXXXXXXXXXXXXXXXXX[25]                                                                    |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX [26]                                                             |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                              |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   [27]                                       |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                              |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX [28]                               |
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                       ----------------- |
+|                                                                                    [29]-9,999,999.99    |
+|                                                                                       ================= |
+| ------------------------------------------------------------------------------------------------------- |
+|     條款:    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX[30]           |
+|              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX               |
+|                                                                                                         |
+| 付款方式:    XXXXXXXXXXXXXXXXXXXXXXXX    [31]                                                           |
+|                                                                                                         |
+| 我司在出货前有重新修改订单或取消订单的权利。                                                            |
+| 备注: 请在送货单上注明物料编号，订单编号，并提供材质证明书及产地。    [32]                              |
+|       签字后请回传。                                                                                    |
+|                                                                                                         |
+|                                                                          东 星 电 子 公 司              |
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+| ________________________________                                         ______________________________ |
+| 供应商签认：                                                                   东星公司签署：           |
+| CONFIRMED & ACCEPTED BY                                                  AUTHORIZED SIGNATURE(S)        |
+|                                              总页数: 99  [33]   最後一頁才列印                         |
++---------------------------------------------------------------------------------------------------------+
+
+                    刪除                                      刪除
+
+                         
+
+* 報表版面設計
++---------------------------------------------------------------------------------------------------------+
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+|                                 E A S T A R (HONG KONG) L I M I T E D                                   |
+|                                             东星电子公司                                                |
+|                                     广东省东莞市茶山镇横江第二工业区Ａ座                                |
+|                                  TEL:(0769)6643874 FAX:(0769)6644135                                    |
+|                                              采 购 订 单                                                |
+| +--------------------------------------+                                                                |
+| |TO: EDWARDS SYSTEMS TECHNOLOGYXX    |[1]                             订单编号：TM020753.R01 [6]        |
+| |Address: 5 NORTH MAIN STREETXXXXXXXXX |                                                                |
+| |        PITTSFIELD, ME 04967XXXXXXXX  |[2]                             修改日期:   23-DEC-02 [7]       |
+| |        XXXXXXXXXXXXXXXXXXXXXXXXXXXX  |                                订单日期:   20-DEC-02 [8]       |
+| |ATTN: MARLENE VANCEXXX                |[3]                                                             |
+| |TEL : (207) 487 3104XX          [4]   |                              [9] 采购員:  Candy KwokXXXXXXXXXX |
+| |FAX : (207) 487 5526XX          [5]   |                              [10] 页数:      1                 |
+| +--------------------------------------+                                                                |
+| +----------------------------+                                           +----------------------------+ |
+| |付款方：                    |                                           |收货方：                    | |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|                                           |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|   [11]                             [12]   |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| |XXXXXXXXXXXXXXXXXXXXXXXXXXXX|                                           |XXXXXXXXXXXXXXXXXXXXXXXXXXXX| |
+| +----------------------------+                                           +----------------------------+ |
+|                                                                                                         |
+| 请提供以下物料，此物料必須符合有关标准和采购单上的条款。[13]                                            | 
+|                                                                                                         |
+|         物料编号/说明                  送货日期          数量      单位      单价           总价        |
+| ------------------------------------------------------------------------------------------------------- |
+|     [14] USE FOR ALL MODELXXXXXXXXXXXXX                                       USD [15]       USD [16]   |
+|[17]  1  722788XXXXXXXXXXXX  [18]       01-JAN-03 [19]  100,000 [20] PCS       0.0367 [22]   $3,670.000  |
+|         Res. 100K Ohm 1/16w 0.5% [24]                               [21]                         [23]   |
+|         (25PPM)SMD0603XXXXXXXXXX [25]                                                                   |
+|         TFCR0603-16W-E-1003DTXXXXXXXXX [26]                                                             |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                              |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   [27]                                       |
+|         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                              |
+|         ** 單價由 0.0336 改為 0.0367XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX [28]                            |
+|         ** 訂單數量由10,000 改為 100,000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                                 |
+|         ** 交貨期由 2003年1月15日改為2003年2月10日XXXXXXXXXXXXXX                                  |
+|                                                                                                         |
+|                                                                                       ----------------- |
+|                                                                                    [29]     3,670.00    |
+|                                                                                       ================= |
+| ------------------------------------------------------------------------------------------------------- |
+|     條款:    EASTAR(H.K) LIMITED RESERVE THE RIGHT TO RESCHEDULE ORXXXXXXXXXXXXXXXXXXXXXX [30]          |
+|              CANCEL THIS ORDER BY 30 DAYS PRIOR TO SHIPMENT DAY.XXXXXXXXXXXXXXXXXXXXXXXXX               |
+|                                                                                                         |
+| 付款方式:    XXXXXXXXXXXXXXXXXXXXXXXX  [31]                                                             |
+|                                                                                                         |
+|     备注: 请在送货单上注明物料编号，订单编号，并提供材质证明书及产地。    [32]                          |                     |           签字后请回传。                                                                                |    |                                                                                                         |
+|                                                                                                         |
+|                                                                         东 星 电 子 公 司               |
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+|                                                                                                         |
+| ________________________________                                         ______________________________ |
+| 供应商签认：                                                                   东星公司签署：           |
+| CONFIRMED & ACCEPTED BY                                                  AUTHORIZED SIGNATURE(S)        |
+|                                              总页数: 99  [33]                                           |
++---------------------------------------------------------------------------------------------------------+
+                                                                      最後一頁才列印
+
+
+序次
+標 籤(Label)
+內 容
+1
+TO
+供應商名稱，設定於2.3.1的供應商資料維護
+(2.3.1 Supplier Maintenance)
+2
+Address
+供應商地址，設定於2.3.1的供應商維護
+(2.3.1 Supplier Maintenance)
+3
+ATTN
+該供應商的聯絡人，設定於2.3.1的供應商維護
+(2.3.1 Supplier Maintenance)
+4
+TEL
+該供應商的電話，設定於2.3.1的供應商維護
+(2.3.1 Supplier Maintenance)
+5
+FAX
+該供應商的傳真/電傳編號，設定於2.3.1的供應商維護
+(2.3.1 Supplier Maintenance)
+6
+订单编号
+採購單編號及修改版序，用戶指定格式為'XX999999.X99'.
+修改版序編號之制定，請參閱程式規格 EAS002.1A
+如沒有修改編序則不須列印(e.g. XX999999)
+7
+修改日期
+修改版序的修改日期，如沒有修改版序則列印'----'在此欄位?
+8
+订单日期
+採購日期，設定於5.7採購單維護的訂購日期?
+9
+采购員
+請購人的詳細名稱，設定於36.2.13的通用代碼維護?
+**用戶使用前需設定36.2.13 的通用代碼維護，把欄位名po_buyer 建立其可輸入值及註解， 例如: 欄位名稱為'po_buyer'，可輸入值為 'CK'，註解為'CANDY KWOK'，當設定後便可在5.7 採購單維護的採購員欄位按F2 鍵，即可顯示與及選取已設定了的採購員資料?
+10
+页数
+採購單頁碼
+11
+
+付款公司及地址
+12
+
+收货公司及地址
+13
+
+採購單表頭備註，需每頁列印，有固定字樣，請參考報表設計版面?
+14
+
+註名採購物料用於那種產品，設定於採購單報頭的註解，第一頁的第一行，指定列印長度為30個英文字元?
+例如: 'USE FOR ALL MODEL' 或 'USE FOR GSA-LED REV.003'
+15
+单价
+採購單價之貨幣
+16
+总价
+採購單總計之貨幣
+17
+
+採購單項次
+18
+物料编号/说明
+採購物料編號
+19
+送货日期
+採購物料的送貨日期
+20
+数量
+採購數量
+21
+单位
+採購物料的度量單位, 需使用36.2.13 通用代碼維護, 
+例如:欄位名稱=um_um ; 可輸入值=EA; 註解=EACH.
+22
+
+採購物料的單價
+23
+
+每行採購項次之物料總計
+24
+
+採購物料說明的第一行，設定於1.4.1 料品主檔資料維護 或 1.4.3 料品工程資料維護 
+25
+
+採購物料說明的第二行，設定於1.4.1 料品主檔資料維護 或 1.4.3 料品工程資料維護 
+26
+
+供應商的料品編號
+27
+
+採購單的採購物料詳細註解
+28
+
+採購單修改版序內容, 需列印中文
+29
+
+採購單總計
+30
+條款
+詳細付款內容，最後一頁才列印，設定於採購單標題註解的第二頁，用戶需輸入預設的主參考號及類型，把預設於1.12的主註解複製到採購單的主註解內?
+
+31
+付款方式
+付款方式說明，最後一頁才列印，用戶在採購單選定付款條件，再找尋存於付款條件維護之有關說明?
+32
+备注
+採購單備註，最後一頁才列印，有固定字樣，請參考報表設計版面?
+33
+总页数
+整張採購單總頁數，最後一頁才列印?
+
+<END>
+EASTAR (H.K.) LTD.                    	  Customization                               Page 4 of 8
+
+
+Prepared By:	Karen Hui - SoftSpeed Consultant Limited                                           Prepared Date: 2003/1/16
+Document:	EAS002A.doc		
+
+

@@ -1,0 +1,102 @@
+09/09/15 13:53:28       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xdn_ctrl ===========================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                         Dump     Table Field Index Table
+Name                          Name     Flags Count Count Label
+----------------------------- -------- ----- ----- ----- -------------------
+xdn_ctrl                      xdn_ctrl f        23     2 ?
+
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xdn_ctrl ===========================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                Data Type   Flags Format          Initial
+----- ------------------------- ----------- ----- --------------- ----------
+   10 xdn_domain                char        i     x(8)
+   20 xdn_type                  char        i     x(2)
+   30 xdn_prev                  char        i     x(3)
+   40 xdn_name                  char              x(30)
+   50 xdn_next                  char              x(8)
+   60 xdn_isonbr                char              x(24)
+   70 xdn_isover                char              x(24)
+   80 xdn_desc1                 char              x(50)
+   90 xdn_desc2                 char              x(50)
+  100 xdn_train1                char              x(24)
+  110 xdn_train2                char              x(24)
+  120 xdn_train3                char              x(24)
+  130 xdn_train4                char              x(24)
+  140 xdn_train5                char              x(24)
+  150 xdn_page1                 char              x(24)
+  160 xdn_page2                 char              x(24)
+  170 xdn_page3                 char              x(24)
+  180 xdn_page4                 char              x(24)
+  190 xdn_page5                 char              x(24)
+  200 xdn_page6                 char              x(24)
+  210 xdn_desc3                 char              x(50)
+  220 xdn_desc4                 char              x(50)
+  230 xdn_desc5                 char              x(50)
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xdn_domain                     ?                      ?
+xdn_type                       ?                      ?
+xdn_prev                       ?                      ?
+xdn_name                       ?                      ?
+xdn_next                       ?                      ?
+xdn_isonbr                     ?                      ?
+xdn_isover                     ?                      ?
+xdn_desc1                      ?                      ?
+xdn_desc2                      ?                      ?
+xdn_train1                     ?                      ?
+xdn_train2                     ?                      ?
+xdn_train3                     ?                      ?
+xdn_train4                     ?                      ?
+xdn_train5                     ?                      ?
+xdn_page1                      ?                      ?
+xdn_page2                      ?                      ?
+xdn_page3                      ?                      ?
+xdn_page4                      ?                      ?
+xdn_page5                      ?                      ?
+xdn_page6                      ?                      ?
+xdn_desc3                      ?                      ?
+xdn_desc4                      ?                      ?
+xdn_desc5                      ?                      ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xdn_ctrl ===========================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+u     xdn_nbr                            3 + xdn_domain
+                                           + xdn_type
+                                           + xdn_prev
+
+pu    xdn_type                           2 + xdn_domain
+                                           + xdn_type
+
+** Index Name: xdn_nbr
+ Storage Area: TRANSACTION
+** Index Name: xdn_type
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xdn_ctrl ===========================
+
+

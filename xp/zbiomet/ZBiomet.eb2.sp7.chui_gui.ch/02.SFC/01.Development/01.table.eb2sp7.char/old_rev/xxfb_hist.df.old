@@ -1,0 +1,403 @@
+ADD TABLE "xxfb_hist"
+  AREA "Schema Area"
+  LABEL "xxfb_hist"
+  DUMP-NAME "xxfb_his"
+
+ADD FIELD "xxfb_wotype" OF "xxfb_hist" AS character 
+  DESCRIPTION "反馈记录的类型:返工件为R,其他为空"
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "工单类型"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxfb_trnbr" OF "xxfb_hist" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "交易号"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxfb_type" OF "xxfb_hist" AS character 
+  FORMAT "X(3)"
+  INITIAL ""
+  LABEL "指令代码"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxfb_date" OF "xxfb_hist" AS date 
+  DESCRIPTION "指令执行的日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "执行日期"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxfb_date_start" OF "xxfb_hist" AS date 
+  DESCRIPTION "指令任务的开始日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "开始日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxfb_date_end" OF "xxfb_hist" AS date 
+  DESCRIPTION "指令任务的结束日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "结束日期"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxfb_time" OF "xxfb_hist" AS integer 
+  DESCRIPTION "指令执行的时间"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "执行时间"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxfb_time_start" OF "xxfb_hist" AS integer 
+  DESCRIPTION "指令任务的开始时间"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "开始时间"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxfb_time_end" OF "xxfb_hist" AS integer 
+  DESCRIPTION "指令任务的结束时间"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "结束时间"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxfb_qty_fb" OF "xxfb_hist" AS decimal 
+  DESCRIPTION "本次反馈的数量,仅对数量反馈指令生效"
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "数量"
+  POSITION 11
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxfb_rsn_code" OF "xxfb_hist" AS character 
+  DESCRIPTION "返工或报废的原因代码,受MFGPRO系统值限制"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "原因代码"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxfb_rmks" OF "xxfb_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 13
+  SQL-WIDTH 36
+  ORDER 120
+
+ADD FIELD "xxfb_update" OF "xxfb_hist" AS logical 
+  DESCRIPTION "标识本次交易记录是否已更新到MFGPRO"
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "已更新"
+  POSITION 14
+  SQL-WIDTH 1
+  ORDER 130
+
+ADD FIELD "xxfb_user" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "用户名"
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxfb_wc" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "机器"
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxfb_wonbr" OF "xxfb_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "工单号"
+  POSITION 17
+  SQL-WIDTH 36
+  ORDER 160
+
+ADD FIELD "xxfb_wolot" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "工单标志"
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxfb_part" OF "xxfb_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "项目号"
+  POSITION 19
+  SQL-WIDTH 36
+  ORDER 180
+
+ADD FIELD "xxfb_op" OF "xxfb_hist" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "工序"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxfb_type2" OF "xxfb_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "指令描述"
+  POSITION 21
+  SQL-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xxfb_program" OF "xxfb_hist" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "程式"
+  POSITION 22
+  SQL-WIDTH 24
+  ORDER 210
+
+ADD FIELD "xxfb_nbr" OF "xxfb_hist" AS character 
+  DESCRIPTION "时间反馈历史记录,拆分为多笔反馈记录时,记录原记录的交易号"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "单号"
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xxfb_pause" OF "xxfb_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "暂停"
+  POSITION 24
+  SQL-WIDTH 1
+  ORDER 230
+
+ADD FIELD "xxfb_user2" OF "xxfb_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "盘点用户"
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xxfb__chr01" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "xxfb__chr02" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 260
+
+ADD FIELD "xxfb__chr03" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 28
+  SQL-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xxfb__chr04" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 29
+  SQL-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xxfb__chr05" OF "xxfb_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 30
+  SQL-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xxfb__dte04" OF "xxfb_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 430
+
+ADD FIELD "xxfb__int02" OF "xxfb_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xxfb__int03" OF "xxfb_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 320
+
+ADD FIELD "xxfb__int04" OF "xxfb_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 34
+  SQL-WIDTH 4
+  ORDER 330
+
+ADD FIELD "xxfb__int05" OF "xxfb_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 35
+  SQL-WIDTH 4
+  ORDER 340
+
+ADD FIELD "xxfb__dec01" OF "xxfb_hist" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 36
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 350
+
+ADD FIELD "xxfb__dec02" OF "xxfb_hist" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 37
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 360
+
+ADD FIELD "xxfb__dec03" OF "xxfb_hist" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 38
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 370
+
+ADD FIELD "xxfb__dec04" OF "xxfb_hist" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 39
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 380
+
+ADD FIELD "xxfb__dec05" OF "xxfb_hist" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 40
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 390
+
+ADD FIELD "xxfb__dte01" OF "xxfb_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 41
+  SQL-WIDTH 4
+  ORDER 400
+
+ADD FIELD "xxfb__dte02" OF "xxfb_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 42
+  SQL-WIDTH 4
+  ORDER 410
+
+ADD FIELD "xxfb__dte03" OF "xxfb_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 43
+  SQL-WIDTH 4
+  ORDER 420
+
+ADD FIELD "xxfb__dte05" OF "xxfb_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 45
+  SQL-WIDTH 4
+  ORDER 440
+
+ADD FIELD "xxfb__int01" OF "xxfb_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 46
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD INDEX "xxfb_trnbr" ON "xxfb_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxfb_trnbr" ASCENDING 
+
+ADD INDEX "xxfb_dateuser" ON "xxfb_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxfb_date" ASCENDING 
+  INDEX-FIELD "xxfb_user" ASCENDING 
+  INDEX-FIELD "xxfb_wc" ASCENDING 
+
+ADD INDEX "xxfb_userwc" ON "xxfb_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxfb_user" ASCENDING 
+  INDEX-FIELD "xxfb_wc" ASCENDING 
+  INDEX-FIELD "xxfb_date_end" DESCENDING 
+
+ADD INDEX "xxfb_wolot" ON "xxfb_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxfb_wolot" ASCENDING 
+  INDEX-FIELD "xxfb_op" ASCENDING 
+  INDEX-FIELD "xxfb_type" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000007618

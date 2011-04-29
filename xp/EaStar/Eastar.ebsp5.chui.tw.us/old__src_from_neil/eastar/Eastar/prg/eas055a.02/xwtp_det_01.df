@@ -1,0 +1,56 @@
+ADD TABLE "xwtp_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xwtp_det"
+
+ADD FIELD "xwtp_type" OF "xwtp_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "Type"
+  ORDER 10
+
+ADD FIELD "xwtp_loc" OF "xwtp_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Location"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "Location"
+  ORDER 20
+
+ADD FIELD "xwtp_is_ser" OF "xwtp_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 30
+
+ADD FIELD "xwtp_desc" OF "xwtp_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xwtp_site" OF "xwtp_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD INDEX "xwtp_typesite" ON "xwtp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xwtp_type" ASCENDING 
+  INDEX-FIELD "xwtp_site" ASCENDING 
+
+.
+PSC
+cpstream=undefined
+.
+0000000971

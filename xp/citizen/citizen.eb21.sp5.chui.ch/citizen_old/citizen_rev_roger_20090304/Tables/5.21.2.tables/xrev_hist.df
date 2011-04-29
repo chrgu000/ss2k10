@@ -1,0 +1,638 @@
+ADD TABLE "xrev_hist"
+  AREA "TRANSACTION"
+  LABEL "xrev_hist"
+  DUMP-NAME "xrev_his"
+
+ADD FIELD "xrev_domain" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xrev_idx" OF "xrev_hist" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xrev_key1" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xrev_key2" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xrev_key3" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xrev_key4" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xrev_key5" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xrev_key6" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xrev_key7" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xrev_key8" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 11
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xrev_chr01" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xrev_chr02" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xrev_chr03" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xrev_chr04" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xrev_chr05" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 16
+  MAX-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xrev_chr06" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  MAX-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xrev_chr07" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xrev_chr08" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xrev_chr09" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 20
+  MAX-WIDTH 16
+  ORDER 190
+
+ADD FIELD "xrev_chr10" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 21
+  MAX-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xrev_chr11" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xrev_chr12" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 23
+  MAX-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xrev_chr13" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 24
+  MAX-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xrev_chr14" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xrev_chr15" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 26
+  MAX-WIDTH 16
+  ORDER 250
+
+ADD FIELD "xrev_chr16" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 27
+  MAX-WIDTH 16
+  ORDER 260
+
+ADD FIELD "xrev_chr17" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 28
+  MAX-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xrev_chr18" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 29
+  MAX-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xrev_chr19" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 30
+  MAX-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xrev_chr20" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 31
+  MAX-WIDTH 16
+  ORDER 300
+
+ADD FIELD "xrev_dte01" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  MAX-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xrev_dte02" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 33
+  MAX-WIDTH 4
+  ORDER 320
+
+ADD FIELD "xrev_dte03" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 34
+  MAX-WIDTH 4
+  ORDER 330
+
+ADD FIELD "xrev_dte04" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 35
+  MAX-WIDTH 4
+  ORDER 340
+
+ADD FIELD "xrev_dte05" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 36
+  MAX-WIDTH 4
+  ORDER 350
+
+ADD FIELD "xrev_dte06" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 37
+  MAX-WIDTH 4
+  ORDER 360
+
+ADD FIELD "xrev_dte07" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 38
+  MAX-WIDTH 4
+  ORDER 370
+
+ADD FIELD "xrev_dte08" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 39
+  MAX-WIDTH 4
+  ORDER 380
+
+ADD FIELD "xrev_int01" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 40
+  MAX-WIDTH 4
+  ORDER 390
+
+ADD FIELD "xrev_int02" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 41
+  MAX-WIDTH 4
+  ORDER 400
+
+ADD FIELD "xrev_int03" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 42
+  MAX-WIDTH 4
+  ORDER 410
+
+ADD FIELD "xrev_int04" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 43
+  MAX-WIDTH 4
+  ORDER 420
+
+ADD FIELD "xrev_int05" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 44
+  MAX-WIDTH 4
+  ORDER 430
+
+ADD FIELD "xrev_int06" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 45
+  MAX-WIDTH 4
+  ORDER 440
+
+ADD FIELD "xrev_int07" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 46
+  MAX-WIDTH 4
+  ORDER 450
+
+ADD FIELD "xrev_int08" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 47
+  MAX-WIDTH 4
+  ORDER 460
+
+ADD FIELD "xrev_dec01" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 48
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 470
+
+ADD FIELD "xrev_dec02" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 49
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 480
+
+ADD FIELD "xrev_dec03" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 50
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 490
+
+ADD FIELD "xrev_dec04" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 51
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 500
+
+ADD FIELD "xrev_dec05" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 52
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 510
+
+ADD FIELD "xrev_dec06" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 53
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 520
+
+ADD FIELD "xrev_dec07" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 54
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 530
+
+ADD FIELD "xrev_dec08" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 55
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 540
+
+ADD FIELD "xrev_dec09" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 56
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 550
+
+ADD FIELD "xrev_dec10" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 57
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 560
+
+ADD FIELD "xrev_dec11" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 58
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 570
+
+ADD FIELD "xrev_dec12" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 59
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 580
+
+ADD FIELD "xrev_dec13" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 60
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 590
+
+ADD FIELD "xrev_dec14" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 61
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 600
+
+ADD FIELD "xrev_dec15" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 62
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 610
+
+ADD FIELD "xrev_dec16" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 63
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 620
+
+ADD FIELD "xrev_dec17" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 64
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 630
+
+ADD FIELD "xrev_dec18" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 65
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 640
+
+ADD FIELD "xrev_dec19" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 66
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 650
+
+ADD FIELD "xrev_dec20" OF "xrev_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 67
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 660
+
+ADD FIELD "xrev_log01" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 68
+  MAX-WIDTH 1
+  ORDER 670
+
+ADD FIELD "xrev_log02" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 69
+  MAX-WIDTH 1
+  ORDER 680
+
+ADD FIELD "xrev_log03" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 70
+  MAX-WIDTH 1
+  ORDER 690
+
+ADD FIELD "xrev_log04" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 71
+  MAX-WIDTH 1
+  ORDER 700
+
+ADD FIELD "xrev_log05" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 72
+  MAX-WIDTH 1
+  ORDER 710
+
+ADD FIELD "xrev_log06" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 73
+  MAX-WIDTH 1
+  ORDER 720
+
+ADD FIELD "xrev_log07" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 74
+  MAX-WIDTH 1
+  ORDER 730
+
+ADD FIELD "xrev_log08" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 75
+  MAX-WIDTH 1
+  ORDER 740
+
+ADD FIELD "xrev_recno1" OF "xrev_hist" AS recid 
+  FORMAT ">>>>>>9"
+  INITIAL ?
+  POSITION 76
+  MAX-WIDTH 4
+  ORDER 750
+
+ADD FIELD "xrev_recno2" OF "xrev_hist" AS recid 
+  FORMAT ">>>>>>9"
+  INITIAL ?
+  POSITION 77
+  MAX-WIDTH 4
+  ORDER 760
+
+ADD FIELD "xrev_user1" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 78
+  MAX-WIDTH 16
+  ORDER 770
+
+ADD FIELD "xrev_user2" OF "xrev_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 79
+  MAX-WIDTH 16
+  ORDER 780
+
+ADD FIELD "xrev_date1" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 80
+  MAX-WIDTH 4
+  ORDER 790
+
+ADD FIELD "xrev_date2" OF "xrev_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 81
+  MAX-WIDTH 4
+  ORDER 800
+
+ADD FIELD "xrev_time1" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 82
+  MAX-WIDTH 4
+  ORDER 810
+
+ADD FIELD "xrev_time2" OF "xrev_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 83
+  MAX-WIDTH 4
+  ORDER 820
+
+ADD FIELD "xrev_release" OF "xrev_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 84
+  MAX-WIDTH 1
+  ORDER 830
+
+ADD INDEX "xrev_key3" ON "xrev_hist" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xrev_key1" ASCENDING 
+  INDEX-FIELD "xrev_key2" ASCENDING 
+  INDEX-FIELD "xrev_key3" ASCENDING 
+
+ADD INDEX "xrev_idx" ON "xrev_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xrev_idx" ASCENDING 
+
+ADD INDEX "xrev_key1" ON "xrev_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xrev_key1" ASCENDING 
+
+ADD INDEX "xrev_key8" ON "xrev_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xrev_key1" ASCENDING 
+  INDEX-FIELD "xrev_key2" ASCENDING 
+  INDEX-FIELD "xrev_key3" ASCENDING 
+  INDEX-FIELD "xrev_key4" ASCENDING 
+  INDEX-FIELD "xrev_key5" ASCENDING 
+  INDEX-FIELD "xrev_key6" ASCENDING 
+  INDEX-FIELD "xrev_key7" ASCENDING 
+  INDEX-FIELD "xrev_key8" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000011404

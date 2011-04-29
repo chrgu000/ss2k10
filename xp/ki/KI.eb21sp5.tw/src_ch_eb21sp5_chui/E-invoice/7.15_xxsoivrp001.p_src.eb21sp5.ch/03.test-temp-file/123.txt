@@ -1,0 +1,5 @@
+#def REPORTPATH=$/KI/xxsoivrp001
+#def EXPORTNAME=inv001.pdf
+#def :end
+Customer Name|Address 1|Address 2|Address 3|City|State|Zip|Country|Attention|Ship Via|From Ship|To Ship|Ship Date|Shipto Name|Shipto Address1|shipto Address2|Invoice Date|Invoice No.|FOB|LC No.|Issuing Bank1|Issuing Bank2|Payment Terms|Currency|Purchase Nbr|BOL|Line|Part|Description|Drawing|Line Comment 1|Line Comment 2|Line Comment 3|Quantity|Price|Line Total|Invoice Total 2|Company Name|Customer Part|Invoice Total|Invoive Comment 1|Invoice Comment 2|Invoice Comment 3|Invoice Type|usr|sgn
+111|222|333|444|555|666|777|888|000||||2009-7-14|111|222|333|2009-7-14|inv001||||||usd|PO : ||2|09-0001|desc1|drawdraw||||3|10|30|Total say  thirty and no cents only|Karrie Industrial Co., Ltd.||30|||||mfg|mfg

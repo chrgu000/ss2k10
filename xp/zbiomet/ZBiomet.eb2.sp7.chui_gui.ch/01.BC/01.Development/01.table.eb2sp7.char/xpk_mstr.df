@@ -1,0 +1,361 @@
+ADD TABLE "xpk_mstr"
+  AREA "Schema Area"
+  LABEL "xpk_mstr"
+  DUMP-NAME "xpk_mstr"
+
+ADD FIELD "xpk_nbr" OF "xpk_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "计划单号"
+  POSITION 2
+  SQL-WIDTH 24
+  ORDER 10
+
+ADD FIELD "xpk_sonbr" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "销售订单"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xpk_soline" OF "xpk_mstr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "订单项"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xpk_due_date" OF "xpk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "截止日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xpk_shipto" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "交运地"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xpk_part" OF "xpk_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "料品"
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "xpk_qty_open" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "未备料量"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xpk_qty_all" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预出货量"
+  POSITION 10
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xpk_qty_oh" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "本批库存量"
+  POSITION 11
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xpk_qty_shp" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "本批出货量"
+  POSITION 12
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xpk_site" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xpk_loc" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "库位"
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xpk_lot" OF "xpk_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批号"
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xpk_ref" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "参考号"
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xpk_crt_Date" OF "xpk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "产生日期"
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xpk_crt_user" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "用户"
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xpk_crt_time" OF "xpk_mstr" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "时间"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xpk_stat" OF "xpk_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "状态"
+  POSITION 22
+  SQL-WIDTH 2
+  ORDER 210
+
+ADD FIELD "xpk__chr01" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xpk__chr02" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xpk__chr03" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xpk__chr04" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "xpk__chr05" OF "xpk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 260
+
+ADD FIELD "xpk__int01" OF "xpk_mstr" AS integer 
+  DESCRIPTION "每销售订单的每个项次一个计划单项,每项可对应多笔记录"
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "计划单项"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "xpk__int02" OF "xpk_mstr" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "xpk__int03" OF "xpk_mstr" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 30
+  SQL-WIDTH 4
+  ORDER 290
+
+ADD FIELD "xpk__int04" OF "xpk_mstr" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "xpk__int05" OF "xpk_mstr" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xpk__dec01" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 33
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 320
+
+ADD FIELD "xpk__dec02" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 34
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 330
+
+ADD FIELD "xpk__dec03" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 35
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 340
+
+ADD FIELD "xpk__dec04" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 36
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 350
+
+ADD FIELD "xpk__dec05" OF "xpk_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 37
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 360
+
+ADD FIELD "xpk__Dte01" OF "xpk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 38
+  SQL-WIDTH 4
+  ORDER 370
+
+ADD FIELD "xpk__Dte02" OF "xpk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 39
+  SQL-WIDTH 4
+  ORDER 380
+
+ADD FIELD "xpk__Dte03" OF "xpk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 40
+  SQL-WIDTH 4
+  ORDER 390
+
+ADD FIELD "xpk__log01" OF "xpk_mstr" AS logical 
+  FORMAT "Yes/No"
+  INITIAL "no"
+  LABEL "预留字段"
+  POSITION 41
+  SQL-WIDTH 1
+  ORDER 400
+
+ADD FIELD "xpk__log02" OF "xpk_mstr" AS logical 
+  FORMAT "Yes/No"
+  INITIAL "no"
+  LABEL "预留字段"
+  POSITION 42
+  SQL-WIDTH 1
+  ORDER 410
+
+ADD INDEX "xpk_nbr" ON "xpk_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  DESCRIPTION "for-add-new-record"
+  INDEX-FIELD "xpk_nbr" ASCENDING 
+  INDEX-FIELD "xpk_sonbr" ASCENDING 
+  INDEX-FIELD "xpk_soline" ASCENDING 
+  INDEX-FIELD "xpk_site" ASCENDING 
+  INDEX-FIELD "xpk_lot" ASCENDING 
+  INDEX-FIELD "xpk_loc" ASCENDING 
+
+ADD INDEX "xpk_nbr2" ON "xpk_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xpk_nbr" ASCENDING 
+
+ADD INDEX "xpk_rpt" ON "xpk_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  DESCRIPTION "for-report-disp"
+  INDEX-FIELD "xpk_nbr" ASCENDING 
+  INDEX-FIELD "xpk_shipto" ASCENDING 
+  INDEX-FIELD "xpk_due_date" ASCENDING 
+  INDEX-FIELD "xpk_sonbr" ASCENDING 
+  INDEX-FIELD "xpk_soline" ASCENDING 
+  INDEX-FIELD "xpk_part" ASCENDING 
+  INDEX-FIELD "xpk_site" ASCENDING 
+  INDEX-FIELD "xpk_lot" ASCENDING 
+  INDEX-FIELD "xpk_loc" ASCENDING 
+
+ADD INDEX "xpk_slot" ON "xpk_mstr" 
+  AREA "Schema Area"
+  DESCRIPTION "for-lot-qty-check"
+  INDEX-FIELD "xpk_stat" ASCENDING 
+  INDEX-FIELD "xpk_part" ASCENDING 
+  INDEX-FIELD "xpk_site" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000006588

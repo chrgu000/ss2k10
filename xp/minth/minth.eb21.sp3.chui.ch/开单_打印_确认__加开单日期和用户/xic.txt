@@ -1,0 +1,135 @@
+09/09/15 13:52:58       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xic_det ============================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                         Dump     Table Field Index Table
+Name                          Name     Flags Count Count Label
+----------------------------- -------- ----- ----- ----- -------------------
+xic_det                       xic_det  f        36     3 ?
+
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xic_det ============================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                Data Type   Flags Format          Initial
+----- ------------------------- ----------- ----- --------------- ----------
+   10 xic_domain                char        i     x(8)
+   20 xic_nbr                   char        i     x(8)
+   30 xic_type                  char        i     x(2)
+   40 xic_part                  char              x(18)
+   50 xic_loc_from              char              x(8)
+   60 xic_loc_to                char              x(8)
+   70 xic_qty_from              deci-5            ->>,>>>,>>9.99< 0
+   80 xic_qty_to                deci-5            ->>,>>>,>>9.99< 0
+   90 xic_um                    char              x(2)
+  100 xic_print                 logi              yes/no          no
+  110 xic_flag                  logi              yes/no          no
+  120 xic_lot_from              char              x(12)
+  130 xic_lot_to                char              x(12)
+  140 xic_ref_from              char              x(8)
+  150 xic_ref_to                char              x(8)
+  160 xic_remark                char              x(8)
+  170 xic_line                  inte        i     >>>9            0
+  180 xic_date                  date              99/99/99        ?
+  200 xic_user1                 char              x(8)
+  210 xic_user2                 char              x(8)
+  220 xic_site_from             char              x(8)
+  230 xic_site_to               char              x(8)
+  240 xic_ln_line               char              x(8)
+  250 xic_eff_date              date              99/99/99        ?
+  260 xic_rsn                   char              x(8)
+  270 xic__chr01                char              x(8)
+  280 xic__chr02                char              x(8)
+  290 xic__dec01                deci-2            ->>,>>9.99      0
+  300 xic__dec02                deci-2            ->>,>>9.99      0
+  310 xic__dte01                date              99/99/99        ?
+  320 xic__dte02                date              99/99/99        ?
+  330 xic__log01                logi              yes/no          no
+  340 xic__log02                logi              yes/no          no
+  350 xic_addr                  char              x(8)
+  360 xic_usrid1                char              x(8)
+  370 xic_usrid2                char              x(8)
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xic_domain                     ?                      ?
+xic_nbr                        ?                      ?
+xic_type                       ?                      ?
+xic_part                       ?                      ?
+xic_loc_from                   ?                      ?
+xic_loc_to                     ?                      ?
+xic_qty_from                   ?                      ?
+xic_qty_to                     ?                      ?
+xic_um                         ?                      ?
+xic_print                      ?                      ?
+xic_flag                       ?                      ?
+xic_lot_from                   ?                      ?
+xic_lot_to                     ?                      ?
+xic_ref_from                   ?                      ?
+xic_ref_to                     ?                      ?
+xic_remark                     ?                      ?
+xic_line                       ?                      ?
+xic_date                       ?                      ?
+xic_user1                      ?                      ?
+xic_user2                      ?                      ?
+xic_site_from                  ?                      ?
+xic_site_to                    ?                      ?
+xic_ln_line                    ?                      ?
+xic_eff_date                   ?                      ?
+xic_rsn                        ?                      ?
+xic__chr01                     ?                      ?
+xic__chr02                     ?                      ?
+xic__dec01                     ?                      ?
+xic__dec02                     ?                      ?
+xic__dte01                     ?                      ?
+xic__dte02                     ?                      ?
+xic__log01                     ?                      ?
+xic__log02                     ?                      ?
+xic_addr                       addr                   ?
+xic_usrid1                     ?                      ?
+xic_usrid2                     ?                      ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xic_det ============================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+u     xic_line                           3 + xic_domain
+                                           + xic_nbr
+                                           + xic_line
+
+      xic_nbr                            2 + xic_domain
+                                           + xic_nbr
+
+pu    xic_type_nbr                       4 + xic_domain
+                                           + xic_type
+                                           + xic_nbr
+                                           + xic_line
+
+** Index Name: xic_line
+ Storage Area: TRANSACTION
+** Index Name: xic_nbr
+ Storage Area: TRANSACTION
+** Index Name: xic_type_nbr
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xic_det ============================
+
+

@@ -1,0 +1,47 @@
+更改/etc/resolv.conf文件
+
+如果你的linux主机只是在局域网内工作，请将nameserver地址改为网卡本身的地址。
+
+例：
+
+# more /etc/resolv.conf
+
+	nameserver 192.168.0.160
+
+	search site
+
+然后重启网卡
+
+# ifconfig eth0 down
+
+# ifconfig eth0 up
+
+
+
+
+
+
+
+
+
+相信很多朋友在使用Linux系统的时候因为安全性的原因摒弃了telnet rlogin 或者 X-window，而把openssh作为自己默认的远程登录方式。
+　
+　　然而经常会遇到的一个情况是telnet到server速度很快，但是ssh连接的时候却很慢，大概要等半分钟甚至更久。ping的速度也非常好，让人误以为是ssh连接不上。
+　
+　　下面说下如何解决这样的问题，最为常见的原因是因为server的sshd会去DNS查找访问client IP的hostname，如果DNS不可用或者没有相关记录，就会耗费大量时间。
+　
+　　1、在server上/etc/hosts文件中把你本机的ip和hostname加入
+　
+　　2、在server上/etc/ssh/sshd_config文件中修改或加入UseDNS=no
+　
+　　3、注释掉server上/etc/resolv.conf中所有行
+　
+　　4、修改server上/etc/nsswitch.conf中hosts为hosts： files
+　
+　　5、reboot server使配置生效
+　
+　　另外在
+　
+　　authentication gssapi-with-mic也有可能出现问题，在server上/etc/ssh/sshd_config文件中修改GSSAPIAuthentication no.
+　
+　　/etc/init.d/sshd restart重启sshd进程使配置生效。

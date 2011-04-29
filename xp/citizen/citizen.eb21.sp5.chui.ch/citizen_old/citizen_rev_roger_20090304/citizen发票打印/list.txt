@@ -1,0 +1,6 @@
+xxivmt001.p    发票产生
+xxivrp001.p    发票打印(标准)
+xxivrp002.p    发票打印(DSCom)
+xxrcshwbxp2.p  货运单修改for发票打印
+
+

@@ -1,0 +1,74 @@
+ADD TABLE "xglt_add"
+  AREA "TRANSACTION"
+  LABEL "xglt_add"
+  DESCRIPTION ""
+  DUMP-NAME "xglt_add"
+
+ADD FIELD "xglt_domain" OF "xglt_add" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xglt_ref" OF "xglt_add" AS character 
+  FORMAT "x(14)"
+  INITIAL ""
+  LABEL "GLref"
+  POSITION 3
+  SQL-WIDTH 28
+  ORDER 20
+
+ADD FIELD "xglt_attached" OF "xglt_add" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Attached"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xglt_chr" OF "xglt_add" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 40
+
+ADD FIELD "xglt_dec" OF "xglt_add" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 110
+  EXTENT 5
+  DECIMALS 10
+  ORDER 50
+
+ADD FIELD "xglt_dte" OF "xglt_add" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 7
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 60
+
+ADD FIELD "xglt_flag" OF "xglt_add" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 40
+  EXTENT 5
+  ORDER 70
+
+ADD INDEX "xglt_ref" ON "xglt_add" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xglt_domain" ASCENDING 
+  INDEX-FIELD "xglt_ref" DESCENDING 
+
+.
+PSC
+cpstream=GB2312
+.

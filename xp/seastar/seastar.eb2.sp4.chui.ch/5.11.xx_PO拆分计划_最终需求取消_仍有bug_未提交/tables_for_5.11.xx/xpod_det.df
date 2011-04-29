@@ -1,0 +1,1486 @@
+ADD TABLE "xpod_det"
+  AREA "TRANSACTION"
+  DESCRIPTION "Purchase Order Detail"
+  FROZEN
+  DUMP-NAME "xpod_det"
+
+
+ADD FIELD "xpod_nbr" OF "xpod_det" AS character 
+  DESCRIPTION "The unique code for a purchase order."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Purchase Order"
+  POSITION 2
+  SQL-WIDTH 80
+  COLUMN-LABEL "Order"
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "xpod_due_date" OF "xpod_det" AS date 
+  DESCRIPTION "The due date for a line item."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "Due"
+  ORDER 20
+
+ADD FIELD "xpod_line" OF "xpod_det" AS integer 
+  DESCRIPTION "The code used as a reference for this line item."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "Ln"
+  ORDER 30
+
+ADD FIELD "xpod_part" OF "xpod_det" AS character 
+  DESCRIPTION "The code of the item or product ordered on this PO line."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 5
+  SQL-WIDTH 30
+  ORDER 40
+
+ADD FIELD "xpod_qty_ord" OF "xpod_det" AS decimal 
+  DESCRIPTION "The number of items ordered on this line."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Ordered"
+  POSITION 6
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 50
+
+ADD FIELD "xpod_qty_rcvd" OF "xpod_det" AS decimal 
+  DESCRIPTION "The total number of items already received on this line."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Received"
+  POSITION 7
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xpod_pur_cost" OF "xpod_det" AS decimal 
+  DESCRIPTION "The unit cost for the item."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Purchase Cost"
+  POSITION 8
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xpod_std_cost" OF "xpod_det" AS decimal 
+  DESCRIPTION "The standard per unit cost for the item."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Std Cost"
+  POSITION 9
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xpod_so_job" OF "xpod_det" AS character 
+  DESCRIPTION "The sales/job number associated with this line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sales/Job"
+  POSITION 10
+  SQL-WIDTH 80
+  COLUMN-LABEL "SO/Job"
+  ORDER 90
+
+ADD FIELD "xpod_qty_chg" OF "xpod_det" AS decimal 
+  DESCRIPTION "A work field used for the number of items received on this transaction."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Receipt Qty"
+  POSITION 11
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xpod_cost_chg" OF "xpod_det" AS decimal 
+  DESCRIPTION "The unit cost of the items received."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Receipt Cost"
+  POSITION 12
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xpod_bo_chg" OF "xpod_det" AS decimal 
+  DESCRIPTION "The number of items on back order for this line item."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty B/O"
+  POSITION 13
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 120
+
+ADD FIELD "xpod_acct" OF "xpod_det" AS character 
+  DESCRIPTION "The general ledger account to be used for PO receipts."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Pur Acct"
+  POSITION 14
+  SQL-WIDTH 80
+  ORDER 130
+
+ADD FIELD "xpod_per_date" OF "xpod_det" AS date 
+  DESCRIPTION "The date which will be used to evaluate supplier performance."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Perform Date"
+  POSITION 15
+  SQL-WIDTH 4
+  COLUMN-LABEL "Perform"
+  ORDER 140
+
+ADD FIELD "xpod_type" OF "xpod_det" AS character 
+  DESCRIPTION "A flag indicating the type of PO:  Subcontract, Memo, or blank."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 16
+  SQL-WIDTH 30
+  COLUMN-LABEL "T"
+  ORDER 150
+
+ADD FIELD "xpod_insp_rqd" OF "xpod_det" AS logical 
+  DESCRIPTION "A flag indicating that incoming inspection is required."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Inspect Req"
+  POSITION 17
+  SQL-WIDTH 1
+  COLUMN-LABEL "Insp"
+  ORDER 160
+
+ADD FIELD "xpod_wo_lot" OF "xpod_det" AS character 
+  DESCRIPTION "The work order lot associated with a subcontracted PO."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Work Order ID"
+  POSITION 18
+  SQL-WIDTH 80
+  COLUMN-LABEL "WO ID"
+  ORDER 170
+
+ADD FIELD "xpod_vpart" OF "xpod_det" AS character 
+  DESCRIPTION "The supplier item number of the item on this line."
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Supplier Item"
+  POSITION 19
+  SQL-WIDTH 80
+  ORDER 180
+
+ADD FIELD "xpod_need" OF "xpod_det" AS date 
+  DESCRIPTION "The date when this line item is actually needed."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Need Date"
+  POSITION 20
+  SQL-WIDTH 4
+  COLUMN-LABEL "Need"
+  ORDER 190
+
+ADD FIELD "xpod_taxable" OF "xpod_det" AS logical 
+  DESCRIPTION "A flag indicating if this line item is taxable."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Taxable"
+  POSITION 21
+  SQL-WIDTH 1
+  COLUMN-LABEL "Tax"
+  ORDER 200
+
+ADD FIELD "xpod_desc" OF "xpod_det" AS character 
+  DESCRIPTION "The description of the line item."
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 22
+  SQL-WIDTH 80
+  ORDER 210
+
+ADD FIELD "xpod_cc" OF "xpod_det" AS character 
+  DESCRIPTION "The cost center of the PO receipts account."
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Cost Ctr"
+  POSITION 23
+  SQL-WIDTH 30
+  COLUMN-LABEL "CC"
+  ORDER 220
+
+ADD FIELD "xpod__qad04" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(40)"
+  INITIAL ?
+  POSITION 24
+  SQL-WIDTH 410
+  EXTENT 5
+  ORDER 230
+
+ADD FIELD "xpod_um" OF "xpod_det" AS character 
+  DESCRIPTION "The unit of measure of the item ordered on this line."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 25
+  SQL-WIDTH 30
+  ORDER 240
+
+ADD FIELD "xpod_disc_pct" OF "xpod_det" AS decimal 
+  DESCRIPTION "The percentage discount to be applied to this line item."
+  FORMAT "->9.99%"
+  INITIAL "0"
+  LABEL "Disc%"
+  POSITION 26
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 250
+
+ADD FIELD "xpod_req_nbr" OF "xpod_det" AS character 
+  DESCRIPTION "The requisition number for this purchase order line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Req"
+  POSITION 27
+  SQL-WIDTH 80
+  ORDER 260
+
+ADD FIELD "xpod__qad10" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(8)"
+  INITIAL ?
+  POSITION 28
+  SQL-WIDTH 80
+  ORDER 270
+
+ADD FIELD "xpod_um_conv" OF "xpod_det" AS decimal 
+  DESCRIPTION "The unit of measure conversion factor for this line item."
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "1"
+  LABEL "UM Conversion"
+  POSITION 29
+  SQL-WIDTH 38
+  COLUMN-LABEL "UM Conv"
+  DECIMALS 10
+  ORDER 280
+
+ADD FIELD "xpod_loc" OF "xpod_det" AS character 
+  DESCRIPTION "The receiving location for this item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Location"
+  POSITION 30
+  SQL-WIDTH 80
+  ORDER 290
+
+ADD FIELD "xpod_serial" OF "xpod_det" AS character 
+  DESCRIPTION "The specific lot/serial number of the items required."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Lot/Serial"
+  POSITION 31
+  SQL-WIDTH 50
+  ORDER 300
+
+ADD FIELD "xpod_op" OF "xpod_det" AS integer 
+  DESCRIPTION "The work order operation associated with a subcontract PO."
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 32
+  SQL-WIDTH 4
+  COLUMN-LABEL "Op"
+  ORDER 310
+
+ADD FIELD "xpod_contract" OF "xpod_det" AS character 
+  DESCRIPTION "The code for the purchasing contract."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Contract"
+  POSITION 33
+  SQL-WIDTH 80
+  ORDER 320
+
+ADD FIELD "xpod_status" OF "xpod_det" AS character 
+  DESCRIPTION "A code indicating the status of the purchase order line."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 34
+  SQL-WIDTH 30
+  COLUMN-LABEL "St"
+  ORDER 330
+
+ADD FIELD "xpod_rev" OF "xpod_det" AS character 
+  DESCRIPTION "The engineering revision of the item on this purchase order line."
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Revision"
+  POSITION 35
+  SQL-WIDTH 30
+  COLUMN-LABEL "Rev"
+  ORDER 340
+
+ADD FIELD "xpod_cmtindx" OF "xpod_det" AS integer 
+  DESCRIPTION "A pointer to the comments associated with this PO line."
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Comment Index"
+  POSITION 36
+  SQL-WIDTH 4
+  COLUMN-LABEL "Comment"
+  ORDER 350
+
+ADD FIELD "xpod_req_line" OF "xpod_det" AS integer 
+  DESCRIPTION "A line number used to uniquely identify duplicate requisitions."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Req Line"
+  POSITION 37
+  SQL-WIDTH 4
+  COLUMN-LABEL "Req Ln"
+  ORDER 360
+
+ADD FIELD "xpod_project" OF "xpod_det" AS character 
+  DESCRIPTION "The project to be used for PO receipts on this line."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Project"
+  POSITION 38
+  SQL-WIDTH 80
+  ORDER 370
+
+ADD FIELD "xpod_ps_chg" OF "xpod_det" AS decimal 
+  DESCRIPTION "A temporary variable used to update PO receipt history."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Packing Slip Qty"
+  POSITION 39
+  SQL-WIDTH 38
+  COLUMN-LABEL "Pack Slip Qty"
+  DECIMALS 10
+  ORDER 380
+
+ADD FIELD "xpod_cst_up" OF "xpod_det" AS logical 
+  DESCRIPTION "Used to identify PO lines which should not update current cost."
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "Update Current Cost"
+  POSITION 40
+  SQL-WIDTH 1
+  ORDER 390
+
+ADD FIELD "xpod_rum" OF "xpod_det" AS character 
+  DESCRIPTION "A temporary field used when processing alternate um upon receipt."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 41
+  SQL-WIDTH 30
+  ORDER 400
+
+ADD FIELD "xpod_user1" OF "xpod_det" AS character 
+  DESCRIPTION "User field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  POSITION 42
+  SQL-WIDTH 80
+  ORDER 410
+
+ADD FIELD "xpod_user2" OF "xpod_det" AS character 
+  DESCRIPTION "User field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  POSITION 43
+  SQL-WIDTH 80
+  ORDER 420
+
+ADD FIELD "xpod_vat" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "VAT"
+  POSITION 44
+  SQL-WIDTH 1
+  ORDER 430
+
+ADD FIELD "xpod__qad16" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 45
+  SQL-WIDTH 80
+  ORDER 440
+
+ADD FIELD "xpod__qad06" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(1)"
+  INITIAL ?
+  POSITION 46
+  SQL-WIDTH 30
+  ORDER 450
+
+ADD FIELD "xpod_pst" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "PST"
+  POSITION 47
+  SQL-WIDTH 1
+  ORDER 460
+
+ADD FIELD "xpod__qad13" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "yes/no"
+  INITIAL ?
+  POSITION 48
+  SQL-WIDTH 1
+  ORDER 470
+
+ADD FIELD "xpod__qad07" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(2)"
+  INITIAL ?
+  POSITION 49
+  SQL-WIDTH 30
+  ORDER 480
+
+ADD FIELD "xpod_pay_um" OF "xpod_det" AS character 
+  DESCRIPTION "Not Used."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Pay UM"
+  POSITION 50
+  SQL-WIDTH 30
+  COLUMN-LABEL "UM"
+  ORDER 490
+
+ADD FIELD "xpod_pum_conv" OF "xpod_det" AS decimal 
+  DESCRIPTION "Not used."
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "1"
+  LABEL "Pay UM Conv"
+  POSITION 51
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 500
+
+ADD FIELD "xpod__qad15" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "yes/no"
+  INITIAL ?
+  POSITION 52
+  SQL-WIDTH 1
+  ORDER 510
+
+ADD FIELD "xpod_site" OF "xpod_det" AS character 
+  DESCRIPTION "The site associated with this line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 53
+  SQL-WIDTH 80
+  ORDER 520
+
+ADD FIELD "xpod_rum_conv" OF "xpod_det" AS decimal 
+  DESCRIPTION "The unit of measure conversion from receipt um to ordered um."
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "1"
+  LABEL "UM Conversion"
+  POSITION 54
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 530
+
+ADD FIELD "xpod_qty_rtnd" OF "xpod_det" AS decimal 
+  DESCRIPTION "The number of items returned to the supplier on this line."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Returned"
+  POSITION 55
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 540
+
+ADD FIELD "xpod_blanket" OF "xpod_det" AS character 
+  DESCRIPTION "Blanket order number for this item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Blanket"
+  POSITION 56
+  SQL-WIDTH 80
+  ORDER 550
+
+ADD FIELD "xpod_blnkt_ln" OF "xpod_det" AS integer 
+  DESCRIPTION "Blanket line number for this item."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Blanket Line"
+  POSITION 57
+  SQL-WIDTH 4
+  COLUMN-LABEL "Bl Ln"
+  ORDER 560
+
+ADD FIELD "xpod__qad01" OF "xpod_det" AS date 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 58
+  SQL-WIDTH 4
+  ORDER 570
+
+ADD FIELD "xpod__qad02" OF "xpod_det" AS integer 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "->>>>>>>>>9"
+  INITIAL ?
+  POSITION 59
+  SQL-WIDTH 4
+  ORDER 580
+
+ADD FIELD "xpod__qad03" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "99:99:99"
+  INITIAL ?
+  POSITION 60
+  SQL-WIDTH 80
+  ORDER 590
+
+ADD FIELD "xpod__qad05" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "yes/no"
+  INITIAL ?
+  POSITION 61
+  SQL-WIDTH 1
+  ORDER 600
+
+ADD FIELD "xpod__qad08" OF "xpod_det" AS date 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 62
+  SQL-WIDTH 4
+  ORDER 610
+
+ADD FIELD "xpod__qad09" OF "xpod_det" AS integer 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "->>>,>>>,>>9"
+  INITIAL ?
+  POSITION 63
+  SQL-WIDTH 4
+  ORDER 620
+
+ADD FIELD "xpod__qad11" OF "xpod_det" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(8)"
+  INITIAL ?
+  POSITION 64
+  SQL-WIDTH 80
+  ORDER 630
+
+ADD FIELD "xpod__qad12" OF "xpod_det" AS logical 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "yes/no"
+  INITIAL ?
+  POSITION 65
+  SQL-WIDTH 1
+  ORDER 640
+
+ADD FIELD "xpod__qad14" OF "xpod_det" AS date 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 66
+  SQL-WIDTH 4
+  ORDER 650
+
+ADD FIELD "xpod_rel_nbr" OF "xpod_det" AS integer 
+  DESCRIPTION "Release number for this line item."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Rel"
+  POSITION 67
+  SQL-WIDTH 4
+  ORDER 660
+
+ADD FIELD "xpod_rel_qty" OF "xpod_det" AS decimal 
+  DESCRIPTION "Quantity released against this line item."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Released"
+  POSITION 68
+  SQL-WIDTH 38
+  COLUMN-LABEL "Rel Qty"
+  DECIMALS 10
+  ORDER 670
+
+ADD FIELD "xpod_reason" OF "xpod_det" AS character 
+  DESCRIPTION "A code indicating the reason for an RTV."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Reason"
+  POSITION 69
+  SQL-WIDTH 80
+  ORDER 680
+
+ADD FIELD "xpod_request" OF "xpod_det" AS character 
+  DESCRIPTION "The person who originated the purchase requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Requested By"
+  POSITION 70
+  SQL-WIDTH 80
+  COLUMN-LABEL "Req By"
+  ORDER 690
+
+ADD FIELD "xpod_approve" OF "xpod_det" AS character 
+  DESCRIPTION "The person who approved the purchase requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Approved By"
+  POSITION 71
+  SQL-WIDTH 80
+  COLUMN-LABEL "Approved"
+  ORDER 700
+
+ADD FIELD "xpod__chr01" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 72
+  SQL-WIDTH 80
+  ORDER 710
+
+ADD FIELD "xpod__chr02" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 73
+  SQL-WIDTH 80
+  ORDER 720
+
+ADD FIELD "xpod__chr03" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #3."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 74
+  SQL-WIDTH 80
+  ORDER 730
+
+ADD FIELD "xpod__chr04" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #4."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 75
+  SQL-WIDTH 80
+  ORDER 740
+
+ADD FIELD "xpod__chr05" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #5."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 76
+  SQL-WIDTH 80
+  ORDER 750
+
+ADD FIELD "xpod__chr06" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #6."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 77
+  SQL-WIDTH 80
+  ORDER 760
+
+ADD FIELD "xpod__chr07" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #7."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 78
+  SQL-WIDTH 80
+  ORDER 770
+
+ADD FIELD "xpod__chr08" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #8."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 79
+  SQL-WIDTH 80
+  ORDER 780
+
+ADD FIELD "xpod__chr09" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #9."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 80
+  SQL-WIDTH 80
+  ORDER 790
+
+ADD FIELD "xpod__chr10" OF "xpod_det" AS character 
+  DESCRIPTION "User custom character field #10."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 81
+  SQL-WIDTH 80
+  ORDER 800
+
+ADD FIELD "xpod__dte01" OF "xpod_det" AS date 
+  DESCRIPTION "User custom date field #1."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 82
+  SQL-WIDTH 4
+  ORDER 810
+
+ADD FIELD "xpod__dte02" OF "xpod_det" AS date 
+  DESCRIPTION "User custom date field #2."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 83
+  SQL-WIDTH 4
+  ORDER 820
+
+ADD FIELD "xpod__dec01" OF "xpod_det" AS decimal 
+  DESCRIPTION "User custom decimal field #1."
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 84
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 830
+
+ADD FIELD "xpod__dec02" OF "xpod_det" AS decimal 
+  DESCRIPTION "User custom decimal field #2."
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 85
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 840
+
+ADD FIELD "xpod__log01" OF "xpod_det" AS logical 
+  DESCRIPTION "User custom logical field #1."
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 86
+  SQL-WIDTH 1
+  ORDER 850
+
+ADD FIELD "xpod_tax_max" OF "xpod_det" AS decimal 
+  DESCRIPTION "The Max Taxable Value for a single item."
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Max Taxable Amount"
+  POSITION 87
+  SQL-WIDTH 38
+  COLUMN-LABEL "Max Amount"
+  DECIMALS 10
+  ORDER 870
+
+ADD FIELD "xpod_curr_rlse_id" OF "xpod_det" AS character 
+  DESCRIPTION "The active release identifier of the plan, ship or required schedule."
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Active Rlse ID"
+  POSITION 88
+  SQL-WIDTH 246
+  EXTENT 3
+  ORDER 1000
+
+ADD FIELD "xpod_sched" OF "xpod_det" AS logical 
+  DESCRIPTION "Indicates if Supplier Schedules apply to this line item."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Scheduled"
+  POSITION 89
+  SQL-WIDTH 1
+  ORDER 1010
+
+ADD FIELD "xpod_cum_qty" OF "xpod_det" AS decimal 
+  DESCRIPTION "The cumulative received as of the corresponding cumulative start date."
+  FORMAT "->>>>,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Cum Received"
+  POSITION 90
+  SQL-WIDTH 160
+  EXTENT 4
+  DECIMALS 10
+  ORDER 880
+
+ADD FIELD "xpod_cum_date" OF "xpod_det" AS date 
+  DESCRIPTION "The starting date of the corresponding cumulative shipped quantity."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Cum Start"
+  POSITION 91
+  SQL-WIDTH 72
+  EXTENT 4
+  ORDER 890
+
+ADD FIELD "xpod_contr_id" OF "xpod_det" AS character 
+  DESCRIPTION "The contract or other identifier for this line item."
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Contract ID"
+  POSITION 92
+  SQL-WIDTH 80
+  ORDER 900
+
+ADD FIELD "xpod_apr_code" OF "xpod_det" AS character 
+  DESCRIPTION "The approval code from the requisition on this PO line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Approval Code"
+  POSITION 93
+  SQL-WIDTH 80
+  COLUMN-LABEL "Apr Code"
+  ORDER 910
+
+ADD FIELD "xpod_taxc" OF "xpod_det" AS character 
+  DESCRIPTION "The VAT class if VAT, GST class if Canadian, tax exempt code if U.S."
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Tax Class"
+  POSITION 94
+  SQL-WIDTH 30
+  COLUMN-LABEL "TxC"
+  ORDER 920
+
+ADD FIELD "xpod_rma_type" OF "xpod_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "RMA Type"
+  POSITION 95
+  SQL-WIDTH 30
+  ORDER 860
+
+ADD FIELD "xpod_po_site" OF "xpod_det" AS character 
+  DESCRIPTION "The site that placed the PO for this line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "PO Site"
+  POSITION 96
+  SQL-WIDTH 80
+  ORDER 930
+
+ADD FIELD "xpod_po_db" OF "xpod_det" AS character 
+  DESCRIPTION "The database containing the PO for this line item."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "PO Database"
+  POSITION 97
+  SQL-WIDTH 80
+  COLUMN-LABEL "PO DB"
+  ORDER 940
+
+ADD FIELD "xpod_firm_weeks" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of weeks in the firm period (Supplier Schedules)."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Firm Weeks"
+  POSITION 98
+  SQL-WIDTH 4
+  ORDER 950
+
+ADD FIELD "xpod_mrp_pct" OF "xpod_det" AS decimal 
+  DESCRIPTION "The percentage of MRP requirements to be copied to supplier schedule."
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  LABEL "Supply Percent"
+  POSITION 99
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 960
+
+ADD FIELD "xpod_raw_weeks" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of weeks in which raw material purchases are authorized."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Raw Auth Weeks"
+  POSITION 100
+  SQL-WIDTH 4
+  ORDER 970
+
+ADD FIELD "xpod_fab_weeks" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of weeks in which fabrication is authorized."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Fab Auth Weeks"
+  POSITION 101
+  SQL-WIDTH 4
+  ORDER 980
+
+ADD FIELD "xpod_ship_weeks" OF "xpod_det" AS integer 
+  DESCRIPTION "The default amount of data to be displayed in the Shipping Schedule."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Ship Sched Weeks"
+  POSITION 102
+  SQL-WIDTH 4
+  ORDER 1070
+
+ADD FIELD "xpod_plan_weeks" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of weeks to follow days in the planning schedule."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plan Sched Weeks"
+  POSITION 103
+  SQL-WIDTH 4
+  ORDER 990
+
+ADD FIELD "xpod_translt_days" OF "xpod_det" AS decimal 
+  DESCRIPTION "The transportation leadtime in days."
+  FORMAT ">>9.99"
+  INITIAL "0"
+  LABEL "Transport Days"
+  POSITION 104
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1080
+
+ADD FIELD "xpod_fsm_type" OF "xpod_det" AS character 
+  DESCRIPTION "fsm type that generated this po"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "FSM Type"
+  POSITION 105
+  SQL-WIDTH 80
+  ORDER 1090
+
+ADD FIELD "xpod_sd_pat" OF "xpod_det" AS character 
+  DESCRIPTION "The shipment/delivery pattern code for this order line."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Ship/Dlvy Pattern"
+  POSITION 106
+  SQL-WIDTH 30
+  ORDER 1100
+
+ADD FIELD "xpod_sd_time" OF "xpod_det" AS character 
+  DESCRIPTION "The shipment/delivery time code for this order line."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Ship/Dlvy Time"
+  POSITION 107
+  SQL-WIDTH 30
+  ORDER 1110
+
+ADD FIELD "xpod_ord_mult" OF "xpod_det" AS decimal 
+  DESCRIPTION "The standard package quantity used to calculate shipment quantities."
+  FORMAT ">>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Std Pack Qty"
+  POSITION 108
+  SQL-WIDTH 38
+  COLUMN-LABEL "Mult"
+  DECIMALS 0
+  ORDER 1020
+
+ADD FIELD "xpod_pkg_code" OF "xpod_det" AS character 
+  DESCRIPTION "A code, item number or description of packaging requirements."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Pkg Code"
+  POSITION 109
+  SQL-WIDTH 30
+  ORDER 1030
+
+ADD FIELD "xpod_sch_mrp" OF "xpod_det" AS logical 
+  DESCRIPTION "Indicates if any schedule quantity changes were made that affect MRP."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Sched MRP Req"
+  POSITION 110
+  SQL-WIDTH 1
+  ORDER 1040
+
+ADD FIELD "xpod_sch_data" OF "xpod_det" AS character 
+  DESCRIPTION "Reserved for future schedule use."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Schedule Data"
+  POSITION 111
+  SQL-WIDTH 80
+  ORDER 1050
+
+ADD FIELD "xpod_rlse_nbr" OF "xpod_det" AS integer 
+  DESCRIPTION "A system maintained number to be assigned to the next release ID."
+  FORMAT "99999999"
+  INITIAL "0"
+  LABEL "Next Release ID"
+  POSITION 112
+  SQL-WIDTH 4
+  ORDER 1060
+
+ADD FIELD "xpod_plan_days" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of days to place in the planning schedule."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plan Sched Days"
+  POSITION 113
+  SQL-WIDTH 4
+  ORDER 1120
+
+ADD FIELD "xpod_plan_mths" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of months to follow weeks in the planning schedule."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plan Sched Months"
+  POSITION 114
+  SQL-WIDTH 4
+  ORDER 1130
+
+ADD FIELD "xpod_firm_days" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of weeks in the firm period (Supplier Schedules)."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Firm Days"
+  POSITION 115
+  SQL-WIDTH 4
+  ORDER 1140
+
+ADD FIELD "xpod_start_eff" OF "xpod_det" AS date 
+  DESCRIPTION "The starting effective date for this scheduled order line."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start Effective"
+  POSITION 116
+  SQL-WIDTH 72
+  EXTENT 4
+  ORDER 1150
+
+ADD FIELD "xpod_end_eff" OF "xpod_det" AS date 
+  DESCRIPTION "The ending effective date for this scheduled order line."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "End Effective"
+  POSITION 117
+  SQL-WIDTH 72
+  EXTENT 4
+  ORDER 1160
+
+ADD FIELD "xpod_raw_days" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of days in which raw material purchases are authorized."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Raw Auth Days"
+  POSITION 118
+  SQL-WIDTH 4
+  ORDER 1170
+
+ADD FIELD "xpod_fab_days" OF "xpod_det" AS integer 
+  DESCRIPTION "The number of days in which fabrication is authorized."
+  FORMAT ">,>>9"
+  INITIAL "0"
+  LABEL "Fab Auth Days"
+  POSITION 119
+  SQL-WIDTH 4
+  ORDER 1180
+
+ADD FIELD "xpod_tax_usage" OF "xpod_det" AS character 
+  DESCRIPTION "This is the Usage Code or Nature of Operation code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Tax Usage"
+  POSITION 120
+  SQL-WIDTH 80
+  COLUMN-LABEL "TaxUsage"
+  ORDER 1190
+
+ADD FIELD "xpod_tax_in" OF "xpod_det" AS logical 
+  DESCRIPTION "A flag indicating whether the price includes tax."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Tax In"
+  POSITION 121
+  SQL-WIDTH 1
+  ORDER 1200
+
+ADD FIELD "xpod_sched_chgd" OF "xpod_det" AS logical 
+  DESCRIPTION "Indicates if Supplier Schedules apply to this line item."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Scheduled"
+  POSITION 122
+  SQL-WIDTH 1
+  ORDER 1210
+
+ADD FIELD "xpod_pr_list" OF "xpod_det" AS character 
+  DESCRIPTION "A code indicating the price list to be used for this order."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Price List"
+  POSITION 123
+  SQL-WIDTH 80
+  COLUMN-LABEL "List"
+  ORDER 1220
+
+ADD FIELD "xpod_dock" OF "xpod_det" AS character 
+  DESCRIPTION "The dock address identifier."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Dock"
+  POSITION 124
+  SQL-WIDTH 80
+  ORDER 1230
+
+ADD FIELD "xpod_pastdue" OF "xpod_det" AS character 
+  DESCRIPTION "Indicates (1) customer uses past due quantities, (2) if not."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Past Due Logic"
+  POSITION 125
+  SQL-WIDTH 30
+  COLUMN-LABEL "C/R"
+  ORDER 1240
+
+ADD FIELD "xpod_fix_pr" OF "xpod_det" AS logical 
+  DESCRIPTION "Indicates whether prices are affected by automatic price updates."
+  FORMAT "yes/no"
+  INITIAL "y"
+  LABEL "Fixed Price"
+  POSITION 126
+  SQL-WIDTH 1
+  ORDER 1310
+
+ADD FIELD "xpod_drp_ref" OF "xpod_det" AS character 
+  DESCRIPTION "Reference number of the DRP Requisition/Inter-site Request"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "DRP Ref"
+  POSITION 127
+  SQL-WIDTH 80
+  ORDER 1250
+
+ADD FIELD "xpod_tax_env" OF "xpod_det" AS character 
+  DESCRIPTION "This is the Tax Environment Code."
+  FORMAT "x(16)"
+  INITIAL ""
+  LABEL "Tax Environment"
+  POSITION 128
+  SQL-WIDTH 30
+  COLUMN-LABEL "Tax Env"
+  ORDER 1260
+
+ADD FIELD "xpod_crt_int" OF "xpod_det" AS decimal 
+  DESCRIPTION "Credit Terms interest included in cost of this Purchase Order line."
+  FORMAT "->>>9.99"
+  INITIAL "0"
+  LABEL "Credit Terms Int"
+  POSITION 129
+  SQL-WIDTH 38
+  COLUMN-LABEL "CRT Int"
+  DECIMALS 10
+  ORDER 1270
+
+ADD FIELD "xpod_fr_list" OF "xpod_det" AS character 
+  DESCRIPTION "Name of the Freight List to be used for calculation of freight charges"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Freight List"
+  POSITION 130
+  SQL-WIDTH 80
+  COLUMN-LABEL "Frt List"
+  ORDER 1320
+
+ADD FIELD "xpod_translt_hrs" OF "xpod_det" AS decimal 
+  DESCRIPTION "The transportation leadtime in hours."
+  FORMAT ">>9.99"
+  INITIAL "0"
+  LABEL "Transport Hours"
+  POSITION 131
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1280
+
+ADD FIELD "xpod_sftylt_days" OF "xpod_det" AS decimal 
+  DESCRIPTION "The safety leadtime in days."
+  FORMAT ">>9.99"
+  INITIAL "0"
+  LABEL "Safety Days"
+  POSITION 132
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1290
+
+ADD FIELD "xpod_sftylt_hrs" OF "xpod_det" AS decimal 
+  DESCRIPTION "The safety leadtime in hours."
+  FORMAT ">>9.99"
+  INITIAL "0"
+  LABEL "Safety Hours"
+  POSITION 133
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1300
+
+ADD FIELD "xpod_lot_next" OF "xpod_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Next Lot/Serial"
+  POSITION 134
+  SQL-WIDTH 30
+  ORDER 1330
+
+ADD FIELD "xpod_lot_rcpt" OF "xpod_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Single Lot"
+  POSITION 135
+  SQL-WIDTH 1
+  ORDER 1340
+
+ADD FIELD "xpod_grade" OF "xpod_det" AS character 
+  DESCRIPTION "The user defined grade to be used in the location detail record."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Grade"
+  POSITION 136
+  SQL-WIDTH 30
+  ORDER 1350
+
+ADD FIELD "xpod_expire" OF "xpod_det" AS date 
+  DESCRIPTION "The expiration date to be used on the location detail record."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Expire Date"
+  POSITION 137
+  SQL-WIDTH 4
+  COLUMN-LABEL "Expire"
+  ORDER 1360
+
+ADD FIELD "xpod_rctstat" OF "xpod_det" AS character 
+  DESCRIPTION "The inventory status to be used for new location detail records"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Receipt Status"
+  POSITION 138
+  SQL-WIDTH 80
+  COLUMN-LABEL "Status"
+  ORDER 1370
+
+ADD FIELD "xpod_assay" OF "xpod_det" AS decimal 
+  DESCRIPTION "The percent solution to be used in the location detail record."
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  LABEL "Assay %"
+  POSITION 139
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1380
+
+ADD FIELD "xpod_rctstat_active" OF "xpod_det" AS logical 
+  DESCRIPTION "Flag indicating whether purchase order receipt status is active."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Active"
+  POSITION 140
+  SQL-WIDTH 1
+  COLUMN-LABEL "Act"
+  ORDER 1390
+
+ADD FIELD "xpod_pricing_dt" OF "xpod_det" AS date 
+  DESCRIPTION "Date for pricing effectivity."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Pricing Date"
+  POSITION 141
+  SQL-WIDTH 4
+  COLUMN-LABEL "Price Dt"
+  ORDER 1400
+
+ADD FIELD "xpod_pr_lst_tp" OF "xpod_det" AS integer 
+  DESCRIPTION "Determines what Price List Effective Date will be used for ERS voucher"
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "ERS Price List Option"
+  POSITION 142
+  SQL-WIDTH 4
+  COLUMN-LABEL "ERS!PLO"
+  ORDER 1410
+
+ADD FIELD "xpod_ers_opt" OF "xpod_det" AS integer 
+  DESCRIPTION "Determines whether ERS vouchers will be created for this line."
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "ERS Option"
+  POSITION 143
+  SQL-WIDTH 4
+  COLUMN-LABEL "ERS!Opt"
+  ORDER 1420
+
+ADD FIELD "xpod__qadd01" OF "xpod_det" AS decimal 
+  FORMAT "->>>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "QAD Field"
+  POSITION 144
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1430
+
+ADD FIELD "xpod__qadd02" OF "xpod_det" AS decimal 
+  FORMAT "->>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "QAD Field"
+  POSITION 145
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1440
+
+ADD FIELD "xpod__qadd03" OF "xpod_det" AS decimal 
+  FORMAT "->>>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "QAD Field"
+  POSITION 146
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 1450
+
+ADD FIELD "xpod_sod_line" OF "xpod_det" AS integer 
+  DESCRIPTION "Primary SO line number associated with this PO line."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Primary SO Line"
+  POSITION 147
+  SQL-WIDTH 4
+  COLUMN-LABEL "Pr SO Ln"
+  ORDER 1460
+  MANDATORY
+
+ADD FIELD "xpod_so_status" OF "xpod_det" AS character 
+  DESCRIPTION "Status of associated supplier SO."
+  FORMAT "x"
+  INITIAL ""
+  LABEL "Secondary SO Status"
+  POSITION 148
+  SQL-WIDTH 30
+  ORDER 1470
+  MANDATORY
+
+ADD FIELD "xpod_sub_ship_date" OF "xpod_det" AS date 
+  DESCRIPTION "The date the material was shipped to the subcontractor.  Used for subcontract Purchase Orders."
+  FORMAT "99/99/99"
+  INITIAL "?"
+  LABEL "Subcontract Ship"
+  POSITION 149
+  SQL-WIDTH 4
+  ORDER 1480
+
+ADD FIELD "xpod_sub_type" OF "xpod_det" AS character 
+  DESCRIPTION "The type of operation performed by the subcontractor.  This is a user-defined field that is validated by generalized codes."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Subcontract Type"
+  POSITION 150
+  SQL-WIDTH 80
+  ORDER 1490
+
+ADD FIELD "xpod_sub" OF "xpod_det" AS character 
+  DESCRIPTION "The general ledger sub-account to be used for PO receipts."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Pur Sub-Acct"
+  POSITION 151
+  SQL-WIDTH 80
+  COLUMN-LABEL "Sub-Acct"
+  ORDER 1500
+
+ADD FIELD "xpod_wip_lotser" OF "xpod_det" AS character 
+  DESCRIPTION "The WIP lot/serial to use as the default for receiving/printing."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Lot/Serial"
+  POSITION 152
+  SQL-WIDTH 30
+  ORDER 1510
+
+ADD FIELD "xpod_pjs_line" OF "xpod_det" AS integer 
+  DESCRIPTION "Internal project line number"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Project Line"
+  POSITION 153
+  SQL-WIDTH 4
+  ORDER 1520
+  MANDATORY
+
+ADD FIELD "xpod_consignment" OF "xpod_det" AS logical 
+  DESCRIPTION "Indicates that the Purchase contract is for consigned material. The value is defaulted to the Purchase Order Line."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Consignment"
+  POSITION 154
+  SQL-WIDTH 1
+  ORDER 1530
+  MANDATORY
+
+ADD FIELD "xpod_max_aging_days" OF "xpod_det" AS integer 
+  DESCRIPTION "The maximum number of days consigned material is allowed to age at your facility.  Zero indicates the material can age indefinitely."
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Maximum Aging Days"
+  POSITION 155
+  SQL-WIDTH 4
+  COLUMN-LABEL "Maximum!Aging Days"
+  ORDER 1540
+  MANDATORY
+
+ADD FIELD "xpod_multi_due_dates" OF "xpod_det" AS logical 
+  DESCRIPTION "A flag indicating whether there are multiple due dates for this line."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Multi Due Dates"
+  POSITION 156
+  SQL-WIDTH 1
+  COLUMN-LABEL "Multi!Due!Dates"
+  ORDER 1550
+  MANDATORY
+
+ADD INDEX "xpod_nbrln" ON "xpod_det" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xpod_nbr" ASCENDING 
+  INDEX-FIELD "xpod_line" ASCENDING 
+
+ADD INDEX "xpod_fsm_type" ON "xpod_det" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xpod_fsm_type" ASCENDING 
+  INDEX-FIELD "xpod_nbr" ASCENDING 
+  INDEX-FIELD "xpod_line" ASCENDING 
+
+ADD INDEX "xpod_part" ON "xpod_det" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  INDEX-FIELD "xpod_part" ASCENDING 
+  INDEX-FIELD "xpod_nbr" ASCENDING 
+  INDEX-FIELD "xpod_line" ASCENDING 
+
+ADD INDEX "xpod_partdue" ON "xpod_det" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xpod_part" ASCENDING 
+  INDEX-FIELD "xpod_due_date" ASCENDING 
+
+ADD INDEX "xpod_project" ON "xpod_det" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xpod_project" ASCENDING 
+  INDEX-FIELD "xpod_pjs_line" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000037210

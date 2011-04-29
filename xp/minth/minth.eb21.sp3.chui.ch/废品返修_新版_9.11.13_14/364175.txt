@@ -1,0 +1,200 @@
+@@batchload gplbldmt.p
+"date" "xxscraprp001.p"
+"scrap-date"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxscraprp001.p"
+"scrap-date1"
+@@end
+@@batchload gplbldmt.p
+"line" "xxscraprp001.p"
+"scrap-line"
+@@end
+@@batchload gplbldmt.p
+"line1" "xxscraprp001.p"
+"scrap-line1"
+@@end
+@@batchload gplbldmt.p
+"part" "xxscraprp001.p"
+"scrap-part"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxscraprp001.p"
+"scrap-part1"
+@@end
+@@batchload gplbldmt.p
+"rsncode" "xxscraprp001.p"
+"scrap-rsncode"
+@@end
+@@batchload gplbldmt.p
+"rsncode1" "xxscraprp001.p"
+"scrap-rsncode1"
+@@end
+@@batchload gplbldmt.p
+"v_time" "xxscraprp001.p"
+"scrap-time"
+@@end
+@@batchload gplbldmt.p
+"v_time1" "xxscraprp001.p"
+"scrap-time1"
+@@end
+@@batchload gplbldmt.p
+"date" "xxscraprp002.p"
+"scrap-date"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxscraprp002.p"
+"scrap-date1"
+@@end
+@@batchload gplbldmt.p
+"line" "xxscraprp002.p"
+"scrap-line"
+@@end
+@@batchload gplbldmt.p
+"line1" "xxscraprp002.p"
+"scrap-line1"
+@@end
+@@batchload gplbldmt.p
+"part" "xxscraprp002.p"
+"scrap-part"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxscraprp002.p"
+"scrap-part1"
+@@end
+@@batchload gplbldmt.p
+"rsncode" "xxscraprp002.p"
+"scrap-rsncode"
+@@end
+@@batchload gplbldmt.p
+"rsncode1" "xxscraprp002.p"
+"scrap-rsncode1"
+@@end
+@@batchload gplbldmt.p
+"v_time" "xxscraprp002.p"
+"scrap-time"
+@@end
+@@batchload gplbldmt.p
+"v_time1" "xxscraprp002.p"
+"scrap-time1"
+@@end
+@@batchload gplbldmt.p
+"date" "xxscraprp003.p"
+"scrap-date"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxscraprp003.p"
+"scrap-date1"
+@@end
+@@batchload gplbldmt.p
+"line" "xxscraprp003.p"
+"scrap-line"
+@@end
+@@batchload gplbldmt.p
+"line1" "xxscraprp003.p"
+"scrap-line1"
+@@end
+@@batchload gplbldmt.p
+"part" "xxscraprp003.p"
+"scrap-part"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxscraprp003.p"
+"scrap-part1"
+@@end
+@@batchload gplbldmt.p
+"rsncode" "xxscraprp003.p"
+"scrap-rsncode"
+@@end
+@@batchload gplbldmt.p
+"rsncode1" "xxscraprp003.p"
+"scrap-rsncode1"
+@@end
+@@batchload gplbldmt.p
+"v_time" "xxscraprp003.p"
+"scrap-time"
+@@end
+@@batchload gplbldmt.p
+"v_time1" "xxscraprp003.p"
+"scrap-time1"
+@@end
+@@batchload gplbldmt.p
+"date" "xxscrapmt001.p"
+"scrap-date"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxscrapmt001.p"
+"scrap-date1"
+@@end
+@@batchload gplbldmt.p
+"line" "xxscrapmt001.p"
+"scrap-line"
+@@end
+@@batchload gplbldmt.p
+"line1" "xxscrapmt001.p"
+"scrap-line1"
+@@end
+@@batchload gplbldmt.p
+"part" "xxscrapmt001.p"
+"scrap-part"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxscrapmt001.p"
+"scrap-part1"
+@@end
+@@batchload gplbldmt.p
+"rsncode" "xxscrapmt001.p"
+"scrap-rsncode"
+@@end
+@@batchload gplbldmt.p
+"rsncode1" "xxscrapmt001.p"
+"scrap-rsncode1"
+@@end
+@@batchload gplbldmt.p
+"v_time" "xxscrapmt001.p"
+"scrap-time"
+@@end
+@@batchload gplbldmt.p
+"v_time1" "xxscrapmt001.p"
+"scrap-time1"
+@@end
+@@batchload gplbldmt.p
+"date" "xxscrapmt002.p"
+"scrap-date"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxscrapmt002.p"
+"scrap-date1"
+@@end
+@@batchload gplbldmt.p
+"line" "xxscrapmt002.p"
+"scrap-line"
+@@end
+@@batchload gplbldmt.p
+"line1" "xxscrapmt002.p"
+"scrap-line1"
+@@end
+@@batchload gplbldmt.p
+"part" "xxscrapmt002.p"
+"scrap-part"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxscrapmt002.p"
+"scrap-part1"
+@@end
+@@batchload gplbldmt.p
+"rsncode" "xxscrapmt002.p"
+"scrap-rsncode"
+@@end
+@@batchload gplbldmt.p
+"rsncode1" "xxscrapmt002.p"
+"scrap-rsncode1"
+@@end
+@@batchload gplbldmt.p
+"v_time" "xxscrapmt002.p"
+"scrap-time"
+@@end
+@@batchload gplbldmt.p
+"v_time1" "xxscrapmt002.p"
+"scrap-time1"
+@@end

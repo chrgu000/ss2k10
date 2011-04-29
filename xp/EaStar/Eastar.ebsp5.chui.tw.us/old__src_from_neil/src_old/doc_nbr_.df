@@ -1,0 +1,115 @@
+ADD TABLE "doc_nbr_ctl"
+  AREA "TRANSACTION"
+  DESCRIPTION "Document Number Control"
+  FROZEN
+  DUMP-NAME "doc_nbr_"
+
+ADD FIELD "doc_sn_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using SN Number(shiping note)"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "SN Last Used"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "doc_sa_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using SA Number(shipping Advise)"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "SA Last Used"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "doc_pi_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using PI Number(Proforma Invoice)"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "PI Last Used"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "doc_ci_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using CI Number(Consignment Invoice)"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "CI Last Used"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "doc_iv_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using IV Number(Normal + Immediate Invoice)"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "IV Last Used"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "doc_1_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using 1 Number"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "last used 1"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "doc_2_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using 2 Number"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "last used 2"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "doc_3_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using 3 Number"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "last used 3"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "doc_4_last" OF "doc_nbr_ctl" AS integer 
+  DESCRIPTION "Using 4 Number"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "last used 4"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "doc_type" OF "doc_nbr_ctl" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "doc_year" OF "doc_nbr_ctl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Year"
+  POSITION 12
+  SQL-WIDTH 8
+  ORDER 110
+
+ADD INDEX "doc_nbr" ON "doc_nbr_ctl" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "doc_type" ASCENDING 
+  INDEX-FIELD "doc_year" ASCENDING 
+  INDEX-FIELD "doc_sn_last" ASCENDING 
+
+.
+PSC
+cpstream=BIG-5
+.
+0000002291

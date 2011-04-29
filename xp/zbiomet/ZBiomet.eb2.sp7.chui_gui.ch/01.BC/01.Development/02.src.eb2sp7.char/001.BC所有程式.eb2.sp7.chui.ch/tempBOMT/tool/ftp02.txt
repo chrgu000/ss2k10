@@ -1,0 +1,10 @@
+open 10.52.20.13
+public
+public
+prompt off
+cd /mfgeb2/bc_test/xs
+lcd C:\tempBOMT\xrc
+bin
+mput *.*
+bye
+

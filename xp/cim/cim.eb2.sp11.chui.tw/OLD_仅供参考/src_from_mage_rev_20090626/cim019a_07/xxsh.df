@@ -1,0 +1,505 @@
+ADD TABLE "xxshd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxshd_de"
+
+ADD FIELD "xxshd_so_nbr" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "xxshd_so_line" OF "xxshd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxshd_so_part" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxshd_so_qty" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 5
+  ORDER 40
+
+ADD FIELD "xxshd_so_price" OF "xxshd_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 5
+  ORDER 50
+
+ADD FIELD "xxshd_ser_no" OF "xxshd_det" AS character 
+  FORMAT "X(36)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxshd_sort" OF "xxshd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxshd_chr" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 160
+
+ADD FIELD "xxshd_inv_no" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxshd_int" OF "xxshd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 110
+  EXTENT 5
+  ORDER 180
+
+ADD FIELD "xxshd_dec" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 150
+  EXTENT 5
+  DECIMALS 5
+  ORDER 190
+
+ADD FIELD "xxshd_log" OF "xxshd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 20
+  SQL-WIDTH 40
+  EXTENT 5
+  ORDER 200
+
+ADD FIELD "xxshd_seat_part" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 22
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xxshd_size1" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xxshd_size2" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xxshd_tiji" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxshd_pallet_carton" OF "xxshd_det" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 40
+  ORDER 260
+
+ADD FIELD "xxshd_cno" OF "xxshd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xxshd_ser_no2" OF "xxshd_det" AS character 
+  FORMAT "x(36)"
+  INITIAL ""
+  POSITION 32
+  SQL-WIDTH 72
+  ORDER 380
+
+ADD FIELD "xxshd_ser_no3" OF "xxshd_det" AS character 
+  FORMAT "x(36)"
+  INITIAL ""
+  POSITION 33
+  SQL-WIDTH 72
+  ORDER 390
+
+ADD FIELD "xxshd_part_gross_weight" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 34
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxshd_part_net_weight" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 35
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 310
+
+ADD FIELD "xxshd_seat_net_weight" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 36
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 320
+
+ADD FIELD "xxshd_seat_gross_weight" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 37
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 330
+
+ADD FIELD "xxshd_seat_tiji" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 38
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 340
+
+ADD FIELD "xxshd_output_max" OF "xxshd_det" AS decimal 
+  FORMAT "->,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 39
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 350
+
+ADD FIELD "xxshd_carton_no" OF "xxshd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 40
+  SQL-WIDTH 4
+  ORDER 360
+
+ADD FIELD "xxshd_pallet_no" OF "xxshd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 41
+  SQL-WIDTH 4
+  ORDER 370
+
+ADD FIELD "xxshd_carton" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 42
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxshd_pallet" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 43
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxshd_blance_qty" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 44
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxshd_yiyin_date" OF "xxshd_det" AS character 
+  FORMAT "x(36)"
+  INITIAL ""
+  POSITION 45
+  SQL-WIDTH 72
+  ORDER 400
+
+ADD FIELD "xxshd_seat_carton" OF "xxshd_det" AS decimal 
+  FORMAT "->>,>>9"
+  INITIAL "0"
+  POSITION 46
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 410
+
+ADD INDEX "xxshd_inv_no_sort" ON "xxshd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxshd_inv_no" ASCENDING 
+  INDEX-FIELD "xxshd_sort" ASCENDING 
+
+ADD INDEX "xxshd_inv_so" ON "xxshd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshd_inv_no" ASCENDING 
+  INDEX-FIELD "xxshd_so_nbr" ASCENDING 
+  INDEX-FIELD "xxshd_so_line" ASCENDING 
+
+ADD INDEX "xxshd_part_inv" ON "xxshd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshd_so_part" ASCENDING 
+  INDEX-FIELD "xxshd_inv_no" ASCENDING 
+
+ADD INDEX "xxshd_sonbr_line" ON "xxshd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshd_so_nbr" ASCENDING 
+  INDEX-FIELD "xxshd_so_line" ASCENDING 
+
+ADD TABLE "xxshm_mstr"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxshm_ms"
+
+ADD FIELD "xxshm_refno" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxshm_terms" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxshm_FC" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxshm_orderno" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxshm_forwarder" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxshm_method" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxshm_from" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxshm_billto" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxshm_shipto" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxshm_port" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxshm_final" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxshm_qitagang" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxshm_name_ch" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxshm_chr" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 108
+  EXTENT 6
+  ORDER 150
+
+ADD FIELD "xxshm_int" OF "xxshm_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 110
+  EXTENT 5
+  ORDER 160
+
+ADD FIELD "xxshm_log" OF "xxshm_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 18
+  SQL-WIDTH 40
+  EXTENT 5
+  ORDER 170
+
+ADD FIELD "xxshm_dec" OF "xxshm_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 150
+  EXTENT 5
+  DECIMALS 5
+  ORDER 180
+
+ADD FIELD "xxshm_inv_no" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 5
+
+ADD FIELD "xxshm_printer_flag" OF "xxshm_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 21
+  SQL-WIDTH 1
+  ORDER 190
+
+ADD FIELD "xxshm_date" OF "xxshm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL "today"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxshm_vessels" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xxshm_container" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xxshm_seal" OF "xxshm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xxshm_notes" OF "xxshm_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 80
+  ORDER 240
+
+ADD FIELD "xxshm_cust" OF "xxshm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "xxshm_notes3" OF "xxshm_mstr" AS character 
+  FORMAT "x(33)"
+  INITIAL ""
+  POSITION 28
+  SQL-WIDTH 66
+  ORDER 270
+
+ADD FIELD "xxshm_notes2" OF "xxshm_mstr" AS character 
+  FORMAT "x(33)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 66
+  ORDER 260
+
+ADD INDEX "xxshm_inv" ON "xxshm_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxshm_inv_no" ASCENDING 
+
+ADD INDEX "xxshm_bill_inv" ON "xxshm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshm_billto" ASCENDING 
+  INDEX-FIELD "xxshm_inv_no" ASCENDING 
+
+ADD INDEX "xxshm_date_inv" ON "xxshm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshm_date" ASCENDING 
+  INDEX-FIELD "xxshm_inv_no" ASCENDING 
+
+ADD INDEX "xxshm_inv_no" ON "xxshm_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxshm_inv_no" ASCENDING 
+
+ADD INDEX "xxshm_ship_inv" ON "xxshm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxshm_shipto" ASCENDING 
+  INDEX-FIELD "xxshm_inv_no" ASCENDING 
+
+.
+PSC
+cpstream=BIG-5
+.
+0000009459

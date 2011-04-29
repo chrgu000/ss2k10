@@ -1,0 +1,88 @@
+@@batchload gplbldmt.p
+"v_start" "xxprmt001.p"
+"v_start"
+@@end
+@@batchload gplbldmt.p
+"v_expire" "xxprmt001.p"
+"v_expire"
+@@end
+@@batchload gplbldmt.p
+"cmts[1]" "xxprmt001.p"
+"cmts[1]"
+@@end
+@@batchload gplbldmt.p
+"cmts[2]" "xxprmt001.p"
+"cmts[2]"
+@@end
+@@batchload gplbldmt.p
+"cmts[3]" "xxprmt001.p"
+"cmts[3]"
+@@end
+@@batchload gplbldmt.p
+"cmts[4]" "xxprmt001.p"
+"cmts[4]"
+@@end
+@@batchload gplbldmt.p
+"cmts[5]" "xxprmt001.p"
+"cmts[5]"
+@@end
+@@batchload gplbldmt.p
+"cmts[6]" "xxprmt001.p"
+"cmts[6]"
+@@end
+@@batchload gplbldmt.p
+"cmts[7]" "xxprmt001.p"
+"cmts[7]"
+@@end
+@@batchload gplbldmt.p
+"cmts[8]" "xxprmt001.p"
+"cmts[8]"
+@@end
+@@batchload gplbldmt.p
+"cmts[9]" "xxprmt001.p"
+"cmts[9]"
+@@end
+@@batchload gplbldmt.p
+"cmts[10]" "xxprmt001.p"
+"cmts[10]"
+@@end
+@@batchload gplbldmt.p
+"v_qty" "xxprmt001.p"
+"v_qty"
+@@end
+@@batchload gplbldmt.p
+"v_vend" "xxprmt001.p"
+"v_vend"
+@@end
+@@batchload gplbldmt.p
+"v_pct" "xxprmt001.p"
+"v_pct"
+@@end
+@@batchload gplbldmt.p
+"t1_nbr" "xxmrprap.p"
+"t1_nbr"
+@@end
+@@batchload gplbldmt.p
+"t1_vend" "xxmrprap.p"
+"t1_vend"
+@@end
+@@batchload gplbldmt.p
+"t1_qty" "xxmrprap.p"
+"t1_qty"
+@@end
+@@batchload gplbldmt.p
+"v_i" "xxmrprap.p"
+"v_i"
+@@end
+@@batchload gplbldmt.p
+"t1_part" "xxmrprap.p"
+"t1_part"
+@@end
+@@batchload gplbldmt.p
+"t1_rel_date" "xxmrprap.p"
+"t1_rel_date"
+@@end
+@@batchload gplbldmt.p
+"t1_due_date" "xxmrprap.p"
+"t1_due_date"
+@@end

@@ -1,0 +1,51 @@
+ADD TABLE "xovm_mstr"
+  AREA "TRANSACTION"
+  LABEL "xovm_mstr"
+  DUMP-NAME "xovm_mstr"
+
+ADD FIELD "xovm_nbr" OF "xovm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "site"
+
+ADD FIELD "xovm_status" OF "xovm_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "S"
+
+ADD FIELD "xovm_site" OF "xovm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+
+ADD FIELD "xovm_mod_user" OF "xovm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "mod_user"
+
+ADD FIELD "xovm_mod_date" OF "xovm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "mod_date"
+
+ADD FIELD "xovm_app_user" OF "xovm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "app_user"
+
+ADD FIELD "xovm_app_date" OF "xovm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "app_date"
+
+
+ADD INDEX "xovm_nbr" ON "xovm_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xovm_nbr" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.

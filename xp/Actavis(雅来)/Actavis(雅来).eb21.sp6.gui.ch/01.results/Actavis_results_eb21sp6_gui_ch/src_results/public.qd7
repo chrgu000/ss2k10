@@ -1,0 +1,26 @@
+/*
+config= directory
+version= 2.1A
+query[2]= "" "AP voucher" "qadadm,qaddb,qadhelp"
+query[9]= "" "CAS帐户查询" "qadadm,qaddb,qadhelp"
+query[23]= "" "Fixed Assets owner report" "qadadm,qaddb,qadhelp"
+query[1]= "" "voucher print" "qadadm,qaddb,qadhelp"
+query[8]= "" "供应商余额汇总查询" "qadadm,qaddb,qadhelp"
+query[18]= "" "回款查询" "qadadm,qaddb,qadhelp"
+query[19]= "" "价格单查询" "qadadm,qaddb,qadhelp"
+query[4]= "" "未过账总帐事务查询-按科目汇总" "qadadm,qaddb,qadhelp"
+query[21]= "" "项目会计事务查询" "qadadm,qaddb,qadhelp"
+query[20]= "" "销售订单状态查询" "qadadm,qaddb,qadhelp"
+query[17]= "" "销售发票历史查询" "qadadm,qaddb,qadhelp"
+query[22]= "" "已过账会计凭证查询" "qadadm,qaddb,qadhelp"
+query[6]= "" "中国格式凭证打印" "qadadm,qaddb,qadhelp"
+query[11]= "" "中国格式凭证打印-按批处理号" "qadadm,qaddb,qadhelp"
+query[13]= "" "中国格式凭证打印-按凭证/发票号" "qadadm,qaddb,qadhelp"
+query[10]= "" "中国格式凭证打印-按用户和日期" "qadadm,qaddb,qadhelp"
+query[12]= "" "中国格式凭证打印-按总帐参考号" "qadadm,qaddb,qadhelp"
+query[16]= "" "中国格式凭证打印-按总帐参考号(显示参考号)" "qadadm,qaddb,qadhelp"
+query[15]= "" "中国格式凭证打印-按总帐参考号(针式打印)" "qadadm,qaddb,qadhelp"
+query[7]= "" "中国格式凭证打印-借贷同列" "qadadm,qaddb,qadhelp"
+query[5]= "" "总帐事务查询-test" "qadadm,qaddb,qadhelp"
+query[3]= "" "总帐事务查询-销售发票事务" "qadadm,qaddb,qadhelp"
+*/

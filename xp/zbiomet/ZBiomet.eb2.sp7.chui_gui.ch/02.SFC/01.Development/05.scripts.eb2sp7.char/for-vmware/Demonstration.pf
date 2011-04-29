@@ -1,0 +1,5 @@
+-db  mfgdemosp7 -ld qaddb -H 192.168.58.91 -S 62700 -trig triggers
+-db  hlpdemosp7 -ld qadhelp -H 192.168.58.91 -S 62701
+-db  admdemosp7 -ld qadadm -H 192.168.58.91 -S 62702 -trig triggers
+-db  xxcust     -ld qadadd -H 192.168.58.91 -S 62703
+-db  xxsfctest  -ld sfc    -H 192.168.58.91 -S 62704

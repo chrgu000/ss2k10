@@ -1,0 +1,13 @@
+
+xxqmrp099.p 进销存,无限制
+xxqmrp098.p 海关进销存_old
+xxqmrp094.p_old 成品/材料库存报表  作废
+xxqmrp097.p 生产标准与实际量差報告 ,无成本等原因,cancel 
+xxqmrp096.p 良品
+xxqmrp095.p 不良品
+
+xxqmrp094.p 工厂库存汇总表
+xxqmrp093.p 生产线WIP库存报表
+xxqmrp092.p 成品库存报表
+xxqmrp091.p 材料库存报表
+xxqmrp090.p 国内供应商转厂明细

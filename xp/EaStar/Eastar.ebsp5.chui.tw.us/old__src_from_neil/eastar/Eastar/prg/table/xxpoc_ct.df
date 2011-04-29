@@ -1,0 +1,41 @@
+ADD TABLE "xxpoc_ctrl"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxpoc_ct"
+
+ADD FIELD "xxpoc_po_pre2" OF "xxpoc_ctrl" AS character 
+  FORMAT "x(3)"
+  INITIAL """TM"""
+  LABEL "[2]"
+  POSITION 2
+  SQL-WIDTH 6
+  COLUMN-LABEL "[2]"
+  ORDER 10
+
+ADD FIELD "xxpoc_po_pre3" OF "xxpoc_ctrl" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "[3]"
+  POSITION 3
+  SQL-WIDTH 6
+  COLUMN-LABEL "[3]"
+  ORDER 20
+
+ADD FIELD "xxpoc_po_nbr2" OF "xxpoc_ctrl" AS integer 
+  FORMAT "99999999"
+  INITIAL "0"
+  LABEL "[2]"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "[2]"
+  ORDER 30
+
+ADD FIELD "xxpoc_po_nbr3" OF "xxpoc_ctrl" AS integer 
+  FORMAT "99999999"
+  INITIAL "0"
+  LABEL "[3]"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "[3]"
+  ORDER 40
+
+.

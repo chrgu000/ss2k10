@@ -1,0 +1,318 @@
+@@batchload glcrfmt.p
+"030101"
+"经营活动产生的现金流入"
+1101
+"销售商品、劳务收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030101"
+"经营活动产生的现金流入"
+1102
+"收到的租金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030101"
+"经营活动产生的现金流入"
+1103
+"收到的销项税额和退回的款" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030101"
+"经营活动产生的现金流入"
+1104
+"收到的其它税费返还" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030101"
+"经营活动产生的现金流入"
+1105
+"收到的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1201
+"购买商品劳务支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1202
+"经营租赁所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1203
+"支付给职工的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1204
+"支付的增值税款" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1205
+"支付的所得税款" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1206
+"支付的其它税费" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030102"
+"经营活动产生的现金流出"
+1207
+"支付的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030201"
+"投资活动产生的现金流入"
+2101
+"收回投资所收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030201"
+"投资活动产生的现金流入"
+2102
+"分得股利所收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030201"
+"投资活动产生的现金流入"
+2103
+"取得利息收入所收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030201"
+"投资活动产生的现金流入"
+2104
+"处置长期资产收到现金净额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030201"
+"投资活动产生的现金流入"
+2105
+"收到的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030202"
+"投资活动产生的现金流出"
+2201
+"购建长期投资所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030202"
+"投资活动产生的现金流出"
+2202
+"权益性投资所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030202"
+"投资活动产生的现金流出"
+2203
+"债权性投资所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030202"
+"投资活动产生的现金流出"
+2204
+"支付的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030301"
+"筹资活动产生的现金流入"
+3101
+"吸收权益性投资所收到现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030301"
+"筹资活动产生的现金流入"
+3102
+"发行债券所收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030301"
+"筹资活动产生的现金流入"
+3103
+"借款所收到的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030301"
+"筹资活动产生的现金流入"
+3104
+"收到的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3201
+"偿还债务所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3202
+"发生筹资费用所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3203
+"分配股利所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3204
+"偿付利息所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3205
+"融资租赁所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3206
+"减少注册资本所支付的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"030302"
+"筹资活动产生的现金流出"
+3207
+"支付的其它有关的现金" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0304"
+"汇率变动对现金的影响"
+4301
+"汇率变动产生现金净额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5203
+"加：计提的资产损失准备" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5204
+"固定资产折旧" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5205
+"无形资产摊销" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5206
+"长期待摊费用摊销" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5207
+"待摊费用减少（减：增加）" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5208
+"预提费用增加（减：减少）" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5209
+"处置长期资产的损失" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5210
+"固定资产报废损失" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5211
+"财务费用" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5212
+"投资损失（减：收益）" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5213
+"递延税款贷项（减：借项）" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5214
+"存货的减少（减：增加）" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5215
+"经营性应收项目的减少" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"0311"
+"调节净利润"
+5216
+"经营性应付项目的增加" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031100"
+"净利润"
+5201
+"净利润" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031301"
+"现金及现金等价物期初余额"
+5301
+"现金的期初余额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031301"
+"现金及现金等价物期初余额"
+5302
+"现金等价物的期初余额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031301"
+"现金及现金等价物期初余额"
+5303
+"现金等价物的期初余额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031302"
+"现金及现金等价物期末余额"
+5311
+"现金的期初末余额" 0 yes no no no yes no
+@@end
+@@batchload glcrfmt.p
+"031302"
+"现金及现金等价物期末余额"
+5312
+"现金等价物的期末余额" 0 yes no no no yes no
+@@end

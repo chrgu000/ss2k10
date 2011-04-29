@@ -1,0 +1,519 @@
+05/23/08 07:34:27       PROGRESS Report
+Database: qaddb (PROGRESS)        Table: ALL
+
+Table: xxcbkc_ctrl
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcbkc_domain               char       i   x(8)
+xxcbkc_dept                 char           x(4)
+xxcbkc_trade                char           x(4)
+xxcbkc_name                 char           x(30)
+xxcbkc_tax_mtd              char           x(4)
+xxcbkc_ship_via             char           x(4)
+xxcbkc_ship_tool            char           x(20)
+xxcbkc_loc                  char           x(5)
+xxcbkc_imp                  char           x(4)
+xxcbkc_fob                  char           x(12)
+xxcbkc_frm_loc              char           x(4)
+xxcbkc_box_type             char           x(8)
+xxcbkc_tax_ratio            deci-10        >>>.99%
+xxcbkc_to_loc               char           x(4)
+xxcbkc_exp                  char           x(4)
+xxcbkc_im_pre               char           x(4)
+xxcbkc_im_seq               inte           >>>>>9
+xxcbkc_prh_pre              char           x(4)
+xxcbkc_prh_seq              inte           >>>>>9
+xxcbkc_sph_pre              char           x(4)
+xxcbkc_sph_seq              inte           >>>>>9
+xxcbkc_ex_pre               char           x(4)
+xxcbkc_ex_seq               inte           >>>>>9
+xxcbkc_comp                 char           x(10)
+xxcbkc_addr                 char           x(30)
+xxcbkc_user1                char           x(20)
+xxcbkc_user2                char           x(20)
+xxcbkc_tel1                 char           x(15)
+xxcbkc_tel2                 char           x(15)
+xxcbkc_tol_in               deci-10        ->>9.99%
+xxcbkc_tol_out              deci-10        ->>9.99%
+xxcbkc_bl_nbr               char           x(12)
+Table: xxcbkd_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcbkd_domain               char       i   x(8)
+xxcbkd_bk_nbr               char       i   x(12)
+xxcbkd_bk_ln                inte       i   >>9
+xxcbkd_bk_type              char       i   x(2)
+xxcbkd_cu_part              char           x(12)
+xxcbkd_ctry_code            char           x(4)
+xxcbkd_qty_ord              deci-10        ->>,>>>,>>9.9<<
+xxcbkd_qty_tsf_in           deci-10        ->>,>>>,>>9.9<<
+xxcbkd_um                   char           x(2)
+xxcbkd_price                deci-10        ->>>>,>>9.9<<<<
+xxcbkd_tax                  logi           yes/no
+xxcbkd_qty_tsf_out          deci-10        ->>,>>>,>>9.9<<
+xxcbkd_qty_use              deci-10        ->>,>>>,>>9.9<<
+xxcbkd_qty_deduct           deci-10        ->>,>>>,>>9.9<<
+xxcbkd_stat                 char           x(1)
+xxcbkd_list_nbr             char           x(8)
+xxcbkd_cu_ln                inte       i   >>>>>9
+xxcbkd_ucfld                char[10]       x(8)
+xxcbkd_udfld                deci-10[10     ->>,>>9.99
+Table: xxcbkps_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcbkps_domain              char       i   x(8)
+xxcbkps_bk_nbr              char       i   x(12)
+xxcbkps_cu_par              char           x(10)
+xxcbkps_cu_comp             char           x(10)
+xxcbkps_cu_ln_par           inte       i   >>>>>9
+xxcbkps_cu_ln_comp          inte       i   >>>>>9
+xxcbkps_ln_par              inte       i   >>9
+xxcbkps_ln_comp             inte       i   >>9
+xxcbkps_qty_per             deci-10        >>,>>9.999999
+xxcbkps_scrap               deci-10        >>,>>9.9<
+xxcbkps_ucfld               char[10]       x(8)
+xxcbkps_udfld               deci-10[10     ->>,>>9.99
+Table: xxcbkt_hist
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcbkt_domain               char       i   x(8)
+xxcbkt_trnbr                char       i   x(8)
+xxcbkt_date                 date           99/99/99
+xxcbkt_effdate              date           99/99/99
+xxcbkt_in_nbr               char           x(8)
+xxcbkt_out_nbr              char           x(8)
+xxcbkt_in_ln                inte           >>>>9
+xxcbkt_out_ln               inte           >>>>9
+xxcbkt_qty                  deci-10        ->>,>>>,>>9.99
+xxcbkt_cu_ln                inte           >>>>>9
+xxcbkt_cu_part              char           x(18)
+xxcbkt_um                   char           x(2)
+Table: xxcbk_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcbk_domain                char       i   x(8)
+xxcbk_doc                   char           x(20)
+xxcbk_end_date              date           99/99/99
+xxcbk_dept                  char           x(4)
+xxcbk_bk_nbr                char       i   x(12)
+xxcbk_curr                  char           x(3)
+xxcbk_trade                 char           x(4)
+xxcbk_contract              char           x(20)
+xxcbk_imp_amt               deci-10        ->>>,>>>,>>9.9<
+xxcbk_exp_amt               deci-10        ->>>,>>>,>>9.9<
+xxcbk_tax_mtd               char           x(4)
+xxcbk_stat                  char           x(1)
+xxcbk_fm_loc                char           x(5)
+xxcbk_userid                char           x(8)
+xxcbk_cr_date               date           99/99/99
+xxcbk_comp                  char           x(10)
+xxcbk_type                  char           x(2)
+xxcbk_cust                  char           x(8)
+xxcbk_ucfld                 char[10]       x(8)
+xxcbk_udfld                 deci-10[10     ->>,>>9.99
+xxcbk_list_nbr              char           x(8)
+xxcbk_gn_type               char           x(1)
+Table: xxccpt_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxccpt_domain               char       i   x(8)
+xxccpt_part                 char       i   x(18)
+xxccpt_ln                   inte       i   >>>>>9
+xxccpt_ctry                 char           x(4)
+xxccpt_um_conv              deci-10        ->>>>9.9999<<<<
+xxccpt_cr_date              date           99/99/99
+xxccpt_key_bom              logi           yes/no
+xxccpt_attach               logi           yes/no
+xxccpt_weightily            logi           yes/no
+xxccpt_ucfld                char[10]       x(8)
+xxccpt_udfld                deci-10[10     ->>,>>9.99
+xxccpt_utfld                date[5]        99/99/99
+Table: xxcpld_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcpld_domain               char       i   x(8)
+xxcpld_list_nbr             char       i   x(8)
+xxcpld_cu_ln                inte       i   >>>>>9
+xxcpld_comp                 char           x(18)
+xxcpld_cu_comp              char           x(12)
+xxcpld_cu_um                char           x(2)
+xxcpld_um                   char           x(2)
+xxcpld_cu_qty               deci-10        ->>>,>>>,>>9.9<<<<
+xxcpld_qty                  deci-10        ->>>,>>>,>>9.9<<<<
+xxcpld_type                 char           x(8)
+xxcpld_qty_use              deci-10        ->>,>>>,>>9.9<<
+xxcpld_qty_open             deci-10        ->>,>>>,>>9.9<<
+xxcpld_ucfld                char[10]       x(8)
+xxcpld_udfld                deci-10[10     ->>,>>9.99
+xxcpld_stat                 char           x(1)
+xxcpld_bk_nbr               char           x(12)
+Table: xxcpl_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcpl_domain                char       i   x(8)
+xxcpl_list_nbr              char       i   x(8)
+xxcpl_cu_part               char           x(12)
+xxcpl_cu_qty                deci-10        ->>>,>>>,>>9.9<<<<
+xxcpl_stat                  char           x(1)
+xxcpl_userid                char           x(8)
+xxcpl_cr_date               date           99/99/99
+xxcpl_par                   char           x(18)
+xxcpl_cu_um                 char           x(2)
+xxcpl_um                    char           x(2)
+xxcpl_qty                   deci-10        ->>>,>>>,>>9.9<
+xxcpl_type                  char           x(8)
+xxcpl_ucfld                 char[10]       x(8)
+xxcpl_udfld                 deci-10[10     ->>,>>9.99
+xxcpl_qty_use               deci-10        ->>,>>>,>>9.9<<
+xxcpl_qty_open              deci-10        ->>,>>>,>>9.9<<
+xxcpl_exp_date              date           99/99/99
+xxcpl_nbr                   char           x(8)
+xxcpl_bk_nbr                char           x(8)
+xxcpl_cu_ln                 inte       i   >>>>>9
+Table: xxcps_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcps_domain                char       i   x(8)
+xxcps_par                   char       i   x(18)
+xxcps_comp                  char       i   x(18)
+xxcps_cu_par                char       i   x(18)
+xxcps_cu_comp               char       i   x(18)
+xxcps_cu_qty_per            deci-10        ->,>>>,>>9.9999999<<<
+xxcps_qty_per               deci-10        ->,>>>,>>9.9<<<<
+xxcps_start                 date           99/99/99
+xxcps_userid                char           x(8)
+xxcps_cr_date               date           99/99/99
+xxcps_ref                   char           x(12)
+xxcps_um                    char           x(8)
+xxcps_cu_um                 char           x(8)
+xxcps_ucfld                 char[10]       x(8)
+xxcps_udfld                 deci-10[10     ->>,>>9.99
+xxcps_utfld                 date[5]        99/99/99
+xxcps_wt                    deci-10        ->>,>>9.99<<<<
+xxcps_par_ln                inte       i   >>>>>9
+xxcps_comp_ln               inte       i   >>>>>9
+xxcps_wt_conv               deci-10        >>,>>9.99<<<
+xxcps_wt_par                deci-10        ->>,>>9.99<<<
+Table: xxcpt_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxcpt_domain                char       i   x(8)
+xxcpt_ln                    inte       i   >>>>>9
+xxcpt_cu_part               char       i   x(12)
+xxcpt_desc                  char           x(48)
+xxcpt_um                    char           x(2)
+xxcpt_price                 deci-10        ->>,>>9.99<<<
+xxcpt_tax                   char           x(1)
+xxcpt_type                  char           x(3)
+xxcpt_cr_date               date           99/99/99
+xxcpt_ucfld                 char[10]       x(8)
+xxcpt_udfld                 deci-10[10     ->>,>>9.99
+xxcpt_ctry_code             char           x(4)
+Table: xxctax_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxctax_domain               char       i   x(8)
+xxctax_code                 char       i   x(4)
+xxctax_desc1                char           x(10)
+xxctax_desc2                char           x(30)
+Table: xxctra_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxctra_domain               char       i   x(8)
+xxctra_code                 char       i   x(4)
+xxctra_desc1                char           x(15)
+xxctra_desc2                char           x(30)
+Table: xxctry_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxctry_domain               char       i   x(8)
+xxctry_code                 char       i   x(4)
+xxctry_name                 char           x(18)
+Table: xxdept_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxdept_domain               char       i   x(8)
+xxdept_code                 char       i   x(4)
+xxdept_desc                 char           x(16)
+Table: xxepld_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxepld_domain               char       i   x(8)
+xxepld_nbr                  char       i   x(8)
+xxepld_ln                   inte       i   >>9
+xxepld_part                 char           x(18)
+xxepld_edate                date           99/99/99
+xxepld_qty                  deci-10        ->>,>>9.99
+xxepld_um                   char           x(2)
+xxepld_cu_qty               deci-10        ->>,>>9.99
+xxepld_ucfld                char[10]       x(8)
+xxepld_udfld                deci-10[10     ->>,>>9.99
+Table: xxepl_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxepl_nbr                   char       i   x(12)
+xxepl_start                 date           99/99/99
+xxepl_end                   date           99/99/99
+xxepl_rmk                   char           x(60)
+xxepl_domain                char       i   x(8)
+xxepl_cr_date               date           99/99/99
+xxepl_userid                char           x(8)
+xxepl_ucfld                 char[10]       x(8)
+xxepl_udfld                 deci-10[10     ->>,>>9.99
+xxepl_stat                  char           x(1)
+Table: xxexpd_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxexpd_domain               char       i   x(8)
+xxexpd_nbr                  char       i   x(8)
+xxexpd_line                 inte       i   >>9
+xxexpd_part                 char           x(18)
+xxexpd_um                   char           x(2)
+xxexpd_qty_rcvd             deci-10        ->>,>>>,>>9.99
+xxexpd_bk_nbr               char           x(8)
+xxexpd_bk_ln                inte           >>>>9
+xxexpd_cu_part              char           x(18)
+xxexpd_cu_ln                inte           >>>>>9
+xxexpd_price                deci-10        ->>>>,>>9.9<<<<
+xxexpd_amt                  deci-10        ->>>>,>>9.9<<<<
+xxexpd_qty_cu               deci-10        ->>,>>>,>>9.99
+xxexpd_cu_um                char           x(2)
+xxexpd_um_conv              deci-10        >>>>9.9999<<<<
+xxexpd_used                 deci-10        ->,>>>,>>9.9<<<
+xxexpd_stat                 char           x(1)
+xxexpd_abs_shipfrom         char           x(8)
+xxexpd_abs_par_id           char           x(8)
+xxexpd_abs_id               char           x(8)
+xxexpd_so_nbr               char           x(8)
+xxexpd_so_ln                inte           >>9
+Table: xxexp_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxexp_domain                char       i   x(8)
+xxexp_nbr                   char       i   x(8)
+xxexp_type                  char           x(1)
+xxexp_date                  date           99/99/99
+xxexp_req_date              date           99/99/99
+xxexp_curr                  char           x(8)
+xxexp_amt                   deci-10        ->>>>,>>9.9<<<<
+xxexp_dept                  char           x(8)
+xxexp_company               char           x(18)
+xxexp_addr                  char           x(18)
+xxexp_bkp_nbr               char           x(8)
+xxexp_pre_nbr               char           x(8)
+xxexp_bl_nbr                char           x(8)
+xxexp_cu_nbr                char           x(8)
+xxexp_tax_mtd               char           x(8)
+xxexp_trade_mtd             char           x(8)
+xxexp_tax_rate              deci-10        >>>>,>>>,>>9.9<
+xxexp_ship_via              char           x(8)
+xxexp_ship_tool             char           x(8)
+xxexp_licence               char           x(8)
+xxexp_appr                  char           x(8)
+xxexp_contract              char           x(8)
+xxexp_container             char           x(8)
+xxexp_rmks1                 char           x(18)
+xxexp_rmks2                 char           x(18)
+xxexp_from                  char           x(8)
+xxexp_to                    char           x(8)
+xxexp_fob                   char           x(8)
+xxexp_use                   char           x(8)
+xxexp_box_num               deci-10        ->>>,>>>,>>9.99
+xxexp_box_type              char           x(8)
+xxexp_net                   deci-10        ->>,>>>,>>9.9<<<
+xxexp_gross                 deci-10        ->>,>>>,>>9.9<<<
+xxexp_port                  char           x(8)
+xxexp_stat                  char           x(1)
+Table: xximpd_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xximpd_domain               char       i   x(8)
+xximpd_nbr                  char       i   x(8)
+xximpd_line                 inte       i   >>9
+xximpd_cu_part              char           x(18)
+xximpd_cu_ln                inte           >>>>>9
+xximpd_price                deci-10        ->>>>,>>9.9<<<<
+xximpd_amt                  deci-10        ->>>>,>>9.9<<<<
+xximpd_ctry                 char           x(8)
+xximpd_cu_qty               deci-10        ->>,>>>,>>9.99
+xximpd_cu_um                char           x(2)
+xximpd_stat                 char           x(1)
+Table: xximp_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xximp_domain                char       i   x(8)
+xximp_nbr                   char       i   x(8)
+xximp_type                  char           x(1)
+xximp_crt_date                  date           99/99/99
+xximp_start              date           99/99/99
+xximp_end              date           99/99/99
+xximp_curr                  char           x(8)
+xximp_amt                   deci-10        ->>>>,>>9.9<<<<
+xximp_dept                  char           x(8)
+xximp_bk_nbr                char           x(8)
+xximp_pre_nbr               char           x(8)
+xximp_bl_nbr                char           x(8)
+xximp_cu_nbr                char           x(8)
+xximp_tax_mtd               char           x(8)
+xximp_trade_mtd             char           x(8)
+xximp_tax_rate              deci-10        >>>>,>>>,>>9.9<
+xximp_ship_via              char           x(8)
+xximp_ship_tool             char           x(8)
+xximp_license               char           x(8)
+xximp_appr_nbr              char           x(8)
+xximp_contract              char           x(8)
+xximp_container             char           x(8)
+xximp_rmks1                 char           x(18)
+xximp_rmks2                 char           x(18)
+xximp_from                  char           x(8)
+xximp_to                    char           x(8)
+xximp_fob                   char           x(8)
+xximp_use                   char           x(8)
+xximp_box_num               deci-10        ->>>,>>>,>>9.99
+xximp_box_type              char           x(8)
+xximp_net                   deci-10        ->>,>>>,>>9.9<<<
+xximp_gross                 deci-10        ->>,>>>,>>9.9<<<
+xximp_port                  char           x(8)
+xximp_stat                  char           x(1)
+Table: xxiprd_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxiprd_rct_ln               inte           >>9
+xxiprd_domain               char       i   x(8)
+xxiprd_nbr                  char       i   x(8)
+xxiprd_line                 inte       i   >>9
+xxiprd_rct_date             date           99/99/99
+xxiprd_cu_ln                inte           >>9
+xxiprd_cu_part              char           x(8)
+xxiprd_price                deci-10        ->>>>,>>9.9<<<<
+xxiprd_used                 deci-10        ->>>>,>>9.9<<<<
+xxiprd_rct_qty              deci-10        ->>>>,>>9.9<<<<
+xxiprd_cu_qty               deci-10        ->>>>,>>9.9<<<<
+xxiprd_um                   char           x(2)
+xxiprd_cu_um                char           x(2)
+xxiprd_amt                  deci-10        ->>>>,>>9.9<<<<
+xxiprd_ctry                 char           x(8)
+xxiprd_rct_order            char           x(8)
+xxiprd_rct_nbr              char           x(8)
+xxiprd_stat                 char           x(1)
+xxiprd_um_conv              deci-10        >>>>9.9999<<<<
+xxiprd_rct_part             char           x(18)
+xxiprd_tax                  char           x(1)
+Table: xxipr_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxipr_domain                char       i   x(8)
+xxipr_nbr                   char       i   x(8)
+xxipr_date                  date           99/99/99
+xxipr_req_date              date           99/99/99
+xxipr_curr                  char           x(3)
+xxipr_amt                   deci-10        ->>>>,>>9.9<<<<
+xxipr_dept                  char           x(18)
+xxipr_loc                   char           x(8)
+xxipr_car                   char           x(18)
+xxipr_driver                char           x(18)
+xxipr_bk_nbr                char           x(8)
+xxipr_ship_nbr              char           x(18)
+xxipr_bar_code              char           x(18)
+xxipr_license               char           x(18)
+xxipr_rmks1                 char           x(60)
+xxipr_rmks2                 char           x(60)
+xxipr_box_num               deci-10        ->>,>>>,>>9.9<<<
+xxipr_gross                 deci-10        ->>,>>>,>>9.9<<<
+xxipr_stat                  char           x(1)
+Table: xxloc_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxloc_domain                char       i   x(8)
+xxloc_code                  char       i   x(5)
+xxloc_desc                  char           x(30)
+Table: xxps_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxps_domain                 char       i   x(8)
+xxps_par_ln                 inte       i   >>>>>9
+xxps_par                    char       i   x(18)
+xxps_comp_ln                inte       i   >>>>>9
+xxps_comp                   char       i   x(18)
+xxps_um                     char           x(2)
+xxps_cu_um                  char           x(2)
+xxps_qty_per                deci-10        ->,>>>,>>9.9<<<<
+xxps_qty_per_b              deci-10        ->,>>>,>>9.9999999<<<
+xxps_cu_qty_per             deci-10        ->,>>>,>>9.9999999<<<
+xxps_cu_qty_per_b           deci-10        ->,>>>,>>9.9999999<<<
+xxps_wt                     deci-10        ->>,>>9.99<<<<
+xxps_wt_b                   deci-10        ->>,>>9.99<<<<
+xxps_userid                 char           x(8)
+xxps_cr_date                date           99/99/99
+xxps_wt_par                 deci-10        ->>,>>9.99<<<<
+xxps_ucfld                  char[10]       x(8)
+xxps_udfld                  deci-10[10     ->>,>>9.99
+xxps_utfld                  date[5]        99/99/99
+Table: xxsld_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxsld_nbr                   char       i   x(8)
+xxsld_line                  inte       i   >>>9
+xxsld_cu_ln                 inte       i   >>>>>9
+xxsld_cu_part               char           x(18)
+xxsld_cu_um                 char           x(2)
+xxsld_qty_ord               deci-10        ->>,>>>,>>9.99
+xxsld_qty_used              deci-10        ->>,>>>,>>9.99
+xxsld_status                char           x(1)
+xxsld_bk_from               char           x(8)
+xxsld_bk_ln_from            inte           >>>>>9
+xxsld_bk_to                 char           x(8)
+xxsld_bk_ln_to              inte           >>>>>9
+xxsld_domain                char       i   x(8)
+xxsld_price                 deci-10        ->>,>>>,>>9.99
+xxsld_rmks                  char           x(40)
+Table: xxsl_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxsl_domain                 char       i   x(8)
+xxsl_nbr                    char       i   x(8)
+xxsl_type                   logi           yes/no
+xxsl_date                   date           99/99/99
+xxsl_start                  date           99/99/99
+xxsl_expire                 date           99/99/99
+xxsl_addr_from              char           x(8)
+xxsl_addr_to                char           x(8)
+xxsl_status                 char           x(1)
+Table: xxtrd_det
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxtrd_domain                char       i   x(8)
+xxtrd_nbr                   char       i   x(8)
+xxtrd_line                  inte       i   >>>>9
+xxtrd_date                  date           99/99/99
+xxtrd_effdate               date           99/99/99
+xxtrd_sl_nbr                char           x(8)
+xxtrd_rc_nbr                char           x(8)
+xxtrd_rc_ln                 inte           >>>>9
+xxtrd_rc_po                 char           x(8)
+xxtrd_qty_rcvd              deci-10        ->>,>>>,>>9.99
+xxtrd_um                    char           x(2)
+xxtrd_cu_part               char           x(18)
+xxtrd_cu_ln                 inte           >>>>>9
+xxtrd_stat                  char           x(1)
+xxtrd_um_conv               deci-10        >>>>9.9999<<<<
+xxtrd_price                 deci-10        ->>>>,>>9.9<<<<
+xxtrd_amt                   deci-10        ->>>>,>>9.9<<<<
+xxtrd_qty_cu                deci-10        ->>>>,>>9.9<<<<
+xxtrd_cu_um                 char           x(2)
+xxtrd_used                  deci-10        ->,>>>,>>9.9<<<
+xxtrd_part                  char           x(18)
+Table: xxtr_mstr
+Field Name                  Data Type  Flg Format
+--------------------------- ---------- --- --------------------------------
+xxtr_domain                 char       i   x(8)
+xxtr_nbr                    char       i   x(8)
+xxtr_date                   date           99/99/99
+xxtr_req_date               date           99/99/99
+xxtr_curr                   char           x(8)
+xxtr_amt                    deci-10        ->>>>,>>9.9<<<<
+xxtr_box_num                deci-10        ->>>,>>>,>>9.99
+xxtr_box_type               char           x(8)
+xxtr_net                    deci-10        ->>,>>>,>>9.9<<<
+xxtr_gross                  deci-10        ->>,>>>,>>9.9<<<
+xxtr_stat                   char           x(1)

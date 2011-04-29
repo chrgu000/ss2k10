@@ -1,0 +1,109 @@
+ADD TABLE "xovd_det"
+  AREA "TRANSACTION"
+  LABEL "xovd_det"
+  DUMP-NAME "xovd_det"
+
+ADD FIELD "xovd_nbr" OF "xovd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+
+ADD FIELD "xovd_line" OF "xovd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+
+ADD FIELD "xovd_part" OF "xovd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+
+ADD FIELD "xovd_wonbr" OF "xovd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+
+ADD FIELD "xovd_wolot" OF "xovd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+
+ADD FIELD "xovd_iss_qty" OF "xovd_det" AS decimal 
+  FORMAT ">>>>>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "Qty"
+  DECIMALS 10
+
+ADD FIELD "xovd_iss_times" OF "xovd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Times"
+
+ADD FIELD "xovd_status" OF "xovd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "S"
+
+ADD FIELD "xovd_mod_user" OF "xovd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "mod_user"
+
+ADD FIELD "xovd_mod_date" OF "xovd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "mod_date"
+
+ADD FIELD "xovd_app_user" OF "xovd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "app_user"
+
+ADD FIELD "xovd_app_date" OF "xovd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "app_date"
+
+ADD FIELD "xovd_cmtidx" OF "xovd_det" AS integer 
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "cmtidx"
+
+
+ADD INDEX "xovd_nbr" ON "xovd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xovd_nbr" ASCENDING 
+  INDEX-FIELD "xovd_line" ASCENDING 
+
+ADD INDEX "xovd_nbrpart" ON "xovd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xovd_nbr" ASCENDING 
+  INDEX-FIELD "xovd_part" ASCENDING 
+  INDEX-FIELD "xovd_line" ASCENDING 
+
+ADD INDEX "xovd_nbr_wolot" ON "xovd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xovd_nbr" ASCENDING 
+  INDEX-FIELD "xovd_wolot" ASCENDING 
+  INDEX-FIELD "xovd_line" ASCENDING 
+
+ADD INDEX "xovd_nbr_wonbr" ON "xovd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xovd_nbr" ASCENDING 
+  INDEX-FIELD "xovd_wonbr" ASCENDING 
+
+
+ADD INDEX "xovd_wolot" ON "xovd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xovd_wolot" ASCENDING 
+  INDEX-FIELD "xovd_part" ASCENDING 
+  INDEX-FIELD "xovd_nbr" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.

@@ -1,0 +1,89 @@
+ADD TABLE "xzp_det"
+  AREA "TRANSACTION"
+  LABEL "xzp_det"
+  DUMP-NAME "xzp_det"
+
+ADD FIELD "xzp_domain" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xzp_wonbr" OF "xzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xzp_wolot" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xzp_zppart" OF "xzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xzp_qty_iss" OF "xzp_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-iss"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xzp_zpwo" OF "xzp_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "AllZpWo"
+  POSITION 8
+  MAX-WIDTH 80
+  ORDER 70
+
+ADD FIELD "xzp_mod_user" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xzp_mod_date" OF "xzp_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD INDEX "xzp_wolot" ON "xzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xzp_domain" ASCENDING 
+  INDEX-FIELD "xzp_wolot" ASCENDING 
+  INDEX-FIELD "xzp_zppart" ASCENDING 
+
+ADD INDEX "xzp_zppart" ON "xzp_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xzp_domain" ASCENDING 
+  INDEX-FIELD "xzp_zppart" ASCENDING 
+  INDEX-FIELD "xzp_wolot" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000001715

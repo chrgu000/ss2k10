@@ -1,0 +1,181 @@
+ADD TABLE "xprn_hist"
+  AREA "Schema Area"
+  DESCRIPTION "xprn_hist: barcode print hist"
+
+  DUMP-NAME "xprn_his"
+
+ADD FIELD "xprn_key1" OF "xprn_hist" AS character 
+  DESCRIPTION "The first field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "关键字"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xprn_key2" OF "xprn_hist" AS character 
+  DESCRIPTION "The second field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "流水号"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xprn_part" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "料品"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xprn_lot" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "批号"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xprn_execname" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "程式名"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xprn_user" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "用户"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xprn_date" OF "xprn_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "打印日期"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xprn_time" OF "xprn_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "打印时间"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xprn_filename" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "文件名"
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xprn_fileword" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "文件内容"
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xprn_lbl_model" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "标签格式"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xprn_nums" OF "xprn_hist" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "标签张数"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xprn_qty" OF "xprn_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "标签数量"
+  POSITION 14
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xprn_charfld" OF "xprn_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "预留字段"
+  POSITION 15
+  SQL-WIDTH 180
+  EXTENT 10
+  ORDER 140
+
+ADD FIELD "xprn_decfld" OF "xprn_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 16
+  SQL-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xprn_logfld" OF "xprn_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "预留字段"
+  POSITION 17
+  SQL-WIDTH 80
+  EXTENT 10
+  ORDER 160
+
+ADD FIELD "xprn_intfld" OF "xprn_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "预留字段"
+  POSITION 18
+  SQL-WIDTH 220
+  EXTENT 10
+  ORDER 170
+
+ADD FIELD "xprn_datefld" OF "xprn_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "预留字段"
+  POSITION 19
+  SQL-WIDTH 72
+  EXTENT 4
+  ORDER 180
+
+ADD INDEX "xprn_index1" ON "xprn_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xprn_key1" ASCENDING 
+  INDEX-FIELD "xprn_key2" ASCENDING 
+
+ADD INDEX "xprn_index2" ON "xprn_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xprn_part" ASCENDING 
+  INDEX-FIELD "xprn_lot" ASCENDING 
+
+ADD INDEX "xprn_index3" ON "xprn_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xprn_user" ASCENDING 
+  INDEX-FIELD "xprn_execname" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003132

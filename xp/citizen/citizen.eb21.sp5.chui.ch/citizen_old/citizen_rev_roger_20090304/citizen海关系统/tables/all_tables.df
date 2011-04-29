@@ -1,0 +1,4225 @@
+ADD TABLE "xxcbkc_ctrl"
+  AREA "TRANSACTION"
+  LABEL "海关控制文件"
+  DUMP-NAME "xxcbkc_c"
+
+ADD FIELD "xxcbkc_domain" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcbkc_dept" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Dept"
+  POSITION 3
+  MAX-WIDTH 8
+  ORDER 20
+
+ADD FIELD "xxcbkc_trade" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Trade"
+  POSITION 4
+  MAX-WIDTH 8
+  ORDER 30
+
+ADD FIELD "xxcbkc_name" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Company Name"
+  POSITION 5
+  MAX-WIDTH 60
+  ORDER 40
+
+ADD FIELD "xxcbkc_tax_mtd" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Tax Method"
+  POSITION 6
+  MAX-WIDTH 8
+  ORDER 50
+
+ADD FIELD "xxcbkc_ship_via" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Travel Method"
+  POSITION 7
+  MAX-WIDTH 8
+  ORDER 60
+
+ADD FIELD "xxcbkc_ship_tool" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Travel"
+  POSITION 8
+  MAX-WIDTH 40
+  ORDER 70
+
+ADD FIELD "xxcbkc_loc" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "Loc"
+  POSITION 9
+  MAX-WIDTH 10
+  ORDER 80
+
+ADD FIELD "xxcbkc_imp" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Import"
+  POSITION 10
+  MAX-WIDTH 8
+  ORDER 90
+
+ADD FIELD "xxcbkc_fob" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "BOL"
+  POSITION 11
+  MAX-WIDTH 24
+  ORDER 100
+
+ADD FIELD "xxcbkc_frm_loc" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "From Loc"
+  POSITION 12
+  MAX-WIDTH 8
+  ORDER 110
+
+ADD FIELD "xxcbkc_box_type" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Box Type"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxcbkc_tax_ratio" OF "xxcbkc_ctrl" AS decimal 
+  FORMAT ">>>.99%"
+  INITIAL "0"
+  LABEL "Tax Ratio"
+  POSITION 14
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xxcbkc_to_loc" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "To Location"
+  POSITION 15
+  MAX-WIDTH 8
+  ORDER 140
+
+ADD FIELD "xxcbkc_exp" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Export"
+  POSITION 16
+  MAX-WIDTH 8
+  ORDER 150
+
+ADD FIELD "xxcbkc_im_pre" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Pre"
+  POSITION 17
+  MAX-WIDTH 8
+  ORDER 160
+
+ADD FIELD "xxcbkc_im_seq" OF "xxcbkc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "Seq"
+  POSITION 18
+  MAX-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxcbkc_prh_pre" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Pre"
+  POSITION 19
+  MAX-WIDTH 8
+  ORDER 180
+
+ADD FIELD "xxcbkc_prh_seq" OF "xxcbkc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "Seq"
+  POSITION 20
+  MAX-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxcbkc_sph_pre" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Pre"
+  POSITION 21
+  MAX-WIDTH 8
+  ORDER 200
+
+ADD FIELD "xxcbkc_sph_seq" OF "xxcbkc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "Seq"
+  POSITION 22
+  MAX-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxcbkc_ex_pre" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Pre"
+  POSITION 23
+  MAX-WIDTH 8
+  ORDER 220
+
+ADD FIELD "xxcbkc_ex_seq" OF "xxcbkc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "Seq"
+  POSITION 24
+  MAX-WIDTH 4
+  ORDER 230
+
+ADD FIELD "xxcbkc_comp" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Company"
+  POSITION 25
+  MAX-WIDTH 20
+  ORDER 240
+
+ADD FIELD "xxcbkc_addr" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Company addr"
+  POSITION 26
+  MAX-WIDTH 36
+  ORDER 250
+
+ADD FIELD "xxcbkc_user1" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "User1"
+  POSITION 27
+  MAX-WIDTH 40
+  ORDER 260
+
+ADD FIELD "xxcbkc_user2" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 28
+  MAX-WIDTH 40
+  COLUMN-LABEL "User2"
+  ORDER 270
+
+ADD FIELD "xxcbkc_tel1" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Tel1"
+  POSITION 29
+  MAX-WIDTH 30
+  ORDER 280
+
+ADD FIELD "xxcbkc_tel2" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Tel2"
+  POSITION 30
+  MAX-WIDTH 30
+  ORDER 290
+
+ADD FIELD "xxcbkc_tol_in" OF "xxcbkc_ctrl" AS decimal 
+  FORMAT "->>9.99%"
+  INITIAL "0"
+  LABEL "Tolrence%"
+  POSITION 31
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 300
+
+ADD FIELD "xxcbkc_tol_out" OF "xxcbkc_ctrl" AS decimal 
+  FORMAT "->>9.99%"
+  INITIAL "0"
+  LABEL "Tolrence%"
+  POSITION 32
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 310
+
+ADD FIELD "xxcbkc_bl_nbr" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Travel Doc#"
+  POSITION 33
+  MAX-WIDTH 24
+  ORDER 320
+
+ADD FIELD "xxcbkc_addr_name" OF "xxcbkc_ctrl" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "地址"
+  POSITION 34
+  MAX-WIDTH 80
+  ORDER 330
+
+ADD FIELD "xxcbkc_rating1" OF "xxcbkc_ctrl" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 35
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 340
+
+ADD FIELD "xxcbkc_rating2" OF "xxcbkc_ctrl" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 36
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 350
+
+ADD INDEX "xxcbkc_domain" ON "xxcbkc_ctrl" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcbkc_domain" ASCENDING 
+
+ADD TABLE "xxcbkd_det"
+  AREA "TRANSACTION"
+  LABEL "手册明细表"
+  DUMP-NAME "xxcbkd_d"
+
+ADD FIELD "xxcbkd_domain" OF "xxcbkd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcbkd_bk_nbr" OF "xxcbkd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Book#"
+  POSITION 3
+  MAX-WIDTH 24
+  ORDER 20
+
+ADD FIELD "xxcbkd_bk_ln" OF "xxcbkd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Ln"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxcbkd_bk_type" OF "xxcbkd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Import/Export"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxcbkd_cu_part" OF "xxcbkd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Custom Item"
+  POSITION 6
+  MAX-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxcbkd_ctry_code" OF "xxcbkd_det" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Country"
+  POSITION 7
+  MAX-WIDTH 8
+  ORDER 60
+
+ADD FIELD "xxcbkd_qty_ord" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "备案数"
+  POSITION 8
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxcbkd_qty_tsf" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "手册结转数"
+  POSITION 9
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxcbkd_um" OF "xxcbkd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxcbkd_price" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Price"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxcbkd_tax" OF "xxcbkd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Tax"
+  POSITION 12
+  MAX-WIDTH 1
+  ORDER 110
+
+ADD FIELD "xxcbkd_qty_sl" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "转厂出入数"
+  POSITION 13
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 120
+
+ADD FIELD "xxcbkd_qty_io" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "进出口数"
+  POSITION 14
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xxcbkd_stat" OF "xxcbkd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 16
+  MAX-WIDTH 2
+  ORDER 150
+
+ADD FIELD "xxcbkd_ucfld" OF "xxcbkd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 260
+
+ADD FIELD "xxcbkd_udfld" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 270
+
+ADD FIELD "xxcbkd_list_nbr" OF "xxcbkd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "List Number"
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxcbkd_cu_ln" OF "xxcbkd_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Cust Ln"
+  POSITION 20
+  MAX-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxcbkd_qty_rjct" OF "xxcbkd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "退回数"
+  POSITION 21
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 280
+
+ADD INDEX "xxcbkd_bk_nbr" ON "xxcbkd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcbkd_domain" ASCENDING 
+  INDEX-FIELD "xxcbkd_bk_type" ASCENDING 
+  INDEX-FIELD "xxcbkd_bk_nbr" ASCENDING 
+  INDEX-FIELD "xxcbkd_bk_ln" ASCENDING 
+
+ADD INDEX "xxcbkd_cu_ln" ON "xxcbkd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxcbkd_domain" ASCENDING 
+  INDEX-FIELD "xxcbkd_bk_type" ASCENDING 
+  INDEX-FIELD "xxcbkd_bk_nbr" ASCENDING 
+  INDEX-FIELD "xxcbkd_cu_ln" ASCENDING 
+
+ADD TABLE "xxcbkps_mstr"
+  AREA "TRANSACTION"
+  LABEL "单耗表"
+  DUMP-NAME "xxcbkps_"
+
+ADD FIELD "xxcbkps_domain" OF "xxcbkps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcbkps_bk_nbr" OF "xxcbkps_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Book#"
+  POSITION 3
+  MAX-WIDTH 24
+  ORDER 20
+
+ADD FIELD "xxcbkps_cu_par" OF "xxcbkps_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Parent Item"
+  POSITION 4
+  MAX-WIDTH 20
+  ORDER 30
+
+ADD FIELD "xxcbkps_cu_comp" OF "xxcbkps_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Component"
+  POSITION 5
+  MAX-WIDTH 20
+  ORDER 40
+
+ADD FIELD "xxcbkps_cu_ln_par" OF "xxcbkps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Cust Par Ln"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxcbkps_cu_ln_comp" OF "xxcbkps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Cust comp Ln"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxcbkps_ln_par" OF "xxcbkps_mstr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Par Ln"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxcbkps_ln_comp" OF "xxcbkps_mstr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Comp Ln"
+  POSITION 9
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxcbkps_qty_per" OF "xxcbkps_mstr" AS decimal 
+  FORMAT ">>,>>9.999999"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 10
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxcbkps_scrap" OF "xxcbkps_mstr" AS decimal 
+  FORMAT ">>,>>9.9<"
+  INITIAL "0"
+  LABEL "Scrap"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxcbkps_ucfld" OF "xxcbkps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 12
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 180
+
+ADD FIELD "xxcbkps_udfld" OF "xxcbkps_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 13
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 190
+
+ADD INDEX "xxcbkps_bk_nbr" ON "xxcbkps_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcbkps_domain" ASCENDING 
+  INDEX-FIELD "xxcbkps_bk_nbr" ASCENDING 
+  INDEX-FIELD "xxcbkps_ln_par" ASCENDING 
+  INDEX-FIELD "xxcbkps_ln_comp" ASCENDING 
+
+ADD INDEX "xxcbkps_bk_nbr2" ON "xxcbkps_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxcbkps_domain" ASCENDING 
+  INDEX-FIELD "xxcbkps_bk_nbr" ASCENDING 
+  INDEX-FIELD "xxcbkps_ln_comp" ASCENDING 
+  INDEX-FIELD "xxcbkps_ln_par" ASCENDING 
+
+ADD INDEX "xxcbkps_par_comp" ON "xxcbkps_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxcbkps_domain" ASCENDING 
+  INDEX-FIELD "xxcbkps_bk_nbr" ASCENDING 
+  INDEX-FIELD "xxcbkps_cu_ln_par" ASCENDING 
+  INDEX-FIELD "xxcbkps_cu_ln_comp" ASCENDING 
+
+ADD TABLE "xxcbk_mstr"
+  AREA "TRANSACTION"
+  LABEL "海关手册主表"
+  DUMP-NAME "xxcbk_ms"
+
+ADD FIELD "xxcbk_domain" OF "xxcbk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcbk_doc" OF "xxcbk_mstr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Document"
+  POSITION 3
+  MAX-WIDTH 40
+  ORDER 20
+
+ADD FIELD "xxcbk_end_date" OF "xxcbk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Date"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxcbk_dept" OF "xxcbk_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Dept"
+  POSITION 5
+  MAX-WIDTH 8
+  ORDER 40
+
+ADD FIELD "xxcbk_bk_nbr" OF "xxcbk_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Book#"
+  POSITION 6
+  MAX-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxcbk_curr" OF "xxcbk_mstr" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Currency"
+  POSITION 7
+  MAX-WIDTH 6
+  ORDER 60
+
+ADD FIELD "xxcbk_trade" OF "xxcbk_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Trade Mtd"
+  POSITION 8
+  MAX-WIDTH 8
+  ORDER 70
+
+ADD FIELD "xxcbk_contract" OF "xxcbk_mstr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Contract"
+  POSITION 9
+  MAX-WIDTH 40
+  ORDER 80
+
+ADD FIELD "xxcbk_imp_amt" OF "xxcbk_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Import Amount"
+  POSITION 10
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxcbk_exp_amt" OF "xxcbk_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Export Amount"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxcbk_tax_mtd" OF "xxcbk_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Tax Mathod"
+  POSITION 12
+  MAX-WIDTH 8
+  ORDER 110
+
+ADD FIELD "xxcbk_stat" OF "xxcbk_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 13
+  MAX-WIDTH 2
+  ORDER 120
+
+ADD FIELD "xxcbk_fm_loc" OF "xxcbk_mstr" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "Location"
+  POSITION 14
+  MAX-WIDTH 10
+  ORDER 130
+
+ADD FIELD "xxcbk_userid" OF "xxcbk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Cr By"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxcbk_cr_date" OF "xxcbk_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Cr Date"
+  POSITION 16
+  MAX-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxcbk_comp" OF "xxcbk_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Company"
+  POSITION 17
+  MAX-WIDTH 20
+  ORDER 160
+
+ADD FIELD "xxcbk_type" OF "xxcbk_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 18
+  MAX-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxcbk_cust" OF "xxcbk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxcbk_ucfld" OF "xxcbk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 20
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 190
+
+ADD FIELD "xxcbk_udfld" OF "xxcbk_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 21
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxcbk_list_nbr" OF "xxcbk_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "List Number"
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xxcbk_gn_type" OF "xxcbk_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Gn Type"
+  POSITION 23
+  MAX-WIDTH 2
+  ORDER 220
+
+ADD INDEX "xxcbk_bk_nbr" ON "xxcbk_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcbk_domain" ASCENDING 
+  INDEX-FIELD "xxcbk_bk_nbr" ASCENDING 
+
+ADD TABLE "xxccpt_mstr"
+  AREA "TRANSACTION"
+  LABEL "海关零件"
+  DUMP-NAME "xxccpt_m"
+
+ADD FIELD "xxccpt_domain" OF "xxccpt_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxccpt_part" OF "xxccpt_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxccpt_ln" OF "xxccpt_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxccpt_ctry" OF "xxccpt_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Country"
+  POSITION 6
+  MAX-WIDTH 8
+  ORDER 50
+
+ADD FIELD "xxccpt_um_conv" OF "xxccpt_mstr" AS decimal 
+  FORMAT "->>>>9.9999<<<<"
+  INITIAL "0"
+  LABEL "UM Conversion"
+  POSITION 7
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxccpt_attach" OF "xxccpt_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Attachment"
+  POSITION 13
+  MAX-WIDTH 1
+  ORDER 140
+
+ADD FIELD "xxccpt_cr_date" OF "xxccpt_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Create Date"
+  POSITION 14
+  MAX-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxccpt_ucfld" OF "xxccpt_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 15
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 160
+
+ADD FIELD "xxccpt_udfld" OF "xxccpt_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxccpt_utfld" OF "xxccpt_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL ""
+  POSITION 17
+  MAX-WIDTH 4
+  EXTENT 5
+  ORDER 200
+
+ADD FIELD "xxccpt_key_bom" OF "xxccpt_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Key BOM"
+  POSITION 18
+  MAX-WIDTH 1
+  ORDER 130
+
+ADD FIELD "xxccpt_weightily" OF "xxccpt_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Weightily"
+  POSITION 19
+  MAX-WIDTH 1
+  ORDER 150
+
+ADD INDEX "xxccpt_part" ON "xxccpt_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxccpt_domain" ASCENDING 
+  INDEX-FIELD "xxccpt_part" ASCENDING 
+
+ADD INDEX "xxccpt_ln" ON "xxccpt_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxccpt_domain" ASCENDING 
+  INDEX-FIELD "xxccpt_ln" ASCENDING 
+
+ADD TABLE "xxcpld_det"
+  AREA "TRANSACTION"
+  LABEL "进口计划清单明细"
+  DUMP-NAME "xxcpld_d"
+
+ADD FIELD "xxcpld_domain" OF "xxcpld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcpld_list_nbr" OF "xxcpld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "List Number"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxcpld_cu_ln" OF "xxcpld_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxcpld_comp" OF "xxcpld_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Component Item"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxcpld_cu_comp" OF "xxcpld_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Custom Item"
+  POSITION 6
+  MAX-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxcpld_cu_um" OF "xxcpld_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxcpld_um" OF "xxcpld_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 9
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxcpld_cu_qty" OF "xxcpld_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Custom Item"
+  POSITION 10
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxcpld_qty" OF "xxcpld_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Qty"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxcpld_type" OF "xxcpld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxcpld_qty_use" OF "xxcpld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "Qty Used"
+  POSITION 13
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 120
+
+ADD FIELD "xxcpld_qty_open" OF "xxcpld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "Open Qty"
+  POSITION 14
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xxcpld_ucfld" OF "xxcpld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 15
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 140
+
+ADD FIELD "xxcpld_udfld" OF "xxcpld_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xxcpld_stat" OF "xxcpld_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Stat"
+  POSITION 17
+  MAX-WIDTH 2
+  ORDER 160
+
+ADD FIELD "xxcpld_bk_nbr" OF "xxcpld_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Book#"
+  POSITION 18
+  MAX-WIDTH 24
+  ORDER 170
+
+ADD INDEX "xxcpld_list_nbr" ON "xxcpld_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcpld_domain" ASCENDING 
+  INDEX-FIELD "xxcpld_list_nbr" ASCENDING 
+  INDEX-FIELD "xxcpld_cu_ln" ASCENDING 
+
+ADD TABLE "xxcpl_mstr"
+  AREA "TRANSACTION"
+  LABEL "出口清单主表"
+  DUMP-NAME "xxcpl_ms"
+
+ADD FIELD "xxcpl_domain" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcpl_list_nbr" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "List Number"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxcpl_cu_part" OF "xxcpl_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Custom Item"
+  POSITION 4
+  MAX-WIDTH 24
+  ORDER 30
+
+ADD FIELD "xxcpl_cu_qty" OF "xxcpl_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 5
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 40
+
+ADD FIELD "xxcpl_stat" OF "xxcpl_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 6
+  MAX-WIDTH 2
+  ORDER 50
+
+ADD FIELD "xxcpl_userid" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Userid"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxcpl_cr_date" OF "xxcpl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Cr Date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxcpl_par" OF "xxcpl_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Parent Item"
+  POSITION 9
+  MAX-WIDTH 36
+  ORDER 80
+
+ADD FIELD "xxcpl_cu_um" OF "xxcpl_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxcpl_um" OF "xxcpl_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 11
+  MAX-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxcpl_qty" OF "xxcpl_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Plan Qty"
+  POSITION 12
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xxcpl_type" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxcpl_ucfld" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 14
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 130
+
+ADD FIELD "xxcpl_udfld" OF "xxcpl_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 140
+
+ADD FIELD "xxcpl_qty_use" OF "xxcpl_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "Qty Used"
+  POSITION 16
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xxcpl_qty_open" OF "xxcpl_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "Open Qty"
+  POSITION 17
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xxcpl_exp_date" OF "xxcpl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Export Date"
+  POSITION 18
+  MAX-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxcpl_nbr" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SO/Exp nbr"
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxcpl_bk_nbr" OF "xxcpl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Book#"
+  POSITION 20
+  MAX-WIDTH 16
+  ORDER 190
+
+ADD FIELD "xxcpl_cu_ln" OF "xxcpl_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 21
+  MAX-WIDTH 4
+  ORDER 200
+
+ADD INDEX "xxcpl_list_nbr" ON "xxcpl_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcpl_domain" ASCENDING 
+  INDEX-FIELD "xxcpl_list_nbr" ASCENDING 
+  INDEX-FIELD "xxcpl_cu_ln" ASCENDING 
+
+ADD TABLE "xxcps_mstr"
+  AREA "TRANSACTION"
+  LABEL "海关BOM表"
+  DUMP-NAME "xxcps_ms"
+
+ADD FIELD "xxcps_domain" OF "xxcps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcps_par" OF "xxcps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Parent Item"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxcps_comp" OF "xxcps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Component Item"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxcps_cu_par" OF "xxcps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Custom Item"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xxcps_cu_comp" OF "xxcps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Custom Component Item"
+  POSITION 7
+  MAX-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xxcps_cu_qty_per" OF "xxcps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9999999<<<"
+  INITIAL "0"
+  LABEL "Cust Item Qty Per"
+  POSITION 8
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxcps_qty_per" OF "xxcps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 9
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxcps_start" OF "xxcps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start Effective"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxcps_userid" OF "xxcps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 11
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxcps_cr_date" OF "xxcps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Create Date"
+  POSITION 12
+  MAX-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxcps_ref" OF "xxcps_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Reference"
+  POSITION 13
+  MAX-WIDTH 24
+  ORDER 120
+
+ADD FIELD "xxcps_um" OF "xxcps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxcps_cu_um" OF "xxcps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Cust UM"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxcps_ucfld" OF "xxcps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 16
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 150
+
+ADD FIELD "xxcps_udfld" OF "xxcps_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 17
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xxcps_utfld" OF "xxcps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  MAX-WIDTH 90
+  EXTENT 5
+  ORDER 170
+
+ADD FIELD "xxcps_par_ln" OF "xxcps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "par_ln"
+  POSITION 19
+  MAX-WIDTH 4
+  ORDER 210
+
+ADD FIELD "xxcps_wt" OF "xxcps_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 20
+  MAX-WIDTH 220
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxcps_comp_ln" OF "xxcps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "comp_ln"
+  POSITION 23
+  MAX-WIDTH 4
+  ORDER 220
+
+ADD FIELD "xxcps_wt_conv" OF "xxcps_mstr" AS decimal 
+  FORMAT ">>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "wt_conv"
+  POSITION 25
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 260
+
+ADD FIELD "xxcps_wt_par" OF "xxcps_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "wt_par"
+  POSITION 26
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 270
+
+ADD INDEX "xxcps_cu_ln" ON "xxcps_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcps_domain" ASCENDING 
+  INDEX-FIELD "xxcps_par_ln" ASCENDING 
+  INDEX-FIELD "xxcps_comp_ln" ASCENDING 
+
+ADD INDEX "xxcps_cu_parcomp" ON "xxcps_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxcps_domain" ASCENDING 
+  INDEX-FIELD "xxcps_cu_par" ASCENDING 
+  INDEX-FIELD "xxcps_cu_comp" ASCENDING 
+
+ADD INDEX "xxcps_parcomp" ON "xxcps_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxcps_domain" ASCENDING 
+  INDEX-FIELD "xxcps_par" ASCENDING 
+  INDEX-FIELD "xxcps_comp" ASCENDING 
+
+ADD TABLE "xxcpt_mstr"
+  AREA "TRANSACTION"
+  LABEL "海关商品编号"
+  DUMP-NAME "xxcpt_ms"
+
+ADD FIELD "xxcpt_domain" OF "xxcpt_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcpt_ln" OF "xxcpt_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxcpt_cu_part" OF "xxcpt_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Custom Item"
+  POSITION 4
+  MAX-WIDTH 24
+  ORDER 30
+
+ADD FIELD "xxcpt_desc" OF "xxcpt_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 5
+  MAX-WIDTH 60
+  ORDER 40
+
+ADD FIELD "xxcpt_um" OF "xxcpt_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxcpt_price" OF "xxcpt_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "price"
+  POSITION 7
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxcpt_tax" OF "xxcpt_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Tax"
+  POSITION 10
+  MAX-WIDTH 2
+  ORDER 90
+
+ADD FIELD "xxcpt_type" OF "xxcpt_mstr" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 11
+  MAX-WIDTH 6
+  ORDER 100
+
+ADD FIELD "xxcpt_cr_date" OF "xxcpt_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Create Date"
+  POSITION 12
+  MAX-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxcpt_ucfld" OF "xxcpt_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 120
+
+ADD FIELD "xxcpt_udfld" OF "xxcpt_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 14
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xxcpt_ctry_code" OF "xxcpt_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Ctry Code"
+  POSITION 15
+  MAX-WIDTH 8
+  ORDER 140
+
+ADD FIELD "xxcpt_wt_conv" OF "xxcpt_mstr" AS decimal 
+  FORMAT ">>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "第二单位"
+  POSITION 16
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xxcpt_attach" OF "xxcpt_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "attached"
+  POSITION 17
+  MAX-WIDTH 1
+  ORDER 160
+
+ADD INDEX "xxcpt_ln" ON "xxcpt_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcpt_domain" ASCENDING 
+  INDEX-FIELD "xxcpt_ln" ASCENDING 
+  INDEX-FIELD "xxcpt_cu_part" ASCENDING 
+
+ADD INDEX "xxcpt_cu_part" ON "xxcpt_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxcpt_domain" ASCENDING 
+  INDEX-FIELD "xxcpt_cu_part" ASCENDING 
+  INDEX-FIELD "xxcpt_ln" ASCENDING 
+
+ADD TABLE "xxctax_mstr"
+  AREA "TRANSACTION"
+  LABEL "征免性质"
+  DUMP-NAME "xxctax_m"
+
+ADD FIELD "xxctax_domain" OF "xxctax_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxctax_code" OF "xxctax_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Tax"
+  POSITION 3
+  MAX-WIDTH 8
+  ORDER 20
+
+ADD FIELD "xxctax_desc1" OF "xxctax_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Desc"
+  POSITION 4
+  MAX-WIDTH 20
+  ORDER 30
+
+ADD FIELD "xxctax_desc2" OF "xxctax_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Desc"
+  POSITION 5
+  MAX-WIDTH 60
+  ORDER 40
+
+ADD INDEX "xxctax_code" ON "xxctax_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxctax_domain" ASCENDING 
+  INDEX-FIELD "xxctax_code" ASCENDING 
+
+ADD TABLE "xxctra_mstr"
+  AREA "TRANSACTION"
+  LABEL "监管方式"
+  DUMP-NAME "xxctra_m"
+
+ADD FIELD "xxctra_domain" OF "xxctra_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxctra_code" OF "xxctra_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Trade#"
+  POSITION 3
+  MAX-WIDTH 8
+  ORDER 20
+
+ADD FIELD "xxctra_desc1" OF "xxctra_mstr" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Desc"
+  POSITION 4
+  MAX-WIDTH 30
+  ORDER 30
+
+ADD FIELD "xxctra_desc2" OF "xxctra_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Desc2"
+  POSITION 5
+  MAX-WIDTH 60
+  ORDER 40
+
+ADD INDEX "xxctra_code" ON "xxctra_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxctra_domain" ASCENDING 
+  INDEX-FIELD "xxctra_code" ASCENDING 
+
+ADD TABLE "xxctry_mstr"
+  AREA "TRANSACTION"
+  LABEL "产终地"
+  DUMP-NAME "xxctry_m"
+
+ADD FIELD "xxctry_domain" OF "xxctry_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxctry_code" OF "xxctry_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Country"
+  POSITION 3
+  MAX-WIDTH 8
+  ORDER 20
+
+ADD FIELD "xxctry_name" OF "xxctry_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD INDEX "xxctry_code" ON "xxctry_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxctry_domain" ASCENDING 
+  INDEX-FIELD "xxctry_code" ASCENDING 
+
+ADD TABLE "xxdept_mstr"
+  AREA "TRANSACTION"
+  LABEL "海关口岸"
+  DUMP-NAME "xxdept_m"
+
+ADD FIELD "xxdept_domain" OF "xxdept_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxdept_code" OF "xxdept_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Dept"
+  POSITION 3
+  MAX-WIDTH 8
+  ORDER 20
+
+ADD FIELD "xxdept_desc" OF "xxdept_mstr" AS character 
+  FORMAT "x(16)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 4
+  MAX-WIDTH 32
+  ORDER 30
+
+ADD INDEX "xxdept_code" ON "xxdept_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxdept_domain" ASCENDING 
+  INDEX-FIELD "xxdept_code" ASCENDING 
+
+ADD TABLE "xxepld_det"
+  AREA "TRANSACTION"
+  LABEL "出品计划明细表"
+  DUMP-NAME "xxepld_d"
+
+ADD FIELD "xxepld_domain" OF "xxepld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxepld_nbr" OF "xxepld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Plan Number"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxepld_ln" OF "xxepld_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxepld_part" OF "xxepld_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxepld_edate" OF "xxepld_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Plan Date"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxepld_qty" OF "xxepld_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "Plan Qty"
+  POSITION 7
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxepld_um" OF "xxepld_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxepld_cu_qty" OF "xxepld_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "Cust Qty"
+  POSITION 9
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxepld_ucfld" OF "xxepld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 10
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 90
+
+ADD FIELD "xxepld_udfld" OF "xxepld_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 100
+
+ADD INDEX "xxepld_nbr" ON "xxepld_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxepld_domain" ASCENDING 
+  INDEX-FIELD "xxepld_nbr" ASCENDING 
+  INDEX-FIELD "xxepld_ln" ASCENDING 
+
+ADD TABLE "xxepl_mstr"
+  AREA "TRANSACTION"
+  LABEL "出口计划主表"
+  DUMP-NAME "xxepl_ms"
+
+ADD FIELD "xxepl_nbr" OF "xxepl_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Plan Number"
+  POSITION 2
+  MAX-WIDTH 24
+  ORDER 10
+
+ADD FIELD "xxepl_start" OF "xxepl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start Date"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxepl_end" OF "xxepl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "End Date"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxepl_rmk" OF "xxepl_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 5
+  MAX-WIDTH 120
+  ORDER 40
+
+ADD FIELD "xxepl_domain" OF "xxepl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxepl_cr_date" OF "xxepl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Create Date"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxepl_userid" OF "xxepl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxepl_ucfld" OF "xxepl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 80
+
+ADD FIELD "xxepl_udfld" OF "xxepl_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxepl_stat" OF "xxepl_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 11
+  MAX-WIDTH 2
+  ORDER 100
+
+ADD INDEX "xxepl_nbr" ON "xxepl_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxepl_domain" ASCENDING 
+  INDEX-FIELD "xxepl_nbr" ASCENDING 
+
+ADD TABLE "xxeprd_det"
+  AREA "TRANSACTION"
+  LABEL "xxeprd_det"
+  DUMP-NAME "xxeprd_d"
+
+ADD FIELD "xxeprd_domain" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxeprd_nbr" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxeprd_line" OF "xxeprd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxeprd_iss_date" OF "xxeprd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "货运日期"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxeprd_cu_ln" OF "xxeprd_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxeprd_cu_part" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "cu_part"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxeprd_price" OF "xxeprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "cu_price"
+  POSITION 8
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxeprd_cu_qty" OF "xxeprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "cu_qty"
+  POSITION 9
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 82
+
+ADD FIELD "xxeprd_cu_um" OF "xxeprd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "cu_UM"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 91
+
+ADD FIELD "xxeprd_amt" OF "xxeprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 12
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xxeprd_ctry" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "产销地"
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxeprd_stat" OF "xxeprd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 20
+  MAX-WIDTH 2
+  ORDER 190
+
+ADD FIELD "xxeprd_um_conv" OF "xxeprd_det" AS decimal 
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "0"
+  POSITION 21
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxeprd_iss_ln" OF "xxeprd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "rct_ln"
+  POSITION 22
+  MAX-WIDTH 4
+  ORDER 0
+
+ADD FIELD "xxeprd_iss_qty" OF "xxeprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "rct_qty"
+  POSITION 23
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 81
+
+ADD FIELD "xxeprd_used" OF "xxeprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "qty_used"
+  POSITION 24
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxeprd_um" OF "xxeprd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxeprd_iss_nbr" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rct_nbr"
+  POSITION 26
+  MAX-WIDTH 16
+  ORDER 182
+
+ADD FIELD "xxeprd_iss_order" OF "xxeprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rct_order"
+  POSITION 27
+  MAX-WIDTH 16
+  ORDER 181
+
+ADD FIELD "xxeprd_iss_part" OF "xxeprd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "rct_part"
+  POSITION 28
+  MAX-WIDTH 36
+  ORDER 210
+
+ADD FIELD "xxeprd_tax" OF "xxeprd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "tax"
+  POSITION 29
+  MAX-WIDTH 2
+  ORDER 220
+
+ADD INDEX "xxeprd_nbr" ON "xxeprd_det" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxeprd_domain" ASCENDING 
+  INDEX-FIELD "xxeprd_nbr" ASCENDING 
+  INDEX-FIELD "xxeprd_line" ASCENDING 
+
+ADD TABLE "xxepr_mstr"
+  AREA "TRANSACTION"
+  LABEL "xxepr_mstr"
+  DUMP-NAME "xxepr_ms"
+
+ADD FIELD "xxepr_domain" OF "xxepr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxepr_nbr" OF "xxepr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxepr_date" OF "xxepr_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxepr_req_date" OF "xxepr_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "申报日期"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxepr_curr" OF "xxepr_mstr" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "curr"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxepr_amt" OF "xxepr_mstr" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 7
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxepr_dept" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "进出口岸"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxepr_loc" OF "xxepr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "贸易国别"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxepr_car" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "car"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxepr_driver" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "driver"
+  POSITION 11
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxepr_bk_nbr" OF "xxepr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "手册号"
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxepr_ship_nbr" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "载货清单号"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxepr_bar_code" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "条码号"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxepr_license" OF "xxepr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "许可证号"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxepr_rmks1" OF "xxepr_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "rmks1"
+  POSITION 16
+  MAX-WIDTH 36
+  ORDER 150
+
+ADD FIELD "xxepr_rmks2" OF "xxepr_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "rmks2"
+  POSITION 17
+  MAX-WIDTH 36
+  ORDER 160
+
+ADD FIELD "xxepr_box_num" OF "xxepr_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "box_num"
+  POSITION 18
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 170
+
+ADD FIELD "xxepr_gross" OF "xxepr_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "grossweight"
+  POSITION 19
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxepr_stat" OF "xxepr_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 20
+  MAX-WIDTH 2
+  ORDER 190
+
+ADD INDEX "xxepr_nbr" ON "xxepr_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxepr_domain" ASCENDING 
+  INDEX-FIELD "xxepr_nbr" ASCENDING 
+
+ADD TABLE "xxexpd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxexpd_d"
+
+ADD FIELD "xxexpd_domain" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxexpd_type" OF "xxexpd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "type"
+  POSITION 3
+  MAX-WIDTH 2
+  ORDER 20
+
+ADD FIELD "xxexpd_line" OF "xxexpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxexpd_pr_nbr" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "pr_nbr"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xxexpd_cu_part" OF "xxexpd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "custom item"
+  POSITION 14
+  MAX-WIDTH 36
+  ORDER 130
+
+ADD FIELD "xxexpd_cu_ln" OF "xxexpd_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "item"
+  POSITION 15
+  MAX-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxexpd_price" OF "xxexpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "price"
+  POSITION 16
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xxexpd_amt" OF "xxexpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 17
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xxexpd_ctry" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "country"
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxexpd_cu_qty" OF "xxexpd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty_cust"
+  POSITION 19
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxexpd_cu_um" OF "xxexpd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "cu um"
+  POSITION 20
+  MAX-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxexpd_iss_qty" OF "xxexpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "qty"
+  POSITION 21
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 300
+
+ADD FIELD "xxexpd_used" OF "xxexpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "used"
+  POSITION 22
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 310
+
+ADD FIELD "xxexpd_stat" OF "xxexpd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 23
+  MAX-WIDTH 2
+  ORDER 220
+
+ADD FIELD "xxexpd_pr_line" OF "xxexpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "pr_line"
+  POSITION 24
+  MAX-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xxexpd_nbr" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 31
+
+ADD FIELD "xxexpd_iss_date" OF "xxexpd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "issdate"
+  POSITION 26
+  MAX-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xxexpd_iss_ln" OF "xxexpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "iss_ln"
+  POSITION 27
+  MAX-WIDTH 4
+  ORDER 260
+
+ADD FIELD "xxexpd_iss_nbr" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "iss_nbr"
+  POSITION 28
+  MAX-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xxexpd_iss_order" OF "xxexpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "order"
+  POSITION 29
+  MAX-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xxexpd_iss_part" OF "xxexpd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 30
+  MAX-WIDTH 36
+  ORDER 290
+
+ADD FIELD "xxexpd_um" OF "xxexpd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "um"
+  POSITION 31
+  MAX-WIDTH 4
+  ORDER 320
+
+ADD FIELD "xxexpd_um_conv" OF "xxexpd_det" AS decimal 
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "0"
+  LABEL "conv"
+  POSITION 32
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 330
+
+ADD FIELD "xxexpd_tax" OF "xxexpd_det" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "tax"
+  POSITION 33
+  MAX-WIDTH 8
+  ORDER 340
+
+ADD INDEX "xxexpd_type" ON "xxexpd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxexpd_domain" ASCENDING 
+  INDEX-FIELD "xxexpd_type" ASCENDING 
+  INDEX-FIELD "xxexpd_nbr" ASCENDING 
+  INDEX-FIELD "xxexpd_line" ASCENDING 
+
+ADD INDEX "xxexpd_nbr" ON "xxexpd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxexpd_domain" ASCENDING 
+  INDEX-FIELD "xxexpd_nbr" ASCENDING 
+  INDEX-FIELD "xxexpd_line" ASCENDING 
+
+ADD TABLE "xxexp_mstr"
+  AREA "TRANSACTION"
+  LABEL "xxexp_mstr"
+  DESCRIPTION "?"
+  DUMP-NAME "xxexp_ms"
+
+ADD FIELD "xxexp_domain" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxexp_type" OF "xxexp_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "typ"
+  POSITION 3
+  MAX-WIDTH 2
+  ORDER 20
+
+ADD FIELD "xxexp_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxexp_crt_date" OF "xxexp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxexp_req_date" OF "xxexp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "req_Date"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxexp_curr" OF "xxexp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "curr"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxexp_amt" OF "xxexp_mstr" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 9
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxexp_dept" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "dept"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxexp_bk_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "手册号"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxexp_pre_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "预录入单号"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxexp_bl_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "提运单号"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxexp_cu_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "海关编号"
+  POSITION 16
+  MAX-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxexp_tax_mtd" OF "xxexp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "tax mathod"
+  POSITION 17
+  MAX-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxexp_trade_mtd" OF "xxexp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "trade mathod"
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxexp_tax_rate" OF "xxexp_mstr" AS decimal 
+  FORMAT ">>>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 19
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxexp_ship_via" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipvia"
+  POSITION 20
+  MAX-WIDTH 16
+  ORDER 190
+
+ADD FIELD "xxexp_ship_tool" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "shiptool"
+  POSITION 21
+  MAX-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xxexp_license" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "license"
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xxexp_appr_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批准文号"
+  POSITION 23
+  MAX-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xxexp_contract" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "合同号"
+  POSITION 24
+  MAX-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xxexp_container" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "集装箱号"
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xxexp_rmks1" OF "xxexp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "rmks1"
+  POSITION 26
+  MAX-WIDTH 36
+  ORDER 250
+
+ADD FIELD "xxexp_rmks2" OF "xxexp_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "rmks2"
+  POSITION 27
+  MAX-WIDTH 36
+  ORDER 260
+
+ADD FIELD "xxexp_from" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipfrom"
+  POSITION 28
+  MAX-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xxexp_to" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipto"
+  POSITION 29
+  MAX-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xxexp_fob" OF "xxexp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "成交方式"
+  POSITION 30
+  MAX-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xxexp_use" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "use"
+  POSITION 31
+  MAX-WIDTH 16
+  ORDER 300
+
+ADD FIELD "xxexp_box_num" OF "xxexp_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "boxnum"
+  POSITION 32
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 310
+
+ADD FIELD "xxexp_box_type" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "boxtype"
+  POSITION 33
+  MAX-WIDTH 16
+  ORDER 320
+
+ADD FIELD "xxexp_net" OF "xxexp_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "netweight"
+  POSITION 34
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 330
+
+ADD FIELD "xxexp_gross" OF "xxexp_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "grossweight"
+  POSITION 35
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 340
+
+ADD FIELD "xxexp_port" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "装货港"
+  POSITION 36
+  MAX-WIDTH 16
+  ORDER 350
+
+ADD FIELD "xxexp_stat" OF "xxexp_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 37
+  MAX-WIDTH 2
+  ORDER 360
+
+ADD FIELD "xxexp_userid" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "userid"
+  POSITION 38
+  MAX-WIDTH 16
+  ORDER 370
+
+ADD FIELD "xxexp_iss_date" OF "xxexp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "iss_date"
+  POSITION 39
+  MAX-WIDTH 4
+  ORDER 380
+
+ADD FIELD "xxexp_sl_nbr" OF "xxexp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "sl_nbr"
+  POSITION 40
+  MAX-WIDTH 16
+  ORDER 390
+
+ADD INDEX "xxexp_type" ON "xxexp_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxexp_domain" ASCENDING 
+  INDEX-FIELD "xxexp_type" ASCENDING 
+  INDEX-FIELD "xxexp_nbr" ASCENDING 
+
+ADD INDEX "xxexp_nbr" ON "xxexp_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  INDEX-FIELD "xxexp_domain" ASCENDING 
+  INDEX-FIELD "xxexp_nbr" ASCENDING 
+
+ADD TABLE "xximpd_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xximpd_d"
+
+ADD FIELD "xximpd_domain" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xximpd_nbr" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xximpd_line" OF "xximpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xximpd_pr_nbr" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "pr_nbr"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xximpd_cu_part" OF "xximpd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "custom item"
+  POSITION 14
+  MAX-WIDTH 36
+  ORDER 130
+
+ADD FIELD "xximpd_cu_ln" OF "xximpd_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "item"
+  POSITION 15
+  MAX-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xximpd_price" OF "xximpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "price"
+  POSITION 16
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xximpd_amt" OF "xximpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 17
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xximpd_ctry" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "country"
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xximpd_cu_qty" OF "xximpd_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty_cust"
+  POSITION 19
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xximpd_cu_um" OF "xximpd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "cu um"
+  POSITION 20
+  MAX-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xximpd_rct_qty" OF "xximpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "rct_qty"
+  POSITION 21
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 300
+
+ADD FIELD "xximpd_um" OF "xximpd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 22
+  MAX-WIDTH 4
+  ORDER 310
+
+ADD FIELD "xximpd_stat" OF "xximpd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 23
+  MAX-WIDTH 2
+  ORDER 220
+
+ADD FIELD "xximpd_pr_line" OF "xximpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "pr_line"
+  POSITION 24
+  MAX-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xximpd_type" OF "xximpd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "T"
+  POSITION 25
+  MAX-WIDTH 2
+  ORDER 21
+
+ADD FIELD "xximpd_rct_date" OF "xximpd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "rct_date"
+  POSITION 26
+  MAX-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xximpd_rct_ln" OF "xximpd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "rct_ln"
+  POSITION 27
+  MAX-WIDTH 4
+  ORDER 260
+
+ADD FIELD "xximpd_rct_nbr" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rct_nbr"
+  POSITION 28
+  MAX-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xximpd_rct_order" OF "xximpd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "order"
+  POSITION 29
+  MAX-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xximpd_rct_part" OF "xximpd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 30
+  MAX-WIDTH 36
+  ORDER 290
+
+ADD FIELD "xximpd_um_conv" OF "xximpd_det" AS decimal 
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "0"
+  LABEL "conv"
+  POSITION 31
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 320
+
+ADD FIELD "xximpd_tax" OF "xximpd_det" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "tax"
+  POSITION 32
+  MAX-WIDTH 8
+  ORDER 330
+
+ADD FIELD "xximpd_used" OF "xximpd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "used"
+  POSITION 33
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 340
+
+ADD INDEX "xximpd_type" ON "xximpd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xximpd_domain" ASCENDING 
+  INDEX-FIELD "xximpd_type" ASCENDING 
+  INDEX-FIELD "xximpd_nbr" ASCENDING 
+  INDEX-FIELD "xximpd_line" ASCENDING 
+
+ADD INDEX "xximpd_nbr" ON "xximpd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xximpd_domain" ASCENDING 
+  INDEX-FIELD "xximpd_nbr" ASCENDING 
+  INDEX-FIELD "xximpd_line" ASCENDING 
+
+ADD TABLE "xximp_mstr"
+  AREA "TRANSACTION"
+  LABEL "xximp_mstr"
+  DESCRIPTION "?"
+  DUMP-NAME "xximp_ms"
+
+ADD FIELD "xximp_domain" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xximp_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xximp_crt_date" OF "xximp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xximp_req_date" OF "xximp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "req_date"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xximp_curr" OF "xximp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "curr"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xximp_amt" OF "xximp_mstr" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 9
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xximp_dept" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "dept"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xximp_bk_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "备案单号"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xximp_pre_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "预录入单号"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xximp_bl_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "提运单号"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xximp_cu_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "海关编号"
+  POSITION 16
+  MAX-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xximp_tax_mtd" OF "xximp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "tax mathod"
+  POSITION 17
+  MAX-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xximp_trade_mtd" OF "xximp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "trade mathod"
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xximp_tax_rate" OF "xximp_mstr" AS decimal 
+  FORMAT ">>>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 19
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xximp_ship_via" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipvia"
+  POSITION 20
+  MAX-WIDTH 16
+  ORDER 190
+
+ADD FIELD "xximp_ship_tool" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "shiptool"
+  POSITION 21
+  MAX-WIDTH 16
+  ORDER 200
+
+ADD FIELD "xximp_license" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "license"
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 210
+
+ADD FIELD "xximp_appr_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批准文号"
+  POSITION 23
+  MAX-WIDTH 16
+  ORDER 220
+
+ADD FIELD "xximp_contract" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "合同号"
+  POSITION 24
+  MAX-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xximp_container" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "集装箱号"
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xximp_rmks1" OF "xximp_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "rmks1"
+  POSITION 26
+  MAX-WIDTH 36
+  ORDER 250
+
+ADD FIELD "xximp_rmks2" OF "xximp_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "rmks2"
+  POSITION 27
+  MAX-WIDTH 36
+  ORDER 260
+
+ADD FIELD "xximp_from" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipfrom"
+  POSITION 28
+  MAX-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xximp_to" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "shipto"
+  POSITION 29
+  MAX-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xximp_fob" OF "xximp_mstr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "成交方式"
+  POSITION 30
+  MAX-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xximp_use" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "use"
+  POSITION 31
+  MAX-WIDTH 16
+  ORDER 300
+
+ADD FIELD "xximp_box_num" OF "xximp_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "boxnum"
+  POSITION 32
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 310
+
+ADD FIELD "xximp_box_type" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "boxtype"
+  POSITION 33
+  MAX-WIDTH 16
+  ORDER 320
+
+ADD FIELD "xximp_net" OF "xximp_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "netweight"
+  POSITION 34
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 330
+
+ADD FIELD "xximp_gross" OF "xximp_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "grossweight"
+  POSITION 35
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 340
+
+ADD FIELD "xximp_port" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "装货港"
+  POSITION 36
+  MAX-WIDTH 16
+  ORDER 350
+
+ADD FIELD "xximp_stat" OF "xximp_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 37
+  MAX-WIDTH 2
+  ORDER 360
+
+ADD FIELD "xximp_userid" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "userid"
+  POSITION 38
+  MAX-WIDTH 16
+  ORDER 370
+
+ADD FIELD "xximp_rct_date" OF "xximp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "rct_date"
+  POSITION 39
+  MAX-WIDTH 4
+  ORDER 380
+
+ADD FIELD "xximp_type" OF "xximp_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "T"
+  POSITION 40
+  MAX-WIDTH 2
+  ORDER 21
+
+ADD FIELD "xximp_sl_nbr" OF "xximp_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "sl_nbr"
+  POSITION 41
+  MAX-WIDTH 16
+  ORDER 390
+
+ADD INDEX "xximp_type" ON "xximp_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xximp_domain" ASCENDING 
+  INDEX-FIELD "xximp_type" ASCENDING 
+  INDEX-FIELD "xximp_nbr" ASCENDING 
+
+ADD INDEX "xximp_nbr" ON "xximp_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  INDEX-FIELD "xximp_domain" ASCENDING 
+  INDEX-FIELD "xximp_nbr" ASCENDING 
+
+ADD TABLE "xxiprd_det"
+  AREA "TRANSACTION"
+  LABEL "xxiprd_det"
+  DUMP-NAME "xxiprd_d"
+
+ADD FIELD "xxiprd_domain" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxiprd_nbr" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxiprd_line" OF "xxiprd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxiprd_rct_date" OF "xxiprd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "收货日期"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxiprd_cu_ln" OF "xxiprd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxiprd_cu_part" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "cu_part"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxiprd_price" OF "xxiprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "cu_price"
+  POSITION 8
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxiprd_cu_qty" OF "xxiprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "cu_qty"
+  POSITION 9
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 82
+
+ADD FIELD "xxiprd_cu_um" OF "xxiprd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "cu_UM"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 91
+
+ADD FIELD "xxiprd_amt" OF "xxiprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 12
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xxiprd_ctry" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "产销地"
+  POSITION 19
+  MAX-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxiprd_stat" OF "xxiprd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 20
+  MAX-WIDTH 2
+  ORDER 190
+
+ADD FIELD "xxiprd_um_conv" OF "xxiprd_det" AS decimal 
+  FORMAT ">>>>9.9999<<<<"
+  INITIAL "0"
+  POSITION 21
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxiprd_rct_ln" OF "xxiprd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "rct_ln"
+  POSITION 22
+  MAX-WIDTH 4
+  ORDER 0
+
+ADD FIELD "xxiprd_rct_qty" OF "xxiprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "rct_qty"
+  POSITION 23
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 81
+
+ADD FIELD "xxiprd_used" OF "xxiprd_det" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "qty_used"
+  POSITION 24
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxiprd_um" OF "xxiprd_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 25
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxiprd_rct_nbr" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rct_nbr"
+  POSITION 26
+  MAX-WIDTH 16
+  ORDER 182
+
+ADD FIELD "xxiprd_rct_order" OF "xxiprd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rct_order"
+  POSITION 27
+  MAX-WIDTH 16
+  ORDER 181
+
+ADD FIELD "xxiprd_rct_part" OF "xxiprd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "rct_part"
+  POSITION 28
+  MAX-WIDTH 36
+  ORDER 210
+
+ADD FIELD "xxiprd_tax" OF "xxiprd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "tax"
+  POSITION 29
+  MAX-WIDTH 2
+  ORDER 220
+
+ADD INDEX "xxiprd_nbr" ON "xxiprd_det" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxiprd_domain" ASCENDING 
+  INDEX-FIELD "xxiprd_nbr" ASCENDING 
+  INDEX-FIELD "xxiprd_line" ASCENDING 
+
+ADD TABLE "xxipr_mstr"
+  AREA "TRANSACTION"
+  LABEL "xxipr_mstr"
+  DUMP-NAME "xxipr_ms"
+
+ADD FIELD "xxipr_domain" OF "xxipr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxipr_nbr" OF "xxipr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxipr_date" OF "xxipr_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxipr_req_date" OF "xxipr_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "申报日期"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxipr_curr" OF "xxipr_mstr" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "curr"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxipr_amt" OF "xxipr_mstr" AS decimal 
+  FORMAT "->>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "amt"
+  POSITION 7
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxipr_dept" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "进出口岸"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxipr_loc" OF "xxipr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "贸易国别"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxipr_car" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "car"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxipr_driver" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "driver"
+  POSITION 11
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxipr_bk_nbr" OF "xxipr_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "手册号"
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxipr_ship_nbr" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "载货清单号"
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxipr_bar_code" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "条码号"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxipr_license" OF "xxipr_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "许可证号"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxipr_rmks1" OF "xxipr_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "rmks1"
+  POSITION 16
+  MAX-WIDTH 36
+  ORDER 150
+
+ADD FIELD "xxipr_rmks2" OF "xxipr_mstr" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "rmks2"
+  POSITION 17
+  MAX-WIDTH 36
+  ORDER 160
+
+ADD FIELD "xxipr_box_num" OF "xxipr_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "box_num"
+  POSITION 18
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 170
+
+ADD FIELD "xxipr_gross" OF "xxipr_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "grossweight"
+  POSITION 19
+  MAX-WIDTH 20
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxipr_stat" OF "xxipr_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 20
+  MAX-WIDTH 2
+  ORDER 190
+
+ADD INDEX "xxipr_nbr" ON "xxipr_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxipr_domain" ASCENDING 
+  INDEX-FIELD "xxipr_nbr" ASCENDING 
+
+ADD TABLE "xxloc_mstr"
+  AREA "TRANSACTION"
+  LABEL "地区代码"
+  DUMP-NAME "xxloc_ms"
+
+ADD FIELD "xxloc_domain" OF "xxloc_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxloc_code" OF "xxloc_mstr" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "Loc"
+  POSITION 3
+  MAX-WIDTH 10
+  ORDER 20
+
+ADD FIELD "xxloc_desc" OF "xxloc_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Desc"
+  POSITION 4
+  MAX-WIDTH 60
+  ORDER 30
+
+ADD INDEX "xxloc_code" ON "xxloc_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxloc_domain" ASCENDING 
+  INDEX-FIELD "xxloc_code" ASCENDING 
+
+ADD TABLE "xxps_mstr"
+  AREA "TRANSACTION"
+  LABEL "BOM单重表"
+  DUMP-NAME "xxps_mst"
+
+ADD FIELD "xxps_domain" OF "xxps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxps_par_ln" OF "xxps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "par_ln"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxps_par" OF "xxps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Parent Item"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxps_comp_ln" OF "xxps_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "comp_ln"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxps_comp" OF "xxps_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Component Item"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xxps_um" OF "xxps_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxps_cu_um" OF "xxps_mstr" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Cust UM"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxps_qty_per" OF "xxps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 9
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xxps_qty_per_b" OF "xxps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9999999<<<"
+  INITIAL "0"
+  LABEL "qty_per_b"
+  POSITION 10
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxps_cu_qty_per" OF "xxps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9999999<<<"
+  INITIAL "0"
+  LABEL "Cust Item Qty Per"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "xxps_cu_qty_per_b" OF "xxps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9999999<<<"
+  INITIAL "0"
+  LABEL "cu_qty_per_b"
+  POSITION 12
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xxps_wt" OF "xxps_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 13
+  MAX-WIDTH 220
+  DECIMALS 10
+  ORDER 120
+
+ADD FIELD "xxps_wt_b" OF "xxps_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "wt_b"
+  POSITION 14
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "xxps_userid" OF "xxps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 15
+  MAX-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxps_cr_date" OF "xxps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Create Date"
+  POSITION 16
+  MAX-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxps_wt_par" OF "xxps_mstr" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "par_wt"
+  POSITION 20
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xxps_ucfld" OF "xxps_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 25
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 240
+
+ADD FIELD "xxps_udfld" OF "xxps_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 26
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 10
+  ORDER 250
+
+ADD FIELD "xxps_utfld" OF "xxps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 27
+  MAX-WIDTH 90
+  EXTENT 5
+  ORDER 260
+
+ADD INDEX "xxps_cu_parcomp" ON "xxps_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxps_domain" ASCENDING 
+  INDEX-FIELD "xxps_par_ln" ASCENDING 
+  INDEX-FIELD "xxps_comp_ln" ASCENDING 
+
+ADD INDEX "xxps_parcomp" ON "xxps_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxps_domain" ASCENDING 
+  INDEX-FIELD "xxps_par" ASCENDING 
+  INDEX-FIELD "xxps_comp" ASCENDING 
+
+ADD TABLE "xxsld_det"
+  AREA "TRANSACTION"
+  LABEL "xxsld_det"
+  DUMP-NAME "xxsld_de"
+
+ADD FIELD "xxsld_nbr" OF "xxsld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxsld_line" OF "xxsld_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "line"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxsld_cu_ln" OF "xxsld_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "cu_ln"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxsld_cu_part" OF "xxsld_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "cu_part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxsld_cu_um" OF "xxsld_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxsld_qty_ord" OF "xxsld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "qty_ord"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxsld_qty_used" OF "xxsld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "qty_used"
+  POSITION 8
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxsld_status" OF "xxsld_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 9
+  MAX-WIDTH 2
+  ORDER 80
+
+ADD FIELD "xxsld_bk_from" OF "xxsld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "bk_from"
+  POSITION 10
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxsld_bk_ln_from" OF "xxsld_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "bk_ln_from"
+  POSITION 11
+  MAX-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxsld_bk_to" OF "xxsld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "bk_to"
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxsld_bk_ln_to" OF "xxsld_det" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "bk_ln_to"
+  POSITION 13
+  MAX-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxsld_domain" OF "xxsld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 14
+  MAX-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxsld_price" OF "xxsld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "price"
+  POSITION 15
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 140
+
+ADD FIELD "xxsld_rmks" OF "xxsld_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "rmks"
+  POSITION 16
+  MAX-WIDTH 80
+  ORDER 150
+
+ADD INDEX "xxsld_nbr" ON "xxsld_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxsld_domain" ASCENDING 
+  INDEX-FIELD "xxsld_nbr" ASCENDING 
+  INDEX-FIELD "xxsld_line" ASCENDING 
+
+ADD INDEX "xxsld_part" ON "xxsld_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxsld_domain" ASCENDING 
+  INDEX-FIELD "xxsld_cu_ln" ASCENDING 
+  INDEX-FIELD "xxsld_nbr" ASCENDING 
+
+ADD TABLE "xxsl_mstr"
+  AREA "TRANSACTION"
+  LABEL "xxsl_mstr"
+  DUMP-NAME "xxsl_mst"
+
+ADD FIELD "xxsl_domain" OF "xxsl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxsl_nbr" OF "xxsl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "nbr"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxsl_type" OF "xxsl_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "type"
+  POSITION 4
+  MAX-WIDTH 1
+  ORDER 30
+
+ADD FIELD "xxsl_date" OF "xxsl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxsl_start" OF "xxsl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "start"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxsl_expire" OF "xxsl_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "expire"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxsl_addr_from" OF "xxsl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "from"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxsl_addr_to" OF "xxsl_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "addr_to"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxsl_status" OF "xxsl_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 10
+  MAX-WIDTH 2
+  ORDER 90
+
+ADD INDEX "xxsl_nbr" ON "xxsl_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxsl_domain" ASCENDING 
+  INDEX-FIELD "xxsl_nbr" ASCENDING 
+
+ADD TABLE "xxtrh_hist"
+  AREA "TRANSACTION"
+  LABEL "xxtrh_hist"
+  DUMP-NAME "xxtrh_hi"
+
+ADD FIELD "xxtrh_domain" OF "xxtrh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxtrh_vend" OF "xxtrh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "vend"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxtrh_cu_ln" OF "xxtrh_hist" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "cu_ln"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxtrh_cu_part" OF "xxtrh_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "cu_part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxtrh_year" OF "xxtrh_hist" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "year"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxtrh_month" OF "xxtrh_hist" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "month"
+  POSITION 7
+  MAX-WIDTH 2
+  ORDER 60
+
+ADD FIELD "xxtrh_qty_begin" OF "xxtrh_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "期初可转厂数"
+  POSITION 8
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxtrh_cu_um" OF "xxtrh_hist" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "um"
+  POSITION 9
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxtrh_qty_send" OF "xxtrh_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "本期送货数"
+  POSITION 10
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD INDEX "xxtrh_part" ON "xxtrh_hist" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxtrh_domain" ASCENDING 
+  INDEX-FIELD "xxtrh_cu_ln" ASCENDING 
+  INDEX-FIELD "xxtrh_vend" ASCENDING 
+  INDEX-FIELD "xxtrh_year" ASCENDING 
+  INDEX-FIELD "xxtrh_month" ASCENDING 
+
+ADD INDEX "xxtrh_vend" ON "xxtrh_hist" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xxtrh_domain" ASCENDING 
+  INDEX-FIELD "xxtrh_vend" ASCENDING 
+  INDEX-FIELD "xxtrh_cu_ln" ASCENDING 
+  INDEX-FIELD "xxtrh_year" ASCENDING 
+  INDEX-FIELD "xxtrh_month" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000078125

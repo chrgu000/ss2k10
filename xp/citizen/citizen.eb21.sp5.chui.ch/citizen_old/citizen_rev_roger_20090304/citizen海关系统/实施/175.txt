@@ -1,0 +1,540 @@
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp001.p"
+"xxcs0004"
+@@end
+@@batchload gplbldmt.p
+"par" "xxqmrp001.p"
+"xxcs0016"
+@@end
+@@batchload gplbldmt.p
+"cu_comp" "xxqmrp001.p"
+"xxcs0006"
+@@end
+@@batchload gplbldmt.p
+"comp" "xxqmrp001.p"
+"xxcs0017"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp001.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"par1" "xxqmrp001.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_comp1" "xxqmrp001.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"comp1" "xxqmrp001.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp002.p"
+"xxcs0013"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp002.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp002.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp002.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"part" "xxqmrp002.p"
+"xxcs0014"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxqmrp002.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp003.p"
+"xxcs0013"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp003.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_comp" "xxqmrp003.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_comp1" "xxqmrp003.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"part" "xxqmrp003.p"
+"xxcs0014"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxqmrp003.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp004.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp004.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp004.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp004.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp005.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp005.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp005.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp005.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"part" "xxqmrp005.p"
+"xxcs0014"
+@@end
+@@batchload gplbldmt.p
+"part1" "xxqmrp005.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp006.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp006.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp006.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp006.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp007.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp007.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp007.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp007.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp008.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp008.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp008.p"
+"xxcs0005"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp008.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_comp" "xxqmrp008.p"
+"xxcs0006"
+@@end
+@@batchload gplbldmt.p
+"cu_comp1" "xxqmrp008.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"date" "xxqmrp009.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxqmrp009.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp009.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp009.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp009.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp009.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"date" "xxqmrp010.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"date1" "xxqmrp010.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp010.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp010.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp010.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_par1" "xxqmrp010.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp011.p"
+"xxcs0018"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp011.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp011.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp011.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp011.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp012.p"
+"xxcs0018"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp012.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp012.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp012.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp012.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"xxcpt_ln" "xxqmrp013.p"
+"xxcs0005"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp013.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"cu_par" "xxqmrp013.p"
+"xxcs0010"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp014.p"
+"xxcs0022"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp014.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp014.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp014.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp014.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp014.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp014.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp014.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp014.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp015.p"
+"xxcs0022"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp015.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp015.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp015.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp015.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp015.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp015.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp015.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp015.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_type" "xxqmrp016.p"
+"xxcs0023"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp016.p"
+"xxcs0024"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp016.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp016.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp016.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp016.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp016.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp016.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp016.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp016.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp016.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_type" "xxqmrp017.p"
+"xxcs0023"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp017.p"
+"xxcs0024"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp017.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"eff_date" "xxqmrp017.p"
+"xxcs0020"
+@@end
+@@batchload gplbldmt.p
+"eff_date1" "xxqmrp017.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp017.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr1" "xxqmrp017.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_part" "xxqmrp017.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"cu_part1" "xxqmrp017.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"cu_ln" "xxqmrp017.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"cu_ln1" "xxqmrp017.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"year" "xxqmrp018.p"
+"xxcs0025"
+@@end
+@@batchload gplbldmt.p
+"month" "xxqmrp018.p"
+"xxcs0026"
+@@end
+@@batchload gplbldmt.p
+"nbr" "xxqmrp018.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"nbr1" "xxqmrp018.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"bk_ln" "xxqmrp018.p"
+"xxcs0009"
+@@end
+@@batchload gplbldmt.p
+"bk_ln1" "xxqmrp018.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"vend" "xxqmrp018.p"
+"xxcs0027"
+@@end
+@@batchload gplbldmt.p
+"vend1" "xxqmrp018.p"
+"xxcs0015"
+@@end
+@@batchload gplbldmt.p
+"year" "xxqmrp019.p"
+"xxcs0025"
+@@end
+@@batchload gplbldmt.p
+"month" "xxqmrp019.p"
+"xxcs0026"
+@@end
+@@batchload gplbldmt.p
+"vend" "xxqmrp019.p"
+"xxcs0027"
+@@end
+@@batchload gplbldmt.p
+"v_bk_nbr" "xxqmrp019.p"
+"xxcs0008"
+@@end
+@@batchload gplbldmt.p
+"v_bk_ln" "xxqmrp019.p"
+"xxcs0009"
+@@end
+@@batchload gplbldmt.p
+"xxcbkd_cu_ln" "xxqmrp019.p"
+"xxcs0001"
+@@end
+@@batchload gplbldmt.p
+"xxcpt_cu_part" "xxqmrp019.p"
+"xxcs0002"
+@@end
+@@batchload gplbldmt.p
+"xxcpt_desc" "xxqmrp019.p"
+"xxcs0003"
+@@end

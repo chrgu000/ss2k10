@@ -1,0 +1,85 @@
+ADD TABLE "xxvend_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxvend_d"
+
+ADD FIELD "xxvend_pt_part" OF "xxvend_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxvend_vd_part" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Supplier Item"
+  POSITION 3
+  SQL-WIDTH 80
+  ORDER 20
+
+ADD FIELD "xxvend_cmmt1" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Conments"
+  POSITION 4
+  SQL-WIDTH 80
+  ORDER 30
+
+ADD FIELD "xxvend_cmmt2" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Conments"
+  POSITION 5
+  SQL-WIDTH 80
+  ORDER 40
+
+ADD FIELD "xxvend_version" OF "xxvend_det" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "PPS Version"
+  POSITION 7
+  SQL-WIDTH 6
+  ORDER 50
+
+ADD FIELD "xxvend_spec1" OF "xxvend_det" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  LABEL "Specification"
+  POSITION 8
+  SQL-WIDTH 40
+  ORDER 60
+
+ADD FIELD "xxvend_spec2" OF "xxvend_det" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 40
+  ORDER 70
+
+ADD FIELD "xxvend_spec3" OF "xxvend_det" AS character 
+  FORMAT "x(60)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 40
+  ORDER 80
+
+ADD INDEX "xxvend_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxvend_pt_part" ASCENDING 
+  INDEX-FIELD "xxvend_vd_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxvend_pt_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxvend_pt_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxvend_vd_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxvend_vd_part" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=UNDEFINED
+.
+0000001614

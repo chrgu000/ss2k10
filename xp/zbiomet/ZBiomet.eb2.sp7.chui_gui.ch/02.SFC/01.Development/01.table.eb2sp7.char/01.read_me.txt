@@ -1,0 +1,30 @@
+1.需单独创建建数据库SFCDB,
+2.目前使用了下列表结构:
+
+2.1.以下四个表为新增表,作用依次是:
+	xsj_hist     采购送检单记录,在phaseI.BarCode时创建,因在SFC(外协工序输入送检单号)使用,于是放在SFCDB
+		     20090316: 外包的零件不打印送检单,所以取消此处校验,此表xsj_hist不再使用.
+
+	xprn_hist    条码打印历史记录,在phaseI.BarCode时创建,因在SFC(打印返工条码时保存记录)使用,于是放在SFCDB
+	xxfb_hist    SFC反馈历史记录,
+	xxwrd_det    SFC工艺流程主档,
+	xxpause_det  SFC被暂停作业的工序明细档,
+
+
+
+2.2.以下表是为了和mfgpro.db分开,从qaddb中同步出来的表
+    同步方式是在table,index,field名称前加x,
+    例如:qaddb.wo_mstr.wo_nbr对应sfcdb.xwo_mstr.xwo_nbr
+    详细同步方式参阅文档:sfc_table_sync.xls
+
+	xcode_mstr     Generalized Code Master
+	xemp_mstr      Employee Master
+	xpod_det       Purchase Order Detail
+	xprd_det       Printer Detail
+	xpt_mstr       Item Master
+	xrsn_ref       Reason Code Master
+	xwc_mstr       Work Center Master
+	xwo_mstr       Work Order Master
+	xwr_route      Work Order Routing
+	xusrw_wkfl     User Work Table
+

@@ -1,0 +1,181 @@
+ADD TABLE "xxvend_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxvend_d"
+
+ADD FIELD "xxvend_pt_part" OF "xxvend_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxvend_vd_part" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Supplier Item"
+  POSITION 3
+  SQL-WIDTH 80
+  ORDER 20
+
+ADD FIELD "xxvend_cmmt1" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Conments"
+  POSITION 4
+  SQL-WIDTH 80
+  ORDER 30
+
+ADD FIELD "xxvend_cmmt2" OF "xxvend_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Conments"
+  POSITION 5
+  SQL-WIDTH 80
+  ORDER 40
+
+ADD INDEX "xxvend_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxvend_pt_part" ASCENDING 
+  INDEX-FIELD "xxvend_vd_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxvend_pt_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxvend_pt_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxvend_vd_part" ON "xxvend_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxvend_vd_part" ASCENDING ABBREVIATED 
+
+ADD TABLE "xxpoa_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxpoa_de"
+
+ADD FIELD "xxpoa_buyer" OF "xxpoa_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Buyer"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpoa_log" OF "xxpoa_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Lg"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxpoa_appr" OF "xxpoa_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Appr"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 30
+
+ADD FIELD "xxpoa_nbr" OF "xxpoa_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Order"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpoa_line" OF "xxpoa_det" AS decimal 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Ln"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxpoa_part" OF "xxpoa_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xxpoa_um" OF "xxpoa_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxpoa_curr" OF "xxpoa_det" AS character 
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Cur"
+  POSITION 9
+  SQL-WIDTH 6
+  ORDER 80
+
+ADD FIELD "xxpoa_qty_ord" OF "xxpoa_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty Ordered"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "xxpoa_unit_cost" OF "xxpoa_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Unit Cost"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxpoa_last_price" OF "xxpoa_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Last Price"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "xxpoa_quote_price" OF "xxpoa_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Quote Price"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxpoa_per_date" OF "xxpoa_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Perf Date"
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD FIELD "xxpoa_vend" OF "xxpoa_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Supplier"
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD INDEX "xxpoa_nbr" ON "xxpoa_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxpoa_nbr" ASCENDING 
+  INDEX-FIELD "xxpoa_line" ASCENDING 
+
+.
+PSC
+.
+0000003351

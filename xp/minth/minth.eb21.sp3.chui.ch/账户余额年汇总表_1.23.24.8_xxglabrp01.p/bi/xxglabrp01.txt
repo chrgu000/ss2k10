@@ -1,0 +1,5 @@
+#def REPORTPATH=$/Minth/xxglabrp01
+#def :end
+"AAA";"BBB";0;0;0;0;"XXdate"
+"AAA";"BBB";0;0;0;0;"XXdate"
+"AAA";"BBB";0;0;0;0;"XXdate"

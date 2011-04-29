@@ -1,0 +1,256 @@
+ADD TABLE "xxpause_det"
+  AREA "Schema Area"
+  LABEL "xxpause_det"
+  DESCRIPTION "ËùÓÐÔÝÍ£×÷ÒµµÄÓÃ»§,»úÆ÷,¹¤µ¥ÌõÂëµÈµÄÃ÷Ï¸×ÊÁÏ"
+  DUMP-NAME "xxpause_"
+
+ADD FIELD "xxpause_user" OF "xxpause_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "ÓÃ»§"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpause_wc" OF "xxpause_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "»úÆ÷"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxpause_wolot" OF "xxpause_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "¹¤µ¥ID"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxpause_op" OF "xxpause_det" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "¹¤Ðò"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxpause_date" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "ÈÕÆÚ"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxpause_time" OF "xxpause_det" AS integer 
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "Ê±¼ä"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxpause_wonbr" OF "xxpause_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "¹¤µ¥ºÅ"
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "xxpause__chr01" OF "xxpause_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxpause__chr02" OF "xxpause_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxpause__chr03" OF "xxpause_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxpause__chr04" OF "xxpause_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxpause__chr05" OF "xxpause_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxpause__int01" OF "xxpause_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD FIELD "xxpause__int02" OF "xxpause_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxpause__int03" OF "xxpause_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxpause__int04" OF "xxpause_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xxpause__int05" OF "xxpause_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxpause__dec01" OF "xxpause_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 19
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "xxpause__dec02" OF "xxpause_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 20
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 190
+
+ADD FIELD "xxpause__dec03" OF "xxpause_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 21
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxpause__dec04" OF "xxpause_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 22
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 210
+
+ADD FIELD "xxpause__dec05" OF "xxpause_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 23
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 220
+
+ADD FIELD "xxpause__dte01" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 24
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD FIELD "xxpause__dte02" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 240
+
+ADD FIELD "xxpause__dte03" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xxpause__dte05" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "xxpause__dte04" OF "xxpause_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Ô¤Áô×Ö¶Î"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 260
+
+ADD INDEX "xxpause_user" ON "xxpause_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpause_user" ASCENDING 
+  INDEX-FIELD "xxpause_wc" ASCENDING 
+  INDEX-FIELD "xxpause_wolot" ASCENDING 
+  INDEX-FIELD "xxpause_op" ASCENDING 
+
+ADD INDEX "xxpause_date" ON "xxpause_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxpause_date" DESCENDING 
+  INDEX-FIELD "xxpause_time" ASCENDING 
+  INDEX-FIELD "xxpause_user" ASCENDING 
+
+ADD INDEX "xxpause_wc" ON "xxpause_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxpause_wc" ASCENDING 
+
+ADD INDEX "xxpause_wo" ON "xxpause_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxpause_wolot" ASCENDING 
+  INDEX-FIELD "xxpause_op" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000004913

@@ -1,0 +1,142 @@
+10/06/11 14:23:51       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xjinv_mstr =========================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                            Table Field Index Table
+Name                             Flags Count Count Label
+-------------------------------- ----- ----- ----- ------------------------
+xjinv_mstr                                11     2 invoice
+
+    Dump Name: xjinv_mstr
+  Description: 金税接口主表
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xjinv_mstr =========================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                       Data Type   Flags
+----- -------------------------------- ----------- -----
+   10 xjinv_domain                     char        i
+   20 xjinv_inv_nbr                    char        i
+   30 xjinv_date                       date        i
+   40 xjinv_customer                   char
+   50 xjinv_taxid                      char
+   60 xjinv_bankname                   char
+   70 xjinv_bankacct                   char
+   80 xjinv_addr                       char
+   90 xjinv_phone                      char
+  100 xjinv_so                         char
+  110 xjinv_jinren_inv                 char
+
+Field Name                       Format
+-------------------------------- -----------------------------
+xjinv_domain                     x(8)
+xjinv_inv_nbr                    x(8)
+xjinv_date                       99/99/99
+xjinv_customer                   x(56)
+xjinv_taxid                      x(18)
+xjinv_bankname                   x(70)
+xjinv_bankacct                   x(40)
+xjinv_addr                       x(100)
+xjinv_phone                      x(20)
+xjinv_so                         x(60)
+xjinv_jinren_inv                 x(60)
+
+Field Name                       Initial
+-------------------------------- -----------------------------
+xjinv_domain
+xjinv_inv_nbr
+xjinv_date                       ?
+xjinv_customer
+xjinv_taxid
+xjinv_bankname
+xjinv_bankacct
+xjinv_addr
+xjinv_phone
+xjinv_so
+xjinv_jinren_inv
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xjinv_domain                   Domain                 ?
+xjinv_inv_nbr                  qadinv                 ?
+xjinv_date                     date                   ?
+xjinv_customer                 name                   ?
+xjinv_taxid                    taxid                  ?
+xjinv_bankname                 bank                   ?
+xjinv_bankacct                 acct                   ?
+xjinv_addr                     addr                   ?
+xjinv_phone                    phone                  ?
+xjinv_so                       so                     ?
+xjinv_jinren_inv               jinren                 ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xjinv_mstr =========================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+      xjinv_date                         2 + xjinv_domain
+                                           + xjinv_date
+
+pu    xjinv_inv_nbr                      2 + xjinv_domain
+                                           + xjinv_inv_nbr
+
+** Index Name: xjinv_date
+ Storage Area: TRANSACTION
+** Index Name: xjinv_inv_nbr
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xjinv_mstr =========================
+
+** Field Name: xjinv_domain
+  Description: 域
+
+** Field Name: xjinv_inv_nbr
+  Description: qad发票号码
+
+** Field Name: xjinv_date
+  Description: 单据日期
+
+** Field Name: xjinv_customer
+  Description: 客户名称
+
+** Field Name: xjinv_taxid
+  Description: 税号
+
+** Field Name: xjinv_bankname
+  Description: 银行名称
+
+** Field Name: xjinv_bankacct
+  Description: 银行账号
+
+** Field Name: xjinv_addr
+  Description: 客户地址
+
+** Field Name: xjinv_phone
+  Description: 客户电话
+
+** Field Name: xjinv_so
+  Description: qad销售订单
+
+** Field Name: xjinv_jinren_inv
+  Description: jinren发票号码
+
+
+todo :
+    1. 增加xx备用.

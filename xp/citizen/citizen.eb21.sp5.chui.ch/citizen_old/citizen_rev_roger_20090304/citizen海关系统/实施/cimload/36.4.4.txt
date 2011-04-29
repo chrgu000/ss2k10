@@ -1,0 +1,540 @@
+@@batchload mgmemt.p
+"ch"
+"0"
+4
+"海关菜单" - "4" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+24
+"海关控制文件" - "xxqmbkpm.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+1
+"海关基本资料菜单" - "4.1" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+1
+"海关商品维护" - "xxqmptmt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+2
+"海关商品查询报表" - "xxqmrp004.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+4
+"海关零件维护" - "xxqmptmt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+5
+"海关零件查询报表" - "xxqmrp005.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+13
+"产终地维护" - "xxqmadmt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+15
+"地区代码维护" - "xxqmadmt05.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+17
+"海关口岸维护" - "xxqmadmt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+19
+"征免性质维护" - "xxqmadmt03.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.1"
+21
+"监管方式维护" - "xxqmadmt04.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+2
+"海关商品结构菜单" - "4.2" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.2"
+1
+"成品单重计算" - "xxqmbommt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.2"
+2
+"海关商品结构产生" - "xxqmbommt03.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.2"
+3
+"海关商品结构修改" - "xxqmbommt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.2"
+4
+"海关商品结构报表" - "xxqmrp001.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+3
+"海关出口计划菜单" - "4.3" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.3"
+1
+"出口计划维护" - "xxqmplan.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.3"
+2
+"进/出口计划清单产生" - "xxqmcplmt.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.3"
+3
+"出口计划清单报表" - "xxqmrp002.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.3"
+4
+"进口计划清单报表" - "xxqmrp003.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+4
+"海关手册菜单" - "4.4" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+1
+"海关手册维护" - "xxqmbkmt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+2
+"出口备案清单报表" - "xxqmrp006.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+3
+"进口备案清单报表" - "xxqmrp007.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+4
+"手册BOM报表" - "xxqmrp008.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+5
+"手册BOM复核表" - "xxqmrp013.p  " -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+13
+"出口合同状况报表" - "xxqmrp010.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.4"
+14
+"进口合同状况报表" - "xxqmrp009.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+5
+"海关转厂菜单" - "4.5" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+1
+"关封维护" - "xxqmslmt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+2
+"转厂转入--进口报关单" - "xxqmslmt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+3
+"转厂转出--出口报关单" - "xxqmslmt03.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+13
+"供应商月初可转厂数维护" - "xxqmslmt04.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+15
+"材料转厂状况报表" - "xxqmrp018.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.5"
+16
+"材料转厂明细报表" - "xxqmrp019.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+6
+"海关进口菜单" - "4.6" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+1
+"进口申报单维护" - "xxqminmt10.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+2
+"进口申报单确认转仓" - "xxqminmt11.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+3
+"进口报关单生成" - "xxqminmt12.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+4
+"进口申报单明细报表" - "xxqmrp011.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+5
+"进口申报单打印" - "xxqmrp014.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+6
+"进口报关单打印" - "xxqmrp017.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+13
+"零星进口报关单" - "xxqmbkmt08.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.6"
+14
+"余数结转转入--进口报关单" - "xxqmbkmt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+7
+"海关出口菜单" - "4.7" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+1
+"出口申报单维护" - "xxqmexmt01.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+2
+"出口申报单确认转仓" - "xxqmexmt02.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+3
+"出口报关单生成" - "xxqmexmt03.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+4
+"出口申报单明细报表" - "xxqmrp012.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+5
+"出口申报单打印" - "xxqmrp015.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+6
+"出口报关单打印" - "xxqmrp016.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+13
+"零星出口报关单" - "xxqmbkmt07.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+14
+"余数结转转出--出口报关单" - "xxqmbkmt03.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.7"
+15
+"进口料退港--出口报关单" - "xxqmbkmt05.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4"
+8
+"成品返厂返修菜单" - "4.8" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.8"
+1
+"返修品进口报关单" - "xxqmbkmt06.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.8"
+2
+"返修品出口报关单" - "xxqmbkmt09.p" -
+.
+.
+.
+@@end
+@@batchload mgmemt.p
+"ch"
+"4.8"
+3
+"返修品统计表" - "xxqmrp0xx.p" -
+.
+.
+.
+@@end

@@ -1,0 +1,9 @@
+程式名-->指令代码
+程式名-->后台代码
+
+指令变更要依次修改下列文件:
+
+1.指令cimload文件
+2.所有用到v_line_prev[的程式: xslndefine.p/xslnchk002.p/xslnprev01.p/xsdowntime.p/xsfixmachine.p
+3.指令权限文件sfcmenu
+

@@ -1,0 +1,114 @@
+09/09/14 15:44:41       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xlkh_hist ==========================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                         Dump     Table Field Index Table
+Name                          Name     Flags Count Count Label
+----------------------------- -------- ----- ----- ----- -------------------
+xlkh_hist                     xlkh_his          27     2 Production History
+
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xlkh_hist ==========================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                Data Type   Flags Format          Initial
+----- ------------------------- ----------- ----- --------------- ----------
+   10 xlkh_domain               char        i     x(8)
+   20 xlkh_site                 char        i     x(8)
+   30 xlkh_line                 char        i     x(8)
+   40 xlkh_barcode              char        i     x(28)
+   50 xlkh_date                 date        i     99/99/99        ?
+   60 xlkh_time                 inte              >>>>>>>9        0
+   70 xlkh_process              logi              yes/no          no
+   80 xlkh_userid               char              x(8)
+   90 xlkh_error                char              x(8)
+  100 xlkh_trnbr                inte        i     >,>>>,>>9       0
+  110 xlkh_seq                  inte              >9              0
+  120 xlkh_part                 char        i     x(18)
+  130 xlkh_pdesc                char              x(24)
+  140 xlkh_fpart                char              x(1)
+  150 xlkh_qc_qty               inte              ->,>>>,>>9      0
+  160 xlkh_scrap_qty            deci-2            ->,>>>,>>9.9<   0
+  170 xlkh_ok_qty               deci-2            ->,>>>,>>9.9<   0
+  180 xlkh_newpart              char              x(18)
+  190 xlkh_scrap_date           date              99/99/99        ?
+  200 xlkh_scrap_user           char              x(8)
+  210 xlkh_scrap_effdate        date              99/99/99        ?
+  220 xlkh_scrap_hrs            deci-2            ->>,>>9.99      0
+  230 xlkh_scrap_line           char              x(8)
+  240 xlkh_scrap_rsn            char              x(8)
+  250 xlkh_total_qty            deci-2            ->,>>>,>>9.9<   0
+  260 xlkh_scrap_wolot          char              x(8)
+  270 xlkh_scrap_time           inte              >>>>>>9         0
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xlkh_domain                    Domain                 ?
+xlkh_site                      Site                   ?
+xlkh_line                      Production Line        ?
+xlkh_barcode                   Barcode                ?
+xlkh_date                      Date                   ?
+xlkh_time                      time                   ?
+xlkh_process                   Process                ?
+xlkh_userid                    UserID                 ?
+xlkh_error                     Error                  ?
+xlkh_trnbr                     Tr nbr                 ?
+xlkh_seq                       制造看板下达顺序       ?
+xlkh_part                      零件号                 ?
+xlkh_pdesc                     生产线说明             ?
+xlkh_fpart                     第一个下达零件         ?
+xlkh_qc_qty                    QC QTY                 ?
+xlkh_scrap_qty                 scrap-qty              ?
+xlkh_ok_qty                    ok-qty                 ?
+xlkh_newpart                   newpart                ?
+xlkh_scrap_date                scrap-date             ?
+xlkh_scrap_user                scrap-user             ?
+xlkh_scrap_effdate             effdate                ?
+xlkh_scrap_hrs                 scrap-hours            ?
+xlkh_scrap_line                scrap-line             ?
+xlkh_scrap_rsn                 scrap-rsn              ?
+xlkh_total_qty                 total-qc-qty           ?
+xlkh_scrap_wolot               scrap-wolot            ?
+xlkh_scrap_time                scrap-time             ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xlkh_hist ==========================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+      xlkh_part                          7 + xlkh_domain
+                                           + xlkh_site
+                                           + xlkh_line
+                                           + xlkh_part
+                                           + xlkh_date
+                                           + xlkh_barcode
+                                           + xlkh_trnbr
+
+pu    xlkh_trnbr                         2 + xlkh_domain
+                                           + xlkh_trnbr
+
+** Index Name: xlkh_part
+ Storage Area: TRANSACTION
+** Index Name: xlkh_trnbr
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xlkh_hist ==========================
+
+

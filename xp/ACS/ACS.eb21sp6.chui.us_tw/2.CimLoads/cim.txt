@@ -1,0 +1,110 @@
+@@batchload mgmemt.p
+"TW" 
+"2.3" 
+"1" 
+- - "xxadvnmt.p" - 
+@@end
+@@batchload mgmemt.p
+"US" 
+"2.3" 
+"1" 
+- - "xxadvnmt.p" - 
+@@end
+@@batchload mgmemt.p
+"TW" 
+"2.1" 
+"1" 
+- - "xxadcsmt.p" - 
+@@end
+@@batchload mgmemt.p
+"US" 
+"2.1" 
+"1" 
+- - "xxadcsmt.p" - 
+@@end
+@@batchload mgmemt.p
+"TW" 
+"2.1" 
+"13" 
+- - "xxadstmt.p" - 
+@@end
+@@batchload mgmemt.p
+"US" 
+"2.1" 
+"13" 
+- - "xxadstmt.p" - 
+@@end
+@@batchload gplblmt.p
+"TW" 
+"ss001" 
+"郵件[1]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"TW" 
+"ss002" 
+"郵件[2]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"TW" 
+"ss003" 
+"聯系人[1]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"TW" 
+"ss004" 
+"聯系人[2]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"TW" 
+"ss005" 
+"貿易條款" - - - - - 
+@@end
+@@batchload gplblmt.p
+"US" 
+"ss001" 
+"Email[1]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"US" 
+"ss002" 
+"Email[2]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"US" 
+"ss003" 
+"Attention[1]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"US" 
+"ss004" 
+"Attention[2]" - - - - - 
+@@end
+@@batchload gplblmt.p
+"US" 
+"ss005" 
+"TradeTerm" - - - - - 
+@@end
+@@batchload gplbldmt.p
+"v_mail1" "" 
+"ss001" 
+@@end
+@@batchload gplbldmt.p
+"v_mail2" "" 
+"ss002" 
+@@end
+@@batchload gplbldmt.p
+"v_person1" "" 
+"ss003" 
+@@end
+@@batchload gplbldmt.p
+"v_person2" "" 
+"ss004" 
+@@end
+@@batchload gplbldmt.p
+"v_tradeterm" "" 
+"ss005" 
+@@end
+@@batchload gplbldmt.p
+"v_cmmt" "" 
+"COMMENTS" 
+@@end

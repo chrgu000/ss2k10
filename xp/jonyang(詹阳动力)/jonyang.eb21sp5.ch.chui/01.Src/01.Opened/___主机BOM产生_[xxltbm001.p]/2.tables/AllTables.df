@@ -1,0 +1,844 @@
+ADD TABLE "xbmd_det"
+  AREA "TRANSACTION"
+  LABEL "xbmd_det"
+  DUMP-NAME "xbmd_det"
+
+ADD FIELD "xbmd_domain" OF "xbmd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xbmd_lot" OF "xbmd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批序号"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xbmd_par" OF "xbmd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "主机编号"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xbmd_comp" OF "xbmd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件编号"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xbmd_qty_bom" OF "xbmd_det" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "单件需求量"
+  POSITION 6
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xbmd_comp2" OF "xbmd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "被替代料"
+  POSITION 7
+  MAX-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xbmd_wolot" OF "xbmd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单ID"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xbmd_status" OF "xbmd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "状态"
+  POSITION 9
+  MAX-WIDTH 2
+  ORDER 80
+
+ADD FIELD "xbmd_hide" OF "xbmd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "隐藏"
+  POSITION 10
+  MAX-WIDTH 2
+  ORDER 90
+
+ADD FIELD "xbmd_sn" OF "xbmd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 11
+  MAX-WIDTH 36
+  ORDER 100
+
+ADD INDEX "xbmd_lot" ON "xbmd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xbmd_domain" ASCENDING 
+  INDEX-FIELD "xbmd_lot" ASCENDING 
+  INDEX-FIELD "xbmd_comp" ASCENDING 
+
+ADD INDEX "xbmd_comp" ON "xbmd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmd_domain" ASCENDING 
+  INDEX-FIELD "xbmd_comp" ASCENDING 
+  INDEX-FIELD "xbmd_lot" ASCENDING 
+
+ADD INDEX "xbmd_par" ON "xbmd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmd_domain" ASCENDING 
+  INDEX-FIELD "xbmd_par" ASCENDING 
+  INDEX-FIELD "xbmd_lot" ASCENDING 
+  INDEX-FIELD "xbmd_comp" ASCENDING 
+
+ADD INDEX "xbmd_wolot" ON "xbmd_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmd_domain" ASCENDING 
+  INDEX-FIELD "xbmd_wolot" ASCENDING 
+  INDEX-FIELD "xbmd_par" ASCENDING 
+  INDEX-FIELD "xbmd_lot" ASCENDING 
+  INDEX-FIELD "xbmd_comp" ASCENDING 
+
+ADD TABLE "xbmzp_det"
+  AREA "TRANSACTION"
+  LABEL "xbmzp_det"
+  DUMP-NAME "xbmzp_det"
+
+ADD FIELD "xbmzp_domain" OF "xbmzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xbmzp_lot" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批序号"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xbmzp_par" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "主机编号"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xbmzp_comp" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件编号"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xbmzp_qty_bom" OF "xbmzp_det" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "单件需求量"
+  POSITION 6
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xbmzp_comp2" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "被替代料"
+  POSITION 7
+  MAX-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xbmzp_wolot" OF "xbmzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单ID"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xbmzp_status" OF "xbmzp_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "状态"
+  POSITION 9
+  MAX-WIDTH 2
+  ORDER 80
+
+ADD FIELD "xbmzp_hide" OF "xbmzp_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "隐藏"
+  POSITION 10
+  MAX-WIDTH 2
+  ORDER 90
+
+ADD FIELD "xbmzp_zppart" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "ZP件"
+  POSITION 11
+  MAX-WIDTH 36
+  ORDER 100
+
+ADD FIELD "xbmzp_sn" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 12
+  MAX-WIDTH 36
+  ORDER 110
+
+ADD FIELD "xbmzp_zpwo" OF "xbmzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "ZP件"
+  POSITION 13
+  MAX-WIDTH 36
+  ORDER 120
+
+ADD INDEX "xbmzp_lot" ON "xbmzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xbmzp_domain" ASCENDING 
+  INDEX-FIELD "xbmzp_lot" ASCENDING 
+  INDEX-FIELD "xbmzp_zppart" ASCENDING 
+  INDEX-FIELD "xbmzp_comp" ASCENDING 
+
+ADD INDEX "xbmzp_comp" ON "xbmzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmzp_domain" ASCENDING 
+  INDEX-FIELD "xbmzp_comp" ASCENDING 
+  INDEX-FIELD "xbmzp_lot" ASCENDING 
+  INDEX-FIELD "xbmzp_zppart" ASCENDING 
+
+ADD INDEX "xbmzp_par" ON "xbmzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmzp_domain" ASCENDING 
+  INDEX-FIELD "xbmzp_par" ASCENDING 
+  INDEX-FIELD "xbmzp_lot" ASCENDING 
+  INDEX-FIELD "xbmzp_zppart" ASCENDING 
+  INDEX-FIELD "xbmzp_comp" ASCENDING 
+
+ADD INDEX "xbmzp_wolot" ON "xbmzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbmzp_domain" ASCENDING 
+  INDEX-FIELD "xbmzp_wolot" ASCENDING 
+  INDEX-FIELD "xbmzp_par" ASCENDING 
+  INDEX-FIELD "xbmzp_lot" ASCENDING 
+  INDEX-FIELD "xbmzp_zppart" ASCENDING 
+  INDEX-FIELD "xbmzp_comp" ASCENDING 
+
+ADD TABLE "xbm_mstr"
+  AREA "TRANSACTION"
+  LABEL "xbm_mstr"
+  DUMP-NAME "xbm_mstr"
+
+ADD FIELD "xbm_domain" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xbm_lot" OF "xbm_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "批序号"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xbm_part" OF "xbm_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件号"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xbm_wonbr" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单编号"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xbm_wolot" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "工单ID"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xbm_date_crt" OF "xbm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "CreatDt"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xbm_time_crt" OF "xbm_mstr" AS integer 
+  FORMAT ">>>>>>>>9"
+  INITIAL "0"
+  LABEL "TimeCrt"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xbm_user_crt" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xbm_date_mod" OF "xbm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xbm_time_mod" OF "xbm_mstr" AS integer 
+  FORMAT ">>>>>>>>9"
+  INITIAL "0"
+  POSITION 11
+  MAX-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xbm_user_mod" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 12
+  MAX-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xbm_status" OF "xbm_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 13
+  MAX-WIDTH 2
+  ORDER 120
+
+ADD FIELD "xbm_mthd_crt" OF "xbm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "创建方式"
+
+
+ADD INDEX "xbm_lot" ON "xbm_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xbm_domain" ASCENDING 
+  INDEX-FIELD "xbm_lot" ASCENDING 
+
+ADD INDEX "xbm_part" ON "xbm_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xbm_domain" ASCENDING 
+  INDEX-FIELD "xbm_part" ASCENDING 
+  INDEX-FIELD "xbm_lot" ASCENDING 
+
+ADD INDEX "xbm_wolot" ON "xbm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xbm_domain" ASCENDING 
+  INDEX-FIELD "xbm_wolot" ASCENDING 
+  INDEX-FIELD "xbm_lot" ASCENDING 
+
+ADD TABLE "xpre_det"
+  AREA "TRANSACTION"
+  LABEL "xpre_det"
+  DUMP-NAME "xpre_det"
+
+ADD FIELD "xpre_domain" OF "xpre_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xpre_part" OF "xpre_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xpre_lot" OF "xpre_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "lot"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xpre_zppart" OF "xpre_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "zppart"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xpre_comp" OF "xpre_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "component"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xpre_sn" OF "xpre_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "sn"
+  POSITION 7
+  MAX-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xpre_qty" OF "xpre_det" AS decimal 
+  FORMAT "->>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty"
+  POSITION 8
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xpre_mod_date" OF "xpre_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xpre_mod_user" OF "xpre_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 11
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD INDEX "xpre_part" ON "xpre_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xpre_domain" ASCENDING 
+  INDEX-FIELD "xpre_part" ASCENDING 
+  INDEX-FIELD "xpre_lot" ASCENDING 
+  INDEX-FIELD "xpre_zppart" ASCENDING 
+  INDEX-FIELD "xpre_comp" ASCENDING 
+
+ADD TABLE "xsub_det"
+  AREA "TRANSACTION"
+  LABEL "WO Substitution"
+  DUMP-NAME "xsub_det"
+
+ADD FIELD "xsub_domain" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xsub_wonbr" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xsub_wolot" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xsub_part" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xsub_subpart" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "subpart"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xsub_qty" OF "xsub_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<,<<<"
+  INITIAL "0"
+  LABEL "sub-qty"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xsub_mod_date" OF "xsub_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xsub_mod_user" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xsub_wolot" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+ADD INDEX "xsub_part" ON "xsub_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+
+ADD INDEX "xsub_subpart" ON "xsub_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+ADD INDEX "xsub_wolot_sub" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+
+ADD INDEX "xsub_wonbr" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wonbr" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+ADD TABLE "xused_det"
+  AREA "TRANSACTION"
+  LABEL "xused_det"
+  DUMP-NAME "xused_det"
+
+ADD FIELD "xused_domain" OF "xused_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xused_wonbr" OF "xused_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xused_wolot" OF "xused_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xused_zppart" OF "xused_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "zppart"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xused_part" OF "xused_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xused_part_by" OF "xused_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "partby"
+  POSITION 7
+  MAX-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xused_sub_type" OF "xused_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "subtype"
+  POSITION 8
+  MAX-WIDTH 1
+  ORDER 70
+
+ADD FIELD "xused_qty_bom" OF "xused_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-bom"
+  POSITION 9
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xused_qty_iss" OF "xused_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-iss"
+  POSITION 10
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xused_qty_used" OF "xused_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-used"
+  POSITION 11
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 100
+
+ADD INDEX "xused_wolot" ON "xused_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xused_domain" ASCENDING 
+  INDEX-FIELD "xused_wolot" ASCENDING 
+  INDEX-FIELD "xused_part" ASCENDING 
+
+ADD INDEX "xused_part_by" ON "xused_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xused_domain" ASCENDING 
+  INDEX-FIELD "xused_wolot" ASCENDING 
+  INDEX-FIELD "xused_part_by" ASCENDING 
+  INDEX-FIELD "xused_part" ASCENDING 
+
+ADD INDEX "xused_wonbr" ON "xused_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xused_domain" ASCENDING 
+  INDEX-FIELD "xused_wonbr" ASCENDING 
+  INDEX-FIELD "xused_wolot" ASCENDING 
+  INDEX-FIELD "xused_part" ASCENDING 
+
+ADD TABLE "xuse_mstr"
+  AREA "TRANSACTION"
+  LABEL "xuse_mstr"
+  DUMP-NAME "xuse_mstr"
+
+ADD FIELD "xuse_domain" OF "xuse_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xuse_wonbr" OF "xuse_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xuse_wolot" OF "xuse_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xuse_zppart" OF "xuse_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "zppart"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xuse_qty_rct" OF "xuse_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-iss"
+  POSITION 6
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 50
+
+ADD FIELD "xuse_qty_used" OF "xuse_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-used"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD INDEX "xuse_wolot" ON "xuse_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xuse_domain" ASCENDING 
+  INDEX-FIELD "xuse_wolot" ASCENDING 
+  INDEX-FIELD "xuse_zppart" ASCENDING 
+
+ADD INDEX "xuse_wonbr" ON "xuse_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xuse_domain" ASCENDING 
+  INDEX-FIELD "xuse_wonbr" ASCENDING 
+  INDEX-FIELD "xuse_wolot" ASCENDING 
+  INDEX-FIELD "xuse_zppart" ASCENDING 
+
+ADD TABLE "xzp_det"
+  AREA "TRANSACTION"
+  LABEL "xzp_det"
+  DUMP-NAME "xzp_det"
+
+ADD FIELD "xzp_domain" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xzp_wonbr" OF "xzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xzp_wolot" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xzp_zppart" OF "xzp_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xzp_qty_iss" OF "xzp_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "qty-iss"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xzp_zpwo" OF "xzp_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "AllZpWo"
+  POSITION 8
+  MAX-WIDTH 80
+  ORDER 70
+
+ADD FIELD "xzp_mod_user" OF "xzp_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xzp_mod_date" OF "xzp_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD INDEX "xzp_wolot" ON "xzp_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xzp_domain" ASCENDING 
+  INDEX-FIELD "xzp_wolot" ASCENDING 
+  INDEX-FIELD "xzp_zppart" ASCENDING 
+
+ADD INDEX "xzp_zppart" ON "xzp_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xzp_domain" ASCENDING 
+  INDEX-FIELD "xzp_zppart" ASCENDING 
+  INDEX-FIELD "xzp_wolot" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000016304

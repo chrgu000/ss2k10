@@ -1,0 +1,109 @@
+ BARCODE SYSTEM ERROR LOG
+11/04/08 12:37:17 20081144543735woi10_2.i.o  ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/04/08 13:27:51 20081144847133woi10_2.i.o  ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/04/08 13:27:51 20081144847133woi10_2.i.o  ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/25/08 16:02:53 200811255777335woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/25/08 16:22:49 200811255896934woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/26/08 10:14:53 200811263689385woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/26/08 10:23:56 200811263743635woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/27/08 17:08:50 200811276173064woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/27/08 22:57:49 200811278266985woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+11/27/08 22:58:42 200811278272289woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/02/08 22:08:45 200812027972585woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/04/08 09:30:50 200812043424935woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/08/08 16:14:27 200812085846635woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/10/08 20:35:49 200812107414935woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/11/08 15:17:09 200812115502964woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/16/08 13:02:17 200812164693733woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/16/08 14:53:12 200812165359289woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+12/22/08 10:18:31 200812223711133woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+以上报错: 
+程式:工单发料转仓(菜单31)
+原因:备料数累计超过需求量,库存转移成功,却未备料成功
+处理结果:1.程式:已经修改
+	 2.数据:用户生产回冲(16.12)前会照领料单检查备料信息,有差异手工补录备料明细(16.13.1)即可
+
+
+
+11/24/08 14:41:06 liuzg 200811245286634woi12.i @SA0420015000@54000 - "649068"@Y T Y@1100 HAM0401a                                      "061019-6UK"@1100 ham0401a@Y@.@.
+11/24/08 14:41:06 liuzg 200811245286634woi12.o ERROR: Data results in null transfer.  Please re-enter.
+11/24/08 14:41:06 liuzg 200811245286634woi12.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/27/08 08:44:00 lisc 200811273144034woi10.i @31-4000-57-07@33 - "655322"@Y T Y@1100 H-Subcon                                      "081015"@1100 H-Subcon@Y@.@.
+11/27/08 08:44:00 lisc 200811273144034woi10.o ERROR: Data results in null transfer.  Please re-enter.
+11/27/08 08:44:00 lisc 200811273144034woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/28/08 13:53:12 wangy 200811284999233woi10.i @32-4872-76-02@3 - "641317"@Y T Y@1100 hap0701a                                      "080923"@1100 H-Subcon@Y@.@.
+11/28/08 13:53:12 wangy 200811284999233woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+12/17/08 14:41:14 liuzg 200812175287334woi10.i @SA0110254000@100 - "702271"@Y T Y@1100 H-Sub001                                      "080716-17UK"@1100 H-Sub001@Y@.@.
+12/17/08 14:41:14 liuzg 200812175287334woi10.o ERROR: Data results in null transfer.  Please re-enter.
+12/17/08 14:41:14 liuzg 200812175287334woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+程式:工单发料转仓(菜单31)
+原因:手工输入的备料库位(SUB产线的)与发料库位相同,无需做库存转移(Data results in null transfer)
+处理结果:1.程式:已加判断,不允许转出转入库位相同.
+	 2.数据:这部分操作,实际库存未转移成功,用户会返回重新操作,无需其他处理
+
+
+
+
+11/24/08 11:27:18 caoxh 200811244123835woi10.i @SW-01-09-5303@12 - "679795"@Y T Y@1100 JA101105                                      "080610-35SZ"@1100 J-Produc@Y@.@.
+11/24/08 11:27:18 caoxh 200811244123835woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/24/08 11:31:18 caoxh 200811244147770woi10.i @SW-01-09-5757@12 - "679795"@Y T Y@1100 JA101105                                      "080606-30US"@1100 J-Produc@Y@.@.
+11/24/08 11:31:18 caoxh 200811244147770woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/28/08 15:12:48 wangy 20081128547684woi10.i @38-100200-05-03@1 - "685236"@Y T Y@1100 HAP0503A                                      "080130"@1100 H-Produc@Y@.@.
+11/28/08 15:12:48 wangy 20081128547684woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/28/08 15:13:54 wangy 200811285483482woi10.i @38-100200-05-03@4 - "685236"@Y T Y@1100 HAP0503A                                      "080409"@1100 H-Produc@Y@.@.
+11/28/08 15:13:54 wangy 200811285483482woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/28/08 15:15:03 wangy 200811285490393woi10.i @38-100200-05-02@1 - "685236"@Y T Y@1100 HAP0503A                                      "080416"@1100 H-Produc@Y@.@.
+11/28/08 15:15:03 wangy 200811285490393woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+11/28/08 15:16:19 wangy 200811285497916woi10.i @38-100200-05-02@4 - "685236"@Y T Y@1100 HAP0503A                                      "081023"@1100 H-Produc@Y@.@.
+11/28/08 15:16:19 wangy 200811285497916woi10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+以上报错: 
+程式:工单发料转仓(菜单31)
+原因:历史记录(*.i,*.o)已删除,无法追查
+处理结果:待下次这种错误发生时,再查
+
+01/03/09 12:49:01 dongl 200901034614118woi12.i @31-1737-38-00A@36 - "722404"@Y T Y@1100 HAP0705B                                      "081223"@1100 HAP0705B@Y@.@.
+01/03/09 12:49:01 dongl 200901034614118woi12.o ERROR: Data results in null transfer.  Please re-enter.
+01/03/09 12:49:01 dongl 200901034614118woi12.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+以上报错: 
+程式:工单退料转仓(菜单32)
+原因:手工输入的退入库位与产线库位相同,无需做库存转移(Data results in null transfer)
+处理结果:1.程式:已加判断,不允许转出转入库位相同.
+	 2.数据:这部分操作,实际库存未转移成功,用户会返回重新操作,无需其他处理
+
+
+01/05/09 14:36:06 liuzg 200901055256672woi10_2.i.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+以上报错: 
+程式:工单发料转仓(菜单31)
+原因:备料数累计超过需求量,库存转移成功,却未备料成功
+处理结果:用户已调整为正确的数据,见mail附件16.13.1, 所以暂时无法确认问题点,
+
+
+
+03/03/09 15:11:07 liuzg woi10-wowamt.p-090303-151105-23.i @SB011044450012@570 - "784229"@Y T Y@1100 ham0903b                                      "081127-07HZ"@1100 H-Produc@Y@.@.@-   "784229"@"SB011044450012" -@570   570   0  Y  40.71428   -  -  -  -  -  -@"H-Produc"   "081127-07HZ" -@0 570@.@.@.
+03/03/09 15:11:07 liuzg woi10-wowamt.p-090303-151105-23.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+03/11/09 16:02:54 zhangym woi10-wowamt.p-090311-160254-10.i @US32-4871-09-00A@15 - "799100"@Y T Y@1100 HAW0205                                       "090114"@1100 H-Produc@Y@.@.@-   "799100"@"US32-4871-09-00A" -@15   15   0  Y  1   -  -  -  -  -  -@"HAW0205"   "090114" -@0                   1@"H-Produc"   "090114" -@0 15@.@.@.
+03/11/09 16:02:54 zhangym woi10-wowamt.p-090311-160254-10.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+03/11/09 16:03:34 zhangym woi10-wowamt.p-090311-160334-88.i @RD-4560-39-00@30 - "799100"@Y T Y@1100 JAW0404                                       "090120"@1100 J-Produc@Y@.@.@-   "799100"@"RD-4560-39-00" -@30   30   0  Y  2   -  -  -  -  -  -@"JAW0404"   "090120" -@0                   2@"J-Produc"   "090120" -@0 30@.@.@.
+03/11/09 16:03:34 zhangym woi10-wowamt.p-090311-160334-88.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+04/22/09 13:47:07 xiangj woi10-wowamt.p-090422-134707-84.i @32-4676-18-02@7 - "855731"@Y T Y@1100 HAP0605B                                      "080906"@1100 H-Produc@Y@.@.@-   "855731"@"32-4676-18-02" -@7   7   0  Y  1   -  -  -  -  -  -@"HAP0605B"   "080906" -@0                   1@"H-Produc"   "080906" -@0 7@.@.@.
+04/22/09 13:47:07 xiangj woi10-wowamt.p-090422-134707-84.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.
+05/10/09 08:24:47 xiangj woi12-iclotr04.p-090510-082447-10.i @32-4672-49-08@11 - "874118"@Y T Y@1100 H-Produc                                      "090304"@1100@Y@.@.
+05/10/09 08:24:47 xiangj woi12-iclotr04.p-090510-082447-10.o ERROR: Data results in null transfer.  Please re-enter.
+05/10/09 08:24:47 xiangj woi12-iclotr04.p-090510-082447-10.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+05/14/09 13:10:03 liuzg woi10-iclotr04.p-090514-131003-18.i @SA0110063500@845 - "863402"@Y T Y@1100 h-produc                                      "090324-03HZ"@1100 H-Produc@Y@.@.
+05/14/09 13:10:03 liuzg woi10-iclotr04.p-090514-131003-18.o ERROR: Data results in null transfer.  Please re-enter.
+05/14/09 13:10:03 liuzg woi10-iclotr04.p-090514-131003-18.o ** /mfgeb2/eb2/client/us/ic/iclotrb.p: Unable to evaluate field for assignment. (143)
+05/15/09 15:53:45 lisc por02-poporc.p-090515-155344-18.i @m090410r@"m090410r-2"                                       - 05/15/09 N N N@@1@128.8 - N - - - 1100 ham0102b                     "090512-15HZ" - - N N N@.@.
+05/15/09 15:53:45 lisc por02-poporc.p-090515-155344-18.o ERROR: ** No po_mstr record is available. (91)
+05/15/09 15:53:45 lisc por02-poporc.p-090515-155344-18.o ERROR: Purchase Order does not exist.  Please re-enter.
+05/15/09 15:53:45 lisc por02-poporc.p-090515-155344-18.o ERROR: ** No po_mstr record is available. (91)
+05/15/09 15:55:23 lisc por02-poporc.p-090515-155523-23.i @m090410b@"m090410b-1"                                       - 05/15/09 N N N@@12@931 - N - - - 1100 ham0505a                       "090509-23HZ" - - N N N@15@78.8 - N - - - 1100 ham19040                      "090509-26HZ" - - N N N@22@5 - N - - - 1100 ham14040                         "090509-33HZ" - - N N N@23@12 - N - - - 1100 ham14030                        "090509-34HZ" - - N N N@.@.
+05/15/09 15:55:23 lisc por02-poporc.p-090515-155523-23.o ERROR: ** No po_mstr record is available. (91)
+05/15/09 15:55:23 lisc por02-poporc.p-090515-155523-23.o ERROR: Purchase Order does not exist.  Please re-enter.
+05/15/09 15:55:23 lisc por02-poporc.p-090515-155523-23.o ERROR: ** No po_mstr record is available. (91)
+05/15/09 16:10:54 lisc por02-poporc.p-090515-161054-84.i @m090410b@"m090410b-1"                                       - 05/15/09 N N N@@12@931 - N - - - 1100 ham0505a                       "090509-23HZ" - - N N N@15@78.8 - N - - - 1100 ham19040                      "090509-26HZ" - - N N N@22@5 - N - - - 1100 ham14040                         "090509-33HZ" - - N N N@23@12 - N - - - 1100 ham14030                        "090509-34HZ" - - N N N@.@.
+05/15/09 16:10:54 lisc por02-poporc.p-090515-161054-84.o ERROR: ** No po_mstr record is available. (91)
+05/15/09 16:10:54 lisc por02-poporc.p-090515-161054-84.o ERROR: Purchase Order does not exist.  Please re-enter.
+05/15/09 16:10:54 lisc por02-poporc.p-090515-161054-84.o ERROR: ** No po_mstr record is available. (91)
+05/16/09 10:39:57 xiangj woi10-wowamt.p-090516-103957-88.i @rd-4553-89-00@20 - "889435"@Y T Y@1100 jaw0403                                       "081209"@1100 J-Produc@Y@.@.@-   "889435"@"rd-4553-89-00" -@20   20   0  Y  1   -  -  -  -  -  -@"jaw0403"   "081209" -@0                   2@"J-Produc"   "081209" -@0 20@.@.@.
+05/16/09 10:39:57 xiangj woi10-wowamt.p-090516-103957-88.o ERROR: Qty required cannot be less than allocated + picked + issued.  Please re-enter.

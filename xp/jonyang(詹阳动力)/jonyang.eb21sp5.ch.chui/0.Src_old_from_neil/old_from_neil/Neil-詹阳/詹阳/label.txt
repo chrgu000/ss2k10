@@ -1,0 +1,58 @@
+/*
+for each lbld_det where lbld_execname = "arparp.p" no-lock:
+disp lbld_fieldname format "x(20)"
+    lbld_execname  format "x(20)"
+    lbld_term      format "x(30)".
+end.
+*/
++--------------------------------------------------------------+
+|Field Name           Program Name         Term                |
+|-------------------- -------------------- --------------------|
+|ar_acct              xxardrrp.p           ENTY!ACCOUNT        |
+|ar_bill              xxardrrp.p           BILL-TO!SOLD-TO     |
+|ar_contested         xxardrrp.p           CONTEST!TAX_DATE    |
+|ar_cr_terms          xxardrrp.p           CR_TERMS!DN_LV      |
+|ar_curr              xxardrrp.p           CUR!C               |
+|ar_date              xxardrrp.p           DATE!EFF_DATE       |
+|base_amt             xxardrrp.p           AMOUNT!APPLIED_AMT  |
+|cust                 xxardrrp.p           BILL_TO             |
+|name                 xxardrrp.p           NAME!EXCH_RATE!PO   |
+|nbr                  xxardrrp.p           REFERENCE           |
+
+|ar_acct              xxarparp.p           CASH_ACCT!DSC_ACCT  |
+|ar_check             xxarparp.p           CHECK!BILL-TO       |
+|ar_curr              xxarparp.p           CUR!EXCH_RATE       |
+|ar_date              xxarparp.p           DATE!EFF_DATE       |
+|ar_po                xxarparp.p           REMARK!NAME         |
+|base_damt            xxarparp.p           CASH_AMOUNT         |
+|cust                 xxarparp.p           BILL_TO             |
+|l_unassign           xxarparp.p           UNASSIGNED_UNAPPLIED_AMOUNT|
+|ptype                xxarparp.p           PAYMENT_TYPE_(<BLANK>,U,N)|
+
+ ar_date                                   Date!Eff_Date!Tax_Date
+ ar_sub                                    entity!sub!Contest
+ ar_cr_terms                               CR_TERMS!CUR!C
+ ar_acct																	 ENTY!ACCOUNT!LEVEL
+|bill_name            xxsoivrp.p           NAME                          |
+|nbr                  xxsoivrp.p           SALES_ORDER                   |
+|net_price            xxsoivrp.p           PRICE                         |
+|sod_acct             xxsoivrp.p           SALES                         |
+|sod_qty_inv          xxsoivrp.p           INVOICED!BACKORDER            |
+|sod_sub              xxsoivrp.p           SUB-ACCOUNT                   |
+|so_ar_acct           xxsoivrp.p           ACCOUNTS_RECEIVABLE           |
+|so_ar_sub            xxsoivrp.p           SUB_ACCOUNT                   |
+|so_pst_pct           xxsoivrp.p           PST                           |
+|so_slspsn[1]         xxsoivrp.p           DEFAULT_SALESPERSON           |
+|tax_trl              xxsoivrp.p           TRAILER                       |
+|tx2d_cur_abs_ret_amt xxsoivrp.p           ABSORB/RETAIN                 |
+|tx2d_cur_nontax_amt  xxsoivrp.p           NON-TAXABLE_BASE              |
+|tx2d_cur_recov_amt   xxsoivrp.p           RECOVERABLE_TAX               |
+|tx2d_cur_tax_amt     xxsoivrp.p           TAX_AMOUNT                    |
+|tx2d_nbr             xxsoivrp.p           RELATED_DOC                   |
+|tx2d_totamt          xxsoivrp.p           TRNX_AMT                      |
+|tx2d_tottax          xxsoivrp.p           TAXABLE_BASE                  |
+|tx2_pt_taxc          xxsoivrp.p           TAX_CLASS                     |
+ 
+ 
+ 
+ 

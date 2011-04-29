@@ -1,0 +1,861 @@
+ch		a6b2e009.p	1	只有满足以下条件时程序才会发出请求:
+ch		a6b2e009.p	2	  1)付款选择已经确认并完成授权
+ch		a6b2e009.p	3	  2)供应商维护了有效的"银行账户",即"账户类型"为"BOC"
+ch		a6b2e009.p	4	
+ch		a6b2e009.p	5	凭证号被设置成了"用途"
+ch		a6b2e009.p	6	
+ch		a6b2e009.p	7	状态等相关字段的处理逻辑如下:
+ch		a6b2e009.p	8	  1)一旦提交,状态即由"2.2 - 授权完成"改为"3 - 提交中"
+ch		a6b2e009.p	9	  2)根据响应结果可能转变为以下状态:
+ch		a6b2e009.p	10	    4 - 成功提交请求
+ch		a6b2e009.p	11	    2.3 - 银行退回
+ch		a6b2e009.p	12	    6 - 提交超时,即没有检测到响应文件
+ch		a6b2e009.p	13	  3)意外情况下,可能保持"3 - 提交中"的状态不变,例如提交请求后突然断电等
+ch		a6b2e009.p	14	  4)当状态为"4"或"2.3"时,同时更新了以下字段:
+ch		a6b2e009.p	15	    VO__CHR02 - 网银划账流水号
+ch		a6b2e009.p	16	    VO_USER2 - 返回码
+ch		a6b2e009.p	17	    VO_CHR03 - 返回信息
+ch		a6b2e009.p	18	
+ch		a6b2e009.p	19	在执行完本程序后,请按以下顺序检查相应的执行结果:
+ch		a6b2e009.p	20	  1)成功提交的汇划即时通报表:已经成功提交交易
+ch		a6b2e009.p	21	  2)银行退回的汇划即时通报表:已经成功发出请求并获得响应,但是存在错误,交易提交不成功.请检查错误并重新选择
+ch		a6b2e009.p	22	  3)超时的汇划即时通报表:已经发出请求,但是在指定的时间内没有获得响应.请查询交易状态并更新
+ch		a6b2e009.p	23	  4)无响应的汇划即时通报表:已经发出请求,但是由于种种原因没有处理响应.请查询交易状态并更新
+ch		a6b2e009.p	24	
+ch		a6b2e009.p	25	另请参见
+ch		a6b2e009.p	26	  成功提交的汇划即时通报表 [a6appar6.p]
+ch		a6b2e009.p	27	  银行退回的汇划即时通报表 [a6appar1.p]
+ch		a6b2e009.p	28	  超时的汇划即时通报表 [a6appar2.p]
+ch		a6b2e009.p	29	  无响应的汇划即时通报表 [a6appar5.p]
+ch		a6b2e009.p	30	
+ch	bank	a6b2e009.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e009.p	2	
+ch	bank	a6b2e009.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e009.p	4	
+ch	bank	a6b2e009.p	5	另请参见
+ch	bank	a6b2e009.p	6	
+ch	bank	a6b2e009.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e009.p	8	
+ch	base_rpt	a6b2e009.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e009.p	2	
+ch	pay_date1	a6b2e009.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e009.p	2	
+ch	pay_date1	a6b2e009.p	3	另请参见
+ch	pay_date1	a6b2e009.p	4	
+ch	pay_date1	a6b2e009.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e009.p	6	
+ch		a6b2e092.p	1	只有满足以下条件时程序才会发出请求:
+ch		a6b2e092.p	2	  1)已经提交但被银行退回
+ch		a6b2e092.p	3	  2)供应商维护了有效的"银行账户",即"账户类型"为"BOC"
+ch		a6b2e092.p	4	
+ch		a6b2e092.p	5	凭证号被设置成了"用途"
+ch		a6b2e092.p	6	
+ch		a6b2e092.p	7	状态等相关字段的处理逻辑如下:
+ch		a6b2e092.p	8	  1)一旦提交,状态即由"2.3 - 银行退回"改为"3 - 提交中"
+ch		a6b2e092.p	9	  2)根据响应结果可能转变为以下状态:
+ch		a6b2e092.p	10	    4 - 成功提交请求
+ch		a6b2e092.p	11	    2.3 - 银行退回
+ch		a6b2e092.p	12	    6 - 提交超时,即没有检测到响应文件
+ch		a6b2e092.p	13	  3)意外情况下,可能保持"3 - 提交中"的状态不变,例如提交请求后突然断电等
+ch		a6b2e092.p	14	  4)当状态为"4"或"2.3"时,同时更新了以下字段:
+ch		a6b2e092.p	15	    VO__CHR02 - 网银划账流水号
+ch		a6b2e092.p	16	    VO_USER2 - 返回码
+ch		a6b2e092.p	17	    VO_CHR03 - 返回信息
+ch		a6b2e092.p	18	
+ch		a6b2e092.p	19	在执行完本程序后,请按以下顺序检查相应的执行结果:
+ch		a6b2e092.p	20	  1)成功提交的汇划即时通报表:已经成功提交交易
+ch		a6b2e092.p	21	  2)银行退回的汇划即时通报表:已经成功发出请求并获得响应,但是存在错误,交易提交不成功.请检查错误并重新选择
+ch		a6b2e092.p	22	  3)超时的汇划即时通报表:已经发出请求,但是在指定的时间内没有获得响应.请查询交易状态并更新
+ch		a6b2e092.p	23	  4)无响应的汇划即时通报表:已经发出请求,但是由于种种原因没有处理响应.请查询交易状态并更新
+ch		a6b2e092.p	24	
+ch		a6b2e092.p	25	另请参见
+ch		a6b2e092.p	26	  成功提交的汇划即时通报表 [a6appar6.p]
+ch		a6b2e092.p	27	  银行退回的汇划即时通报表 [a6appar1.p]
+ch		a6b2e092.p	28	  超时的汇划即时通报表 [a6appar2.p]
+ch		a6b2e092.p	29	  无响应的汇划即时通报表 [a6appar5.p]
+ch		a6b2e092.p	30	
+ch	bank	a6b2e092.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e092.p	2	
+ch	bank	a6b2e092.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e092.p	4	
+ch	bank	a6b2e092.p	5	另请参见
+ch	bank	a6b2e092.p	6	
+ch	bank	a6b2e092.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e092.p	8	
+ch	base_rpt	a6b2e092.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e092.p	2	
+ch	pay_date1	a6b2e092.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e092.p	2	
+ch	pay_date1	a6b2e092.p	3	另请参见
+ch	pay_date1	a6b2e092.p	4	
+ch	pay_date1	a6b2e092.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e092.p	6	
+ch		a6b2epm.p	1	在启用"银企对接"之前必须首先设置本控制文件
+ch		a6b2epm.p	2	
+ch		a6b2epm.p	3	如果在“修改密码交易 [a6b2e021.p]”中修改了网银操作员的远程登录密码，必须同时在这里进行相应的更新，否则无法使用本地所有需要访问银企对接服务器的菜单程序
+ch		a6b2epm.p	4	
+ch		a6b2epm.p	5	另请参见
+ch		a6b2epm.p	6	
+ch		a6b2epm.p	7	修改密码交易 [a6b2e021.p]
+ch		a6b2epm.p	8	
+ch	b2ec_ftp_open	a6b2epm.p	1	WINDOWS服务所在的FTP服务器的IP地址
+ch	b2ec_ftp_open	a6b2epm.p	2	
+ch	b2ec_ftp_open	a6b2epm.p	3	该服务器必须安装了以下WINDOWS服务:
+ch	b2ec_ftp_open	a6b2epm.p	4	  RequestWatcher:请求服务
+ch	b2ec_ftp_open	a6b2epm.p	5	  ResponseWatcher:响应服务
+ch	b2ec_ftp_open	a6b2epm.p	6	以上服务已经设置为随系统自动启动,如果始终检测不到响应文件,请洽询系统管理员,检查以上服务的状态是否为已经启动,必要时请手工启动相应的服务
+ch	b2ec_ftp_open	a6b2epm.p	7	
+ch	b2ec_ftp_user	a6b2epm.p	1	登录WINDOWS服务所在的FTP服务器的用户
+ch	b2ec_ftp_user	a6b2epm.p	2	
+ch	b2ec_ftp_user	a6b2epm.p	3	如果始终检测不到响应文件,请洽询系统管理员,检查该用户是否存在及有相应的权限,必要时请手工增加或更新相应的用户
+ch	b2ec_ftp_user	a6b2epm.p	4	
+ch	b2ec_ftp_password	a6b2epm.p	1	登录WINDOWS服务所在的FTP服务器的密码
+ch	b2ec_ftp_password	a6b2epm.p	2	
+ch	b2ec_ftp_password	a6b2epm.p	3	如果始终检测不到响应文件,请洽询系统管理员,检查该密码是否与相应的用户匹配,必要时请手工更新相应的密码
+ch	b2ec_ftp_password	a6b2epm.p	4	
+ch	b2ec_ftp_rq	a6b2epm.p	1	WINDOWS服务所在的FTP服务器的请求服务所监控的目录
+ch	b2ec_ftp_rq	a6b2epm.p	2	
+ch	b2ec_ftp_rq	a6b2epm.p	3	这里的设置必须与服务器的虚拟目录保持一致
+ch	b2ec_ftp_rq	a6b2epm.p	4	
+ch	b2ec_custid	a6b2epm.p	1	根据"中国银行企业网上银行客户申请表"等相关资料填写
+ch	b2ec_custid	a6b2epm.p	2	
+ch	b2ec_cusopr	a6b2epm.p	1	根据"中国银行企业网上银行客户申请表"等相关资料填写
+ch	b2ec_cusopr	a6b2epm.p	2	
+ch	b2ec_oprpwd	a6b2epm.p	1	所有需要访问银企对接服务器的菜单程序都要求验证本密码
+ch	b2ec_oprpwd	a6b2epm.p	2	
+ch	b2ec_oprpwd	a6b2epm.p	3	根据"中国银行企业网上银行客户申请表"等相关资料填写,这里的设置仅影响本地所有需要访问银企对接服务器的菜单程序
+ch	b2ec_oprpwd	a6b2epm.p	4	
+ch	b2ec_oprpwd	a6b2epm.p	5	请同时在“修改密码交易 [a6b2e021.p]”中修改网银操作员的远程登录密码
+ch	b2ec_oprpwd	a6b2epm.p	6	
+ch	b2ec_oprpwd	a6b2epm.p	7	另请参见
+ch	b2ec_oprpwd	a6b2epm.p	8	
+ch	b2ec_oprpwd	a6b2epm.p	9	修改密码交易 [a6b2e021.p]
+ch	b2ec_oprpwd	a6b2epm.p	10	
+ch	b2ec_usbkey	a6b2epm.p	1	根据"中国银行企业网上银行客户申请表"等相关资料填写
+ch	b2ec_usbkey	a6b2epm.p	2	
+ch	b2ec_timeout_rs	a6b2epm.p	1	如果在该时间范围内检测不到相应的响应文件,程序将会自动退出
+ch	b2ec_timeout_rs	a6b2epm.p	2	
+ch	b2ec_timeout_rs	a6b2epm.p	3	这里的计量单位为秒,初始默认设置为10
+ch	b2ec_timeout_rs	a6b2epm.p	4	
+ch	b2ec_timeout_rs	a6b2epm.p	5	程序可能因为种种原因无法返回响应文件,比如网络故障等.如果出现这种情况,请及时洽询系统管理员
+ch	b2ec_timeout_rs	a6b2epm.p	6	
+ch	b2ec_timeout_01	a6b2epm.p	1	如果在该时间范围内没有访问银企对接服务器,必须重新签到后才可以使用所有需要访问银企对接服务器的菜单程序
+ch	b2ec_timeout_01	a6b2epm.p	2	
+ch	b2ec_timeout_01	a6b2epm.p	3	这里的计量单位为分,初始默认设置为10
+ch	b2ec_timeout_01	a6b2epm.p	4	
+ch	b2ec_timeout_01	a6b2epm.p	5	建议在处理完所有需要访问银企对接服务器的菜单程序后及时签退
+ch	b2ec_timeout_01	a6b2epm.p	6	
+ch	b2ec_interval	a6b2epm.p	1	交易频率控制
+ch	b2ec_interval	a6b2epm.p	2	
+ch	b2ec_interval	a6b2epm.p	3	和上笔交易最小间隔时间，单位秒
+ch	b2ec_interval	a6b2epm.p	4	
+ch	b2ec_interval	a6b2epm.p	5	=0时不控制
+ch	b2ec_interval	a6b2epm.p	6	
+ch	b2ec_lead_time	a6b2epm.p	1	应用于"汇划即时通"
+ch	b2ec_lead_time	a6b2epm.p	2	
+ch	b2ec_lead_time	a6b2epm.p	3	当前日期加上本提前期是"付款日期至"的默认值
+ch	b2ec_lead_time	a6b2epm.p	4	
+ch	b2ec_tmp	a6b2epm.p	1	存放临时文件的目录
+ch	b2ec_tmp	a6b2epm.p	2	
+ch	b2ec_tmp	a6b2epm.p	3	所有的用户必须对该目录具有可读写的访问权限且允许远程用户通过FTP访问
+ch	b2ec_tmp	a6b2epm.p	4	
+ch	b2ec_tmp	a6b2epm.p	5	临时文件命名规则:TMPB2EYYMMDDHHMMSS.*
+ch	b2ec_tmp	a6b2epm.p	6	
+ch	b2ec_tmp	a6b2epm.p	7	包括以下四种类型的临时文件:
+ch	b2ec_tmp	a6b2epm.p	8	  1)rq:请求文件
+ch	b2ec_tmp	a6b2epm.p	9	  2)ftp:FTP文件
+ch	b2ec_tmp	a6b2epm.p	10	  3)ftp.log:FTP日志文件
+ch	b2ec_tmp	a6b2epm.p	11	  4)rs:响应文件
+ch	b2ec_tmp	a6b2epm.p	12	
+ch	b2ec_tmp	a6b2epm.p	13	由于系统异常等原因可能生成一些不再有用的临时文件,请定期清理
+ch	b2ec_tmp	a6b2epm.p	14	
+ch		a6apbkm1.p	1	维护付款人账户信息
+ch		a6apbkm1.p	2	
+ch		a6apbkm1.p	3	应用于"汇划即时通"等,包括以下专用字段:
+ch		a6apbkm1.p	4	  账户类型
+ch		a6apbkm1.p	5	  付款人名称
+ch		a6apbkm1.p	6	  付款账号
+ch		a6apbkm1.p	7	  联行号
+ch		a6apbkm1.p	8	
+ch		a6apbkm1.p	9	本程序基于标准程序"银行维护 [apbkmt.p]"修改而来,请参考相应的帮助以获得这里没有提到的信息
+ch		a6apbkm1.p	10	
+ch		a6apbkm1.p	11	另请参见
+ch		a6apbkm1.p	12	  银行维护 [apbkmt.p]
+ch		a6apbkm1.p	13	  汇划即时通 [a6b2e009.p]
+ch		a6apbkm1.p	14	
+ch	bk_acct_type	a6apbkm1.p	1	账户类型,只有设置为"BOC - 中国银行银企对接账户"的银行才能应用于本系统
+ch	bk_acct_type	a6apbkm1.p	2	
+ch	bk_acct_type	a6apbkm1.p	3	请至少设置一个账户类型为"BOC"的银行
+ch	bk_acct_type	a6apbkm1.p	4	
+ch	ad_sort	a6apbkm1.p	1	付款人名称
+ch	ad_sort	a6apbkm1.p	2	
+ch	ad_sort	a6apbkm1.p	3	要求字符串,长度0-76
+ch	ad_sort	a6apbkm1.p	4	
+ch	bk_bk_acct1	a6apbkm1.p	1	付款账号
+ch	bk_bk_acct1	a6apbkm1.p	2	
+ch	bk_bk_acct1	a6apbkm1.p	3	要求数字,18位.必须是中行的帐号
+ch	bk_bk_acct1	a6apbkm1.p	4	
+ch	bk_bk_acct2	a6apbkm1.p	1	联行号
+ch	bk_bk_acct2	a6apbkm1.p	2	
+ch	bk_bk_acct2	a6apbkm1.p	3	要求数字,5位,4开头.必须是中行的联行号
+ch	bk_bk_acct2	a6apbkm1.p	4	
+ch		a6adcsb1.p	1	维护收款人账户信息
+ch		a6adcsb1.p	2	
+ch		a6adcsb1.p	3	应用于"供应商维护"和"汇划即时通"等,包括以下专用字段:
+ch		a6adcsb1.p	4	  编号
+ch		a6adcsb1.p	5	 *开户行
+ch		a6adcsb1.p	6	  地址
+ch		a6adcsb1.p	7	  E-Mail
+ch		a6adcsb1.p	8	  手机
+ch		a6adcsb1.p	9	  传真
+ch		a6adcsb1.p	10	以上带"*"的字段为必选项
+ch		a6adcsb1.p	11	
+ch		a6adcsb1.p	12	如果您不知道收款人的正确信息,请您联系您的收款人向其开户银行获取
+ch		a6adcsb1.p	13	
+ch		a6adcsb1.p	14	如果该银行存在授权待提交或银行退回的银企对接凭证,不允许修改
+ch		a6adcsb1.p	15	
+ch		a6adcsb1.p	16	本程序基于标准程序"客户/供应商银行维护 [adcsbkmt.p]"修改而来,请参考相应的帮助以获得这里没有提到的信息
+ch		a6adcsb1.p	17	
+ch		a6adcsb1.p	18	另请参见
+ch		a6adcsb1.p	19	  客户/供应商银行维护 [adcsbkmt.p]
+ch		a6adcsb1.p	20	  供应商维护 [a6advnm1.p]
+ch		a6adcsb1.p	21	  汇划即时通 [a6b2e009.p]
+ch		a6adcsb1.p	22	
+ch	ad_addr	a6adcsb1.p	1	收款人编号(唯一)
+ch	ad_addr	a6adcsb1.p	2	
+ch	ad_addr	a6adcsb1.p	3	必选.要求字符串,长度1-10
+ch	ad_addr	a6adcsb1.p	4	
+ch	ad_addr	a6adcsb1.p	5	通过该字段与"供应商维护"中的"银行账户"的"编号"建立联系
+ch	ad_addr	a6adcsb1.p	6	
+ch	ad_name	a6adcsb1.p	1	收款行名
+ch	ad_name	a6adcsb1.p	2	
+ch	ad_name	a6adcsb1.p	3	要求字符串,长度0-70
+ch	ad_name	a6adcsb1.p	4	
+ch	ad_name	a6adcsb1.p	5	如果联行号为空,则收款行名不允许为空
+ch	ad_name	a6adcsb1.p	6	
+ch	ad_line1	a6adcsb1.p	1	收款人地址
+ch	ad_line1	a6adcsb1.p	2	
+ch	ad_line1	a6adcsb1.p	3	可选.要求字符串,长度0-70
+ch	ad_line1	a6adcsb1.p	4	
+ch	ad_line2	a6adcsb1.p	1	收款人EMAIL
+ch	ad_line2	a6adcsb1.p	2	
+ch	ad_line2	a6adcsb1.p	3	可选.要求Email格式,长度0-30
+ch	ad_line2	a6adcsb1.p	4	
+ch	ad_phone	a6adcsb1.p	1	收款人手机
+ch	ad_phone	a6adcsb1.p	2	
+ch	ad_phone	a6adcsb1.p	3	可选.要求电话号码格式,长度0-15
+ch	ad_phone	a6adcsb1.p	4	
+ch	ad_fax	a6adcsb1.p	1	收款人传真
+ch	ad_fax	a6adcsb1.p	2	
+ch	ad_fax	a6adcsb1.p	3	可选.要求电话号码格式,长度0-20
+ch	ad_fax	a6adcsb1.p	4	
+ch		a6advnm1.p	1	维护供应商的收款人账户信息
+ch		a6advnm1.p	2	
+ch		a6advnm1.p	3	应用于"汇划即时通"等,包括以下专用字段:
+ch		a6advnm1.p	4	 *银企对接
+ch		a6advnm1.p	5	 *收款人名称
+ch		a6advnm1.p	6	 *编号
+ch		a6advnm1.p	7	 *账户类型
+ch		a6advnm1.p	8	  联行号
+ch		a6advnm1.p	9	  机构号
+ch		a6advnm1.p	10	 *收款人账号
+ch		a6advnm1.p	11	以上带"*"的字段为必选项
+ch		a6advnm1.p	12	
+ch		a6advnm1.p	13	如果您不知道收款人的正确信息,请您联系您的收款人向其开户银行获取
+ch		a6advnm1.p	14	
+ch		a6advnm1.p	15	该供应商存在授权待提交或银行退回的银企对接凭证,不允许修改银行账户
+ch		a6advnm1.p	16	
+ch		a6advnm1.p	17	本程序基于标准程序"供应商维护 [advnmt.p]"修改而来,请参考相应的帮助以获得这里没有提到的信息
+ch		a6advnm1.p	18	
+ch		a6advnm1.p	19	另请参见
+ch		a6advnm1.p	20	  供应商维护 [advnmt.p]
+ch		a6advnm1.p	21	  客户/供应商银行维护 [a6adcsb1.p]
+ch		a6advnm1.p	22	  汇划即时通 [a6b2e009.p]
+ch		a6advnm1.p	23	
+ch	vd__log01	a6advnm1.p	1	是否使用"银企对接"的供应商
+ch	vd__log01	a6advnm1.p	2	
+ch	vd__log01	a6advnm1.p	3	必选.只有"银企对接"字段设置为"是"的供应商才可以使用本系统
+ch	vd__log01	a6advnm1.p	4	
+ch	ad_name	a6advnm1.p	1	收款人名称
+ch	ad_name	a6advnm1.p	2	
+ch	ad_name	a6advnm1.p	3	必选.要求字符串,长度1-76
+ch	ad_name	a6advnm1.p	4	
+ch	csbank	a6advnm1.p	1	收款人编号(唯一).引用自"客户/供应商银行维护 [a6adcsb1.p]"
+ch	csbank	a6advnm1.p	2	
+ch	csbank	a6advnm1.p	3	必选.要求字符串,长度1-10
+ch	csbank	a6advnm1.p	4	
+ch	csbank	a6advnm1.p	5	通过该字段与"客户/供应商银行维护"中的"编号"建立联系
+ch	csbank	a6advnm1.p	6	
+ch	bk_acct_type	a6advnm1.p	1	账户类型
+ch	bk_acct_type	a6advnm1.p	2	
+ch	bk_acct_type	a6advnm1.p	3	必选.只有设置为"BOC",即"中国银行银企对接账户"的供应商才可以使用本系统
+ch	bk_acct_type	a6advnm1.p	4	
+ch	bk_acct_type	a6advnm1.p	5	每个"银企对接"的供应商至少也只需要维护一个账户类型为"BOC"的银行账户,如果存在多条记录,则使用第一条记录
+ch	bk_acct_type	a6advnm1.p	6	
+ch	csbd_edi	a6advnm1.p	1	收款行联行号
+ch	csbd_edi	a6advnm1.p	2	
+ch	csbd_edi	a6advnm1.p	3	可选.要求数字.长度0或5
+ch	csbd_edi	a6advnm1.p	4	
+ch	csbd_branch	a6advnm1.p	1	收款行机构号
+ch	csbd_branch	a6advnm1.p	2	
+ch	csbd_branch	a6advnm1.p	3	可选.
+ch	csbd_branch	a6advnm1.p	4	
+ch	csbd_bk_acct	a6advnm1.p	1	收款人账号
+ch	csbd_bk_acct	a6advnm1.p	2	
+ch	csbd_bk_acct	a6advnm1.p	3	必选.要求字符串,长度1-35.如果是中行联行号,则必为18位数字
+ch	csbd_bk_acct	a6advnm1.p	4	
+ch		a6mgcm36.p	1	存在三种类型的返回码:
+ch		a6mgcm36.p	2	  1."B"字头的返回码:中国银行银企对接服务器对请求产生响应时生成的代表各种既定信息的代码.这种类型的返回码通常表示请求已经发送到了中行的远程服务器,并经过了处理.该代码已经由中行事先定义好并在初始化时装入了系统.用户可以根据自己的理解和约定对其重新定义.
+ch		a6mgcm36.p	3	  2.四位数字的返回码:中国银行银企对接本地应用对请求产生响应时生成的代表各种既定信息的代码.这种类型的返回码通常表示请求没有通过本地验证,或者发送失败.该代码已经由中行事先定义好并在初始化时装入了系统.用户可以根据自己的理解和约定对其重新定义.
+ch		a6mgcm36.p	4	  3."S"字头的返回码:本系统生成的代表各种既定信息的代码.这种类型的返回码通常表示系统在进行相关处理时检测到了错误,没有发送请求.该代码已经由系统事先定义好并在初始化时装入了系统.用户可以根据自己的理解和约定对其重新定义.
+ch		a6mgcm36.p	5	
+ch		a6mgcm36.p	6	对于前两种类型的返回码,系统将同时返回远程解释,从而与本地说明并存和相互对照.
+ch		a6mgcm36.p	7	
+ch		a6mgcm36.p	8	[交易状态查询成功返回码维护]和[到账查询成功返回码维护]中定义的返回码应该在这里存在
+ch		a6mgcm36.p	9	
+ch		a6mgcm36.p	10	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"b2e_error_code",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm36.p	11	
+ch		a6mgcm36.p	12	另请参见
+ch		a6mgcm36.p	13	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm36.p	14	  到账查询成功返回码维护 [a6mgcm38.p]
+ch		a6mgcm36.p	15	  交易状态查询成功返回码维护 [a6mgcm37.p]
+ch		a6mgcm36.p	16	
+ch		a6mgcm38.p	1	在执行"到账更新 [a6b2e062.p]"时,如果返回码在这里定义了,则将状态由"4 - 提交成功"更新为"7 - 交易成功";否则不更新
+ch		a6mgcm38.p	2	
+ch		a6mgcm38.p	3	引用自"返回码定义 [a6mgcm36.p]"
+ch		a6mgcm38.p	4	
+ch		a6mgcm38.p	5	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"b2e0006_success",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm38.p	6	
+ch		a6mgcm38.p	7	另请参见
+ch		a6mgcm38.p	8	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm38.p	9	  返回码定义 [a6mgcm36.p]
+ch		a6mgcm38.p	10	  到账更新 [a6b2e062.p]
+ch		a6mgcm38.p	11	
+ch		a6mgcm37.p	1	在执行"超时的汇划即时通交易状态更新 [a6b2e073.p]"和"无响应的汇划即时通交易状态更新 [a6b2e074.p]"时,如果返回码在这里定义了,则将状态分别由"6 - 提交超时"和"3 - 提交中"更新为"4 - 提交成功"
+ch		a6mgcm37.p	2	
+ch		a6mgcm37.p	3	如果既没有定义成功返回码,也没有定义失败返回码,则系统将不会更新状态
+ch		a6mgcm37.p	4	
+ch		a6mgcm37.p	5	引用自"返回码定义 [a6mgcm36.p]"
+ch		a6mgcm37.p	6	
+ch		a6mgcm37.p	7	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"b2e0007_success",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm37.p	8	
+ch		a6mgcm37.p	9	另请参见
+ch		a6mgcm37.p	10	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm37.p	11	  返回码定义 [a6mgcm36.p]
+ch		a6mgcm37.p	12	  超时的汇划即时通交易状态更新 [a6b2e073.p]
+ch		a6mgcm37.p	13	  无响应的汇划即时通交易状态更新 [a6b2e074.p]
+ch		a6mgcm37.p	14	
+ch		a6mgcm42.p	1	在执行"超时的汇划即时通交易状态更新 [a6b2e073.p]"和"无响应的汇划即时通交易状态更新 [a6b2e074.p]"时,如果返回码在这里定义了,则将状态分别由"6 - 提交超时"和"3 - 提交中"更新为"0.3 - 银行退回"
+ch		a6mgcm42.p	2	
+ch		a6mgcm42.p	3	如果既没有定义成功返回码,也没有定义失败返回码,则系统将不会更新状态
+ch		a6mgcm42.p	4	
+ch		a6mgcm42.p	5	引用自"返回码定义 [a6mgcm36.p]"
+ch		a6mgcm42.p	6	
+ch		a6mgcm42.p	7	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"b2e0007_error",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm42.p	8	
+ch		a6mgcm42.p	9	另请参见
+ch		a6mgcm42.p	10	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm42.p	11	  返回码定义 [a6mgcm36.p]
+ch		a6mgcm42.p	12	  超时的汇划即时通交易状态更新 [a6b2e073.p]
+ch		a6mgcm42.p	13	  无响应的汇划即时通交易状态更新 [a6b2e074.p]
+ch		a6mgcm42.p	14	
+ch		a6b2e021.p	1	修改网银操作员的远程登录密码
+ch		a6b2e021.p	2	
+ch		a6b2e021.p	3	注意,本程序不修改本地登录密码!请同时更新"银企对接控制 [a6b2epm.p]"中的相应的本地登录密码
+ch		a6b2e021.p	4	
+ch		a6b2e021.p	5	建议经常修改本密码
+ch		a6b2e021.p	6	
+ch	oldpwd	a6b2e021.p	1	要求再次验证旧的密码,如果不一致,则不允许更新
+ch	oldpwd	a6b2e021.p	2	
+ch	newpwd1	a6b2e021.p	1	新的网银操作员的远程登录密码
+ch	newpwd1	a6b2e021.p	2	
+ch	newpwd1	a6b2e021.p	3	必选.要求字符串,6-8位
+ch	newpwd1	a6b2e021.p	4	
+ch	newpwd1	a6b2e021.p	5	建议不要使用容易猜测的字符串
+ch	newpwd1	a6b2e021.p	6	
+ch	newpwd2	a6b2e021.p	1	要求再次验证新的密码,如果不一致,则不允许更新
+ch	newpwd2	a6b2e021.p	2	
+ch		a6appau1.p	1	基于标准程序"付款选择 - 自动 [appaup.p]"
+ch		a6appau1.p	2	
+ch		a6appau1.p	3	仅应用于定义了"账户类型"为"BOC"即"中国银行银企对接账户"的银行账户的"银企对接"供应商
+ch		a6appau1.p	4	
+ch		a6appau1.p	5	包括以下状态:
+ch		a6appau1.p	6	  1) 空
+ch		a6appau1.p	7	  2) 代码以"0"开始的状态:
+ch		a6appau1.p	8	      0 - 撤消委托
+ch		a6appau1.p	9	      0.1 - 复核拒绝
+ch		a6appau1.p	10	      0.2 - 授权拒绝
+ch		a6appau1.p	11	      0.3 - 银行退回
+ch		a6appau1.p	12	
+ch		a6appau1.p	13	付款日期默认等于到期日期
+ch		a6appau1.p	14	
+ch		a6appau1.p	15	增加了以下字段的输出:
+ch		a6appau1.p	16	  收款人账号
+ch		a6appau1.p	17	  收款人开户行
+ch		a6appau1.p	18	同时,用"批处理"替代了"发票"的输出  
+ch		a6appau1.p	19	
+ch		a6appau1.p	20	重要:不包括存在负数记录的供应商记录
+ch		a6appau1.p	21	
+ch	bank	a6appau1.p	1	与"指定银行"必须一致
+ch	bank	a6appau1.p	2	
+ch	bank1	a6appau1.p	1	与"指定银行"必须一致
+ch	bank1	a6appau1.p	2	
+ch	new_ckfrm	a6appau1.p	1	默认为"1"
+ch	new_ckfrm	a6appau1.p	2	
+ch		a6appau2.p	1	基于标准程序"付款选择 - 自动 [appaup.p]"
+ch		a6appau2.p	2	
+ch		a6appau2.p	3	仅应用于定义了"账户类型"为"BOC"即"中国银行银企对接账户"的银行账户的"银企对接"供应商
+ch		a6appau2.p	4	
+ch		a6appau2.p	5	包括以下状态:
+ch		a6appau2.p	6	  1) 1 - 委托待复核
+ch		a6appau2.p	7	
+ch		a6appau2.p	8	增加了以下字段的输出:
+ch		a6appau2.p	9	  收款人账号
+ch		a6appau2.p	10	  收款人开户行
+ch		a6appau2.p	11	同时,用"批处理"替代了"发票"的输出,用"付款日期"替代了"折扣日期"的输出
+ch		a6appau2.p	12	
+ch	bank	a6appau2.p	1	与"指定银行"必须一致
+ch	bank	a6appau2.p	2	
+ch	bank1	a6appau2.p	1	与"指定银行"必须一致
+ch	bank1	a6appau2.p	2	
+ch	new_ckfrm	a6appau2.p	1	默认为"1"
+ch	new_ckfrm	a6appau2.p	2	
+ch		a6appau6.p	1	适用于以下状态:
+ch		a6appau6.p	2	 1.1 - 复核退回
+ch		a6appau6.p	3	 1.2 - 授权退回
+ch		a6appau6.p	4	
+ch		a6appau6.p	5	允许的操作:
+ch		a6appau6.p	6	 11 - 转账委托,状态更新为"1 - 委托待复核"
+ch		a6appau6.p	7	 12 - 撤消委托,状态更新为"0 - 撤消委托"
+ch		a6appau6.p	8	
+ch	opr	a6appau6.p	1	指定默认的操作:
+ch	opr	a6appau6.p	2	 11 - 转账委托,状态更新为"1 - 委托待复核"
+ch	opr	a6appau6.p	3	 12 - 撤消委托,状态更新为"0 - 撤消委托"
+ch	opr	a6appau6.p	4	允许为空
+ch	opr	a6appau6.p	5	
+ch	sel_all	a6appau6.p	1	是否将默认的操作应用于所有符合条件的记录
+ch	sel_all	a6appau6.p	2	
+ch	tt1_rmk	a6appau6.p	1	如果撤销委托,可以有选择的输入相关的说明
+ch	tt1_rmk	a6appau6.p	2	
+ch	tt1_f2	a6appau6.p	1	有关该凭证的操作历史事务
+ch	tt1_f2	a6appau6.p	2	
+ch		a6appau5.p	1	适用于以下状态:
+ch		a6appau5.p	2	 2 - 复核待授权
+ch		a6appau5.p	3	 2.1 - 授权中
+ch		a6appau5.p	4	
+ch		a6appau5.p	5	允许的操作:
+ch		a6appau5.p	6	 31 - 授权通过,状态更新为"2.1 - 授权中"或"2.2 - 授权待提交"
+ch		a6appau5.p	7	 32 - 授权退回,状态更新为"1.2 - 授权退回",需要通过"修改委托 [a6appau6.p]"重新委托或撤销委托
+ch		a6appau5.p	8	 33 - 授权拒绝,状态更新为"0.2 - 授权拒绝",需要重新委托
+ch		a6appau5.p	9	
+ch	opr	a6appau5.p	1	指定默认的操作:
+ch	opr	a6appau5.p	2	 31 - 授权通过,状态更新为"2.1 - 授权中"或"2.2 - 授权待提交"
+ch	opr	a6appau5.p	3	 32 - 授权退回,状态更新为"1.2 - 授权退回",需要通过"修改委托 [a6appau6.p]"重新委托或撤销委托
+ch	opr	a6appau5.p	4	 33 - 授权拒绝,状态更新为"0.2 - 授权拒绝",需要重新委托
+ch	opr	a6appau5.p	5	允许为空
+ch	opr	a6appau5.p	6	
+ch	sel_all	a6appau5.p	1	是否将默认的操作应用于所有符合条件的记录
+ch	sel_all	a6appau5.p	2	
+ch	tt1_rmk	a6appau5.p	1	如果退回或拒绝,可以有选择的输入相关的说明
+ch	tt1_rmk	a6appau5.p	2	
+ch	tt1_f2	a6appau5.p	1	有关该凭证的操作历史事务
+ch	tt1_f2	a6appau5.p	2	
+ch		a6appau7.p	1	适用于以下状态:
+ch		a6appau7.p	2	 1 - 委托待复核
+ch		a6appau7.p	3	
+ch		a6appau7.p	4	允许的操作:
+ch		a6appau7.p	5	 21 - 复核通过,状态更新为"2 - 复核待授权"
+ch		a6appau7.p	6	 22 - 复核退回,状态更新为"1.1 - 复核退回",需要通过"修改委托 [a6appau6.p]"重新委托或撤销委托
+ch		a6appau7.p	7	 23 - 复核拒绝,状态更新为"0.1 - 复核拒绝",需要重新委托
+ch		a6appau7.p	8	
+ch		a6appau7.p	9	另请参见
+ch		a6appau7.p	10	  批量复核 [a6appau3.p]
+ch		a6appau7.p	11	
+ch	opr	a6appau7.p	1	指定默认的操作:
+ch	opr	a6appau7.p	2	 21 - 复核通过,状态更新为"2 - 复核待授权"
+ch	opr	a6appau7.p	3	 22 - 复核退回,状态更新为"1.1 - 复核退回",需要通过"修改委托 [a6appau6.p]"重新委托或撤销委托
+ch	opr	a6appau7.p	4	 23 - 复核拒绝,状态更新为"0.1 - 复核拒绝",需要重新委托
+ch	opr	a6appau7.p	5	允许为空
+ch	opr	a6appau7.p	6	
+ch	sel_all	a6appau7.p	1	是否将默认的操作应用于所有符合条件的记录
+ch	sel_all	a6appau7.p	2	
+ch	tt1_rmk	a6appau7.p	1	如果退回或拒绝,可以有选择的输入相关的说明
+ch	tt1_rmk	a6appau7.p	2	
+ch	tt1_f2	a6appau7.p	1	有关该凭证的操作历史事务
+ch	tt1_f2	a6appau7.p	2	
+ch		a6appau3.p	1	适用于以下状态:
+ch		a6appau3.p	2	 1 - 委托待复核
+ch		a6appau3.p	3	
+ch		a6appau3.p	4	允许的操作:
+ch		a6appau3.p	5	 21 - 复核通过,状态更新为"2 - 复核待授权"
+ch		a6appau3.p	6	
+ch		a6appau3.p	7	增加了以下字段的输出:
+ch		a6appau3.p	8	  收款人账号
+ch		a6appau3.p	9	  收款人开户行
+ch		a6appau3.p	10	同时,用"批处理"替代了"发票"的输出,用"付款日期"替代了"折扣日期"的输出
+ch		a6appau3.p	11	
+ch		a6appau3.p	12	另请参见
+ch		a6appau3.p	13	  委托复核 [a6appau7.p]
+ch		a6appau3.p	14	
+ch		a6appau4.p	1	基于标准程序"付款选择 - 自动 [appaup.p]"
+ch		a6appau4.p	2	
+ch		a6appau4.p	3	仅应用于定义了"账户类型"为"BOC"即"中国银行银企对接账户"的银行账户的"银企对接"供应商
+ch		a6appau4.p	4	
+ch		a6appau4.p	5	包括以下状态:
+ch		a6appau4.p	6	  1) 2 - 复核待授权
+ch		a6appau4.p	7	
+ch		a6appau4.p	8	增加了以下字段的输出:
+ch		a6appau4.p	9	  收款人账号
+ch		a6appau4.p	10	  收款人开户行
+ch		a6appau4.p	11	同时,用"批处理"替代了"发票"的输出,用"付款日期"替代了"折扣日期"的输出
+ch		a6appau4.p	12	
+ch	bank	a6appau4.p	1	与"指定银行"必须一致
+ch	bank	a6appau4.p	2	
+ch	bank1	a6appau4.p	1	与"指定银行"必须一致
+ch	bank1	a6appau4.p	2	
+ch	new_ckfrm	a6appau4.p	1	默认为"1"
+ch	new_ckfrm	a6appau4.p	2	
+ch		a6appaua.p	1	基于标准程序"付款选择 - 自动 [appaup.p]"
+ch		a6appaua.p	2	
+ch		a6appaua.p	3	仅应用于定义了"账户类型"为"BOC"即"中国银行银企对接账户"的银行账户的"银企对接"供应商
+ch		a6appaua.p	4	
+ch		a6appaua.p	5	包括以下状态:
+ch		a6appaua.p	6	  1) 2.1 - 授权中
+ch		a6appaua.p	7	  2) 2.2 - 授权待提交
+ch		a6appaua.p	8	  3) 2.3 - 银行退回
+ch		a6appaua.p	9	
+ch		a6appaua.p	10	增加了以下字段的输出:
+ch		a6appaua.p	11	  收款人账号
+ch		a6appaua.p	12	  收款人开户行
+ch		a6appaua.p	13	同时,用"批处理"替代了"发票"的输出,用"付款日期"替代了"折扣日期"的输出
+ch		a6appaua.p	14	
+ch	bank	a6appaua.p	1	与"指定银行"必须一致
+ch	bank	a6appaua.p	2	
+ch	bank1	a6appaua.p	1	与"指定银行"必须一致
+ch	bank1	a6appaua.p	2	
+ch	new_ckfrm	a6appaua.p	1	默认为"1"
+ch	new_ckfrm	a6appaua.p	2	
+ch		a6appar7.p	1	允许修改默认的付款日期
+ch		a6appar7.p	2	
+ch		a6appar7.p	3	如果使用了"附加天数",则将基于旧的付款日期
+ch		a6appar7.p	4	
+ch		a6appar7.p	5	仅以下状态的凭证允许修改付款日期:
+ch		a6appar7.p	6	  1 - 委托待复核
+ch		a6appar7.p	7	  1.1 - 复核退回
+ch		a6appar7.p	8	  1.2 - 授权退回
+ch		a6appar7.p	9	  2 - 复核待授权
+ch		a6appar7.p	10	  2.1 - 授权中
+ch		a6appar7.p	11	  2.2 - 授权待提交
+ch		a6appar7.p	12	
+ch		a6appar7.p	13	另请参见
+ch		a6appar7.p	14	  新建委托 [a6appau1.p]
+ch		a6appar7.p	15	
+ch		a6appar1.p	1	另请参见
+ch		a6appar1.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar1.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar1.p	4	
+ch		a6appar2.p	1	另请参见
+ch		a6appar2.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar2.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar2.p	4	
+ch		a6appar3.p	1	另请参见
+ch		a6appar3.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar3.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar3.p	4	
+ch		a6appar4.p	1	另请参见
+ch		a6appar4.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar4.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar4.p	4	
+ch		a6appar5.p	1	另请参见
+ch		a6appar5.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar5.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar5.p	4	
+ch		a6appar6.p	1	另请参见
+ch		a6appar6.p	2	  处理状态查询 [a6appau8.p]
+ch		a6appar6.p	3	  处理状态报表 [a6appau9.p]
+ch		a6appar6.p	4	
+ch		advnmt.p	1	禁用了"银行账户"
+ch		advnmt.p	2	
+ch		advnmt.p	3	名称的长度增加到了66
+ch		advnmt.p	4	
+ch		apvomt.p	1	不允许修改银企接口凭证
+ch		apvomt.p	2	
+ch		apvomt.p	3	即只能修改状态为空的凭证(VO_USER1="")
+ch		apvomt.p	4	
+ch		apvomt.p	5	基于N322的补丁(SP10)修改
+ch		apvomt.p	6	
+ch		apmcmt.p	1	不允许修改银企接口凭证
+ch		apmcmt.p	2	
+ch		apmcmt.p	3	即只能修改状态为空的凭证(VO_USER1="")
+ch		apmcmt.p	4	
+ch		apmcmt.p	5	基于N322的补丁(SP10)修改
+ch		apmcmt.p	6	
+ch		a6b2e001.p	1	在处理所有与银行相关的交易前必须签到
+ch		a6b2e001.p	2	
+ch		a6b2e001.p	3	每次发生与银行相关的交易时首先检查与上次交易之间的时间,如果超时,必须重新签到
+ch		a6b2e001.p	4	
+ch		a6b2e001.p	5	在每一次成功交易后更新签到时间
+ch		a6b2e001.p	6	
+ch		a6b2e001.p	7	成功签到后记录交易验证标识和签到时间
+ch		a6b2e001.p	8	
+ch		a6mgcm39.p	1	该代码已经由系统事先定义好并在初始化时装入了系统.用户可以根据自己的理解和约定对其重新定义
+ch		a6mgcm39.p	2	
+ch		a6mgcm39.p	3	请勿删除系统定义的状态码
+ch		a6mgcm39.p	4	
+ch		a6mgcm39.p	5	用户增加的状态码仅供参考
+ch		a6mgcm39.p	6	
+ch		a6mgcm39.p	7	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"vo_user1",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm39.p	8	
+ch		a6mgcm39.p	9	另请参见
+ch		a6mgcm39.p	10	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm39.p	11	
+ch		a6b2e002.p	1	在处理完所有与银行相关的交易后应该签退
+ch		a6b2e002.p	2	
+ch		a6b2e002.p	3	每次发生与银行相关的交易时首先检查与上次交易之间的时间,如果签到超时,必须重新签到
+ch		a6b2e002.p	4	
+ch		a6b2e002.p	5	成功签退后清除交易验证标识
+ch		a6b2e002.p	6	
+ch		a6b2e008.p	1	查询网络联通情况
+ch		a6b2e008.p	2	
+ch		a6b2e008.p	3	如果总是出现响应超时的情况,可以使用本程序查询是否存在网络故障
+ch		a6b2e008.p	4	
+ch		a6b2e008.p	5	如果交易成功,说明网络联通;如果响应超时,通常表示网络有故障或存在其他问题,请联系相关人员
+ch		a6b2e008.p	6	
+ch		a6mgcm40.p	1	定义授权人及其最小授权金额(含)
+ch		a6mgcm40.p	2	
+ch		a6mgcm40.p	3	至少要为某个金额范围定义一个授权人
+ch		a6mgcm40.p	4	
+ch		a6mgcm40.p	5	如果定义了多个授权人,其先后顺序没有限制
+ch		a6mgcm40.p	6	
+ch		a6mgcm40.p	7	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"usrw_key5",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm40.p	8	
+ch		a6mgcm40.p	9	另请参见
+ch		a6mgcm40.p	10	  通用代码维护 [mgcodemt.p]
+ch		a6mgcm40.p	11	  用户维护 [mgurmt.p]
+ch		a6mgcm40.p	12	
+ch	code_value	a6mgcm40.p	1	授权人的用户标志
+ch	code_value	a6mgcm40.p	2	
+ch	code_value	a6mgcm40.p	3	必须是在系统中已经定义的用户标志
+ch	code_value	a6mgcm40.p	4	
+ch	code_cmmt	a6mgcm40.p	1	授权人的最小授权金额,只要超过(含)本金额,就要求该授权人授权
+ch	code_cmmt	a6mgcm40.p	2	
+ch	code_cmmt	a6mgcm40.p	3	如果不满足该最小授权金额,系统将自动过滤相关记录
+ch	code_cmmt	a6mgcm40.p	4	
+ch		a6mgcm41.p	1	该代码已经由系统事先定义好并在初始化时装入了系统.用户可以根据自己的理解和约定对其重新定义
+ch		a6mgcm41.p	2	
+ch		a6mgcm41.p	3	请勿删除系统定义的状态码
+ch		a6mgcm41.p	4	
+ch		a6mgcm41.p	5	用户增加的状态码仅供参考
+ch		a6mgcm41.p	6	
+ch		a6mgcm41.p	7	本程序基于标准程序"通用代码维护 [mgcodemt.p]"修改而来,字段名为"usrw_key5",请参考相应的帮助以获得这里没有提到的信息
+ch		a6mgcm41.p	8	
+ch		a6mgcm41.p	9	另请参见
+ch		a6mgcm41.p	10	  通用代码维护 [mgcodemt.p]
+ch		a6b2e071.p	1	查询提交超时的交易状态
+ch		a6b2e071.p	2	
+ch		a6b2e071.p	3	在更新交易状态前建议先进行本查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e071.p	4	
+ch		a6b2e071.p	5	另请参见
+ch		a6b2e071.p	6	  交易状态查询成功返回码维护 [a6mgcm37.p]
+ch		a6b2e071.p	7	  交易状态查询失败返回码维护 [a6mgcm42.p]
+ch		a6b2e071.p	8	  超时的汇划即时通交易状态更新 [a6b2e072.p]
+ch		a6b2e071.p	9	
+ch	bank	a6b2e071.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e071.p	2	
+ch	bank	a6b2e071.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e071.p	4	
+ch	bank	a6b2e071.p	5	另请参见
+ch	bank	a6b2e071.p	6	
+ch	bank	a6b2e071.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e071.p	8	
+ch	base_rpt	a6b2e071.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e071.p	2	
+ch	pay_date1	a6b2e071.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e071.p	2	
+ch	pay_date1	a6b2e071.p	3	另请参见
+ch	pay_date1	a6b2e071.p	4	
+ch	pay_date1	a6b2e071.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e071.p	6	
+ch		a6b2e072.p	1	更新提交超时的交易状态:
+ch		a6b2e072.p	2	  如果返回码在"交易状态查询成功返回码维护 [a6mgcm37.p]"定义了,则更新状态为"4 - 提交成功"
+ch		a6b2e072.p	3	  如果返回码在"交易状态查询失败返回码维护 [a6mgcm42.p]"定义了,则更新状态为"0.3 - 银行退回"
+ch		a6b2e072.p	4	  否则,不做任何更新
+ch		a6b2e072.p	5	
+ch		a6b2e072.p	6	在更新交易状态前建议先进行查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e072.p	7	
+ch		a6b2e072.p	8	另请参见
+ch		a6b2e072.p	9	  交易状态查询成功返回码维护 [a6mgcm37.p]
+ch		a6b2e072.p	10	  交易状态查询失败返回码维护 [a6mgcm42.p]
+ch		a6b2e072.p	11	  超时的汇划即时通交易状态查询 [a6b2e071.p]
+ch		a6b2e072.p	12	
+ch	bank	a6b2e072.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e072.p	2	
+ch	bank	a6b2e072.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e072.p	4	
+ch	bank	a6b2e072.p	5	另请参见
+ch	bank	a6b2e072.p	6	
+ch	bank	a6b2e072.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e072.p	8	
+ch	base_rpt	a6b2e072.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e072.p	2	
+ch	pay_date1	a6b2e072.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e072.p	2	
+ch	pay_date1	a6b2e072.p	3	另请参见
+ch	pay_date1	a6b2e072.p	4	
+ch	pay_date1	a6b2e072.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e072.p	6	
+ch		a6b2e073.p	1	查询提交无响应的交易状态
+ch		a6b2e073.p	2	
+ch		a6b2e073.p	3	在更新交易状态前建议先进行本查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e073.p	4	
+ch		a6b2e073.p	5	另请参见
+ch		a6b2e073.p	6	  交易状态查询成功返回码维护 [a6mgcm37.p]
+ch		a6b2e073.p	7	  交易状态查询失败返回码维护 [a6mgcm42.p]
+ch		a6b2e073.p	8	  无响应的汇划即时通交易状态更新 [a6b2e074.p]
+ch		a6b2e073.p	9	
+ch	bank	a6b2e073.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e073.p	2	
+ch	bank	a6b2e073.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e073.p	4	
+ch	bank	a6b2e073.p	5	另请参见
+ch	bank	a6b2e073.p	6	
+ch	bank	a6b2e073.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e073.p	8	
+ch	base_rpt	a6b2e073.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e073.p	2	
+ch	pay_date1	a6b2e073.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e073.p	2	
+ch	pay_date1	a6b2e073.p	3	另请参见
+ch	pay_date1	a6b2e073.p	4	
+ch	pay_date1	a6b2e073.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e073.p	6	
+ch		a6b2e074.p	1	更新提交无响应的交易状态
+ch		a6b2e074.p	2	  如果返回码在"交易状态查询成功返回码维护 [a6mgcm37.p]"定义了,则更新状态为"4 - 提交成功"
+ch		a6b2e074.p	3	  如果返回码在"交易状态查询失败返回码维护 [a6mgcm42.p]"定义了,则更新状态为"0.3 - 银行退回"
+ch		a6b2e074.p	4	  否则,不做任何更新
+ch		a6b2e074.p	5	
+ch		a6b2e074.p	6	在更新交易状态前建议先进行查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e074.p	7	
+ch		a6b2e074.p	8	另请参见
+ch		a6b2e074.p	9	  交易状态查询成功返回码维护 [a6mgcm37.p]
+ch		a6b2e074.p	10	  交易状态查询失败返回码维护 [a6mgcm42.p]
+ch		a6b2e074.p	11	  无响应的汇划即时通交易状态查询 [a6b2e073.p]
+ch		a6b2e074.p	12	
+ch	bank	a6b2e074.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e074.p	2	
+ch	bank	a6b2e074.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e074.p	4	
+ch	bank	a6b2e074.p	5	另请参见
+ch	bank	a6b2e074.p	6	
+ch	bank	a6b2e074.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e074.p	8	
+ch	base_rpt	a6b2e074.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e074.p	2	
+ch	pay_date1	a6b2e074.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e074.p	2	
+ch	pay_date1	a6b2e074.p	3	另请参见
+ch	pay_date1	a6b2e074.p	4	
+ch	pay_date1	a6b2e074.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e074.p	6	
+ch		a6b2e061.p	1	查询提交成功的交易状态
+ch		a6b2e061.p	2	
+ch		a6b2e061.p	3	在更新交易状态前建议先进行本查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e061.p	4	
+ch		a6b2e061.p	5	另请参见
+ch		a6b2e061.p	6	  到账查询成功返回码维护 [a6mgcm38.p]
+ch		a6b2e061.p	7	  到账更新 [a6b2e062.p]
+ch		a6b2e061.p	8	
+ch	bank	a6b2e061.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e061.p	2	
+ch	bank	a6b2e061.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e061.p	4	
+ch	bank	a6b2e061.p	5	另请参见
+ch	bank	a6b2e061.p	6	
+ch	bank	a6b2e061.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e061.p	8	
+ch	base_rpt	a6b2e061.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e061.p	2	
+ch	pay_date1	a6b2e061.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e061.p	2	
+ch	pay_date1	a6b2e061.p	3	另请参见
+ch	pay_date1	a6b2e061.p	4	
+ch	pay_date1	a6b2e061.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e061.p	6	
+ch		a6b2e062.p	1	更新提交成功的交易状态:
+ch		a6b2e062.p	2	  如果返回码在"到账查询成功返回码维护 [a6mgcm38.p]"定义了,则更新状态为"7 - 交易成功"
+ch		a6b2e062.p	3	  否则,不做任何更新
+ch		a6b2e062.p	4	
+ch		a6b2e062.p	5	在更新交易状态前建议先进行查询,如果发现有未定义的返回码(成功或失败),请首先定义后再更新交易状态
+ch		a6b2e062.p	6	
+ch		a6b2e062.p	7	另请参见
+ch		a6b2e062.p	8	  到账查询成功返回码维护 [a6mgcm38.p]
+ch		a6b2e062.p	9	  到账查询 [a6b2e061.p]
+ch		a6b2e062.p	10	
+ch	bank	a6b2e062.p	1	只能从"账户类型"为"BOC"的银行付款
+ch	bank	a6b2e062.p	2	
+ch	bank	a6b2e062.p	3	银行货币与基本货币或者交易货币不符
+ch	bank	a6b2e062.p	4	
+ch	bank	a6b2e062.p	5	另请参见
+ch	bank	a6b2e062.p	6	
+ch	bank	a6b2e062.p	7	银行维护 [a6apbkm1.p]
+ch	bank	a6b2e062.p	8	
+ch	base_rpt	a6b2e062.p	1	只有基本货币凭证可以由文件付款
+ch	base_rpt	a6b2e062.p	2	
+ch	pay_date1	a6b2e062.p	1	付款日期的截止日期默认等于当前日期加上提前期
+ch	pay_date1	a6b2e062.p	2	
+ch	pay_date1	a6b2e062.p	3	另请参见
+ch	pay_date1	a6b2e062.p	4	
+ch	pay_date1	a6b2e062.p	5	银企对接控制 [a6b2epm.p]
+ch	pay_date1	a6b2e062.p	6	
+ch		a6apckp1.p	1	更新交易成功的交易状态:8 - 关闭
+ch		a6apckp1.p	2	
+ch		a6apckp1.p	3	执行系统的供应商付款功能,更新应付账账龄
+ch		a6apckp1.p	4	
+ch		a6b2e004.p	1	查询指定银行的当日交易.这里的"交易"仅限于成功付款的记录
+ch		a6b2e004.p	2	
+ch		a6b2e004.p	3	注意:交易可能随时发生变化
+ch		a6b2e004.p	4	
+ch		a6b2e005.p	1	查询指定银行的当前余额
+ch		a6b2e005.p	2	
+ch		a6b2e005.p	3	注意:余额可能随时发生变化
+ch		a6b2e005.p	4	
+ch		a6b2e011.p	1	查询指定银行指定期间的历史交易.这里的"交易"仅限于成功付款的记录
+ch		a6b2e011.p	2	
+ch		a6b2e011.p	3	注意:指定期间不可以包括当日及以后的日期
+ch		a6b2e011.p	4	
+ch		a6b2e012.p	1	查询指定银行指定期间的历史余额
+ch		a6b2e012.p	2	
+ch		a6b2e012.p	3	注意:指定期间不可以包括当日及以后的日期
+ch		a6b2e012.p	4	
+ch		a6appau8.p	1	查询所有已经委托且未关闭的凭证交易状态
+ch		a6appau8.p	2	
+ch		a6appau8.p	3	注意,尚未委托和已经付款关闭的凭证不在此范围内
+ch		a6appau8.p	4	
+ch		a6appau8.p	5	可以同时查询有关凭证的操作历史记录
+ch		a6appau8.p	6	
+ch		a6appau8.p	7	另请参见
+ch		a6appau8.p	8	  处理状态报表 [a6appau9.p]
+ch		a6appau8.p	9	
+ch		a6appau9.p	1	输出所有已经委托且未关闭的凭证交易状态
+ch		a6appau9.p	2	
+ch		a6appau9.p	3	注意,尚未委托和已经付款关闭的凭证不在此范围内
+ch		a6appau9.p	4	
+ch		a6appau9.p	5	另请参见
+ch		a6appau9.p	6	  处理状态查询 [a6appau8.p]
+ch		a6appau9.p	7	
+ch		ssmgflh1.p	1	装入字段帮助
+ch		ssmgflh1.p	2	
+ch		ssmgflh1.p	3	仅适用于实施顾问在初始化时使用
+ch		ssmgflh1.p	4	
+ch		ssmgflh1.p	5	另请参见
+ch		ssmgflh1.p	6	  字段帮助装入 [mgflld.p]
+ch		ssmgflh1.p	7	
+ch		a6mgpwm1.p	1	受限的菜单口令维护
+ch		a6mgpwm1.p	2	
+ch		a6mgpwm1.p	3	包括以下限制:
+ch		a6mgpwm1.p	4	   1) 仅限于指定的菜单和选择及其子菜单和选择,即银企对接菜单及其子菜单
+ch		a6mgpwm1.p	5	   2) 仅限于当前用户有访问权限的菜单和选择
+ch		a6mgpwm1.p	6	
+ch		a6mgpwm1.p	7	另请参见
+ch		a6mgpwm1.p	8	  菜单口令维护 [mgpwmt.p]
+ch		a6mgpwm1.p	9

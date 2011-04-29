@@ -1,0 +1,49 @@
+192。168。33。17
+test
+test
+mfg
+test0201 
+
+正式库
+usr:888
+pwd:888
+mfgpro:
+mfg: minth0501
+root minth20090101
+
+用户名：jack   密码： minth@jack  配置导入密码： minthjack
+
+bi
+192.168.1.16
+qad:minthbiserver 
+bi adim,13586566758
+
+正式库
+远程192.168.1.119 
+远程用户：02195 
+密码hub+20090701 
+登陆minth域
+
+连192.168.66.15
+root minth20090101
+  
+mfg minth0501  
+
+主机名: 192.168.1.27
+用户名: root
+密码: testminth
+端口: 21
+
+武汉buffer
+os
+buff:buff
+mfgpro
+mfg/test0201
+
+
+192。168。171。15 武汉条码
+jack武汉ERP加密码.spd
+jack minth@jack minth@jack
+
+barcode
+bc14/bc14

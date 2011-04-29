@@ -1,0 +1,12 @@
+"E033-CTNQTY" "ctn_qty" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-EXTGROSSWT" "ext_grosswt" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-EXTNETWT" "ext_netwt" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-EXTQTY" "ext_qty" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-GROSSWT" "grosswt" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-LOC" "loc" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-NETWT" "netwt" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-PART" "part" "xxshntmt.p" "" "apple" 03/30/04 "" "" "" "" 0 no ? 0
+"E033-PART2" "part2" "xxshntmt.p" "" "apple" 03/30/04 "" "" "" "" 0 no ? 0
+"E033-PO1" "po1" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-QTYPER" "qtyper" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0
+"E033-REF" "ref" "xxshntmt.p" "" "apple" 03/31/04 "" "" "" "" 0 no ? 0

@@ -1,0 +1,110 @@
+
+
+      {mfdeclre.i}
+      {gplabel.i} /* EXTERNAL LABEL INCLUDE */
+
+      define shared variable v_wolot like wo_lot.
+      define shared variable v_op like ro_op.
+
+      define variable nbr like wo_nbr format "x(10)" label "工单".
+      define variable lot like wo_lot label "标志".
+      define variable op like ro_op label "OP".
+
+      FORM /*GUI*/ 
+         nbr      at 1
+         lot      at 18
+         op       at 33
+      with frame a row 1 centered overlay side-labels width 80.
+      
+      lot = v_wolot.
+      op = v_op. 
+      find first wo_mstr where wo_lot = lot no-lock no-error.
+      nbr = (if available wo_mstr then wo_nbr else "").
+
+      repeat:
+         update        
+            nbr
+            lot
+            op
+	 with frame a editing:
+            if frame-field = "nbr" then do:
+               /* FIND NEXT/PREVIOUS RECORD */
+               {mfnp.i wo_mstr nbr wo_nbr nbr wo_nbr wo_nbr}
+  
+               if recno <> ? then do:
+                  nbr = wo_nbr.
+		  display nbr with frame a.
+	       end.
+            end.
+            else if frame-field = "lot" then do:
+               /* FIND NEXT/PREVIOUS RECORD */
+               {mfnp05.i wo_mstr wo_nbr "wo_nbr = nbr" wo_lot "input lot"}
+
+               if recno <> ? then do:
+                  lot = wo_lot.
+                  display lot with frame a.
+	       end.
+            end.
+            else do:
+               status input.
+               readkey.
+               apply lastkey.
+            end.
+         end.
+
+         clear frame a all no-pause.
+
+         display
+            nbr
+            lot
+            op
+	 with frame a.
+
+         /* OUTPUT DESTINATION SELECTION */
+         {gpselout.i &printType = "terminal"
+               &printWidth = 80
+               &pagedFlag = " "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "no"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 6
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
+
+         loopa:
+         for each xxwrd_det no-lock
+	    where (nbr = "" or xxwrd_wonbr = nbr)
+	      and (lot = "" or xxwrd_wolot = lot)
+	      and (op = 0 or xxwrd_op = op)
+              and xxwrd_status <> "D"
+	 break by xxwrd_wonbr by xxwrd_wolot desc by xxwrd_op
+	 on endkey undo, leave loopa 
+	 with frame b 12 down width 80:
+
+	    display
+               xxwrd_wolot      format "x(7)" label "标志"
+               xxwrd_part       format "x(16)"
+               xxwrd_op         format ">9" label "OP"
+               xxwrd_qty_ord    format "->>>>>9" 
+               xxwrd_qty_comp   format "->>>>>9"
+               xxwrd_qty_rejct  format "->>>>9"
+               xxwrd_qty_rework format "->>>>9" column-label "返工!开始数"
+               xxwrd_qty_return format "->>>>9" column-label "返工!完成数"
+	       string(xxwrd_time_setup,"HH:MM") format "x(5)" column-label "准备!时间"
+	       string(xxwrd_time_run,"HH:MM") format "x(5)" column-label "运行!时间"
+	    with down frame b.
+
+	    if frame-line(b) = frame-down(b) then pause.
+
+            {mfreset.i}
+         end.
+
+        {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
+      end.
+
+      hide frame a.
+         

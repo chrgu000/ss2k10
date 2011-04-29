@@ -1,0 +1,15 @@
+└─CD
+    ├─01.tables         最新的table
+    ├─02.xrc            最新的程式,
+    ├─03.labels         最新的条码标签
+    ├─04.scripts        BC系统设定档:client,menu,profiles
+    ├─05.license        license
+    ├─06.setup          MFGPRO系统相关设定
+    └─bc
+
+
+
+复制bc到服务器前,
+要检查是否已把(最新的程式,标签等)复制到bc下
+
+以后考虑做个bat,自动处理

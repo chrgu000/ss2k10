@@ -1,0 +1,57 @@
+soivrp09.p b+                                       7.13.8 Invoice History Report                                     Date: 03/23/06
+Page:    1                                           MFG/PRO Training DB - eB 91                                      Time: 13:57:07
+Invoice  Rev Customer Purchase Order         Ship-To  Ship Date Inv Date Slspsn   Cur Exchange Rate
+-------- --- ------------------------------- -------- --------- -------- -------- --- ----------------------------------------
+3B000001   0 001                             001      03/23/06  03/23/06 NONE     USD USD 1.0 = USD 1.0
+             PEI Computers Ltd.
+
+Order     Ln Item Number        UM  QUANTITY_ORDQty Invoiced    Backorder C           Price Extended Price    Ext Margin Due Date T
+-------- --- ------------------ -- ------------ ------------ ------------ - --------------- -------------- ------------- -------- -
+dd02       1 12-4100            EA          5.0          5.0          0.0              4.00          20.00         20.00 03/24/06
+     WELDING RODS                                     
+dd02       2 12-4100            EA          7.0          7.0          0.0              4.00          28.00         28.00 03/24/06
+     WELDING RODS                                     
+dd02       3 12-4100            EA         76.0          3.0         73.0              4.00          12.00         12.00 03/24/06
+     WELDING RODS                                     
+
+Tax Type                 Tax                      Tax   Tax                 Tax     Tax           Taxable      Non-Taxable
+Description              Description              Class Usage            Amount    Rate             Sales            Sales
+------------------------ ------------------------ ----- -------- -------------- -------- ---------------- ----------------
+GST - Canada             Canada GST                     7-S                4.20    7.00%            60.00             0.00
+PST - PE Island, Canada  PST - PE Island, Canada        7-S                3.00    5.00%            60.00             0.00
+
+
+Non-Taxable: 0.00              Currency: USD     Line Total:            60.00
+    Taxable: 60.00                        0.00%    Discount:             0.00
+   Tax Date: 03/23/06                         FREIGHT   10 :             0.00
+                                          TAX-FREIGHT   11 :             0.00
+                                          TAX-SERVICE   21 :             0.00
+                                                  Total Tax:             7.20
+                                                      Total:            67.20
+
+ Report Totals:   
+
+  Ext Margin:            60.00           Extended Price:            60.00                 Discount:             0.00
+Trailer Amt :             0.00            Trailer Amt 2:             0.00            Trailer Amt 3:             0.00
+   Total Tax:             7.20                    Total:            67.20
+
+
+                                                           End of Report
+soivrp09.p b+                                       7.13.8 Invoice History Report                                     Date: 03/23/06
+Page:    2                                           MFG/PRO Training DB - eB 91                                      Time: 13:57:07
+
+
+
+
+REPORT_CRITERIA:                        REPORT_SUBMITTED_BY:       us
+
+       Invoice:                               To:
+   Sales Order: dd02                          To: dd02
+      Customer:                               To:
+       Bill To:                               To:
+   Salesperson:                               To:
+Purchase Order:                               To:
+      Currency:
+                                                             Output: dd02-inv
+                                                           Batch ID:
+

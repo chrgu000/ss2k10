@@ -1,0 +1,9 @@
+└─CD
+    ├─01.tables         最新的table
+    ├─02.tempBMT        最新的源程式,
+    ├─03.labels         最新的条码标签
+    ├─04.scripts        BC系统设定档:client,menu,profiles
+    ├─05.license        license
+    └─06.setup          MFGPRO系统相关设定
+
+

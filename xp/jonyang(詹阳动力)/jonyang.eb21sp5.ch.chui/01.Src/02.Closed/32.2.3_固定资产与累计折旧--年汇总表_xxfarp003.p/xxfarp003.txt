@@ -1,0 +1,5 @@
+#def REPORTPATH=$/FA/xxfarp003
+#def :end
+"AAA";"BBB";0;0;0;0;0;0;0;0;0;0;0;0;xxdate
+"AAA";"BBB";0;0;0;0;0;0;0;0;0;0;0;0;xxdate
+"AAA";"BBB";0;0;0;0;0;0;0;0;0;0;0;0;xxdate

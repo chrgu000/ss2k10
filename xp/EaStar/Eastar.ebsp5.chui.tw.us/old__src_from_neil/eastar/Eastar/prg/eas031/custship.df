@@ -1,0 +1,39 @@
+ADD TABLE "custship_mstr"
+  AREA "TRANSACTION"
+  DUMP-NAME "custship"
+
+ADD FIELD "custship_code" OF "custship_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "custship_method" OF "custship_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Shipment Method"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD INDEX "custship_cm" ON "custship_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "custship_code" ASCENDING 
+  INDEX-FIELD "custship_method" ASCENDING 
+
+ADD INDEX "custship_code" ON "custship_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "custship_code" ASCENDING 
+
+ADD INDEX "custship_method" ON "custship_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "custship_method" ASCENDING 
+
+.
+PSC
+cpstream=UNDEFINED
+.
+0000000758

@@ -1,0 +1,11 @@
+ADD SEQUENCE "xrpt_sq01"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT yes
+  MIN-VAL 0
+  MAX-VAL 999999
+
+.
+PSC
+cpstream=GB2312
+.

@@ -1,0 +1,10 @@
+open 192.168.58.91
+root
+123456
+prompt off
+cd /app/bc/xs
+lcd C:\tempBOMT\xrc
+bin
+mput *.*
+bye
+

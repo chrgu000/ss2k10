@@ -1,0 +1,58 @@
+
+
+
+
+   Newport, Inc.                                                          发  票
+   1791 Deere Avenue
+   Irvine, CA 92606                                发票: IV20204       版本:   0
+   United States of America                    发票日期: 07/28/10      页号:   1
+                                               打印日期: 07/28/10
+
+
+       票据开往: 00010001                    销往: 00010000
+
+       University of California              University of Cal - Ship To
+       1 Busch Place                         1 Briar Lane
+       Los Angeles, CA 90036                 Los Angeles, CA 90036
+       United States                         United States of America
+
+
+
+
+
+
+      销售订单: xxxxxxxx                      发货日期: 07/28/10
+      订货日期: 08/15/09                      采购订单:
+        推销员:                                发货-至: 00010000
+                                              发货方式: ups
+      支付方式: net 30                          提货单:
+                Net 30 Days               离岸价格易主:
+        转卖税:
+          备注:
+
+
+物料号             计   已开发票     欠交量 税             价格 合计价格
+------------------ -- ---------- ---------- --- --------------- ----------------
+test1              EA      100.0      800.0 No            10.00         1,000.00
+  testdesc1               
+  testdesc2               
+
+test1              EA        0.0     5400.0 No             0.00             0.00
+  testdesc1               
+  testdesc2               
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+   非应纳税: 1,000.00              货币: USD       项目合计:         1,000.00
+     应纳税: 0.00                         0.00%        折扣:             0.00
+   定税日期: 07/28/10                         Service   10 :             0.00
+      集装箱: 0.00                Freight Non-Taxable   20 :             0.00
+  其他项收费: 0.00                            Special   30 :             0.00
+                                                   税款合计:             0.00
+                                                       合计:         1,000.00
+

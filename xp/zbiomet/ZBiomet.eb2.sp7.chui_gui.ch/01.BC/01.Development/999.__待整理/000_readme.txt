@@ -1,0 +1,37 @@
+Barcode代码生成器 
+
+***文件夹说明:
+1.tool      : xcode,ftp,生成器的配置文件(重要,部分文件已隐藏)
+2.xrc       : 所有可提交给客户的程式文件(已加密,可随时清空)
+3.src_auto  : 所有生成器生成的程式(未加密,可随时清空)
+4.src_manual: 所有手工加写的程式(未加密,重要,绝密,不可外传)
+(以上供开发人员使用,不得外传)
+(以下供实施人员使用)
+5.InstallCD : barcode服务器安装手册,实施手册,源安装文件,实施日志,等等...
+
+
+***生成器使用配置说明:
+(如果以上5个目录不是解压在c:\tempbomt,则需修改以下路径)
+1.生成器路径修改:
+--对象--模块--CODE_Generator:   c:\tempbomt\src_auto (两处)
+--对象--窗体--main --设计视图 --xcode --事件生成器: C:\tempbomt\tool\mycode.bat
+
+2.C:\tempbomt\tool\mycode.bat修改
+ftp模板位置: ftp -s:c:\tempbomt\tool\ftp**.txt
+根据不同Server的实际情况建立多个ftp模板,选择,更换ftp模板即可
+注意:xcode顺序是(先src_manual后src_auto),所以如果同名生成器的内容为最新
+
+3.修改生成器"默认数据库文件夹"位置:
+--工具--选项--常规--"默认数据库文件夹 = c:\tempbomt\" 
+
+
+
+
+
+***待解决问题:
+
+如果文件在server不存在,ftp新上传上去的文件,权限如何设置为777  -->server ftpd or user的默认值
+生成器打开时错误或保存修改时错误? --> 可能是--工具--选项--高级--默认文件格式 access 2000 / access 2000-2003
+程式里面手工做的 *.i *.p 应该都加上标记
+有空把这个做成ppt格式~~
+label制作手册,

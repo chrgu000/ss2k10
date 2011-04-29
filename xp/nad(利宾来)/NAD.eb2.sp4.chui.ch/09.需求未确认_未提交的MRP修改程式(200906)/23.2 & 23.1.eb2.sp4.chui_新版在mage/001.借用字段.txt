@@ -1,0 +1,3 @@
+schd_det.schd__log01  日程核准
+wo_mstr.wo__log01     工单核准
+wo_mstr.wo__chr05     标识是否本程式产生的工单= "sp-mrp"

@@ -1,0 +1,20 @@
+TERM=vt100;
+	export TERM
+DLC=/mfgeb2/progress/dlc91d;
+	export DLC
+PATH=$PATH:$DLC;
+	export PATH
+PROMSGS=$DLC/promsgs;
+	export PROMSGS
+PROTERMCAP=$DLC/protermcap;
+	export PROTERMCAP
+PS1='$$ ';
+	export PS1
+
+BC=/mfgeb2/bc_test;
+	export BC
+PROPATH=.,$BC,$BC/sfc,$BC/xs,$BC/labels,$BC/scripts,/mfgeb2/eb2/xxsrc,/mfgeb2/eb2,/mfgeb2/eb2/xrc,/mfgeb2/eb2/src,/mfgeb2/eb2/client,/mfgeb2/eb2/client/us,/mfgeb2/eb2/bbi;
+	export PROPATH
+
+cd $BC/tmp_sfc
+$DLC/bin/_progres -c 30 -d mdy -yy 1920 -Bt 350 -D 100 -mmax 3000 -nb 200 -s 63 -noshvarfix -p $BC/sfc/xsmf002main.p -pf /mfgeb2/eb2/sfc_db/plt_sfc.pf

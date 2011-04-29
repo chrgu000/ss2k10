@@ -1,0 +1,30 @@
+@@batchload mgcodemt.p
+"Barcode"
+"Global_user_lang_dir"
+"/app/mfgpro/eb2sp7/us/"
+@@end
+@@batchload mgcodemt.p
+"Barcode"
+"LabelsPath"
+"/app/bc/labels/"
+@@end
+@@batchload mgcodemt.p
+"Barcode"
+"wtimeout"
+"999"
+@@end
+@@batchload mgcodemt.p
+"Barcodeaccesssite"
+"*"
+"1100"
+@@end
+@@batchload mgcodemt.p
+"BARCODEDEFSITE"
+"*"
+"1100"
+@@end
+@@batchload mgcodemt.p
+"BARCODEDEuserid"
+"zbc1|mfg"
+""
+@@end

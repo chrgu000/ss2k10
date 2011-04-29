@@ -1,0 +1,11 @@
+DLC=/app/progress/91d;      export DLC
+PATH=$PATH:$DLC;            export PATH
+PROMSGS=$DLC/promsgs;       export PROMSGS
+PROTERMCAP=$DLC/protermcap; export PROTERMCAP
+PS1='$$ ';                  export PS1
+TERM=VT100;                 export TERM
+PROPATH=.,/app/mfgpro/eb2sp7,/app/mfgpro/eb2sp7/xrc,/app/mfgpro/eb2sp7/us,/app/mfgpro/eb2sp7/bbi;export PROPATH
+ 
+cd 	# change to home directory
+
+$DLC/bin/_progres -b -c 30 -d mdy -yy 1920 -Bt 350 -D 100 -mmax 3000 -nb 200 -s 63 -noshvarfix -p /app/bc/scripts/sfc-db-sync01.p -pf /app/mfgpro/eb2sp7/Demonstration.pf  

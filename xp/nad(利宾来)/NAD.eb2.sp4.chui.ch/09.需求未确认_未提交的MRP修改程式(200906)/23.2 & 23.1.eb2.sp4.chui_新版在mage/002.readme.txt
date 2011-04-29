@@ -1,0 +1,43 @@
+xxmrmpnc.p 23.1
+xxmrmpup.p 23.2
+
+
+没考虑多单位转换,
+没考虑订购倍数订单量等
+没考虑联合工单副产品的计算和工单产生
+
+
+
+xxmrmpup.p / xxmrmpnc.p -->
+    --> xxgpmp.p 
+    --> xxgpmp01.p 
+    --> xxgpmpup.p 
+	--> xxwowomtxp.p 
+	     --> xxwowomtcxp.p  
+	     --> xxwowomtjxp.p  --> xxwomtacctxp.p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

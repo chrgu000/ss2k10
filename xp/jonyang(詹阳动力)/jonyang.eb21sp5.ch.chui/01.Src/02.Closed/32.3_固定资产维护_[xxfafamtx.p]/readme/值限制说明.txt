@@ -1,0 +1,2 @@
+1.使用人fa_custodian 需在 2.7.1存在  --- 已取消限制
+2.fa__chr01,fa__chr02,fa__chr03,fa__chr04,需受通用代码控制逻辑限制

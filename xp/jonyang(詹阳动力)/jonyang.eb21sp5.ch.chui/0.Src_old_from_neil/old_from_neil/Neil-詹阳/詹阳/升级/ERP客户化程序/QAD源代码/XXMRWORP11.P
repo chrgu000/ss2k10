@@ -1,0 +1,349 @@
+/* GUI CONVERTED from mrworp11.p (converter v1.71) Tue Oct  6 14:35:58 1998 */
+/* mrworp11.p - PLANNED ORDER REPORT                                    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/* web convert mrworp11.p (converter v1.00) Fri Oct 10 13:57:13 1997 */
+/* web tag in mrworp11.p (converter v1.00) Mon Oct 06 14:17:36 1997 */
+/*F0PN*/ /*K0ZX*/ /*V8#ConvertMode=WebReport                            */
+/*V8:ConvertMode=FullGUIReport                                 */
+/* Revision: 1.0      LAST MODIFIED: 07/16/86   BY: PML       */
+/* REVISION: 1.0      LAST MODIFIED: 06/26/86   BY: EMB       */
+/* REVISION: 1.0      LAST MODIFIED: 09/16/86   BY: EMB *12*  */
+/* REVISION: 2.1      LAST MODIFIED: 10/19/87   BY: WUG *A94* */
+/* REVISION: 4.0      LAST MODIFIED: 02/16/88   BY: FLM *A175**/
+/* REVISION: 4.0      LAST MODIFIED: 06/14/88   BY: flm *A268**/
+/* REVISION: 4.0      LAST MODIFIED: 05/30/89   BY: emb *A740**/
+/* REVISION: 6.0      LAST MODIFIED: 09/11/90   BY: emb *D040**/
+/* REVISION: 6.0      LAST MODIFIED: 01/02/91   BY: emb *D276**/
+/* REVISION: 7.3      LAST MODIFIED: 11/19/92   BY: jcd *G348**/
+/* REVISION: 7.5      LAST MODIFIED: 03/24/95   BY: tjs *J014**/
+/* REVISION: 8.6      LAST MODIFIED: 10/15/97   BY: ckm *K0ZX**/
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan   */
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+{mfdtitle.i "e+ "}
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+&SCOPED-DEFINE mrworp11_p_1 "按零件号或物料单/配料排序"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE mrworp11_p_2 "显示虚零件"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE mrworp11_p_3 "包括副产品订单"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE mrworp11_p_4 "包括基本处理订单"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE mrworp11_p_5 "     零件号!       物料单/配料"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE mrworp11_p_6 "零件号/产品结构"
+/* MaxLen: Comment: */
+
+/* ********** End Translatable Strings Definitions ********* */
+
+
+
+/*D040*/ define variable site like si_site.
+/*D040*/ define variable site1 like si_site.
+
+define variable nbr     like mrp_nbr.
+define variable nbr1    like mrp_nbr.
+define variable part    like wo_part.
+define variable part1   like wo_part.
+/*J014*/ define variable bom  like wo_bom_code.
+/*J014*/ define variable bom1 like wo_bom_code.
+define variable due     like wo_due_date.
+define variable due1    like wo_due_date.
+define variable rel     like wo_rel_date.
+define variable rel1    like wo_rel_date.
+define variable desc1   like pt_desc1.
+define variable pm_code like pt_pm_code.
+define variable vend like pt_vend.
+define variable vend1 like pt_vend.
+define variable show_phantom like mfc_logical initial no
+label {&mrworp11_p_2}.
+/*J014*/ define variable bom_code like pt_bom_code.
+/*J014*/ define variable blnk like wo_part initial "                  ".
+/*J014*/ define variable len as integer.
+/*J014*/ define variable show_base like mfc_logical initial true
+/*J014*/        label {&mrworp11_p_4}.
+/*J014*/ define variable show_by like mfc_logical initial false
+/*J014*/        label {&mrworp11_p_3}.
+/*J014*/ define variable  item_sort  like mfc_logical initial true
+/*J014*/        format {&mrworp11_p_6}
+/*J014*/        label {&mrworp11_p_1}.
+define variable buyer AS  CHARACTER FORMAT "xxxxx" label "(主文件中的采计代码) 计划员".
+define variable buyer1 AS  CHARACTER FORMAT "xx" label "(主文件中的采计代码) 采购员".
+
+     define variable code like pt_pm_code.
+define variable cst_tot like sct_cst_tot label "系统单价".
+define variable sub_ll like sct_sub_ll label "其中转包成本".
+define variable pur_cost like pod_pur_cost label "采购单单价".
+
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+part    colon 20 part1 label {t001.i}   colon 49 skip
+vend    colon 20 vend1 label {t001.i}   colon 49 skip
+/*J014*/ bom   colon 20 bom1  label {t001.i}   colon 49 skip
+/*D040*/ site  colon 20 site1 label {t001.i}   colon 49 skip
+nbr     colon 20 nbr1 label  {t001.i}   colon 49 skip
+rel     colon 20 rel1  label {t001.i}   colon 49 skip
+due     colon 20 due1  label {t001.i}   colon 49 skip(1)
+/*J014*  buyer   colon 20       */
+/*J014*  code    colon 20       */
+/*J014*  show_phantom colon 20  */
+/*J014*/ buyer          colon 38
+/*J014*/ buyer1          colon 38
+/*J014*/ code           colon 38
+/*J014*/ show_phantom   colon 38
+/*J014*/ show_base      colon 38
+/*J014*/ show_by        colon 38
+/*J014*/ item_sort      colon 38
+ SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = &IF (DEFINED(SELECTION_CRITERIA) = 0)
+  &THEN " 选择条件 "
+  &ELSE {&SELECTION_CRITERIA}
+  &ENDIF .
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+
+site = global_site.
+site1 = global_site.
+
+
+/*K0ZX*/ {wbrp01.i}
+
+/*GUI*/ {mfguirpa.i true  "printer" 132 }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
+
+   if nbr1 = hi_char then nbr1 = "".
+   if part1 = hi_char then part1 = "".
+   if vend1 = hi_char then vend1 = "".
+/*J014*/ if bom1 = hi_char then bom1 = "".
+/*D040*/ if site1 = hi_char then site1 = "".
+   if rel = low_date then rel = ?.
+   if rel1 = hi_date then rel1 = ?.
+   if due = low_date then due = ?.
+   if due1 = hi_date then due1 = ?.
+
+
+/*K0ZX*/ if c-application-mode <> 'web':u then
+   
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
+
+/*K0ZX*/ {wbrp06.i &command = update &fields = "  part part1  vend vend1 bom bom1  site site1
+nbr nbr1 rel rel1 due due1   buyer buyer1 code show_phantom  show_base show_by item_sort" &frm = "a"}
+
+/*K0ZX*/ if (c-application-mode <> 'web':u) or
+/*K0ZX*/ (c-application-mode = 'web':u and
+/*K0ZX*/ (c-web-request begins 'data':u)) then do:
+
+
+    /* CREATE BATCH INPUT STRING */
+     bcdparm = "".
+     {mfquoter.i part     }
+     {mfquoter.i part1    }
+     {mfquoter.i vend     }
+     {mfquoter.i vend1    }
+
+/*J014*/ {mfquoter.i bom      }
+/*J014*/ {mfquoter.i bom1     }
+/*D040*/ {mfquoter.i site     }
+/*D040*/ {mfquoter.i site1    }
+     {mfquoter.i nbr      }
+     {mfquoter.i nbr1     }
+     {mfquoter.i rel      }
+     {mfquoter.i rel1     }
+     {mfquoter.i due      }
+     {mfquoter.i due1     }
+     {mfquoter.i buyer    }
+     {mfquoter.i buyer1    }
+     {mfquoter.i code     }
+     {mfquoter.i show_phantom}
+/*J014*/ {mfquoter.i show_base   }
+/*J014*/ {mfquoter.i show_by     }
+/*J014*/ {mfquoter.i item_sort   }
+
+   if nbr1 = "" then nbr1 = hi_char.
+   if part1 = "" then part1 = hi_char.
+   if vend1 = "" then vend1 = hi_char.
+/*J014*/ if bom1 = "" then bom1 = hi_char.
+/*D040*/ if site1 = "" then site1 = hi_char.
+   if rel = ? then rel = low_date.
+   if rel1 = ? then rel1 = hi_date.
+   if due = ? then due = low_date.
+   if due1 = ? then due1 = hi_date.
+
+/*K0ZX*/ end.
+
+   /* SELECT PRINTER */
+   
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i  "printer" 132}
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+
+
+
+   {mfphead.i}
+
+     /* FIND AND DISPLAY */
+     for each wo_mstr where (wo_nbr >= nbr and wo_nbr <= nbr1)
+     and (wo_part >= part and wo_part <= part1)
+/*D040*/ and (wo_site >= site and wo_site <= site1)
+     and (wo_rel_date >= rel and wo_rel_date <= rel1)
+     and (wo_due_date >= due and wo_due_date <= due1)
+     and (wo_status = "P")
+/*J014*  no-lock use-index wo_part_rel with width 300 no-attr-space: */
+/*J014*/ and ((show_base and show_by and bom = "" and bom1 = hi_char) or
+/*J014*/      /* INCLUDE/EXCLUDE BASE PRODUCTS & BY-PRODUCTS*/
+/*J014*/      (wo_joint_type = "" or
+/*J014*/       ((show_base or (not show_base and wo_joint_type <> "5")) and
+/*J014*/        (show_by or (not show_by and wo_joint_type <> "2"
+/*J014*/         and wo_joint_type <> "3" and wo_joint_type <> "4")))))
+/*J014*/ /* WITHIN BOM CODE RANGE */
+/*J014*/ and ((bom = "" and bom1 = hi_char) or
+/*J014*/      (wo_bom_code >= bom and wo_bom_code <= bom1)) no-lock
+/*J014*/ by (if item_sort then wo_part else wo_bom_code) by wo_part by wo_site
+/*J014*/ by wo_rel_date with width 250 no-attr-space:
+
+                 
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+                     /*G348*/
+
+      desc1 = "".
+      pm_code = "".
+      find pt_mstr where pt_part = wo_part and pt_vend >= vend and pt_vend <= vend1 no-lock no-error.
+      if available pt_mstr then do:
+     desc1 = pt_desc1.
+     pm_code = pt_pm_code.
+      end.
+      if available pt_mstr and pt_vend <> "" then
+         find ad_mstr where ad_addr = pt_vend no-lock no-error.
+         
+/*D040*/ find ptp_det no-lock where ptp_part = wo_part
+/*D040*/ and ptp_site = wo_site no-error.
+/*D040*/ if available ptp_det then do:
+/*D040*/    pm_code = ptp_pm_code.
+/*D040*/ end.
+
+     if (pm_code = code or code = "")
+/*D040*/ and
+/*D276*/ (
+/*D040*/    (available ptp_det
+        and (ptp_phantom = no or show_phantom = yes)
+        and (substring(ptp_buyer,4,5) = buyer or buyer = "")
+        and (substring(ptp_buyer,1,2) = buyer1 or buyer1 = ""))
+  
+          
+/*D040*/ or (not available ptp_det
+        and (available pt_mstr and pt_phantom = no or show_phantom = yes)
+        and (available pt_mstr and substring(pt_buyer,4,5) = buyer or buyer = "")
+         and (substring(pt_buyer,1,2) = buyer1 or buyer1 = ""))
+/*D276*/ )
+      then do:
+      cst_tot = 0.
+      sub_ll = 0.
+      pur_cost = 0.
+       find sct_DET WHERE SCT_PART = wo_PART AND sct_sim = "GL" and sct_site = "10000"
+            no-lock no-error.
+            if available sct_det then do:
+                cst_tot = sct_cst_tot.
+                sub_ll = sct_sub_ll.
+                end.
+           if not available sct_det then 
+               find last pod_det where pod_part = wo_part no-lock no-error.
+                if available pod_det then pur_cost = pod_pur_cost.
+                
+                  
+        if available pt_mstr and pt_desc2 > ""
+        and page-size - line-counter < 2 then page.
+
+        display
+        wo_part
+/*J014*/            column-label {&mrworp11_p_5}
+        desc1
+        wo_site
+/*K0ZX* /*D040*/    ptp_buyer when available ptp_det @ pt_buyer */
+/*K0ZX*/    ptp_buyer when (available ptp_det) @ pt_buyer
+/*K0ZX* /*D040*/    pt_buyer when not available ptp_det */
+/*K0ZX*/    pt_buyer when (not available ptp_det)
+        pm_code
+        pt_vend
+        ad_name when (available ad_mstr and pt_vend <> "")
+        cst_tot when cst_tot <> 0
+        sub_ll when sub_ll <> 0
+        pur_cost when pur_cost <> 0
+        wo_nbr @ nbr
+        wo_lot
+        wo_qty_ord
+        pt_um
+        wo_rel_date
+        wo_due_date WITH STREAM-IO /*GUI*/ .
+/*J014*     if available pt_mstr and pt_desc2 > "" then do: */
+/*J014*/    if available pt_mstr and (pt_desc2 > "" or wo_bom_code > "")
+/*J014*/    then do:
+/*J014*/       len = length(wo_bom_code).
+/*J014*/       bom_code = substring(blnk,1,(18 - len)) +
+/*J014*/                  substring(wo_bom_code,1,(len)).
+           down 1.
+/*J014*        display pt_desc2 @ desc1. */
+/*J014*/       display bom_code @ wo_part pt_desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
+           end.
+    end.
+   end.
+
+   
+/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+
+end.
+
+/*K0ZX*/ {wbrp04.i &frame-spec = a}
+
+/*GUI*/ end procedure. /*p-report*/
+/*GUI*/ {mfguirpb.i &flds=" part part1  vend vend1 bom bom1  site site1 nbr nbr1 rel rel1 due due1   buyer buyer1 code show_phantom  show_base show_by item_sort "} /*Drive the Report*/

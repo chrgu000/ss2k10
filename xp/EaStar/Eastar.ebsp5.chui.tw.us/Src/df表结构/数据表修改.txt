@@ -1,0 +1,6 @@
+修改的数据表:
+1. 表snh_ctn_hdr加field:snh_so_line 格式同sod_line.
+2. 表snh_ctn_hdr加index: snh_sopart    包含字段: snh_so_order snh_so_line snh_so_part
+3. 表snp_totals 加index: snp_sn_nbr    包含字段:snp_sn_nbr snp_status
+
+详见测试库这个三个表

@@ -1,0 +1,26 @@
+ADD TABLE "xseq_ctrl"
+  AREA "TRANSACTION"
+  DESCRIPTION "EAS027A.doc"
+  DUMP-NAME "xseq_ctr"
+
+ADD FIELD "xseq_date" OF "xseq_ctrl" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Effect date"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "xseq_num" OF "xseq_ctrl" AS integer 
+  FORMAT ">>>9"
+  INITIAL "1"
+  LABEL "Number"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+.
+PSC
+cpstream=GB2312
+.
+0000000392

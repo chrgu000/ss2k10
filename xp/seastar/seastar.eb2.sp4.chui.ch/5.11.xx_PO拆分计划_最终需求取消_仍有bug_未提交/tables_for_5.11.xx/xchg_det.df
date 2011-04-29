@@ -1,0 +1,191 @@
+ADD TABLE "xchg_det"
+  AREA "TRANSACTION"
+  LABEL "xchg_det"
+  DUMP-NAME "xchg_det"
+
+ADD FIELD "c_site" OF "xchg_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "c_part" OF "xchg_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件号"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "c_nbr" OF "xchg_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "采购单"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "c_line" OF "xchg_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "项"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "c_date_to" OF "xchg_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "建议日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "c_date_from" OF "xchg_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "原到期日"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "c_date01" OF "xchg_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "初审日期"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "c_date02" OF "xchg_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "复审日期"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "c_qty" OF "xchg_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "订单数量"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "c_qty_to" OF "xchg_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "建议数量"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "c_req_nbr" OF "xchg_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "请购单"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "c_req_line" OF "xchg_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "项"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "c_user01" OF "xchg_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "初审人"
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "c_user02" OF "xchg_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "复审人"
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "c_detail" OF "xchg_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "建议动作"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "c_stat01" OF "xchg_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "初审"
+  POSITION 19
+  SQL-WIDTH 1
+  ORDER 180
+
+ADD FIELD "c_stat02" OF "xchg_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "复审"
+  POSITION 20
+  SQL-WIDTH 1
+  ORDER 190
+
+ADD FIELD "c_id" OF "xchg_det" AS integer 
+  FORMAT ">>>>9"
+  INITIAL "0"
+  LABEL "项"
+  POSITION 21
+  SQL-WIDTH 6
+  ORDER 200
+
+ADD INDEX "c_nbrdate" ON "xchg_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "c_site" ASCENDING 
+  INDEX-FIELD "c_date_to" ASCENDING 
+  INDEX-FIELD "c_part" ASCENDING 
+  INDEX-FIELD "c_nbr" ASCENDING 
+  INDEX-FIELD "c_line" ASCENDING
+  INDEX-FIELD "c_detail" ASCENDING
+  INDEX-FIELD "c_id" ASCENDING 
+
+ADD INDEX "c_chkdate" ON "xchg_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "c_site" ASCENDING 
+  INDEX-FIELD "c_date01" ASCENDING 
+  INDEX-FIELD "c_date02" ASCENDING 
+
+ADD INDEX "c_nbrline" ON "xchg_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "c_site" ASCENDING 
+  INDEX-FIELD "c_nbr" ASCENDING 
+  INDEX-FIELD "c_line" ASCENDING 
+
+ADD INDEX "c_part" ON "xchg_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "c_site" ASCENDING 
+  INDEX-FIELD "c_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "c_reqnbr" ON "xchg_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "c_site" ASCENDING 
+  INDEX-FIELD "c_req_nbr" ASCENDING 
+  INDEX-FIELD "c_req_line" ASCENDING 
+
+.
+PSC
+cpstream=gb2312
+.
+0000003315

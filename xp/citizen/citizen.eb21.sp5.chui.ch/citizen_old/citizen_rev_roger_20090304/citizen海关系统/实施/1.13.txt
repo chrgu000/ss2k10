@@ -1,0 +1,24 @@
+@@batchload ppummt.p
+"EA" "KP" -
+1000
+@@end
+@@batchload ppummt.p
+"EA" "HP" -
+100
+@@end
+@@batchload ppummt.p
+"EA" "TA" -
+1
+@@end
+@@batchload ppummt.p
+"EA" "PC" -
+1
+@@end
+@@batchload ppummt.p
+"EA" "SH" -
+1
+@@end
+@@batchload ppummt.p
+"EA" "ST" -
+1
+@@end

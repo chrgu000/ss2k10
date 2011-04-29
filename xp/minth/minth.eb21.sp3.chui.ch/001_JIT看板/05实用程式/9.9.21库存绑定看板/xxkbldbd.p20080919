@@ -1,0 +1,377 @@
+/* xxkbldbd.p  看板绑定库存                                                          */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                               */
+/* All rights reserved worldwide.  This is an unpublished work.                      */
+/*V8:ConvertMode=NoConvert                                                           */
+/* REVISION: 1.0      LAST MODIFIED: 10/08/07   BY: Softspeed roger xiao   /*xp001*/ */
+/*-Revision end------------------------------------------------------------          */
+
+
+
+/* DISPLAY TITLE */
+{mfdtitle.i "1.0"}
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+
+
+/* ********** End Translatable Strings Definitions ********* */
+
+define var part  like xmpt_part .
+define var part1 like xmpt_part .
+define var desc1 like pt_desc1.
+define var desc2 like pt_desc2 .
+define var site  like xmpt_site .
+define var loc   like ld_loc .
+define var loc1  like ld_loc .
+define var v_buyer    like ptp_buyer   label  "计划员" .
+define var v_buyer1   like ptp_buyer .
+define var v_buyer2   like ptp_buyer .
+define var v_type    like xkb_type .
+define var v_yn      like mfc_logical initial no .
+define var v_pm_code like pt_pm_code . 
+define var v_qty_oh  like ld_qty_oh .
+define var v_qty_kb  like ld_qty_oh .
+
+define var v_kb_id   like xkb_kb_id . 
+define var i as integer .
+define var j as integer .
+define var v_total as integer .
+define var v_add as integer format "->>9" .
+
+
+define var trnbr like tr_trnbr.
+define buffer xkbhhist for xkbh_hist.
+
+
+define buffer xkbmstr for xkb_mstr.
+
+
+
+
+find icc_ctrl where icc_domain = global_domain no-lock no-error.
+site = if avail icc_ctrl then icc_site else global_site .
+disp site with frame a .   
+
+
+
+v_type = "P" .
+
+define  frame a.
+
+/* DISPLAY SELECTION FORM */
+form
+    SKIP(.2)
+    v_type                    colon 18   label  "看板类型"
+    site                      colon 18      
+    loc                       colon 18  
+
+    part                      colon 18
+    part1                     colon 54   label  {t001.i} 
+    v_buyer                   colon 18   label  "计划员"
+    v_buyer1                  colon 54   label  {t001.i} 
+   
+    skip(3)
+
+    "注意: 仅对有效的空看板(A状态)做库存绑定" colon 8 
+
+    
+    
+    skip(1)
+
+    
+with frame a  side-labels width 80 attr-space.
+
+/* SET EXTERNAL LABELS  */
+setFrameLabels(frame a:handle).
+
+{wbrp01.i}
+repeat:
+    if part1 = part       then part1 = "".
+    if v_buyer1 = v_buyer   then v_buyer1 = "".
+    
+    if c-application-mode <> 'web' then  
+        update site v_type  loc part part1  v_buyer v_buyer1   with frame a.
+
+	{wbrp06.i &command = update &fields = "site v_type  loc part part1  v_buyer v_buyer1  "  &frm = "a"}
+    if (c-application-mode <> 'web') or (c-application-mode = 'web' and (c-web-request begins 'data')) then do:
+
+        find first xkbc_ctrl where xkbc_domain = global_domain and xkbc_enable = yes and ( xkbc_site = site) no-lock no-error .
+        if not avail xkbc_ctrl then do:
+            find first xkbc_ctrl where xkbc_domain = global_domain and xkbc_enable = yes and ( xkbc_site = "" ) no-lock no-error .
+            if not avail xkbc_ctrl then do:
+                /* {pxmsg.i &MSGNUM=???? &ERRORLEVEL=3} */
+                message "看板模块没有开启" view-as alert-box .
+                leave .
+            end.
+        end.
+    
+
+        bcdparm = "".
+        {mfquoter.i site     }
+        {mfquoter.i v_type     }  
+        {mfquoter.i loc      }
+        {mfquoter.i part     }
+        {mfquoter.i part1    }
+        {mfquoter.i v_buyer     }
+        {mfquoter.i v_buyer1    }
+
+        
+
+        if part1 = "" then part1 = part.
+        if v_buyer1 = "" then v_buyer1 = v_buyer.
+
+	end.  /* if c-application-mode <> 'web' */
+
+    /* PRINTER SELECTION */
+    /* OUTPUT DESTINATION SELECTION */
+    {gpselout.i &printType = "printer"
+                &printWidth = 132
+                &pagedFlag = " "
+                &stream = " "
+                &appendToFile = " "
+                &streamedOutputToTerminal = " "
+                &withBatchOption = "yes"
+                &displayStatementType = 1
+                &withCancelMessage = "yes"
+                &pageBottomMargin = 6
+                &withEmail = "yes"
+                &withWinprint = "yes"
+                &defineVariables = "yes"}
+    mainloop: 
+    do on error undo, return error on endkey undo, return error:                    
+    
+/*         ( pt_pm_code = "" or pt_pm_code = "m" or pt_pm_code = "l" ) */
+/*          ( pt_pm_code = "" or pt_pm_code = "P" )                    */
+
+        {mfphead.i}
+
+if v_type = "P" then do:
+        for each pt_mstr where pt_domain = global_domain and pt_site = site 
+                         and pt_part >= part and (pt_part <= part1 or part1 = "")
+                         and ( pt_pm_code = "" or pt_pm_code = "P" ) 
+                         and (can-find(first ptp_det where ptp_domain =global_domain and ptp_site = site and ptp_part = pt_part and ( ptp_pm_code = "P" or ptp_pm_code = "") 
+                                                       and (ptp_buyer >= v_buyer and ( ptp_buyer <= v_buyer1 or v_buyer1 = "")))
+                              or 
+                             ((not can-find(first ptp_det where ptp_domain =global_domain and ptp_site = site and ptp_part = pt_part and ( ptp_pm_code = "P" or ptp_pm_code = "") 
+                                                           and (ptp_buyer >= v_buyer and ( ptp_buyer <= v_buyer1 or v_buyer1 = ""))))
+	                          and can-find(first pt_mstr where pt_domain =global_domain and ( pt_pm_code = "" or pt_pm_code = "P" ) and pt_part >= part and (pt_part <= part1 or part1 = "")
+                                                            and (pt_buyer >= v_buyer and ( pt_buyer <= v_buyer1 or v_buyer1 = ""))) ))
+                         no-lock break by pt_buyer by pt_part :
+            
+            find first xppt_mstr where xppt_domain = global_domain and xppt_site = site and xppt_part = pt_part no-lock no-error .
+            if not avail xppt_mstr then next .
+            find first xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = xppt_site and xkb_part = xppt_part
+                                and xkb_status = "A" and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999) no-lock no-error .
+            if not avail xkb_mstr then next .
+
+
+            for each ld_det where ld_domain = global_domain and ld_part = pt_part and ld_site = site and ld_loc = loc and ld_qty_oh > 0 
+                no-lock break by ld_loc:
+
+                if first-of(ld_loc) then do:
+                    v_qty_oh = 0 .  /*实际总库存量 */
+                    v_qty_kb = 0 .  /*看板总容量,不含尾数看板*/
+                    for each xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site 
+                                        and xkb_stat = "A" and xkb_part = ld_part and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999)
+                                        no-lock :
+                        v_qty_kb = v_qty_kb + xkb_kb_qty .
+                    end.
+                end.
+
+                v_qty_oh = v_qty_oh + ld_qty_oh .
+
+                if last-of(ld_loc) then do:
+                    if v_qty_oh > v_qty_kb then do:
+                       find first xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site and xkb_part = ld_part
+                                             and xkb_stat = "A" and ( xkb_kb_id = 000 or xkb_kb_id = 999) no-lock no-error .
+                       if not avail xkb_mstr and xppt_qty_firm = yes then next .
+                    end.
+                    /*看板容量够,或者容量不够但非固定容量才继续执行*/
+
+                    for each xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site and xkb_part = ld_part
+                                      and xkb_stat = "A" and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999) exclusive-lock break by xkb_part by xkb_kb_id :
+                        if v_qty_oh <= 0  then  next .
+
+                        if xkb_kb_qty > v_qty_oh then do:
+                            find first xkbmstr where xkbmstr.xkb_domain = global_domain and  xkbmstr.xkb_type = v_type and  xkbmstr.xkb_site = ld_site and  xkbmstr.xkb_part = ld_part
+                                             and xkbmstr.xkb_stat = "A" and (  xkbmstr.xkb_kb_id = 000 or  xkbmstr.xkb_kb_id = 999) exclusive-lock no-error .
+                            if not avail xkbmstr then do :
+                                    xkb_mstr.xkb_kb_raim_qty = v_qty_oh  .  /*非固定容量才执行*/
+                                    xkb_mstr.xkb_status = "U" .
+                                    xkb_mstr.xkb_loc    = ld_loc .
+                                    xkb_mstr.xkb_upt_date = today .
+                            end.
+                            else do:
+                                    xkbmstr.xkb_kb_raim_qty = v_qty_oh  .
+                                    xkbmstr.xkb_stat = "U" .
+                                    xkbmstr.xkb_loc = ld_loc .    
+                                    xkbmstr.xkb_upt_date = today . 
+                            end.                            
+                        end.
+                        else do :
+                            xkb_mstr.xkb_kb_raim_qty = xkb_mstr.xkb_kb_qty .
+                            xkb_mstr.xkb_status = "U" .
+                            xkb_mstr.xkb_loc    = ld_loc .
+                            xkb_mstr.xkb_upt_date = today .
+    
+                        end.
+                        
+                        v_qty_oh = v_qty_oh - xkb_mstr.xkb_kb_qty .
+
+                        if last-of( xkb_mstr.xkb_part) and v_qty_oh > 0  then do:
+                            find first xkbmstr where xkbmstr.xkb_domain = global_domain and  xkbmstr.xkb_type = v_type and  xkbmstr.xkb_site = ld_site and  xkbmstr.xkb_part = ld_part
+                                             and xkbmstr.xkb_stat = "A" and (  xkbmstr.xkb_kb_id = 000 or  xkbmstr.xkb_kb_id = 999) exclusive-lock no-error .
+                            if not avail xkbmstr then do :
+                                    xkb_mstr.xkb_kb_raim_qty = v_qty_oh + xkb_mstr.xkb_kb_qty .  /*非固定容量才执行*/
+                            end.
+                            else do:
+                                    xkbmstr.xkb_kb_raim_qty = v_qty_oh  .
+                                    xkbmstr.xkb_stat = "U" .
+                                    xkbmstr.xkb_loc = ld_loc .    
+                                    xkbmstr.xkb_upt_date = today . 
+                            end.
+                        end.
+                    end.
+
+					release xkbmstr .
+
+                    for each xkb_mstr where xkb_mstr.xkb_domain = global_domain and xkb_mstr.xkb_type = v_type and xkb_mstr.xkb_part = ld_part and xkb_mstr.xkb_stat = "U"
+                                      and xkb_mstr.xkb_site = ld_site  and xkb_mstr.xkb_loc = ld_loc no-lock  with frame x1 width 300  :
+                        disp xkb_mstr.xkb_site label "厂别"
+                             xkb_mstr.xkb_loc  label "库位"
+                             xkb_mstr.xkb_type label "类型"
+                             xkb_mstr.xkb_part label "零件号"
+                             xkb_mstr.xkb_kb_id  label "序号"
+                             xkb_mstr.xkb_status label "状态"
+                             xkb_mstr.xkb_kb_qty label "容量" when (xkb_mstr.xkb_kb_id <> 0 and xkb_mstr.xkb_kb_id <> 999 )
+                             xkb_mstr.xkb_kb_raim_qty label "余量"
+                             with frame x1 .
+
+                    end.
+
+                end.  /*if last-of(ld_loc) */
+            end.   /* for each ld_det */
+            {mfrpexit.i}
+        end. /*  for each pt_mstr*/    
+end.  /*if v_type = "P" */
+else if v_type = "M" then do:
+        for each pt_mstr where pt_domain = global_domain and pt_site = site 
+                         and pt_part >= part and (pt_part <= part1 or part1 = "")
+                         and ( pt_pm_code = "" or pt_pm_code = "m" or pt_pm_code = "l" ) 
+                         and (can-find(first ptp_det where ptp_domain =global_domain and ptp_site = site and ptp_part = pt_part and ( ptp_pm_code = "" or ptp_pm_code = "m" or ptp_pm_code = "l" )
+                                                       and (ptp_buyer >= v_buyer and ( ptp_buyer <= v_buyer1 or v_buyer1 = "")))
+                              or 
+                             ((not can-find(first ptp_det where ptp_domain =global_domain and ptp_site = site and ptp_part = pt_part and ( ptp_pm_code = "" or ptp_pm_code = "m" or ptp_pm_code = "l" )
+                                                           and (ptp_buyer >= v_buyer and ( ptp_buyer <= v_buyer1 or v_buyer1 = ""))))
+	                          and can-find(first pt_mstr where pt_domain =global_domain and ( pt_pm_code = "" or pt_pm_code = "m" or pt_pm_code = "l" ) and pt_part >= part and (pt_part <= part1 or part1 = "")
+                                                            and (pt_buyer >= v_buyer and ( pt_buyer <= v_buyer1 or v_buyer1 = ""))) ))
+                         no-lock break by pt_buyer by pt_part :
+            
+            find first xmpt_mstr where xmpt_domain = global_domain and xmpt_site = site and xmpt_part = pt_part no-lock no-error .
+            if not avail xmpt_mstr then next .
+            find first xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = xmpt_site and xkb_part = xmpt_part
+                                and xkb_status = "A" and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999) no-lock no-error .
+            if not avail xkb_mstr then next .
+
+
+            for each ld_det where ld_domain = global_domain and ld_part = pt_part and ld_site = site and ld_loc = loc and ld_qty_oh > 0 
+                no-lock break by ld_loc:
+
+                if first-of(ld_loc) then do:
+                    v_qty_oh = 0 .  /*实际总库存量 */
+                    v_qty_kb = 0 .  /*看板总容量,不含尾数看板*/
+                    for each xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site 
+                                        and xkb_stat = "A" and xkb_part = ld_part and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999)
+                                        no-lock :
+                        v_qty_kb = v_qty_kb + xkb_kb_qty .
+                    end.
+                end.
+
+                v_qty_oh = v_qty_oh + ld_qty_oh .
+
+                if last-of(ld_loc) then do:
+                    if v_qty_oh > v_qty_kb then do:
+                       find first xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site and xkb_part = ld_part
+                                             and xkb_stat = "A" and ( xkb_kb_id = 000 or xkb_kb_id = 999) no-lock no-error .
+                       if not avail xkb_mstr and xmpt_qty_firm = yes then next .
+                    end.
+                    /*看板容量够,或者容量不够但非固定容量才继续执行*/
+
+                    for each xkb_mstr where xkb_domain = global_domain and xkb_type = v_type and xkb_site = ld_site and xkb_part = ld_part
+                                      and xkb_stat = "A" and ( xkb_kb_id <> 000 and  xkb_kb_id <> 999) exclusive-lock break by xkb_part by xkb_kb_id :
+                        if v_qty_oh <= 0  then  next .
+
+
+                        if xkb_kb_qty > v_qty_oh then do:
+                            find first xkbmstr where xkbmstr.xkb_domain = global_domain and  xkbmstr.xkb_type = v_type and  xkbmstr.xkb_site = ld_site and  xkbmstr.xkb_part = ld_part
+                                             and xkbmstr.xkb_stat = "A" and (  xkbmstr.xkb_kb_id = 000 or  xkbmstr.xkb_kb_id = 999) exclusive-lock no-error .
+                            if not avail xkbmstr then do :
+                                    xkb_mstr.xkb_kb_raim_qty = v_qty_oh  .  /*非固定容量才执行*/
+                                    xkb_mstr.xkb_status = "U" .
+                                    xkb_mstr.xkb_loc    = ld_loc .
+                                    xkb_mstr.xkb_upt_date = today .
+                            end.
+                            else do:
+                                    xkbmstr.xkb_kb_raim_qty = v_qty_oh  .
+                                    xkbmstr.xkb_stat = "U" .
+                                    xkbmstr.xkb_loc = ld_loc .    
+                                    xkbmstr.xkb_upt_date = today . 
+                            end.                            
+                        end.
+                        else do :
+                            xkb_mstr.xkb_kb_raim_qty = xkb_mstr.xkb_kb_qty .
+                            xkb_mstr.xkb_status = "U" .
+                            xkb_mstr.xkb_loc    = ld_loc .
+                            xkb_mstr.xkb_upt_date = today .
+    
+                        end.
+                        
+                        v_qty_oh = v_qty_oh - xkb_mstr.xkb_kb_qty .
+
+
+                        if last-of(xkb_mstr.xkb_part) and v_qty_oh > 0  then do:
+                            find first xkbmstr where xkbmstr.xkb_domain = global_domain and  xkbmstr.xkb_type = v_type and  xkbmstr.xkb_site = ld_site and  xkbmstr.xkb_part = ld_part
+                                             and xkbmstr.xkb_stat = "A" and (  xkbmstr.xkb_kb_id = 000 or  xkbmstr.xkb_kb_id = 999) exclusive-lock no-error .
+                            if not avail xkbmstr then do :
+                                    xkb_mstr.xkb_kb_raim_qty = v_qty_oh + xkb_mstr.xkb_kb_qty .  /*非固定容量才执行*/
+                            end.
+                            else do:
+                                    xkbmstr.xkb_kb_raim_qty = v_qty_oh  .
+                                    xkbmstr.xkb_stat = "U" .
+                                    xkbmstr.xkb_loc = ld_loc .    
+                                    xkbmstr.xkb_upt_date = today . 
+                            end.
+                        end.
+                    end.
+
+					release xkbmstr .
+
+                    for each xkb_mstr where xkb_mstr.xkb_domain = global_domain and xkb_mstr.xkb_type = v_type and xkb_mstr.xkb_part = ld_part and xkb_mstr.xkb_stat = "U"
+                                      and xkb_mstr.xkb_site = ld_site  and xkb_mstr.xkb_loc = ld_loc no-lock  with frame x2 width 300  :
+                        disp xkb_mstr.xkb_site label "厂别"
+                             xkb_mstr.xkb_loc  label "库位"
+                             xkb_mstr.xkb_type label "类型"
+                             xkb_mstr.xkb_part label "零件号"
+                             xkb_mstr.xkb_kb_id  label "序号"
+                             xkb_mstr.xkb_status label "状态"
+                             xkb_mstr.xkb_kb_qty label "容量"when  (xkb_mstr.xkb_kb_id <> 0 and xkb_mstr.xkb_kb_id <> 999 )
+                             xkb_mstr.xkb_kb_raim_qty label "余量"
+                             with frame x2 .
+
+                    end.
+
+                end.  /*if last-of(ld_loc) */
+            end.   /* for each ld_det */
+            {mfrpexit.i}
+        end. /*  for each pt_mstr*/        
+
+end.   /*if v_type = "M" */
+else do:
+    put skip(3) string("看板类型输入无效(" + v_type + "),不任何任何操作!") format "x(50)" skip   .  
+    put skip(3) .
+end.
+
+    end. /* mainloop: */
+    {mfrtrail.i}  /* REPORT TRAILER  */
+end.  /* REPEAT */
+{wbrp04.i &frame-spec = a}

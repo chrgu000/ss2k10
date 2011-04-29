@@ -1,0 +1,2197 @@
+ADD TABLE "shc_ctrl"
+  AREA "CONTROL"
+  DESCRIPTION "Shipper Control File"
+  FROZEN
+  DUMP-NAME "shc_ctrl"
+
+ADD FIELD "shc_index1" OF "shc_ctrl" AS integer 
+  DESCRIPTION "Unique index for this record"
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "shc_preship_nr_id" OF "shc_ctrl" AS character 
+  DESCRIPTION "NRM sequence used to assign sequence numbers to pre-shippers"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Pre-Shipper Sequence ID"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+  MANDATORY
+
+ADD FIELD "shc_ship_nr_id" OF "shc_ctrl" AS character 
+  DESCRIPTION "NRM sequence used to assign sequence numbers to shippers"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Shipper Sequence ID"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+  MANDATORY
+
+ADD FIELD "shc_master_nr_id" OF "shc_ctrl" AS character 
+  DESCRIPTION "NRM sequence used to assign sequence numbers to master bills of lading"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Master Bill Sequence ID"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+  MANDATORY
+
+ADD FIELD "shc_require_inv_mov" OF "shc_ctrl" AS logical 
+  DESCRIPTION "Determines whether inventory movement codes are required on shippers, etc"
+  FORMAT "yes/no"
+  INITIAL "No"
+  LABEL "Require Inventory Movement Codes"
+  POSITION 6
+  SQL-WIDTH 1
+  ORDER 50
+  MANDATORY
+
+ADD FIELD "shc_trl_amts" OF "shc_ctrl" AS logical 
+  DESCRIPTION "Determines whether SO trailer amounts are maintained in ship processing"
+  FORMAT "yes/no"
+  INITIAL "No"
+  LABEL "Maintain Trailer Amounts"
+  POSITION 7
+  SQL-WIDTH 1
+  ORDER 60
+  MANDATORY
+
+ADD FIELD "shc_user1" OF "shc_ctrl" AS character 
+  DESCRIPTION "Not Used. Field available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "shc_user2" OF "shc_ctrl" AS character 
+  DESCRIPTION "Not Used. Field available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "shc__qadc01" OF "shc_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "shc_format" OF "shc_ctrl" AS character 
+  DESCRIPTION "Document format assigned by default to shippers"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Document Format"
+  POSITION 11
+  SQL-WIDTH 16
+  COLUMN-LABEL "Format"
+  ORDER 100
+
+ADD FIELD "shc_ship_rcpt" OF "shc_ctrl" AS logical 
+  DESCRIPTION "Determines whether to prompt for shipment info when receiving"
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Shipment Info For Receipts"
+  POSITION 12
+  SQL-WIDTH 1
+  ORDER 110
+
+ADD INDEX "shc_index1" ON "shc_ctrl" 
+  AREA "CONTROL_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "shc_index1" ASCENDING 
+
+ADD TABLE "ship_mt_mstr"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "ship_mt_"
+
+ADD FIELD "ship_mt_code" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "The shipment method code"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Method code"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "ship_rout_seq1" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 1"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "1."
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "ship_loc_seq1" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 1"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "1."
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "ship_rout_seq2" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 2"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "2."
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "ship_loc_seq2" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 2"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "2."
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "ship_rout_seq3" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 3"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "3."
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "ship_loc_seq3" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 3"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "3."
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "ship_rout_seq4" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 4"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "4."
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "ship_loc_seq4" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 4"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "4."
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "ship_rout_seq5" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 5"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "5."
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "ship_loc_seq5" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 5"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "5."
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "ship_rout_seq6" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 6"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "6."
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "ship_loc_seq6" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 6"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "6."
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "ship_rout_seq7" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 7"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "7."
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "ship_loc_seq7" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 7"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "7."
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "ship_rout_seq8" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 8"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "8."
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "ship_loc_seq8" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 8"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "8."
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "ship_rout_seq9" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 9"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "9."
+  POSITION 19
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD FIELD "ship_loc_seq9" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 9"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "9."
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 190
+
+ADD FIELD "ship_rout_seq10" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "routing code sequence 10"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "10."
+  POSITION 21
+  SQL-WIDTH 16
+  ORDER 200
+
+ADD FIELD "ship_loc_seq10" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "location code sequence 10"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "10."
+  POSITION 22
+  SQL-WIDTH 16
+  ORDER 210
+
+ADD FIELD "ship_chr_01" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_01"
+  POSITION 23
+  SQL-WIDTH 16
+  ORDER 220
+
+ADD FIELD "ship_chr_02" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_02"
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "ship_chr_03" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_03"
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "ship_chr_04" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_04"
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "ship_chr_05" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_05"
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 260
+
+ADD FIELD "ship_chr_06" OF "ship_mt_mstr" AS character 
+  DESCRIPTION "Spare field for routing code or location code."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "chr_06"
+  POSITION 28
+  SQL-WIDTH 16
+  ORDER 270
+
+ADD INDEX "ship_mt_code" ON "ship_mt_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "ship_mt_code" ASCENDING 
+
+ADD TABLE "sn_hdr"
+  AREA "TRANSACTION"
+  LABEL "Shipping Note Header"
+  DESCRIPTION "Shipping Note Header"
+  FROZEN
+  DUMP-NAME "shipping"
+
+ADD FIELD "sn_nbr" OF "sn_hdr" AS character 
+  DESCRIPTION "Shipment note number."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "sn_date" OF "sn_hdr" AS date 
+  DESCRIPTION "The Date to ship.Required Field.Default today."
+  FORMAT "99/99/99"
+  INITIAL "Today"
+  LABEL "Ship Date"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "sn_time" OF "sn_hdr" AS character 
+  DESCRIPTION "The time to ship.24 hours clock."
+  FORMAT "99:99"
+  INITIAL ""
+  LABEL "Time"
+  POSITION 4
+  SQL-WIDTH 10
+  ORDER 30
+
+ADD FIELD "sn_ship_wk" OF "sn_hdr" AS integer 
+  DESCRIPTION "The week of the year to ship.E.g.0308 means the 8th week of year 2003."
+  FORMAT "9999"
+  INITIAL "0"
+  LABEL "Ship Week"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "sn_truck_hk" OF "sn_hdr" AS character 
+  DESCRIPTION "The transportation vehicle number in HK."
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Truck No.(HK)"
+  POSITION 6
+  SQL-WIDTH 30
+  ORDER 50
+
+ADD FIELD "sn_truck_prc" OF "sn_hdr" AS character 
+  DESCRIPTION "The transportation vehicle number in PRC"
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Truck No.(PRC)"
+  POSITION 7
+  SQL-WIDTH 30
+  ORDER 60
+
+ADD FIELD "sn_remark" OF "sn_hdr" AS character 
+  DESCRIPTION "A text field only.User might usr it as vehicle information."
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 8
+  SQL-WIDTH 48
+  ORDER 70
+
+ADD FIELD "sn_container" OF "sn_hdr" AS character 
+  DESCRIPTION "The container number.A text field only."
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Container No"
+  POSITION 9
+  SQL-WIDTH 48
+  ORDER 80
+
+ADD FIELD "sn_total_ctn" OF "sn_hdr" AS decimal 
+  DESCRIPTION "The total number of Extended QTY per SN.Sum of snd_ctn_qty by system"
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "CTN"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "sn_total_qty" OF "sn_hdr" AS decimal 
+  DESCRIPTION "The Total number of Extended QTY per SN.Sum of snd_ext_qty by systme"
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY"
+  POSITION 11
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "sn_total_netwt" OF "sn_hdr" AS decimal 
+  DESCRIPTION "The total number of Extended Net Weight per SN.Sum of snd_ext_netwt by"
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "NET WT"
+  POSITION 12
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "sn_total_grosswt" OF "sn_hdr" AS decimal 
+  DESCRIPTION "The total Gross Wt of this SN.Sum of snp_grosswt+sumof snd_grosswt of"
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "GROSS WT"
+  POSITION 13
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "sn_total_cbm" OF "sn_hdr" AS decimal 
+  DESCRIPTION "The totals Gross Wt of this Sn."
+  FORMAT ">>>,>>>,>>9.9<<"
+  INITIAL "0"
+  LABEL "CBM"
+  POSITION 14
+  SQL-WIDTH 4
+  DECIMALS 3
+  ORDER 130
+
+ADD FIELD "sn_confirm" OF "sn_hdr" AS logical 
+  DESCRIPTION "Y= Yes,N= No.Default is N."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Post to SA?"
+  POSITION 15
+  SQL-WIDTH 1
+  ORDER 140
+
+ADD FIELD "sn_status" OF "sn_hdr" AS character 
+  DESCRIPTION "D=Delete,BLANK=Active.Default is BLANK"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "SN Status"
+  POSITION 16
+  SQL-WIDTH 2
+  ORDER 150
+
+ADD FIELD "sn_last_user" OF "sn_hdr" AS character 
+  DESCRIPTION "Last update user id"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Last Update User"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "sn_last_date" OF "sn_hdr" AS date 
+  DESCRIPTION "Last update date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Last Update Date"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "sn_chr01" OF "sn_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 19
+  SQL-WIDTH 80
+  ORDER 180
+
+ADD FIELD "sn_chr02" OF "sn_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 80
+  ORDER 190
+
+ADD FIELD "sn_dec01" OF "sn_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 200
+
+ADD FIELD "sn_dec02" OF "sn_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "sn_dte01" OF "sn_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "sn_dte02" OF "sn_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 24
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD INDEX "sn_nbr" ON "sn_hdr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "sn_nbr" ASCENDING ABBREVIATED 
+
+ADD TABLE "snp_totals"
+  AREA "TRANSACTION"
+  DESCRIPTION "Shipping Note Pallet Totals
+
+
+"
+  FROZEN
+  DUMP-NAME "snp_tota"
+
+ADD FIELD "snp_sn_nbr" OF "snp_totals" AS character 
+  DESCRIPTION "Shipment note number."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "snp_shipto" OF "snp_totals" AS character 
+  DESCRIPTION "Ship To Customer Number"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship To"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "snp_ext_grosswt" OF "snp_totals" AS decimal 
+  DESCRIPTION "Extended Gross Weight including cartons"
+  FORMAT ">>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext.Gross Wt"
+  POSITION 5
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "snp_length" OF "snp_totals" AS decimal 
+  DESCRIPTION "Length of the Carton+Pallet."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "L*H*W"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "snp_height" OF "snp_totals" AS decimal 
+  DESCRIPTION "Height of the Carton + Pallet."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(H)"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "snp_width" OF "snp_totals" AS decimal 
+  DESCRIPTION "Width of the Carton + Pallet."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(W)"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "snp_cbm" OF "snp_totals" AS decimal 
+  DESCRIPTION "snp_length * snp_height * snp_width / 10,000."
+  FORMAT ">,>>9.999"
+  INITIAL "0"
+  LABEL "CBM"
+  POSITION 9
+  SQL-WIDTH 4
+  DECIMALS 3
+  ORDER 80
+
+ADD FIELD "snp_status" OF "snp_totals" AS character 
+  DESCRIPTION "D=Delete,BLANK=Active.Default is BLANK"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "SN Plt status"
+  POSITION 10
+  SQL-WIDTH 2
+  ORDER 90
+
+ADD FIELD "snp_last_user" OF "snp_totals" AS character 
+  DESCRIPTION "Last update user id"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Last Update User"
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "snp_last_date" OF "snp_totals" AS date 
+  DESCRIPTION "Last update date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Last Update Date"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "snp_chr01" OF "snp_totals" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 80
+  ORDER 120
+
+ADD FIELD "snp_chr02" OF "snp_totals" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 80
+  ORDER 130
+
+ADD FIELD "snp_dec01" OF "snp_totals" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "snp_dec02" OF "snp_totals" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "snp_dte01" OF "snp_totals" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "snp_dte02" OF "snp_totals" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "snp_sq_nbr" OF "snp_totals" AS integer 
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "SQ"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "snp_nbr" OF "snp_totals" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plt"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD INDEX "snp_nbr" ON "snp_totals" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "snp_shipto" ASCENDING 
+  INDEX-FIELD "snp_sn_nbr" ASCENDING 
+  INDEX-FIELD "snp_nbr" ASCENDING 
+
+ADD TABLE "snh_ctn_hdr"
+  AREA "TRANSACTION"
+  DESCRIPTION "Shipment Note Carton Header"
+  FROZEN
+  DUMP-NAME "snb_ctn_"
+
+ADD FIELD "snh_sn_nbr" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Shipment note number.Required Field."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "snh_shipto" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Ship To customer number"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship To"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "snh_part" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Sales Order Item number"
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "snh_part_desc1" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Item description line 1"
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Item description"
+  POSITION 5
+  SQL-WIDTH 48
+  ORDER 40
+
+ADD FIELD "snh_part_desc2" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Item description line2"
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Item description"
+  POSITION 6
+  SQL-WIDTH 48
+  ORDER 50
+
+ADD FIELD "snh_so_order" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Sales Order number"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "snh_sq_nbr" OF "snh_ctn_hdr" AS integer 
+  DESCRIPTION "Sequence Number"
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "SQ"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "snh_destin" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "The destination of the SQ line."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Destination"
+  POSITION 10
+  SQL-WIDTH 36
+  ORDER 90
+
+ADD FIELD "snh_part_um" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Unit of Measure of selected Item."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "snh_ctn_consign" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Default is Blank.Input C,N OR BLANK only C=Consigment"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Consig"
+  POSITION 12
+  SQL-WIDTH 2
+  ORDER 110
+
+ADD FIELD "snh_loc" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "The receipt location needs to be recorded for some customers."
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "DC/Main"
+  POSITION 13
+  SQL-WIDTH 8
+  ORDER 120
+
+ADD FIELD "snh_type" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "The field combines with item and ship via as a key to match the defaul"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 14
+  SQL-WIDTH 2
+  ORDER 130
+
+ADD FIELD "snh_ship_via" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Input allows ""S"" or ""A"" only"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Ship Via"
+  POSITION 15
+  SQL-WIDTH 2
+  ORDER 140
+
+ADD FIELD "snh_po" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Customer Purchase Order Number."
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "P.O.NO"
+  POSITION 16
+  SQL-WIDTH 24
+  ORDER 150
+
+ADD FIELD "snh_method" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Default from customer shipment method"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Method"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "snh_forwarder" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Text field only.Forwarder of SQ."
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Forwarder"
+  POSITION 18
+  SQL-WIDTH 40
+  ORDER 170
+
+ADD FIELD "snh_reference" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Text field only.Reference of SQ.e.g.warehouse information"
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Ref."
+  POSITION 19
+  SQL-WIDTH 24
+  ORDER 180
+
+ADD FIELD "snh_ctn_status" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "D=Deleted,BLANK=Active.Default is BLANK"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "SN Carton Status"
+  POSITION 20
+  SQL-WIDTH 2
+  ORDER 190
+
+ADD FIELD "snh_last_user" OF "snh_ctn_hdr" AS character 
+  DESCRIPTION "Last update user id"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Last Update User"
+  POSITION 21
+  SQL-WIDTH 16
+  ORDER 200
+
+ADD FIELD "snh_last_date" OF "snh_ctn_hdr" AS date 
+  DESCRIPTION "Last update date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Last Update Date"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "snh_chr01" OF "snh_ctn_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 23
+  SQL-WIDTH 80
+  ORDER 220
+
+ADD FIELD "snh_chr02" OF "snh_ctn_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 80
+  ORDER 230
+
+ADD FIELD "snh_dec01" OF "snh_ctn_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 240
+
+ADD FIELD "snh_dec02" OF "snh_ctn_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 26
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 250
+
+ADD FIELD "snh_dte01" OF "snh_ctn_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 27
+  SQL-WIDTH 4
+  ORDER 260
+
+ADD FIELD "snh_dte02" OF "snh_ctn_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "snh_qty_open" OF "snh_ctn_hdr" AS decimal 
+  FORMAT "->,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY Open"
+  POSITION 29
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 280
+
+ADD FIELD "snh_qty_ship" OF "snh_ctn_hdr" AS decimal 
+  FORMAT "->,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY To Ship"
+  POSITION 30
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 290
+
+ADD FIELD "snh_plt_nbr" OF "snh_ctn_hdr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plt"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD INDEX "snh_nbr" ON "snh_ctn_hdr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "snh_sn_nbr" ASCENDING 
+  INDEX-FIELD "snh_sq_nbr" ASCENDING 
+
+ADD TABLE "snd_ctn_det"
+  AREA "TRANSACTION"
+  LABEL "Shipping Note Carton Details"
+  FROZEN
+  DUMP-NAME "snd_ctn_"
+
+ADD FIELD "snd_sn_nbr" OF "snd_ctn_det" AS character 
+  DESCRIPTION "Shipment note number.Required Field."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "snd_shipto" OF "snd_ctn_det" AS character 
+  DESCRIPTION "Ship To customer number"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship To"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "snd_part" OF "snd_ctn_det" AS character 
+  DESCRIPTION "Sales Order Item number"
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "snd_so_order" OF "snd_ctn_det" AS character 
+  DESCRIPTION "Sales Order number"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "snd_qtyper" OF "snd_ctn_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "QTY Per"
+  POSITION 7
+  SQL-WIDTH 4
+  DECIMALS 1
+  ORDER 60
+
+ADD FIELD "snd_ctn_qty" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Number of Carton/Pallet (Default = snd_ctnnbr_to - snd_ctnnbr_fm + 1)"
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "No.of CTN/PLT"
+  POSITION 8
+  SQL-WIDTH 4
+  DECIMALS 1
+  ORDER 70
+
+ADD FIELD "snd_ext_qty" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Extended Quantity. = QTY Per(snd_qtyper)* No.of CTN/PLT(snd_ctn_qty)."
+  FORMAT ">>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext.QTY"
+  POSITION 9
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "snd_netwt" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_netwt.Net weight of an item in KG unit."
+  FORMAT ">,>>9.99"
+  INITIAL "0"
+  LABEL "Net Wt"
+  POSITION 10
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "snd_ctn_line" OF "snd_ctn_det" AS integer 
+  DESCRIPTION "Line number of Carton details entry"
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "Ln"
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "snd_ctnnbr_fm" OF "snd_ctn_det" AS integer 
+  DESCRIPTION "The CTN number - From"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "CTN Nbr Fm"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "snd_ctnnbr_to" OF "snd_ctn_det" AS integer 
+  DESCRIPTION "The CTN number - To"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "CTN Nbr To"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "snd_ext_netwt" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Extended Net Weight. = Net Wt(snd_netwt) * Ext. QTY(snd_ext_qty)."
+  FORMAT ">>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext. Net Wt"
+  POSITION 14
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "snd_grosswt" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_grosswt.Gross weight of an item in KG unit."
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "Gross Wt"
+  POSITION 15
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "snd_ext_grosswt" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Extended Gross Weight  = Gross Wt(snd_grosswt) * Ext. QTY(snd_ext_qty)"
+  FORMAT ">>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext.Gross Wt"
+  POSITION 16
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "snd_ctn_length" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_ct_length. Length of the Carton."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(L)"
+  POSITION 17
+  SQL-WIDTH 4
+  DECIMALS 1
+  ORDER 160
+
+ADD FIELD "snd_ctn_height" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_ct_height. Height of the Carton."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(H)"
+  POSITION 18
+  SQL-WIDTH 4
+  DECIMALS 1
+  ORDER 170
+
+ADD FIELD "snd_ctn_width" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_ct_width. Width of the Carton."
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(W)"
+  POSITION 19
+  SQL-WIDTH 4
+  DECIMALS 1
+  ORDER 180
+
+ADD FIELD "snd_cbm" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Default from ptship_cbm."
+  FORMAT ">>,>>9.999"
+  INITIAL "0"
+  LABEL "CBM"
+  POSITION 20
+  SQL-WIDTH 4
+  DECIMALS 3
+  ORDER 190
+
+ADD FIELD "snd_ctn_status" OF "snd_ctn_det" AS character 
+  DESCRIPTION "D=Deleted, BLANK=Active. Default is BLANK"
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "SN Carton Status"
+  POSITION 21
+  SQL-WIDTH 2
+  ORDER 200
+
+ADD FIELD "snd_last_user" OF "snd_ctn_det" AS character 
+  DESCRIPTION "Last update user id"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Last Update User"
+  POSITION 22
+  SQL-WIDTH 16
+  ORDER 210
+
+ADD FIELD "snd_last_date" OF "snd_ctn_det" AS date 
+  DESCRIPTION "Last update date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Last update date"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "snd_shipped_qty" OF "snd_ctn_det" AS decimal 
+  DESCRIPTION "Quantity already shipped"
+  FORMAT ">>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Shipped QTY"
+  POSITION 24
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 230
+
+ADD FIELD "snd_chr01" OF "snd_ctn_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 25
+  SQL-WIDTH 80
+  ORDER 240
+
+ADD FIELD "snd_chr02" OF "snd_ctn_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 80
+  ORDER 250
+
+ADD FIELD "snd_dec01" OF "snd_ctn_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 27
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 260
+
+ADD FIELD "snd_dec02" OF "snd_ctn_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 4
+  DECIMALS 2
+  ORDER 270
+
+ADD FIELD "snd_dte01" OF "snd_ctn_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "snd_dte02" OF "snd_ctn_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 30
+  SQL-WIDTH 4
+  ORDER 290
+
+ADD FIELD "snd_sq_nbr" OF "snd_ctn_det" AS integer 
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "SQ"
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "snd_plt_nbr" OF "snd_ctn_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Plt"
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "snd_sanbr" OF "snd_ctn_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 33
+  SQL-WIDTH 16
+  ORDER 320
+
+ADD INDEX "snd_line" ON "snd_ctn_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "snd_sn_nbr" ASCENDING 
+  INDEX-FIELD "snd_sq_nbr" ASCENDING 
+  INDEX-FIELD "snd_ctn_line" ASCENDING 
+
+ADD TABLE "shah_hdr"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "shad_hdr"
+
+ADD FIELD "shah_sanbr" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SA"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "shah_pinbr" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "PI"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "shah_shipto" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship To"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "shah_notify" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Notify"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "shah_etdhk" OF "shah_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "ETD HK"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "shah_eta" OF "shah_hdr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "ETA"
+  POSITION 7
+  SQL-WIDTH 40
+  ORDER 60
+
+ADD FIELD "shah_eta_date" OF "shah_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "ETA Date"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "shah_desc_line1" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Vessel Name/Housing AWB"
+  POSITION 9
+  SQL-WIDTH 60
+  ORDER 80
+
+ADD FIELD "shah_desc_line2" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "B/L No./Master AWB"
+  POSITION 10
+  SQL-WIDTH 60
+  ORDER 90
+
+ADD FIELD "shah_desc_line3" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Country of Origin"
+  POSITION 11
+  SQL-WIDTH 60
+  ORDER 100
+
+ADD FIELD "shah_desc_line4" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Flight No."
+  POSITION 12
+  SQL-WIDTH 60
+  ORDER 110
+
+ADD FIELD "shah_forwarder" OF "shah_hdr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Forwarder"
+  POSITION 13
+  SQL-WIDTH 40
+  ORDER 120
+
+ADD FIELD "shah_container" OF "shah_hdr" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Container No."
+  POSITION 14
+  SQL-WIDTH 48
+  ORDER 130
+
+ADD FIELD "shah_shipvia" OF "shah_hdr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Ship Via"
+  POSITION 15
+  SQL-WIDTH 2
+  ORDER 140
+
+ADD FIELD "shah_consig" OF "shah_hdr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Consig"
+  POSITION 16
+  SQL-WIDTH 2
+  ORDER 150
+
+ADD FIELD "shah_loc" OF "shah_hdr" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "DC/Main"
+  POSITION 17
+  SQL-WIDTH 8
+  ORDER 160
+
+ADD FIELD "shah_method" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Method"
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "shah_ttl_plt" OF "shah_hdr" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "PLTs"
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "shah_ttl_ctn" OF "shah_hdr" AS integer 
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "CTNs"
+  POSITION 20
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "shah_ttl_qty" OF "shah_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY"
+  POSITION 21
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 200
+
+ADD FIELD "shah_ttl_gw" OF "shah_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "GW"
+  POSITION 22
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "shah_ttl_cmb" OF "shah_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "CBM"
+  POSITION 23
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 220
+
+ADD FIELD "shah_last_user" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "shah_last_date" OF "shah_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 240
+
+ADD FIELD "shah_loc_seq1" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Method Default Location"
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "shah_inv_qty" OF "shah_hdr" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Total Invoiced QTY"
+  POSITION 27
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 260
+
+ADD FIELD "shah_chr01" OF "shah_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 28
+  SQL-WIDTH 80
+  ORDER 270
+
+ADD FIELD "shah_chr02" OF "shah_hdr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 80
+  ORDER 280
+
+ADD FIELD "shah_dec01" OF "shah_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 290
+
+ADD FIELD "shah_dec02" OF "shah_hdr" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 31
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 300
+
+ADD FIELD "shah_dte01" OF "shah_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "shah_dte02" OF "shah_hdr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 320
+
+ADD FIELD "shah_snnbr" OF "shah_hdr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 34
+  SQL-WIDTH 16
+  ORDER 330
+
+ADD FIELD "shah_cinbr" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 35
+  SQL-WIDTH 16
+  ORDER 340
+
+ADD FIELD "shah_ninbr" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 36
+  SQL-WIDTH 16
+  ORDER 350
+
+ADD FIELD "shah_ivnbr" OF "shah_hdr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 37
+  SQL-WIDTH 16
+  ORDER 360
+
+ADD FIELD "shah_freedback" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  POSITION 38
+  SQL-WIDTH 60
+  ORDER 370
+
+ADD FIELD "shah_feedback" OF "shah_hdr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  POSITION 39
+  SQL-WIDTH 60
+  ORDER 380
+
+ADD INDEX "shah_sanbr" ON "shah_hdr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "shah_sanbr" ASCENDING 
+
+ADD TABLE "shad_det"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "shad_det"
+
+ADD FIELD "shad_sanbr" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SA"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "shad_snnbr" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SN"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "shad_sq" OF "shad_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "SQ"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "shad_plt_nbr" OF "shad_det" AS integer 
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "PLT"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "shad_so_nbr" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "shad_part" OF "shad_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "shad_destin" OF "shad_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Destination"
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "shad_consign" OF "shad_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Consig"
+  POSITION 9
+  SQL-WIDTH 2
+  ORDER 80
+
+ADD FIELD "shad_loc" OF "shad_det" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "DC/Main"
+  POSITION 10
+  SQL-WIDTH 8
+  ORDER 90
+
+ADD FIELD "shad_type" OF "shad_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 11
+  SQL-WIDTH 2
+  ORDER 100
+
+ADD FIELD "shad_shipvia" OF "shad_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Ship Via"
+  POSITION 12
+  SQL-WIDTH 2
+  ORDER 110
+
+ADD FIELD "shad_ponbr" OF "shad_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "PO No."
+  POSITION 13
+  SQL-WIDTH 24
+  ORDER 120
+
+ADD FIELD "shad_method" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Method"
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "shad_forwarder" OF "shad_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Forwarder"
+  POSITION 15
+  SQL-WIDTH 40
+  ORDER 140
+
+ADD FIELD "shad_ref" OF "shad_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 24
+  ORDER 150
+
+ADD FIELD "shad_qtyper" OF "shad_det" AS decimal 
+  FORMAT ">>9.9<"
+  INITIAL "0"
+  LABEL "QTY Per"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "shad_ctn_qty" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "No.of CTN/PLT"
+  POSITION 18
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 170
+
+ADD FIELD "shad_ext_qty" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext. QTY"
+  POSITION 19
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 180
+
+ADD FIELD "shad_netwt" OF "shad_det" AS decimal 
+  FORMAT ">,>>9.99"
+  INITIAL "0"
+  LABEL "Net Wt"
+  POSITION 20
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 190
+
+ADD FIELD "shad_ctn_line" OF "shad_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Ln"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "shad_ctnnbr_fm" OF "shad_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "FM"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "shad_ctnnbr_to" OF "shad_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "To"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "shad_ext_netwt" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext.Net Wt"
+  POSITION 24
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 230
+
+ADD FIELD "shad_ctn_gw" OF "shad_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "Gross Wt"
+  POSITION 25
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 240
+
+ADD FIELD "shad_ctn_ext_gw" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Ext.Gross Wt"
+  POSITION 26
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 250
+
+ADD FIELD "shad_ctn_length" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(L)"
+  POSITION 27
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 260
+
+ADD FIELD "shad_ctn_height" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(H)"
+  POSITION 28
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 270
+
+ADD FIELD "shad_ctn_width" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "(W)"
+  POSITION 29
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 280
+
+ADD FIELD "shad_ctn_cbm" OF "shad_det" AS decimal 
+  FORMAT ">,>>9.999"
+  INITIAL "0"
+  LABEL "CBM"
+  POSITION 30
+  SQL-WIDTH 18
+  DECIMALS 3
+  ORDER 290
+
+ADD FIELD "shad_plt_gw" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 31
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 300
+
+ADD FIELD "shad_plt_length" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "Plt (L)"
+  POSITION 32
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 310
+
+ADD FIELD "shad_plt_height" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "Plt (H)"
+  POSITION 33
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 320
+
+ADD FIELD "shad_plt_width" OF "shad_det" AS decimal 
+  FORMAT ">>9.9"
+  INITIAL "0"
+  LABEL "Plt (W)"
+  POSITION 34
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 330
+
+ADD FIELD "shad_plt_cbm" OF "shad_det" AS decimal 
+  FORMAT ">,>>9.999"
+  INITIAL "0"
+  LABEL "Plt CBM"
+  POSITION 35
+  SQL-WIDTH 18
+  DECIMALS 3
+  ORDER 340
+
+ADD FIELD "shad_ctn_status" OF "shad_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 36
+  SQL-WIDTH 2
+  ORDER 350
+
+ADD FIELD "shad_last_user" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 37
+  SQL-WIDTH 16
+  ORDER 360
+
+ADD FIELD "shad_last_date" OF "shad_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 38
+  SQL-WIDTH 4
+  ORDER 370
+
+ADD FIELD "shad_shploc" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Shipping Location"
+  POSITION 39
+  SQL-WIDTH 16
+  ORDER 380
+
+ADD FIELD "shad_shplot" OF "shad_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Shipping Lot No."
+  POSITION 40
+  SQL-WIDTH 36
+  ORDER 390
+
+ADD FIELD "shad_shpref" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Shipping Reference"
+  POSITION 41
+  SQL-WIDTH 16
+  ORDER 400
+
+ADD FIELD "shad_trf_qty" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Transferred QTY"
+  POSITION 42
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 410
+
+ADD FIELD "shad_qty_trf" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY to be"
+  POSITION 43
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 420
+
+ADD FIELD "shad_inv_qty" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "Invoiced QTY"
+  POSITION 44
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 430
+
+ADD FIELD "shad_qty_inv" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "QTY to be invoiced"
+  POSITION 45
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 440
+
+ADD FIELD "shad_chr01" OF "shad_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 46
+  SQL-WIDTH 80
+  ORDER 450
+
+ADD FIELD "shad_chr02" OF "shad_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 47
+  SQL-WIDTH 80
+  ORDER 460
+
+ADD FIELD "shad_dec01" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 48
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 470
+
+ADD FIELD "shad_dec02" OF "shad_det" AS decimal 
+  FORMAT ">>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 49
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 480
+
+ADD FIELD "shad_dte01" OF "shad_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 50
+  SQL-WIDTH 4
+  ORDER 490
+
+ADD FIELD "shad_dte02" OF "shad_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 51
+  SQL-WIDTH 4
+  ORDER 500
+
+ADD FIELD "shad_shipto" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship To"
+  POSITION 52
+  SQL-WIDTH 16
+  ORDER 510
+
+ADD FIELD "shad_line" OF "shad_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Ln"
+  POSITION 53
+  SQL-WIDTH 4
+  ORDER 520
+
+ADD FIELD "shad_ii_nbr" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 54
+  SQL-WIDTH 16
+  ORDER 530
+
+ADD FIELD "shad_ni_nbr" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 55
+  SQL-WIDTH 16
+  ORDER 540
+
+ADD FIELD "shad_ii_print" OF "shad_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 56
+  SQL-WIDTH 1
+  ORDER 550
+
+ADD FIELD "shad_ni_print" OF "shad_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 57
+  SQL-WIDTH 1
+  ORDER 560
+
+ADD FIELD "shad_crd_qty" OF "shad_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<"
+  INITIAL "0"
+  POSITION 58
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 570
+
+ADD FIELD "shad_crd_ni" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 59
+  SQL-WIDTH 16
+  ORDER 580
+
+ADD FIELD "shad_crd_ii" OF "shad_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 60
+  SQL-WIDTH 16
+  ORDER 590
+
+ADD INDEX "shad_sqline" ON "shad_det" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "shad_sanbr" ASCENDING 
+  INDEX-FIELD "shad_sq" ASCENDING 
+  INDEX-FIELD "shad_line" ASCENDING 
+
+ADD TABLE "shloc_hist"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "shloc_hi"
+
+ADD FIELD "shloc_sanbr" OF "shloc_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SA"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "shloc_sq" OF "shloc_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "shloc_ctn_line" OF "shloc_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "shloc_site" OF "shloc_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "shloc_loc" OF "shloc_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "shloc_loc_type" OF "shloc_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "shloc_ext_qty" OF "shloc_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 80
+
+ADD FIELD "shloc_trf_qty" OF "shloc_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 90
+
+ADD FIELD "shloc_open_qty" OF "shloc_hist" AS decimal 
+  FORMAT "->>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 100
+
+ADD FIELD "shloc_plt_nbr" OF "shloc_hist" AS integer 
+  FORMAT "999"
+  INITIAL "0"
+  LABEL "PLT"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD INDEX "shloc_sa_loc" ON "shloc_hist" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "shloc_sanbr" ASCENDING 
+  INDEX-FIELD "shloc_sq" ASCENDING 
+  INDEX-FIELD "shloc_ctn_line" ASCENDING 
+  INDEX-FIELD "shloc_site" ASCENDING 
+  INDEX-FIELD "shloc_loc" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=BIG-5
+.
+0000043128

@@ -1,0 +1,111 @@
+ADD TABLE "xsub_det"
+  AREA "TRANSACTION"
+  LABEL "WO Substitution"
+  DUMP-NAME "xsub_det"
+
+ADD FIELD "xsub_domain" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xsub_wonbr" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "wonbr"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xsub_wolot" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "wolot"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xsub_part" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 5
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xsub_subpart" OF "xsub_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "subpart"
+  POSITION 6
+  MAX-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xsub_qty" OF "xsub_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<,<<<"
+  INITIAL "0"
+  LABEL "sub-qty"
+  POSITION 7
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xsub_mod_date" OF "xsub_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xsub_mod_user" OF "xsub_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "user"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xsub_wonbr" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wonbr" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+ADD INDEX "xsub_wolot" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+ADD INDEX "xsub_wolot_sub" ON "xsub_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_wolot" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+
+ADD INDEX "xsub_part" ON "xsub_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_part" ASCENDING 
+
+ADD INDEX "xsub_subpart" ON "xsub_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xsub_domain" ASCENDING 
+  INDEX-FIELD "xsub_subpart" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000001974

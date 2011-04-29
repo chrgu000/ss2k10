@@ -1,0 +1,12 @@
+@@batchload xxptmt001.p
+"050505"
+Y  "A"
+@@end
+@@batchload xxptmt001.p
+"050504" 
+Y  "A"
+@@end
+@@batchload xxptmt001.p
+"050503"
+Y  "A"
+@@end

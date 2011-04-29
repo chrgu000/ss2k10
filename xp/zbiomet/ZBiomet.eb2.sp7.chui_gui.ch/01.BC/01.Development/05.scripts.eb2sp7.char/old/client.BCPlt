@@ -1,0 +1,35 @@
+#!/bin/sh
+# Script to start multi-user session of MFG/PRO
+ 
+# tokens:
+# &DLC = Progress Directory
+# &CLIENT-DB-CONNECT = command line to connect to each db in dbset
+ 
+stty intr '^c'
+DLC=/mfgeb2/progress/dlc91d;export DLC
+PATH=$PATH:$DLC;export PATH
+PROMSGS=$DLC/promsgs;export PROMSGS
+PROTERMCAP=$DLC/protermcap;export PROTERMCAP
+PS1='$$ ';export PS1
+BC=/mfgeb2/bc_test;export RF
+XS=/mfgeb2/bc_test/xs;export XS
+PROPATH=.$BC,$XS,$BC/labels,$BC/scripts,/mfgeb2/eb2/xxsrc,/mfgeb2/eb2/src,/mfgeb2/eb2,/mfgeb2/eb2/bbi,/mfgeb2/eb2/client;export PROPATH
+ 
+#
+# Set terminal type.
+#
+if [ ${TERM:-NULL} = NULL ]
+then  
+    echo
+    echo "Please enter your terminal type: \c"
+    read TERM
+    export TERM
+fi
+ 
+#
+# Start MFG/PRO.
+# 
+cd $BC/tmp_bc 	# change to home directory
+ 
+# exec $DLC/bin/_progres &DB etc
+$DLC/bin/_progres  -c 30 -d mdy -yy 1920 -Bt 350 -D 100 -mmax 3000 -nb 200 -s 63 -noshvarfix -p xsmfa.p  -pf /mfgeb2/eb2/Pilot.pf  

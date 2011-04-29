@@ -1,0 +1,26 @@
+Mn#	Program			#Function		#Security
+11#	xspor02.p		#采购收货(1)		#*
+31#	xswoi10.p		#工单发料转仓		#*
+32#	xswoi12.p		#工单退料转仓		#*
+41#	xsinv41.p		#周期盘点		#*
+42#	xsinv42.p		#初盘(by item)		#* 
+43#	xsinv43.p		#初盘(无物有数)		#*
+44#	xsinv44.p		#复盘(by nbr)		#*
+51#	xslap03.p		#材料标签列印-无库存	#*
+52#	xslap04.p		#材料标签打印-有库存	#*
+54#	xslap08.p		#半成品标签打印		#*
+55#	xslap06.p		#成品标签-有序列	#*
+56#	xslap07.p		#成品标签-无序列	#*
+61#	xsinv21.p		#计划外出库		#*
+62#	xsinv22.p		#计划外入库		#*
+63#	xsinv23.p		#库存转移		#*
+64#	xsinv03.p		#库位库存查询		#*
+65#	xsinv02.p		#批号库存查询		#*
+66#	xsinv99.p		#交易查询		#*
+67#	xsinv67.p		#whatin货架查询		#*
+68#	xsinv97.p		#bin_card查询	        #*
+73#	xssoa20.p		#销售成品备料	        #*
+
+84#	xspwd01.p		#用户密码修改		#*
+85#	xsusr01.p		#用户标签列印	        #*	
+XX#     XXXXXXXXX		#XXXXXXXXXXXX		#*

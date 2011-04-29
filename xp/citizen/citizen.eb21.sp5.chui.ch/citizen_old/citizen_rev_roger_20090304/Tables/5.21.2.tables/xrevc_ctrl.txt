@@ -1,0 +1,72 @@
+08/01/12 09:12:54       PROGRESS Report
+Database: qaddb (PROGRESS)
+
+
+
+
+=========================================================================
+============================= Table: xrevc_ctrl =========================
+
+              Table Flags: "f" = frozen, "s" = a SQL table
+
+
+Table                         Dump     Table Field Index Table
+Name                          Name     Flags Count Count Label
+----------------------------- -------- ----- ----- ----- -------------------
+xrevc_ctrl                    xrevc_ct           4     1 ?
+
+ Storage Area: TRANSACTION
+
+
+============================= FIELD SUMMARY =============================
+============================= Table: xrevc_ctrl =========================
+
+Flags: <c>ase sensitive, <i>ndex component, <m>andatory, <v>iew component
+
+Order Field Name                       Data Type   Flags
+----- -------------------------------- ----------- -----
+   10 xrevc_domain                     char        i
+   20 xrevc_yn                         logi        i
+   30 xrevc_release                    logi
+   40 xrevc_site                       char
+
+Field Name                       Format
+-------------------------------- -----------------------------
+xrevc_domain                     x(8)
+xrevc_yn                         yes/no
+xrevc_release                    yes/no
+xrevc_site                       x(8)
+
+Field Name                       Initial
+-------------------------------- -----------------------------
+xrevc_domain
+xrevc_yn                         no
+xrevc_release                    no
+xrevc_site
+
+Field Name                     Label                  Column Label
+------------------------------ ---------------------- ----------------------
+xrevc_domain                   ?                      ?
+xrevc_yn                       ?                      ?
+xrevc_release                  ?                      ?
+xrevc_site                     ?                      ?
+
+
+============================= INDEX SUMMARY =============================
+============================= Table: xrevc_ctrl =========================
+
+Flags: <p>rimary, <u>nique, <w>ord, <a>bbreviated, <i>nactive, + asc, - desc
+
+Flags Index Name                       Cnt Field Name
+----- -------------------------------- --- ---------------------------------
+p     xrecv_ctrl                         2 + xrevc_domain
+                                           + xrevc_yn
+
+** Index Name: xrecv_ctrl
+ Storage Area: TRANSACTION
+
+
+============================= FIELD DETAILS =============================
+============================= Table: xrevc_ctrl =========================
+
+

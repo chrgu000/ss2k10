@@ -1,0 +1,2 @@
+1.说明 format "x(50)"
+2.pt__chr01 变更编号 "x(8)"   ----->label "pt__chr01"

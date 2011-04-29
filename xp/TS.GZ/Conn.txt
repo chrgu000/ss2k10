@@ -1,0 +1,92 @@
+TS&&DAK的连接方式
+远程连接：58.62.159.198:7126
+用户名：ts
+密码：tst$$567890
+ 
+
+在程序中用NETERM登录系统
+
+UNIX用户名：mrp
+UNIX密码：mrp5566
+ 
+QAD用户名：sys
+QAD密码：tsmfgsys
+
+域：TS
+..............................
+测试数据库:
+远程连接：58.62.159.198：7126
+
+在程序中用NETERM登录系统
+
+UNIX用户名：mrptest
+UNIX密码：mrptest123
+
+QAD用户名：sys
+QAD密码：tsmfgsys
+
+域：TS
+
+条码系统：
+用户：strz1
+密码：112233
+
+BI系统：
+用户: sys
+密码：acer9910
+用户：admin
+密码：gztstbi
+
+CIM:203.85.42.60
+test数据库
+LINUX:	cimtest
+	cimtest / 123456
+QAD:	cimlive
+	cim889132
+
+CIM:203.85.42.60
+正式数据库
+LINUX:	cimlive
+	cim889132
+QAD:	cimlive
+	cim889132
+     
+root
+559t186a
+
+CCL:202.76.35.100
+test数据库
+LINUX:	mfgeb2
+	mfgeb2
+QAD:	ssuser
+	cc4516
+
+CCL:202.76.35.100
+正式数据库
+LINUX:	ssuser
+	cc4516
+QAD:	ssuser
+	cc4516
+
+192.168.1.2
+用户名：Administrator
+密码：mfgpro_168
+
+以后JIRA不能用，重新登录进服务器就可以了。。
+
+MOTOR 的环境：
+IP: 61.142.17.139
+端口:2323
+Linux用户名：weid
+Linux密码：33AACC
+
+转到用户名：su
+密码：321654
+
+cd /app/mfgpro/eb21
+./client.Production
+
+秋千 9:46:37
+密码让Phoebe帮忙输入，我也不知道 
+秋千 9:47:04
+Production是正式数据库，他们有个temp还有test都是测试的

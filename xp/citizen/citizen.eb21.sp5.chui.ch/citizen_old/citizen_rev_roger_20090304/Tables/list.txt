@@ -1,0 +1,8 @@
+xrev_hist.df    po修改版本历史
+xrevc_ctrl.df   5.21.2修改版本控制
+xdn_ctrl.df     5.21.1自动编号控制
+xic_det.df      16.13.6领料单
+xchg_det.df     5.11采购单修改计划    
+xchg_hist.df    5.11采购单修改计划
+xreq_det.df     5.11采购单修改计划
+
