@@ -1,0 +1,22 @@
+#define column1 as char[10] 
+#define column2 as char[10] 
+#define column3 as char[40] 
+#define column4 as char[24] 
+#define column5 as char[16] 
+#define column6 as char[18] 
+#define column7 as char[24] 
+#define column8 as char[24] 
+#define column9 as char[10] 
+#define column10 as number 
+#define column11 as char[2] 
+#define column12 as number 
+#define column13 as number 
+#define column14 as char[18] 
+#define column15 as char[18] 
+#define column16 as char[18] 
+#define column17 as char[10] 
+#define column18 as number 
+pt_status 	Vend	Name              	Attn	Fax	PARENT_PART	PARENT_DESC1	PARENT_DESC2	Due_Date	Qty 	UM	Next_Qty	Next2_Qty	flag	PO_NUMber   	pt_draw      	pt_buyer     	po_line 
+AC      	C05E033 	宁波东睦新材料股份有限公司                              	周忠                    	0574-87875904   	MHSG01-398-0      	阀片止动座              	STOPPER  SEAT           	08/11/04	    44,000.0	PC	         0.0	         0.0	08/11/04	P0811DM1	HSG01-398-01      	4RSA    	  1
+AC      	C05E033 	宁波东睦新材料股份有限公司                              	周忠                    	0574-87875904   	MHSG01-398-0      	阀片止动座              	STOPPER  SEAT           	08/11/13	    30,000.0	PC	         0.0	         0.0	08/11/13	P0811DM1	HSG01-398-01      	4RSA    	  2
+AC      	C05E033 	宁波东睦新材料股份有限公司                              	周忠                    	0574-87875904   	MHSG01-398-0      	阀片止动座              	STOPPER  SEAT           	12/12/12	         0.0	PC	    69,000.0	         0.0	预示栏  	P0811DM1	HSG01-398-01      	4RSA    	  0

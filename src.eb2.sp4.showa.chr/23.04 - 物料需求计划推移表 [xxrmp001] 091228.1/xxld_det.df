@@ -1,0 +1,157 @@
+ADD TABLE "xxld_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxld_det"
+
+ADD FIELD "xxld_part" OF "xxld_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxld_site" OF "xxld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxld_qty_oh" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "实际库存"
+  POSITION 5
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 40
+
+ADD FIELD "xxld_qty_rcv" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "到货实绩"
+  POSITION 6
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 50
+
+ADD FIELD "xxld_qty_comp" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "进度"
+  POSITION 7
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "xxld_due_date" OF "xxld_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxld_wo" OF "xxld_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "更新wo"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 80
+
+ADD FIELD "xxld_po" OF "xxld_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "更新po"
+  POSITION 10
+  SQL-WIDTH 1
+  ORDER 90
+
+ADD FIELD "xxld_rcv" OF "xxld_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "更新到货"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xxld_deci" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 110
+  EXTENT 5
+  DECIMALS 10
+  ORDER 110
+
+ADD FIELD "xxld_char" OF "xxld_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 120
+
+ADD FIELD "xxld_log" OF "xxld_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 14
+  SQL-WIDTH 40
+  EXTENT 5
+  ORDER 130
+
+ADD FIELD "xxld_date" OF "xxld_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 140
+
+ADD FIELD "xxld_qty_ord" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "订单计划"
+  POSITION 16
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "xxld_qty_plan" OF "xxld_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "计划需求"
+  POSITION 17
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "xxld_month" OF "xxld_det" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "月"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD INDEX "xxld_part" ON "xxld_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxld_site" ASCENDING 
+  INDEX-FIELD "xxld_part" ASCENDING 
+  INDEX-FIELD "xxld_due_date" ASCENDING 
+
+ADD INDEX "xxld_month" ON "xxld_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxld_site" ASCENDING 
+  INDEX-FIELD "xxld_part" ASCENDING 
+  INDEX-FIELD "xxld_month" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000002747

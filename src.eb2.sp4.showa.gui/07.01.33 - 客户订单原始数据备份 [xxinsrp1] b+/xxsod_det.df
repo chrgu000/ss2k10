@@ -1,0 +1,222 @@
+ADD TABLE "xxsod_det"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxsod_de"
+
+ADD FIELD "xxsod_type" OF "xxsod_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "xxsod_cust" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxsod_project" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 25
+
+ADD FIELD "xxsod_item" OF "xxsod_det" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxsod_vend" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxsod_addr" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxsod_part" OF "xxsod_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 40
+  ORDER 60
+
+ADD FIELD "xxsod_color" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxsod_desc" OF "xxsod_det" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 48
+  ORDER 80
+
+ADD FIELD "xxsod_plan" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxsod_due_date" OF "xxsod_det" AS char 
+  FORMAT "x(10)"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxsod_due_time" OF "xxsod_det" AS char
+  FORMAT "x(5)"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxsod_qty_ord" OF "xxsod_det" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxsod_invnbr" OF "xxsod_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 40
+  ORDER 130
+
+ADD FIELD "xxsod_rev" OF "xxsod_det" AS integer 
+  FORMAT "99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxsod_week" OF "xxsod_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxsod_category" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxsod_ship" OF "xxsod_det" AS character 
+  FORMAT "x(16)"
+  INITIAL ""
+  POSITION 19
+  SQL-WIDTH 32
+  ORDER 170
+
+ADD FIELD "xxsod_rmks" OF "xxsod_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 35
+  ORDER 175
+
+ADD FIELD "xxsod_rmks1" OF "xxsod_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 21
+  SQL-WIDTH 40
+  ORDER 180
+
+ADD FIELD "xxsod_due_date1" OF "xxsod_det" AS char
+  FORMAT "x(10)"
+  INITIAL ?
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 190
+
+ADD FIELD "xxsod_due_time1" OF "xxsod_det" AS char
+  FORMAT "x(5)"
+  INITIAL ?
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxsod_rmks2" OF "xxsod_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 40
+  ORDER 210
+
+ADD FIELD "xxsod__dte01" OF "xxsod_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 25
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "xxsod__dte02" OF "xxsod_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD FIELD "xxsod__chr01" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 240
+
+ADD FIELD "xxsod__chr02" OF "xxsod_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 28
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "xxsod__dec02" OF "xxsod_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 29
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 270
+
+ADD FIELD "xxsod__dec01" OF "xxsod_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 280
+
+ADD INDEX "cust_invnbr" ON "xxsod_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxsod_cust" ASCENDING 
+  INDEX-FIELD "xxsod_invnbr" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003460

@@ -1,0 +1,57 @@
+/* SS - 090723.1 By: Neil Gao */
+
+{mfdtitle.i "090723.1"}
+
+define var date1 as date.
+define var date2 as date.
+
+
+&SCOPED-DEFINE PP_FRAME_NAME A
+form
+    RECT-FRAME       AT ROW 1 COLUMN 1.25
+    RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+    skip(1)
+    date1  colon 12 label "送货日期"
+    date2 colon 40 label "至"
+    SKIP(1)
+with frame a side-label width 80 attr-space NO-BOX THREE-D.
+
+DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+
+&UNDEFINE PP_FRAME_NAME
+
+setframelabels(frame a:handle).                                                 
+main:
+repeat:
+
+  if date1  = low_date then date1 = ? .
+  if date2 = hi_date  then date2 = ? .
+
+  update  date1 date2 WITH FRAME a .
+
+  if date1  = ?  then date1  = low_date.
+  if date2 = ?  then date2  = hi_date. 
+
+  {mfselprt.i "printer" 120}
+
+  for each xxsodh_hist no-lock:
+      
+       disp xxsodh_date
+       			string(xxsodh_time,"HH:MM")
+       			xxsodh_cust
+            xxsodh_part
+            xxsodh_due_date
+            xxsodh_due_time
+            xxsodh_due_date1
+            xxsodh_due_time1
+          with stream-io width 200. 
+  end.   /* for each xxsod_det */
+
+  {mfreset.i} 
+  {mfgrptrm.i}        
+end. /* repeat: */      

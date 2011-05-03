@@ -1,0 +1,139 @@
+ADD TABLE "xxac_det"
+  AREA "REFERENCE"
+  DESCRIPTION "acct "
+  FROZEN
+  DUMP-NAME "xxac_det"
+
+ADD FIELD "xxac_code" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account Code"
+  POSITION 2
+  SQL-WIDTH 30
+  ORDER 10
+
+ADD FIELD "xxac_code_desc" OF "xxac_det" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Desc"
+  POSITION 3
+  SQL-WIDTH 30
+  ORDER 20
+
+ADD FIELD "xxac_drcr" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "DR/CR"
+  POSITION 4
+  SQL-WIDTH 30
+  ORDER 30
+
+ADD FIELD "xxac_name" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Name"
+  POSITION 5
+  SQL-WIDTH 30
+  ORDER 40
+
+ADD FIELD "xxac_name_desc" OF "xxac_det" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Name Desc"
+  POSITION 6
+  SQL-WIDTH 30
+  ORDER 50
+
+ADD FIELD "xxac_acctfrom" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account From"
+  POSITION 7
+  SQL-WIDTH 30
+  ORDER 60
+
+ADD FIELD "xxac_acctto" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account To"
+  POSITION 8
+  SQL-WIDTH 30
+  ORDER 70
+
+ADD FIELD "xxac_subfrom" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sub From"
+  POSITION 9
+  SQL-WIDTH 30
+  ORDER 80
+
+ADD FIELD "xxac_subto" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sub To"
+  POSITION 10
+  SQL-WIDTH 30
+  ORDER 90
+
+ADD FIELD "xxac__dte01" OF "xxac_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxac__dte02" OF "xxac_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxac__chr01" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxac__chr02" OF "xxac_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxac__dec02" OF "xxac_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxac__dec01" OF "xxac_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD INDEX "acct_code" ON "xxac_det" 
+  AREA "REFERENCE_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxac_code" ASCENDING 
+  INDEX-FIELD "xxac_drcr" ASCENDING 
+  INDEX-FIELD "xxac_name" ASCENDING 
+  INDEX-FIELD "xxac_acctfrom" ASCENDING 
+  INDEX-FIELD "xxac_acctto" ASCENDING 
+  INDEX-FIELD "xxac_subfrom" ASCENDING 
+  INDEX-FIELD "xxac_subto" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000019921
