@@ -12,13 +12,14 @@
 
 define new shared variable cmtindx  like lnd_cmtindx.
 define variable i as integer.
-define variable del-yn as logical. 
+define variable del-yn as logical.
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
 define variable lnm_recid as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
 define variable b-delete as logical no-undo initial no.
 define variable TIME_INTERVAL as integer no-undo.
+define variable lnmtpdesc as character no-undo.
 
 /* Display Forms */
 form
@@ -33,8 +34,8 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnm_type colon 20 skip(1)
-   b-delete     colon 20 
+   xxlnm_type colon 20  lnmtpdesc no-label skip(1)
+   b-delete     colon 20
    TIME_INTERVAL colon 20
 with frame bb side-labels width 80
 title color normal (getFrameTitle("REPLENISHMENT_TIME",14)).
@@ -200,7 +201,7 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         xxlnm_type 
+         xxlnm_type
       editing:
 
          if frame-field = "xxlnm_type" then do:
@@ -208,8 +209,15 @@ repeat:
                "xxlnm_line = input ln_line and xxlnm_site = input ln_site"
                xxlnm_type "input xxlnm_type" """" """"}
 
-            if recno <> ? then do: 
-               display xxlnm_type 
+            if recno <> ? then do:
+               assign lnmtpdesc = "".
+               find first code_mstr no-lock where
+                          code_fldname = "xxlnm_type" and
+                          code_value = xxlnm_type no-error.
+               if available code_mstr then do:
+                  assign lnmtpdesc = code_cmmt.
+               end.
+               display xxlnm_type lnmtpdesc
                with frame bb.
 
             end. /* if recno */
@@ -226,55 +234,73 @@ repeat:
          where xxlnm_line = ln_line
            and xxlnm_site = ln_site
            and xxlnm_type = input xxlnm_type
-      exclusive-lock no-error.
-      if available xxlnm_det then do:       	 
-      	 display xxlnm_type
-      	 with frame bb.
-		  end.
+      no-lock no-error.
+      if available xxlnm_det then do:
+         assign lnmtpdesc = "".
+         find first code_mstr no-lock where
+                    code_fldname = "xxlnm_type" and
+                    code_value = xxlnm_type no-error.
+         if available code_mstr then do:
+            assign lnmtpdesc = code_cmmt.
+         end.
+         display xxlnm_type lnmtpdesc
+         with frame bb.
+      end.
+      else do:
+         assign lnmtpdesc = "".
+         find first code_mstr no-lock where
+                    code_fldname = "xxlnm_type" and
+                    code_value = input xxlnm_type no-error.
+         if available code_mstr then do:
+            assign lnmtpdesc = code_cmmt.
+         end.
+         display lnmtpdesc
+         with frame bb.
+      end.
       set2:
       do on error undo, retry:
- 
+
          ststatus = stline[2].
          status input ststatus.
 
-         set b-delete TIME_INTERVAL with frame bb.    
+         set b-delete TIME_INTERVAL with frame bb.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */
             /*  DELETING IT.                                                 */
 
             if not b-delete then do:
-            	 for each xxlnm_det exclusive-lock where 
-            	 				  xxlnm_line = ln_line and
-            	 				  xxlnm_site = ln_site and
-            	 				  xxlnm_type = input xxlnm_type:
-            	 		 delete xxlnm_det.
-            	 end.            	 	   
-            	 assign i = 0.
-            	 do while i * (TIME_INTERVAL * 60) < 86400:
-            	 		create xxlnm_det.
-            	 		assign xxlnm_line = ln_line 
-            	 					 xxlnm_site = ln_site
-            	 					 xxlnm_type = input xxlnm_type
-            	 					 xxlnm_itime = i * TIME_INTERVAL * 60.
-            	 	  assign xxlnm_time = t2s(input i * TIME_INTERVAL * 60,
-            	 	  												input "").
-            	 	  i = i + 1.
-            	 end.
+               for each xxlnm_det exclusive-lock where
+                        xxlnm_line = ln_line and
+                        xxlnm_site = ln_site and
+                        xxlnm_type = input xxlnm_type:
+                   delete xxlnm_det.
+               end.
+               assign i = 0.
+               do while i * (TIME_INTERVAL * 60) < 86400:
+                  create xxlnm_det.
+                  assign xxlnm_line = ln_line
+                         xxlnm_site = ln_site
+                         xxlnm_type = input xxlnm_type
+                         xxlnm_itime = i * TIME_INTERVAL * 60.
+                  assign xxlnm_time = t2s(input i * TIME_INTERVAL * 60,
+                                          input "").
+                  i = i + 1.
+               end.
             end.
-            else do:            
+            else do:
                 hide message.
                 del-yn = no.
                 {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
                 if del-yn = no then undo set2.
                 else do:
-             	 				for each xxlnm_det exclusive-lock where 
-            	 								  xxlnm_line = ln_line and
-            	 								  xxlnm_site = ln_site and
-            	 								  xxlnm_type = input xxlnm_type:
-            	 						 delete xxlnm_det.
-            	 				end.                		 
-               		 	  clear frame bb no-pause.
+                      for each xxlnm_det exclusive-lock where
+                                xxlnm_line = ln_line and
+                                xxlnm_site = ln_site and
+                                xxlnm_type = input xxlnm_type:
+                           delete xxlnm_det.
+                      end.
+                      clear frame bb no-pause.
                 end.
-            end. 
+            end.
 
       end. /* set2 */
 

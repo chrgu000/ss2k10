@@ -11,11 +11,12 @@
 {pxphdef.i lnlnxr}
 
 define new shared variable cmtindx  like lnd_cmtindx.
-define variable del-yn as logical. 
+define variable del-yn as logical.
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
 define variable lnm_recid as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
+define variable lnmtpdesc as character no-undo.
 
 /* Display Forms */
 form
@@ -30,7 +31,7 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnm_type colon 20
+   xxlnm_type colon 20 lnmtpdesc no-label
    xxlnm_time colon 20 skip(1)
    xxlnm_desc colon 20
 with frame bb side-labels width 80
@@ -205,14 +206,30 @@ repeat:
                "xxlnm_line = input ln_line and xxlnm_site = input ln_site"
                xxlnm_type "input xxlnm_type" """" """"}
 
-            if recno <> ? then do: 
+            if recno <> ? then do:
+               assign lnmtpdesc = "".
+               find first code_mstr no-lock where
+                          code_fldname = "xxlnm_type" and
+                          code_value = xxlnm_type no-error.
+               if available code_mstr then do:
+                  assign lnmtpdesc = code_cmmt.
+               end.
                display
-                    xxlnm_type
+                    xxlnm_type lnmtpdesc
                     xxlnm_time
                     xxlnm_desc
                with frame bb.
-
             end. /* if recno */
+            else do:
+               assign lnmtpdesc = "".
+               find first code_mstr no-lock where
+                          code_fldname = "xxlnm_type" and
+                          code_value = input xxlnm_type no-error.
+               if available code_mstr then do:
+                  assign lnmtpdesc = code_cmmt.
+               end.
+               display "" @ xxlnm_time lnmtpdesc with frame bb.
+            end.
 
          end. /* frame-field */
 
@@ -237,13 +254,13 @@ repeat:
                 xxlnm_type
                 xxlnm_time.
          assign xxlnm_itime = s2t(xxlnm_time).
-            
+
       end.
- 
+
       display
-              xxlnm_type     
-              xxlnm_time     
-              xxlnm_desc    
+              xxlnm_type
+              xxlnm_time
+              xxlnm_desc
       with frame bb.
 
       set2:
@@ -254,12 +271,12 @@ repeat:
          status input ststatus.
 
          set xxlnm_desc
-         go-on (F5 CTRL-D) with frame bb.  
+         go-on (F5 CTRL-D) with frame bb.
          display
               xxlnm_type
               xxlnm_time
-              xxlnm_desc 
-      	 with frame bb.
+              xxlnm_desc
+         with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */
