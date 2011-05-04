@@ -34,6 +34,8 @@ ADD FIELD "xxlnw_start" OF "xxlnw_det" AS character
   INITIAL ""
   POSITION 5
   SQL-WIDTH 20
+  VALEXP "{xxtimestr.v xxlnw_start}"
+  VALMSG "ERROR:Time Format. Please re-enter."  
   ORDER 40
 
 ADD FIELD "xxlnw_stime" OF "xxlnw_det" AS integer 
@@ -49,6 +51,8 @@ ADD FIELD "xxlnw_end" OF "xxlnw_det" AS character
   LABEL "End Time"
   POSITION 7
   SQL-WIDTH 20
+  VALEXP "{xxtimestr.v xxlnw_end}"
+  VALMSG "ERROR:Time Format. Please re-enter."
   ORDER 60
 
 ADD FIELD "xxlnw_etime" OF "xxlnw_det" AS integer 
@@ -75,12 +79,12 @@ ADD FIELD "xxlnw_rstmin" OF "xxlnw_det" AS integer
   SQL-WIDTH 4
   ORDER 90
 
-ADD FIELD "xxlnw_type" OF "xxlnw_det" AS character 
+ADD FIELD "xxlnw_shift" OF "xxlnw_det" AS character 
   FORMAT "x(1)"
   INITIAL ""
   POSITION 11
   SQL-WIDTH 2
-  VALEXP "{gpcode.v xxlnw_type}"
+  VALEXP "{gpcode.v xxlnw_shift}"
   VALMSG "ERROR: VALUE MUST EXIST IN GENERALIZED CODES. Please re-enter."
   ORDER 100
 

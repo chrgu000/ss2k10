@@ -10,11 +10,11 @@
 {xxtimestr.i}
 {pxphdef.i lnlnxr}
 
-define new shared variable cmtindx     like lnd_cmtindx.
-define variable del-yn as logical.
-define variable shiftdesc like code_cmmt.
+define new shared variable cmtindx  like lnd_cmtindx.
+define variable del-yn as logical. 
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
+define variable lnm_recid as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
 
 /* Display Forms */
@@ -30,14 +30,11 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnw_sn colon 20
-   xxlnw_Start   colon 20
-   xxlnw_End     at 41
-   xxlnw_rstmin  colon 20
-   xxlnw_shift    colon 20 shiftdesc no-label at 26
-   xxlnw_wktime  colon 20
+   xxlnm_type colon 20
+   xxlnm_time colon 20 skip(1)
+   xxlnm_desc colon 20
 with frame bb side-labels width 80
-title color normal (getFrameTitle("PRODUCTION_HOURS",14)).
+title color normal (getFrameTitle("REPLENISHMENT_TIME",14)).
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame bb:handle).
@@ -162,11 +159,11 @@ repeat:
       if return-value <> {&SUCCESS-RESULT} then
          undo mainloop, retry mainloop.
 
-      for each xxlnw_det where xxlnw_line = ln_line
-                         and xxlnw_site = ln_site
+      for each xxlnm_det where xxlnm_line = ln_line
+                         and xxlnm_site = ln_site
       exclusive-lock:
 
-         delete xxlnw_det.
+         delete xxlnm_det.
 
       end. /* for each lnd_det */
 
@@ -200,31 +197,20 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         xxlnw_sn
+         xxlnm_type xxlnm_time
       editing:
 
-         if frame-field = "xxlnw_sn" then do:
-            {mfnp06.i xxlnw_det xxlnw_line
-               "xxlnw_line = input ln_line and xxlnw_site = input ln_site"
-               xxlnw_sn "input xxlnw_sn" """" """"}
+         if frame-field = "xxlnm_type" then do:
+            {mfnp06.i xxlnm_det xxlnm_line
+               "xxlnm_line = input ln_line and xxlnm_site = input ln_site"
+               xxlnm_type "input xxlnm_type" """" """"}
 
-            if recno <> ? then do:
-               assign shiftdesc = "".
-               find first code_mstr no-lock where code_fldname = "xxlnw_shift"
-                      and code_value = xxlnw_shift no-error.
-               if available code_mstr then do:
-                  assign shiftdesc = code_cmmt.
-               end.
+            if recno <> ? then do: 
                display
-                    xxlnw_sn
-                    xxlnw_start
-                    xxlnw_end
-                    xxlnw_rstmin
-                    xxlnw_wktime
-                    xxlnw_shift
-                    shiftdesc
+                    xxlnm_type
+                    xxlnm_time
+                    xxlnm_desc
                with frame bb.
-
 
             end. /* if recno */
 
@@ -236,33 +222,28 @@ repeat:
          end.
       end. /* editing */
 
-      find xxlnw_det
-         where xxlnw_line = ln_line
-           and xxlnw_site = ln_site
-           and xxlnw_sn  = input xxlnw_sn
+      find xxlnm_det
+         where xxlnm_line = ln_line
+           and xxlnm_site = ln_site
+           and xxlnm_type = input xxlnm_type
+           and xxlnm_time = input xxlnm_time
       exclusive-lock no-error.
 
-      if not available xxlnw_det then do:
-         create xxlnw_det.
+      if not available xxlnm_det then do:
+         create xxlnm_det.
          assign
-                xxlnw_line = ln_line
-                xxlnw_site = ln_site
-                xxlnw_sn.
+                xxlnm_line = ln_line
+                xxlnm_site = ln_site
+                xxlnm_type
+                xxlnm_time.
+         assign xxlnm_itime = s2t(xxlnm_time).
+            
       end.
-      assign shiftdesc = "".
-      find first code_mstr no-lock where code_fldname = "xxlnw_shift"
-             and code_value = xxlnw_shift no-error.
-      if available code_mstr then do:
-         assign shiftdesc = code_cmmt.
-      end.
+ 
       display
-              xxlnw_sn
-              xxlnw_start
-              xxlnw_end
-              xxlnw_rstmin
-              xxlnw_wktime
-              xxlnw_shift
-              shiftdesc
+              xxlnm_type     
+              xxlnm_time     
+              xxlnm_desc    
       with frame bb.
 
       set2:
@@ -272,27 +253,12 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxlnw_start
-             xxlnw_end
-             xxlnw_rstmin
-             xxlnw_shift
-         go-on (F5 CTRL-D) with frame bb.
-         assign xxlnw_stime = s2t(xxlnw_start)
-                xxlnw_etime = s2t(xxlnw_end).
-         if xxlnw_stime > xxlnw_etime and xxlnw_shift = "N" then do:
-            assign xxlnw_etime = xxlnw_etime + con24h.
-         end.
-         assign xxlnw_wktime =
-                howLong(input (xxlnw_etime - xxlnw_stime - xxlnw_rstmin * 60),
-                        input "H").
+         set xxlnm_desc
+         go-on (F5 CTRL-D) with frame bb.  
          display
-              xxlnw_sn
-              xxlnw_start
-              xxlnw_end
-              xxlnw_rstmin
-              xxlnw_wktime
-              xxlnw_shift
-              shiftdesc
+              xxlnm_type
+              xxlnm_time
+              xxlnm_desc 
       	 with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
@@ -303,7 +269,7 @@ repeat:
 
             if del-yn = no then undo set2.
             else do:
-                delete xxlnw_det.
+                delete xxlnm_det.
                 clear frame bb no-pause.
             end.
          end.  /* if lastkey */
@@ -311,7 +277,7 @@ repeat:
       end. /* set2 */
 
       /* RELEASE THE RECORDS TO AVOID DEAD-LOCK SITUATION */
-      release xxlnw_det.
+      release xxlnm_det.
       status input.
 
    end. /* with frame bb */

@@ -1,5 +1,5 @@
-/*V8:ConvertMode=Maintenance                          */
-{mfdtitle.i "110426.1"}
+/*V8:ConvertMode=Maintenance                                                  */
+{mfdtitle.i "110504.1"}
 define variable yn like mfc_logical no-undo.
 {gpcdget.i "UT"}
 
@@ -18,7 +18,7 @@ if not available brw_mstr then do:
 end.
 assign brw_mstr.brw_desc = 'ABC_ALLOCATE'.
 assign brw_mstr.brw_view = 'code_mstr'
-       brw_mstr.brw_filter    = 'code_fldname = "pt__chr10"'
+       brw_mstr.brw_filter    = 'code_fldname = "xxlnm_type"'
        brw_mstr.brw_userid    = 'admin'
        brw_mstr.brw_mod_date  = today
        brw_mstr.brw_sort_col  = ''
@@ -72,4 +72,5 @@ assign brwf_det.brwf_field    = 'code_cmmt'
        brwf_det.brwf_mod_date = today
        brwf_det.brwf__qadc01  = '24'
        brwf_det.brwf_enable   = no.
-end.  /* DO ON ERROR UNDO, RETRY */
+end.  /* repeat with frame a: */
+status input.

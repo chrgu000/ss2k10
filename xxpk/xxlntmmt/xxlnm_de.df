@@ -1,0 +1,144 @@
+ADD TABLE "xxlnm_det"
+  AREA "STATIC"
+  LABEL "workline metail type pk time"
+  DESCRIPTION "workline metail type package time maintance"
+  DUMP-NAME "xxlnm_de"
+
+ADD FIELD "xxlnm_site" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxlnm_line" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "line"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxlnm_type" OF "xxlnm_det" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  VALEXP "{gpcode.v xxlnm_type}"
+  VALMSG "ERROR: VALUE MUST EXIST IN GENERAL CODES. Please re-enter."
+  ORDER 30
+
+ADD FIELD "xxlnm_time" OF "xxlnm_det" AS character 
+  FORMAT "99:99:99"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  VALEXP "{xxtimestr.v xxlnm_time}"
+  VALMSG "ERROR:Time Format. Please re-enter."
+  ORDER 40
+
+ADD FIELD "xxlnm_itime" OF "xxlnm_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxlnm_desc" OF "xxlnm_det" AS character 
+  FORMAT "x(22)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxlnm__chr01" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxlnm__chr02" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxlnm__chr03" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxlnm__chr04" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxlnm__chr05" OF "xxlnm_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxlnm__dec01" OF "xxlnm_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxlnm__dec02" OF "xxlnm_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD FIELD "xxlnm__dec03" OF "xxlnm_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxlnm__dec04" OF "xxlnm_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 150
+
+ADD FIELD "xxlnm__dec05" OF "xxlnm_det" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD INDEX "xxlnm_linesite" ON "xxlnm_det" 
+  AREA "STATIC_IDX"
+  PRIMARY
+  INDEX-FIELD "xxlnm_line" ASCENDING 
+  INDEX-FIELD "xxlnm_site" ASCENDING 
+  INDEX-FIELD "xxlnm_type" ASCENDING 
+  INDEX-FIELD "xxlnm_itime" ASCENDING 
+
+ADD INDEX "xxlnm_siteline" ON "xxlnm_det" 
+  AREA "STATIC_IDX"
+  INDEX-FIELD "xxlnm_site" ASCENDING 
+  INDEX-FIELD "xxlnm_line" ASCENDING 
+  INDEX-FIELD "xxlnm_type" ASCENDING 
+  INDEX-FIELD "xxlnm_itime" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000002827

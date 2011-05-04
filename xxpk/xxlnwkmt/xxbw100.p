@@ -1,5 +1,5 @@
 /*V8:ConvertMode=Maintenance                                                  */
-{mfdtitle.i "110426.1"}
+{mfdtitle.i "110504.1"}
 define variable yn like mfc_logical no-undo.
 {gpcdget.i "UT"}
 
@@ -18,7 +18,7 @@ if not available brw_mstr then do:
 end.
 assign brw_mstr.brw_desc = 'SHIFT'.
 assign brw_mstr.brw_view = 'code_mstr'
-       brw_mstr.brw_filter    = 'code_fldname = "xxlnw_type"'
+       brw_mstr.brw_filter    = 'code_fldname = "xxlnw_shift"'
        brw_mstr.brw_userid    = 'admin'
        brw_mstr.brw_mod_date  = today
        brw_mstr.brw_sort_col  = '1'
