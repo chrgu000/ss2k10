@@ -27,7 +27,6 @@ form
    ln_site colon 20 si_desc no-label
    skip(1)
    ln_desc colon 20 label "Description"
-   ln_rate colon 20
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -57,7 +56,7 @@ repeat:
       if frame-field = "ln_line" then do:
          {mfnp.i ln_mstr ln_line ln_line ln_site ln_site ln_linesite}
          if recno <> ? then do:
-            display ln_line ln_site ln_desc ln_rate
+            display ln_line ln_site ln_desc
             with frame a.
          end.
       end. /* if frame-field */
@@ -115,7 +114,7 @@ repeat:
       exclusive-lock:
       end. /* FOR FIRST ln_mstr */
 
-      display ln_desc ln_rate with frame a.
+      display ln_desc with frame a.
 
       set1:
       do on error undo, retry:
@@ -127,7 +126,6 @@ repeat:
 
          set
             ln_desc
-            ln_rate
          go-on (F5 CTRL-D) with frame a.
 
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
