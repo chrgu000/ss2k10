@@ -66,12 +66,12 @@ define buffer flhmmstr for flhm_mst.
 form
    flhm_lang        colon 15
    lng_desc         no-label
-   flhm_sub         colon 65
+   flhm_sub         colon 60
    flhm_field       colon 15 label "Calling Field"
-   flhm_call_pg     colon 65 label "Calling Proc"
+   flhm_call_pg     colon 60 label "Calling Proc" format "x(16)"
    flhm_lnk_fld     colon 15 label "Link to Field"
-   flhm_lnk_pgm     colon 65 label "Link to Proc"
-   flhm_sub         colon 65
+   flhm_lnk_pgm     colon 60 label "Link to Proc"
+   flhm_sub         colon 60 format "x(16)"
    text-label       at 2     no-label
    txt              colon 10 no-label
    /*V8! view-as fill-in size 60 by 1 */
