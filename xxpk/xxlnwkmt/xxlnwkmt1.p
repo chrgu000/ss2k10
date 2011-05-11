@@ -9,14 +9,14 @@
 {pxmaint.i}
 {xxtimestr.i}
 {pxphdef.i lnlnxr}
-
+define variable sw_reset    like mfc_logical.
 define new shared variable cmtindx     like lnd_cmtindx.
 define variable del-yn as logical.
-define variable shiftdesc like code_cmmt.
+define variable shiftdesc like code_cmmt label "COMMENT".
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
-
+define variable xxlnwsn like xxlnw_sn.
 /* Display Forms */
 form
    ln_line colon 20 label "Production Line"
@@ -30,14 +30,16 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnw_sn colon 20
-   xxlnw_Start   colon 20
-   xxlnw_End     at 41
-   xxlnw_rstmin  colon 20
-   xxlnw_shift    colon 20 shiftdesc no-label at 26
-   xxlnw_wktime  colon 20
-with frame bb side-labels width 80
-title color normal (getFrameTitle("PRODUCTION_HOURS",14)).
+   xxlnw_sn format "->>9"
+   xxlnw_Start
+   xxlnw_End
+   xxlnw_rstmin
+   xxlnw_shift format "x(4)"
+   shiftdesc format "x(6)"
+   xxlnw_wktime
+   with frame bb down width 80 attr-space.
+/* with frame bb side-labels width 80                           */
+/* title color normal (getFrameTitle("PRODUCTION_HOURS",14)).   */
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame bb:handle).
@@ -193,127 +195,97 @@ repeat:
 
    repeat with frame bb:
 
-      for first ln_mstr
-         fields(ln_desc ln_line ln_rate ln_site)
-         where recid(ln_mstr) = ln_recid
-      exclusive-lock:
-      end. /* FOR FIRST ln_mstr */
+      if not batchrun then do:
 
-      prompt-for
-         xxlnw_sn
-      editing:
+         {mpscrad4.i
+            xxlnw_det
+            xxlnw_linesite
+            xxlnw_sn
+            "xxlnw_sn xxlnw_Start xxlnw_End
+            xxlnw_rstmin xxlnw_shift shiftdesc xxlnw_wktime"
+            xxlnw_sn
+            bb
+            "xxlnw_line = input ln_line and xxlnw_site = input ln_site"
+            8808
+            yes
+            }
 
-         if frame-field = "xxlnw_sn" then do:
-            {mfnp06.i xxlnw_det xxlnw_line
-               "xxlnw_line = input ln_line and xxlnw_site = input ln_site"
-               xxlnw_sn "input xxlnw_sn" """" """"}
+         if recno = ?
+         and keyfunction(lastkey) <> "insert-mode"
+         and keyfunction(lastkey) <> "go"
+         and keyfunction(lastkey) <> "return"
+         then leave.
+         if keyfunction(lastkey) <> "end-error"
+         then do on error undo, retry:
+         do  transaction:
 
-            if recno <> ? then do:
-               assign shiftdesc = "".
-               find first code_mstr no-lock where code_fldname = "xxlnw_shift"
-                      and code_value = xxlnw_shift no-error.
-               if available code_mstr then do:
-                  assign shiftdesc = code_cmmt.
+            if false then do:
+               update xxlnw_sn validate (true,"") with frame bb.
+            end.
+
+            if recno = ? then do:
+               create xxlnw_det.
+               set xxlnw_sn with frame bb.
+               xxlnwsn = xxlnw_sn.
+               delete xxlnw_det.
+               find first xxlnw_det where xxlnw_line = input ln_line and
+                          xxlnw_site = input ln_site and
+                          xxlnw_sn = xxlnwsn no-lock no-error.
+               if available xxlnw_det then do:
+                  recno = recid(xxlnw_det).
                end.
-               display
-                    xxlnw_sn
-                    xxlnw_start
-                    xxlnw_end
-                    xxlnw_rstmin
-                    xxlnw_wktime
-                    xxlnw_shift
-                    shiftdesc
-               with frame bb.
+               else do:
+                  create xxlnw_det.
+                  assign xxlnw_line = ln_line
+                         xxlnw_site = ln_site
+                         xxlnw_sn   = xxlnwsn.
+                  recno = recid(xxlnw_det).
+               end.
+            end.
 
+            find xxlnw_det exclusive-lock where recid(xxlnw_det) = recno.
+            assign shiftdesc = "".
+            find first code_mstr no-lock where code_fldname = "xxlnw_shift"
+                   and code_value = xxlnw_shift no-error.
+            if available code_mstr then do:
+               assign shiftdesc = code_cmmt.
+            end.
+            display xxlnw_sn xxlnw_Start xxlnw_End xxlnw_rstmin xxlnw_shift
+                    shiftdesc xxlnw_wktime
+            with frame bb.
 
-            end. /* if recno */
-
-         end. /* frame-field */
-
-         else do:
-            readkey.
-            apply lastkey.
-         end.
-      end. /* editing */
-
-      find xxlnw_det
-         where xxlnw_line = ln_line
-           and xxlnw_site = ln_site
-           and xxlnw_sn  = input xxlnw_sn
-      exclusive-lock no-error.
-
-      if not available xxlnw_det then do:
-         create xxlnw_det.
-         assign
-                xxlnw_line = ln_line
-                xxlnw_site = ln_site
-                xxlnw_sn.
-      end.
-      assign shiftdesc = "".
-      find first code_mstr no-lock where code_fldname = "xxlnw_shift"
-             and code_value = xxlnw_shift no-error.
-      if available code_mstr then do:
-         assign shiftdesc = code_cmmt.
-      end.
-      display
-              xxlnw_sn
-              xxlnw_start
-              xxlnw_end
-              xxlnw_rstmin
-              xxlnw_wktime
-              xxlnw_shift
-              shiftdesc
-      with frame bb.
-
-      set2:
-      do on error undo, retry:
-
-         del-yn = no.
-         ststatus = stline[2].
-         status input ststatus.
-
-         set xxlnw_start
-             xxlnw_end
-             xxlnw_rstmin
-             xxlnw_shift
-         go-on (F5 CTRL-D) with frame bb.
-         assign xxlnw_stime = s2t(xxlnw_start)
+            set xxlnw_Start xxlnw_End xxlnw_rstmin xxlnw_shift
+            with frame bb
+            editing:
+            assign xxlnw_stime = s2t(xxlnw_start)
                 xxlnw_etime = s2t(xxlnw_end).
-         if xxlnw_stime > xxlnw_etime and xxlnw_shift = "N" then do:
-            assign xxlnw_etime = xxlnw_etime + con24h.
-         end.
-         assign xxlnw_wktime =
+           if xxlnw_stime > xxlnw_etime and xxlnw_shift = "N" then do:
+              assign xxlnw_etime = xxlnw_etime + con24h.
+           end.
+            assign xxlnw_wktime =
                 howLong(input (xxlnw_etime - xxlnw_stime - xxlnw_rstmin * 60),
                         input "H").
-         display
-              xxlnw_sn
-              xxlnw_start
-              xxlnw_end
-              xxlnw_rstmin
-              xxlnw_wktime
-              xxlnw_shift
-              shiftdesc
-         with frame bb.
-         if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
-            del-yn = no.
-            /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */
-            /*  DELETING IT.                                                 */
-            hide message.
-            {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
-
-            if del-yn = no then undo set2.
-            else do:
-                delete xxlnw_det.
-                clear frame bb no-pause.
+               ststatus = stline[2].
+               status input ststatus.
+               readkey.
+               /* DELETE */
+               del-yn = no.
+               if lastkey = keycode("F5")
+                  or lastkey = keycode("CTRL-D")
+               then do:
+                  del-yn = yes.
+                  {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
+                  if del-yn then do:
+                     leave.
+                  end.
+               end.
+               else do:
+                  apply lastkey.
+               end.
             end.
-         end.  /* if lastkey */
-
-      end. /* set2 */
-
-      /* RELEASE THE RECORDS TO AVOID DEAD-LOCK SITUATION */
-      release xxlnw_det.
-      status input.
-
+       end.
+     end. /*if keyfunction(lastkey) <> "end-error"  then do on error undo */
+    end. /*if not batchrun then do: */
    end. /* with frame bb */
    release ln_mstr.
 
