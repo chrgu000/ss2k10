@@ -6,6 +6,7 @@
 /* 100716.1  $  BY: mage chen  DATE: 07/16/10    ECO: *P45S*                  */
 /* 100727.1  $  BY: mage chen  DATE: 07/27/10    ECO: *P45S*                  */
 /* 101023.1  $  BY: mage chen  DATE: 10/23/10    ECO: *P45S*                  */
+/* 110511.1  $  BY: zhangyun   DATE: 11/05/11    chg site from pt to icc_ctrl */
 
 /*-Revision end---------------------------------------------------------------*/
 
@@ -17,7 +18,7 @@
 /******************************************************************************/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "101214.1"}
+{mfdtitle.i "110511.1"}
 
 /* STANDARD INCLUDE FOR MAINTENANCE COMPONENTS */
 {pxmaint.i}
@@ -455,16 +456,18 @@ repeat with frame a:
       scroll_loopb:
       do on error undo , retry with frame s:
       empty temp-table tmp_wod no-error.
+      find first icc_ctrl where icc_domain = global_domain no-lock no-error.
       for each wod_det no-lock where wod_det.wod_domain = global_domain and
-              (wod_lot = wo_lot and ((wod_qty_req = 0 and incl_zero_reqd)
-       or (max(wod_qty_req - wod_qty_iss,0) = 0 and incl_zero_open)
-       or  wod_qty_req > wod_qty_iss) and
+              (wod_lot = wo_lot and
+         ((wod_qty_req > 0 or incl_zero_reqd) or
+          ((max(wod_qty_req - wod_qty_iss,0) = 0 and incl_zero_open) or
+            max(wod_qty_req - wod_qty_iss,0) > 0)) and
            (wod_loc = s_wodloc or s_wodloc = "")):
           find first pt_mstr no-lock where pt_domain = global_domain
-                 and pt_part = wod_part and pt_loc = s_wodloc no-error.
+                 and pt_part = wod_part no-error.
           if available pt_mstr then do:
           for each ld_det no-lock where ld_domain = global_domain and
-                   ld_site = pt_site and ld_loc = s_wodloc and
+                   ld_site = icc_site and ld_loc = s_wodloc and
                    ld_part = wod_part:
               accum ld_qty_oh(total).
           end.
@@ -476,7 +479,7 @@ repeat with frame a:
                  twd_nbr = wod_nbr
                  twd_lot = wod_lot
                  twd_part = wod_part
-                 twd_qty_req = wod_qty_req
+                 twd_qty_req = tmpqtyx
                  twd_qty_loc = accum total(ld_qty_oh)
                  twd_qty_act = wod_qty_req - wod_qty_pick
                  twd_desc1   = pt_desc1
@@ -485,7 +488,6 @@ repeat with frame a:
                 end.
           end. /* if avaiable pt_mstr*/
       end.
-
         {swselect.i
          &detfile=tmp_wod
          &scroll-field = twd_nbr

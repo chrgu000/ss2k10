@@ -42,6 +42,7 @@
 /* Revision: 1.13     BY: Katie Hilbert  DATE: 04/01/01 ECO: *P008*         */
 /* Revision: 1.15  BY: Tiziana Giustozzi DATE: 09/16/01 ECO: *N12M* */ /*
 $Revision: 1.17 $ BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00G* */
+/* 110408.1.1  $  BY: mage chen  DATE: 04/08/11    ECO: *P45S*  */
 
 /*-Revision end---------------------------------------------------------------*/
 
@@ -440,6 +441,11 @@ end. /*FOR EACH*/
    end.
    if page-size - line-counter <= 7 then do:
       RUN PAK1.
+      /*ss - 110407.1 -b*/
+      display wo_nbr wo_lot wo_part wod_iss_date wo_due_date
+             wo_des wo_qty wo_um tmp_loc wcdesc
+             with frame picklist.
+/*ss - 110407.1 -e*/
    end.
    assign ldqtyoh = 0.
    find first icc_ctrl where icc_domain = global_domain no-lock no-error.
@@ -460,6 +466,7 @@ end. /*FOR EACH*/
           down with frame ttmp.
       put skip(1).
       setFrameLabels(frame ttmp:handle).
+/*ss - 110407.1 -b*
   if page-size - line-counter <= 8 then do:
      RUN PAK.
      page.
@@ -467,6 +474,7 @@ end. /*FOR EACH*/
              wo_des wo_qty wo_um tmp_loc wcdesc
              with frame picklist.
   end.
+  *ss - 110407.1 -e*/
       linex = linex + 1.
 end.  /* for each tmp */
 
