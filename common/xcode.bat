@@ -23,6 +23,7 @@ copy /y %svn%\xxcomp\xxcompil.p %src%\
 copy /y %svn%\xxmsgiq.p %src%\
 copy /y %svn%\xxlbliq\*.p %src%\
 copy /y %svn%\xxgettab\*.* %src%\
+copy /y %svn%\xxmeiq\*.p %src%\
 
 rem Xcode.
 cd /d %src%
