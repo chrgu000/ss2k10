@@ -25,6 +25,7 @@ copy /y %svn%\xxlbliq\*.p %src%\
 copy /y %svn%\xxgettab\*.* %src%\
 copy /y %svn%\xxmeiq\*.p %src%\
 copy /y %svn%\xxlbldmt\*.p %src%\
+copy /y %svn%\xxflhusr\*.p %src%\
 
 rem Xcode.
 cd /d %src%
