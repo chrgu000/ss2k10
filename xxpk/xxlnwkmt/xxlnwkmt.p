@@ -31,6 +31,7 @@ setFrameLabels(frame a:handle).
 
 form
    xxlnw_sn colon 20
+   xxlnw_on colon 20
    xxlnw_Start   colon 20
    xxlnw_End     at 41
    xxlnw_rstmin  colon 20
@@ -217,6 +218,7 @@ repeat:
                end.
                display
                     xxlnw_sn
+                    xxlnw_on
                     xxlnw_start
                     xxlnw_end
                     xxlnw_rstmin
@@ -257,6 +259,7 @@ repeat:
       end.
       display
               xxlnw_sn
+              xxlnw_on
               xxlnw_start
               xxlnw_end
               xxlnw_rstmin
@@ -272,7 +275,8 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxlnw_start
+         set xxlnw_on
+             xxlnw_start
              xxlnw_end
              xxlnw_rstmin
              xxlnw_shift
@@ -287,6 +291,7 @@ repeat:
                         input "H").
          display
               xxlnw_sn
+              xxlnw_on
               xxlnw_start
               xxlnw_end
               xxlnw_rstmin

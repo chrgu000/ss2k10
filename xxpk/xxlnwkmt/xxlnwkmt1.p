@@ -12,7 +12,7 @@
 define variable sw_reset    like mfc_logical.
 define new shared variable cmtindx     like lnd_cmtindx.
 define variable del-yn as logical.
-define variable shiftdesc like code_cmmt label "COMMENT".
+/* define variable shiftdesc like code_cmmt label "COMMENT". */
 define variable flow      as logical no-undo.
 define variable ln_recid  as recid   no-undo.
 define variable rpc_allow_rate like mfc_logical no-undo.
@@ -31,11 +31,12 @@ setFrameLabels(frame a:handle).
 
 form
    xxlnw_sn format "->>9"
+   xxlnw_on
    xxlnw_Start
    xxlnw_End
    xxlnw_rstmin
-   xxlnw_shift format "x(4)"
-   shiftdesc format "x(6)"
+   xxlnw_shift format "x(8)"
+/*   shiftdesc format "x(6)"   */
    xxlnw_wktime
    with frame bb down width 80 attr-space.
 /* with frame bb side-labels width 80                           */
@@ -201,8 +202,8 @@ repeat:
             xxlnw_det
             xxlnw_linesite
             xxlnw_sn
-            "xxlnw_sn xxlnw_Start xxlnw_End
-            xxlnw_rstmin xxlnw_shift shiftdesc xxlnw_wktime"
+            "xxlnw_sn xxlnw_on xxlnw_Start xxlnw_End
+            xxlnw_rstmin xxlnw_shift xxlnw_wktime"
             xxlnw_sn
             bb
             "xxlnw_line = input ln_line and xxlnw_site = input ln_site"
@@ -244,17 +245,17 @@ repeat:
             end.
 
             find xxlnw_det exclusive-lock where recid(xxlnw_det) = recno.
-            assign shiftdesc = "".
-            find first code_mstr no-lock where code_fldname = "xxlnw_shift"
-                   and code_value = xxlnw_shift no-error.
-            if available code_mstr then do:
-               assign shiftdesc = code_cmmt.
-            end.
-            display xxlnw_sn xxlnw_Start xxlnw_End xxlnw_rstmin xxlnw_shift
-                    shiftdesc xxlnw_wktime
+/*          assign shiftdesc = "".                                           */
+/*          find first code_mstr no-lock where code_fldname = "xxlnw_shift"  */
+/*                 and code_value = xxlnw_shift no-error.                    */
+/*          if available code_mstr then do:                                  */
+/*             assign shiftdesc = code_cmmt.                                 */
+/*          end.                                                             */
+            display xxlnw_sn xxlnw_on xxlnw_Start xxlnw_End xxlnw_rstmin
+                    xxlnw_shift xxlnw_wktime
             with frame bb.
 
-            set xxlnw_Start xxlnw_End xxlnw_rstmin xxlnw_shift
+            set xxlnw_on xxlnw_Start xxlnw_End xxlnw_rstmin xxlnw_shift
             with frame bb
             editing:
             assign xxlnw_stime = s2t(xxlnw_start)
