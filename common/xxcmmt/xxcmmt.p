@@ -1,15 +1,19 @@
-/* xxcmmt.p - PART COMMENTS -copy from gpcmmt.p                              */
-/* REVISION: 0BYP LAST MODIFIED: 11/25/10   BY: zy                           */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION END                                                              */
+/* xxcmmt.p - PART COMMENTS                                                   */
+/*V8:ConvertMode=Maintenance                                                  */
+/************************* REVISION HISTORY ***********************************/
+/* REVISION:111520.1 Create: 05/20/11 BY: zy                                  */
+/* Environment: Progress:10.1B   QAD:eb21sp5    Interface:                    */
+/******************************************************************************/
+/*-Revision:[15YJ]-------------------------------------------------------------
+  Purpose:export nr_mstr record to source code for install to custmer
+  Notes:This version only apply for mfg/pro eb21 or later.
+------------------------------------------------------------------------------*/
+{mfdtitle.i "15YJ" }
 
-/* DISPLAY TITLE */
-{mfdtitle.i "0BYP"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE gpcmmt_p_1 " Master Comments "
-&SCOPED-DEFINE gpcmmt_p_2 " DOMAIN!CODE "
 /* MaxLen: Comment: */
 
 /* ********** End Translatable Strings Definitions ********* */
@@ -18,7 +22,7 @@ define variable del-yn like mfc_logical initial no.
 
 define variable l-value     as character no-undo.
 define variable l-fontvalue as integer   no-undo.
-define variable qad_rsrv as character  no-undo initial "QADRSRV".
+
 
 /* Variable added to perform delete during CIM.
  * Record is deleted only when the value of this variable
@@ -29,8 +33,8 @@ define variable batchdelete as character format "x(1)" no-undo.
 form
    cd_ref      colon 18
    cd_lang     colon 71
-   cd_type     colon 18
-   cd_domain   colon 36 label {&gpcmmt_p_2}
+   cd_domain   colon 18
+   cd_type     colon 42
    batchdelete colon 62
    cd_seq      colon 71
    skip(1)
@@ -76,33 +80,34 @@ repeat with frame a:
 
    display 1 @ cd_seq with frame a.
 
-   prompt-for cd_ref cd_type cd_domain cd_lang cd_seq
+   prompt-for cd_ref cd_domain cd_type cd_lang cd_seq
    /* Prompt for the delete variable in the key frame at the
     * End of the key field/s only when batchrun is set to yes */
    batchdelete no-label when (batchrun)
    editing:
       if frame-field = "cd_ref"
       then do:
-         {mfnp05.i cd_det cd_ref_type  " cd_det.cd_domain = cd_domain and
-         yes "  cd_ref "input cd_ref"}
+         {mfnp05.i cd_det cd_ref_type  " yes "  cd_ref "input cd_ref"}
       end. /* IF frame-field = "cd_ref" */
+      else
+      if frame-field = "cd_domain"
+      then do:
+         {mfnp05.i cd_det cd_ref_type
+            " cd_domain  = input cd_domain "
+            cd_domain "input cd_domain"}
+      end.
       else
       if frame-field = "cd_type"
       then do:
          {mfnp05.i cd_det cd_ref_type
-            " cd_det.cd_domain = cd_domain and cd_ref  = input cd_ref"
+            " cd_ref  = input cd_ref "
             cd_type "input cd_type"}
       end. /* IF frame-field = "cd_type" */
-/*      else                                                     */
-/*      if frame-field = "cd_domain"                             */
-/*      then do:                                                 */
-/*                                                               */
-/*      end. /* IF frame-field = "cd_domain" */                  */
       else
       if frame-field = "cd_lang"
       then do:
          {mfnp05.i cd_det cd_ref_type
-            " cd_det.cd_domain = cd_domain and cd_ref  = input cd_ref and
+              " cd_ref  = input cd_ref and
             cd_type = input cd_type"
             cd_lang "input cd_lang"}
       end. /* IF frame-field = "cd_lang" */
@@ -110,8 +115,8 @@ repeat with frame a:
       if frame-field = "cd_seq"
       then do:
          {mfnp05.i cd_det cd_ref_type
-            " cd_det.cd_domain = cd_domain and cd_ref  = input cd_ref and
-            cd_type = input cd_type
+            " cd_ref  = input cd_ref and
+               cd_type = input cd_type
               and cd_lang = input cd_lang"
             cd_seq "input cd_seq + 1"}
       end. /* IF frame-field = "cd_seq" */
@@ -122,30 +127,31 @@ repeat with frame a:
 
       if recno <> ?
       then do:
-         display cd_ref cd_type cd_lang cd_seq + 1 @ cd_seq
-            cd_det.cd_domain cd_cmmt.
+         display cd_ref cd_domain cd_type cd_lang cd_seq + 1 @ cd_seq
+            cd_cmmt.
       end. /* IF recno <> ? */
    end. /* PROMPT-FOR....EDITING */
 
    find cd_det
-       where cd_det.cd_domain = qad_rsrv and  cd_ref  = input cd_ref
-      and   cd_type = input cd_type
+       where cd_det.cd_domain = input cd_domain
+      and  cd_ref  = input cd_ref
+      and cd_type = input cd_type
       and cd_lang   = input cd_lang
       and cd_seq    = input cd_seq - 1
    exclusive-lock no-error.
    if not available cd_det
    then do:
       {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
-      create cd_det. cd_det.cd_domain = input cd_domain.
+      create cd_det.
       assign
          cd_ref
+         cd_domain
          cd_type
          cd_lang
          cd_seq = input cd_seq - 1.
    end. /* IF NOT AVAILABLE cd_det */
 
-   display cd_ref cd_type cd_lang cd_seq + 1 @ cd_seq cd_cmmt
-           cd_det.cd_domain.
+   display cd_ref cd_domain cd_type cd_lang cd_seq + 1 @ cd_seq cd_cmmt.
 
    assign
       recno = recid(cd_det)
