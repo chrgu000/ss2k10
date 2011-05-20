@@ -163,7 +163,7 @@ repeat with frame a :
           lang
           destpath
   with frame a.
-
+  if fileto = filefrom then assign fileto = fileto + CHR(255).
   DO jj = 1 to 5:
     compilepath[jj] = substring(old_compilepath,
                                 (jj - 1) * compilepathlength + 1,

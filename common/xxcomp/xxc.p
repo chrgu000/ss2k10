@@ -124,6 +124,7 @@ mainLoop:
 repeat:
 do on error undo, retry:
    update destDir xrcDir fileF fileT bpropath lng destdir with Frame z.
+   if fileT = fileF then assign fileT = fileT + hi_char.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
       {mfmsg.i 7656 3}
       next-prompt lng with frame z.
