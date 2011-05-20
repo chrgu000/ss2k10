@@ -21,11 +21,13 @@ copy /y %svn%\xxcomp\xxc.p %src%\
 copy /y %svn%\xxcomp\xxcomp.p %src%\
 copy /y %svn%\xxcomp\xxcompil.p %src%\
 copy /y %svn%\xxmsgiq.p %src%\
-copy /y %svn%\xxlbliq\*.p %src%\
+copy /y %svn%\xxmeiq\*.* %src%\
 copy /y %svn%\xxgettab\*.* %src%\
+copy /y %svn%\xxlbliq\*.p %src%\
 copy /y %svn%\xxmeiq\*.p %src%\
 copy /y %svn%\xxlbldmt\*.p %src%\
 copy /y %svn%\xxflhusr\*.p %src%\
+copy /y %svn%\xxcmmt\*.p %src%\
 
 rem Xcode.
 cd /d %src%
