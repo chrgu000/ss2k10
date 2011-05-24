@@ -1,7 +1,7 @@
-/* xxlnmt.p - Line shift MAINT                                               */
-/* revision: 110422.1   created on: 20110422   by: zhang yun                 */
+/* xxlnwkmt1.p - Line shift MAINT                                            */
+/* revision: 110422.1   created on: 20110422   by: zy                        */
 /*V8:ConvertMode=Maintenance                                                 */
-/* REVISION: 0CYH LAST MODIFIED: 04/22/11   BY: zy                           */
+/* REVISION: 0CYH LAST MODIFIED: 04/22/11      BY: zy                        */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
