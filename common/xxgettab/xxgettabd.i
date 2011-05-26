@@ -14,10 +14,15 @@ e.g.
 RUN "d:\trunk\common\xxgettab.p" "pt_mstr" "CLIPBOARD".
 
 *****************************************************************************/
-
+if sdb = "" then do:
+   create alias dictdb for database qaddb no-error.
+end.
+else do:
+  create alias dictdb for database value(sdb) no-error.
+end.
 for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
-    display _file-name _desc _Tbl-Type _Frozen 
-    			 with frame x side-labels width 254.
+    display _file-name _desc _Tbl-Type _Frozen
+           with frame x side-labels width 254.
     FOR EACH _FIELD OF _FILE BY _ORDER:
      DISPLAY _ORDER _FIELD-NAME _FORMAT _EXTENT _DATA-TYPE _INITIAL _LABEL
              _COL-LABEL _desc WITH WIDTH 254.
