@@ -107,7 +107,7 @@ repeat:
         put unformat fill(" ",12) "nr_valuemask = '" nr_valuemask "'" skip.
 /*EB*/  put unformat fill(" ",12) "nr_domain = global_domain" skip.
         put unformat fill(" ",12) "." skip.
-        put unformat fill(" ",5) "~{mfmsg.i 1107 1~}" skip.
+        put unformat fill(" ",5) "~{mfmsg.i 4171 1~}" skip.
         put unformat "end." skip.
         put unformat "end.  ~/* repeat with frame a: *~/" skip.
         put unformat "status input." skip.

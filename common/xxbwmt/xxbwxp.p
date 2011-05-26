@@ -60,8 +60,11 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name >= browse1
    {gprun.i 'xxbwmta.p' "(input brw_mstr.brw_name,input filename)"}
 END.
 output to value(filename) APPEND.
-put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
-put unformat "status input." skip.
+	 put unformat fill(" ",6) "~{mfmsg.i 4171 1~}"skip.
+	 put unformat fill(" ",7) "pause." skip.
+	 put unformat fill(" ",7) "return." skip.
+	 put unformat "end.  ~/* DO ON ERROR UNDO, RETRY *~/" skip.
+	 put unformat "status input." skip.
 output close.
 
    /* OUTPUT DESTINATION SELECTION */
