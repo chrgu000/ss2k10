@@ -1,80 +1,136 @@
-/* uxptsts.p - VALIDATE/UPDATE PT_STATUS VALIDATION FILE                      */
-/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.6.1.5 $                                                       */
-/*V8:ConvertMode=Report                                                       */
-/* REVISION: 7.3      LAST MODIFIED: 06/26/96    *F0XC  BY: Russ Witt         */
-/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane          */
-/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan         */
-/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan         */
-/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
-/* REVISION: 9.1      LAST MODIFIED: 08/12/00   BY: *N0KC* Mark Brown         */
-/* REVISION: 9.1      LAST MODIFIED: 08/16/00   BY: *N0LL* Dave Caveney       */
-/* REVISION: 9.1      LAST MODIFIED: 08/30/00   BY: *N0QM* Jean Miller        */
-/* $Revision: 1.6.1.5 $  BY: Jean Miller         DATE: 12/14/01  ECO: *P03Q*  */
-/* SS - 081104.1 By: Bill Jiang */
+/* xxmgflh1.p - import program help                                          */
+/*V8:ConvertMode=Report                                                      */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 0BYJ LAST MODIFIED: 05/27/11 BY: zy                             */
+/* REVISION END                                                              */
 
-/* SS - 081104.1 - B */
-/*
-1. 字段帮助装入
-*/
-/* SS - 081104.1 - E */
-
-/******************************************************************************/
-/* All patch markers and commented out code have been removed from the source */
-/* code below. For all future modifications to this file, any code which is   */
-/* no longer required should be deleted and no in-line patch markers should   */
-/* be added.  The ECO marker should only be included in the Revision History. */
-/******************************************************************************/
-
-/* DISPLAY TITLE */
-/* SS - 081104.1 - B */
-/*
-{mfdtitle.i "b+ "}
-*/
-{mfdtitle.i "081104.1"}
-/* SS - 081104.1 - E */
-
-/* ********** Begin Translatable Strings Definitions ********* */
+{mfdtitle.i "15YQ"}
 
 &SCOPED-DEFINE mgbdpro_p_14 "Input File Name"
-/* MaxLen: Comment: */
 
-/* ********** End Translatable Strings Definitions ********* */
-
-define variable file_name as character format "x(20)"
+define variable file_name as character format "x(36)"
    label {&mgbdpro_p_14}.
+define variable l_delete  like mfc_logical   label "Delete"  no-undo.
+
+define variable i as integer.
+define variable beffld as character.
+define variable befpg  as character.
+DEFINE TEMP-TABLE tt1
+       FIELD tt1_lang LIKE flhd_lang
+       FIELD tt1_field LIKE flhd_field
+       FIELD tt1_call_pg LIKE flhd_call_pg
+       FIELD tt1_line LIKE flhd_line
+       FIELD tt1_text LIKE flhd_text
+       INDEX i1 is primary tt1_lang tt1_field tt1_call_pg tt1_line
+       .
 
 form
-   file_name COLON 30
-with frame a side-labels width 80.
+   file_name colon 12 skip(1)
+   l_delete  colon 12
+with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-PAUSE 0.
+form
+   tt1_lang
+   tt1_field
+   tt1_call_pg
+   tt1_line
+   tt1_text
+with frame b side-labels width 132.
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame b:handle).
+
+
+/* Display Utility Information */
+{gpcdget.i "UT"}
 
 repeat:
 
-   /* Display Utility Information */
-   /* SS - 081104.1 - B */
-   /*
-   {gpcdget.i "UT"}
-   */
-   {xxmgflh1gpcdget.i "UT"}
-   /* SS - 081104.1 - E */
+   view frame a.
 
-   update
-      file_name
+   display
+      file_name l_delete
    with frame a.
 
-   IF search(file_name) = ? THEN DO:
+   set
+      file_name l_delete
+   with frame a.
+
+    IF search(file_name) = ? THEN DO:
       /* 找不到文件:# */
       {pxmsg.i &MSGNUM=391 &ERRORLEVEL=3 &MSGARG1=file_name}
       UNDO,RETRY.
    END.
-
    {mfquoter.i file_name }
+    EMPTY TEMP-TABLE tt1 no-error.
+    INPUT FROM VALUE(file_name).
+    REPEAT:
+       CREATE tt1.
+       IMPORT DELIMITER "~011" tt1_lang tt1_field tt1_call_pg tt1_text no-error.
+    END.
+    INPUT CLOSE.
+
+    for each tt1 exclusive-lock by recid(tt1):
+        if tt1_LANG = "" THEN DO:
+           DELETE TT1.
+           NEXT.
+        END.
+        if tt1_field <> beffld or tt1_call_pg <> befpg then do:
+            assign i = 1.
+        end.
+        assign tt1_line = i.
+        assign beffld = tt1_field
+               befpg = tt1_call_pg.
+        i = i + 1.
+    end.
+
+  FOR EACH tt1 NO-LOCK BREAK BY tt1_lang
+     BY tt1_field BY tt1_call_pg BY tt1_line:
+     IF FIRST-OF(tt1_call_pg) THEN DO:
+        FIND FIRST flhm_mst WHERE flhm_lang = tt1_lang AND
+                   flhm_field = tt1_field AND flhm_call_pg = tt1_call_pg
+             NO-LOCK NO-ERROR.
+        IF NOT AVAILABLE flhm_mst THEN DO:
+           CREATE flhm_mst.
+           ASSIGN
+              flhm_lang = tt1_lang
+              flhm_field = tt1_field
+              flhm_call_pg = tt1_call_pg
+              .
+        END.
+        assign i = 1.
+        if l_delete then do:
+           FOR EACH flhd_det WHERE flhd_lang = tt1_lang AND
+                    flhd_field = tt1_field AND
+                    flhd_call_pg = tt1_call_pg AND
+                    flhd_type = "user":
+              DELETE flhd_det.
+           END.
+        end.
+        else do:
+          find last flhd_det WHERE flhd_lang = tt1_lang AND
+                    flhd_field = tt1_field AND
+                    flhd_call_pg = tt1_call_pg no-error.
+          if available flhd_det then do:
+             assign i = flhd_line + 1.
+          end.
+        end.
+     END. /* IF FIRST-OF(tt1_call_pg) THEN DO: */
+
+     CREATE flhd_det.
+     ASSIGN
+        flhd_lang = tt1_lang
+        flhd_field = tt1_field
+        flhd_call_pg = tt1_call_pg
+        flhd_type = "user"
+        flhd_line = i
+        flhd_text = tt1_text
+        .
+        i = i + 1.
+  END.
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "printer"
@@ -92,14 +148,11 @@ repeat:
                &defineVariables = "yes"}
    {mfphead.i}
 
-   REPEAT:
-      {gprun.i ""xxmgflh1a.p"" "(
-         INPUT FILE_name
-         ")}
+for each tt1 no-lock with frame b:
+    display tt1.
+end.
 
-      LEAVE.
-   END.
-
+   /* REPORT TRAILER */
    {mfrtrail.i}
 
-end.              /* END REPEAT   */
+end. /* REPEAT */
