@@ -51,6 +51,12 @@ repeat:
 
    view frame a.
 
+   find first qad_wkfl no-lock where qad_domain = global_domain
+        and qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
+   if available qad_wkfl then do:
+     assign file_name = qad_charfld[1]
+            l_delete = qad_logfld[1].
+   end.
    display
       file_name l_delete
    with frame a.
@@ -64,6 +70,22 @@ repeat:
       {pxmsg.i &MSGNUM=391 &ERRORLEVEL=3 &MSGARG1=file_name}
       UNDO,RETRY.
    END.
+
+   find first qad_wkfl exclusive-lock where qad_domain = global_domain
+        and qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
+   if available qad_wkfl then do:
+      assign qad_charfld[1] = file_name
+             qad_logfld[1] = l_delete.
+   end.
+   else do:
+        create qad_wkfl.
+        assign qad_domain = global_domain
+               qad_key1 = execname
+               qad_key2 = global_userid
+               qad_charfld[1] = file_name
+               qad_logfld[1] = l_delete.
+   end.
+
    {mfquoter.i file_name }
     EMPTY TEMP-TABLE tt1 no-error.
     INPUT FROM VALUE(file_name).

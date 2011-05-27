@@ -37,7 +37,8 @@ repeat:
 
    if c-application-mode <> 'web' then
       update lang field_from field_to pgm_from pgm_to with frame a.
-
+   IF FIELD_to = field_from then assign field_to = field_to + hi_char.
+   IF pgm_to = pgm_from then assign pgm_to = pgm_to + hi_char.
    {wbrp06.i &command = update
              &fields = " lang field_from field_to pgm_from pgm_to"
              &frm = "a"}
