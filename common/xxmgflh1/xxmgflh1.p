@@ -96,7 +96,8 @@ repeat:
     INPUT CLOSE.
 
     for each tt1 exclusive-lock by recid(tt1):
-        if tt1_LANG = "" THEN DO:
+        if tt1_LANG = "" or 
+        	 not can-find(first lng_mstr where lng_lang = tt1_lang)THEN DO:
            DELETE TT1.
            NEXT.
         END.
