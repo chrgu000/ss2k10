@@ -1,4 +1,4 @@
-/* xxmgflh1.p - import program help                                          */
+/* xxmgflh1.p - FIELD HELP TEXT Import                                       */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 0BYJ LAST MODIFIED: 05/27/11 BY: zy                             */
@@ -25,8 +25,8 @@ DEFINE TEMP-TABLE tt1
        .
 
 form
-   file_name colon 12 skip(1)
-   l_delete  colon 12
+   file_name colon 16 skip(1)
+   l_delete  colon 16
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
