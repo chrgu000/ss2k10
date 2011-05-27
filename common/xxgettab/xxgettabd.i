@@ -21,11 +21,11 @@ else do:
   create alias dictdb for database value(sdb) no-error.
 end.
 for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
-    display _file-name _desc _Tbl-Type _Frozen
+    display _file-name _file._desc _Tbl-Type _Frozen
            with frame x side-labels width 254.
     FOR EACH _FIELD OF _FILE BY _ORDER:
      DISPLAY _ORDER _FIELD-NAME _FORMAT _EXTENT _DATA-TYPE _INITIAL _LABEL
-             _COL-LABEL _desc WITH WIDTH 254.
+             _COL-LABEL _field._desc WITH WIDTH 254.
     END.
     FOR EACH _index WHERE _index._file-recid = RECID(_file):
       FOR EACH _index-field NO-LOCK WHERE
@@ -44,7 +44,7 @@ for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     END.
     FOR EACH _FIELD OF _FILE where
        (_FIELD._Valexp <> "" and _FIELD._Valexp <> ?) BY _ORDER:
-        DISPLAY _ORDER _FIELD-NAME _FIELD._Valexp _FIELD._Valmsg
+        DISPLAY _ORDER _FIELD-NAME _FIELD._Valexp format "x(120)" _FIELD._Valmsg
                 WITH WIDTH 254.
     END.
 end.
