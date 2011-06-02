@@ -212,15 +212,25 @@ for each xxsod_det
     v_time_f  = if xtime(xxsod_due_time1) < 10 * 60 * 60 then ""
               else string(xtime(xxsod_due_time1) - 80 * 60,"HH:MM")
     .
-/*                                                                             */
-/*    find first xxcased_det no-lock where xxcased_part = xxsod_part no-error. */
-/*    if available xxcased_det then do:                                        */
-/*       assign v_qty_case = xxcased_qty_per.                                  */
-/*    end.                                                                     */
-/*    else do:                                                                 */
-/*       assign v_qty_case = 0.                                                */
-/*    end.                                                                     */
-/*                                                                             */
+/*                                                                           */
+/*  find first xxcased_det no-lock where xxcased_part = xxsod_part no-error. */
+/*  if available xxcased_det then do:                                        */
+/*     assign v_qty_case = xxcased_qty_per.                                  */
+/*  end.                                                                     */
+/*  else do:                                                                 */
+/*     assign v_qty_case = 0.                                                */
+/*  end.                                                                     */
+/*
+                                                                     */
+    /*  容器数量 = 部品数量 / 台车包装数 */
+    find first pt_mstr no-lock where pt_part = v_part no-error.
+    if available pt_mstr and pt_ship_wt <> 0 then do:
+       assign v_qty_case = xxsod_qty_ord / pt_ship_wt.
+    end.
+    else do:
+       assign v_qty_case = 0.
+    end.
+
     export delimiter "~011"
         xxsod_cust
         xxsod_due_date1
