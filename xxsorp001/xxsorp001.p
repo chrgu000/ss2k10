@@ -7,7 +7,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*ע�⣺cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110314.1"}
+{mfdtitle.i "110607.1"}
 define var v_prgname like execname no-undo.
 
 
