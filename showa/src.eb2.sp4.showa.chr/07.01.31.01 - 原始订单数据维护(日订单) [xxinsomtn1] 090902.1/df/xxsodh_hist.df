@@ -1,0 +1,190 @@
+ADD TABLE "xxsodh_hist"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxsodh_hist"
+
+ADD FIELD "xxsodh_nbr" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "销售订单"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售订单"
+  ORDER 10
+
+ADD FIELD "xxsodh_line" OF "xxsodh_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "项"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "项"
+  ORDER 20
+
+ADD FIELD "xxsodh_part" OF "xxsodh_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "项目号"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "项目号"
+  ORDER 30
+
+ADD FIELD "xxsodh_date" OF "xxsodh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "日期"
+  ORDER 40
+
+ADD FIELD "xxsodh_time" OF "xxsodh_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "时间"
+  POSITION 6
+  SQL-WIDTH 4
+  COLUMN-LABEL "时间"
+  ORDER 50
+
+ADD FIELD "xxsodh_userid" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "用户"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "用户"
+  ORDER 60
+
+ADD FIELD "xxsodh_type" OF "xxsodh_hist" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "类型"
+  POSITION 8
+  SQL-WIDTH 8
+  COLUMN-LABEL "类型"
+  ORDER 70
+
+ADD FIELD "xxsodh_due_date" OF "xxsodh_hist" AS character 
+  FORMAT "x(11)"
+  INITIAL ""
+  LABEL "改变前日期"
+  POSITION 9
+  SQL-WIDTH 22
+  COLUMN-LABEL "改变前日期"
+  ORDER 80
+
+ADD FIELD "xxsodh_due_time" OF "xxsodh_hist" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "改变前时间"
+  POSITION 10
+  SQL-WIDTH 10
+  COLUMN-LABEL "改变前世界"
+  ORDER 90
+
+ADD FIELD "xxsodh_due_date1" OF "xxsodh_hist" AS character 
+  FORMAT "x(11)"
+  INITIAL ""
+  LABEL "改变后日期"
+  POSITION 11
+  SQL-WIDTH 22
+  COLUMN-LABEL "改变后日期"
+  ORDER 100
+
+ADD FIELD "xxsodh_due_time1" OF "xxsodh_hist" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "改变后日期"
+  POSITION 12
+  SQL-WIDTH 10
+  COLUMN-LABEL "改变后日期"
+  ORDER 110
+
+ADD FIELD "xxsodh_qty_ord" OF "xxsodh_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "改变前数量"
+  POSITION 13
+  SQL-WIDTH 19
+  COLUMN-LABEL "改变前数量"
+  DECIMALS 4
+  ORDER 120
+
+ADD FIELD "xxsodh_qty_ord1" OF "xxsodh_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "改变后数量"
+  POSITION 14
+  SQL-WIDTH 20
+  COLUMN-LABEL "改变后数量"
+  DECIMALS 5
+  ORDER 130
+
+ADD FIELD "xxsodh_rmks" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "rmks"
+  POSITION 15
+  SQL-WIDTH 16
+  COLUMN-LABEL "rmks"
+  ORDER 140
+
+ADD FIELD "xxsodh_nbr1" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "销售订单"
+  POSITION 16
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售订单"
+  ORDER 150
+
+ADD FIELD "xxsodh_line1" OF "xxsodh_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "项"
+  POSITION 17
+  SQL-WIDTH 4
+  COLUMN-LABEL "项"
+  ORDER 160
+
+ADD FIELD "xxsodh_cust" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "客户"
+  POSITION 18
+  SQL-WIDTH 16
+  COLUMN-LABEL "客户"
+  ORDER 170
+
+ADD FIELD "xxsodh_project" OF "xxsodh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "项目"
+  POSITION 19
+  SQL-WIDTH 16
+  COLUMN-LABEL "项目"
+  ORDER 180
+
+ADD FIELD "xxsodh_week" OF "xxsodh_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "序号"
+  POSITION 20
+  SQL-WIDTH 4
+  COLUMN-LABEL "序号"
+  ORDER 190
+
+ADD INDEX "xxsodh_part" ON "xxsodh_hist" 
+  AREA "TRANSACTION_IDX"
+  PRIMARY
+  INDEX-FIELD "xxsodh_date" ASCENDING 
+  INDEX-FIELD "xxsodh_time" ASCENDING 
+  INDEX-FIELD "xxsodh_cust" ASCENDING 
+  INDEX-FIELD "xxsodh_part" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003563

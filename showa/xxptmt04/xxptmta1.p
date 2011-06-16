@@ -138,6 +138,8 @@ do transaction on endkey undo, leave:
       pt_break_cat
       pt_promo
       pt__chr01
+      pt__chr09
+      pt__chr10
    with frame a1.
 
    assign
@@ -168,6 +170,8 @@ do transaction on endkey undo, leave:
          pt_drwg_size
          pt_break_cat
          pt__chr01
+         pt__chr09
+         pt__chr10
       with frame a1 no-validate.
 
       /* VALIDATE PRODUCT LINE */
