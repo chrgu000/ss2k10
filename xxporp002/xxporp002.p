@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*ע�⣺cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110314.1"}
+{mfdtitle.i "110620.1"}
 &SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable effdate  like tr_effdate no-undo label "DUE_DATE".
@@ -98,13 +98,13 @@ for each pod_det no-lock where pod_due_date = effdate and
     assign qty_ord = qty_ord + pod_qty_ord
            qty_rcvd = qty_rcvd + pod_qty_rcvd.
     if last-of(pod_part) then do:
-       assign vprice = 0.
-       find first vd_mstr no-lock where vd_addr = po_vend no-error.
-       find first vp_mstr no-lock where
-                vp_vend = po_vend and vp_part = pod_part no-error.
-       if available vp_mstr then do:
-          assign vprice = vp__dec01.
-       end.
+       assign vprice = pt__qad18.
+       find first vd_mstr no-lock where vd_addr = po_vend no-error.         
+/*       find first vp_mstr no-lock where                                    */
+/*                vp_vend = po_vend and vp_part = pod_part no-error.         */
+/*       if available vp_mstr then do:                                       */
+/*          assign vprice = vp__dec01.                                       */
+/*       end.                                                                */
        export Delimiter "~t" xdate2c(effdate) po_vend vd_sort pod_part
               qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice.
     end.
