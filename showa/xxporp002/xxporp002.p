@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*ע�⣺cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110314.1"}
+{mfdtitle.i "110621.1"}
 &SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable effdate  like tr_effdate no-undo label "DUE_DATE".
@@ -88,7 +88,9 @@ for each pod_det no-lock where pod_due_date = effdate and
          pod_stat <> "X" and pod_stat <> "C"
    ,each po_mstr no-lock where po_nbr = pod_nbr and
          po_vend >= vend and po_vend <= vend1
-   ,each pt_mstr fields(pt_part pt_ord_mult pt__dec01) no-lock
+   ,each code_mstr no-lock where code_fldname = "xxporp002.vdlist" and
+   			 code_value = po_vend
+   ,each pt_mstr fields(pt_part pt_ord_mult pt__dec01 pt__qad18) no-lock
    where pt_part = pod_part
     break by po_vend by pod_part:
     if first-of(pod_part) then do:
@@ -98,13 +100,13 @@ for each pod_det no-lock where pod_due_date = effdate and
     assign qty_ord = qty_ord + pod_qty_ord
            qty_rcvd = qty_rcvd + pod_qty_rcvd.
     if last-of(pod_part) then do:
-       assign vprice = 0.
-       find first vd_mstr no-lock where vd_addr = po_vend no-error.
-       find first vp_mstr no-lock where
-                vp_vend = po_vend and vp_part = pod_part no-error.
-       if available vp_mstr then do:
-          assign vprice = vp__dec01.
-       end.
+       assign vprice = pt__qad18.
+       find first vd_mstr no-lock where vd_addr = po_vend no-error.         
+/*       find first vp_mstr no-lock where                                    */
+/*                vp_vend = po_vend and vp_part = pod_part no-error.         */
+/*       if available vp_mstr then do:                                       */
+/*          assign vprice = vp__dec01.                                       */
+/*       end.                                                                */
        export Delimiter "~t" xdate2c(effdate) po_vend vd_sort pod_part
               qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice.
     end.

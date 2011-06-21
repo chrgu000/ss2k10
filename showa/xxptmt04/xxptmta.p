@@ -521,7 +521,7 @@ repeat:
 
                pt_part_type pt_status
                pt_break_cat
-               pt_promo pt__chr01 pt__chr09 pt__chr10
+               pt_promo pt__chr01 pt__chr09 pt__chr10 pt__qad18
             with frame a1.
 
             if ppform = "" or ppform = "b" then do:
