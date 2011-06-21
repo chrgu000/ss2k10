@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 /*ע�⣺cim-showa.xla vba project password:rogercimshowa                     */
 
-{mfdtitle.i "110620.1"}
+{mfdtitle.i "110621.1"}
 &SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable effdate  like tr_effdate no-undo label "DUE_DATE".
@@ -88,7 +88,9 @@ for each pod_det no-lock where pod_due_date = effdate and
          pod_stat <> "X" and pod_stat <> "C"
    ,each po_mstr no-lock where po_nbr = pod_nbr and
          po_vend >= vend and po_vend <= vend1
-   ,each pt_mstr fields(pt_part pt_ord_mult pt__dec01) no-lock
+   ,each code_mstr no-lock where code_fldname = "xxporp002.vdlist" and
+   			 code_value = po_vend
+   ,each pt_mstr fields(pt_part pt_ord_mult pt__dec01 pt__qad18) no-lock
    where pt_part = pod_part
     break by po_vend by pod_part:
     if first-of(pod_part) then do:
