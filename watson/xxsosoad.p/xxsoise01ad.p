@@ -78,17 +78,10 @@ define output parameter l_rej like mfc_logical no-undo.
 
 /* SS - 20081112.1 - B */
 DEFINE SHARED VARIABLE vv_location LIKE sr_loc .
-DEFINE NEW SHARED VARIABLE v_flag AS LOGICAL .
-v_flag = NO .
-
-/*
-MESSAGE "1 " + vv_location VIEW-AS ALERT-BOX.
-*/
-
 /* SS - 20081112.1 - E */
 
 define new shared variable back_site like sr_site.
-define new shared variable transtype as character initial "iss-wo".
+define new shared variable transtype as character initial "ISS-FAS".
 define new shared variable parent_assy like pts_par.
 define new shared variable part like wod_part.
 define new shared variable wopart_wip_acct like pl_wip_acct.
@@ -179,6 +172,11 @@ define shared temp-table compute_ldd no-undo
    field compute_lineid like sr_lineid
    index compute_index compute_site compute_item
          compute_loc   compute_lot  compute_ref .
+
+/* SS - 20081127.1 - B */
+DEFINE NEW SHARED VARIABLE v_flag AS LOGICAL.
+v_flag = NO .
+/* SS - 20081127.1 - E */
 
 /* SS - 20081202.1 - B */
 DEF VAR v_sr_qty LIKE sr_qty .
@@ -350,11 +348,6 @@ repeat on error undo, retry:
       */
       BACK_loc = vv_location .
       filter_loc = vv_location.
-
-      /*
-      MESSAGE "2 " + filter_loc VIEW-AS ALERT-BOX.
-        */
-
       if c-application-mode = "API" then
          assign
             {mfaiset.i back_loc ttSoShipDet.ed_back_loc}
@@ -456,7 +449,7 @@ repeat on error undo, retry:
          end. /* FOR EACH compute_ldd */
 
          delete sr_wkfl.
-      end. /* FOR EACH    */
+      end. /* FOR EACH sr_wkfl */
 
       for each lotw_wkfl  where lotw_wkfl.lotw_domain = global_domain and
       lotw_mfguser = mfguser
@@ -574,8 +567,8 @@ repeat on error undo, retry:
       if pick_logic then do:
          display-messages = true.
          /* SS - 20081113.1 - B */
-         {gprun.i ""xxsoise02.p""}
-
+         {gprun.i ""xxsoise02ad.p""}
+         
          /* SS - 20081202.1 - B */
          v_sr_qty = 0.            
          FOR EACH ttsr :
@@ -643,7 +636,7 @@ repeat on error undo, retry:
                   .
          END.
          /* SS - 20081202.1 - E */
-
+         
          IF v_flag THEN DO:
             for each sr_wkfl
                where sr_wkfl.sr_domain           = global_domain
@@ -651,6 +644,7 @@ repeat on error undo, retry:
             exclusive-lock:
                delete sr_wkfl .
             end.  /* FOR EACH sr_wkfl */
+
          END.
          /* SS - 20081113.1 - E */
       end.
@@ -679,7 +673,7 @@ repeat on error undo, retry:
             no-lock: end.
 
             {gprun.i ""icedit2.p""
-               "(input ""iss-wo"",
+               "(input ""ISS-FAS"",
                  input back_site,
                  input pk_loc,
                  input pk_part,
@@ -694,10 +688,7 @@ repeat on error undo, retry:
             if rejected
             then do on endkey undo mainloop, retry mainloop:
                any_rejected = yes.
-/*15YF*/         find first pt_mstr no-lock where pt_domain = global_domain and
-/*15YF*/                    pt_part = pk_part no-error.
-/*15YF*/         {pxmsg.i &MSGNUM=358 &ERRORLEVEL=3 &MSGARG1=pt_status}
-/*15YF*         {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}         */
+               {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}
                /* SS - 20081127.1 - B */
                v_flag = YES .
                for each sr_wkfl
@@ -706,8 +697,8 @@ repeat on error undo, retry:
                exclusive-lock:
                   delete sr_wkfl .
                end.  /* FOR EACH sr_wkfl */
+               UNDO,RETRY.
                /* SS - 20081127.1 - E */
-               PAUSE .
                next.
             end.
 
@@ -1182,7 +1173,7 @@ repeat on error undo, retry:
                         else do with frame d:
 
                            {gprun.i ""icedit.p""
-                              "(input ""iss-wo"",
+                              "(input ""ISS-FAS"",
                                 input site,
                                 input location,
                                 input pk_part,
@@ -1204,7 +1195,7 @@ repeat on error undo, retry:
                                  trans_um = pt_um.
 
                               {gprun.i ""icedit4.p""
-                                 "(input ""iss-wo"",
+                                 "(input ""ISS-FAS"",
                                    input sod_site,
                                    input site,
                                    input pt_loc,
@@ -1291,8 +1282,9 @@ repeat on error undo, retry:
                   and   sr_userid =  mfguser
                   and   sr_lineid  begins (string(sod_line) + "ISS" + pk_part) :
 
-                  /* SS - 20081226.1 - B */
-                  {gprun.i ""xxrcinvchk.p""
+                  /* SS - 20081127.1 - B */
+                    /*
+                  {gprun.i ""rcinvchk.p""
                      "(input  pk_part,
                        input  sr_site,
                        input  sr_loc,
@@ -1302,7 +1294,19 @@ repeat on error undo, retry:
                        input  string(recid(sr_wkfl)),
                        input  no,
                        output l_undo)"}
-                  /* SS - 20081226.1 - E */
+                  */
+
+                  {gprun.i ""xxrcinvchkad.p""
+                     "(input  pk_part,
+                       input  sr_site,
+                       input  sr_loc,
+                       input  sr_lotser,
+                       input  sr_ref,
+                       input  sr_qty ,
+                       input  string(recid(sr_wkfl)),
+                       input  no,
+                       output l_undo)"}
+                  /* SS - 20081127.1 - E */
 
                   if  l_undo = yes
                   then do:

@@ -26,6 +26,12 @@
 /*V8:ConvertMode=Maintenance                                                  */
 /* (from icpkall.p) */
 
+/* SS - 20081127.1 - B */
+/*
+ISS-WO ==>> ISS-FAS
+*/
+/* SS - 20081127.1 - E */
+                      
 {mfdeclre.i}
 
 define shared variable back_site like sr_site.
@@ -34,11 +40,6 @@ define shared variable filter_loc like ld_loc.
 define shared variable filter_status like is_status.
 define shared variable filter_expire like ld_expire.
 define shared variable display-messages as logical no-undo.
-
-/* SS - 20081127.1 - B */
-DEFINE SHARED VARIABLE v_flag AS LOGICAL .
-v_flag = NO .
-/* SS - 20081127.1 - E */
 
 define variable rejected like mfc_logical no-undo.
 define variable found_reject like mfc_logical no-undo.
@@ -138,7 +139,7 @@ no-lock:
       exclusive-lock no-error.
 
       {gprun.i ""icedit2.p""
-         "(input ""ISS-WO"",
+         "(input ""ISS-FAS"",
            input back_site,
            input pk_loc,
            input pk_part,
@@ -153,7 +154,12 @@ no-lock:
            output rejected)"}
 
       if rejected then do:
+         /* SS - 20081127.1 - B */
+         /*
          found_reject = yes.
+         */
+         found_reject = NO.
+         /* SS - 20081127.1 - E */
       end.
 
       else do:
@@ -176,14 +182,7 @@ no-lock:
 
    if found_reject then do on endkey undo, retry:
       if display-messages then do:
-/*15YF*/         find first pt_mstr no-lock where pt_domain = global_domain and
-/*15YF*/                    pt_part = pk_part no-error.
-/*15YF*/         {pxmsg.i &MSGNUM=358 &ERRORLEVEL=3 &MSGARG1=pt_status}
-/*15YF*         {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}         */ 
-         /* SS - 20081127.1 - B */
-         v_flag = YES .
-         /* SS - 20081127.1 - E */
-         PAUSE .
+         {pxmsg.i &MSGNUM=161 &ERRORLEVEL=2 &MSGARG1=pk_part}
       end.
       any_rejected = yes.
    end.

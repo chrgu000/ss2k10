@@ -1,7 +1,7 @@
 /* sosois.p - SALES ORDER SHIPMENT WITH SERIAL NUMBERS                        */
 /* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.7.2.3 $                                                       */
+/* $Revision: 1.7.2.3 $                                                               */
 /*                                                                            */
 /* REVISION: 6.0      LAST MODIFIED: 03/14/90   BY: emb *D002*                */
 /* REVISION: 6.0      LAST MODIFIED: 03/14/90   BY: WUG *D002*                */
@@ -76,12 +76,13 @@
 /* REVISION: 9.1      LAST MODIFIED: 08/12/00   BY: *N0KN* myb                */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Revision: 1.7.2.2    BY: John Corda           DATE: 08/12/02  ECO: *N1QP*  */
-/* $Revision: 1.7.2.3 $ BY: Dorota Hohol   DATE: 02/25/03  ECO: *P0N6* */
-/* $Revision: 1.7.2.3 $ BY: Micho Yang DATE: 08/23/08  ECO: *SS - 20080823.1* */
-/* $Revision: 1.7.2.3 $ BY: Micho Yang DATE: 11/14/08  ECO: *SS - 20081114.1* */
-/* $Revision: 1.7.2.3 $ BY: Micho Yang DATE: 11/18/08  ECO: *SS - 20081118.1* */
-/* $Revision: 1.7.2.3 $ BY: Micho Yang DATE: 11/20/08  ECO: *SS - 20081120.1* */
-/* $Revision: 1.7.2.3 $ BY: Micho Yang DATE: 11/27/08  ECO: *SS - 20081127.1* */
+/* $Revision: 1.7.2.3 $   BY: Dorota Hohol   DATE: 02/25/03  ECO: *P0N6* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 08/23/08  ECO: *SS - 20080823.1* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 10/27/08  ECO: *SS - 20081027.1* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 11/14/08  ECO: *SS - 20081114.1* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 11/18/08  ECO: *SS - 20081118.1* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 11/20/08  ECO: *SS - 20081120.1* */
+/* $Revision: 1.7.2.3 $   BY: Micho Yang         DATE: 11/27/08  ECO: *SS - 20081127.1* */
 /* SS - 20081202.1 By: Micho Yang */
 /* SS - 20081205.1 By: Micho Yang */
 /* SS - 20081208.1 By: Micho Yang */
@@ -94,8 +95,18 @@
 /* SS - 20090303.1 By: Micho Yang */
 /* SS - 20090304.1 By: Micho Yang */
 /* SS - 20090305.1 By: Micho Yang */
-/* SS - 20090606.1 By: Micho Yang */
-/* $Revision: 1.100.1.5 $  BY: zy                 DATE: 05/16/11  ECO: *15YF* */                                    
+/* SS - 20090721.1 update By: Micho Yang                          */
+/*ss - 101124.1 by ken */
+/*
+  FIX When input second Loading, if input not existed line no, the program will abnormally abort to menu screen
+*/
+
+/* SS - 20090721.1 - B */
+/*
+取消 fill_all = yes
+*/
+/* SS - 20090721.1 - E */                                    
+                                    
 /*                                                                            */
 /*V8:ConvertMode=Maintenance                                                  */
 /******************************************************************************/
@@ -104,54 +115,6 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
-/* SS - 100813.1 By: Bill Jiang */
-/* SS - 100817.1 By: Bill Jiang */
-/* SS - 101124.1 By: Ken chen */
-/*
-  FIX line not avail , exit programm 
-*/
-
-/* SS - 100817.1 - RNB
-[100817.1]
-
-Pls check with attachment about loading in different UM.
-
-Stock have 20.125 CS
-
-1 CS = 24 PC
-
- 
-
-Now load 4 CS & 23 PC, it shows Error: Insufficient quantity availble to be consumed as attached.
-
-[100817.1]
-
-SS - 100817.1 - RNE */
-
-/* SS - 100813.1 - RNB
-[100813.1]
-
-Sales Order Loading problem 
-a. some sales order cannot load line 801 to 814(happened on Live data) 
-b. loading bundle problem (missing one of the item in bundle)
-
-[100813.1]
-
-SS - 100813.1 - RNE */
-
-/* SS - 20090606.1 - B */
-/*
-Issue: when fill_all = ‘Yes’, shipment of Config item is incorrect & other item stock checking is incorrect.
-should check based on config detail items/items against site/location/seriallot/reference of shipment data
-a. provide 'Invalid Line' window to list: 
-     Ln, Item#, UM, Qty B/O, QtyAvail, UOM/Conv, Message#
-Message#: 208 (insufficient stock) 
-          4982 (Unmatched UOM Conversion)
-b. set QtyChg = 0 for Insufficient Stock
-c. Display QtyChg in details window when user scroll down thru line#, so that user can update those item with Qty = 0
-*/
-/* SS - 20090606.1 - E */
 
 /* SS - 20090305.1 - B */
 /*
@@ -166,7 +129,7 @@ c. Display QtyChg in details window when user scroll down thru line#, so that us
 global_site  问题
 */
 /* SS - 20090304.1 - E */
-                
+
 /* SS - 20090303.1 - B */
 /*
 单位换算时，小数尾差的问题  （xxsosoisd.p)
@@ -183,7 +146,7 @@ Case 2: SO UM <> item UM & conv.factor not match
 ERROR 4982 No unit of measure conversion exists for measurement
 */   
 /* SS - 20090226.1 - E */
-
+                      
 /* SS - 20090223.1 - B */
 /*
 Allow update Bill-To with same update logic in xxsosomt
@@ -197,7 +160,7 @@ xxsosois/xxsosoun/xxsosorc/xxsosoad
 especially for Gas station order.
 */
 /* SS - 20090223.1 - E */
-              
+
 /* SS - 20090114.1 - B */
 /*
 不准許通過客戶 Type:X 
@@ -207,7 +170,7 @@ cm_type = "X"
 
 /* SS - 20081226.1 - B */
 /*
-取消ld_det的exclusive-lock 
+ldd_det 
 */
 /* SS - 20081226.1 - E */
 
@@ -216,7 +179,7 @@ cm_type = "X"
 a.effective date must > postdate
 */
 /* SS - 20081219.1 - E */
-
+                         
 /* SS - 20081215.1 - B */
 /*
 显示 tr_user1 和 tr_user2
@@ -225,10 +188,10 @@ a.effective date must > postdate
 
 /* SS - 20081208.1 - B */
 /*
-98 xxsoso* 1  1. only allow integer qty  New 2008/12/5 phone Micho by Tommy
+98              xxsoso*         1               1. only allow integer qty               New             2008/12/5 phone Micho by Tommy
 */
 /* SS - 20081208.1 - E */
-                         
+
 /* SS - 20081205.1 - B */
 /* 
 取消 四舍五入的警告    sosoisc.p soistr12.p
@@ -243,14 +206,14 @@ Add ONE more checking for DN ID & Rtn#
   */
 /* SS - 20081202.1 - E */  
 
-/* SS - 20081120.1 - B */
+/* SS - 20081127.1 - B */
 /*
 1. not allow update bill-to & ship-to
 2. header location : not allow blank,and check security from 3.24.24
 3. not allow update item location
 */
-/* SS - 20081120.1 - E */
-                         
+/* SS - 20081127.1 - E */
+
 /* SS - 20081120.1 - B */
 /*
 保留订单中的数量(tr__dec01)和单位(tr__chr01)
@@ -266,10 +229,25 @@ New Request:
 
 /* SS - 20081114.1 - B */
 /* 
-配置产品问题
+新增了配置产品的处理
 */
 /* SS - 20081114.1 - E */
 
+/* SS - 20081027.1 - B */
+/*
+Another feedback from user testing, if possible when Qty ordered = 0,      
+do not show following warning                                              
+(note that we will import zero Qty ordered for empty bottle & plastic crate)
+622
+ WARNING: Qty shipped + Qty to ship is greater than Qty ordered.            
+(in xxsosois & xxsosoun)                                                    
+90002
+ WARNING: 90002 - Qty returned + Qty to return is greater than Qty ordered.
+(in xxsosorc & xxsosoad)
+*/
+/* SS - 20081027.1 - E */
+
+                         
 /* SS - 20080823.1 - B */
 /*
 仅适用于非指定"Category[sod_order_category]"的行
@@ -296,17 +274,14 @@ New Request:
 */                                                                          
 /* SS - 20080823.1 - E */
 
+
+/* SS - 101124.1 B*/
 /*
 {mfdtitle.i "090721.1"}
 */
+{mfdtitle.i "101124.1"}
+/* SS - 101124.1 E*/
 
-/*ss -101124.1 b*/
-/*
-{mfdtitle.i "100817.1"}
-*/
-/* {mfdtitle.i "101124.3"} */
-{mfdtitle.i "110516.2"}
-/*ss -101124.1 e*/
 {cxcustom.i "SOSOIS.P"}
 {sosois1.i new}
 
@@ -320,16 +295,6 @@ New Request:
 
 sorec = fssoship.
 
-/* Licensecheck */ define variable vdays as integer.
-/* Licensecheck */ assign vdays = date(6,19,2011) - today.
-/* Licensecheck */ if vdays < 0 then do:
-/* Licensecheck */     {pxmsg.i &MSGNUM=2696 &ERRORLEVEL=2}
-/* Licensecheck */     pause.
-/* Licensecheck */     RETURN.
-/* Licensecheck */ end.
-/* Licensecheck */ if vdays <= 5 then do:
-/* Licensecheck */      {pxmsg.i &MSGNUM=2697 &MSGARG1=vdays &ERRORLEVEL=2}
-/* Licensecheck */ end.
 /* SS - 20080823.1 - B */
-{gprun.i ""xxsosoism.p""}
+{gprun.i ""xxsosoismun.p""}
 /* SS - 20080823.1 - E */

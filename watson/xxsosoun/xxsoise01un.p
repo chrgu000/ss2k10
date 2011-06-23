@@ -64,6 +64,7 @@
 /******************************************************************************/
 /*V8:ConvertMode=Maintenance                                                  */
 /* DISPLAY TITLE */
+
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
@@ -78,17 +79,10 @@ define output parameter l_rej like mfc_logical no-undo.
 
 /* SS - 20081112.1 - B */
 DEFINE SHARED VARIABLE vv_location LIKE sr_loc .
-DEFINE NEW SHARED VARIABLE v_flag AS LOGICAL .
-v_flag = NO .
-
-/*
-MESSAGE "1 " + vv_location VIEW-AS ALERT-BOX.
-*/
-
 /* SS - 20081112.1 - E */
 
 define new shared variable back_site like sr_site.
-define new shared variable transtype as character initial "iss-wo".
+define new shared variable transtype as character initial "ISS-FAS".
 define new shared variable parent_assy like pts_par.
 define new shared variable part like wod_part.
 define new shared variable wopart_wip_acct like pl_wip_acct.
@@ -179,31 +173,6 @@ define shared temp-table compute_ldd no-undo
    field compute_lineid like sr_lineid
    index compute_index compute_site compute_item
          compute_loc   compute_lot  compute_ref .
-
-/* SS - 20081202.1 - B */
-DEF VAR v_sr_qty LIKE sr_qty .
-DEFINE TEMP-TABLE ttsr
-   FIELD ttsr_userid   LIKE sr_userid 
-   FIELD ttsr_lineid   LIKE sr_lineid 
-   FIELD ttsr_loc      LIKE sr_loc 
-   FIELD ttsr_lotser   LIKE sr_lotser
-   FIELD ttsr_qty      LIKE v_sr_qty  
-   FIELD ttsr_assay    LIKE sr_assay 
-   FIELD ttsr_expire   LIKE sr_expire 
-   FIELD ttsr_site     LIKE sr_site 
-   FIELD ttsr_user1    LIKE sr_user1 
-   FIELD ttsr_user2    LIKE sr_user2 
-   FIELD ttsr_ref      LIKE sr_ref  
-   FIELD ttsr_rev      LIKE sr_rev 
-   FIELD ttsr_vend_lot LIKE sr_vend_lot 
-   FIELD ttsr_to_loc   LIKE sr_to_loc 
-   FIELD ttsr_to_site  LIKE sr_to_site 
-   FIELD ttsr_status   LIKE sr_status
-   FIELD ttsr__qadc01  LIKE sr__qadc01
-   FIELD ttsr_domain   LIKE sr_domain 
-   FIELD ttoid_sr_wkfl LIKE oid_sr_wkfl
-   .
-/* SS - 20081202.1 - E */
 
 form
    back_assy     colon 17                    pt_desc1 no-label at 51
@@ -350,11 +319,6 @@ repeat on error undo, retry:
       */
       BACK_loc = vv_location .
       filter_loc = vv_location.
-
-      /*
-      MESSAGE "2 " + filter_loc VIEW-AS ALERT-BOX.
-        */
-
       if c-application-mode = "API" then
          assign
             {mfaiset.i back_loc ttSoShipDet.ed_back_loc}
@@ -456,7 +420,7 @@ repeat on error undo, retry:
          end. /* FOR EACH compute_ldd */
 
          delete sr_wkfl.
-      end. /* FOR EACH    */
+      end. /* FOR EACH sr_wkfl */
 
       for each lotw_wkfl  where lotw_wkfl.lotw_domain = global_domain and
       lotw_mfguser = mfguser
@@ -574,84 +538,7 @@ repeat on error undo, retry:
       if pick_logic then do:
          display-messages = true.
          /* SS - 20081113.1 - B */
-         {gprun.i ""xxsoise02.p""}
-
-         /* SS - 20081202.1 - B */
-         v_sr_qty = 0.            
-         FOR EACH ttsr :
-            DELETE ttsr .
-         END.
-         FOR EACH sr_wkfl WHERE sr_wkfl.sr_domain = GLOBAL_domain
-            AND sr_userid = mfguser
-            AND sr_lineid BEGINS STRING(sod_line) + "ISS"
-            BREAK BY sr_lineid BY sr_site BY sr_loc BY sr_lotser :
-            v_sr_qty = v_sr_qty + sr_qty .
-            IF LAST-OF(sr_lot) THEN DO:
-               CREATE ttsr.
-               ASSIGN
-                  ttsr_userid   = sr_userid 
-                  ttsr_lineid   = sr_lineid 
-                  ttsr_loc      = sr_loc 
-                  ttsr_lotser   = sr_lotser
-                  ttsr_qty      = v_sr_qty  
-                  ttsr_assay    = sr_assay 
-                  ttsr_expire   = sr_expire 
-                  ttsr_site     = sr_site 
-                  ttsr_user1    = sr_user1 
-                  ttsr_user2    = sr_user2 
-                  ttsr_ref      = sr_ref  
-                  ttsr_rev      = sr_rev 
-                  ttsr_vend_lot = sr_vend_lot 
-                  ttsr_to_loc   = sr_to_loc 
-                  ttsr_to_site  = sr_to_site 
-                  ttsr_status   = sr_status 
-                  ttsr__qadc01  = sr__qadc01 
-                  ttsr_domain   = sr_domain 
-                  ttoid_sr_wkfl = oid_sr_wkfl
-                  .
-               v_sr_qty = 0.
-            END.
-         END.
-
-         FOR EACH sr_wkfl WHERE sr_wkfl.sr_domain = GLOBAL_domain
-            AND sr_userid = mfguser
-            AND sr_lineid BEGINS STRING(sod_line) + "ISS" :
-            DELETE sr_wkfl .
-         END.
-         FOR EACH ttsr :
-            CREATE sr_wkfl .
-            ASSIGN
-                  sr_userid   = ttsr_userid 
-                  sr_lineid   = ttsr_lineid 
-                  sr_loc      = ttsr_loc 
-                  sr_lotser   = ttsr_lotser
-                  sr_qty      = ttsr_qty  
-                  sr_assay    = ttsr_assay 
-                  sr_expire   = ttsr_expire 
-                  sr_site     = ttsr_site 
-                  sr_user1    = ttsr_user1 
-                  sr_user2    = ttsr_user2 
-                  sr_ref      = ttsr_ref  
-                  sr_rev      = ttsr_rev 
-                  sr_vend_lot = ttsr_vend_lot 
-                  sr_to_loc   = ttsr_to_loc 
-                  sr_to_site  = ttsr_to_site 
-                  sr_status   = ttsr_status 
-                  sr__qadc01  = ttsr__qadc01 
-                  sr_domain   = ttsr_domain 
-                  oid_sr_wkfl = ttoid_sr_wkfl
-                  .
-         END.
-         /* SS - 20081202.1 - E */
-
-         IF v_flag THEN DO:
-            for each sr_wkfl
-               where sr_wkfl.sr_domain           = global_domain
-                 and substring(sr_lineid ,1 ,1 ) = string(sod_line)
-            exclusive-lock:
-               delete sr_wkfl .
-            end.  /* FOR EACH sr_wkfl */
-         END.
+         {gprun.i ""xxsoise02un.p""}
          /* SS - 20081113.1 - E */
       end.
 
@@ -660,7 +547,7 @@ repeat on error undo, retry:
          any_rejected = no.
 
          for each pk_det
-            fields( pk_domain pk_loc pk_part pk_qty pk_user)
+            fields( pk_domain pk_loc pk_part pk_qty pk_user pk_lot)
              where pk_det.pk_domain = global_domain and  pk_user = mfguser
          no-lock:
 
@@ -679,7 +566,7 @@ repeat on error undo, retry:
             no-lock: end.
 
             {gprun.i ""icedit2.p""
-               "(input ""iss-wo"",
+               "(input ""ISS-FAS"",
                  input back_site,
                  input pk_loc,
                  input pk_part,
@@ -694,20 +581,7 @@ repeat on error undo, retry:
             if rejected
             then do on endkey undo mainloop, retry mainloop:
                any_rejected = yes.
-/*15YF*/         find first pt_mstr no-lock where pt_domain = global_domain and
-/*15YF*/                    pt_part = pk_part no-error.
-/*15YF*/         {pxmsg.i &MSGNUM=358 &ERRORLEVEL=3 &MSGARG1=pt_status}
-/*15YF*         {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}         */
-               /* SS - 20081127.1 - B */
-               v_flag = YES .
-               for each sr_wkfl
-                  where sr_wkfl.sr_domain           = global_domain
-                    and substring(sr_lineid ,1 ,1 ) = string(sod_line)
-               exclusive-lock:
-                  delete sr_wkfl .
-               end.  /* FOR EACH sr_wkfl */
-               /* SS - 20081127.1 - E */
-               PAUSE .
+               {pxmsg.i &MSGNUM=161 &ERRORLEVEL=2 &MSGARG1=pk_part}
                next.
             end.
 
@@ -738,7 +612,7 @@ repeat on error undo, retry:
       end.
 
       for each pk_det
-         fields( pk_domain pk_loc pk_part pk_qty pk_user)
+         fields(pk_lot pk_domain pk_loc pk_part pk_qty pk_user)
           where pk_det.pk_domain = global_domain and  pk_user = mfguser
       no-lock:
 
@@ -845,7 +719,7 @@ repeat on error undo, retry:
 
                   if pk_recno <> ? then do:
                      for first pk_det
-                        fields( pk_domain pk_loc pk_part pk_qty pk_user)
+                        fields( pk_lot pk_domain pk_loc pk_part pk_qty pk_user)
                         where recid(pk_det) = pk_recno
                      no-lock:
                         part = pk_part.
@@ -1182,7 +1056,7 @@ repeat on error undo, retry:
                         else do with frame d:
 
                            {gprun.i ""icedit.p""
-                              "(input ""iss-wo"",
+                              "(input ""ISS-FAS"",
                                 input site,
                                 input location,
                                 input pk_part,
@@ -1204,7 +1078,7 @@ repeat on error undo, retry:
                                  trans_um = pt_um.
 
                               {gprun.i ""icedit4.p""
-                                 "(input ""iss-wo"",
+                                 "(input ""ISS-FAS"",
                                    input sod_site,
                                    input site,
                                    input pt_loc,
@@ -1291,8 +1165,9 @@ repeat on error undo, retry:
                   and   sr_userid =  mfguser
                   and   sr_lineid  begins (string(sod_line) + "ISS" + pk_part) :
 
-                  /* SS - 20081226.1 - B */
-                  {gprun.i ""xxrcinvchk.p""
+                  /* SS - 20081127.1 - B */
+                  /*
+                  {gprun.i ""rcinvchk.p""
                      "(input  pk_part,
                        input  sr_site,
                        input  sr_loc,
@@ -1302,7 +1177,18 @@ repeat on error undo, retry:
                        input  string(recid(sr_wkfl)),
                        input  no,
                        output l_undo)"}
-                  /* SS - 20081226.1 - E */
+                       */
+                  {gprun.i ""xxrcinvchkun.p""
+                     "(input  pk_part,
+                       input  sr_site,
+                       input  sr_loc,
+                       input  sr_lotser,
+                       input  sr_ref,
+                       input  sr_qty ,
+                       input  string(recid(sr_wkfl)),
+                       input  no,
+                       output l_undo)"}
+                  /* SS - 20081127.1 - E */
 
                   if  l_undo = yes
                   then do:
