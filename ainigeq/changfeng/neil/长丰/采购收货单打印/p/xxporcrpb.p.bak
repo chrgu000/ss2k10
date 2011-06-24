@@ -1,0 +1,480 @@
+/* porcrpb.p - RECEIVER PRINT AND UPDATE                                */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                  */
+/* All rights reserved worldwide.  This is an unpublished work.         */
+/* $Revision: 1.8.1.9 $                                                     */
+/*V8:ConvertMode=Report                                                 */
+/* REVISION: 7.3     LAST MODIFIED: 05/28/93    BY: kgs *GB61**/
+/* REVISION: 8.5     LAST MODIFIED: 10/12/95    BY: taf *J053**/
+/* REVISION: 8.5     LAST MODIFIED: 02/07/96    BY: *J0CV* Robert Wachowicz*/
+/* REVISION: 8.5     LAST MODIFIED: 12/23/97    BY: *H1H7* Niranjan R.     */
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane       */
+/* REVISION: 8.6E     LAST MODIFIED: 03/20/98   BY: *J2F0* Niranjan R.     */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan      */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan      */
+/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane */
+/* REVISION: 9.1      LAST MODIFIED: 05/02/00   BY: *N09M* Peter Faherty    */
+/* REVISION: 9.1      LAST MODIFIED: 08/13/00   BY: *N0KQ* myb              */
+/* REVISION: 9.1      LAST MODIFIED: 03/01/01   BY: *M12P* Sandeep P.       */
+
+/* Old ECO marker removed, but no ECO header exists *F0PN*               */
+/* Old ECO marker removed, but no ECO header exists *G068*               */
+/* Old ECO marker removed, but no ECO header exists *G677*               */
+/* Old ECO marker removed, but no ECO header exists *G718*               */
+/* $Revision: 1.8.1.9 $    BY: Rajaneesh S.    DATE: 12/19/01 ECO: *M1SH*    */
+/* SS - 090707.1 By: Neil Gao */
+
+/******************************************************************************/
+/* All patch markers and commented out code have been removed from the source */
+/* code below. For all future modifications to this file, any code which is   */
+/* no longer required should be deleted and no in-line patch markers should   */
+/* be added.  The ECO marker should only be included in the Revision History. */
+/******************************************************************************/
+{mfdeclre.i}
+{gplabel.i} /* EXTERNAL LABEL INCLUDE */
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+&SCOPED-DEFINE porcrpb_p_1 "Apr By"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE porcrpb_p_2 "Print Approvals"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE porcrpb_p_6 "Req By"
+/* MaxLen: Comment: */
+
+/* ********** End Translatable Strings Definitions ********* */
+
+define shared variable rndmthd        like rnd_rnd_mthd.
+define shared variable prh_recno        as recid.
+define shared variable tr_count         as integer.
+define shared variable print_approval like mfc_logical initial yes
+                                           label {&porcrpb_p_2}.
+define shared variable printcmts      like mfc_logical initial no.
+
+define variable vpart  like pod_vpart.
+define variable trsite like tr_site.
+define variable loc    like pod_loc.
+define variable desc1  like pt_desc1.
+
+define variable rev-lbl    as character format "x(10)".
+define variable cont_lbl   as character format "x(12)".
+define variable extprice like pod_pur_cost.
+define variable i          as integer.
+define variable j          as integer.
+define variable k          as integer.
+define variable under      as character format "x(12)"
+                              initial "________".
+define variable approve_by like req_apr_by format "x(70)"
+   label {&porcrpb_p_1}.
+
+define variable err-flag    as integer no-undo.
+define variable old_db    like si_db   no-undo.
+define variable l_tr_type like tr_type no-undo.
+define variable l_count     as integer no-undo.
+
+rev-lbl = getTermLabel("REVISION",16) + ": ".
+cont_lbl = "***" + (dynamic-function('getTermLabelFillCentered' in h-label,
+                                      input "CONTINUE",
+                                      input 06,
+                                      input "*")) + "***".
+
+form with frame d down no-attr-space no-box width 80.
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame d:handle).
+
+find prh_hist
+   where recid(prh_hist) = prh_recno.
+
+/* DISPLAY PO RECEIPT LINE INFORMATION */
+assign
+   vpart  = ""
+   trsite = ""
+   loc    = ""
+   desc1  = "".
+find pod_det
+   where pod_nbr  = prh_nbr
+     and pod_line = prh_line
+   no-lock no-error.
+if available pod_det
+then do:
+   assign
+      vpart  = pod_vpart
+      trsite = pod_site
+      loc    = pod_loc
+      desc1  = pod_desc.
+end.
+
+find pt_mstr
+   where pt_part = prh_part
+no-lock no-error.
+if  available pt_mstr
+and pt_desc1 <> ""
+then do:
+   desc1 = pt_desc1.
+end.
+
+tr_count = 0.
+
+if can-find(first tr_hist
+           where tr_lot  = prh_receiver and
+                     tr_nbr  = prh_nbr      and
+                     tr_line = prh_line     and
+                     tr_part = prh_part     and
+                     tr_type = "RCT-TR" )
+then
+   l_tr_type = "RCT-TR".
+else
+   l_tr_type = "RCT-PO".
+
+for each tr_hist
+   fields(tr_effdate tr_line tr_loc tr_lot tr_nbr
+          tr_part tr_serial tr_site tr_type)
+   where tr_lot     = prh_receiver
+     and tr_nbr     = prh_nbr
+     and tr_line    = prh_line
+     and tr_part    = prh_part
+     and tr_effdate = prh_rcp_date
+     and tr_type    = l_tr_type
+use-index tr_nbr_eff
+no-lock:
+   tr_count = tr_count + 1.
+   if tr_serial <> ""
+   then
+      tr_count = tr_count + 1.
+   if tr_count > 1
+   then do:
+      assign
+         trsite = ""
+         loc    = "".
+      leave.
+   end.
+   assign
+      trsite = tr_site
+      loc    = tr_loc.
+end. /* FOR EACH tr_hist */
+
+if page-size - line-counter < 3
+then
+   page.
+   
+/* SS 090707.1 - B */
+define var xxamt01 like ar_amt.
+define var xxprc01 like pt_price.
+xxamt01 = 0.
+xxprc01 = 0.
+find first sct_det where sct_sim = "STANDARD" and sct_part = prh_part no-lock no-error.
+if avail sct_det then do:
+	xxprc01 = sct_cst_tot.
+	xxamt01 = prh_rcvd * sct_cst_tot.
+end.
+
+/* SS 090707.1 - B */
+display
+   prh_line
+   prh_part format "x(24)"
+   prh_um
+ /* SS 090707.1 - B */
+ /*
+   prh_ps_qty
+   prh_rcvd
+   loc
+   prh_request
+*/
+		prh_rcvd
+		xxprc01 column-label "计划价格"
+		xxamt01 column-label "合计"
+with frame d.
+
+down 1 with frame d.
+/* SS 090707.1 - B */
+/*
+if prh_rev <> ""
+then do:
+   if page-size - line-counter < 1
+   then do:
+      page.
+      clear frame d all no-pause.
+      display
+         prh_line
+         prh_part
+         cont_lbl @ prh_ps_qty
+      with frame d.
+      down 1 with frame d.
+   end.
+   clear frame d all no-pause.
+   display
+       rev-lbl + " " + prh_rev @ prh_part
+       with frame d.
+   down 1 with frame d.
+end.
+*/
+/* SS 090707.1 - E */
+
+if desc1  <> ""
+or trsite <> ""
+then do:
+   if page-size - line-counter < 1
+   then do:
+      page.
+      clear frame d all no-pause.
+      display
+         prh_line
+         prh_part
+/* SS 090707.1 - B */
+/*
+         cont_lbl @ prh_ps_qty
+*/
+/* SS 090707.1 - E */
+      with frame d.
+
+      down 1 with frame d.
+   end.
+   clear frame d all no-pause.
+   display
+      desc1 @ prh_part
+
+/* SS 090707.1 - B */
+/*
+      trsite @ loc
+*/
+/* SS 090707.1 - E */
+   with frame d.
+   down 1 with frame d.
+end.
+
+if  available pt_mstr
+and pt_desc2 <> ""
+then do:
+   if page-size - line-counter < 1
+   then do:
+      page.
+      clear frame d all no-pause.
+      display
+         prh_line
+         prh_part
+/* SS 090707.1 - B */
+/*
+         cont_lbl @ prh_ps_qty
+*/
+/* SS 090707.1 - E */
+      with frame d.
+      down 1 with frame d.
+   end.
+   clear frame d all no-pause.
+   display
+      pt_desc2 @ prh_part
+   with frame d.
+   down 1 with frame d.
+end.
+
+/* SS 090707.1 - B */
+/*
+display
+   "   " + getTermLabel("ERS_OPTION",14) + ": " +
+   string(pod_ers_opt) @ prh_part
+   with frame d.
+down 1 with frame d.
+*/
+/* SS 090707.1 - E */
+
+/* SS 090707.1 - B */
+/*
+if vpart <> ""
+then do:
+   if page-size - line-counter < 1
+   then do:
+      page.
+      clear frame d all no-pause.
+      display
+         prh_line
+         prh_part
+         cont_lbl @ prh_ps_qty
+      with frame d.
+      down 1 with frame d.
+   end.
+
+   put {gplblfmt.i
+        &FUNC=getTermLabel(""SUPPLIER_ITEM"",20)
+        &CONCAT="': '"
+       } at 5 vpart skip.
+end.
+*/
+/* SS 090707.1 - E */
+
+/* SECTION TO PRINT APPROVALS AND REQ_BY*/
+if  print_approval
+and available pod_det
+then do:
+
+   k = 0.
+
+   /* USE ENTIRE PO LINE QTY FOR EXT PRICE SO   */
+   /* WILL BE SAME APR LEVEL AS REQUISITION WAS */
+   extprice = pod_pur_cost * pod_um_conv * pod_qty_ord.
+   /* ROUND PER DOCUMENT CURRENCY ROUND METHOD */
+   {gprun.i ""gpcurrnd.p"" "(input-output extprice,
+                             input rndmthd)"}
+   /* DETERMINE HOW MANY LEVELS OF APPROVALS TO PRINT */
+   find first pac_mstr
+      where pac_code = pod_apr_code
+      no-lock no-error.
+
+   if available pac_mstr
+   then do:
+      if available pac_mstr
+      then do k = 1 to 4:
+         if pac_amt[k] >= extprice
+         then
+            leave.
+      end.
+      if k = 5
+      then
+         k = 4.
+      /* FILL APPROVALS NEEDED TO APPROPRIATE LEVEL */
+      approve_by = "".
+      if k > 0
+      then do j = 1 to k:
+         approve_by = approve_by + " "
+                      + fill(" ",(8 - length(pac_apr_by[j])))
+                      + pac_apr_by[j] + " " + under.
+      end.
+
+      if page-size - line-counter < 3
+      then
+         page.
+      do with frame e:
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame e:handle).
+         display
+            prh_request label {&porcrpb_p_6} under no-label
+            with frame e side-labels width 80.
+      end. /* do with */
+      do with frame f:
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame f:handle).
+         display
+            approve_by
+            with frame f width 80 side-labels.
+      end. /* do with */
+   end. /* IF AVAILABLE pac_mstr */
+
+   else do:
+      if page-size - line-counter < 3
+      then
+         page.
+
+      do with frame g:
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame g:handle).
+/* SS 090707.1 - B */
+/*
+         display
+            prh_request label {&porcrpb_p_6} under no-label
+         with frame g side-labels width 80.
+*/
+					display "办理人:" at 50 with frame g width 80.
+/* SS 090707.1 - E */
+      end. /* do with */
+
+      for each rqda_det
+         where rqda_nbr    = pod_req_nbr
+           and rqda_action = "1":
+         l_count = l_count + 1.
+      end. /* FOR EACH rqda_det */
+
+      k=0.
+      for each rqda_det
+         where rqda_nbr    = pod_req_nbr
+           and rqda_action = "1":
+
+         assign
+            l_count  = l_count  - 1
+            k        = k + 1.
+
+         /* FILL APPROVALS NEEDED TO APPROPRIATE LEVEL */
+         if k <=  4
+         then do:
+            approve_by = approve_by + " "
+                         + fill(" ",(8 - length(rqda_apr_userid)))
+                         + rqda_apr_userid + " " + under.
+         end. /* IF k <= 4 */
+
+         if ( k = 4 )
+         or ( l_count  = 0)
+         then do:
+
+            if page-size - line-counter < 3
+            then
+               page.
+            do with frame h:
+               setFrameLabels(frame h:handle).
+               display
+                  approve_by with frame h width 80 side-labels.
+            end. /* do with */
+        approve_by = " ".
+            k = 0 .
+         end. /* IF k = 4 ... */
+
+
+      end. /* FOR EACH rqda_det */
+   end. /* ELSE DO */
+
+end. /* print approvals needed */
+
+if available pod_det
+then do:
+   if global_db <> pod_po_db
+   then do:
+      old_db = global_db.
+      {gprun.i ""gpalias3.p"" "(pod_po_db, output err-flag)" }
+
+      /* PRINT ALL COMMENTS */
+      if printcmts
+      then do:
+         {gprun.i ""polncmt.p"" "(input pod_nbr,
+                                  input pod_line,
+                                  input 'RP' )"}
+      end. /* IF PRINTCMTS */
+      /* PRINT RECEIVER COMMENTS ONLY */
+      else do:
+         {gprun.i ""polncmt.p"" "(input pod_nbr,
+                                  input pod_line,
+                                  input 'RC' )"}
+      end. /* ELSE */
+
+      {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+   end. /* IF GLOBAL_DB <> POD_PO_DB */
+end. /* IF AVAILABLE POD_DET */
+
+/* SS 090708.1 - B */
+/*
+if printcmts
+then do:   /* PRINT ALL COMMENTS */
+   if available pod_det
+   then do:
+      {gpcmtprt.i &type=RP &id=pod_cmtindx &pos=5
+                  &command="
+                  page.
+                  clear frame d all no-pause.
+                  display prh_line prh_part cont_lbl @ prh_ps_qty
+                  with frame d.
+                  down 1 with frame d."}
+   end.
+end.
+else do:                /* PRINT RECEIVER COMMENTS ONLY */
+   if available pod_det
+   then do:
+      {gpcmtprt.i &type=RC &id=pod_cmtindx &pos=5
+                  &command="
+                  page.
+                  clear frame d all no-pause.
+                  display prh_line prh_part cont_lbl @ prh_ps_qty
+                  with frame d.
+                  down 1 with frame d."}
+   end.
+end.
+*/
+/* SS 090708.1 - E */

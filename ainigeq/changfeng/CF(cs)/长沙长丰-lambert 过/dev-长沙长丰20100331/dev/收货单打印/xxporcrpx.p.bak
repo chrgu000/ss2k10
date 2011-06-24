@@ -1,0 +1,327 @@
+/* xxporcrpx.p -- */
+/* Copyright 200911 Softspeed Inc., Guangzhou, China                     */
+/* All rights reserved worldwide.  This is an unpublished work.          */
+/* SS - 091113.1 By: Kaine Zhang */
+/* SS - 100127.1 By: Lambert Xiang */
+
+{mfdtitle.i "20100129.1"}
+
+define variable sPoNbrA like prh_nbr no-undo.
+define variable sPoNbrB like prh_nbr no-undo.
+define variable sReceiverA like prh_receiver no-undo.
+define variable sReceiverB like prh_receiver no-undo.
+define variable sVendA like prh_vend no-undo.
+define variable sVendB like prh_vend no-undo.
+define variable dteRcpDateA as date no-undo.
+define variable dteRcpDateB as date no-undo.
+define variable bOnlyNew as logical no-undo.
+
+define variable iRevision as integer no-undo.
+define variable sName as character no-undo.
+define variable sDesc1 like pt_desc1 no-undo.
+define variable sDesc2 like pt_desc1 no-undo.
+define variable decCost like sct_cst_tot no-undo.
+define variable decAmount as decimal format "->>,>>>,>>9.9<<<" no-undo.
+
+define variable iHeadUseLine as integer initial 8 no-undo.
+define variable iCommonUseLine as integer initial 2 no-undo.
+define variable iLastUseLine as integer initial 3 no-undo.
+define variable iBottomUseLine as integer initial 2 no-undo.
+define variable decAmountSum as decimal format "->>,>>>,>>9.9<<<" no-undo.
+
+FORM
+    sPoNbrA  colon 15 label "采购单"
+    sPoNbrB  colon 45 label "至"
+    sReceiverA  colon 15 label "收货单"
+    sReceiverB  colon 45 label "至"
+    sVendA  colon 15 label "供应商"
+    sVendB  colon 45 label "至"
+    dteRcpDateA  colon 15 label "收货日期"
+    dteRcpDateB  colon 45 label "至"
+    bOnlyNew  colon 15 label "仅新单"
+    SKIP
+WITH FRAME a SIDE-LABELS WIDTH 80.
+setFrameLabels(FRAME a:HANDLE).
+
+
+
+
+
+{wbrp01.i}
+REPEAT ON ENDKEY UNDO, LEAVE:
+    if sPoNbrB = hi_char then sPoNbrB = "".
+    if sReceiverB = hi_char then sReceiverB = "".
+    if sVendB = hi_char then sVendB = "".
+    if dteRcpDateA = low_date then dteRcpDateA = ?.
+    if dteRcpDateB = hi_date then dteRcpDateB = ?.
+
+    if c-application-mode <> 'web' then
+        update
+            sPoNbrA
+            sPoNbrB
+            sReceiverA
+            sReceiverB
+            sVendA
+            sVendB
+            dteRcpDateA
+            dteRcpDateB
+            bOnlyNew
+        WITH FRAME a .
+
+    {wbrp06.i
+        &command = update
+        &fields = "
+            sPoNbrA
+            sPoNbrB
+            sReceiverA
+            sReceiverB
+            sVendA
+            sVendB
+            dteRcpDateA
+            dteRcpDateB
+            bOnlyNew
+        "
+        &frm = "a"
+    }
+
+
+
+    if (c-application-mode <> 'web')
+        or (c-application-mode = 'web' and (c-web-request begins 'data'))
+    THEN DO:
+        bcdparm = "".
+        {mfquoter.i sPoNbrA }
+        {mfquoter.i sPoNbrB }
+        {mfquoter.i sReceiverA }
+        {mfquoter.i sReceiverB }
+        {mfquoter.i sVendA }
+        {mfquoter.i sVendB }
+        {mfquoter.i dteRcpDateA }
+        {mfquoter.i dteRcpDateB }
+        {mfquoter.i bOnlyNew }
+    
+        if sPoNbrB = "" then sPoNbrB = hi_char.
+        if sReceiverB = "" then sReceiverB = hi_char.
+        if sVendB = "" then sVendB = hi_char.
+        if dteRcpDateA = ? then dteRcpDateA = low_date.
+        if dteRcpDateB = ? then dteRcpDateB = hi_date.
+    END.
+
+    /* OUTPUT DESTINATION SELECTION */
+    {gpselout.i
+        &printType = "printer"
+        &printWidth = 132
+        &pagedFlag = " "
+        &stream = " "
+        &appendToFile = " "
+        &streamedOutputToTerminal = " "
+        &withBatchOption = "yes"
+        &displayStatementType = 1
+        &withCancelMessage = "yes"
+        &pageBottomMargin = 6
+        &withEmail = "yes"
+        &withWinprint = "yes"
+        &defineVariables = "yes"
+    }
+
+    for each prh_hist
+        where prh_nbr >= sPoNbrA
+            and prh_nbr <= sPoNbrB
+            and prh_receiver >= sReceiverA
+            and prh_receiver <= sReceiverB
+            and prh_vend >= sVendA
+            and prh_vend <= sVendB
+            and prh_rcp_date >= dteRcpDateA
+            and prh_rcp_date <= dteRcpDateB
+            and (prh_print or not(bOnlyNew))
+            and prh_rcp_type <> "R"
+        use-index prh_rcp_date 
+        break 
+        by prh_receiver
+        by prh_nbr 
+        by prh_line
+    :
+        if first-of(prh_receiver) then do:
+            find first po_mstr
+                no-lock
+                where po_nbr = prh_nbr
+                no-error.
+            iRevision = if available(po_mstr) then po_rev else 0.
+
+            find first ad_mstr
+                no-lock
+                where ad_addr = prh_vend
+                no-error.
+            sName = if available(ad_mstr) then ad_name else "".
+        end.
+
+        find first pt_mstr
+            no-lock
+            where pt_part = prh_part
+            no-error.
+        if available(pt_mstr) then
+            assign
+                sDesc1 = pt_desc1
+                sDesc2 = pt_desc2
+                .
+        else
+            assign
+                sDesc1 = ""
+                sDesc2 = ""
+                .
+        
+        find first sct_det 
+            no-lock
+            where sct_sim = "STANDARD" 
+                and sct_part = prh_part 
+                and sct_site = prh_site 
+            no-error.
+        if available(sct_det) then
+            assign
+                decCost = sct_mtl_tl + sct_mtl_ll
+                decAmount = prh_rcvd * (sct_mtl_tl + sct_mtl_ll)
+                .
+        else
+            assign
+                decCost = 0
+                decAmount = 0
+                .
+
+        /*
+        if first-of(prh_receiver) and last-of(prh_receiver) then do:
+            if line-counter + iHeadUseLine + iLastUseLine + iBottomUseLine > page-size then do:
+                run xxgotobottomline(iBottomUseLine).
+                run xxputbottom(decAmountSum).
+                decAmountSum = 0.
+                page.
+            end.
+            run xxputhead(
+                prh_vend,
+                prh_nbr,
+                sName,
+                prh_receiver,
+                iRevision,
+                prh_rcp_date
+            ).
+        end.
+        else 
+        */
+        if first-of(prh_receiver) then do:
+            run xxputhead(
+                prh_vend,
+                prh_nbr,
+                sName,
+                prh_receiver,
+                iRevision,
+                prh_rcp_date
+            ).
+        end.
+        else if last-of(prh_receiver) then do:
+            if line-counter + iLastUseLine + iBottomUseLine > page-size then do:
+            	/* ss lambert 20100129
+                run xxgotobottomline(iBottomUseLine).
+                */
+                run xxputbottom(decAmountSum).
+                decAmountSum = 0.
+                page.
+            end.
+        end.
+        else do:
+            if line-counter + iCommonUseLine + iBottomUseLine > page-size then do:
+                run xxgotobottomline(iBottomUseLine).
+                run xxputbottom(decAmountSum).
+                decAmountSum = 0.
+                page.
+            end.
+        end.
+
+        run xxputline(prh_line ,prh_part ,sDesc1   ,sDesc2   ,prh_rcvd ,decCost  ,decAmount).
+        
+        decAmountSum = decAmountSum + decAmount.
+        accumulate decAmount (total by prh_receiver).
+
+        if last-of(prh_receiver) then do:
+            put
+                "收货单合计金额: " at 86 " "
+                (accum total by prh_receiver decAmount) format "->>,>>>,>>9.9<<<"
+                .
+            /*  ss lambert 20100129
+            run xxgotobottomline(iBottomUseLine).
+            */
+            run xxputbottom(decAmountSum).
+            decAmountSum = 0.
+            page.
+        end.
+
+    end.
+    
+
+
+    {mfreset.i}
+	{mfgrptrm.i}
+END.
+{wbrp04.i &frame-spec = a}
+
+
+procedure xxputhead:
+    define input parameter s1 like prh_vend.
+    define input parameter s2 like prh_nbr.
+    define input parameter s3 like ad_name.
+    define input parameter s4 like prh_receiver.
+    define input parameter i5 as integer format ">>9".
+    define input parameter dte6 like prh_rcp_date.
+
+    put
+        unformatted
+        "入  库  单" at 46
+        "供应商: " at 1 s1
+        "采购单: " at 91 s2
+        s3 at 1
+        "收货单: " at 91 s4
+        "采购单版本: " at 1 i5
+        "收货日期: " at 89 dte6
+        "打印日期: " at 89 today
+        " 项 项目号             件名                     规格                         接收数量        计划价格          合计" at 1
+        "--- ------------------ ------------------------ ------------------------ ------------ --------------- -------------" at 1
+        .
+end procedure.
+
+procedure xxputbottom:
+    define input parameter decAmountSum like decAmount.
+    put
+        "本页合计金额: " at 88 " "
+        decAmountSum format "->>,>>>,>>9.9<<<"
+        .
+    put
+        "采购员:                       仓管员:                       检验员:" at 5
+        skip.
+
+end procedure.
+
+procedure xxgotobottomline:
+    define input parameter iBL like iBottomUseLine.
+    repeat while line-counter + iBL < page-size:
+        put skip(1).
+    end.
+end procedure.
+
+procedure xxputline:
+define input parameter prh_line  like  prh_line  .
+define input parameter prh_part  like  prh_part  .
+define input parameter sDesc1    like  sDesc1    .
+define input parameter sDesc2    like  sDesc2    .
+define input parameter prh_rcvd  like  prh_rcvd  .
+define input parameter decCost   like  decCost   .
+define input parameter decAmount like  decAmount .
+put
+    prh_line at 1 " "
+    prh_part " "
+    sDesc1 " "
+    sDesc2 " "
+    prh_rcvd " "
+    decCost " "
+    decAmount
+    .
+put "--- ------------------ ------------------------ ------------------------ ------------ --------------- -------------" at 1 
+    .
+end procedure.

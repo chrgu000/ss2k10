@@ -1,0 +1,446 @@
+/*By: Lambert Xiang 2010/03/17 ECO: *SS 20100324* */
+
+
+{mfdtitle.i "20100429"}
+
+DEFINE VARIABLE part like mrp_part. 
+DEFINE VARIABLE part1 like mrp_part.
+DEFINE VARIABLE date1 as date.      
+DEFINE VARIABLE date2 as date.      
+DEFINE VARIABLE ptline like pt_prod_line. 
+DEFINE VARIABLE ptline1 like pt_prod_line.
+DEFINE VARIABLE buyer like pt_buyer. 
+DEFINE VARIABLE buyer1 like pt_buyer.
+DEFINE VARIABLE vend like pt_vend. 
+DEFINE VARIABLE vend1 like pt_vend.
+
+DEFINE VARIABLE site like si_site.
+DEFINE VARIABLE eff_date as date.
+
+DEFINE VARIABLE qcqty like tr_qty_loc.	/*期初数*/
+DEFINE VARIABLE qmqty like tr_qty_loc.	/*期末数*/
+DEFINE VARIABLE inpqty like tr_qty_loc.	/*计划入库数*/
+DEFINE VARIABLE outpqty like tr_qty_loc.	/*计划出库数*/
+define var  mylist as char extent 20. /* 最终产品名称数组 */
+define var  myords as int extent 20. /* 最终产品订量数组 */
+define var  mypcnt as int. /* 最终产品名称计数变量 */
+define var  mypp as int. /* 最终产品名称计数变量 */
+
+DEFINE TEMP-TABLE tmp_mstr 
+	field tmp_part like pt_part			/*物料编码*/
+	field tmp_buyer like pt_buyer			/*采购员编码*/
+	field tmp_vend like pt_vend			/*供应商编码*/
+	field tmp_ptline like pt_prod_line			/*产品线编码*/
+	field tmp_qty_safe like pt_sfty_stk		/*安全库存数*/
+	field tmp_qty1 like ld_qty_oh		/*大于截至日期的入库事务的入库数*/
+	field tmp_qty2 like ld_qty_oh		/*大于截至日期的出库事务的出库数*/
+	field tmp_qty3 like ld_qty_oh		/*本期入库*/
+	field tmp_qty4 like ld_qty_oh		/*本期出库*/
+	field tmp_qty14 like ld_qty_oh		/*查询时库存数*/
+	field tmp_qty as int extent 20		/* 数组保存每个车型的需求 */
+	.
+
+DEFINE TEMP-TABLE tmpso_mstr
+	field tmpso_part like pt_part			/*物料编码*/
+/*
+	field tmpso_buyer like pt_buyer	          		/*采购员编码*/
+	field tmpso_vend like pt_vend		            	/*供应商编码*/
+	field tmpso_ptline like pt_prod_line	    		/*产品线编码*/
+	field tmpso_qty_safe like pt_sfty_stk	      	/*安全库存数*/
+	field tmpso_qty1 like ld_qty_oh		            /*大于截至日期的入库事务的入库数*/
+	field tmpso_qty2 like ld_qty_oh		            /*大于截至日期的出库事务的出库数*/
+	field tmpso_qty3 like ld_qty_oh		            /*本期入库*/
+	field tmpso_qty4 like ld_qty_oh		            /*本期出库*/
+*/
+	field tmpso_ptline like pt_prod_line	    		/*产品线编码*/
+	field tmpso_ptpmcode like pt_pm_code	    		/*制造采购编码*/
+	field tmpso_qty like sod_qty_ord		/** 销售数量 */
+	.
+	
+/* 保存销售件与显示件关系的临时表 */
+define temp-table temp1
+        field t1_par         like ps_par label "父零件" 
+/*
+        field t1_par_ln      like xxcpt_ln label "序号"
+        field t1_cu_par      like xxcpt_cu_part 
+*/
+        field t1_comp        like ps_comp  label "子零件"
+/*
+        field t1_comp_ln     like xxcpt_ln label "序号"
+        field t1_cu_comp     like xxcpt_cu_part 
+        field t1_desc        like xxcpt_desc
+*/
+        field t1_um          like pt_um
+        field t1_cu_um       like pt_um
+        field t1_um_conv     like um_conv
+        field t1_qty_per     like ps_qty_per
+        field t1_qty_ord     like sod_qty_ord
+        field t1_qty_cu      like ps_qty_per  format ">>>,>>9.9<<<<<<"
+        field t1_wt          like pt_net_wt 
+        field t1_attach      as logical 
+        field t1_rmks        as char format "x(30)"
+        index t1_parcomp     t1_par t1_comp.
+
+
+form 
+	date1					colon 15
+	date2					colon 45
+	part					colon 15
+	part1   label {t001.i}	colon 45 
+	ptline	label "产品线"  		colon 15
+	ptline1	label "至"	colon 45
+	buyer	    		colon 15
+	buyer1 	label {t001.i}	colon 45
+	vend  	  		colon 15
+	vend1 	label {t001.i}	colon 45
+	skip(1)
+
+with frame a side-labels width 80 attr-space.
+
+setFrameLabels(frame a:handle).
+
+{wbrp01.i}
+date1 = date(month(today),1,year(today)).
+date2 = date(month(today) + 1,1,year(today)) - 1.
+
+REPEAT ON ENDKEY UNDO, LEAVE: 
+	for each tmp_mstr :
+		delete tmp_mstr .
+	end.
+	for each tmpso_mstr :
+		delete tmpso_mstr .
+	end.
+	mypcnt = 0.
+	do mypp = 1 to 20 :
+  	mylist[mypp] = "".
+  	myords[mypp] = 0.
+	end.
+	
+	
+
+	if part1 = hi_char then part1 = "".
+	if buyer1 = hi_char then buyer1 = "".
+	if ptline1 = hi_char then ptline1 = "".
+	if vend1 = hi_char then vend1 = "".
+	if date1 = low_date then date1 = ?.
+	if date2 = hi_date  then date2 = ?.
+	
+	IF c-application-mode <> 'web':u THEN
+	update date1 date2 part part1 ptline ptline1 buyer buyer1 vend vend1 WITH FRAME a.
+
+	{wbrp06.i &command = UPDATE
+		&fields = "date1 date2 part part1 ptline ptline1 buyer buyer1 vend vend1 "
+		&frm = "a"}
+	if part1 = "" then part1 = hi_char.
+	if buyer1 = "" then buyer1 = hi_char.
+	if ptline1 = "" then ptline1 = hi_char.
+	if vend1 = "" then vend1 = hi_char.
+	if date1 = ? then  date1 = low_date.
+	if date2 = ? then date2 = hi_date.
+
+  eff_date = today.
+	{mfselprt.i "printer" 132}
+
+
+	for each  pt_mstr where pt_part >= part
+		and pt_part <= part1 
+		and pt_prod_line >= ptline
+		and pt_prod_line <= ptline1
+		and pt_buyer >= buyer
+		and pt_buyer <= buyer1
+		and pt_vend >= vend
+		and pt_vend <= vend1
+		no-lock:
+			
+			for each tr_hist where tr_part = pt_part
+				and tr_effdate >= date1
+				and tr_qty_loc <> 0
+				and tr_ship_type = ""
+				no-lock 
+				:
+				find first tmp_mstr where tmp_part = tr_part  no-error .
+				if not avail tmp_mstr then do :
+					create tmp_mstr .
+					assign 
+						tmp_part = tr_part
+						tmp_qty_safe = pt_sfty_stk
+						tmp_buyer = pt_buyer
+						.
+				end.
+				if tr_effdate <= date2 then do :
+					if ( tr_type begins "RCT" or tr_type = "CN-RCT" or (tr_type = "CYC-RCNT" and tr_qty_loc > 0 )or tr_type = "TAG-CNT" ) 
+						then tmp_qty3 = tmp_qty3 + tr_qty_loc.
+						else tmp_qty4 = tmp_qty4 - tr_qty_loc.
+			
+				end.
+
+				if tr_effdate > date2 then do :
+					if ( tr_type begins "RCT" or tr_type = "CN-RCT" or (tr_type = "CYC-RCNT" and tr_qty_loc > 0 )or tr_type = "TAG-CNT" ) 
+					then tmp_qty1 = tmp_qty1 + tr_qty_loc.
+					else tmp_qty2 = tmp_qty2 - tr_qty_loc.
+				end.
+		  end.
+		  for each ld_det where ld_part = pt_part
+			  and ld_qty_oh <> 0
+			  no-lock:
+			  find first tmp_mstr where tmp_part = ld_part  no-error .
+  			if not avail tmp_mstr then do :
+	  			create tmp_mstr .
+		  		assign 
+			  		tmp_part = ld_part 
+			  		tmp_buyer = pt_buyer
+				  	.
+  			end.
+	  		tmp_qty14 = tmp_qty14 + ld_qty_oh .
+  		end.
+	end.
+	/*  进销存计算完毕  */
+
+  /* 计算销售物料临时表 */
+  for each sod_det no-lock where sod_due_date >= date1 and sod_due_date <= date2 :
+  	find first tmpso_mstr no-lock where tmpso_part = sod_part no-error.
+  	if not avail tmpso_mstr then do:
+  		create tmpso_mstr.
+  		assign
+  		  tmpso_part = sod_part
+  		  tmpso_qty = 0 .
+  	end.
+  	tmpso_qty = tmpso_qty + sod_qty_ord.
+  	/* 根据pt_prod_line 和pt_pm_code 区分销售物料是成品还是维修件 */
+  	find first pt_mstr no-lock where 
+  	  pt_part = sod_part and 
+  	  pt_prod_line >="0801" and 
+  	  pt_prod_line <= "0805" and 
+  	  pt_pm_code = "m" no-error.
+  	if avail pt_mstr then do:
+  		tmpso_ptline = pt_prod_line.
+  		tmpso_ptpmcode = pt_pm_code.
+  		mypcnt = mypcnt + 1.
+  		if mypcnt >0 and mypcnt < 21 then 
+  		  mylist[mypcnt] = pt_part.
+  	end.
+  	else do:
+  		tmpso_ptline = "".
+  		tmpso_ptpmcode = "".
+  	end.
+  end.
+	
+  /* Begin 根据销售物料临时表、需要显示的物料清单表和 BOM数据 计算需要显示的物料的期间计划需求数 */
+  for each tmpso_mstr :
+  	run process_report (input tmpso_part , eff_date ,site).  
+  	find first tmp_mstr where tmp_part = tmpso_part no-error.
+  	if avail tmp_mstr then do:
+  		create temp1.
+  		assign 
+  		  t1_par = tmpso_part
+  		  t1_comp = tmpso_part
+  		  t1_qty_per = 1 .
+  		  .
+  	end.
+  end.
+
+  for each tmpso_mstr :
+  	for each temp1 where t1_par = tmpso_part:
+  		t1_qty_ord = t1_qty_per * tmpso_qty.
+  	end.
+  	do mypp = 1 to 20 :
+   		if mylist[mypp] = tmpso_part then do:
+   			myords[mypp] = tmpso_qty.
+   		end.
+   	end.
+  end.
+  
+   
+  /* End 根据销售物料临时表、需要显示的物料清单表和 BOM数据 计算需要显示的物料的期间计划需求数 */
+  
+  put "按车型展开的计划明细表" skip.
+  put unformatted "开始日期:" date1 "             结束日期：" date2 skip.
+  if mypcnt >20 then do:
+  	put unformatted "搜索到的车型数量大于20,只显示最先搜索到的30个车型的明细" skip.
+  end.
+  if mypcnt <1 then do:
+  	put unformatted "搜索到的车型数量小于1,无法显示车型的明细" skip.
+
+  end.
+  put unformatted "物料编码" at 1.
+  put unformatted "物料名称" at 19.
+  put unformatted "采购员" at 68.
+  put unformatted "合计" at 77 .
+  if mypcnt > 20 then do:
+  	do mypp = 1 to 20 :
+   		put unformat mylist[mypp] at (70 + mypp * 18 ) .
+   	end.
+  end.
+  else if mypcnt > 0 then do:
+   	do mypp = 1 to mypcnt:
+   		put unformat mylist[mypp] at (70 + mypp * 18 ).
+   	end.
+  end.  
+  put skip.
+  
+  if mypcnt > 20 then do:
+  	do mypp = 1 to 20 :
+   		put unformat myords[mypp] at (70 + mypp * 18 ) .
+   	end.
+  end.
+  else if mypcnt > 0 then do:
+   	do mypp = 1 to mypcnt:
+   		put unformat myords[mypp] at (70 + mypp * 18 ).
+   	end.
+  end.
+  put skip.
+  
+  put unformatted "----------------- ".  /* 物料号 */
+  put unformatted "------------------------------------------------ " .  /* 物料描述 */
+	put unformatted "-------- ". /* 采购员 */
+	put unformatted "---------- ". /* 合计 */
+  if mypcnt > 20 then do:
+   	do mypp = 1 to 20 :
+   		put unformatted "----------------- ".
+  	end.
+  end.
+  else if mypcnt > 0 then do:
+   	do mypp = 1 to mypcnt:
+   		put unformatted "----------------- ".
+  	end.
+  end.
+  put skip.
+  
+	for each tmp_mstr no-lock break by tmp_part :
+		/*计算期初及结存数*/
+		qmqty = 0 .
+		qcqty = 0 .
+		outpqty = 0.
+		inpqty = 0.
+		qcqty = tmp_qty14 - tmp_qty1 + tmp_qty2 - tmp_qty3 + tmp_qty4 .
+		
+		for each temp1 where t1_comp = tmp_part:
+			outpqty = outpqty + t1_qty_ord.
+		end.
+
+    if mypcnt > 20 then do:
+    	do mypp = 1 to 20 :
+    		find first temp1 no-lock where t1_comp = tmp_part and t1_par = mylist[mypp] no-error.
+    		if avail temp1 then tmp_qty[mypp] = t1_qty_ord.
+    	end.
+    end.
+    else if mypcnt > 0 then do:
+    	do mypp = 1 to mypcnt:
+    		find first temp1 no-lock where t1_comp = tmp_part and t1_par = mylist[mypp] no-error.
+    		if avail temp1 then tmp_qty[mypp] = t1_qty_ord.
+    	end.
+    end.
+		
+		find first pt_mstr where pt_part = tmp_part no-lock no-error .
+		put unformatted  tmp_part at 1.
+		put unformatted trim (pt_desc1) + trim (pt_desc2) at 19.
+		put unformatted  tmp_buyer at 68.
+		put unformatted  outpqty at 77.
+		if mypcnt > 20 then do:
+			do mypp = 1 to 20 :
+				put unformat tmp_qty[mypp] at (70 + mypp * 18 ).
+			end.
+		end.
+		else if mypcnt > 0 then do:
+   	  do mypp = 1 to mypcnt:
+   		  put unformat tmp_qty[mypp] at (70 + mypp * 18 ).
+   	  end.
+    end.
+    put skip.
+	end .
+	{mfreset.i}
+	/* {mfgrptrm.i} */
+END.
+
+{wbrp04.i &frame-spec = a}
+
+procedure process_report:
+    define input  parameter vv_part as character .
+    define input  parameter vv_eff_date as date format "99/99/99" .
+    define input  parameter vv_site as character .
+    
+    define var  vv_comp like ps_comp no-undo.
+    define var  vv_level as integer no-undo.
+    define var  vv_record as integer extent 100.
+    define var  vv_qty as decimal initial 1 no-undo.
+    define var  vv_save_qty as decimal extent 100 no-undo.
+    define var  vv_pm_code like ptp_pm_code no-undo .
+    define var  vv_recno    like recno .
+    
+    assign vv_level = 1 vv_qty = 1 vv_comp = vv_part  /*vv_site = ""*/ .
+
+    find first ps_mstr use-index ps_parcomp where  ps_par = vv_comp  no-lock no-error .
+    repeat:        
+               if not avail ps_mstr then do:                        
+                     repeat:  
+                        vv_level = vv_level - 1.
+                        if vv_level < 1 then leave .                    
+                        find ps_mstr where recid(ps_mstr) = vv_record[vv_level] no-lock no-error.
+                        vv_comp  = ps_par.  
+                        vv_qty = vv_save_qty[vv_level].            
+                        find next ps_mstr use-index ps_parcomp where  ps_par = vv_comp  no-lock no-error.
+                        if avail ps_mstr then leave .               
+                    end.
+                end.  /*if not avail ps_mstr*/
+            
+                if vv_level < 1 then leave .
+                vv_record[vv_level] = recid(ps_mstr).                
+                
+                
+                if (ps_end = ? or vv_eff_date <= ps_end) then do :
+                       vv_save_qty[vv_level] = vv_qty.
+                       
+                
+                       vv_pm_code = "" .   
+                       find ptp_det where ptp_part = ps_comp and ptp_site = vv_site no-lock no-error .
+                       if avail ptp_det then do :
+                             vv_pm_code = ptp_pm_code  .                             
+                       end.
+                       else do:
+                            find pt_mstr where  pt_part = ps_comp no-lock no-error .
+                            vv_pm_code = if avail pt_mstr then pt_pm_code else "" .
+                       end.
+                       
+                       /*if ps_ps_code = "x" then vv_pm_code = "P"  . */
+
+                              
+                     if ps_ps_code <> "A" and ps_ps_code <> "D" then do: /* 替代产品,文档类不向下穿透，不计算 */
+                               vv_comp  = ps_comp .
+                               vv_qty = vv_qty * ps_qty_per * (100 / (100 - ps_scrp_pct)).
+                               vv_level = vv_level + 1.
+                               vv_recno = recid(ps_mstr) .
+
+                               find first ps_mstr use-index ps_parcomp where  ps_par = vv_comp  no-lock no-error.
+                               if not avail ps_mstr then do:
+                                    find ps_mstr where recid(ps_mstr) = vv_recno  no-lock no-error.
+                                    if avail ps_mstr then do:
+                                        /*create */
+                                        if ps_ps_code <> "x" then do: /* 局部虚零件不计算数量 if begin */
+                                          find first temp1 where t1_par = vv_part and t1_comp = ps_comp no-error.
+                                          if not available temp1 then do:
+                                            find pt_mstr where  pt_part = ps_comp no-lock no-error .
+                                            create temp1.
+                                            assign
+                                                t1_par      = caps(vv_part)
+                                                t1_comp     = caps(ps_comp)
+                                                t1_um       = (if available pt_mstr then pt_um else "")
+                                                t1_qty_per  = vv_qty 
+                                                .
+                                          end.
+                                          else t1_qty_per   = t1_qty_per + vv_qty  .  
+                                        end.   /* 局部虚零件不计算数量 if end */
+                                    end.
+                               end.
+
+                               
+                               find first ps_mstr use-index ps_parcomp where  ps_par = vv_comp  no-lock no-error.  
+                     end.  /* 替代产品,文档类不向下穿透，不计算 */
+                end.   /*if (ps_end = ? or vv_eff_date <= ps_end)*/
+                else do:
+                      find next ps_mstr use-index ps_parcomp where  ps_par = vv_comp  no-lock no-error.
+                end.  /* not (ps_end = ? or vv_eff_date <= ps_end)  */
+    
+    
+    end. /*repeat:*/   
+
+end procedure.

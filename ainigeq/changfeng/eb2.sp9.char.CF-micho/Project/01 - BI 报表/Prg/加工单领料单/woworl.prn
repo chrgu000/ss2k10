@@ -1,0 +1,91 @@
+xxwoworl 2+                          .0 主菜单                    日期: 03/19/06
+页:      1                       Your Name Here                   时间: 22:42:14
+
+
+                                                     加工单领料单 
+
+        工单: wot00001                                     发放日期: 03/19/06
+        标志: 2                                            截止日期: 03/20/06
+      批处理:
+      项目号: 10-15000                           NOMAD(TM) COOLING SYSTEM AUTOMOTIVE UNIT
+        备注:                                           客户单/工作:
+    已订购量: 100.0        EA                                  交货:
+
+项目               Site                        现有         Required
+号                 Location 批/序              库存量       Qty to Issue UM 已发放
+------------------ -------- ------------------ ------------ ------------ -- --------
+44-110             10000                             -170.0          0.0 EA (      ) (      )
+CONTROL UNIT, AUTOMOTIVE
+
+55-110             10000                             -200.0          0.0 EA (      ) (      )
+EVAPORATOR,SERIES 1000  
+
+66-210             10000                            1,000.0        100.0 EA (      ) (      )
+PUMP,AUTO,BATTERY LINK  
+                   100                                             100.0    (      ) (      )
+
+
+xxwoworl 2+                          .0 主菜单                    日期: 03/19/06
+页:      2                       Your Name Here                   时间: 22:42:14
+
+
+                                                     加工单领料单 
+
+        工单: wot00001                                     发放日期: 03/20/06
+        标志: 2                                            截止日期: 03/20/06
+      批处理:
+      项目号: 10-15000                           NOMAD(TM) COOLING SYSTEM AUTOMOTIVE UNIT
+        备注:                                           客户单/工作:
+    已订购量: 100.0        EA                                  交货:
+
+项目               Site                        现有         Required
+号                 Location 批/序              库存量       Qty to Issue UM 已发放
+------------------ -------- ------------------ ------------ ------------ -- --------
+88-100             10000                             -200.0          0.0 EA (      ) (      )
+CASE,AUTO-UNIT          
+
+xxwoworl 2+                          .0 主菜单                    日期: 03/19/06
+页:      3                       Your Name Here                   时间: 22:42:14
+
+
+                                                     加工单领料单 
+
+        工单: wot00001                                     发放日期: 03/21/06
+        标志: 2                                            截止日期: 03/20/06
+      批处理:
+      项目号: 10-15000                           NOMAD(TM) COOLING SYSTEM AUTOMOTIVE UNIT
+        备注:                                           客户单/工作:
+    已订购量: 100.0        EA                                  交货:
+
+
+
+
+   车间库存                           需求量 UM
+   ---------------------------- ------------ --
+   99-510                              100.0 EA
+      BOX,SHIPPER,LARGE
+xxwoworl 2+                          .0 主菜单                    日期: 03/19/06
+页:      1                       Your Name Here                   时间: 22:42:14
+
+
+                                加工单工艺流程 
+
+        工单: wot00001
+        标志: 2
+      批处理:
+      项目号: 10-15000             版本: AB                截止日期: 03/20/06
+              NOMAD(TM) COOLING SYSTEM AUTOMOTIVE UNIT
+        备注:                                           客户单/工作:
+    已订购量: 100.0        EA                                  交货:
+
+
+                                         Tooling  Setup Time
+  工序 工作中心                 标准工序 Supplier Run Time      实际   经办
+------ ------------------------ -------- -------- ------------- ------ ----
+    10 15000                                                0.0 ______ (  )
+       ASSEMBLY,NOMAD(TM) UNITS                           100.0 ______ (  )
+       ASSEMBLE PER SPEC
+    20 1030                                                 0.0 ______ (  )
+       INSPECTION, ALL SITES                              100.0 ______ (  )
+       INSPEC PER PROC-009
+
