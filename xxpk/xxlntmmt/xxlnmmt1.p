@@ -31,7 +31,11 @@ setFrameLabels(frame a:handle).
 
 form
    xxlnm_type colon 20 lnmtpdesc no-label
-   xxlnm_time colon 20 skip(1)
+   xxlnm_interval colon 20 skip(1)
+   xxlnm_pkstart colon 20
+   xxlnm_pkend colon 45
+   xxlnm_sdstart colon 20
+   xxlnm_sdend colon 45
    xxlnm_desc colon 20
 with frame bb side-labels width 80
 title color normal (getFrameTitle("REPLENISHMENT_TIME",14)).
@@ -196,7 +200,7 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         xxlnm_type xxlnm_time
+         xxlnm_type xxlnm_interval
       editing:
 
          if frame-field = "xxlnm_type" then do:
@@ -214,7 +218,11 @@ repeat:
                end.
                display
                     xxlnm_type lnmtpdesc
-                    xxlnm_time
+                    xxlnm_interval
+                    xxlnm_pkstart
+                    xxlnm_pkend
+                    xxlnm_sdstart
+                    xxlnm_sdend
                     xxlnm_desc
                with frame bb.
             end. /* if recno */
@@ -226,7 +234,7 @@ repeat:
                if available code_mstr then do:
                   assign lnmtpdesc = code_cmmt.
                end.
-               display "" @ xxlnm_time lnmtpdesc with frame bb.
+               display lnmtpdesc with frame bb.
             end.
 
          end. /* frame-field */
@@ -241,23 +249,27 @@ repeat:
          where xxlnm_line = ln_line
            and xxlnm_site = ln_site
            and xxlnm_type = input xxlnm_type
-           and xxlnm_time = input xxlnm_time
+           and xxlnm_interval = input xxlnm_interval
       exclusive-lock no-error.
 
       if not available xxlnm_det then do:
          create xxlnm_det.
-         assign
-                xxlnm_line = ln_line
+         assign xxlnm_line = ln_line
                 xxlnm_site = ln_site
                 xxlnm_type
-                xxlnm_time.
-         assign xxlnm_itime = s2t(xxlnm_time).
-
+                xxlnm_interval
+                xxlnm_pkstart
+                xxlnm_pkend
+                xxlnm_sdstart
+                xxlnm_sdend.  
       end.
 
-      display
-              xxlnm_type
-              xxlnm_time
+      display xxlnm_type
+              xxlnm_interval
+              xxlnm_pkstart
+              xxlnm_pkend
+              xxlnm_sdstart
+              xxlnm_sdend
               xxlnm_desc
       with frame bb.
 
@@ -268,11 +280,15 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxlnm_desc
+         set xxlnm_pkstart xxlnm_pkend xxlnm_sdstart xxlnm_sdend xxlnm_desc
          go-on (F5 CTRL-D) with frame bb.
          display
               xxlnm_type
-              xxlnm_time
+              xxlnm_interval
+              xxlnm_pkstart
+              xxlnm_pkend
+              xxlnm_sdstart
+              xxlnm_sdend
               xxlnm_desc
          with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
