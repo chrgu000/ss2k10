@@ -5,6 +5,9 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
+/* 2011-07-04:修改表结构,add index xxmqp_part_serial                         */
+/* 可能影响的程序有 .5.13.9   .28.1.3*                                       */
+
 /* DISPLAY TITLE */
 {mfdtitle.i "110624.1"}
 
@@ -16,6 +19,8 @@ define variable site1 like ld_site.
 define variable loc like ld_loc.
 define variable loc1 like ld_loc.
 define variable vfind as logical.
+define variable vptstat as character.
+define variable vstat   as character.
 /* SELECT FORM */
 form
    site  colon 19
@@ -97,59 +102,135 @@ repeat:
       is_overissue
    with frame b width 162 no-attr-space down.
 
-   /* SET EXTERNAL LABELS\ */
+/* SET EXTERNAL LABELS */
    setFrameLabels(frame b:handle).
+export delimiter "~011" 
+			 getTermLabel("site",12)
+			 getTermLabel("LOCATIONS",12)
+			 getTermLabel("PARTS",12)
+			 getTermLabel("DESCRIPTION_1",12)
+			 getTermLabel("DESCRIPTION_2",12)
+			 getTermLabel("LOT/SERIAL",12)
+			 getTermLabel("PERMANENT ",12)
+			 getTermLabel("SINGLE_ITEM",12)
+			 getTermLabel("INVENTORY_STATUS",12)
+			 getTermLabel("ON_HAND",12)			 
+			 getTermLabel("SPECIFICATION_TESTS",12)
+			 getTermLabel("SPECIFICATION_TESTS",12)
+			 .
+			 
 
+/*							"地点" "库位" "料号" "描述1" "描述2"  "批/序号"             */
+/*              "永久" "单件" "库存状态" "库存量" "检验状态"                */
+ 
    for each loc_mstr no-lock
-      where loc_site >= site
-      and loc_site <= site1
-      and (loc_loc >= loc and loc_loc <= loc1),
-      each si_mstr no-lock where si_site = loc_site,
-      each is_mstr no-lock where is_status = loc_status
+      where loc_site >= site and loc_site <= site1 and
+            (loc_loc >= loc and loc_loc <= loc1)
    break by loc_site by loc_loc
    with frame b width 162:
 assign vfind = no.
+if can-find(first ld_det no-lock where ld_site = loc_site and
+                  ld_loc = loc_loc and ld_qty_oh > 0) then do:
+   for each ld_det no-lock where ld_site = loc_site and
+                  ld_loc = loc_loc and ld_qty_oh > 0:
+      find first pt_mstr no-lock where pt_part = ld_part no-error.
+      assign vptstat = "3".
+/*    筛选出的结果做检验标志，合格为1，不合格为2，空为未做检验               */
+      find first Xxmqp_det no-lock where xxmqp_part = ld_part and
+                 xxmqp_serial = ld_lot no-error.
+      if available xxmqp_det then do:
+         assign vptstat = xxmqp_stat.
+      end.
+      if first-of(loc_loc) then do:
+         assign vstat = vptstat.
+      end.
+      else do:
+         if vstat <> vptstat then do:
+            assign vstat = "10".
+         end.
+      end.
+      if last-of(loc_loc) then do:
+         export delimiter "~011" loc_site
+                  loc_loc
+                  ld_part
+                  pt_desc1
+                  pt_desc2
+                  ld_lot
+                  loc_perm
+                  loc_single
+                  loc_status
+                  ld_qty_oh
+                  vptstat
+                  vstat
+                  .
+      end.
+      else do:
+           export delimiter "~011" loc_site
+                  loc_loc
+                  ld_part
+                  pt_desc1
+                  pt_desc2
+                  ld_lot
+                  loc_perm
+                  loc_single
+                  loc_status
+                  ld_qty_oh
+                  vptstat.
+      end.
+   end.
+end.
+else do:
+      export delimiter "~011" loc_site
+              loc_loc
+              ""
+              ""
+              ""
+              ""
+              loc_perm
+              loc_single
+              loc_status
+              .
+end.
 /*      if page-size - line-counter < 2 then page. */
 
-for each ld_det no-lock where ld_site = loc_site and ld_loc = loc_loc
-     and ld_qty_oh <> 0:
-    find first pt_mstr no-lock where pt_part = ld_part no-error.
-    if available pt_mstr then do:
-         assign vfind = yes.
-         display
-            loc_site
-            loc_loc
-            ld_part
-            pt_desc1
-            pt_desc2
-            ld_lot
-            loc_perm
-            loc_single
-            loc_status
-            ld_qty_oh
-            is_avail
-            is_nettable
-            is_overissue with frame b.
-      down 1.
-     end.
-end.
-if vfind = no then do:
-     down 1.
-     display loc_site
-             loc_loc
-             "" @ ld_part
-             "" @ pt_desc1
-             "" @ pt_desc2
-             "" @ ld_lot
-             loc_perm
-             loc_single
-             loc_status
-             is_avail
-             is_nettable
-             is_overissue
-             with frame b.
-      down 1.
-end.
+/* for each ld_det no-lock where ld_site = loc_site and ld_loc = loc_loc     */
+/*      and ld_qty_oh <> 0:                                                  */
+/*     find first pt_mstr no-lock where pt_part = ld_part no-error.          */
+/*     if available pt_mstr then do:                                         */
+/*          assign vfind = yes.                                              */
+/*          display                                                          */
+/*             loc_site                                                      */
+/*             loc_loc                                                       */
+/*             ld_part                                                       */
+/*             pt_desc1                                                      */
+/*             pt_desc2                                                      */
+/*             ld_lot                                                        */
+/*             loc_perm                                                      */
+/*             loc_single                                                    */
+/*             loc_status                                                    */
+/*             ld_qty_oh                                                     */
+/*             is_avail                                                      */
+/*             is_nettable                                                   */
+/*             is_overissue with frame b.                                    */
+/*       down 1.                                                             */
+/*      end.                                                                 */
+/* end.                                                                      */
+/* if vfind = no then do:                                                    */
+/*      display loc_site                                                     */
+/*              loc_loc                                                      */
+/*              "" @ ld_part                                                 */
+/*              "" @ pt_desc1                                                */
+/*              "" @ pt_desc2                                                */
+/*              "" @ ld_lot                                                  */
+/*              loc_perm                                                     */
+/*              loc_single                                                   */
+/*              loc_status                                                   */
+/*              is_avail                                                     */
+/*              is_nettable                                                  */
+/*              is_overissue                                                 */
+/*              with frame b.                                                */
+/*       down 1.                                                             */
+/* end.                                                                      */
 /*
       if last-of (loc_site) and page-size - line-counter > 1
          then down 1.
