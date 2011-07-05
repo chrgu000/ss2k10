@@ -8,11 +8,11 @@
 /* 2011-07-04:修改表结构,add index xxmqp_part_serial                         */
 /* 可能影响的程序有 .5.13.9   .28.1.3*                                       */
 /* showa 仓库库位分类
-	 Check 待检
-	 P-2R -> P-CGRD  备料
-	 S-HD -> S-ZXMP  外协
-	 TEMP            日供收货
-	 XA-1 -> XZZZ    货架
+   Check 待检
+   P-2R -> P-CGRD  备料
+   S-HD -> S-ZXMP  外协
+   TEMP            日供收货
+   XA-1 -> XZZZ    货架
 */
 
 /* DISPLAY TITLE */
@@ -98,7 +98,7 @@ export delimiter "~011"
        getTermLabel("ON_HAND",12)
        getTermLabel("SPECIFICATION_TESTS",12)
        .
-/*              "地点" "库位" "料号" "描述1" "描述2"  "批/序号"             */
+/*              "地点" "库位" "分组" "料号" "描述1" "描述2"  "批/序号"      */
 /*              "永久" "单件" "库存状态" "库存量" "检验状态"                */
 
 for each loc_mstr no-lock
@@ -120,8 +120,8 @@ assign vfind = no.
               assign vptstat = xxmqp_stat.
         end.
             if last-of(loc_loc) then do:
-               export delimiter "~011" 
-               			  loc_site
+               export delimiter "~011"
+                      loc_site
                       loc_loc
                       loc_user1
                       ld_part
@@ -136,8 +136,8 @@ assign vfind = no.
                       .
             end.
             else do:
-                 export delimiter "~011" 
-                 			  loc_site
+                 export delimiter "~011"
+                        loc_site
                         loc_loc
                         loc_user1
                         ld_part
