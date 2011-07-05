@@ -87,6 +87,7 @@ repeat:
 export delimiter "~011"
        getTermLabel("site",12)
        getTermLabel("LOCATIONS",12)
+       getTermLabel("GROUPS",12)
        getTermLabel("PARTS",12)
        getTermLabel("DESCRIPTION_1",12)
        getTermLabel("DESCRIPTION_2",12)
@@ -119,22 +120,26 @@ assign vfind = no.
               assign vptstat = xxmqp_stat.
         end.
             if last-of(loc_loc) then do:
-               export delimiter "~011" loc_site
-                        loc_loc
-                        ld_part
-                        pt_desc1
-                        pt_desc2
-                        ld_lot
-                        loc_perm
-                        loc_single
-                        loc_status
-                        ld_qty_oh
-                        vptstat
-                        .
+               export delimiter "~011" 
+               			  loc_site
+                      loc_loc
+                      loc_user1
+                      ld_part
+                      pt_desc1
+                      pt_desc2
+                      ld_lot
+                      loc_perm
+                      loc_single
+                      loc_status
+                      ld_qty_oh
+                      vptstat
+                      .
             end.
             else do:
-                 export delimiter "~011" loc_site
+                 export delimiter "~011" 
+                 			  loc_site
                         loc_loc
+                        loc_user1
                         ld_part
                         pt_desc1
                         pt_desc2
@@ -150,6 +155,7 @@ assign vfind = no.
     else do:
           export delimiter "~011" loc_site
                   loc_loc
+                  loc_user1
                   ""
                   ""
                   ""
