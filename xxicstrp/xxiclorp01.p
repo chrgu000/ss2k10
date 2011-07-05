@@ -13,6 +13,7 @@
 /* REVISION: 9.1      LAST MODIFIED: 03/24/00    BY: *N08T* Annasaheb Rahane  */
 /* REVISION: 9.1      LAST MODIFIED: 09/05/00    BY: *N0RF* Mark Brown        */
 /* REVISION: 9.1      LAST MODIFIED: 08/11/00    BY: *N0K2* Phil DeRogatis    */
+/* Revision: 110705.1                      BY: ZY DATE: 07/05/11  ECO: *Y175* */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Revision: 1.14     BY: Jean Miller          DATE: 04/06/02  ECO: *P056*    */
 /* $Revision: 1.15 $ BY: Patrick Rowan DATE: 05/24/02  ECO: *P018* */
@@ -22,9 +23,17 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
+/* Environment: Progress:9.1D   QAD:eb2sp12    Interface:Character            */
+/*Y175  - 110705.1    ZY      *Y175*
+  Purpose:做库位分组,以便统计库存状态报表
+  Parameters:<none>
+  Notes:借用loc_user1
+  Change List:
+        xxiclomt.p
+        xxicstrp.p
+*/
 /* DISPLAY TITLE */
-{mfdtitle.i "2+ "}
+{mfdtitle.i "110705.1"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
@@ -121,7 +130,7 @@ repeat:
       loc_loc
       loc_desc
       loc_type
-      loc_user1 column-label "GROUPS"
+/*Y175*/ loc_user1 column-label "GROUPS"
       loc_perm
       loc_single
       loc__qad01 column-label "Single!Lot"
@@ -221,7 +230,7 @@ repeat:
             loc_loc
             loc_desc
             loc_type
-            loc_user1
+/*Y175*/    loc_user1
             loc_perm
             loc_single
             loc__qad01
@@ -240,7 +249,7 @@ repeat:
             loc_loc
             loc_desc
             loc_type
-            loc_user1
+/*Y175*/    loc_user1
             loc_perm
             loc_single
             loc__qad01

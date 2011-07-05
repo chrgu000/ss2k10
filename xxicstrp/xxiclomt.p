@@ -40,7 +40,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-/* Revision: 1.6.5.11                      BY: ZY DATE: 07/05/11  ECO: *Y175* */
+/* Revision: 110705.1                      BY: ZY DATE: 07/05/11  ECO: *Y175* */
 /* Environment: Progress:9.1D   QAD:eb2sp12    Interface:Character            */
 /*Y175  - 110705.1    ZY      *Y175*
   Purpose:做库位分组,以便统计库存状态报表
@@ -78,7 +78,7 @@ form
    loc_cap        colon 30 loc_cap_um label "UM"
    reserved_cust  colon 30 label "Reserved Locations"
    loc_xfer_ownership colon 30
-   loc_user1      colon 30
+/*Y175*/   loc_user1      colon 30
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -158,7 +158,7 @@ repeat with frame a:
                loc_project
                reserved_cust
                loc_xfer_ownership when (using_supplier_consignment)
-               loc_user1
+/*Y175*/       loc_user1
             with frame a
             .
          end.  /* if recno <> ? */
@@ -218,7 +218,7 @@ repeat with frame a:
                                 then si_xfer_ownership
                                 else no
          loc_perm = yes
-         loc_user1.
+/*Y175*/ loc_user1.
          locdesc = " ".
    end.
    assign
@@ -247,7 +247,7 @@ repeat with frame a:
       loc_project
       reserved_cust
       loc_xfer_ownership when (using_supplier_consignment).
-      loc_user1
+/*Y175*/ loc_user1
       .
 
    ststatus = stline[2].
@@ -268,7 +268,7 @@ repeat with frame a:
          loc_cap loc_cap_um
          reserved_cust
          loc_xfer_ownership when (using_supplier_consignment)
-         loc_user1
+/*Y175*/ loc_user1
          go-on (F5 CTRL-D).
 
       /* VALIDATING THE INVENTORY STATUS */
