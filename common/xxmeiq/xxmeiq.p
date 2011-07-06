@@ -2,18 +2,20 @@
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 14Y2 LAST MODIFIED: 11/19/10   BY: zy                           */
+/* REVISION: 17Y6 LAST MODIFIED: 11/19/10   BY: zy  #Add progName variable   */
 
-{mfdtitle.i "14Y2"}
+{mfdtitle.i "17Y6"}
 &SCOPED-DEFINE xxmeiq_p_1 "cdrefUDE"
 
 define variable lang like lng_lang.
 define variable cdref as character format "x(20)" label {&xxmeiq_p_1}.
 define variable dcount as integer no-undo.
-
+define variable progName like mnd_exec.
 form
    space(1)
    lang
    cdref
+   progName skip(1)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -26,14 +28,14 @@ lang = global_user_lang.
 repeat:
 
    if c-application-mode <> 'web' then
-      update lang cdref with frame a.
+      update lang cdref progName with frame a.
 
-   {wbrp06.i &command = update &fields = " lang cdref " &frm = "a"}
+   {wbrp06.i &command = update &fields = " lang cdref progName " &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
                &printWidth = 80
-               &pagedFlag = " "
+               &pagedFlag = "nopage"
                &stream = " "
                &appendToFile = " "
                &streamedOutputToTerminal = " "
@@ -48,16 +50,18 @@ repeat:
    dcount = 0.
 
    for each mnt_det no-lock where mnt_lang = lang and
-            index(mnt_label,cdref) > 0,
+            (index(mnt_label,cdref) > 0 or cdref = ""),
        each mnd_det no-lock where mnd_nbr = mnt_nbr and
-            mnd_select = mnt_select
+            mnd_select = mnt_select and
+            (index(mnd_exec,progName) > 0 or progName = "")
     with frame f-a:
 
       {mfrpchk.i}
 
       setFrameLabels(frame f-a:handle). /* SET EXTERNAL LABELS */
 
-      display mnt_nbr mnt_select mnt_label mnd_exec
+      display mnt_nbr + "." + trim(string(mnt_select,">>>>9")) @ mnt_nbr
+              mnt_label mnd_exec
       with width 80.
 
       dcount = dcount + 1.
@@ -67,7 +71,8 @@ repeat:
 
    end.
 
-   {mfreset.i}
+/*   {mfreset.i}   */
+   {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
 
 end.
