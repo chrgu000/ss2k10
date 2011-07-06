@@ -34,7 +34,7 @@ repeat:
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
-               &printWidth = 80
+               &printWidth = 320
                &pagedFlag = "nopage"
                &stream = " "
                &appendToFile = " "
@@ -61,8 +61,8 @@ repeat:
       setFrameLabels(frame f-a:handle). /* SET EXTERNAL LABELS */
 
       display mnt_nbr + "." + trim(string(mnt_select,">>>>9")) @ mnt_nbr
-              mnt_label mnd_exec
-      with width 80.
+              mnt_label mnd_exec mnd_canrun
+      with width 320.
 
       dcount = dcount + 1.
 
