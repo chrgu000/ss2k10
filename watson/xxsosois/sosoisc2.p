@@ -29,7 +29,7 @@
 /* Revision: 1.12.2.13     BY: Jean Miller        DATE: 06/23/03  ECO: *Q06C* */
 /* Revision: 1.12.2.14     BY: Shivganesh Hegde   DATE: 09/22/04  ECO: *P2LM* */
 /* Revision: 1.12.2.15     BY: Vinod Kumar        DATE: 12/10/04  ECO: *P2TK* */
-/* $Revision: 1.12.2.15.1.2 $  BY: Robin McCarthy     DATE: 12/01/05  ECO: *P470* */
+/* $Revision: 1.12.2.15.1.2 $ BY: Robin McCarthy  DATE: 12/01/05  ECO: *P470* */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/

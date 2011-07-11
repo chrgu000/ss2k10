@@ -305,7 +305,14 @@ New Request:
 {mfdtitle.i "100817.1"}
 */
 /* {mfdtitle.i "101124.3"} */
-{mfdtitle.i "110516.2"}
+{mfdtitle.i "110711.1"}
+/*-110711.1------------------------------------------------*15YF*-------------
+  Purpose:2.	加入condition如果是suspend item時就顯示”
+  						ERROR: Restricted procedure for item status code SUSPEND.
+  					  Please re-enter.”和停止loading的運作 
+  Modify List:xxsoise01.p  xxsoise02.p
+------------------------------------------------------------------------------*/
+ 
 /*ss -101124.1 e*/
 {cxcustom.i "SOSOIS.P"}
 {sosois1.i new}
@@ -320,16 +327,16 @@ New Request:
 
 sorec = fssoship.
 
-/* Licensecheck */ define variable vdays as integer.
-/* Licensecheck */ assign vdays = date(6,19,2011) - today.
-/* Licensecheck */ if vdays < 0 then do:
-/* Licensecheck */     {pxmsg.i &MSGNUM=2696 &ERRORLEVEL=2}
-/* Licensecheck */     pause.
-/* Licensecheck */     RETURN.
-/* Licensecheck */ end.
-/* Licensecheck */ if vdays <= 5 then do:
-/* Licensecheck */      {pxmsg.i &MSGNUM=2697 &MSGARG1=vdays &ERRORLEVEL=2}
-/* Licensecheck */ end.
+/* Licensecheck  define variable vdays as integer.                           */
+/* Licensecheck  assign vdays = date(6,19,2011) - today.                     */
+/* Licensecheck  if vdays < 0 then do:                                       */
+/* Licensecheck      {pxmsg.i &MSGNUM=2696 &ERRORLEVEL=2}                    */
+/* Licensecheck      pause.                                                  */
+/* Licensecheck      RETURN.                                                 */
+/* Licensecheck  end.                                                        */
+/* Licensecheck  if vdays <= 5 then do:                                      */
+/* Licensecheck       {pxmsg.i &MSGNUM=2697 &MSGARG1=vdays &ERRORLEVEL=2}    */
+/* Licensecheck  end.                                                        */
 /* SS - 20080823.1 - B */
 {gprun.i ""xxsosoism.p""}
 /* SS - 20080823.1 - E */

@@ -694,9 +694,19 @@ repeat on error undo, retry:
             if rejected
             then do on endkey undo mainloop, retry mainloop:
                any_rejected = yes.
-/*15YF*/         find first pt_mstr no-lock where pt_domain = global_domain and
-/*15YF*/                    pt_part = pk_part no-error.
-/*15YF*/         {pxmsg.i &MSGNUM=358 &ERRORLEVEL=3 &MSGARG1=pt_status}
+/*15YF*/   find first pt_mstr no-lock where pt_domain = global_domain and
+/*15YF*/              pt_part = pk_part no-error.
+/*15YF*/   if can-find(first isd_det no-lock where
+/*15YF*/                     isd_domain = global_domain and
+/*15YF*/                     trim(substring(isd_status,1,8)) = pt_status and
+/*15YF*/                     index(isd_status,"#") > 0 and
+/*15YF*/										 isd_tr_type = "iss-wo"
+/*15YF*/               ) then do:
+/*15YF*/        {pxmsg.i &MSGNUM=358 &ERRORLEVEL=3 &MSGARG1=pt_status}
+/*15YF*/   end.
+/*15YF*/   else do:
+/*15YF*/        {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}
+/*15YF*/   end.
 /*15YF*         {pxmsg.i &MSGNUM=161 &ERRORLEVEL=3 &MSGARG1=pk_part}         */
                /* SS - 20081127.1 - B */
                v_flag = YES .
