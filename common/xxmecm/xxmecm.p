@@ -84,7 +84,7 @@ repeat:
     do on error undo, retry:
       UPDATE fname with frame a.
       IF fname = "" THEN DO:
-          {mfmsg.i 7772 3}
+          {mfmsg.i 7722 3}
           UNDO,RETRY.
       END.
     end.
