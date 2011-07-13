@@ -13,6 +13,7 @@
    S-HD -> S-ZXMP  外协
    TEMP            日供收货
    XA-1 -> XZZZ    货架
+   xxicstrp.xla vbaPassword:rogercimshowa
 */
 
 /* DISPLAY TITLE */
