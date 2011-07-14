@@ -13,7 +13,7 @@
 define variable file_name as character format "x(50)".
 define variable lngdir    like lng_dir.
 define temp-table tf
-    fields tf_txt as character format "x(78)" column-label "CONTENT".
+    fields tf_txt as character format "x(200)" column-label "CONTENT".
 
 form
    lngdir    colon 15
@@ -106,7 +106,7 @@ repeat:
     end.
 
     for each tf no-lock with frame b:
-        display tf_txt no-label.
+        display tf_txt no-label with width 220.
     end.
 
     setFrameLabels(frame b:handle).
