@@ -91,19 +91,51 @@ end.
               END.
 
         end.    /* if first-of(xxwk_line) then do: */
- 
+
             itcetimee = itcetimes + xxwk_qty_req / vrate.
-            create xxlw_mst.
-            assign xxlw_date = xxwk_date
-                   xxlw_site = xxwk_site
-                   xxlw_line = xxwk_line
-                   xxlw_part = xxwk_part
-                   xxlw_qty_req = xxwk_qty_req
-                   xxlw_start = itcetimes
-                   xxlw_end = itcetimee
-                   xxlw__int01 = xxlnw_etime.
-            assign itcetimes = itcetimee.
-               
+            if itcetimee <= xxlnw_etime then do:
+               if (xxlnw_etime - xxlnw_stime) * vrate >= xxwk_qty_req then do:
+                  create xxlw_mst.
+                  assign xxlw_date = xxwk_date
+                         xxlw_site = xxwk_site
+                         xxlw_line = xxwk_line
+                         xxlw_part = xxwk_part
+                         xxlw_qty_req = xxwk_qty_req
+                         xxlw_start = itcetimes
+                         xxlw_end = itcetimee
+                         xxlw__int01 = xxlnw_etime.
+                  assign itcetimes = itcetimee.
+               end.
+            end.
+            else do:
+
+              create xxlw_mst.
+              assign xxlw_date = xxwk_date
+                     xxlw_site = xxwk_site
+                     xxlw_line = xxwk_line
+                     xxlw_part = xxwk_part
+                     xxlw_qty_req = xxwk_qty_req
+                     xxlw_start = itcetimes
+                     xxlw_end = xxlnw_etime
+                     xxlw__int01 = xxlnw_etime.
+              assign timedif = itcetimee - xxlnw_etime.
+              FIND NEXT xxlnw_det WHERE xxlnw_site = xxwk_site AND
+                       xxlnw_line = xxwk_line AND xxlnw_on
+                       NO-LOCK NO-ERROR.
+              IF AVAILABLE xxlnw_det THEN DO:
+                 create xxlw_mst.
+                 assign xxlw_date = xxwk_date
+                        xxlw_site = xxwk_site
+                        xxlw_line = xxwk_line
+                        xxlw_part = xxwk_part
+                        xxlw_qty_req = xxwk_qty_req
+                        xxlw_start = xxlnw_stime
+                        xxlw_end = xxlnw_stime + timedif
+                        xxlw__int01 = xxlnw_etime.
+              END.
+                assign itcetimee = xxlnw_stime + timedif.
+                assign itcetimes = itcetimee.
+            end.
     END.
 
     for each xxlw_mst no-lock with frame w:
@@ -119,6 +151,7 @@ end.
         disp xxlnw_site xxlnw_line xxlnw_sn xxlnw_on xxlnw_start xxlnw_end
              xxlnw_rstmin with width 300.
     end.
+
 /*        for each si_mstr                                                   */
 /*            no-lock break by si_site with frame b width 132 no-box.        */
 /*                                                                           */
