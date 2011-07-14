@@ -91,37 +91,19 @@ end.
               END.
 
         end.    /* if first-of(xxwk_line) then do: */
-  
-/*      find first lnd_det no-lock where lnd_site = xxwk_site and            */
-/*                 lnd_line = xxwk_line and lnd_part = xxwk_part no-error.   */
-/*      if available lnd_det then do:                                        */
-/*          /* 计算iTceTimeE结束时间是不是工作时间 */                        */
-/*                                                                           */
-          for each xxlnw_det no-lock where xxlnw_site = xxwk_site and            
-                   xxlnw_line = xxwk_line and                                    
-                   xxlnw_stime >= itceTime and                                   
-                   xxlnw_etime >= itcetimee  and                                 
-                   xxlnw_on                                                      
-                   break by xxlnw_line by xxlnw_sn:                              
-               if xxlnw_etime >= itcetimee then do:                              
-                  assign itceTimeS = iTceTimeE.                                  
-                         itceTimeE = itceTimeE                                   
-                                   + xxwk_qty_req / (lnd_rate / 3600).           
-                  create xxlw_mst.                                               
-                  assign xxlw_date = xxwk_date                                   
-                         xxlw_site = xxwk_site                                   
-                         xxlw_line = xxwk_line                                   
-                         xxlw_part = xxwk_part                                   
-                         xxlw_start = itcetimes                                  
-                         xxlw_end  = itcetimee.                                  
-               end.                                                              
-               else do:                                                          
-                                                                                 
-               end.                                                              
-          end.                                                                   
-                                                                                 
-/*      end.                                                                 */
-/*                                                                           */
+ 
+            itcetimee = itcetimes + xxwk_qty_req / vrate.
+            create xxlw_mst.
+            assign xxlw_date = xxwk_date
+                   xxlw_site = xxwk_site
+                   xxlw_line = xxwk_line
+                   xxlw_part = xxwk_part
+                   xxlw_qty_req = xxwk_qty_req
+                   xxlw_start = itcetimes
+                   xxlw_end = itcetimee
+                   xxlw__int01 = xxlnw_etime.
+            assign itcetimes = itcetimee.
+               
     END.
 
     for each xxlw_mst no-lock with frame w:
