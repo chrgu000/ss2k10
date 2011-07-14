@@ -24,7 +24,7 @@ for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     display _file-name _file._desc _Tbl-Type _Frozen
            with frame x side-labels width 254.
     FOR EACH _FIELD OF _FILE BY _ORDER:
-     DISPLAY _ORDER _FIELD-NAME _FORMAT _EXTENT _DATA-TYPE _INITIAL _LABEL
+     DISPLAY _ORDER _FIELD-NAME _DATA-TYPE _FORMAT _EXTENT _INITIAL _LABEL
              _COL-LABEL _field._desc WITH WIDTH 254.
     END.
     FOR EACH _index WHERE _index._file-recid = RECID(_file):

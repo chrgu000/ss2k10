@@ -4,33 +4,31 @@
 
 /* DISPLAY TITLE */
 {mfdtitle.i "09Y1"}
-define variable vterm like lbld_term.
+define variable lblterm like lbld_term.
 define variable fld   like lbld_field format "x(16)".
-define variable prog  like lbld_execname format "x(12)".
+define variable progName  like lbld_execname format "x(12)".
 define variable dcount as integer.
 
 /* DISPLAY TITLE */
 
 form
    space(1)
-   vterm colon 12
-   fld   colon 12
-   prog
+   lblterm  colon 14
+   fld      colon 14
+   progName colon 14 skip(2)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-
-
 
 {wbrp01.i}
 
 repeat:
 
    if c-application-mode <> 'web' then
-      update vterm fld prog with frame a.
+      update lblterm fld progName with frame a.
 
-   {wbrp06.i &command = update &fields = " vterm fld prog" &frm = "a"}
+   {wbrp06.i &command = update &fields = " lblterm fld progName" &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
@@ -48,9 +46,9 @@ repeat:
                &defineVariables = "yes"}
 assign dcount = 0.
    for each lbld_det
-     where (lbld_term = vterm or vterm = "")
-       and (lbld_execname = prog or prog = "")
-       and (lbld_fieldname = fld or fld = "")
+     where (lbld_term = lblterm or lblterm = "") and
+           (lbld_execname = progName or progName = "") and
+           ((index(lbld_fieldname , fld) > 0 and fld <> "") or fld = "")
    no-lock with frame b:
 
       {mfrpchk.i}
@@ -71,7 +69,7 @@ assign dcount = 0.
       end.
       dcount = dcount + 1.
 
-      if dev <> "terminal" and dev <> "page" and dev<> "printer"
+     if dev <> "terminal" and dev <> "page" and dev<> "printer"
      and dcount modulo 5 = 0 then
          put skip(1).
 

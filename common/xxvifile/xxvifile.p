@@ -10,14 +10,14 @@
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
 
-define variable file_name as character format "x(24)".
+define variable file_name as character format "x(50)".
 define variable lngdir    like lng_dir.
 define temp-table tf
     fields tf_txt as character format "x(78)" column-label "CONTENT".
 
 form
-   lngdir    colon 25
-   file_name colon 25
+   lngdir    colon 15
+   file_name colon 15 skip(1)
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -86,7 +86,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-
+	  empty temp-table tf no-error.
 
     for each qad_wkfl no-lock where qad_key1 = "xxvifile.p" and
              qad_key3 = global_userid and
