@@ -36,7 +36,7 @@ DO:
   INPUT FROM OS-DIR(lngdir).
   REPEAT:
       CREATE qad_wkfl.
-      IMPORT qad_key2 qad_key4 qad_key5.
+      IMPORT qad_key4 qad_key2 qad_key5.
       assign qad_key1 = "xxvifile.p"
              qad_key3 = global_userid.
   END.
@@ -90,19 +90,19 @@ repeat:
 
     for each qad_wkfl no-lock where qad_key1 = "xxvifile.p" and
              qad_key3 = global_userid and
-             index(qad_key2,file_name) > 0:
+             index(qad_key4,file_name) > 0:
         create tf.
-        assign tf_txt = "-- File:[" + trim(qad_key2) + "] Beging "
-                      + fill("-", 71 - length(trim(qad_key2))).
-        input from value(qad_key4).
+        assign tf_txt = "-- File:[" + trim(qad_key4) + "] Beging "
+                      + fill("-", 71 - length(trim(qad_key4))).
+        input from value(qad_key2).
         repeat:
           create tf.
           import unformat tf_txt.
         end.
         input close.
         create tf.
-        assign tf_txt = "-- File:[" + trim(qad_key2) + "] End "
-                      + fill("-", 74 - length(trim(qad_key2))).
+        assign tf_txt = "-- File:[" + trim(qad_key4) + "] End "
+                      + fill("-", 74 - length(trim(qad_key4))).
     end.
 
     for each tf no-lock with frame b:

@@ -43,7 +43,7 @@ if not available brwf_det then do:
           assign brwf_det.brw_name = 'xx800'
                  brwf_det.brwf_seq = 1.
 end.
-assign brwf_det.brwf_field    = 'qad_key2'
+assign brwf_det.brwf_field    = 'qad_key4'
        brwf_det.brwf_datatype = 'character'
        brwf_det.brwf_format   = 'x(24)'
        brwf_det.brwf_label    = 'FILE_NAME'

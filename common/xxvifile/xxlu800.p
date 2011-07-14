@@ -4,6 +4,7 @@
 /* $Revision: 1.81.3.3 $    */
 /*V8:ConvertMode=NoConvert                                                  */
 /********************************** History *********************************
+ * $Revision: 1.2 $    Default User             DATE: 07/14/11  ECO: *XXXX*
  ****************************************************************************/
 
 {mfdeclre.i}
@@ -14,12 +15,12 @@
 &SCOPED-DEFINE Q-DRAG-BACK-COL 1
 
 &SCOPED-DEFINE Q-FIRST-TABLE qad_wkfl
-&SCOPED-DEFINE Q-FIRST-FIELD-LIST (qad_key2)
+&SCOPED-DEFINE Q-FIRST-FIELD-LIST (qad_key4)
 &SCOPED-DEFINE Q-NUM-TABLES 1
 
-&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-1 b-1.qad_key2
-&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-1 qad_wkfl.qad_key2
-&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-1 tt-qad_key2
+&SCOPED-DEFINE Q-BROWSE-DISP-EXPR-1 b-1.qad_key4
+&SCOPED-DEFINE Q-BROWSE-DEF-EXPR-1 qad_wkfl.qad_key4
+&SCOPED-DEFINE TT-Q-BROWSE-DEF-EXPR-1 tt-qad_key4
 &SCOPED-DEFINE BR-K-COL-LABEL-1 COLUMN-LABEL
 &SCOPED-DEFINE BR-COLUMN-LABEL-1 "ÎÄ¼þÃû³Æ"
 &SCOPED-DEFINE BR-FIELD-TYPE-1 character
