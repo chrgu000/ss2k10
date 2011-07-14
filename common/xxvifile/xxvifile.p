@@ -87,7 +87,7 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
 	  empty temp-table tf no-error.
-
+/*    {mfphead.i}     */
     for each qad_wkfl no-lock where qad_key1 = "xxvifile.p" and
              qad_key3 = global_userid and
              index(qad_key4,file_name) > 0:
@@ -110,8 +110,8 @@ repeat:
     end.
 
     setFrameLabels(frame b:handle).
-   {mfrtrail.i}
-
+    {mfreset.i}
+/*  {mfrtrail.i}  */
 end.
 
 {wbrp04.i &frame-spec = a}
