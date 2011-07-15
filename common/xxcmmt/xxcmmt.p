@@ -1,14 +1,15 @@
 /* xxcmmt.p - PART COMMENTS                                                   */
 /*V8:ConvertMode=Maintenance                                                  */
 /************************* REVISION HISTORY ***********************************/
-/* REVISION:111520.1 Create: 05/20/11 BY: zy                                  */
+/* REVISION:110520.1 Create: 05/20/11 BY: zy                                  */
+/* LAST MODIFY:110715 by Zy:Modify it to eb2 version (Remove Domain)    *17YF */ 
 /* Environment: Progress:10.1B   QAD:eb21sp5    Interface:                    */
 /******************************************************************************/
 /*-Revision:[15YJ]-------------------------------------------------------------
   Purpose:export nr_mstr record to source code for install to custmer
   Notes:This version only apply for mfg/pro eb21 or later.
 ------------------------------------------------------------------------------*/
-{mfdtitle.i "15YJ" }
+{mfdtitle.i "17YF" }
 
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -33,8 +34,8 @@ define variable batchdelete as character format "x(1)" no-undo.
 form
    cd_ref      colon 18
    cd_lang     colon 71
-   cd_domain   colon 18
-   cd_type     colon 42
+/*17YF   cd_domain   colon 18  */
+   cd_type     colon 18
    batchdelete colon 62
    cd_seq      colon 71
    skip(1)
@@ -80,7 +81,9 @@ repeat with frame a:
 
    display 1 @ cd_seq with frame a.
 
-   prompt-for cd_ref cd_domain cd_type cd_lang cd_seq
+   prompt-for cd_ref 
+/*17YF   cd_domain    */
+   cd_type cd_lang cd_seq
    /* Prompt for the delete variable in the key frame at the
     * End of the key field/s only when batchrun is set to yes */
    batchdelete no-label when (batchrun)
@@ -90,13 +93,13 @@ repeat with frame a:
          {mfnp05.i cd_det cd_ref_type  " yes "  cd_ref "input cd_ref"}
       end. /* IF frame-field = "cd_ref" */
       else
-      if frame-field = "cd_domain"
-      then do:
-         {mfnp05.i cd_det cd_ref_type
-            " cd_domain  = input cd_domain "
-            cd_domain "input cd_domain"}
-      end.
-      else
+/*17YF      if frame-field = "cd_domain"                                     */
+/*17YF      then do:                                                         */
+/*17YF         {mfnp05.i cd_det cd_ref_type                                  */
+/*17YF            " cd_domain  = input cd_domain "                           */
+/*17YF            cd_domain "input cd_domain"}                               */
+/*17YF      end.                                                             */
+/*17YF      else                                                             */
       if frame-field = "cd_type"
       then do:
          {mfnp05.i cd_det cd_ref_type
@@ -127,17 +130,19 @@ repeat with frame a:
 
       if recno <> ?
       then do:
-         display cd_ref cd_domain cd_type cd_lang cd_seq + 1 @ cd_seq
+         display cd_ref 
+/*17YF    cd_domain */
+          cd_type cd_lang cd_seq + 1 @ cd_seq
             cd_cmmt.
       end. /* IF recno <> ? */
    end. /* PROMPT-FOR....EDITING */
 
-   find cd_det
-       where cd_det.cd_domain = input cd_domain
-      and  cd_ref  = input cd_ref
-      and cd_type = input cd_type
-      and cd_lang   = input cd_lang
-      and cd_seq    = input cd_seq - 1
+   find cd_det where
+/*17YF      where cd_det.cd_domain = input cd_domain  and*/
+        cd_ref  = input cd_ref and
+        cd_type = input cd_type and
+        cd_lang   = input cd_lang and
+        cd_seq    = input cd_seq - 1
    exclusive-lock no-error.
    if not available cd_det
    then do:
@@ -145,13 +150,15 @@ repeat with frame a:
       create cd_det.
       assign
          cd_ref
-         cd_domain
+/*17YF   cd_domain   */
          cd_type
          cd_lang
          cd_seq = input cd_seq - 1.
    end. /* IF NOT AVAILABLE cd_det */
 
-   display cd_ref cd_domain cd_type cd_lang cd_seq + 1 @ cd_seq cd_cmmt.
+   display cd_ref 
+/*17YF     cd_domain  */
+					 cd_type cd_lang cd_seq + 1 @ cd_seq cd_cmmt.
 
    assign
       recno = recid(cd_det)
