@@ -1,3 +1,4 @@
+
 /* xxrepkup.p - REPETITIVE PICKLIST CALCULATION                              */
 /*V8:ConvertMode=FullGUIReport                                               */
 /* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
@@ -5,8 +6,8 @@
 /*-revision end--------------------------------------------------------------*/
 
 {mfdtitle.i "110609.1"}
-{xxrepkup1.i}
-{xxtimestr.i}
+/* {xxrepkup1.i} */
+/* {xxtimestr.i} */
 
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
@@ -15,7 +16,9 @@ define variable issue1 as date no-undo.
 define variable update_data as logical no-undo initial yes.
 define variable timedif as integer.
 define variable vRate as decimal. /* 产能(个/每秒) */
-
+define variable itceTime as integer. /*时间用于记录计算时每个分界时间*/
+define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
+define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
 /* SELECT FORM */
 form
    line   colon 15
@@ -100,6 +103,7 @@ end.
                          xxlw_site = xxwk_site
                          xxlw_line = xxwk_line
                          xxlw_part = xxwk_part
+                         xxlw_sn = xxlnw_sn
                          xxlw_qty_req = xxwk_qty_req
                          xxlw_start = itcetimes
                          xxlw_end = itcetimee
@@ -114,6 +118,7 @@ end.
                      xxlw_site = xxwk_site
                      xxlw_line = xxwk_line
                      xxlw_part = xxwk_part
+                     xxlw_sn = xxlnw_sn
                      xxlw_qty_req = xxwk_qty_req
                      xxlw_start = itcetimes
                      xxlw_end = xxlnw_etime
@@ -128,6 +133,7 @@ end.
                         xxlw_site = xxwk_site
                         xxlw_line = xxwk_line
                         xxlw_part = xxwk_part
+                        xxlw_sn = xxlnw_sn
                         xxlw_qty_req = xxwk_qty_req
                         xxlw_start = xxlnw_stime
                         xxlw_end = xxlnw_stime + timedif
@@ -136,10 +142,15 @@ end.
                 assign itcetimee = xxlnw_stime + timedif.
                 assign itcetimes = itcetimee.
             end.
+        for each xxlw_mst exclusive-lock where xxlw_date = xxwk_date
+             and xxlw_site = xxwk_site and xxlw_line = xxwk_line
+             and xxlw_part = xxwk_part:
+             assign xxlw_qty_req = vrate * (xxlw_end - xxlw_start).
+        end.
     END.
 
     for each xxlw_mst no-lock with frame w:
-        DISP xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
+        DISP xxlw_sn xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
              string(xxlw_start,"HH:MM:SS") column-label "Start At"
              string(xxlw_end,"HH:MM:SS") column-label "End At"
              string(xxlw__int01,"HH:MM:SS") column-label "End At"
@@ -148,8 +159,8 @@ end.
 
     for each xxlnw_det no-lock where xxlnw_line = "2rdc"
     break by xxlnw_line by xxlnw_sn with frame s:
-        disp xxlnw_site xxlnw_line xxlnw_sn xxlnw_on xxlnw_start xxlnw_end
-             xxlnw_rstmin with width 300.
+        disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on
+             xxlnw_start xxlnw_end xxlnw_rstmin with width 300.
     end.
 
 /*        for each si_mstr                                                   */
