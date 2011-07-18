@@ -4,7 +4,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "110609.1"}
+{mfdtitle.i "110718.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -90,15 +90,22 @@ end.
         /* 初始化itceTime */
         if first-of(xxwk_line) then do:
             FIND FIRST xxlnw_det use-index xxlnw_siteline
-            		 WHERE xxlnw_site = xxwk_site AND
+                 WHERE xxlnw_site = xxwk_site AND
                        xxlnw_line = xxwk_line AND xxlnw_on
                        NO-LOCK NO-ERROR.
             IF AVAILABLE xxlnw_det THEN DO:
                  assign itceTime = xxlnw_stime
                         itceTimeS = xxlnw_stime
                         itceTimeE = xxlnw_stime.
+                 recno = recid(xxlnw_det).
             END.
         end.    /* if first-of(xxwk_line) then do: */
+        else do:                                                         
+          if recno <> ? then do:                                         
+             find first xxlnw_det where recid(xxlnw_det) = recno         
+                  no-lock no-error.                                      
+          end.                                                           
+        end.                                                             
         /*每个物料产能 (个/秒) */
         find first lnd_det no-lock where lnd_site = xxwk_site and
                    lnd_line = xxwk_line and lnd_part = xxwk_part no-error.
@@ -148,6 +155,7 @@ end.
                     xxlw_start = xxlnw_stime
                     xxlw_end = xxlnw_stime + timedif
                     xxlw__int01 = xxlnw_etime.
+             recno = recid(xxlnw_det).
           END.
             assign itcetimee = xxlnw_stime + timedif.
             assign itcetimes = itcetimee.
@@ -158,24 +166,27 @@ end.
              and xxlw_part = xxwk_part:
              assign xxlw_qty_req = vrate * (xxlw_end - xxlw_start).
         end.
+
     END.  /*  FOR EACH xxwk_det NO-LOCK */
 
     for each xxlw_mst no-lock where
         xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
-        xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and 
-        xxlw_line >= line and (xxlw_line <= line1 or line1 = "")    				
-    	  with frame w :
+        xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
+        xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
+        with frame w 
+        by xxlw_date by xxlw_site by xxlw_line by xxlw_sn by xxlw_start:
         DISP xxlw_sn xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
              string(xxlw_start,"HH:MM:SS") column-label "Start At"
              string(xxlw_end,"HH:MM:SS") column-label "End At"
-             with width 300.                                                        
-    end.                                                                            
-       for each xxlnw_det no-lock where xxlnw_line = "2rdc"                         
-       break by xxlnw_line by xxlnw_sn with frame s:                                
-           disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on                    
-                xxlnw_start xxlnw_end xxlnw_rstmin with width 300.                  
-       end.                                                                         
-                                                                                    
+             with width 300.
+    end.
+
+/*       for each xxlnw_det no-lock where xxlnw_line = "2rdc"               */
+/*       break by xxlnw_line by xxlnw_sn with frame s:                      */
+/*           disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on          */
+/*                xxlnw_start xxlnw_end xxlnw_rstmin with width 300.        */
+/*       end.                                                               */
+
 
    /* REPORT TRAILER  */
    {mfrtrail.i}
