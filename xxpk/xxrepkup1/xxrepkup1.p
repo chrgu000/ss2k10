@@ -19,6 +19,7 @@ define variable vRate as decimal. /* 产能(个/每秒) */
 define variable itceTime as integer. /*时间用于记录计算时每个分界时间*/
 define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
 define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
+define variable rid as recid.
 /* SELECT FORM */
 form
    site   colon 15
@@ -85,12 +86,6 @@ end.
              xxwk_site >= site and (xxwk_site <= site1 or site1 = "") and
              xxwk_line >= line and (xxwk_line <= line1 or line1 = "")
              break by xxwk_site by xxwk_line by xxwk_sn:
-        /*每个物料产能 (个/秒) */
-        find first lnd_det no-lock where lnd_site = xxwk_site and
-                   lnd_line = xxwk_line and lnd_part = xxwk_part no-error.
-        if available lnd_det then do:
-           vrate = lnd_rate / 3600.
-        end.
 
         /* 初始化itceTime */
         if first-of(xxwk_line) then do:
@@ -104,6 +99,12 @@ end.
                         itceTimeE = xxlnw_stime.
             END.
         end.    /* if first-of(xxwk_line) then do: */
+        /*每个物料产能 (个/秒) */
+        find first lnd_det no-lock where lnd_site = xxwk_site and
+                   lnd_line = xxwk_line and lnd_part = xxwk_part no-error.
+        if available lnd_det then do:
+           vrate = lnd_rate / 3600.
+        end.
 
         itcetimee = itcetimes + xxwk_qty_req / vrate.
         if itcetimee <= xxlnw_etime then do:
@@ -159,19 +160,22 @@ end.
         end.
     END.  /*  FOR EACH xxwk_det NO-LOCK */
 
-    for each xxlw_mst no-lock with frame w:
+    for each xxlw_mst no-lock where
+        xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
+        xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and 
+        xxlw_line >= line and (xxlw_line <= line1 or line1 = "")    				
+    	  with frame w :
         DISP xxlw_sn xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
              string(xxlw_start,"HH:MM:SS") column-label "Start At"
              string(xxlw_end,"HH:MM:SS") column-label "End At"
-             string(xxlw__int01,"HH:MM:SS") column-label "End At"
-             with width 300.
-    end.
-
-    for each xxlnw_det no-lock where xxlnw_line = "2rdc"
-    break by xxlnw_line by xxlnw_sn with frame s:
-        disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on
-             xxlnw_start xxlnw_end xxlnw_rstmin with width 300.
-    end.
+             with width 300.                                                        
+    end.                                                                            
+       for each xxlnw_det no-lock where xxlnw_line = "2rdc"                         
+       break by xxlnw_line by xxlnw_sn with frame s:                                
+           disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on                    
+                xxlnw_start xxlnw_end xxlnw_rstmin with width 300.                  
+       end.                                                                         
+                                                                                    
 
    /* REPORT TRAILER  */
    {mfrtrail.i}
