@@ -1,4 +1,3 @@
-
 /* xxrepkup.p - REPETITIVE PICKLIST CALCULATION                              */
 /*V8:ConvertMode=FullGUIReport                                               */
 /* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
@@ -6,9 +5,10 @@
 /*-revision end--------------------------------------------------------------*/
 
 {mfdtitle.i "110609.1"}
-/* {xxrepkup1.i} */
-/* {xxtimestr.i} */
 
+/* {xxtimestr.i}  */
+define variable site   like si_site no-undo.
+define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
 define variable issue  as date no-undo.
@@ -21,6 +21,8 @@ define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
 define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
 /* SELECT FORM */
 form
+   site   colon 15
+   site1  label {t001.i} colon 49 skip
    line   colon 15
    line1  label {t001.i} colon 49 skip
    issue  colon 15
@@ -35,15 +37,16 @@ setFrameLabels(frame a:handle).
 
 {wbrp01.i}
 repeat:
+    if site1 = hi_char then site1 = "".
     if line1 = hi_char then line1 = "".
     if issue = low_date then issue = ?.
     if issue1 = hi_date then issue1 = ?.
 
 if c-application-mode <> 'web' then
-update line line1 issue issue1 update_data with frame a.
+update site site1 line line1 issue issue1 update_data with frame a.
 
 {wbrp06.i &command = update
-          &fields = " line line1 issue issue1 update_data"
+          &fields = " site site1 line line1 issue issue1 update_data"
           &frm = "a"}
 
 if (c-application-mode <> 'web') or
@@ -51,12 +54,15 @@ if (c-application-mode <> 'web') or
 (c-web-request begins 'data')) then do:
 
    bcdparm = "".
+   {mfquoter.i site}
+   {mfquoter.i site1}
    {mfquoter.i line  }
    {mfquoter.i line1 }
    {mfquoter.i issue }
    {mfquoter.i issue1}
 
    line1 = line1 + hi_char.
+   site1 = site1 + hi_char.
    if issue = ? then issue = low_date.
    if issue1 = ? then issue1 = hi_date.
 end.
@@ -66,13 +72,17 @@ end.
         {mfphead.i}
 
     if update_data then do:
-       for each xxlw_mst exclusive-lock:
+       for each xxlw_mst exclusive-lock where xxlw_date >= issue and
+               (xxlw_date <= issue1 or issue1 = ?) and
+               (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
+                xxlw_line >= line and (xxlw_line <= line1 or line1 = ""):
            delete xxlw_mst.
        end.
     end.
 
-    FOR EACH xxwk_det NO-LOCK  where xxwk_date >= issue and
-           /*  (xxwk_date <= issue1 or issue1 = ?) and */
+    FOR EACH xxwk_det NO-LOCK where xxwk_date >= issue and
+            (xxwk_date <= issue1 or issue1 = ?) and
+             xxwk_site >= site and (xxwk_site <= site1 or site1 = "") and
              xxwk_line >= line and (xxwk_line <= line1 or line1 = "")
              break by xxwk_site by xxwk_line by xxwk_sn:
         /*每个物料产能 (个/秒) */
@@ -84,70 +94,70 @@ end.
 
         /* 初始化itceTime */
         if first-of(xxwk_line) then do:
-            FIND FIRST xxlnw_det WHERE xxlnw_site = xxwk_site AND
+            FIND FIRST xxlnw_det use-index xxlnw_siteline
+            		 WHERE xxlnw_site = xxwk_site AND
                        xxlnw_line = xxwk_line AND xxlnw_on
                        NO-LOCK NO-ERROR.
-              IF AVAILABLE xxlnw_det THEN DO:
-                   assign itceTime = xxlnw_stime
-                          itceTimeS = xxlnw_stime
-                          itceTimeE = xxlnw_stime.
-              END.
-
+            IF AVAILABLE xxlnw_det THEN DO:
+                 assign itceTime = xxlnw_stime
+                        itceTimeS = xxlnw_stime
+                        itceTimeE = xxlnw_stime.
+            END.
         end.    /* if first-of(xxwk_line) then do: */
 
-            itcetimee = itcetimes + xxwk_qty_req / vrate.
-            if itcetimee <= xxlnw_etime then do:
-               if (xxlnw_etime - xxlnw_stime) * vrate >= xxwk_qty_req then do:
-                  create xxlw_mst.
-                  assign xxlw_date = xxwk_date
-                         xxlw_site = xxwk_site
-                         xxlw_line = xxwk_line
-                         xxlw_part = xxwk_part
-                         xxlw_sn = xxlnw_sn
-                         xxlw_qty_req = xxwk_qty_req
-                         xxlw_start = itcetimes
-                         xxlw_end = itcetimee
-                         xxlw__int01 = xxlnw_etime.
-                  assign itcetimes = itcetimee.
-               end.
-            end.
-            else do:
-
+        itcetimee = itcetimes + xxwk_qty_req / vrate.
+        if itcetimee <= xxlnw_etime then do:
+           if (xxlnw_etime - xxlnw_stime) * vrate >= xxwk_qty_req then do:
               create xxlw_mst.
               assign xxlw_date = xxwk_date
                      xxlw_site = xxwk_site
                      xxlw_line = xxwk_line
                      xxlw_part = xxwk_part
-                     xxlw_sn = xxlnw_sn
+                     xxlw_sn   = xxlnw_sn
                      xxlw_qty_req = xxwk_qty_req
                      xxlw_start = itcetimes
-                     xxlw_end = xxlnw_etime
+                     xxlw_end = itcetimee
                      xxlw__int01 = xxlnw_etime.
-              assign timedif = itcetimee - xxlnw_etime.
-              FIND NEXT xxlnw_det WHERE xxlnw_site = xxwk_site AND
-                       xxlnw_line = xxwk_line AND xxlnw_on
-                       NO-LOCK NO-ERROR.
-              IF AVAILABLE xxlnw_det THEN DO:
-                 create xxlw_mst.
-                 assign xxlw_date = xxwk_date
-                        xxlw_site = xxwk_site
-                        xxlw_line = xxwk_line
-                        xxlw_part = xxwk_part
-                        xxlw_sn = xxlnw_sn
-                        xxlw_qty_req = xxwk_qty_req
-                        xxlw_start = xxlnw_stime
-                        xxlw_end = xxlnw_stime + timedif
-                        xxlw__int01 = xxlnw_etime.
-              END.
-                assign itcetimee = xxlnw_stime + timedif.
-                assign itcetimes = itcetimee.
-            end.
+              assign itcetimes = itcetimee.
+           end.
+        end.
+        else do:
+          create xxlw_mst.
+          assign xxlw_date = xxwk_date
+                 xxlw_site = xxwk_site
+                 xxlw_line = xxwk_line
+                 xxlw_part = xxwk_part
+                 xxlw_sn   = xxlnw_sn
+                 xxlw_qty_req = xxwk_qty_req
+                 xxlw_start = itcetimes
+                 xxlw_end = xxlnw_etime
+                 xxlw__int01 = xxlnw_etime.
+          assign timedif = itcetimee - xxlnw_etime.
+          FIND NEXT xxlnw_det use-index xxlnw_siteline
+              WHERE xxlnw_site = xxwk_site AND
+                    xxlnw_line = xxwk_line AND xxlnw_on NO-LOCK NO-ERROR.
+          IF AVAILABLE xxlnw_det THEN DO:
+             create xxlw_mst.
+             assign xxlw_date = xxwk_date
+                    xxlw_site = xxwk_site
+                    xxlw_line = xxwk_line
+                    xxlw_part = xxwk_part
+                    xxlw_sn   = xxlnw_sn
+                    xxlw_qty_req = xxwk_qty_req
+                    xxlw_start = xxlnw_stime
+                    xxlw_end = xxlnw_stime + timedif
+                    xxlw__int01 = xxlnw_etime.
+          END.
+            assign itcetimee = xxlnw_stime + timedif.
+            assign itcetimes = itcetimee.
+
+        end.
         for each xxlw_mst exclusive-lock where xxlw_date = xxwk_date
              and xxlw_site = xxwk_site and xxlw_line = xxwk_line
              and xxlw_part = xxwk_part:
              assign xxlw_qty_req = vrate * (xxlw_end - xxlw_start).
         end.
-    END.
+    END.  /*  FOR EACH xxwk_det NO-LOCK */
 
     for each xxlw_mst no-lock with frame w:
         DISP xxlw_sn xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
@@ -163,18 +173,8 @@ end.
              xxlnw_start xxlnw_end xxlnw_rstmin with width 300.
     end.
 
-/*        for each si_mstr                                                   */
-/*            no-lock break by si_site with frame b width 132 no-box.        */
-/*                                                                           */
-/*           /* SET EXTERNAL LABELS */                                       */
-/*           setFrameLabels(frame b:handle).                                 */
-/*                                                                           */
-/*           display  si_site si_desc.                                       */
-/*           {mfrpexit.i}                                                    */
-/*        end.                                                               */
-
-        /* REPORT TRAILER  */
-        {mfrtrail.i}
+   /* REPORT TRAILER  */
+   {mfrtrail.i}
 
 end.  /* repeat: */
 
