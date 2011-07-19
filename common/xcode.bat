@@ -1,7 +1,7 @@
 rem @echo off
 
 rem this parameter must change to svnpath(xcode.bat path).
-set svn=C:\tmp\common
+set svn="C:\Docume~1\zy\LocalS~1\Temp\comp"
 
 set xrc=c:\qadguicli
 set xcode=C:\qadguicli\proedit
@@ -15,19 +15,23 @@ mkdir /d %xrc%\xrc
 
 rem copy src to srcdir
 mkdir %src%
-copy /y %svn%\xxbdpro\xxbdpro.p %src%\
-copy /y %svn%\xxcomp\xx*.i %src%\
-copy /y %svn%\xxcomp\xxc.p %src%\
-copy /y %svn%\xxcomp\xxcomp.p %src%\
-copy /y %svn%\xxcomp\xxcompil.p %src%\
+copy /y %svn%\xxbdpro\xx*.? %src%\
+copy /y %svn%\xxbwmt\xx*.? %src%\
+copy /y %svn%\xxcmmt\xx*.? %src%\
+copy /y %svn%\xxcomp\xx*.? %src%\
+copy /y %svn%\xxdlfhmt\xx*.? %src%\
+copy /y %svn%\xxflhusr\xx*.? %src%\
+copy /y %svn%\xxgettab\xx*.? %src%\
+copy /y %svn%\xxlbldmt\xx*.? %src%\
+copy /y %svn%\xxlbliq\xx*.? %src%\
+copy /y %svn%\xxmecm\xx*.? %src%\
+copy /y %svn%\xxmeiq\xx*.? %src%\
+copy /y %svn%\xxmgflh1\xx*.? %src%\
+copy /y %svn%\xxnrgnmt\xx*.? %src%\
+copy /y %svn%\xxvifile\xx*.? %src%\
+copy /y %svn%\xxvifile\*.cim %cim%\
+
 copy /y %svn%\xxmsgiq.p %src%\
-copy /y %svn%\xxmeiq\*.* %src%\
-copy /y %svn%\xxgettab\*.* %src%\
-copy /y %svn%\xxlbliq\*.p %src%\
-copy /y %svn%\xxmeiq\*.p %src%\
-copy /y %svn%\xxlbldmt\*.p %src%\
-copy /y %svn%\xxflhusr\*.p %src%\
-copy /y %svn%\xxcmmt\*.p %src%\
 
 rem Xcode.
 cd /d %src%
