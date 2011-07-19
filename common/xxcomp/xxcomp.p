@@ -86,10 +86,8 @@ ON "CTRL-D" OF destpath IN FRAME a DO:
    end.
 end.
 on Entry of destpath in frame a do:
-   status input "Ctrl-] to change default value.".
+   status input "Ctrl-] to change default Destination Directory value.".
    {pxmsg.i &MSGTEXT='"Ctrl-D to delete saved param."' &ERRORLEVEL=1}
-/*7B*/  {pxmsg.i &MSGTEXT='"Ctrl-] to change default save as path."'
-/*7B*/           &ERRORLEVEL=1}
 end.
 on Leave of destpath in frame a do:
    status input "".
