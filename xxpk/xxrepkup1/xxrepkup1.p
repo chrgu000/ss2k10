@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 {mfdtitle.i "110718.1"}
-
+{xxrepkup1.i}
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
@@ -16,10 +16,11 @@ define variable issue1 as date no-undo.
 define variable update_data as logical no-undo initial yes.
 define variable timedif as integer.
 define variable vRate as decimal. /* 产能(个/每秒) */
-define variable itceTime as integer. /*时间用于记录计算时每个分界时间*/
+define variable itceTime as integer.  /*时间用于记录计算时每个分界时间*/
 define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
 define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
 define variable rid as recid.
+define variable vqty  as decimal.
 /* SELECT FORM */
 form
    site   colon 15
@@ -168,6 +169,21 @@ end.
         end.
 
     END.  /*  FOR EACH xxwk_det NO-LOCK */
+	  empty temp-table levx no-error.	
+		for each xxlw_mst no-lock where
+        xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
+        xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
+        xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
+        break by xxlw_part:
+        if first-of(xxlw_part) then do:
+        	 assign vqty = 1.
+        	 run getPhList(input xxlw_part,input-output vqty).
+        end.
+        
+    end.
+for each levx no-lock:
+	display levx.
+end.
 
     for each xxlw_mst no-lock where
         xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and

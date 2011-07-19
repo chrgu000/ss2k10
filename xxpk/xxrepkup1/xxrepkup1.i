@@ -6,9 +6,10 @@
 
 /*** 此表用于确定那个材料是vpart下的非虚零件要显示在报表上                ****/
 define temp-table levx no-undo
+  fields levx_par  like pt_part
   fields levx_part like pt_part
   fields levx_qty  like ps_qty_per
-  index levx_part levx_part.
+  index levx_part levx_par levx_part.
 define buffer ptmstr for pt_mstr.
 /*------------------------------------------------------------------------------
   Purpose:展开工单明细第一层非虚零件的用量
@@ -31,14 +32,15 @@ procedure getPhList:
             run getPhList(input ps_mstr.ps_comp,input-output vqty).
          end.
          else do:
-            find first levx exclusive-lock where levx_part = ps_mstr.ps_comp
-                 no-error.
+            find first levx exclusive-lock where levx_par = ipart and
+            				   levx_part = ps_mstr.ps_comp no-error.
             if available levx then do:
                assign levx_qty = levx_qty + vqty.
             end.
             else do:
                create levx.
-               assign levx_part = ps_mstr.ps_comp
+               assign levx_par = ipart
+               	      levx_part = ps_mstr.ps_comp
                       levx_qty  = vqty.
             end.
          end.
