@@ -32,6 +32,7 @@ copy /y %svn%\xxvifile\xx*.? %src%\
 copy /y %svn%\xxvifile\*.cim %cim%\
 
 copy /y %svn%\xxmsgiq.p %src%\
+copy /y %svn%\xxmsgmt.p %src%\
 
 rem Xcode.
 cd /d %src%
