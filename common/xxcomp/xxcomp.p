@@ -1,10 +1,11 @@
 /* xxcomp.p - compile procedure                                              */
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 14YB LAST MODIFIED: 04/11/11 BY:zy Add EB common             *EB*/
+/* REVISION: 17YB LAST MODIFIED: 07/19/11 BY:zy prompt ctrl+] operator    *7B*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "14YB"}
+{mfdtitle.i "17YB"}
 define variable filepath as character format "x(54)".
 define variable destpath as character format "x(54)".
 define variable filefrom as character format "x(24)".
@@ -87,6 +88,8 @@ end.
 on Entry of destpath in frame a do:
    status input "Ctrl-] to change default value.".
    {pxmsg.i &MSGTEXT='"Ctrl-D to delete saved param."' &ERRORLEVEL=1}
+/*7B*/  {pxmsg.i &MSGTEXT='"Ctrl-] to change default save as path."'
+/*7B*/           &ERRORLEVEL=1}
 end.
 on Leave of destpath in frame a do:
    status input "".
