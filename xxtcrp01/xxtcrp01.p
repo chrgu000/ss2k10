@@ -11,8 +11,8 @@ define variable nbr1 like rsn_type.
 define variable cust like rsn_code.
 define variable cust1 like rsn_code.
 
-/*K1D1*/ /* DISPLAY TITLE */
-/*K1D1*/  {mfdtitle.i "110720.1"}
+/* DISPLAY TITLE */
+{mfdtitle.i "110720.1"}
 
 form
    nbr   colon 20
@@ -24,27 +24,27 @@ with frame a side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-/*K1D1*/ {wbrp01.i}
+{wbrp01.i}
 
 repeat:
 
    if nbr1 = hi_char then nbr1 = "".
    if cust1 = hi_char then cust1 = "".
 
-/*K1D1*/ if c-application-mode <> 'web' then
+ if c-application-mode <> 'web' then
    update nbr nbr1 cust cust1 with frame a.
 
-/*K1D1*/ {wbrp06.i &command = update &fields = "  nbr nbr1 cust cust1 "
+ {wbrp06.i &command = update &fields = "  nbr nbr1 cust cust1 "
           &frm = "a"}
 
-/*K1D1*/ if (c-application-mode <> 'web') or
-/*K1D1*/ (c-application-mode = 'web' and
-/*K1D1*/ (c-web-request begins 'data')) then do:
+ if (c-application-mode <> 'web') or
+ (c-application-mode = 'web' and
+ (c-web-request begins 'data')) then do:
 
    if nbr1 = "" then nbr1 = hi_char.
    if cust1 = "" then cust1 = hi_char.
 
-/*K1D1*/ end.
+ end.
 
    /* SELECT PRINTER */
    {mfselprt.i "printer" 132}
@@ -57,7 +57,7 @@ repeat:
    no-lock with frame b width 132 no-attr-space:
                 /* SET EXTERNAL LABELS */
                 setFrameLabels(frame b:handle).
-                {mfrpchk.i}         /*G348*/
+                {mfrpchk.i}  
 		  find first cm_mstr where cm_addr = xxtc_cust no-lock no-error.
 		  if available cm_mstr then do:
 		  	 assign cmsort = cm_sort.
@@ -77,4 +77,4 @@ repeat:
    {mftrl080.i}
 end.
 
-/*K1D1*/ {wbrp04.i &frame-spec = a}
+ {wbrp04.i &frame-spec = a}
