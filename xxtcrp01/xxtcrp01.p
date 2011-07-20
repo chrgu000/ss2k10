@@ -10,6 +10,7 @@ define variable nbr like rsn_type.
 define variable nbr1 like rsn_type.
 define variable cust like rsn_code.
 define variable cust1 like rsn_code.
+define variable xxtcstat as character format "x(12)".
 
 /* DISPLAY TITLE */
 {mfdtitle.i "110720.1"}
@@ -65,10 +66,19 @@ repeat:
 		  else do:
 		  	 assign cmsort = "".
 		  end.
+		  find first code_mstr where code_fldname = "xxtc_stat" and 
+		  				   code_value = xxtc_stat no-lock no-error.
+	 		if availabl code_mstr then do:
+	 			 assign xxtcstat = code_cmmt.
+	 	  end.
+	 	  else do:
+	 	  	 assign xxtcstat = "".
+	    end.
       display xxtc_nbr        
 							xxtc_cust     
 							cmsort  
 							xxtc_stat  
+							xxtcstat
 							xxtc_date       
 							xxtc_mod_date   
 							xxtc_mod_usr.    
