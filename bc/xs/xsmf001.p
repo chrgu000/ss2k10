@@ -1,6 +1,13 @@
-/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
+/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */ 
 /* BARCODE SYSTEM */
 /* Generate date / time  12/05/07 22:31:30 */
+/* replace 【复盘(BY NBR). .44】 as 【台车回收..44】           *17YJ**/
+/*- SS - 110720.1 --------------------------------------------*17YJ*-----------
+  Purpose:新增台车回收程序替换原44(xsinv44.p).
+  Parameters: NONE
+  Memo: Add new table xxtc_hst record it.
+------------------------------------------------------------------------------*/
+
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -1947,7 +1954,7 @@ IF OkToRun = yes then RUN    xsrep09.p.
 
 
                 /* LABEL 4 - START */ 
-                L11404 = "复盘(BY NBR). .44" .
+/*17YJ*/        L11404 = "台车回收. .44" .
                 display L11404          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 4 - END */ 
 
@@ -2405,8 +2412,10 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
 
         /* LOGICAL SKIP START */
         V1140 = "".
-RUN CheckSecurity (INPUT "xsinv44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN    xsinv44.p.
+/*17YJ* RUN CheckSecurity (INPUT "xsinv44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ). */
+/*17YJ* IF OkToRun = yes THEN  RUN    xsinv44.p.                                                        */
+/*17YJ*/ RUN CheckSecurity (INPUT "xstcbk.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+/*17YJ*/  IF OkToRun = yes THEN  RUN xstcbk.p.
         leave V1144L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
@@ -4622,7 +4631,7 @@ end. /*v1168lmainloop:*/
 
 
                 /* LABEL 3 - START */ 
-                  L11703 = "" . 
+                  L11703 = "台车状态报表. .(0.73)" . 
                 display L11703          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 3 - END */ 
 
