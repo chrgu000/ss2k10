@@ -84,9 +84,7 @@
 */
 /* ss - 110402.1 -b */  /* 修改获取订单逻辑 */
 /* ss - 110621.1 -b */ /*  xxsod_rmks2 记录global_userid*/
-
-
-
+/*怎加版本信息*/
 
 
 define variable sectionid as integer init 0 .
@@ -98,7 +96,6 @@ define variable i as integer .
 /* ss - 110402.1 -b */
 DEFINE VAR v_month AS CHAR FORMAT "x(2)" .
 /* ss - 110402.1 -e */
-
 /*
 DEF SHARED VAR global_userid AS CHAR.
 */
