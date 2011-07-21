@@ -10,7 +10,6 @@
   Memo:
 ------------------------------------------------------------------------------*/
 
-
 {mfdtitle.i "110720.1"}
 DEFINE VARIABLE v_type LIKE xxsod_type.
 DEFINE VARIABLE v_cust LIKE xxsod_cust.
@@ -34,7 +33,7 @@ DEFINE VARIABLE v_pt like pt_part.
 
 form
     SKIP(.2)
-    v_type       COLON 15 
+    v_type       COLON 15
     v_cust       COLON 15 v_cust1     label {t001.i} COLON 49 SKIP
     v_project    COLON 15 v_project1  LABEL {t001.i} COLON 49 SKIP
     v_vend       COLON 15 v_vend1     LABEL {t001.i} COLON 49 SKIP
@@ -77,7 +76,7 @@ repeat:
 
     {gpselout.i &printType = "printer"
                 &printWidth = 500
-                &pagedFlag = " "
+                &pagedFlag = " nopage "
                 &stream = " "
                 &appendToFile = " "
                 &streamedOutputToTerminal = " "
@@ -144,8 +143,8 @@ do on error undo, return error on endkey undo, return error:
           PUT UNFORMATTED xxsod_due_date AT 263.
           PUT UNFORMATTED xxsod_due_time  AT 273.
           PUT UNFORMATTED xxsod__chr02 TO 286.
-          PUT UNFORMATTED v_ptdraw at 292.
-          PUT UNFORMATTED v_pt 310.
+          PUT UNFORMATTED v_ptdraw at 291.
+          PUT UNFORMATTED v_pt at 310.
           PUT SKIP.
 
       END. /*FOR EACH xxsod_det*/
