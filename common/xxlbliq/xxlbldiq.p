@@ -6,7 +6,7 @@
 {mfdtitle.i "09Y1"}
 define variable lblterm like lbld_term.
 define variable fld   like lbld_field format "x(16)".
-define variable progName  like lbld_execname format "x(12)".
+define variable lbldpgrm  like lbld_execname format "x(12)".
 define variable dcount as integer.
 
 /* DISPLAY TITLE */
@@ -15,7 +15,7 @@ form
    space(1)
    lblterm  colon 14
    fld      colon 14
-   progName colon 14 skip(2)
+   lbldpgrm colon 14 skip(2)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -26,9 +26,9 @@ setFrameLabels(frame a:handle).
 repeat:
 
    if c-application-mode <> 'web' then
-      update lblterm fld progName with frame a.
+      update lblterm fld lbldpgrm with frame a.
 
-   {wbrp06.i &command = update &fields = " lblterm fld progName" &frm = "a"}
+   {wbrp06.i &command = update &fields = " lblterm fld lbldpgrm" &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
@@ -47,7 +47,7 @@ repeat:
 assign dcount = 0.
    for each lbld_det
      where (lbld_term = lblterm or lblterm = "") and
-           (lbld_execname = progName or progName = "") and
+           (lbld_execname = lbldpgrm or lbldpgrm = "") and
            ((index(lbld_fieldname , fld) > 0 and fld <> "") or fld = "")
    no-lock with frame b:
 
