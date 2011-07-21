@@ -1,7 +1,7 @@
 rem @echo off
 
 rem this parameter must change to svnpath(xcode.bat path).
-set svn="C:\Docume~1\zy\LocalS~1\Temp\comp"
+set svn="D:\ss\trunk\common"
 
 set xrc=c:\qadguicli
 set xcode=C:\qadguicli\proedit
@@ -25,7 +25,7 @@ copy /y %svn%\xxdlfhmt\xx*.? %src%\
 copy /y %svn%\xxflhusr\xx*.? %src%\
 copy /y %svn%\xxgettab\xx*.? %src%\
 copy /y %svn%\xxlbldmt\xx*.? %src%\
-copy /y %svn%\xxlbliq\xx*.? %src%\
+copy /y %svn%\xxlbliq\xx*iq.? %src%\
 copy /y %svn%\xxmecm\xx*.? %src%\
 copy /y %svn%\xxmeiq\xx*.? %src%\
 copy /y %svn%\xxmgflh1\xx*.? %src%\
@@ -33,9 +33,12 @@ copy /y %svn%\xxmgflh1\l.cim %cim%\xxmgflh1.cim
 copy /y %svn%\xxnrgnmt\xx*.? %src%\
 copy /y %svn%\xxvifile\xx*.? %src%\
 copy /y %svn%\xxvifile\p.cim %cim%\xxvifile.cim
+copy /y %svn%\xxqwmt\xx*.? %src%\
+copy /y %svn%\xxqwmt\*.cim %cim%\
 
 copy /y %svn%\xxmsgiq.p %src%\
 copy /y %svn%\xxmsgmt.p %src%\
+
 
 rem Xcode.
 cd /d %src%

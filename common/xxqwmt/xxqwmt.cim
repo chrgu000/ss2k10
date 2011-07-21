@@ -1,0 +1,54 @@
+@@batchload gplblmt.p
+"CH"
+"KEY1"
+"KEY1" "K1" "1" "" "" ""
+@@end
+@@batchload gplblmt.p
+"CH"
+"KEY2"
+"KEY2" "K2" "2" "" "" ""
+@@end
+@@batchload gplblmt.p
+"CH"
+"KEY3"
+"KEY3" "K3" "3" "" "" ""
+@@end
+@@batchload gplblmt.p
+"CH"
+"KEY4"
+"KEY4" "K4" "4" "" "" ""
+@@end
+@@batchload gplblmt.p
+"CH"
+"KEY5"
+"KEY5" "K5" "5" "" "" ""
+@@end
+@@batchload gplblmt.p
+"CH"
+"KEY6"
+"KEY6" "K6" "6" "" "" ""
+@@end
+@@batchload xxlbldmt.p
+"qad_key1" "xxqwmt.p"
+"KEY1"
+@@end
+@@batchload xxlbldmt.p
+"qad_key2" "xxqwmt.p"
+"KEY2"
+@@end
+@@batchload xxlbldmt.p
+"qad_key3" "xxqwmt.p"
+"KEY3"
+@@end
+@@batchload xxlbldmt.p
+"qad_key4" "xxqwmt.p"
+"KEY4"
+@@end
+@@batchload xxlbldmt.p
+"qad_key5" "xxqwmt.p"
+"KEY5"
+@@end
+@@batchload xxlbldmt.p
+"qad_key6" "xxqwmt.p"
+"KEY6"
+@@end

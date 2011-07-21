@@ -1,6 +1,6 @@
 /* xxqwmt.p - QAD_WORKFL MAINTENANCE                                         */
 /*F0PN*/ /*V8:ConvertMode=Maintenance                                        */
-/* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
+/* REVISION: 0CYH LAST MODIFIED: 07/21/11   BY: zy                        *eb*/
 /* Environment: Progress:10.1C04   QAD:eb21sp7    Interface:Character        */
 /*-revision end--------------------------------------------------------------*/
 
@@ -110,9 +110,9 @@ repeat with frame a:
    prompt-for qad_key1 qad_key2 editing:
 
       /* FIND NEXT/PREVIOUS RECORD */
-      {mfnp.i qad_wkfl qad_key1  " qad_wkfl.qad_domain = global_domain and
-      qad_key1 "  qad_key2 qad_key2 qad_index1}
-
+/*eb*   {mfnp.i qad_wkfl qad_key1  " qad_wkfl.qad_domain = global_domain and */
+/*eb*   qad_key1 "  qad_key2 qad_key2 qad_index1}                            */
+/*eb*/  {mfnp.i qad_wkfl qad_key1 qad_key1 qad_key2 qad_key2 qad_index1}  
       if recno <> ? then do:
          display qad_key1 qad_key2.
          display qad_key3 qad_key4 qad_key5 qad_key6 with frame k.
@@ -120,11 +120,13 @@ repeat with frame a:
    end.
 
    /* ADD/MOD/DELETE  */
-   find qad_wkfl where qad_wkfl.qad_domain = global_domain and
+       find qad_wkfl where
+/*eb*   qad_wkfl.qad_domain = global_domain and                              */
         qad_key1 = input qad_key1 and qad_key2 = input qad_key2 no-error.
    if not available qad_wkfl then do:
       {mfmsg.i 1 1}
-      create qad_wkfl. qad_wkfl.qad_domain = global_domain.
+      create qad_wkfl. 
+/*eb* assign qad_wkfl.qad_domain = global_domain.                            */
       assign qad_key1 qad_key2.
    end.
    recno = recid(qad_wkfl).
@@ -250,7 +252,6 @@ repeat with frame a:
       end.
      end.
    end.
-
 
 end.
 status input.
