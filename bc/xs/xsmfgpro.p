@@ -23,8 +23,7 @@ if substring(global_user_lang_dir, length(global_user_lang_dir), 1) <> "/" then
 if wMfgproProgram = "" then leave.
 
 
-find first usrw_wkfl where u
-srw_key1 = "BARCODE" and usrw_key2 = "LICENSEKEY" no-lock no-error .
+find first usrw_wkfl where usrw_key1 = "BARCODE" and usrw_key2 = "LICENSEKEY" no-lock no-error .
 
 
 find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="ReportWarehouseLICENSEKEY" no-lock no-error.
