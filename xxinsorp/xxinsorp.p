@@ -95,7 +95,7 @@ do on error undo, return error on endkey undo, return error:
    /* EXPORT DELIMITER ";" "类型" "客户" "项目" "顺序号"  "供应商号"  "收货地点"  "零件号"  "零件颜色"  "零件名称"  "计划代码"  "传票日期"  "传票时间"  "订货数量"  "传票号码"
                            "版本号"   "周次"  "分类"  "交货规则"  "备注"  "备注1"  "送货日期" "送货时间" .*/
 
-      put unformatted "类型   客户     项目    顺序号  供应商号  收货地点        零件号        零件颜色            零件名称       计划代码  送货日期   送货时间      订货数量            传票号码      版本号    周次      分类       交货规则              备注                 备注1       传票日期  传票时间   数量        料号               条码" SKIP.
+      put unformatted "类型   客户     项目    顺序号  供应商号  收货地点        零件号        零件颜色            零件名称       计划代码  送货日期   送货时间      订货数量            传票号码      版本号    周次      分类       交货规则              备注                 备注1       传票日期  传票时间   数量        图号               标签图号" SKIP.
       put unformatted "---- -------- -------- ------- --------- --------- -------------------- --------- ------------------------ --------- ---------- --------- ---------------- -------------------- ------ ---------- -------- ---------------- -------------------- -------------------- --------- --------- ------- ------------------ ------------------" SKIP .
       FOR EACH xxsod_det NO-LOCK WHERE xxsod_cust >= v_cust
                                    AND xxsod_cust <= v_cust1
@@ -144,8 +144,8 @@ do on error undo, return error on endkey undo, return error:
           PUT UNFORMATTED xxsod_due_date AT 263.
           PUT UNFORMATTED xxsod_due_time  AT 273.
           PUT UNFORMATTED xxsod__chr02 TO 286.
-          PUT UNFORMATTED v_pt at 292.
-          PUT UNFORMATTED v_ptdraw at 310.
+          PUT UNFORMATTED v_ptdraw at 292.
+          PUT UNFORMATTED v_pt 310.
           PUT SKIP.
 
       END. /*FOR EACH xxsod_det*/

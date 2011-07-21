@@ -3,7 +3,7 @@
 /* REVISION: 0CYH LAST MODIFIED: 07/20/11   BY: zy                           */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
- 
+
 
 define variable cmsort like cm_sort.
 define variable nbr like rsn_type.
@@ -58,30 +58,29 @@ repeat:
    no-lock with frame b width 132 no-attr-space:
                 /* SET EXTERNAL LABELS */
                 setFrameLabels(frame b:handle).
-                {mfrpchk.i}  
-		  find first cm_mstr where cm_addr = xxtc_cust no-lock no-error.
-		  if available cm_mstr then do:
-		  	 assign cmsort = cm_sort.
-		  end.
-		  else do:
-		  	 assign cmsort = "".
-		  end.
-		  find first code_mstr where code_fldname = "xxtc_stat" and 
-		  				   code_value = xxtc_stat no-lock no-error.
-	 		if availabl code_mstr then do:
-	 			 assign xxtcstat = code_cmmt.
-	 	  end.
-	 	  else do:
-	 	  	 assign xxtcstat = "".
-	    end.
-      display xxtc_nbr        
-							xxtc_cust     
-							cmsort  
-							xxtc_stat  
-							xxtcstat
-							xxtc_date       
-							xxtc_mod_date   
-							xxtc_mod_usr.    
+                {mfrpchk.i}
+      find first cm_mstr where cm_addr = xxtc_cust no-lock no-error.
+      if available cm_mstr then do:
+         assign cmsort = cm_sort.
+      end.
+      else do:
+         assign cmsort = "".
+      end.
+      find first code_mstr where code_fldname = "xxtc_stat" and
+                 code_value = xxtc_stat no-lock no-error.
+      if availabl code_mstr then do:
+         assign xxtcstat = code_cmmt.
+      end.
+      else do:
+         assign xxtcstat = "".
+      end.
+      display xxtc_nbr
+              xxtc_cust
+              cmsort
+              xxtc_stat
+              xxtcstat
+              xxtc_date
+              xxtc_mod_usr.
 
    end.
    {mftrl080.i}

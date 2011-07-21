@@ -777,7 +777,7 @@ End.
 /*17YJ*/  display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/  find first xxtc_hst no-lock where xxtc_nbr = v10006 no-error.
 /*17YJ*/  if availabl xxtc_hst and xxtc_cust <> "" then do:
-/*17YJ*/  		assign wmessage = "台车:[" + v10006 + "]在客户:[" + "]处！请确认资料.".
+/*17YJ*/  		assign wmessage = "台车:[" + v10006 + "]在客户:[" + xxtc_cust + "]处！请确认资料.".
 /*17YJ*/     display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/    assign v10006 = "".
 /*17YJ*/		undo , retry.

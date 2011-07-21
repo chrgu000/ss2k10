@@ -1,4 +1,4 @@
-/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */ 
+/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */
 /* BARCODE SYSTEM */
 /* Generate date / time  12/05/07 22:31:30 */
 /* replace 【复盘(BY NBR). .44】 as 【台车回收..44】           *17YJ**/
@@ -46,9 +46,9 @@ PROCEDURE CheckSecurity:
                QAD_CHARFLD[1] = "*".
      end.
      If OkToRun = no Then Do:
-        display " *** WARNING *** " skip with fram WarningBox no-box . 
+        display " *** WARNING *** " skip with fram WarningBox no-box .
          display " YOU CAN NOT" skip with fram WarningBox no-box .
-         display " ACCESS THIS" skip with fram WarningBox no-box . 
+         display " ACCESS THIS" skip with fram WarningBox no-box .
          display "  FUNCTION!" skip with fram WarningBox no-box .
          display " CONTACT IT " skip with fram WarningBox no-box .
          display " DEPARTMENT " skip with fram WarningBox no-box .
@@ -152,40 +152,40 @@ REPEAT:
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L10025 = "" . 
+                /* LABEL 5 - START */
+                  L10025 = "" .
                 display L10025          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L10026 = "" . 
+                /* LABEL 6 - START */
+                  L10026 = "" .
                 display L10026          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1002
         WITH  fram F1002 NO-LABEL
         EDITING:
@@ -261,40 +261,40 @@ REPEAT:
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11001 = "采销菜单. . . .1" .
                 display L11001          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11002 = "重复生产. . . .3" .
                 display L11002          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11003 = "盘点菜单. . . .4" .
                 display L11003          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L11004 = "标签菜单. . . .5" .
                 display L11004          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11005 = "库存菜单. . . .6" .
                 display L11005          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
+                /* LABEL 6 - START */
                 L11006 = "昭和报表. . . .7" .
                 display L11006          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1100
         WITH  fram F1100 NO-LABEL
         EDITING:
@@ -370,40 +370,40 @@ REPEAT:
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1110 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11101 = "生产转仓. . . .11" .
                 display L11101          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11102 = "生产回冲-废品 .12" .
                 display L11102          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11103 = "PO收货[严控]. .13" .
                 display L11103          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11104 = "" . 
+                /* LABEL 4 - START */
+                  L11104 = "" .
                 display L11104          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11105 = "SO出货. . . . .15" .
                 display L11105          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
+                /* LABEL 6 - START */
                 L11106 = "库存转移[车间].16" .
                 display L11106          format "x(40)" skip with fram F1110 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1110
         WITH  fram F1110 NO-LABEL
         EDITING:
@@ -445,9 +445,9 @@ REPEAT:
      /* END    LINE :1110  1.1 采销菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1110LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1110    */
    END.
    pause 0 before-hide.
@@ -491,40 +491,40 @@ IF OkToRun = yes then RUN    xsinv27.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1111 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11111 = "" . 
+                /* LABEL 1 - START */
+                  L11111 = "" .
                 display L11111          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11112 = "" . 
+                /* LABEL 2 - START */
+                  L11112 = "" .
                 display L11112          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11113 = "" . 
+                /* LABEL 3 - START */
+                  L11113 = "" .
                 display L11113          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11114 = "" . 
+                /* LABEL 4 - START */
+                  L11114 = "" .
                 display L11114          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11115 = "" . 
+                /* LABEL 5 - START */
+                  L11115 = "" .
                 display L11115          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11116 = "" . 
+                /* LABEL 6 - START */
+                  L11116 = "" .
                 display L11116          format "x(40)" skip with fram F1111 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1111
         WITH  fram F1111 NO-LABEL
         EDITING:
@@ -566,9 +566,9 @@ IF OkToRun = yes then RUN    xsinv27.p.
      /* END    LINE :1111  1.1.1 生产转仓  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1111LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1111    */
    END.
    pause 0 before-hide.
@@ -612,40 +612,40 @@ IF OkToRun = yes then RUN    xsrep12.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1112 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11121 = "" . 
+                /* LABEL 1 - START */
+                  L11121 = "" .
                 display L11121          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11122 = "" . 
+                /* LABEL 2 - START */
+                  L11122 = "" .
                 display L11122          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11123 = "" . 
+                /* LABEL 3 - START */
+                  L11123 = "" .
                 display L11123          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11124 = "" . 
+                /* LABEL 4 - START */
+                  L11124 = "" .
                 display L11124          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11125 = "" . 
+                /* LABEL 5 - START */
+                  L11125 = "" .
                 display L11125          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11126 = "" . 
+                /* LABEL 6 - START */
+                  L11126 = "" .
                 display L11126          format "x(40)" skip with fram F1112 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1112
         WITH  fram F1112 NO-LABEL
         EDITING:
@@ -687,9 +687,9 @@ IF OkToRun = yes then RUN    xsrep12.p.
      /* END    LINE :1112  1.1.2 生产回冲-废品  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1112LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1112    */
    END.
    pause 0 before-hide.
@@ -733,40 +733,40 @@ IF OkToRun = yes then RUN    xspor03.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1113 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11131 = "" . 
+                /* LABEL 1 - START */
+                  L11131 = "" .
                 display L11131          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11132 = "" . 
+                /* LABEL 2 - START */
+                  L11132 = "" .
                 display L11132          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11133 = "" . 
+                /* LABEL 3 - START */
+                  L11133 = "" .
                 display L11133          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11134 = "" . 
+                /* LABEL 4 - START */
+                  L11134 = "" .
                 display L11134          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11135 = "" . 
+                /* LABEL 5 - START */
+                  L11135 = "" .
                 display L11135          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11136 = "" . 
+                /* LABEL 6 - START */
+                  L11136 = "" .
                 display L11136          format "x(40)" skip with fram F1113 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1113
         WITH  fram F1113 NO-LABEL
         EDITING:
@@ -808,9 +808,9 @@ IF OkToRun = yes then RUN    xspor03.p.
      /* END    LINE :1113  1.1.3 PO收货[严控]  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1113LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
@@ -854,40 +854,40 @@ IF OkToRun = yes then RUN    xssoi10.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1115 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11151 = "" . 
+                /* LABEL 1 - START */
+                  L11151 = "" .
                 display L11151          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11152 = "" . 
+                /* LABEL 2 - START */
+                  L11152 = "" .
                 display L11152          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11153 = "" . 
+                /* LABEL 3 - START */
+                  L11153 = "" .
                 display L11153          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11154 = "" . 
+                /* LABEL 4 - START */
+                  L11154 = "" .
                 display L11154          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11155 = "" . 
+                /* LABEL 5 - START */
+                  L11155 = "" .
                 display L11155          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11156 = "" . 
+                /* LABEL 6 - START */
+                  L11156 = "" .
                 display L11156          format "x(40)" skip with fram F1115 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1115
         WITH  fram F1115 NO-LABEL
         EDITING:
@@ -929,9 +929,9 @@ IF OkToRun = yes then RUN    xssoi10.p.
      /* END    LINE :1115  1.1.5 销售出货  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1115LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1115    */
    END.
    pause 0 before-hide.
@@ -975,40 +975,40 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1116 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11161 = "" . 
+                /* LABEL 1 - START */
+                  L11161 = "" .
                 display L11161          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11162 = "" . 
+                /* LABEL 2 - START */
+                  L11162 = "" .
                 display L11162          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11163 = "" . 
+                /* LABEL 3 - START */
+                  L11163 = "" .
                 display L11163          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11164 = "" . 
+                /* LABEL 4 - START */
+                  L11164 = "" .
                 display L11164          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11165 = "" . 
+                /* LABEL 5 - START */
+                  L11165 = "" .
                 display L11165          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11166 = "" . 
+                /* LABEL 6 - START */
+                  L11166 = "" .
                 display L11166          format "x(40)" skip with fram F1116 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1116
         WITH  fram F1116 NO-LABEL
         EDITING:
@@ -1050,9 +1050,9 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
      /* END    LINE :1116  1.1.6 库存转移[车间]  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1116LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1116    */
    END.
    pause 0 before-hide.
@@ -1092,40 +1092,40 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1130 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11301 = "直接生产领料. .31" .
                 display L11301          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11302 = "重复生产备料. .32" .
                 display L11302          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11303 = "备料转车间. . .33" .
                 display L11303          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L11304 = "生产标签补打. .37" .
                 display L11304          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11305 = "ASSY回冲-有标签38" .
                 display L11305          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
+                /* LABEL 6 - START */
                 L11306 = "生产回冲-无标签39" .
                 display L11306          format "x(40)" skip with fram F1130 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1130
         WITH  fram F1130 NO-LABEL
         EDITING:
@@ -1167,9 +1167,9 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
      /* END    LINE :1130  1.3 重复生产菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1130LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1130    */
    END.
    pause 0 before-hide.
@@ -1213,40 +1213,40 @@ IF OkToRun = yes then RUN    xsrep01.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1131 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11311 = "" . 
+                /* LABEL 1 - START */
+                  L11311 = "" .
                 display L11311          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11312 = "" . 
+                /* LABEL 2 - START */
+                  L11312 = "" .
                 display L11312          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11313 = "" . 
+                /* LABEL 3 - START */
+                  L11313 = "" .
                 display L11313          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11314 = "" . 
+                /* LABEL 4 - START */
+                  L11314 = "" .
                 display L11314          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11315 = "" . 
+                /* LABEL 5 - START */
+                  L11315 = "" .
                 display L11315          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11316 = "" . 
+                /* LABEL 6 - START */
+                  L11316 = "" .
                 display L11316          format "x(40)" skip with fram F1131 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1131
         WITH  fram F1131 NO-LABEL
         EDITING:
@@ -1288,9 +1288,9 @@ IF OkToRun = yes then RUN    xsrep01.p.
      /* END    LINE :1131  1.3.1 直接生产领料  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1131LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1131    */
    END.
    pause 0 before-hide.
@@ -1334,40 +1334,40 @@ IF OkToRun = yes then RUN    xsrep02.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1132 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11321 = "" . 
+                /* LABEL 1 - START */
+                  L11321 = "" .
                 display L11321          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11322 = "" . 
+                /* LABEL 2 - START */
+                  L11322 = "" .
                 display L11322          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11323 = "" . 
+                /* LABEL 3 - START */
+                  L11323 = "" .
                 display L11323          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11324 = "" . 
+                /* LABEL 4 - START */
+                  L11324 = "" .
                 display L11324          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11325 = "" . 
+                /* LABEL 5 - START */
+                  L11325 = "" .
                 display L11325          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11326 = "" . 
+                /* LABEL 6 - START */
+                  L11326 = "" .
                 display L11326          format "x(40)" skip with fram F1132 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1132
         WITH  fram F1132 NO-LABEL
         EDITING:
@@ -1409,9 +1409,9 @@ IF OkToRun = yes then RUN    xsrep02.p.
      /* END    LINE :1132  1.3.2 重复生产备料  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1132LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1132    */
    END.
    pause 0 before-hide.
@@ -1455,40 +1455,40 @@ IF OkToRun = yes then RUN    xsrep03.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1133 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11331 = "" . 
+                /* LABEL 1 - START */
+                  L11331 = "" .
                 display L11331          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11332 = "" . 
+                /* LABEL 2 - START */
+                  L11332 = "" .
                 display L11332          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11333 = "" . 
+                /* LABEL 3 - START */
+                  L11333 = "" .
                 display L11333          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11334 = "" . 
+                /* LABEL 4 - START */
+                  L11334 = "" .
                 display L11334          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11335 = "" . 
+                /* LABEL 5 - START */
+                  L11335 = "" .
                 display L11335          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11336 = "" . 
+                /* LABEL 6 - START */
+                  L11336 = "" .
                 display L11336          format "x(40)" skip with fram F1133 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1133
         WITH  fram F1133 NO-LABEL
         EDITING:
@@ -1530,9 +1530,9 @@ IF OkToRun = yes then RUN    xsrep03.p.
      /* END    LINE :1133  1.3.3 备料转车间  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1133LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1133    */
    END.
    pause 0 before-hide.
@@ -1576,40 +1576,40 @@ IF OkToRun = yes then RUN    xslap02.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1137 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11371 = "" . 
+                /* LABEL 1 - START */
+                  L11371 = "" .
                 display L11371          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11372 = "" . 
+                /* LABEL 2 - START */
+                  L11372 = "" .
                 display L11372          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11373 = "" . 
+                /* LABEL 3 - START */
+                  L11373 = "" .
                 display L11373          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11374 = "" . 
+                /* LABEL 4 - START */
+                  L11374 = "" .
                 display L11374          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11375 = "" . 
+                /* LABEL 5 - START */
+                  L11375 = "" .
                 display L11375          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11376 = "" . 
+                /* LABEL 6 - START */
+                  L11376 = "" .
                 display L11376          format "x(40)" skip with fram F1137 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1137
         WITH  fram F1137 NO-LABEL
         EDITING:
@@ -1632,6 +1632,7 @@ IF OkToRun = yes then RUN    xslap02.p.
         IF INDEX ( V1137 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1137 ).
         /* **CHANGE Default Site END ** */
         IF V1137 = "S" THEN  RUN xsmdf01.p.
+
         /* **CHANGE DEFAULT SITE END ** */
         display  skip WMESSAGE NO-LABEL with fram F1137.
 
@@ -1650,10 +1651,9 @@ IF OkToRun = yes then RUN    xslap02.p.
      PV1137 = V1137.
      /* END    LINE :1137  1.3.7 生产标签补打  */
 
-
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1137LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1137    */
    END.
    pause 0 before-hide.
@@ -1697,40 +1697,40 @@ IF OkToRun = yes then RUN    xsrep08.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1138 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11381 = "" . 
+                /* LABEL 1 - START */
+                  L11381 = "" .
                 display L11381          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11382 = "" . 
+                /* LABEL 2 - START */
+                  L11382 = "" .
                 display L11382          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11383 = "" . 
+                /* LABEL 3 - START */
+                  L11383 = "" .
                 display L11383          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11384 = "" . 
+                /* LABEL 4 - START */
+                  L11384 = "" .
                 display L11384          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11385 = "" . 
+                /* LABEL 5 - START */
+                  L11385 = "" .
                 display L11385          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11386 = "" . 
+                /* LABEL 6 - START */
+                  L11386 = "" .
                 display L11386          format "x(40)" skip with fram F1138 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1138
         WITH  fram F1138 NO-LABEL
         EDITING:
@@ -1772,9 +1772,9 @@ IF OkToRun = yes then RUN    xsrep08.p.
      /* END    LINE :1138  1.3.8 ASSY回冲-有标签  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1138LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1138    */
    END.
    pause 0 before-hide.
@@ -1818,40 +1818,40 @@ IF OkToRun = yes then RUN    xsrep09.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1139 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11391 = "" . 
+                /* LABEL 1 - START */
+                  L11391 = "" .
                 display L11391          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11392 = "" . 
+                /* LABEL 2 - START */
+                  L11392 = "" .
                 display L11392          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11393 = "" . 
+                /* LABEL 3 - START */
+                  L11393 = "" .
                 display L11393          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11394 = "" . 
+                /* LABEL 4 - START */
+                  L11394 = "" .
                 display L11394          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11395 = "" . 
+                /* LABEL 5 - START */
+                  L11395 = "" .
                 display L11395          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11396 = "" . 
+                /* LABEL 6 - START */
+                  L11396 = "" .
                 display L11396          format "x(40)" skip with fram F1139 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1139
         WITH  fram F1139 NO-LABEL
         EDITING:
@@ -1893,9 +1893,9 @@ IF OkToRun = yes then RUN    xsrep09.p.
      /* END    LINE :1139  1.3.9 生产回冲-无标签  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1139LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1139    */
    END.
    pause 0 before-hide.
@@ -1935,40 +1935,40 @@ IF OkToRun = yes then RUN    xsrep09.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1140 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11401 = "周期盘点. . . .41" .
                 display L11401          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11402 = "初盘(BY ITEM) .42" .
                 display L11402          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11403 = "初盘(无物有数).43" .
                 display L11403          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
 /*17YJ*/        L11404 = "台车回收. .44" .
                 display L11404          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11405 = "销售出货（新）.45" .
                 display L11405          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11406 = "" . 
+                /* LABEL 6 - START */
+                  L11406 = "" .
                 display L11406          format "x(40)" skip with fram F1140 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1140
         WITH  fram F1140 NO-LABEL
         EDITING:
@@ -2010,9 +2010,9 @@ IF OkToRun = yes then RUN    xsrep09.p.
      /* END    LINE :1140  1.4 盘点菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1140LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1140    */
    END.
    pause 0 before-hide.
@@ -2056,40 +2056,40 @@ IF OkToRun = yes THEN  RUN    xsinv41.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1141 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11411 = "" . 
+                /* LABEL 1 - START */
+                  L11411 = "" .
                 display L11411          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11412 = "" . 
+                /* LABEL 2 - START */
+                  L11412 = "" .
                 display L11412          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11413 = "" . 
+                /* LABEL 3 - START */
+                  L11413 = "" .
                 display L11413          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11414 = "" . 
+                /* LABEL 4 - START */
+                  L11414 = "" .
                 display L11414          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11415 = "" . 
+                /* LABEL 5 - START */
+                  L11415 = "" .
                 display L11415          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11416 = "" . 
+                /* LABEL 6 - START */
+                  L11416 = "" .
                 display L11416          format "x(40)" skip with fram F1141 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1141
         WITH  fram F1141 NO-LABEL
         EDITING:
@@ -2131,9 +2131,9 @@ IF OkToRun = yes THEN  RUN    xsinv41.p.
      /* END    LINE :1141  1.4.1 周期盘点  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1141LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1141    */
    END.
    pause 0 before-hide.
@@ -2177,40 +2177,40 @@ IF OkToRun = yes THEN  RUN    xsinv42.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1142 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11421 = "" . 
+                /* LABEL 1 - START */
+                  L11421 = "" .
                 display L11421          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11422 = "" . 
+                /* LABEL 2 - START */
+                  L11422 = "" .
                 display L11422          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11423 = "" . 
+                /* LABEL 3 - START */
+                  L11423 = "" .
                 display L11423          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11424 = "" . 
+                /* LABEL 4 - START */
+                  L11424 = "" .
                 display L11424          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11425 = "" . 
+                /* LABEL 5 - START */
+                  L11425 = "" .
                 display L11425          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11426 = "" . 
+                /* LABEL 6 - START */
+                  L11426 = "" .
                 display L11426          format "x(40)" skip with fram F1142 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1142
         WITH  fram F1142 NO-LABEL
         EDITING:
@@ -2252,9 +2252,9 @@ IF OkToRun = yes THEN  RUN    xsinv42.p.
      /* END    LINE :1142  1.4.2 初盘(按实物)  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1142LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1142    */
    END.
    pause 0 before-hide.
@@ -2298,40 +2298,40 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1143 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11431 = "" . 
+                /* LABEL 1 - START */
+                  L11431 = "" .
                 display L11431          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11432 = "" . 
+                /* LABEL 2 - START */
+                  L11432 = "" .
                 display L11432          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11433 = "" . 
+                /* LABEL 3 - START */
+                  L11433 = "" .
                 display L11433          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11434 = "" . 
+                /* LABEL 4 - START */
+                  L11434 = "" .
                 display L11434          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11435 = "" . 
+                /* LABEL 5 - START */
+                  L11435 = "" .
                 display L11435          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11436 = "" . 
+                /* LABEL 6 - START */
+                  L11436 = "" .
                 display L11436          format "x(40)" skip with fram F1143 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1143
         WITH  fram F1143 NO-LABEL
         EDITING:
@@ -2373,9 +2373,9 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
      /* END    LINE :1143  1.4.3 初盘(无物有数)  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1143LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1143    */
    END.
    pause 0 before-hide.
@@ -2421,40 +2421,40 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1144 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11441 = "" . 
+                /* LABEL 1 - START */
+                  L11441 = "" .
                 display L11441          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11442 = "" . 
+                /* LABEL 2 - START */
+                  L11442 = "" .
                 display L11442          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11443 = "" . 
+                /* LABEL 3 - START */
+                  L11443 = "" .
                 display L11443          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11444 = "" . 
+                /* LABEL 4 - START */
+                  L11444 = "" .
                 display L11444          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11445 = "" . 
+                /* LABEL 5 - START */
+                  L11445 = "" .
                 display L11445          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11446 = "" . 
+                /* LABEL 6 - START */
+                  L11446 = "" .
                 display L11446          format "x(40)" skip with fram F1144 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1144
         WITH  fram F1144 NO-LABEL
         EDITING:
@@ -2496,9 +2496,9 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
      /* END    LINE :1144  1.4.4 复盘(BY NBR)  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1144LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1144    */
    END.
    pause 0 before-hide.
@@ -2542,40 +2542,40 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1145 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11451 = "" . 
+                /* LABEL 1 - START */
+                  L11451 = "" .
                 display L11451          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11452 = "" . 
+                /* LABEL 2 - START */
+                  L11452 = "" .
                 display L11452          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11453 = "" . 
+                /* LABEL 3 - START */
+                  L11453 = "" .
                 display L11453          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11454 = "" . 
+                /* LABEL 4 - START */
+                  L11454 = "" .
                 display L11454          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11455 = "" . 
+                /* LABEL 5 - START */
+                  L11455 = "" .
                 display L11455          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11456 = "" . 
+                /* LABEL 6 - START */
+                  L11456 = "" .
                 display L11456          format "x(40)" skip with fram F1145 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1145
         WITH  fram F1145 NO-LABEL
         EDITING:
@@ -2617,9 +2617,9 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
      /* END    LINE :1145  1.4.5 销售出货（新）  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1145LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1145    */
    END.
    pause 0 before-hide.
@@ -2663,40 +2663,40 @@ IF OkToRun = yes THEN  RUN    xsinv28.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1146 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11461 = "" . 
+                /* LABEL 1 - START */
+                  L11461 = "" .
                 display L11461          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11462 = "" . 
+                /* LABEL 2 - START */
+                  L11462 = "" .
                 display L11462          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11463 = "" . 
+                /* LABEL 3 - START */
+                  L11463 = "" .
                 display L11463          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11464 = "" . 
+                /* LABEL 4 - START */
+                  L11464 = "" .
                 display L11464          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11465 = "" . 
+                /* LABEL 5 - START */
+                  L11465 = "" .
                 display L11465          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11466 = "" . 
+                /* LABEL 6 - START */
+                  L11466 = "" .
                 display L11466          format "x(40)" skip with fram F1146 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1146
         WITH  fram F1146 NO-LABEL
         EDITING:
@@ -2738,9 +2738,9 @@ IF OkToRun = yes THEN  RUN    xsinv28.p.
      /* END    LINE :1146  1.4.6 库存转到备料区  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1146LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1146    */
    END.
    pause 0 before-hide.
@@ -2780,40 +2780,40 @@ IF OkToRun = yes THEN  RUN    xsinv28.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1150 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11501 = "标准标签打印..51" .
                 display L11501          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11502 = "库存标签打印..52" .
                 display L11502          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11503 = "取消打印列队..53" .
                 display L11503          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L11504 = "自制标签补打..54" .
                 display L11504          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11505 = "自制标签入库..55" .
                 display L11505          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
+                /* LABEL 6 - START */
                 L11506 = "自制标签打印..56" .
                 display L11506          format "x(40)" skip with fram F1150 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1150
         WITH  fram F1150 NO-LABEL
         EDITING:
@@ -2855,9 +2855,9 @@ IF OkToRun = yes THEN  RUN    xsinv28.p.
      /* END    LINE :1150  1.5 标签菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1150LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1150    */
    END.
    pause 0 before-hide.
@@ -2901,40 +2901,40 @@ IF OkToRun = yes THEN  RUN    xslap03.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1151 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11511 = "" . 
+                /* LABEL 1 - START */
+                  L11511 = "" .
                 display L11511          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11512 = "" . 
+                /* LABEL 2 - START */
+                  L11512 = "" .
                 display L11512          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11513 = "" . 
+                /* LABEL 3 - START */
+                  L11513 = "" .
                 display L11513          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11514 = "" . 
+                /* LABEL 4 - START */
+                  L11514 = "" .
                 display L11514          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11515 = "" . 
+                /* LABEL 5 - START */
+                  L11515 = "" .
                 display L11515          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11516 = "" . 
+                /* LABEL 6 - START */
+                  L11516 = "" .
                 display L11516          format "x(40)" skip with fram F1151 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1151
         WITH  fram F1151 NO-LABEL
         EDITING:
@@ -2976,9 +2976,9 @@ IF OkToRun = yes THEN  RUN    xslap03.p.
      /* END    LINE :1151  1.5.1 标准标签打印  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1151LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1151    */
    END.
    pause 0 before-hide.
@@ -3022,40 +3022,40 @@ IF OkToRun = yes THEN  RUN    xslap04.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1152 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11521 = "" . 
+                /* LABEL 1 - START */
+                  L11521 = "" .
                 display L11521          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11522 = "" . 
+                /* LABEL 2 - START */
+                  L11522 = "" .
                 display L11522          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11523 = "" . 
+                /* LABEL 3 - START */
+                  L11523 = "" .
                 display L11523          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11524 = "" . 
+                /* LABEL 4 - START */
+                  L11524 = "" .
                 display L11524          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11525 = "" . 
+                /* LABEL 5 - START */
+                  L11525 = "" .
                 display L11525          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11526 = "" . 
+                /* LABEL 6 - START */
+                  L11526 = "" .
                 display L11526          format "x(40)" skip with fram F1152 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1152
         WITH  fram F1152 NO-LABEL
         EDITING:
@@ -3097,9 +3097,9 @@ IF OkToRun = yes THEN  RUN    xslap04.p.
      /* END    LINE :1152  1.5.2 库存标签打印  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1152LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1152    */
    END.
    pause 0 before-hide.
@@ -3143,40 +3143,40 @@ IF OkToRun = yes THEN  RUN    xslap05.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1153 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11531 = "" . 
+                /* LABEL 1 - START */
+                  L11531 = "" .
                 display L11531          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11532 = "" . 
+                /* LABEL 2 - START */
+                  L11532 = "" .
                 display L11532          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11533 = "" . 
+                /* LABEL 3 - START */
+                  L11533 = "" .
                 display L11533          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11534 = "" . 
+                /* LABEL 4 - START */
+                  L11534 = "" .
                 display L11534          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11535 = "" . 
+                /* LABEL 5 - START */
+                  L11535 = "" .
                 display L11535          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11536 = "" . 
+                /* LABEL 6 - START */
+                  L11536 = "" .
                 display L11536          format "x(40)" skip with fram F1153 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1153
         WITH  fram F1153 NO-LABEL
         EDITING:
@@ -3218,9 +3218,9 @@ IF OkToRun = yes THEN  RUN    xslap05.p.
      /* END    LINE :1153  1.5.3 取消打印列队  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1153LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1153    */
    END.
    pause 0 before-hide.
@@ -3264,40 +3264,40 @@ IF OkToRun = yes THEN  RUN    xslap08.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1154 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11541 = "" . 
+                /* LABEL 1 - START */
+                  L11541 = "" .
                 display L11541          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11542 = "" . 
+                /* LABEL 2 - START */
+                  L11542 = "" .
                 display L11542          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11543 = "" . 
+                /* LABEL 3 - START */
+                  L11543 = "" .
                 display L11543          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11544 = "" . 
+                /* LABEL 4 - START */
+                  L11544 = "" .
                 display L11544          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11545 = "" . 
+                /* LABEL 5 - START */
+                  L11545 = "" .
                 display L11545          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11546 = "" . 
+                /* LABEL 6 - START */
+                  L11546 = "" .
                 display L11546          format "x(40)" skip with fram F1154 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1154
         WITH  fram F1154 NO-LABEL
         EDITING:
@@ -3339,9 +3339,9 @@ IF OkToRun = yes THEN  RUN    xslap08.p.
      /* END    LINE :1154  1.5.4 自制标签补打  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1154LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1154    */
    END.
    pause 0 before-hide.
@@ -3385,40 +3385,40 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1155 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11551 = "" . 
+                /* LABEL 1 - START */
+                  L11551 = "" .
                 display L11551          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11552 = "" . 
+                /* LABEL 2 - START */
+                  L11552 = "" .
                 display L11552          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11553 = "" . 
+                /* LABEL 3 - START */
+                  L11553 = "" .
                 display L11553          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11554 = "" . 
+                /* LABEL 4 - START */
+                  L11554 = "" .
                 display L11554          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11555 = "" . 
+                /* LABEL 5 - START */
+                  L11555 = "" .
                 display L11555          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11556 = "" . 
+                /* LABEL 6 - START */
+                  L11556 = "" .
                 display L11556          format "x(40)" skip with fram F1155 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1155
         WITH  fram F1155 NO-LABEL
         EDITING:
@@ -3460,9 +3460,9 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
      /* END    LINE :1155  1.5.5 自制标签入库  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1155LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1155    */
    END.
    pause 0 before-hide.
@@ -3506,40 +3506,40 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1156 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11561 = "" . 
+                /* LABEL 1 - START */
+                  L11561 = "" .
                 display L11561          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11562 = "" . 
+                /* LABEL 2 - START */
+                  L11562 = "" .
                 display L11562          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11563 = "" . 
+                /* LABEL 3 - START */
+                  L11563 = "" .
                 display L11563          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11564 = "" . 
+                /* LABEL 4 - START */
+                  L11564 = "" .
                 display L11564          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11565 = "" . 
+                /* LABEL 5 - START */
+                  L11565 = "" .
                 display L11565          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11566 = "" . 
+                /* LABEL 6 - START */
+                  L11566 = "" .
                 display L11566          format "x(40)" skip with fram F1156 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1156
         WITH  fram F1156 NO-LABEL
         EDITING:
@@ -3581,9 +3581,9 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
      /* END    LINE :1156  1.5.6 自制标签打印  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1156LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1156    */
    END.
    pause 0 before-hide.
@@ -3623,40 +3623,40 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1160 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11601 = "计划外出库. . .61" .
                 display L11601          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11602 = "入库(退回仓库).62" .
                 display L11602          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11603 = "库存转移. . . .63" .
                 display L11603          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L11604 = "库位库存查询. .64" .
                 display L11604          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
+                /* LABEL 5 - START */
                 L11605 = "批号库存查询. .65" .
                 display L11605          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
+                /* LABEL 6 - START */
                 L11606 = "交易查询. . . .66" .
                 display L11606          format "x(40)" skip with fram F1160 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1160
         WITH  fram F1160 NO-LABEL
         EDITING:
@@ -3698,9 +3698,9 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
      /* END    LINE :1160  1.6 库存菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1160LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1160    */
    END.
    pause 0 before-hide.
@@ -3744,40 +3744,40 @@ IF OkToRun = yes THEN  RUN    xsinv21.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1161 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11611 = "" . 
+                /* LABEL 1 - START */
+                  L11611 = "" .
                 display L11611          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11612 = "" . 
+                /* LABEL 2 - START */
+                  L11612 = "" .
                 display L11612          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11613 = "" . 
+                /* LABEL 3 - START */
+                  L11613 = "" .
                 display L11613          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11614 = "" . 
+                /* LABEL 4 - START */
+                  L11614 = "" .
                 display L11614          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11615 = "" . 
+                /* LABEL 5 - START */
+                  L11615 = "" .
                 display L11615          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11616 = "" . 
+                /* LABEL 6 - START */
+                  L11616 = "" .
                 display L11616          format "x(40)" skip with fram F1161 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1161
         WITH  fram F1161 NO-LABEL
         EDITING:
@@ -3819,9 +3819,9 @@ IF OkToRun = yes THEN  RUN    xsinv21.p.
      /* END    LINE :1161  1.6.1 计划外出库  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1161LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1161    */
    END.
    pause 0 before-hide.
@@ -3865,40 +3865,40 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1162 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11621 = "" . 
+                /* LABEL 1 - START */
+                  L11621 = "" .
                 display L11621          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11622 = "" . 
+                /* LABEL 2 - START */
+                  L11622 = "" .
                 display L11622          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11623 = "" . 
+                /* LABEL 3 - START */
+                  L11623 = "" .
                 display L11623          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11624 = "" . 
+                /* LABEL 4 - START */
+                  L11624 = "" .
                 display L11624          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11625 = "" . 
+                /* LABEL 5 - START */
+                  L11625 = "" .
                 display L11625          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11626 = "" . 
+                /* LABEL 6 - START */
+                  L11626 = "" .
                 display L11626          format "x(40)" skip with fram F1162 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1162
         WITH  fram F1162 NO-LABEL
         EDITING:
@@ -3940,9 +3940,9 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
      /* END    LINE :1162  1.6.2 入库(退回仓库)  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1162LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1162    */
    END.
    pause 0 before-hide.
@@ -3986,40 +3986,40 @@ IF OkToRun = yes THEN  RUN    xsinv23.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1163 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11631 = "" . 
+                /* LABEL 1 - START */
+                  L11631 = "" .
                 display L11631          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11632 = "" . 
+                /* LABEL 2 - START */
+                  L11632 = "" .
                 display L11632          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11633 = "" . 
+                /* LABEL 3 - START */
+                  L11633 = "" .
                 display L11633          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11634 = "" . 
+                /* LABEL 4 - START */
+                  L11634 = "" .
                 display L11634          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11635 = "" . 
+                /* LABEL 5 - START */
+                  L11635 = "" .
                 display L11635          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11636 = "" . 
+                /* LABEL 6 - START */
+                  L11636 = "" .
                 display L11636          format "x(40)" skip with fram F1163 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1163
         WITH  fram F1163 NO-LABEL
         EDITING:
@@ -4061,9 +4061,9 @@ IF OkToRun = yes THEN  RUN    xsinv23.p.
      /* END    LINE :1163  1.6.3 库存转移  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1163LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1163    */
    END.
    pause 0 before-hide.
@@ -4107,40 +4107,40 @@ IF OkToRun = yes THEN  RUN    xsinv03.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1164 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11641 = "" . 
+                /* LABEL 1 - START */
+                  L11641 = "" .
                 display L11641          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11642 = "" . 
+                /* LABEL 2 - START */
+                  L11642 = "" .
                 display L11642          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11643 = "" . 
+                /* LABEL 3 - START */
+                  L11643 = "" .
                 display L11643          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11644 = "" . 
+                /* LABEL 4 - START */
+                  L11644 = "" .
                 display L11644          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11645 = "" . 
+                /* LABEL 5 - START */
+                  L11645 = "" .
                 display L11645          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11646 = "" . 
+                /* LABEL 6 - START */
+                  L11646 = "" .
                 display L11646          format "x(40)" skip with fram F1164 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1164
         WITH  fram F1164 NO-LABEL
         EDITING:
@@ -4182,9 +4182,9 @@ IF OkToRun = yes THEN  RUN    xsinv03.p.
      /* END    LINE :1164  1.6.4 库位库存查询  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1164LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1164    */
    END.
    pause 0 before-hide.
@@ -4228,40 +4228,40 @@ IF OkToRun = yes THEN  RUN    xsinv02.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1165 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11651 = "" . 
+                /* LABEL 1 - START */
+                  L11651 = "" .
                 display L11651          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11652 = "" . 
+                /* LABEL 2 - START */
+                  L11652 = "" .
                 display L11652          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11653 = "" . 
+                /* LABEL 3 - START */
+                  L11653 = "" .
                 display L11653          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11654 = "" . 
+                /* LABEL 4 - START */
+                  L11654 = "" .
                 display L11654          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11655 = "" . 
+                /* LABEL 5 - START */
+                  L11655 = "" .
                 display L11655          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11656 = "" . 
+                /* LABEL 6 - START */
+                  L11656 = "" .
                 display L11656          format "x(40)" skip with fram F1165 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1165
         WITH  fram F1165 NO-LABEL
         EDITING:
@@ -4303,9 +4303,9 @@ IF OkToRun = yes THEN  RUN    xsinv02.p.
      /* END    LINE :1165  1.6.5 批号库存查询  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1165LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1165    */
    END.
    pause 0 before-hide.
@@ -4349,40 +4349,40 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1166 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11661 = "" . 
+                /* LABEL 1 - START */
+                  L11661 = "" .
                 display L11661          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11662 = "" . 
+                /* LABEL 2 - START */
+                  L11662 = "" .
                 display L11662          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11663 = "" . 
+                /* LABEL 3 - START */
+                  L11663 = "" .
                 display L11663          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11664 = "" . 
+                /* LABEL 4 - START */
+                  L11664 = "" .
                 display L11664          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11665 = "" . 
+                /* LABEL 5 - START */
+                  L11665 = "" .
                 display L11665          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11666 = "" . 
+                /* LABEL 6 - START */
+                  L11666 = "" .
                 display L11666          format "x(40)" skip with fram F1166 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1166
         WITH  fram F1166 NO-LABEL
         EDITING:
@@ -4424,9 +4424,9 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
      /* END    LINE :1166  1.6.6 交易查询  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1166LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1166    */
    END.
 
@@ -4457,15 +4457,15 @@ repeat:
         leave v1167l.
 
 
-        l11671 = "" . 
-        l11672 = "" . 
-        l11673 = "" . 
-        l11674 = "" . 
-        l11675 = "" . 
-        l11676 = "" . 
-        display 
+        l11671 = "" .
+        l11672 = "" .
+        l11673 = "" .
+        l11674 = "" .
+        l11675 = "" .
+        l11676 = "" .
+        display
             "#条码# *" + ( if length(dbname) < 5 then trim( dbname ) else trim(substring(dbname,length(dbname) - 4,5)) )
-            + "*" + trim ( v1002 )  format "x(40)" skip 
+            + "*" + trim ( v1002 )  format "x(40)" skip
         with fram f1167 no-box.
         display l11671          format "x(40)" skip with fram f1167 no-box.
         display l11672          format "x(40)" skip with fram f1167 no-box.
@@ -4533,15 +4533,15 @@ repeat:
         leave v1168l.
 
 
-        l11681 = "" . 
-        l11682 = "" . 
-        l11683 = "" . 
-        l11684 = "" . 
-        l11685 = "" . 
-        l11686 = "" . 
-        display 
+        l11681 = "" .
+        l11682 = "" .
+        l11683 = "" .
+        l11684 = "" .
+        l11685 = "" .
+        l11686 = "" .
+        display
             "#条码# *" + ( if length(dbname) < 5 then trim( dbname ) else trim(substring(dbname,length(dbname) - 4,5)) )
-            + "*" + trim ( v1002 )  format "x(40)" skip 
+            + "*" + trim ( v1002 )  format "x(40)" skip
         with fram f1168 no-box.
         display l11681          format "x(40)" skip with fram f1168 no-box.
         display l11682          format "x(40)" skip with fram f1168 no-box.
@@ -4618,40 +4618,40 @@ end. /*v1168lmainloop:*/
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1170 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11701 = "入库批号管理表.(0.71)" .
                 display L11701          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11702 = "转仓明细查询. .(0.72)" .
                 display L11702          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11703 = "台车状态报表. .(0.73)" . 
+                /* LABEL 3 - START */
+                  L11703 = "台车状态报表. .(0.73)" .
                 display L11703          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11704 = "" . 
+                /* LABEL 4 - START */
+                  L11704 = "" .
                 display L11704          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11705 = "" . 
+                /* LABEL 5 - START */
+                  L11705 = "" .
                 display L11705          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11706 = "" . 
+                /* LABEL 6 - START */
+                  L11706 = "" .
                 display L11706          format "x(40)" skip with fram F1170 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1170
         WITH  fram F1170 NO-LABEL
         EDITING:
@@ -4671,7 +4671,7 @@ end. /*v1168lmainloop:*/
         /* **LOAD MENU START** */
         IF V1170 = "$LOADMENU" THEN  RUN LOADMENU.
         /* **LOAD MENU END ** */
-        IF INDEX ( V1170 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1170 ).
+        IF INDEX ( V1170 ,".") <> 0 THEN RUN RUNMFGPROPROGRAM ( INPUT V1170 ).
         /* **CHANGE Default Site END ** */
         IF V1170 = "S" THEN  RUN xsmdf01.p.
         /* **CHANGE DEFAULT SITE END ** */
@@ -4693,9 +4693,9 @@ end. /*v1168lmainloop:*/
      /* END    LINE :1170  1.7 报表菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1170LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1170    */
    END.
    pause 0 before-hide.
@@ -4735,40 +4735,40 @@ end. /*v1168lmainloop:*/
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1180 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11801 = "计划外出正常料.81" .
                 display L11801          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11802 = "计划外出过期料.82" .
                 display L11802          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11803 = "库存标签分箱...83" .
                 display L11803          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11804 = "" . 
+                /* LABEL 4 - START */
+                  L11804 = "" .
                 display L11804          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11805 = "" . 
+                /* LABEL 5 - START */
+                  L11805 = "" .
                 display L11805          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11806 = "" . 
+                /* LABEL 6 - START */
+                  L11806 = "" .
                 display L11806          format "x(40)" skip with fram F1180 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1180
         WITH  fram F1180 NO-LABEL
         EDITING:
@@ -4810,9 +4810,9 @@ end. /*v1168lmainloop:*/
      /* END    LINE :1180  1.8 加强菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1180LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1180    */
    END.
    pause 0 before-hide.
@@ -4856,40 +4856,40 @@ IF OkToRun = yes THEN  RUN    xsinv24.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1181 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11811 = "" . 
+                /* LABEL 1 - START */
+                  L11811 = "" .
                 display L11811          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11812 = "" . 
+                /* LABEL 2 - START */
+                  L11812 = "" .
                 display L11812          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11813 = "" . 
+                /* LABEL 3 - START */
+                  L11813 = "" .
                 display L11813          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11814 = "" . 
+                /* LABEL 4 - START */
+                  L11814 = "" .
                 display L11814          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11815 = "" . 
+                /* LABEL 5 - START */
+                  L11815 = "" .
                 display L11815          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11816 = "" . 
+                /* LABEL 6 - START */
+                  L11816 = "" .
                 display L11816          format "x(40)" skip with fram F1181 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1181
         WITH  fram F1181 NO-LABEL
         EDITING:
@@ -4931,9 +4931,9 @@ IF OkToRun = yes THEN  RUN    xsinv24.p.
      /* END    LINE :1181  1.8.1 计划外出正常料  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1181LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1181    */
    END.
    pause 0 before-hide.
@@ -4977,40 +4977,40 @@ IF OkToRun = yes THEN  RUN    xsinv25.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1182 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11821 = "" . 
+                /* LABEL 1 - START */
+                  L11821 = "" .
                 display L11821          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11822 = "" . 
+                /* LABEL 2 - START */
+                  L11822 = "" .
                 display L11822          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11823 = "" . 
+                /* LABEL 3 - START */
+                  L11823 = "" .
                 display L11823          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11824 = "" . 
+                /* LABEL 4 - START */
+                  L11824 = "" .
                 display L11824          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11825 = "" . 
+                /* LABEL 5 - START */
+                  L11825 = "" .
                 display L11825          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11826 = "" . 
+                /* LABEL 6 - START */
+                  L11826 = "" .
                 display L11826          format "x(40)" skip with fram F1182 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1182
         WITH  fram F1182 NO-LABEL
         EDITING:
@@ -5052,9 +5052,9 @@ IF OkToRun = yes THEN  RUN    xsinv25.p.
      /* END    LINE :1182  1.8.2 计划外出过期料  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1182LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1182    */
    END.
    pause 0 before-hide.
@@ -5098,40 +5098,40 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1183 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11831 = "" . 
+                /* LABEL 1 - START */
+                  L11831 = "" .
                 display L11831          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11832 = "" . 
+                /* LABEL 2 - START */
+                  L11832 = "" .
                 display L11832          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11833 = "" . 
+                /* LABEL 3 - START */
+                  L11833 = "" .
                 display L11833          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11834 = "" . 
+                /* LABEL 4 - START */
+                  L11834 = "" .
                 display L11834          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11835 = "" . 
+                /* LABEL 5 - START */
+                  L11835 = "" .
                 display L11835          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11836 = "" . 
+                /* LABEL 6 - START */
+                  L11836 = "" .
                 display L11836          format "x(40)" skip with fram F1183 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1183
         WITH  fram F1183 NO-LABEL
         EDITING:
@@ -5173,14 +5173,14 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
      /* END    LINE :1183  1.8.3 库存标签分箱  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1183LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1183    */
    END.
    pause 0 before-hide.
 
-   
+
    /*Sam Song 20100312 Start*/
       /* Internal Cycle Input :1190    */
    V1190LMAINLOOP:
@@ -5218,40 +5218,40 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1190 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11901 = "图号入货架...91" .
                 display L11901          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L11902 = "ASSY=>货架...92" .
                 display L11902          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L11903 = "入库回冲货架.93" .
                 display L11903          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11904 = "保税转移.94" . 
+                /* LABEL 4 - START */
+                  L11904 = "保税转移.94" .
                 display L11904          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11905 = "" . 
+                /* LABEL 5 - START */
+                  L11905 = "" .
                 display L11905          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11906 = "" . 
+                /* LABEL 6 - START */
+                  L11906 = "" .
                 display L11906          format "x(40)" skip with fram F1190 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1190
         WITH  fram F1190 NO-LABEL
         EDITING:
@@ -5293,9 +5293,9 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
      /* END    LINE :1190  1.9 货架菜单  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1190LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1190    */
    END.
    pause 0 before-hide.
@@ -5339,40 +5339,40 @@ IF OkToRun = yes THEN  RUN    xsinv71.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1191 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11911 = "" . 
+                /* LABEL 1 - START */
+                  L11911 = "" .
                 display L11911          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11912 = "" . 
+                /* LABEL 2 - START */
+                  L11912 = "" .
                 display L11912          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11913 = "" . 
+                /* LABEL 3 - START */
+                  L11913 = "" .
                 display L11913          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11914 = "" . 
+                /* LABEL 4 - START */
+                  L11914 = "" .
                 display L11914          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11915 = "" . 
+                /* LABEL 5 - START */
+                  L11915 = "" .
                 display L11915          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11916 = "" . 
+                /* LABEL 6 - START */
+                  L11916 = "" .
                 display L11916          format "x(40)" skip with fram F1191 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1191
         WITH  fram F1191 NO-LABEL
         EDITING:
@@ -5414,9 +5414,9 @@ IF OkToRun = yes THEN  RUN    xsinv71.p.
      /* END    LINE :1191  1.9.1 图号入货架  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1191LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1191    */
    END.
    pause 0 before-hide.
@@ -5460,40 +5460,40 @@ IF OkToRun = yes THEN  RUN    xsinv72.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1192 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11921 = "" . 
+                /* LABEL 1 - START */
+                  L11921 = "" .
                 display L11921          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11922 = "" . 
+                /* LABEL 2 - START */
+                  L11922 = "" .
                 display L11922          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11923 = "" . 
+                /* LABEL 3 - START */
+                  L11923 = "" .
                 display L11923          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11924 = "" . 
+                /* LABEL 4 - START */
+                  L11924 = "" .
                 display L11924          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11925 = "" . 
+                /* LABEL 5 - START */
+                  L11925 = "" .
                 display L11925          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11926 = "" . 
+                /* LABEL 6 - START */
+                  L11926 = "" .
                 display L11926          format "x(40)" skip with fram F1192 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1192
         WITH  fram F1192 NO-LABEL
         EDITING:
@@ -5535,9 +5535,9 @@ IF OkToRun = yes THEN  RUN    xsinv72.p.
      /* END    LINE :1192  1.9.2 ASSY=>货架  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1192LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1192    */
    END.
    pause 0 before-hide.
@@ -5581,40 +5581,40 @@ IF OkToRun = yes THEN  RUN    xsinv73.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1193 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11931 = "" . 
+                /* LABEL 1 - START */
+                  L11931 = "" .
                 display L11931          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11932 = "" . 
+                /* LABEL 2 - START */
+                  L11932 = "" .
                 display L11932          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11933 = "" . 
+                /* LABEL 3 - START */
+                  L11933 = "" .
                 display L11933          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11934 = "" . 
+                /* LABEL 4 - START */
+                  L11934 = "" .
                 display L11934          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11935 = "" . 
+                /* LABEL 5 - START */
+                  L11935 = "" .
                 display L11935          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11936 = "" . 
+                /* LABEL 6 - START */
+                  L11936 = "" .
                 display L11936          format "x(40)" skip with fram F1193 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1193
         WITH  fram F1193 NO-LABEL
         EDITING:
@@ -5656,9 +5656,9 @@ IF OkToRun = yes THEN  RUN    xsinv73.p.
      /* END    LINE :1193  1.9.3 入库回冲货架  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1193LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1193    */
    END.
    pause 0 before-hide.
@@ -5702,40 +5702,40 @@ IF OkToRun = yes THEN  RUN    xsinv81.p.
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1194 no-box.
 
-                /* LABEL 1 - START */ 
-                  L11941 = "" . 
+                /* LABEL 1 - START */
+                  L11941 = "" .
                 display L11941          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11942 = "" . 
+                /* LABEL 2 - START */
+                  L11942 = "" .
                 display L11942          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11943 = "" . 
+                /* LABEL 3 - START */
+                  L11943 = "" .
                 display L11943          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11944 = "" . 
+                /* LABEL 4 - START */
+                  L11944 = "" .
                 display L11944          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
 
 
-                /* LABEL 5 - START */ 
-                  L11945 = "" . 
+                /* LABEL 5 - START */
+                  L11945 = "" .
                 display L11945          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 5 - END */ 
+                /* LABEL 5 - END */
 
 
-                /* LABEL 6 - START */ 
-                  L11946 = "" . 
+                /* LABEL 6 - START */
+                  L11946 = "" .
                 display L11946          format "x(40)" skip with fram F1194 no-box.
-                /* LABEL 6 - END */ 
+                /* LABEL 6 - END */
         Update V1194
         WITH  fram F1194 NO-LABEL
         EDITING:
@@ -5777,9 +5777,9 @@ IF OkToRun = yes THEN  RUN    xsinv81.p.
      /* END    LINE :1194  1.9.4 库存转移  */
 
 
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1194LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1194    */
    END.
    pause 0 before-hide.
