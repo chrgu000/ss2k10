@@ -42,8 +42,8 @@ repeat:
  (c-application-mode = 'web' and
  (c-web-request begins 'data')) then do:
 
-   if nbr1 = "" then nbr1 = hi_char.
-   if cust1 = "" then cust1 = hi_char.
+   nbr1 = nbr1 + hi_char.
+   cust1 = cust1 + hi_char.
 
  end.
 

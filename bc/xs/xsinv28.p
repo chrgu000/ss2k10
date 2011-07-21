@@ -776,12 +776,20 @@ End.
 /*17YJ*/  					 assign wmessage = "......".
 /*17YJ*/  display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/  find first xxtc_hst no-lock where xxtc_nbr = v10006 no-error.
-/*17YJ*/  if availabl xxtc_hst and xxtc_cust <> "" then do:
-/*17YJ*/  		assign wmessage = "台车:[" + v10006 + "]在客户:[" + xxtc_cust + "]处！请确认资料.".
-/*17YJ*/     display  skip WMESSAGE NO-LABEL with fram F10006.
-/*17YJ*/    assign v10006 = "".
-/*17YJ*/		undo , retry.
-/*17YJ*/	end.
+/*17YJ*/  if availabl xxtc_hst then do:
+/*17YJ*/	   if xxtc_stat = "C" then do:
+/*17YJ*/  		  assign wmessage = "台车:[" + v10006 + "]在客户:[" + xxtc_cust + "]处！请确认资料.".
+/*17YJ*/        display  skip WMESSAGE NO-LABEL with fram F10006.
+/*17YJ*/        assign v10006 = "".
+/*17YJ*/		    undo , retry.
+/*17YJ*/	   end.
+/*17YJ*/		 else if xxtc_stat = "X" then do:
+/*17YJ*/  		  assign wmessage = "台车:[" + v10006 + "]状态:[取消]！请确认资料.".
+/*17YJ*/        display  skip WMESSAGE NO-LABEL with fram F10006.
+/*17YJ*/        assign v10006 = "".
+/*17YJ*/		    undo , retry.
+/*17YJ*/		 end.
+/*17YJ*/  end .   /*if availabl xxtc_hst then do:*/
 /*17YJ*/  leave pv10006loop.
 /*17YJ*/ end.
 
