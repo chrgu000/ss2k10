@@ -18,6 +18,7 @@ define buffer ptmstr for pt_mstr.
 ------------------------------------------------------------------------------*/
 procedure getPhList:
   define input parameter ipart like ps_par.
+  define input parameter iroot like ps_par.
   define input-output parameter ioqty like ps_qty_per.
   define variable vqty like ps_qty_per.
   for each ps_mstr no-lock where  ps_par = ipart
@@ -29,17 +30,17 @@ procedure getPhList:
             where ptmstr.pt_part = ps_mstr.ps_comp no-error.
        if available ptmstr then do:
          if ptmstr.pt_phantom then do:
-            run getPhList(input ps_mstr.ps_comp,input-output vqty).
+            run getPhList(input ps_mstr.ps_comp,input iroot,input-output vqty).
          end.
          else do:
-            find first levx exclusive-lock where levx_par = ipart and
+            find first levx exclusive-lock where  levx_par = iroot and
             				   levx_part = ps_mstr.ps_comp no-error.
             if available levx then do:
                assign levx_qty = levx_qty + vqty.
             end.
             else do:
                create levx.
-               assign levx_par = ipart
+               assign levx_par = iroot
                	      levx_part = ps_mstr.ps_comp
                       levx_qty  = vqty.
             end.

@@ -13,7 +13,7 @@ define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
 define variable issue  as date no-undo.
 define variable issue1 as date no-undo.
-define variable update_data as logical no-undo initial yes.
+define variable update_data as logical no-undo initial no.
 define variable timedif as integer.
 define variable vRate as decimal. /* 产能(个/每秒) */
 define variable itceTime as integer.  /*时间用于记录计算时每个分界时间*/
@@ -73,14 +73,21 @@ end.
         {mfselbpr.i "printer" 162}
         {mfphead.i}
 
-    if update_data then do:
+    if update_data then do: 
        for each xxlw_mst exclusive-lock where xxlw_date >= issue and
                (xxlw_date <= issue1 or issue1 = ?) and
                (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
                 xxlw_line >= line and (xxlw_line <= line1 or line1 = ""):
+                for each xxwa_det exclusive-lock where
+                         xxwa_date = xxlw_date and
+                         xxwa_site = xxlw_site and
+                         xxwa_line = xxlw_line and
+                         xxwa_par = xxlw_part:
+                    delete xxwa_det.
+                end.
            delete xxlw_mst.
        end.
-    end.
+
 
     FOR EACH xxwk_det NO-LOCK where xxwk_date >= issue and
             (xxwk_date <= issue1 or issue1 = ?) and
@@ -101,12 +108,12 @@ end.
                  recno = recid(xxlnw_det).
             END.
         end.    /* if first-of(xxwk_line) then do: */
-        else do:                                                         
-          if recno <> ? then do:                                         
-             find first xxlnw_det where recid(xxlnw_det) = recno         
-                  no-lock no-error.                                      
-          end.                                                           
-        end.                                                             
+        else do:
+          if recno <> ? then do:
+             find first xxlnw_det where recid(xxlnw_det) = recno
+                  no-lock no-error.
+          end.
+        end.
         /*每个物料产能 (个/秒) */
         find first lnd_det no-lock where lnd_site = xxwk_site and
                    lnd_line = xxwk_line and lnd_part = xxwk_part no-error.
@@ -169,40 +176,64 @@ end.
         end.
 
     END.  /*  FOR EACH xxwk_det NO-LOCK */
-	  empty temp-table levx no-error.	
-		for each xxlw_mst no-lock where
+    empty temp-table levx no-error.
+    for each xxlw_mst no-lock where
         xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
         xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
         xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
         break by xxlw_part:
         if first-of(xxlw_part) then do:
-        	 assign vqty = 1.
-        	 run getPhList(input xxlw_part,input-output vqty).
+           assign vqty = 1.
+           run getPhList(input xxlw_part,input xxlw_part,input-output vqty).
         end.
-        
     end.
-for each levx no-lock:
-	display levx.
-end.
 
     for each xxlw_mst no-lock where
         xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
         xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
         xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
-        with frame w 
+        with frame w
         by xxlw_date by xxlw_site by xxlw_line by xxlw_sn by xxlw_start:
-        DISP xxlw_sn xxlw_date xxlw_site xxlw_line xxlw_part xxlw_qty
-             string(xxlw_start,"HH:MM:SS") column-label "Start At"
-             string(xxlw_end,"HH:MM:SS") column-label "End At"
-             with width 300.
+
+             for each levx no-lock where levx_par = xxlw_par:
+             create xxwa_det.
+             assign xxwa_date = xxlw_date
+                    xxwa_site = xxlw_site
+                    xxwa_line = xxlw_line
+                    xxwa_par = xxlw_part
+                    xxwa_part = levx_part
+                    xxwa_sn = xxlw_sn
+                    xxwa_qty_req = levx_qty * xxlw_qty_req
+                    xxwa_rtime = xxlw_start.
+             end.
+
     end.
 
-/*       for each xxlnw_det no-lock where xxlnw_line = "2rdc"               */
-/*       break by xxlnw_line by xxlnw_sn with frame s:                      */
-/*           disp xxlnw_sn xxlnw_site xxlnw_line xxlnw_sn xxlnw_on          */
-/*                xxlnw_start xxlnw_end xxlnw_rstmin with width 300.        */
-/*       end.                                                               */
-
+    for each xxwa_det exclusive-lock where
+             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
+             xxwa_site >= site1 and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line = "")
+    break by xxwa_date by xxwa_site by xxwa_line:
+    end.
+    end.  /*   if update_data then do:  */
+    
+    for each xxwa_det no-lock
+         with frame x width 300
+         break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_rtime:
+        display xxwa_date xxwa_site xxwa_line xxwa_part xxwa_sn
+                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
+                xxwa_qty_pln xxwa_qty_piss xxwa_qty_siss
+                string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
+                string(xxwa_petime,"hh:mm:ss") @ xxwa_petime                
+                xxwa_pouser xxwa_podate
+                string(xxwa_potime,"hh:mm:ss") @ xxwa_potime
+                string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
+                string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
+                xxwa_souser xxwa_sodate
+                string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime
+                .
+setFrameLabels(frame x:handle).
+   end.
 
    /* REPORT TRAILER  */
    {mfrtrail.i}
