@@ -21,6 +21,7 @@ define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
 define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
 define variable rid as recid.
 define variable vqty  as decimal.
+define variable vtype as character.
 /* SELECT FORM */
 form
    site   colon 15
@@ -73,7 +74,7 @@ end.
         {mfselbpr.i "printer" 162}
         {mfphead.i}
 
-    if update_data then do: 
+    if update_data then do:
        for each xxlw_mst exclusive-lock where xxlw_date >= issue and
                (xxlw_date <= issue1 or issue1 = ?) and
                (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
@@ -192,7 +193,6 @@ end.
         xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
         xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
         xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
-        with frame w
         by xxlw_date by xxlw_site by xxlw_line by xxlw_sn by xxlw_start:
 
              for each levx no-lock where levx_par = xxlw_par:
@@ -211,12 +211,42 @@ end.
 
     for each xxwa_det exclusive-lock where
              xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
-             xxwa_site >= site1 and (xxwa_site <= site1 or site1 = ?) and
-             xxwa_line >= line and (xxwa_line <= line1 or line = "")
-    break by xxwa_date by xxwa_site by xxwa_line:
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
+    break by xxwa_date by
+     xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+          assign vtype = "*".
+          if first-of(xxwa_part) then do:
+             find first pt_mstr where pt_part = xxwa_part no-lock no-error.
+             if available pt_mstr then do:
+             		assign vtype = pt__chr10.
+             end.
+          end.
+          find last xxlnm_det where xxlnm_line = xxwa_line
+                 and xxlnm_site = xxwa_site
+                 and (xxlnm_type = vtype or xxlnm_type = "*")
+                 no-lock no-error.
+          if not available xxlnm_det then do:
+             find first xxlnm_det no-lock no-error.
+          end.
+          if available xxlnm_det then do:
+          	 find first xxlnw_det where xxlnw_site = xxwa_site
+          	        and xxlnw_line = xxwa_line
+          	        and xxlnw_sn = xxwa_sn no-lock no-error.
+          	 if available xxlnw_det then do:
+          	 assign xxwa_pstime = xxlnw_stime - xxlnm_pkstart * 60
+          	        xxwa_petime = xxlnw_stime - xxlnm_pkend * 60
+          	        xxwa_sstime = xxlnw_stime - xxlnm_sdstart * 60
+          	        xxwa_setime = xxlnw_stime - xxlnm_sdend * 60.
+          	 end.
+          end.
+          else do:
+          		message xxwa_line " " xxwa_site view-as alert-box.
+          		assign xxwa_pstime = -1.
+          end.
     end.
     end.  /*   if update_data then do:  */
-    
+
     for each xxwa_det no-lock
          with frame x width 300
          break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_rtime:
@@ -224,7 +254,7 @@ end.
                 string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
                 xxwa_qty_pln xxwa_qty_piss xxwa_qty_siss
                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
-                string(xxwa_petime,"hh:mm:ss") @ xxwa_petime                
+                string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
                 xxwa_pouser xxwa_podate
                 string(xxwa_potime,"hh:mm:ss") @ xxwa_potime
                 string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
@@ -232,7 +262,7 @@ end.
                 xxwa_souser xxwa_sodate
                 string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime
                 .
-setFrameLabels(frame x:handle).
+        setFrameLabels(frame x:handle).
    end.
 
    /* REPORT TRAILER  */
