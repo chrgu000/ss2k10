@@ -115,7 +115,8 @@ repeat with frame a:
 /*eb*/  {mfnp.i qad_wkfl qad_key1 qad_key1 qad_key2 qad_key2 qad_index1}  
       if recno <> ? then do:
          display qad_key1 qad_key2.
-         display qad_key3 qad_key4 qad_key5 qad_key6 with frame k.
+         display qad_key3 qad_key4 qad_key5 qad_key6 
+         				 qad_user1 qad_user2 qad__qadc01 with frame k.
       end.
    end.
 
