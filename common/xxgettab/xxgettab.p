@@ -54,6 +54,10 @@ assign
 repeat:
 if c-application-mode <> 'web' then.
    update sfile db_name with frame a.
+   if sfile = "" then do:
+   	  {pxmsg.i &MSGNUM=4463 &ERRORLEVEL=3}
+   	  undo,retry.
+   end.
    assign db_name sfile.
    assign sdb = db_name
           stb = sfile.
