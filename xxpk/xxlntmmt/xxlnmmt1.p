@@ -30,8 +30,8 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnm_type colon 20 lnmtpdesc no-label
-   xxlnm_interval colon 20 skip(1)
+   xxlnm_type colon 20 lnmtpdesc no-label skip(1)
+   xxlnm_interval colon 20
    xxlnm_pkstart colon 20
    xxlnm_pkend colon 45
    xxlnm_sdstart colon 20
@@ -200,7 +200,7 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         xxlnm_type xxlnm_interval
+         xxlnm_type
       editing:
 
          if frame-field = "xxlnm_type" then do:
@@ -249,7 +249,6 @@ repeat:
          where xxlnm_line = ln_line
            and xxlnm_site = ln_site
            and xxlnm_type = input xxlnm_type
-           and xxlnm_interval = input xxlnm_interval
       exclusive-lock no-error.
 
       if not available xxlnm_det then do:
@@ -280,7 +279,8 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxlnm_pkstart xxlnm_pkend xxlnm_sdstart xxlnm_sdend xxlnm_desc
+         set xxlnm_interval xxlnm_pkstart xxlnm_pkend xxlnm_sdstart 
+         		 xxlnm_sdend xxlnm_desc
          go-on (F5 CTRL-D) with frame bb.
          display
               xxlnm_type
