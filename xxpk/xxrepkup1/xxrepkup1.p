@@ -11,10 +11,11 @@ define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
-define variable issue  as date no-undo.
-define variable issue1 as date no-undo.
+define variable issue  as date no-undo initial today.
+define variable issue1 as date no-undo initial today.
 define variable update_data as logical no-undo initial no.
 define variable timedif as integer.
+define variable rev  as character.
 define variable vRate as decimal. /* 产能(个/每秒) */
 define variable itceTime as integer.  /*时间用于记录计算时每个分界时间*/
 define variable itceTimeS as integer. /*时间用于记录计算时每个分界时间开始*/
@@ -22,6 +23,7 @@ define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束*/
 define variable rid as recid.
 define variable vqty  as decimal.
 define variable vtype as character.
+define variable rev1 as character.
 /* SELECT FORM */
 form
    site   colon 15
@@ -29,7 +31,8 @@ form
    line   colon 15
    line1  label {t001.i} colon 49 skip
    issue  colon 15
-   issue1 label {t001.i} colon 49 skip(1)
+   issue1 label {t001.i} colon 49 skip
+   rev    colon 15 skip(2)
    update_data colon 25
 with frame a side-labels width 80.
 
@@ -46,10 +49,10 @@ repeat:
     if issue1 = hi_date then issue1 = ?.
 
 if c-application-mode <> 'web' then
-update site site1 line line1 issue issue1 update_data with frame a.
+update site site1 line line1 issue issue1 rev update_data with frame a.
 
 {wbrp06.i &command = update
-          &fields = " site site1 line line1 issue issue1 update_data"
+          &fields = " site site1 line line1 issue issue1 rev update_data"
           &frm = "a"}
 
 if (c-application-mode <> 'web') or
@@ -75,20 +78,65 @@ end.
         {mfphead.i}
 
     if update_data then do:
-       for each xxlw_mst exclusive-lock where xxlw_date >= issue and
-               (xxlw_date <= issue1 or issue1 = ?) and
-               (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
-                xxlw_line >= line and (xxlw_line <= line1 or line1 = ""):
-                for each xxwa_det exclusive-lock where
-                         xxwa_date = xxlw_date and
-                         xxwa_site = xxlw_site and
-                         xxwa_line = xxlw_line and
-                         xxwa_par = xxlw_part:
-                    delete xxwa_det.
-                end.
-           delete xxlw_mst.
-       end.
+    for each xxlw_mst exclusive-lock where xxlw_date >= issue and
+            (xxlw_date <= issue1 or issue1 = ?) and
+            (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
+             xxlw_line >= line and (xxlw_line <= line1 or line1 = ""):
+             for each xxwa_det exclusive-lock where
+                      xxwa_date = xxlw_date and
+                      xxwa_site = xxlw_site and
+                      xxwa_line = xxlw_line and
+                      xxwa_par = xxlw_part:
+                 delete xxwa_det.
+             end.
+        delete xxlw_mst.
+    end.
 
+/* initial xxwk_det */
+    FOR EACH xxwk_det exclusive-LOCK where xxwk_date >= issue and
+            (xxwk_date <= issue1 or issue1 = ?) and
+             xxwk_site >= site and (xxwk_site <= site1 or site1 = "") and
+             xxwk_line >= line and (xxwk_line <= line1 or line1 = ""):
+         delete xxwk_det.
+    end.
+
+    find first xaps_det no-lock where xaps_version_date >= issue and
+    					 (xaps_version_date <= issue1 or issue1 = ?) and
+/*   					  xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
+    					  xaps_line >= line and (xaps_line <= line1 or line1 = "") and
+    					  xaps_version_time >= rev no-error.
+    if available xaps_det then do:
+    	 assign rev1 = xaps_version_time.
+    end.
+    else do:
+    		find last xaps_det no-lock where xaps_version_date >= issue and
+    					 (xaps_version_date <= issue1 or issue1 = ?) and
+/*   					  xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
+    					  xaps_line >= line and (xaps_line <= line1 or line1 = "") and
+    					  xaps_version_time < rev no-error.
+    	 if available xaps_det then do:
+    	 		assign rev1 = xaps_version_time.
+    	 end.
+    end.
+
+
+    for each xaps_det no-lock where xaps_date >= issue and
+            (xaps_date <= issue1 or issue1 = ?) and
+ /*          xaps_site >= site and (xaps_site <= site1 or site1 = "") and   */
+             xaps_line >= line and (xaps_line <= line1 or line1 = "")
+             and xaps_version_time = rev1
+             break by xaps_date
+/*             by xaps_site      */
+             by xaps_line by xaps_sequence :
+/*     display xaps_date xaps_line xaps_qty xaps_part xaps_qty xaps_sequence. */
+            create xxwk_det.
+            assign xxwk_date = xaps_date
+                   xxwk_site = "gsa01"
+                   xxwk_line = xaps_line
+                   xxwk_qty_req = xaps_qty
+                   xxwk_part = xaps_part
+                   xxwk_sn = xaps_sequence.
+    end.
 
     FOR EACH xxwk_det NO-LOCK where xxwk_date >= issue and
             (xxwk_date <= issue1 or issue1 = ?) and
@@ -209,17 +257,17 @@ end.
 
     end.
 
+    /*计算取料,发料时间区间*/
     for each xxwa_det exclusive-lock where
              xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
-    break by xxwa_date by
-     xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
           assign vtype = "*".
           if first-of(xxwa_part) then do:
              find first pt_mstr where pt_part = xxwa_part no-lock no-error.
              if available pt_mstr then do:
-             		assign vtype = pt__chr10.
+                assign vtype = pt__chr10.
              end.
           end.
           find last xxlnm_det where xxlnm_line = xxwa_line
@@ -230,29 +278,46 @@ end.
              find first xxlnm_det no-lock no-error.
           end.
           if available xxlnm_det then do:
-          	 find first xxlnw_det where xxlnw_site = xxwa_site
-          	        and xxlnw_line = xxwa_line
-          	        and xxlnw_sn = xxwa_sn no-lock no-error.
-          	 if available xxlnw_det then do:
-          	 assign xxwa_pstime = xxlnw_stime - xxlnm_pkstart * 60
-          	        xxwa_petime = xxlnw_stime - xxlnm_pkend * 60
-          	        xxwa_sstime = xxlnw_stime - xxlnm_sdstart * 60
-          	        xxwa_setime = xxlnw_stime - xxlnm_sdend * 60.
-          	 end.
+             find first xxlnw_det where xxlnw_site = xxwa_site
+                    and xxlnw_line = xxwa_line
+                    and xxlnw_sn = xxwa_sn no-lock no-error.
+             if available xxlnw_det then do:
+             assign xxwa_pstime = xxlnw_stime - xxlnm_pkstart * 60
+                    xxwa_petime = xxlnw_stime - xxlnm_pkend * 60
+                    xxwa_sstime = xxlnw_stime - xxlnm_sdstart * 60
+                    xxwa_setime = xxlnw_stime - xxlnm_sdend * 60.
+             end.
           end.
           else do:
-          		message xxwa_line " " xxwa_site view-as alert-box.
-          		assign xxwa_pstime = -1.
+              assign xxwa_pstime = -1.
           end.
     end.
+
+    /*C类物料以最小包装量发放*/
+    for each xxwa_det exclusive-lock where
+             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line1 = ""),
+        each pt_mstr no-lock where pt_part = xxwa_part and pt__chr10 = "C"
+    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+
+    end.
+
+
+
     end.  /*   if update_data then do:  */
 
-    for each xxwa_det no-lock
-         with frame x width 300
+    for each xxwa_det no-lock where
+             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
+         with frame x width 400
          break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_rtime:
+        find first pt_mstr no-lock where pt_part = xxwa_part no-error.
+
         display xxwa_date xxwa_site xxwa_line xxwa_part xxwa_sn
                 string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
-                xxwa_qty_pln xxwa_qty_piss xxwa_qty_siss
+                xxwa_qty_pln pt_ord_min pt__chr10 xxwa_qty_piss xxwa_qty_siss
                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
                 string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
                 xxwa_pouser xxwa_podate
