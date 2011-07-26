@@ -155,7 +155,7 @@ do on error undo, retry:
    end.
    assign xrcDir = lower(trim(xrcDir)).
    find first qad_wkfl exclusive-lock where
-/*EB          qad_domain = global_domain                                     */
+/*EB          qad_domain = global_domain and                                 */
               qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
         if not available qad_wkfl then do:
            create qad_wkfl.
