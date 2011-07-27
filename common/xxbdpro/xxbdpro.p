@@ -329,15 +329,15 @@ assign vfrom_id        = from_id
                if first_shot then
                   find first bdl_mstr no-lock where
 /*EB                         bdl_mstr.bdl_domain = global_domain and         */
-                         bdl_source = "" and
-                         bdl_id >= from_id and bdl_id <= to_id
-                     no-error no-wait.
+                             bdl_source = "" and
+                             bdl_id >= from_id and bdl_id <= to_id
+                             no-error no-wait.
                else
                   find next bdl_mstr no-lock where
 /*EB                        bdl_mstr.bdl_domain = global_domain and          */
-                         bdl_source = "" and
-                         bdl_id >= from_id and bdl_id <= to_id
-                         no-error no-wait.
+                            bdl_source = "" and
+                            bdl_id >= from_id and bdl_id <= to_id
+                            no-error no-wait.
 
                first_shot = no.
 
@@ -369,9 +369,9 @@ assign vfrom_id        = from_id
 
          find first bdld_det no-lock where
 /*EB                bdld_det.bdld_domain = global_domain and                 */
-             bdld_source = current_bdl_source and
-             bdld_id = current_bdl_id and
-            (bdld_data begins "@ACTION") no-error.
+                    bdld_source = current_bdl_source and
+                    bdld_id = current_bdl_id and
+                   (bdld_data begins "@ACTION") no-error.
          group_count = group_count + 1.
          if available bdld_det then
             run process_by_screen.
@@ -429,7 +429,7 @@ end.
 
 do transaction:
    find qad_wkfl exclusive-lock where
-/*EB      qad_wkfl.qad_domain = global_domain and                            */
+/*EB    qad_wkfl.qad_domain = global_domain and                               */
         qad_key1 = "Cim Process Session" and
         qad_key2 = session_no no-error.
 
@@ -586,7 +586,7 @@ PROCEDURE process_by_screen:
             /*... otherwise, get data from database */
             else do:
                find first bdld_det no-lock where
-/*EB                bdld_det.bdld_domain = global_domain and                 */
+/*EB              bdld_det.bdld_domain = global_domain and                   */
                   bdld_source = "" and
                   bdld_id = current_bdl_id and
                   bdld_line > current_line no-error.
@@ -1242,8 +1242,8 @@ PROCEDURE get_CIM_session:
       /* Find first CIM process session - leave if more than 999 CIM sessions*/
       do i = 0 to 999:
          find first qad_wkfl exclusive-lock where
-/*          qad_wkfl.qad_domain = global_domain and                          */
-            qad_key1 = "Cim Process Session"    and
+/*EB        qad_wkfl.qad_domain = global_domain and                          */
+            qad_key1 = "Cim Process Session" and
             qad_key2 > string(i, "999")
             use-index qad_index1 no-error.
          if not available qad_wkfl then
@@ -1266,7 +1266,7 @@ PROCEDURE get_CIM_session:
 
       /* Set up CIM process session in qad_wkfl record */
       create qad_wkfl.
-/*EB     qad_wkfl.qad_domain = global_domain.                                */
+/*EB         qad_wkfl.qad_domain = global_domain.                            */
       assign
          qad_key1 = "Cim Process Session"
          qad_key2 = session_no
