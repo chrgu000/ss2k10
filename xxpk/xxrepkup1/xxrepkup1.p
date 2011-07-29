@@ -101,22 +101,22 @@ end.
     end.
 
     find first xaps_det no-lock where xaps_version_date >= issue and
-    					 (xaps_version_date <= issue1 or issue1 = ?) and
-/*   					  xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
-    					  xaps_line >= line and (xaps_line <= line1 or line1 = "") and
-    					  xaps_version_time >= rev no-error.
+               (xaps_version_date <= issue1 or issue1 = ?) and
+/*              xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
+                xaps_line >= line and (xaps_line <= line1 or line1 = "") and
+                xaps_version_time >= rev no-error.
     if available xaps_det then do:
-    	 assign rev1 = xaps_version_time.
+       assign rev1 = xaps_version_time.
     end.
     else do:
-    		find last xaps_det no-lock where xaps_version_date >= issue and
-    					 (xaps_version_date <= issue1 or issue1 = ?) and
-/*   					  xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
-    					  xaps_line >= line and (xaps_line <= line1 or line1 = "") and
-    					  xaps_version_time < rev no-error.
-    	 if available xaps_det then do:
-    	 		assign rev1 = xaps_version_time.
-    	 end.
+        find last xaps_det no-lock where xaps_version_date >= issue and
+               (xaps_version_date <= issue1 or issue1 = ?) and
+/*              xaps_site >= site and (xaps_site <= site1 or site1 = "") and */
+                xaps_line >= line and (xaps_line <= line1 or line1 = "") and
+                xaps_version_time < rev no-error.
+       if available xaps_det then do:
+          assign rev1 = xaps_version_time.
+       end.
     end.
 
 
@@ -216,14 +216,12 @@ end.
           END.
             assign itcetimee = xxlnw_stime + timedif.
             assign itcetimes = itcetimee.
-
         end.
         for each xxlw_mst exclusive-lock where xxlw_date = xxwk_date
              and xxlw_site = xxwk_site and xxlw_line = xxwk_line
              and xxlw_part = xxwk_part:
              assign xxlw_qty_req = vrate * (xxlw_end - xxlw_start).
         end.
-
     END.  /*  FOR EACH xxwk_det NO-LOCK */
     empty temp-table levx no-error.
     for each xxlw_mst no-lock where
@@ -242,7 +240,6 @@ end.
         xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
         xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
         by xxlw_date by xxlw_site by xxlw_line by xxlw_sn by xxlw_start:
-
              for each levx no-lock where levx_par = xxlw_par:
              create xxwa_det.
              assign xxwa_date = xxlw_date
@@ -254,7 +251,6 @@ end.
                     xxwa_qty_req = levx_qty * xxlw_qty_req
                     xxwa_rtime = xxlw_start.
              end.
-
     end.
 
     /*计算取料,发料时间区间*/
@@ -302,8 +298,6 @@ end.
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
 
     end.
-
-
 
     end.  /*   if update_data then do:  */
 
