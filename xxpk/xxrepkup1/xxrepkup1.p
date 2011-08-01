@@ -43,6 +43,11 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 /* REPORT BLOCK */
+		find first qad_wkfl no-lock where qad_key1 = "xxrepkup0.p" and
+							 qad_key2 = "xxrepkup1.p" no-error.
+	  if available qad_wkfl then do:
+	  		assign nbr = qad_key3.
+	  end.							 
     find first rpc_ctrl no-lock no-error.
     nbr1 = rpc_nbr_pre + string(rpc_nbr - 1).
 {wbrp01.i}
@@ -278,7 +283,7 @@ if update_data then do:
              xxwa_rtime = qad_intfld[2] no-error.
   end.
 */
-  /*计算取料,发料时间区间* /
+  /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -314,7 +319,7 @@ if update_data then do:
             assign xxwa_pstime = -1.
         end.
   end.
-*/
+ 
    /*  /*C类物料以最小包装量发放*/                                                     */
    /*  for each xxwa_det exclusive-lock where                                          */
    /*           xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and         */
