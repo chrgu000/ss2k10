@@ -26,6 +26,9 @@ define variable i as integer.
 define variable rid as recid.
 define variable vqty  as decimal.
 define variable vtype as character.
+define variable v_number as character format "x(12)".
+define variable errorst as logical.
+define variable errornum as integer.
 /* SELECT FORM */
 form
    site   colon 20
@@ -43,11 +46,11 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 /* REPORT BLOCK */
-		find first qad_wkfl no-lock where qad_key1 = "xxrepkup0.p" and
-							 qad_key2 = "xxrepkup1.p" no-error.
-	  if available qad_wkfl then do:
-	  		assign nbr = qad_key3.
-	  end.							 
+    find first qad_wkfl no-lock where qad_key1 = "xxrepkup0.p" and
+               qad_key2 = "xxrepkup1.p" no-error.
+    if available qad_wkfl then do:
+        assign nbr = qad_key3.
+    end.
     find first rpc_ctrl no-lock no-error.
     nbr1 = rpc_nbr_pre + string(rpc_nbr - 1).
 {wbrp01.i}
@@ -175,25 +178,7 @@ if update_data then do:
              assign xxlw_qty_req = ROUND(vrate * (xxlw_end - xxlw_start),0).
         end.
     end. /* for each rps_mstr no-lock user-index rps_site_line where */
- /*****
-  for each xxlw_mst no-lock where
-       xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
-       xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
-       xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
-       BREAK BY xxlw_date BY xxlw_site BY xxlw_line BY xxlw_start:
-       display xxlw_date
-               xxlw_site
-               xxlw_line
-               xxlw_part
-               xxlw_sn
-               string(xxlw_start,"hh:mm:ss") column-label "xxlnw_start"
-               string(xxlw_end  ,"hh:mm:ss") column-label "xxlnw_end"
-               xxlw_qty_req
-               xxlw__dec01
-               string(xxlw__int01,"hh:mm:ss") column-label "xxlw__int01"
-                with width 300.
-  end.
-*****/
+
   empty temp-table levx no-error.
   for each xxlw_mst no-lock where
       xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
@@ -206,83 +191,57 @@ if update_data then do:
       end.
   end.
 
-/*   assign i = 1.                                                         */
-/*   for each qad_wkfl exclusive-lock where qad_key1 = "xxrepkup1.p":      */
-/*       delete qad_wkfl.                                                  */
-/*   end.                                                                  */
   for each xxlw_mst no-lock where
            xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
            xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
            xxlw_line >= line and (xxlw_line <= line1 or line1 = ""),
       each levx no-lock where levx_par = xxlw_part
       by xxlw_date by xxlw_site by xxlw_line by xxlw_sn by xxlw_start:
-/*      DISPLAY xxlw_date xxlw_site xxlw_line levx_par levx_part xxlw_sn
-      				xxlw_start xxlw_qty_req with width 300.
+           find first xxwa_det exclusive-lock where
+                      xxwa_date = xxlw_date and
+                      xxwa_site = xxlw_site and
+                      xxwa_line = xxlw_line and
+                      xxwa_par = levx_par and
+                      xxwa_part = levx_part and
+                      xxwa_sn = xxlw_sn and
+                      xxwa_rtime = xxlw_start no-error.
+           if not available xxwa_det then do:
+                  create xxwa_det.
+                  assign
+                         xxwa_date = xxlw_date
+                         xxwa_site = xxlw_site
+                         xxwa_line = xxlw_line
+                         xxwa_par = levx_par
+                         xxwa_part = levx_part
+                         xxwa_sn = xxlw_sn
+                         xxwa_qty_req = xxlw_qty_req
+                         xxwa_rtime = xxlw_start
+                          .
+           end.
+           else do:
+              assign xxwa_qty_req = xxwa_qty_req + xxlw_qty_req.
+           end.
 
-           create qad_wkfl.
-           assign qad_key1 = "xxrepkup1.p"
-                  qad_key2 = string(i)
-                  qad_datefld[1] = xxlw_date
-                  qad_charfld[1] = xxlw_site
-                  qad_charfld[2] = xxlw_line
-                  qad_charfld[3] = levx_par
-                  qad_charfld[4] = levx_part
-                  qad_intfld[1] = xxlw_sn
-                  qad_intfld[2] = xxlw_start
-                  qad_decfld[1] = xxlw_qty_req.
-           i = i + 1.
-*/
-/*             find first xxwa_det exclusive-lock where                   */
-/*                        xxwa_date = xxlw_date and                       */
-/*                        xxwa_site = xxlw_site and                       */
-/*                        xxwa_line = xxlw_line and                       */
-/*                        xxwa_par = levx_par and                         */
-/*                        xxwa_part = levx_part and                       */
-/*                        xxwa_sn = xxlw_sn and                           */
-/*                        xxwa_rtime = xxlw_start no-error.               */
-/*             if not available xxwa_det then do:                         */
-                      create xxwa_det.                        
-                      assign                                  
-                             xxwa_date = xxlw_date            
-                             xxwa_site = xxlw_site            
-                             xxwa_line = xxlw_line            
-                             xxwa_par = levx_par              
-                             xxwa_part = levx_part            
-                             xxwa_sn = xxlw_sn                
-                             xxwa_qty_req = xxlw_qty_req      
-                             xxwa_rtime = xxlw_start          
-					                    .
-/*             end.                                                        */
-/*             else do:                                                    */
-/*                assign xxwa_qty_req = xxwa_qty_req + xxlw_qty_req.       */
-/*             end.                                                        */
-   
-		           display xxlw_date xxlw_site xxlw_line xxlw_part levx_part
-		                    xxlw_qty_req xxlw_sn xxlw_start
-		                    string(xxlw_start,"hh:mm:ss") column-label "xxlw_start"
-		                    with width 320 .
-/*             display xxlw_date xxlw_site xxlw_line xxlw_part levx_part 
-											 xxlw_sn string(xxlw_start,"hh:mm:ss").   */
-        
   end.
-  /*
-  for each qad_wkfl no-lock where qad_key1 = "xxrepkup1.p":
-  
-  display qad_datefld[1] qad_charfld[1] qad_charfld[2]
-             qad_charfld[3] format "x(18)" qad_charfld[4] format "x(18)"
-             qad_intfld[1] qad_intfld[2] qad_decfld[1] with width 300.
-    
-      create xxwa_det no-error.
-      assign xxwa_date = qad_datefld[1]
-             xxwa_site = qad_charfld[1]
-             xxwa_line = qad_charfld[2]
-             xxwa_par = qad_charfld[3]
-             xxwa_part = qad_charfld[4]
-             xxwa_sn = qad_intfld[1]
-             xxwa_qty_req = qad_decfld[1]
-             xxwa_rtime = qad_intfld[2] no-error.
+ /*****
+  for each xxlw_mst no-lock where
+       xxlw_date >= issue and (xxlw_date <= issue1 or issue1 = ?) and
+       xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
+       xxlw_line >= line and (xxlw_line <= line1 or line1 = "")
+       BREAK BY xxlw_date BY xxlw_site BY xxlw_line BY xxlw_start:
+       display xxlw_date
+               xxlw_site
+               xxlw_line
+               xxlw_part
+               xxlw_sn
+               string(xxlw_start,"hh:mm:ss") column-label "xxlnw_start
+               string(xxlw_end  ,"hh:mm:ss") column-label "xxlnw_end"
+               xxlw_qty_req
+               xxlw__dec01
+               string(xxlw__int01,"hh:mm:ss") column-label "xxlw__int01"
+                with width 300.
   end.
-*/
+*****/
   /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
@@ -318,22 +277,50 @@ if update_data then do:
         else do:
             assign xxwa_pstime = -1.
         end.
+  end. /* for each xxwa_det exclusive-lock where  */
+
+  /*计算单号,序号*/
+
+  for each xxwa_det exclusive-lock where
+           xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
+  break by xxwa_date by xxwa_site by xxwa_line:
+      if first-of(xxwa_line) then do:
+        {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output v_number
+                                 ,output errorst,output errornum)" }
+        i = 1.
+      end.
+      assign xxwa_nbr = v_number
+             xxwa_recid = i.
+      i = i + 1.
   end.
- 
-   /*  /*C类物料以最小包装量发放*/                                                     */
-   /*  for each xxwa_det exclusive-lock where                                          */
-   /*           xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and         */
-   /*           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and            */
-   /*           xxwa_line >= line and (xxwa_line <= line1 or line1 = ""),              */
-   /*      each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and                  */
-   /*           pt_mstr.pt__chr10 = "C"                                                */
-   /*  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:           */
-   /*                                                                                  */
-   /*  end.                                                                            */
-   /*                                                                                  */
-   /*                                                                                  */
+/*  /*C类物料以最小包装量发放*/                                             */
+/*  for each xxwa_det exclusive-lock where                                  */
+/*           xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and */
+/*           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and    */
+/*           xxwa_line >= line and (xxwa_line <= line1 or line1 = ""),      */
+/*      each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and          */
+/*           pt_mstr.pt__chr10 = "C"                                        */
+/*  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:   */
+/*                                                                          */
+/*  end.                                                                    */
+
     end.  /*   if update_data then do:  */
- 
+
+   /*借用xxwa__dec01记录在此之前的需求量*/
+   for each xxwa_det exclusive-lock break by xxwa_part by xxwa_date
+         by xxwa_site by xxwa_line by xxwa_rtime:
+         if first-of (xxwa_part) then do:
+            assign vqty = xxwa_qty_req.
+         end.
+         if not first-of(xxwa_part) then do:
+            assign xxwa__dec01 = vqty.
+            assign vqty = vqty + xxwa_qty_req.
+         end.
+   end.
+
+   assign vqty = 0.
    for each xxwa_det no-lock where
             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -342,29 +329,40 @@ if update_data then do:
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_rtime:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
 
-       display xxwa_date xxwa_site xxwa_line xxwa_par xxwa_part xxwa_sn
+       display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line
+              /* xxwa_par  xxwa_sn */ xxwa_part
                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
-               xxwa_qty_pln pt_mstr.pt_ord_min pt_mstr.pt__chr10
-               xxwa_qty_piss xxwa_qty_siss
-               string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
-               string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
-               xxwa_pouser xxwa_podate
-               string(xxwa_potime,"hh:mm:ss") @ xxwa_potime
+              /* xxwa_qty_pln */
+               pt_mstr.pt_ord_min pt_mstr.pt__chr10
+           /*    xxwa_qty_piss xxwa_qty_siss                        */
+                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
+                 string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
+           /*    xxwa_pouser xxwa_podate                            */
+           /*    string(xxwa_potime,"hh:mm:ss") @ xxwa_potime       */
                string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
                string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
-               xxwa_souser xxwa_sodate
-               string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime
-               .
+           /*  xxwa_souser xxwa_sodate                              */
+           /*  string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime        */
+               with frame x down.
 
-/*
-       display xxwa_date xxwa_site xxwa_line xxwa_par xxwa_part xxwa_sn
-               string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
-                 pt_mstr.pt_ord_min pt_mstr.pt__chr10.
-*/
+       for each lad_det WHERE lad_dataset = "rps_det"
+                          and SUBSTRING(lad_nbr,9,10) >= nbr
+                          and SUBSTRING(lad_nbr,9,10) <= nbr1
+                          and lad_site = xxwa_site
+                          and lad_line = xxwa_line
+                          and lad_part = xxwa_part:
+           down 1 with frame x.
+           display SUBSTRING(lad_nbr,9,10) @ xxwa_line
+                   lad_loc @ xxwa_part
+                   lad_lot @ xxwa_rtime
+                   lad_qty_all @ xxwa_qty_req
+                   with frame x.
+       end.  /*   for each lad_det   */
+
 
        setFrameLabels(frame x:handle).
   end.
- 
+
   /*  REPORT TRAILER  */
    {mfrtrail.i}
 
