@@ -125,19 +125,21 @@ repeat with frame a:
    end.
 
    /* ADD/MOD/DELETE  */
-
+   
+   find first loc_mstr no-lock where loc_site = input loc_site and
+   			      loc_loc = input loc_loc no-error.
+   if available loc_mstr then do:
    assign
       recno = recid(loc_mstr)
       global_site = loc_site.
-
-
    display
       loc_site si_desc when(available si_mstr)
       " " when (not available si_mstr) @ si_desc
       loc_loc
       locdesc @ loc_desc
-      loc_user2.
-
+      loc_user2.      
+   end.
+   
    ststatus = stline[2].
    status input ststatus.
    del-yn = no.
