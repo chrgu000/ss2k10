@@ -129,7 +129,7 @@ define shared variable nbrstart as   character format "x(10)".
               xxwa_par = xxwp_par
               xxwa_part = xxwp_part
               xxwa_sn = xxlw_sn
-              xxwa_qty_req = xxwp_qty_req * (xxlw_qty_req / xxlw_qty_src) 
+              xxwa_qty_req = xxwp_qty_req * (xxlw_qty_req / xxlw_qty_src)
               xxwa_qty_pln = xxwa_qty_req
               xxwa_rtime = xxlw_start.
             end.
@@ -218,17 +218,26 @@ define shared variable nbrstart as   character format "x(10)".
       end.
   end.
   */
-  
-/*C类物料以最小包装量发放*/                                               
-    for each xxwa_det exclusive-lock where                                      
-             xxwa_date = issue and                                              
-             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and        
-             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),       
-        each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and              
-             pt_mstr.pt__chr10 = "C"                                            
-    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:       
-                                                                                
-    end.                                                                        
+
+/*C类物料以最小包装量发放*/
+    for each xxwa_det exclusive-lock where
+             xxwa_date = issue and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+        each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and
+             pt_mstr.pt__chr10 = "C"
+    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+    	 if first-of(xxwa_part) then do:
+    	 	  assign vqty = xxwa_qty_pln.
+    	 end.
+    	 else do:
+    	 	  assign vqty = xxwa_qty_req - vqty.
+    	 end.
+  	   if pt_ord_min <> 0 then do:
+				 assign xxwa_qty_pln = round(vqty / pt_ord_min,0) * pt_ord_min.
+			 end.
+			 assign vqty = round(vqty / pt_ord_min,0) * pt_ord_min - vqty.
+    end.
 
 
   /*计算发料库位及数量*/
@@ -243,7 +252,7 @@ define shared variable nbrstart as   character format "x(10)".
       if availabl lad_det then do:
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
-           				xxwd_ladnbr = lad_nbr
+                  xxwd_ladnbr = lad_nbr
                   xxwd_recid = xxwa_recid
                   xxwd_part = xxwa_part
                   xxwd_site = lad_site
@@ -252,12 +261,7 @@ define shared variable nbrstart as   character format "x(10)".
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqty.
       end.
-
   end.
-
-
-
-
 
    /*借用xxwa__dec01记录在此之前的需求量
    for each xxwa_det exclusive-lock break by xxwa_part by xxwa_date
@@ -278,13 +282,13 @@ define shared variable nbrstart as   character format "x(10)".
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
         with frame x width 320
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_rtime:
+        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part by xxwa_rtime:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
 
        display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line
                xxwa_sn xxwa_par xxwa_part
                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
-               xxwa_qty_pln  
+               xxwa_qty_pln
                pt_mstr.pt_ord_min pt_mstr.pt__chr10
            /*    xxwa_qty_piss xxwa_qty_siss                        */
                  string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
