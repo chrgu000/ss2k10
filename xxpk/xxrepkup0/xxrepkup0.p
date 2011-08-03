@@ -232,9 +232,9 @@ repeat:
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
         with frame x width 320
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part by xxwa_rtime:
+        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn 
+       by xxwa_part by xxwa_rtime:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
-
        display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line xxwa_part
                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime 
                xxwa_qty_pln

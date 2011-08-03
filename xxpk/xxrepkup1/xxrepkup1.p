@@ -144,6 +144,7 @@ if update_data then do:
                   xxlw_sn   = xxlnw_sn
                   xxlw_start = itcetimes
                   xxlw_end = itcetimee
+                  xxlw_qty_src = rps_qty_req
                   xxlw__dec01 = rps_qty_req  /*调试程序使用,用完删除*/
                   xxlw__int01 = xxlnw_etime. /*调试程序使用,用完删除*/
            assign itcetimes = itcetimee.
@@ -158,6 +159,7 @@ if update_data then do:
                   xxlw_sn   = xxlnw_sn
                   xxlw_start = itcetimes
                   xxlw_end = xxlnw_etime
+                  xxlw_qty_src = rps_qty_req
                   xxlw__dec01 = rps_qty_req   /*调试程序使用,用完删除*/
                   xxlw__int01 = xxlnw_etime.  /*调试程序使用,用完删除*/
           assign timedif = xxlnw_etime
