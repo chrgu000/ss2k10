@@ -23,7 +23,9 @@ define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束 */
 define variable i as integer.
 define variable rid as recid.
 define variable vqty  as decimal.
+define variable vqty1 as decimal.
 define variable vqtya as decimal.
+define variable vqtya1 as decimal.
 define variable vtype as character.
 define variable v_number as character format "x(12)".
 define variable errorst as logical.
@@ -225,19 +227,18 @@ define shared variable nbrstart as   character format "x(10)".
              xxwa_date = issue and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-        each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and
-             pt_mstr.pt__chr10 = "C"
+        each pt_mstr fields(pt_part pt_ord_mult pt__chr10) no-lock WHERE
+             pt_mstr.pt_part = xxwa_part and
+             pt_mstr.pt__chr10 = "C" and pt_mstr.pt_ord_mult <> 0
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
        if first-of(xxwa_part) then do:
-          assign vqty = xxwa_qty_pln.
-       end.
-       else do:
-          assign vqty = xxwa_qty_pln - vqty.
-       end.
-       if pt_ord_min <> 0 then do:
-         assign xxwa_qty_pln = round(vqty / pt_ord_min,0) * pt_ord_min.
-       end.
-       assign vqty = round(vqty / pt_ord_min,0) * pt_ord_min - vqty.
+    	 	  assign vqty = xxwa_qty_req.
+    	 end.
+    	 else do:
+    	 	  assign vqty = xxwa_qty_req - vqty.
+    	 end.
+			 assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult.
+			 assign vqty = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult - vqty.
     end.
 
   for each xxwd_det exclusive-lock:
@@ -250,24 +251,24 @@ define shared variable nbrstart as   character format "x(10)".
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
       break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part:
-
+      assign vqty = xxwa_qty_pln
+             vqty1 = 0.
       if first-of(xxwa_part) then do:
-         assign vqty = xxwa_qty_pln
-                vqtya = 0.
+          assign vqtya = 0
+                 vqtya1 = 0.
+          find first lad_det where lad_dataset = "rps_det" and
+                     lad_site = xxwa_site and lad_line = xxwa_line and
+                     SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart and
+                     lad_part = xxwa_part no-lock no-error.
+          if availabl(lad_det) then do:
+             assign recno = recid(lad_det).
+          end.
       end.
-      else do:
-        assign vqty = xxwa_qty_pln - vqty.
-      end.
-      find first lad_det where lad_dataset = "rps_det" and
-                 lad_site = xxwa_site and lad_line = xxwa_line and
-                 SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart and
-                 lad_part = xxwa_part no-lock no-error.
-      if availabl(lad_det) then do:
-         assign recno = recid(lad_det).
-      end.
+
       repeat:
          find first lad_det where recid(lad_det) = recno no-lock no-error.
-         assign vqtya = lad_qty_all - vqtya.
+         assign vqtya = lad_qty_all - vqtya1
+                vqty = vqty - vqty1.
          if vqty <= vqtya then do:
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
@@ -279,7 +280,7 @@ define shared variable nbrstart as   character format "x(10)".
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqty.
-            assign vqtya = vqty.
+            assign vqtya1 = vqtya1 + vqty.
             leave.
          end.
          else do:
@@ -293,8 +294,8 @@ define shared variable nbrstart as   character format "x(10)".
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqtya.
-           assign vqtya = 0.
-                  vqty = vqty - vqtya.
+           assign vqty = vqty - vqtya
+                  vqtya1 = vqtya1 + vqty.
            find next lad_det where lad_dataset = "rps_det" and
                  lad_site = xxwa_site and lad_line = xxwa_line and
                  SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart and

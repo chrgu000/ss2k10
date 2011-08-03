@@ -119,7 +119,8 @@ end.
                 .
        end.
        display xxwa_recid xxwa_part xxwa_qty_pln
-               vMultiple vtype with frame pkdet down.
+               vMultiple when vtype = "C"
+               vtype with frame pkdet down.
        down 1 with frame pkdet.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
             and xxwd_recid = xxwa_recid:
@@ -136,15 +137,13 @@ end.
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
+        assign vMultiple = 0
+                 vtype = "".
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
           assign vMultiple = pt_ord_mult
                  vtype = pt__chr10.
-       end.
-       else do:
-          assign vMultiple = 0
-                 vtype = "".
-       end.
+       end.  
        if first-of(xxwa_nbr) then do:
           display "s" + xxwa_nbr @  xxwa_nbr xxwa_date
                xxwa_site xxwa_line
@@ -154,7 +153,8 @@ end.
                 with frame s width 80 side-label.
        end.
        display xxwa_recid xxwa_part xxwa_qty_pln
-               vMultiple vtype with frame pkdet down.
+               vMultiple when vtype = "C"
+               vtype with frame pkdet down.
        down 1 with frame pkdet.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
             and xxwd_recid = xxwa_recid:
