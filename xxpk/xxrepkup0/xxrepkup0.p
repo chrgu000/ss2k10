@@ -4,7 +4,8 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "110801.1"}
+
+{mfdtitle.i "110720.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -20,7 +21,7 @@ define new shared variable issue          like wo_rel_date
                                           label "Production Date".
 define new shared variable issue1         like wo_rel_date.
 define new shared variable reldate        like wo_rel_date
-                                          label "Release Date".
+                                          label "Release Date" initial today.
 define new shared variable reldate1       like wo_rel_date.
 define new shared variable nbr            as character format "x(10)"
                                           label "Picklist Number".
@@ -32,7 +33,7 @@ define new shared variable qtyneed        like wod_qty_chg
 define new shared variable netgr          like mfc_logical initial yes
                                           label "Use Work Center Inventory".
 define new shared variable detail_display like mfc_logical
-                                          label "Detail Requirements".
+                  label "Detail Requirements" initial yes.
 define new shared variable um             like pt_um.
 define new shared variable wc_qoh         like ld_qty_oh.
 define new shared variable temp_qty       like wod_qty_chg.
@@ -41,26 +42,30 @@ define new shared variable ord_max        like pt_ord_max.
 define new shared variable comp_max       like wod_qty_chg.
 define new shared variable pick-used      like mfc_logical.
 define new shared variable isspol         like pt_iss_pol.
+define new shared variable nbrstart       as   character format "x(10)".
+define variable l_use_ord_multiple        like mfc_logical
+                                          label "Use Order Multiple" no-undo.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
 form
-   site           colon 22
-   site1          label {t001.i} colon 49 skip
-   part           colon 22
-   part1          label {t001.i} colon 49 skip
-   comp1          colon 22
-   comp2          label {t001.i} colon 49 skip
-   wkctr          colon 22
-   wkctr1         label {t001.i} colon 49 skip
-   issue          colon 22
-   issue1         label {t001.i} colon 49
-   reldate        colon 22
-   reldate1       label {t001.i} colon 49 skip(1)
-   netgr          colon 30
-   detail_display colon 30
-   nbr            colon 30
-   delete_pklst   colon 30
+   site               colon 22
+   site1              label {t001.i} colon 49 skip
+   part               colon 22
+   part1              label {t001.i} colon 49 skip
+   comp1              colon 22
+   comp2              label {t001.i} colon 49 skip
+   wkctr              colon 22
+   wkctr1             label {t001.i} colon 49 skip
+/*   issue              colon 22                            */
+/*   issue1             label {t001.i} colon 49             */
+   reldate            colon 22
+/*   reldate1           label {t001.i} colon 49 skip(1)     */
+   netgr              colon 30
+   l_use_ord_multiple colon 30
+   detail_display     colon 30
+   nbr                colon 30
+   delete_pklst       colon 30
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -75,10 +80,25 @@ assign
    site  = global_site
    site1 = global_site.
 
+/*  find first qad_wkfl exclusive-lock where qad_key1 = "xxrepkup0.p"      */
+/*         and qad_key2 = "xxrepkup1.p" no-error.                          */
+/*  if available qad_wkfl then do:                                         */
+/*       assign qad_key3 = nbr.                                            */
+/*  end.                                                                   */
+/*  else do:                                                               */
+/*       create qad_wkfl.                                                  */
+/*       assign qad_key1 = "xxrepkup0.p"                                   */
+/*              qad_key2 = "xxrepkup1.p"                                   */
+/*              qad_key3 = nbr.                                            */
+/*  end.                                                                   */
+      assign nbrstart = nbr.
 repeat:
 
    find first rpc_ctrl no-lock no-error.
-   nbr = rpc_nbr_pre + string(rpc_nbr).
+
+   assign
+      l_use_ord_multiple = yes
+      nbr                = rpc_nbr_pre + string(rpc_nbr).
 
    if site1    = hi_char  then site1    = "".
    if part1    = hi_char  then part1    = "".
@@ -92,27 +112,53 @@ repeat:
    display nbr with frame a.
 
    update
-      site  site1
-      part  part1
-      comp1 comp2
-      wkctr wkctr1
-      issue issue1
-      reldate reldate1
+      site
+      site1
+      part
+      part1
+      comp1
+      comp2
+      wkctr
+      wkctr1
+/*      issue           */
+/*      issue1          */
+      reldate
+/*      reldate1        */
       netgr
+      l_use_ord_multiple
       detail_display
       nbr
       delete_pklst
    with frame a.
-
+   assign issue = reldate
+          issue1 = reldate
+          reldate1 = reldate.
    if delete_pklst then nbr = mfguser.
 
    bcdparm = "".
 
-   {gprun.i ""gpquote.p"" "(input-output bcdparm,16,
-        site,site1,part,part1,comp1,comp2,wkctr,wkctr1,
-        string(issue),string(issue1),string(reldate),string(reldate1),
-        string(netgr),string(detail_display),nbr,string(delete_pklst),
-        null_char,null_char,null_char,null_char)"}
+   {gprun.i ""gpquote.p"" "(input-output bcdparm,
+                            17,
+                            site,
+                            site1,
+                            part,
+                            part1,
+                            comp1,
+                            comp2,
+                            wkctr,
+                            wkctr1,
+                            string(issue),
+                            string(issue1),
+                            string(reldate),
+                            string(reldate1),
+                            string(netgr),
+                            string(l_use_ord_multiple),
+                            string(detail_display),
+                            nbr,
+                            string(delete_pklst),
+                            null_char,
+                            null_char,
+                            null_char)"}
 
    if site1    = "" then site1    = hi_char.
    if part1    = "" then part1    = hi_char.
@@ -122,19 +168,6 @@ repeat:
    if issue1   = ?  then issue1   = hi_date.
    if reldate  = ?  then reldate  = low_date.
    if reldate1 = ?  then reldate1 = hi_date.
-
-   find first qad_wkfl exclusive-lock where qad_key1 = "xxrepkup0.p"
-          and qad_key2 = "xxrepkup1.p" no-error.
-   if available qad_wkfl then do:
-        assign qad_key3 = nbr.
-   end.
-   else do:
-        create qad_wkfl.
-        assign qad_key1 = "xxrepkup0.p"
-               qad_key2 = "xxrepkup1.p"
-               qad_key3 = nbr.
-   end.
-
 
    if not batchrun then do:
       {gprun.i ""gpsirvr.p""
@@ -159,26 +192,48 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-   {mfphead.i}
+  {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
    /* APPLY TO THE REPETITVE MODULE.  THEREFORE, DO NOT CALL REPKUPA.P  */
-
-   {gprun.i ""repkupd.p""}
+   for each xxwp_mst exclusive-lock where xxwp_date = reldate:
+     delete xxwp_mst.
+   end.
+   {gprun.i ""xxrepkupd0.p""
+            "(input l_use_ord_multiple)"}
 
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS
       THAT WERE CREATED THIS SESSION BUT SHOULD BE DELETED         */
-
-   {gprun.i ""repkupc.p""}
-
+   {gprun.i ""xxrepkupu0.p""}
+   {gprun.i ""repkupc.p""} 
+FOR EACH xxwp_mst use-index xxwp_par_part NO-LOCK WHERE :
+    display  xxwp_date
+                xxwp_site
+                xxwp_line
+                xxwp_nbr
+                xxwp_part
+                xxwp_par
+                xxwp_qty_req
+                xxwp_um
+                xxwp_qty_oh
+                xxwp_qty_all
+                xxwp_op
+                xxwp_mch
+                xxwp_start
+            WITH WIDTH 200 STREAM-IO.
+END.
+for each xxlw_mst no-lock:
+display xxlw_mst with width 320.
+end.
    /* REPORT TRAILER  */
-   {mfrtrail.i}
+    {mfrtrail.i}
+/* {mfreset.i} */
    if temp_nbr = rpc_nbr_pre + string(rpc_nbr)
       and pick-used
       and not delete_pklst
    then do transaction:
 
-      {gprun.i ""gpnbr.p"" "(10,input-output nbr)"}
+      {gprun.i ""gpnbr.p"" "(16,input-output nbr)"}
       find first rpc_ctrl exclusive-lock.
       rpc_nbr = integer(substring(nbr,length(rpc_nbr_pre) + 1)).
       release rpc_ctrl.
