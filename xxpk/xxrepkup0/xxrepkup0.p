@@ -204,27 +204,54 @@ repeat:
 
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS
       THAT WERE CREATED THIS SESSION BUT SHOULD BE DELETED         */
+   {gprun.i ""repkupc.p""}
    {gprun.i ""xxrepkupu0.p""}
-   {gprun.i ""repkupc.p""} 
-FOR EACH xxwp_mst use-index xxwp_par_part NO-LOCK WHERE :
-    display  xxwp_date
-                xxwp_site
-                xxwp_line
-                xxwp_nbr
-                xxwp_part
-                xxwp_par
-                xxwp_qty_req
-                xxwp_um
-                xxwp_qty_oh
-                xxwp_qty_all
-                xxwp_op
-                xxwp_mch
-                xxwp_start
-            WITH WIDTH 200 STREAM-IO.
-END.
-for each xxlw_mst no-lock:
-display xxlw_mst with width 320.
-end.
+/* FOR EACH xxwp_mst use-index xxwp_par_part NO-LOCK WHERE : */
+/*     display  xxwp_date                                    */
+/*                 xxwp_site                                 */
+/*                 xxwp_line                                 */
+/*                 xxwp_nbr                                  */
+/*                 xxwp_part                                 */
+/*                 xxwp_par                                  */
+/*                 xxwp_qty_req                              */
+/*                 xxwp_um                                   */
+/*                 xxwp_qty_oh                               */
+/*                 xxwp_qty_all                              */
+/*                 xxwp_op                                   */
+/*                 xxwp_mch                                  */
+/*                 xxwp_start                                */
+/*             WITH WIDTH 200 STREAM-IO.                     */
+/* END.                                                      */
+/* for each xxlw_mst no-lock:                                */
+/* display xxlw_mst with width 320.                          */
+/* end.                                                      */
+
+
+   for each xxwa_det no-lock where
+            xxwa_date = issue and
+            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+        with frame x width 320
+        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part by xxwa_rtime:
+       find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
+
+       display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line xxwa_part
+               string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime 
+               xxwa_qty_pln
+               pt_mstr.pt_ord_min pt_mstr.pt__chr10
+           /*    xxwa_qty_piss xxwa_qty_siss                        */
+                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
+                 string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
+           /*    xxwa_pouser xxwa_podate                            */
+           /*    string(xxwa_potime,"hh:mm:ss") @ xxwa_potime       */
+               string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
+               string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
+           /*  xxwa_souser xxwa_sodate                              */
+           /*  string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime        */
+               with frame x down.
+
+       setFrameLabels(frame x:handle).
+  end.
    /* REPORT TRAILER  */
     {mfrtrail.i}
 /* {mfreset.i} */

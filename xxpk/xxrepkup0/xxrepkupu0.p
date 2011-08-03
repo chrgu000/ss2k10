@@ -23,6 +23,7 @@ define variable itceTimeE as integer. /*时间用于记录计算时每个分界时间结束 */
 define variable i as integer.
 define variable rid as recid.
 define variable vqty  as decimal.
+define variable vqtya as decimal.
 define variable vtype as character.
 define variable v_number as character format "x(12)".
 define variable errorst as logical.
@@ -227,29 +228,47 @@ define shared variable nbrstart as   character format "x(10)".
         each pt_mstr no-lock where pt_mstr.pt_part = xxwa_part and
              pt_mstr.pt__chr10 = "C"
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
-    	 if first-of(xxwa_part) then do:
-    	 	  assign vqty = xxwa_qty_pln.
-    	 end.
-    	 else do:
-    	 	  assign vqty = xxwa_qty_req - vqty.
-    	 end.
-  	   if pt_ord_min <> 0 then do:
-				 assign xxwa_qty_pln = round(vqty / pt_ord_min,0) * pt_ord_min.
-			 end.
-			 assign vqty = round(vqty / pt_ord_min,0) * pt_ord_min - vqty.
+       if first-of(xxwa_part) then do:
+          assign vqty = xxwa_qty_pln.
+       end.
+       else do:
+          assign vqty = xxwa_qty_pln - vqty.
+       end.
+       if pt_ord_min <> 0 then do:
+         assign xxwa_qty_pln = round(vqty / pt_ord_min,0) * pt_ord_min.
+       end.
+       assign vqty = round(vqty / pt_ord_min,0) * pt_ord_min - vqty.
     end.
 
+  for each xxwd_det exclusive-lock:
+    delete xxwd_det.
+  end.
 
   /*计算发料库位及数量*/
   for each xxwa_det no-lock where
            xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-      break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn:
+      break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part:
+
+      if first-of(xxwa_part) then do:
+         assign vqty = xxwa_qty_pln
+                vqtya = 0.
+      end.
+      else do:
+        assign vqty = xxwa_qty_pln - vqty.
+      end.
       find first lad_det where lad_dataset = "rps_det" and
                  lad_site = xxwa_site and lad_line = xxwa_line and
-           SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart no-lock no-error.
-      if availabl lad_det then do:
+                 SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart and
+                 lad_part = xxwa_part no-lock no-error.
+      if availabl(lad_det) then do:
+         assign recno = recid(lad_det).
+      end.
+      repeat:
+         find first lad_det where recid(lad_det) = recno no-lock no-error.
+         assign vqtya = lad_qty_all - vqtya.
+         if vqty <= vqtya then do:
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr
@@ -260,60 +279,32 @@ define shared variable nbrstart as   character format "x(10)".
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqty.
-      end.
-  end.
-
-   /*借用xxwa__dec01记录在此之前的需求量
-   for each xxwa_det exclusive-lock break by xxwa_part by xxwa_date
-         by xxwa_site by xxwa_line:
-         if first-of (xxwa_part) then do:
-            assign vqty = xxwa_qty_req.
+            assign vqtya = vqty.
+            leave.
          end.
-         if not first-of(xxwa_part) then do:
-            assign xxwa__dec01 = vqty.
-            assign vqty = vqty + xxwa_qty_req.
-         end.
-   end.
-   */
-
-
-   for each xxwa_det no-lock where
-            xxwa_date = issue and
-            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-        with frame x width 320
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part by xxwa_rtime:
-       find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
-
-       display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line
-               xxwa_sn xxwa_par xxwa_part
-               string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime xxwa_qty_req
-               xxwa_qty_pln
-               pt_mstr.pt_ord_min pt_mstr.pt__chr10
-           /*    xxwa_qty_piss xxwa_qty_siss                        */
-                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
-                 string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
-           /*    xxwa_pouser xxwa_podate                            */
-           /*    string(xxwa_potime,"hh:mm:ss") @ xxwa_potime       */
-               string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
-               string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
-           /*  xxwa_souser xxwa_sodate                              */
-           /*  string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime        */
-               with frame x down.
-
-/*      for each lad_det WHERE lad_dataset = "rps_det"                    */
-/*                         and SUBSTRING(lad_nbr,9,10) >= nbr             */
-/*                         and SUBSTRING(lad_nbr,9,10) <= nbr1            */
-/*                         and lad_site = xxwa_site                       */
-/*                         and lad_line = xxwa_line                       */
-/*                         and lad_part = xxwa_part:                      */
-/*          down 1 with frame x.                                          */
-/*          display SUBSTRING(lad_nbr,9,10) @ xxwa_line                   */
-/*                  lad_loc @ xxwa_part                                   */
-/*                  lad_lot @ xxwa_rtime                                  */
-/*                  lad_qty_all @ xxwa_qty_req                            */
-/*                  with frame x.                                         */
-/*      end.  /*   for each lad_det   */                                  */
-/*      setFrameLabels(frame x:handle).                                   */
+         else do:
+           create xxwd_det.
+           assign xxwd_nbr = xxwa_nbr
+                  xxwd_ladnbr = lad_nbr
+                  xxwd_recid = xxwa_recid
+                  xxwd_part = xxwa_part
+                  xxwd_site = lad_site
+                  xxwd_loc = lad_loc
+                  xxwd_lot = lad_lot
+                  xxwd_ref = lad_ref
+                  xxwd_qty_plan = vqtya.
+           assign vqtya = 0.
+                  vqty = vqty - vqtya.
+           find next lad_det where lad_dataset = "rps_det" and
+                 lad_site = xxwa_site and lad_line = xxwa_line and
+                 SUBSTRING(lad_nbr,9 ,10 ) >= nbrstart and
+                 lad_part = xxwa_part no-lock no-error.
+           if availabl(lad_det) then do:
+               assign recno = recid(lad_det).
+           end.
+           else do:
+              leave.
+           end.
+         end.  /*else do:*/
+      end.   /* repeat */
   end.
-
