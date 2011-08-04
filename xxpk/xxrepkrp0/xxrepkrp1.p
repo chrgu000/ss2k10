@@ -11,11 +11,12 @@ define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
 define variable issue  as date no-undo initial today.
-define variable nbr  as character format "x(10)" label "Picklist Number".
-define variable nbr1 as character format "x(10)".
+define variable nbr  as character format "x(12)" label "Picklist Number".
+define variable nbr1 as character format "x(12)".
 define variable cate as character format "x(1)" initial "A".
 define variable vMultiple like pt_ord_mult label "Order_Multiple".
-define variable vtype    as character format "x(2)" label "ABC_ALLOCATE".
+define variable vtype  as character format "x(2)" label "ABC_ALLOCATE".
+define variable vdesc1 like pt_desc1.
 define variable pnbr like xxwa_nbr.
 /* SELECT FORM */
 form
@@ -36,6 +37,7 @@ setFrameLabels(frame a:handle).
 repeat:
     if site1 = hi_char then site1 = "".
     if line1 = hi_char then line1 = "".
+    if nbr1 = hi_char then nbr1 = "".
     if issue = low_date then issue = ?.
 
 if c-application-mode <> 'web' then
@@ -58,10 +60,13 @@ if (c-application-mode <> 'web') or
    {mfquoter.i site1}
    {mfquoter.i line}
    {mfquoter.i line1}
+   {mfquoter.i nbr}
+   {mfquoter.i nbr1}
    {mfquoter.i issue}
 
    line1 = line1 + hi_char.
    site1 = site1 + hi_char.
+   nbr1 = nbr1 + hi_char.
    if issue = ? then issue = low_date.
 
 end.
@@ -86,87 +91,102 @@ do on error undo, return error on endkey undo, return error:
          "xxrepkrp1.p" "" "" ""
          getTermLabel("P_I_C_K_U_P_S_E_N_D_P_R_I_N_T",30).
   export delimiter "~011"
-  			 getTermLabel("Type",12)
+         getTermLabel("Type",12)
          getTermLabel("NUMBER",12)
          getTermLabel("PRODUCTION_LINE",12)
          getTermLabel("PRODUCTION_HOURS",12)
          getTermLabel("START",12)
          getTermLabel("END",12)
          getTermLabel("Serial",12)
+         getTermLabel("PICKLIST_NUMBER",12)
          getTermLabel("ITEM_NUMBER",12)
+         getTermLabel("DESCRIPTION",12)
          getTermLabel("PLAN_CUM_QTY",12)
          getTermLabel("Order_Multiple",12)
          getTermLabel("ABC_CLASS",12)
          getTermLabel("QTY_PLANNED",12)
          getTermLabel("LOCATION",12)
-         getTermLabel("LOT/SERIAL",12).
+         getTermLabel("LOT/SERIAL",12)
+         getTermLabel("STATUS",12).
   if cate = "A" or cate = "P" then do:
     for each xxwa_det no-lock where
             xxwa_date = issue  and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
+            xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")      
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
           assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 0
-                 vtype = pt__chr10.
+                 vtype = pt__chr10
+                 vdesc1 = pt_desc1.
        end.
        else do:
           assign vMultiple = 0
-                 vtype = "".
+                 vtype = ""
+                 vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
             and xxwd_recid = xxwa_recid:
               export delimiter "~011"
-              			 "P"
+                     "P"
                      "p" + xxwa_nbr
-                     xxwa_line
+                     xxwd_line
                      string(xxwa_rtime,"hh:mm:ss")
                      string(xxwa_pstime,"hh:mm:ss")
                      string(xxwa_petime,"hh:mm:ss")
-                     xxwa_recid
+                     xxwd_sn
+                     substring(xxwd_ladnbr,9)
                      xxwa_part
+                     vdesc1
                      xxwa_qty_pln
                      vMultiple
                      vtype
                      xxwd_qty_plan
                      xxwd_loc
-                     xxwd_lot.
+                     xxwd_lot
+                     xxwd_stat.
        end.
     end.
   end.
-  if cate = "A" or cate = "s" then do:
+  if cate = "A" or cate = "S" then do:
      for each xxwa_det no-lock where
             xxwa_date = issue  and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
+            xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")         
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
           assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 0
-                 vtype = pt__chr10.
+                 vtype = pt__chr10
+                 vdesc1 = pt_desc1.
        end.
        else do:
           assign vMultiple = 0
-                 vtype = "".
+                 vtype = ""
+                 vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
             and xxwd_recid = xxwa_recid:
               export delimiter "~011"
-              			 "S"
+                     "S"
                      "s" + xxwa_nbr
-                     xxwa_line
+                     xxwd_line
                      string(xxwa_rtime,"hh:mm:ss")
-                     string(xxwa_pstime,"hh:mm:ss")
-                     string(xxwa_petime,"hh:mm:ss")
-                     xxwa_recid
+                     string(xxwa_sstime,"hh:mm:ss")
+                     string(xxwa_setime,"hh:mm:ss")
+                     xxwd_sn
+                     substring(xxwd_ladnbr,9)
                      xxwa_part
+                     vdesc1
                      xxwa_qty_pln
                      vMultiple
                      vtype
                      xxwd_qty_plan
                      xxwd_loc
-                     xxwd_lot.
+                     xxwd_lot
+                     xxwd_stat.
        end.
     end.
   end.

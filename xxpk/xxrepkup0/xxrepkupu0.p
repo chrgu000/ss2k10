@@ -13,6 +13,7 @@ define shared variable site1  like si_site.
 define shared variable wkctr  like op_wkctr.
 define shared variable wkctr1 like op_wkctr.
 define shared variable issue  like wo_rel_date.
+define shared variable nbrstart as   character format "x(10)".
 
 define variable timedif as integer.
 define variable rev  as character.
@@ -30,17 +31,21 @@ define variable vtype as character.
 define variable v_number as character format "x(12)".
 define variable errorst as logical.
 define variable errornum as integer.
-define shared variable nbrstart as   character format "x(10)".
+define variable ladnbr like lad_nbr.
 
     /* clear pk data */
     for each xxlw_mst exclusive-lock where xxlw_date = issue and
             (xxlw_site >= site) and (xxlw_site <= site1 or site1 = "") and
              xxlw_line >= wkctr and (xxlw_line <= wkctr1 or wkctr1 = ""):
              for each xxwa_det exclusive-lock where
-                      xxwa_date = xxlw_date and
-                      xxwa_site = xxlw_site and
-                      xxwa_line = xxlw_line and
-                      xxwa_par = xxlw_part:
+                      xxwa_date = xxlw_date and xxwa_site = xxlw_site and
+                      xxwa_line = xxlw_line and xxwa_par = xxlw_part
+                 break by xxwa_nbr:
+                 if first-of(xxwa_nbr) then do:
+                   for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr:
+                       delete xxwd_det. /*备料明细*/
+                   end.
+                 end.
                  delete xxwa_det.   /*明细表*/
              end.
         delete xxlw_mst.  /*主表*/
@@ -81,9 +86,9 @@ define shared variable nbrstart as   character format "x(10)".
                   xxlw_sn   = xxlnw_sn
                   xxlw_start = itcetimes
                   xxlw_end = itcetimee
-                  xxlw_qty_src = rps_qty_req
-                  xxlw__dec01 = rps_qty_req  /*调试程序使用,用完删除*/
-                  xxlw__int01 = xxlnw_etime. /*调试程序使用,用完删除*/
+                  xxlw_qty_src = rps_qty_req.
+/*                xxlw__dec01 = rps_qty_req  /*调试程序使用,用完删除*/       */
+/*                xxlw__int01 = xxlnw_etime. /*调试程序使用,用完删除*/       */
            assign itcetimes = itcetimee.
            leave calcloop1.
         end.
@@ -96,9 +101,9 @@ define shared variable nbrstart as   character format "x(10)".
                   xxlw_sn   = xxlnw_sn
                   xxlw_start = itcetimes
                   xxlw_end = xxlnw_etime
-                  xxlw_qty_src = rps_qty_req
-                  xxlw__dec01 = rps_qty_req   /*调试程序使用,用完删除*/
-                  xxlw__int01 = xxlnw_etime.  /*调试程序使用,用完删除*/
+                  xxlw_qty_src = rps_qty_req.
+/*                xxlw__dec01 = rps_qty_req   /*调试程序使用,用完删除*/      */
+/*                xxlw__int01 = xxlnw_etime.  /*调试程序使用,用完删除*/      */
           assign timedif = xxlnw_etime
                  itcetimes = xxlnw_etime.
           find next xxlnw_det no-lock where xxlnw_site = rps_site and
@@ -137,25 +142,7 @@ define shared variable nbrstart as   character format "x(10)".
               xxwa_rtime = xxlw_start.
             end.
       end.
- /*****
-  for each xxlw_mst no-lock where
-       xxlw_date = issue and
-       xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
-       xxlw_line >= wkctr and (xxlw_line <= wkctr1 or wkctr1 = "")
-       BREAK BY xxlw_date BY xxlw_site BY xxlw_line BY xxlw_start:
-       display xxlw_date
-               xxlw_site
-               xxlw_line
-               xxlw_part
-               xxlw_sn
-               string(xxlw_start,"hh:mm:ss") column-label "xxlnw_start
-               string(xxlw_end  ,"hh:mm:ss") column-label "xxlnw_end"
-               xxlw_qty_req
-               xxlw__dec01
-               string(xxlw__int01,"hh:mm:ss") column-label "xxlw__int01"
-                with width 300.
-  end.
-*****/
+
   /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
            xxwa_date = issue and
@@ -209,18 +196,6 @@ define shared variable nbrstart as   character format "x(10)".
              xxwa_recid = i.
       i = i + 1.
   end.
-  /*
-   for each xxwa_det no-lock where xxwa_date = issue and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-      break by xxwa_nbr:
-      if first-of(xxwa_nbr) then do:
-         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr:
-             delete xxwd_det.
-         end.
-      end.
-  end.
-  */
 
 /*C类物料以最小包装量发放*/
     for each xxwa_det exclusive-lock where
@@ -231,28 +206,37 @@ define shared variable nbrstart as   character format "x(10)".
              pt_mstr.pt_part = xxwa_part and
              pt_mstr.pt__chr10 = "C" and pt_mstr.pt_ord_mult <> 0
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+       if first-of(xxwa_line) then do:
+          find first lad_det where lad_dataset = "rps_det" and
+                     lad_site = xxwa_site and lad_line = xxwa_line
+               no-lock no-error.
+          if available(lad_det) then do:
+             assign ladnbr = lad_nbr.
+          end.
+       end.
+       assign xxwa_ladnbr = ladnbr.
        if first-of(xxwa_part) then do:
-    	 	  assign vqty = xxwa_qty_req.
-    	 end.
-    	 else do:
-    	 	  assign vqty = xxwa_qty_req - vqty.
-    	 end.
-			 assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult.
-			 assign vqty = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult - vqty.
+          assign vqty = xxwa_qty_req.
+       end.
+       else do:
+          assign vqty = xxwa_qty_req - vqty.
+       end.
+       assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult.
+       assign vqty = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult - vqty.
     end.
 
-  for each xxwd_det exclusive-lock:
-    delete xxwd_det.
-  end.
 
-  /*计算发料库位及数量*/
-  for each xxwa_det no-lock where
-           xxwa_date = issue and
+
+  /*对应发料库位及数量*/
+  for each xxwa_det no-lock where xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
       break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part:
       assign vqty = xxwa_qty_pln
              vqty1 = 0.
+      if first-of(xxwa_sn) then do:
+         assign i = 1.
+      end.
       if first-of(xxwa_part) then do:
           assign vqtya = 0
                  vqtya1 = 0.
@@ -274,12 +258,15 @@ define shared variable nbrstart as   character format "x(10)".
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr
                   xxwd_recid = xxwa_recid
-                  xxwd_part = xxwa_part
+                  xxwd_sn = i
+                  xxwd_part = lad_part
                   xxwd_site = lad_site
+                  xxwd_line = lad_line
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqty.
+            assign i = i + 1.
             assign vqtya1 = vqtya1 + vqty.
             leave.
          end.
@@ -288,12 +275,15 @@ define shared variable nbrstart as   character format "x(10)".
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr
                   xxwd_recid = xxwa_recid
-                  xxwd_part = xxwa_part
+                  xxwd_sn = i
+                  xxwd_part = lad_part
                   xxwd_site = lad_site
+                  xxwd_line = lad_line
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
                   xxwd_qty_plan = vqtya.
+           assign i = i + 1.
            assign vqty = vqty - vqtya
                   vqtya1 = vqtya1 + vqty.
            find next lad_det where lad_dataset = "rps_det" and
