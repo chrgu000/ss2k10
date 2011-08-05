@@ -4,6 +4,8 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
+/*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
+
 {mfdtitle.i "110803.1"}
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -113,7 +115,7 @@ do on error undo, return error on endkey undo, return error:
             xxwa_date = issue  and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")      
+            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
@@ -154,7 +156,7 @@ do on error undo, return error on endkey undo, return error:
             xxwa_date = issue  and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")         
+              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
