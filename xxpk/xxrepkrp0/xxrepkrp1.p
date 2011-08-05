@@ -109,7 +109,9 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("QTY_PLANNED",12)
          getTermLabel("LOCATION",12)
          getTermLabel("LOT/SERIAL",12)
-         getTermLabel("STATUS",12).
+         getTermLabel("ISSUED",12)
+         getTermLabel("STATUS",12)
+         .
   if cate = "A" or cate = "P" then do:
     for each xxwa_det no-lock where
             xxwa_date = issue  and
@@ -147,6 +149,7 @@ do on error undo, return error on endkey undo, return error:
                      xxwd_qty_plan
                      xxwd_loc
                      xxwd_lot
+                     xxwd_qty_piss
                      xxwd_stat.
        end.
     end.
@@ -188,6 +191,7 @@ do on error undo, return error on endkey undo, return error:
                      xxwd_qty_plan
                      xxwd_loc
                      xxwd_lot
+                     xxwd_qty_siss
                      xxwd_stat.
        end.
     end.
