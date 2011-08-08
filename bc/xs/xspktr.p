@@ -84,7 +84,7 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan,0) - truncate(xxwd_qty_piss,0) " - ".
+            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
             put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
@@ -97,7 +97,7 @@ repeat:
          end.
      end.
      output close.
-
+    message "test" view-as alert-box.
     batchrun  = yes.
     input from value(vcimfile + ".i").
     output to value(vcimfile + ".o") keep-messages.
@@ -159,22 +159,71 @@ repeat:
         display "数量:"  skip with frame frameq no-box.
         update qtyreq no-label with frame frameq no-box.
         if qtyreq > xxwd_qty_plan - xxwd_qty_piss then do:
-        	 assign ret-ok = no.
-        	  hide frame frameq.
-        	  display "[生产取料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
-		        display "取料单:" + trim(tcnbr) format "x(40)"  skip with frame framer no-box.
-		        display "料号:" + part format "x(40)" skip with frame framer no-box.
-		        display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame framer no-box.
-		        display "数量:" + string(qtyreq) format "x(40)"  skip with frame framer no-box.
-					  assign wmessage = "取料量大于计划量!继续或退出.".
-		        display  skip WMESSAGE NO-LABEL with fram framer no-box.		        
-		        update ret-ok no-label with frame framer.
-		        if not ret-ok then do:
-		       	   undo,retry.
-		        end.
+           assign ret-ok = no.
+            hide frame frameq.
+            display "[生产取料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
+            display "取料单:" + trim(tcnbr) format "x(40)"  skip with frame framer no-box.
+            display "料号:" + part format "x(40)" skip with frame framer no-box.
+            display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame framer no-box.
+            display "数量:" + string(qtyreq) format "x(40)"  skip with frame framer no-box.
+            assign wmessage = "取料量大于计划量!继续或退出.".
+            display  skip WMESSAGE NO-LABEL skip with fram framer no-box.
+            update ret-ok no-label with frame framer.
+            if not ret-ok then do:
+               undo,retry.
+            end.
         end.
         leave.
       end.  /* repeate 数量*/
+
+     assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
+     output to value(vcimfile + ".i").
+     for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
+         for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
+             and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
+             and xxwd_stat <> "C" and xxwd_part = part:
+            find first loc_mstr no-lock where loc_site = wdefsite and
+                       loc_loc = xxwd_loc no-error.
+            if available loc_mstr then do:
+               assign sstat = loc_stat.
+            end.
+            put unformat '"' xxwd_part '"' skip.
+            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
+            put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
+            put unformat '"-" "-" "-" "-"' skip.
+            put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
+            put unformat '- "' vtrloc '"' skip.
+            if vtrstat <> sstat then do:
+              put unformat "yes" skip.
+            end.
+            put unformat "yes" skip.
+            put unformat "." skip.
+         end.
+     end.
+     output close.
+
+    batchrun  = yes.
+    input from value(vcimfile + ".i").
+    output to value(vcimfile + ".o") keep-messages.
+    hide message no-pause.
+    {gprun.i ""iclotr04.p""}
+    hide message no-pause.
+    output close.
+    input close.
+    batchrun  = no.
+
+    for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
+         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
+             and xxwd_recid = xxwa_recid and xxwd_part = part:
+             for each tr_hist no-lock where
+                      tr_nbr = 'p' + xxwd_nbr + "," + string(xxwd_recid)
+                  and tr_part = xxwd_part and tr_type = "rct-tr":
+                  accum tr_qty_loc(total).
+             end.
+             assign xxwd_qty_piss = accum total tr_qty_loc.
+             if xxwd_qty_plan - xxwd_qty_piss <= 0 then assign xxwd_stat = "C".
+         end.
+     end.
       end. /* repeat:   料号/项次*/
   end. /*  if procall else do: */
   hide all.
@@ -190,15 +239,6 @@ repeat:
   if not ret-ok then do:
      leave.
   end.
-
-  /*
-  if availabl xxtc_hst and xxtc_cust <> "" then do:
-      assign wmessage = "台车:[" + tcnbr + "]在客户:[" + "]处！请确认资料.".
-     display  skip WMESSAGE NO-LABEL with fram framea1.
-    assign tcnbr = "".
-    undo , retry.
-  end.
-  */
 
 end.
 

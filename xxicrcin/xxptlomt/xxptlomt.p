@@ -23,7 +23,8 @@ with frame a side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
 
 form xxpl_site colon 25 sidesc no-label
-     xxpl_loc  colon 25 locdesc no-label skip(1)
+     xxpl_loc  colon 25 locdesc no-label skip(1)     
+     xxpl_type colon 25
      xxpl_rank colon 25
      xxpl_cap  colon 25
 with frame bb title color 
@@ -45,7 +46,8 @@ repeat with frame a:
             find first xxpl_ref no-lock where xxpl_part = pt_part
                  no-error.
             if available xxpl_ref then do:
-               display xxpl_site xxpl_loc xxpl_rank xxpl_cap with frame bb.
+               display xxpl_site xxpl_loc xxpl_type 
+               			   xxpl_rank xxpl_cap with frame bb.
                run disploc(input xxpl_site,input xxpl_loc).
             end.
          end.
@@ -65,7 +67,8 @@ repeat with frame a:
                       pt_part xxpl_part xxpl_part}
 
             if recno <> ? then do:
-               display xxpl_site xxpl_loc xxpl_rank xxpl_cap with frame bb.
+               display xxpl_site xxpl_loc xxpl_type
+               				 xxpl_rank xxpl_cap with frame bb.
                run disploc(input xxpl_site,input xxpl_loc).
             end. /* if recno */
          end. /* frame-field */
@@ -86,11 +89,14 @@ repeat with frame a:
                    and xxpl_site = input xxpl_site
             		   and xxpl_loc = input xxpl_loc no-error.
             if available xxpl_ref then do:
-            	 display xxpl_rank xxpl_cap with frame bb.
+            	 display xxpl_type xxpl_rank xxpl_cap with frame bb.
             	 run disploc(input xxpl_site,input xxpl_loc).
             end.
             else do:
-            	 display "" @ xxpl_rank "" @ xxpl_cap with frame bb.
+            	 display "" @ xxpl_type 
+            	 				 "" @ xxpl_rank 
+            	 				 "" @ xxpl_cap
+            	  with frame bb.
             end.
          end.  /* if recno <> ? */
       end.  /* if frame-field = "xxpl_loc" */
@@ -136,7 +142,7 @@ repeat with frame a:
                 xxpl_site
                 xxpl_loc.
       end.
-            display xxpl_site xxpl_loc xxpl_rank xxpl_cap
+            display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_cap
       with frame bb.
 
       set2:
@@ -146,9 +152,9 @@ repeat with frame a:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxpl_rank xxpl_cap
+         set xxpl_type xxpl_rank xxpl_cap
          go-on (F5 CTRL-D) with frame bb.
-         display xxpl_site xxpl_loc xxpl_rank xxpl_cap with frame bb.
+         display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_cap with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */

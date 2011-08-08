@@ -143,13 +143,13 @@ do on error undo, return error on endkey undo, return error:
                      substring(xxwd_ladnbr,9)
                      xxwa_part
                      vdesc1
-                     xxwa_qty_pln
+                     truncate(xxwa_qty_pln,0)
                      vMultiple
                      vtype
-                     xxwd_qty_plan
+                     truncate(xxwd_qty_plan,0)
                      xxwd_loc
                      xxwd_lot
-                     xxwd_qty_piss
+                     truncate(xxwd_qty_piss,0)
                      xxwd_stat.
        end.
     end.
@@ -185,13 +185,13 @@ do on error undo, return error on endkey undo, return error:
                      substring(xxwd_ladnbr,9)
                      xxwa_part
                      vdesc1
-                     xxwa_qty_pln
+                     truncate(xxwa_qty_pln,0)
                      vMultiple
                      vtype
-                     xxwd_qty_plan
+                     truncate(xxwd_qty_plan,0)
                      xxwd_loc
                      xxwd_lot
-                     xxwd_qty_siss
+                     truncate(xxwd_qty_siss,0)
                      xxwd_stat.
        end.
     end.
@@ -202,3 +202,4 @@ do on error undo, return error on endkey undo, return error:
 end.  /* repeat: */
 
 {wbrp04.i &frame-spec = a}
+
