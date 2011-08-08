@@ -1,7 +1,7 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */
 /* BARCODE SYSTEM */
 /* Generate date / time  12/05/07 22:31:30 */
-/* replace 【复盘(BY NBR). .44】 as 【台车回收..44】           *17YJ**/
+/* replace 【复盘(BY NBR). .44】 as 【台车回收..44】                    *17YJ**/
 /*- SS - 110720.1 --------------------------------------------*17YJ*-----------
   Purpose:新增台车回收程序替换原44(xsinv44.p).
   Parameters: NONE
@@ -1954,7 +1954,7 @@ IF OkToRun = yes then RUN    xsrep09.p.
 
 
                 /* LABEL 4 - START */
-/*17YJ*/        L11404 = "台车回收. .44" .
+/*17YJ*/        L11404 = "台车回收      .44" .
                 display L11404          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 4 - END */
 
@@ -4637,13 +4637,13 @@ end. /*v1168lmainloop:*/
 
 
                 /* LABEL 4 - START */
-                  L11704 = "" .
+                  L11704 = "生产取料. . . .(0.74)" .
                 display L11704          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 4 - END */
 
 
                 /* LABEL 5 - START */
-                  L11705 = "" .
+                  L11705 = "生产配送. . . .(0.75)" .
                 display L11705          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 5 - END */
 
