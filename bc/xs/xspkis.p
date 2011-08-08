@@ -1,4 +1,4 @@
-define variable vernbr as character format "x(20)".
+ define variable vernbr as character format "x(20)".
 define variable tcnbr as character format "x(30)".
 define variable WMESSAGE as character format "x(40)".
 define variable ret-ok as logical initial yes.
