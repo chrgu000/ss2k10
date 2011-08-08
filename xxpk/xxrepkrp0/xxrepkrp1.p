@@ -150,7 +150,7 @@ do on error undo, return error on endkey undo, return error:
                      xxwd_loc
                      xxwd_lot
                      truncate(xxwd_qty_piss,0)
-                     xxwd_stat.
+                     xxwd_pstat.
        end.
     end.
   end.
@@ -192,7 +192,7 @@ do on error undo, return error on endkey undo, return error:
                      xxwd_loc
                      xxwd_lot
                      truncate(xxwd_qty_siss,0)
-                     xxwd_stat.
+                     xxwd_sstat.
        end.
     end.
   end.

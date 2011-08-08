@@ -13,6 +13,7 @@ define variable qtyreq as decimal format "->>>,>>>,>>9".
 assign vernbr = "110808.2".
 {mfdtitle.i vernbr}
 {xsdfsite.i}
+{xspkpub.i}
 define variable wtimeout as integer init 99999 .
 find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="wtimeout" no-lock no-error. /*  Timeout - All Level */
 if AVAILABLE(code_mstr) Then wtimeout = 60 * decimal(code_cmmt).
@@ -53,7 +54,7 @@ repeat:
   end.
   else do:
      find first xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid and xxwd_stat <> "C" no-error.
+            and xxwd_recid = xxwa_recid and xxwd_pstat <> "C" no-error.
      if not available xxwd_det then do:
         assign wmessage = "取料单已结清,请确认资料!".
          display  skip WMESSAGE NO-LABEL with fram framea1.
@@ -77,7 +78,7 @@ repeat:
      for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_stat <> "C":
+             and xxwd_pstat <> "C":
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
@@ -122,7 +123,7 @@ repeat:
                   accum tr_qty_loc(total).
              end.
              assign xxwd_qty_piss = accum total tr_qty_loc.
-             if xxwd_qty_plan - xxwd_qty_piss = 0 then assign xxwd_stat = "C".
+             if xxwd_qty_plan - xxwd_qty_piss = 0 then assign xxwd_pstat = "C".
          end.
      end.
   end.
@@ -181,7 +182,7 @@ repeat:
      for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_stat <> "C" and xxwd_part = part:
+             and xxwd_pstat <> "C" and xxwd_part = part:
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
@@ -221,7 +222,7 @@ repeat:
                   accum tr_qty_loc(total).
              end.
              assign xxwd_qty_piss = accum total tr_qty_loc.
-             if xxwd_qty_plan - xxwd_qty_piss <= 0 then assign xxwd_stat = "C".
+             if xxwd_qty_plan - xxwd_qty_piss <= 0 then assign xxwd_pstat = "C".
          end.
      end.
       end. /* repeat:   料号/项次*/
@@ -241,27 +242,3 @@ repeat:
   end.
 
 end.
-
-procedure getTrLoc:
-  define output parameter oloc like loc_loc.
-  define output parameter ostat like ld_status.
-  assign oloc = "P-4RPS".
-  find first loc_mstr no-lock where loc_loc = oloc no-error.
-  if availa loc_mstr then do:
-     assign ostat = loc_status.
-  end.
-end procedure.
-
-FUNCTION getSaveLogStat RETURNS logical() :
-/*------------------------------------------------------------------------------
-  Purpose: 是否保存临时文件(for test program)
-    Notes:
-------------------------------------------------------------------------------*/
-  define variable ostat as logical initial yes.
-  find first code_mstr no-lock where code_fldname = "barcode" and
-             code_value = "savecimlogforcheck" and code_cmmt = "yes" no-error.
-  if available code_mstr then do:
-     assign ostat = no.
-  end.
-  return ostat.
-END FUNCTION.
