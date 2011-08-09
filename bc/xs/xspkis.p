@@ -1,4 +1,4 @@
- define variable vernbr as character format "x(20)".
+define variable vernbr as character format "x(20)".
 define variable tcnbr as character format "x(30)".
 define variable WMESSAGE as character format "x(40)".
 define variable ret-ok as logical initial yes.
@@ -77,7 +77,8 @@ repeat:
      output to value(vcimfile + ".i").
      for each xxwa_det no-lock where "s" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-             and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
+             and xxwd_recid = xxwa_recid
+             and min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) > 0
              and xxwd_sstat <> "C":
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
@@ -85,11 +86,11 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
+            put unformat truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) , 0) " - ".
             put unformat '"s' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
-            put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
-            put unformat '- "' vtrloc '"' skip.
+            put unformat '- "' vtrloc '" "' xxwd_lot '"' skip.
+            put unformat '- "' xxwd_line '"' skip.
             if vtrstat <> sstat then do:
               put unformat "yes" skip.
             end.
@@ -98,16 +99,16 @@ repeat:
          end.
      end.
      output close.
-    message "test" view-as alert-box.
-    batchrun  = yes.
-    input from value(vcimfile + ".i").
-    output to value(vcimfile + ".o") keep-messages.
-    hide message no-pause.
-    {gprun.i ""iclotr04.p""}
-    hide message no-pause.
-    output close.
-    input close.
-    batchrun  = no.
+
+      batchrun  = yes.
+      input from value(vcimfile + ".i").
+      output to value(vcimfile + ".o") keep-messages.
+      hide message no-pause.
+      {gprun.i ""iclotr04.p""}
+      hide message no-pause.
+      output close.
+      input close.
+      batchrun  = no.
 
 /*    if not getsaveLogstat() then do:                              */
 /*       os-delete value(vcimfile + ".i") no-error.                 */
@@ -156,16 +157,16 @@ repeat:
         display "[生产送料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(4) with fram frameq no-box.
         display "送料单:" + trim(tcnbr) format "x(40)"  skip with frame frameq no-box.
         display "料号:" + part format "x(40)" skip with frame frameq no-box.
-        display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame frameq no-box.
+        display "计划量:" + string(truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) , 0)) format "x(40)" skip with frame frameq no-box.
         display "数量:"  skip with frame frameq no-box.
         update qtyreq no-label with frame frameq no-box.
-        if qtyreq > xxwd_qty_plan - xxwd_qty_piss then do:
+        if qtyreq > truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) , 0) then do:
            assign ret-ok = no.
             hide frame frameq.
             display "[生产送料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
             display "送料单:" + trim(tcnbr) format "x(40)"  skip with frame framer no-box.
             display "料号:" + part format "x(40)" skip with frame framer no-box.
-            display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame framer no-box.
+            display "计划量:" + string(truncate(min(xxwd_qty_plan - xxwd_qty_siss ,xxwd_qty_piss) , 0 )) format "x(40)" skip with frame framer no-box.
             display "数量:" + string(qtyreq) format "x(40)"  skip with frame framer no-box.
             assign wmessage = "送料量大于计划量!继续或退出.".
             display  skip WMESSAGE NO-LABEL skip with fram framer no-box.
@@ -189,11 +190,11 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
+            put unformat truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss),0) " - ".
             put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
-            put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
-            put unformat '- "' vtrloc '"' skip.
+            put unformat '- "' vtrloc '" "' xxwd_lot '"' skip.
+            put unformat '- "' xxwd_line '"' skip.
             if vtrstat <> sstat then do:
               put unformat "yes" skip.
             end.
@@ -203,15 +204,15 @@ repeat:
      end.
      output close.
 
-    batchrun  = yes.
-    input from value(vcimfile + ".i").
-    output to value(vcimfile + ".o") keep-messages.
-    hide message no-pause.
-    {gprun.i ""iclotr04.p""}
-    hide message no-pause.
-    output close.
-    input close.
-    batchrun  = no.
+      batchrun  = yes.
+      input from value(vcimfile + ".i").
+      output to value(vcimfile + ".o") keep-messages.
+      hide message no-pause.
+      {gprun.i ""iclotr04.p""}
+      hide message no-pause.
+      output close.
+      input close.
+      batchrun  = no.
 
     for each xxwa_det no-lock where "s" + xxwa_nbr = tcnbr:
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr

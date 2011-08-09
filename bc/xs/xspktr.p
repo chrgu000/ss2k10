@@ -98,7 +98,6 @@ repeat:
          end.
      end.
      output close.
-    message "test" view-as alert-box.
     batchrun  = yes.
     input from value(vcimfile + ".i").
     output to value(vcimfile + ".o") keep-messages.
