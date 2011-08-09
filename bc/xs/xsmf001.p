@@ -4649,7 +4649,7 @@ end. /*v1168lmainloop:*/
 
 
                 /* LABEL 6 - START */
-                  L11706 = "" .
+                  L11706 = "取/送料单关闭 .(0.76)" .
                 display L11706          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 6 - END */
         Update V1170
