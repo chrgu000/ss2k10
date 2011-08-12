@@ -4582,6 +4582,82 @@ repeat:
      leave v1168lmainloop.
 end. /*v1168lmainloop:*/
 
+pause 0 before-hide.
+v1169lmainloop:
+repeat:
+     if not (v1160 = "69" or v1100 = "69" ) then leave v1169lmainloop.
+     v1169l:
+     repeat:
+
+        hide all.
+        define variable v1169           as char format "x(50)".
+        define variable pv1169          as char format "x(50)".
+        define variable l11691          as char format "x(40)".
+        define variable l11692          as char format "x(40)".
+        define variable l11693          as char format "x(40)".
+        define variable l11694          as char format "x(40)".
+        define variable l11695          as char format "x(40)".
+        define variable l11696          as char format "x(40)".
+
+
+        v1169 = " ".
+        v1169 = entry(1,v1169,"@").
+        v1160 = "".
+        run checksecurity (input "xsinv69.p" , input global_userid , output oktorun , output execname ).
+        if oktorun = yes then  run xsinv69.p.
+
+        leave v1169l.
+
+
+        l11691 = "" .
+        l11692 = "" .
+        l11693 = "" .
+        l11694 = "" .
+        l11695 = "" .
+        l11696 = "" .
+        display
+            "#ЬѕТы# *" + ( if length(dbname) < 5 then trim( dbname ) else trim(substring(dbname,length(dbname) - 4,5)) )
+            + "*" + trim ( v1002 )  format "x(40)" skip
+        with fram f1169 no-box.
+        display l11691          format "x(40)" skip with fram f1169 no-box.
+        display l11692          format "x(40)" skip with fram f1169 no-box.
+        display l11693          format "x(40)" skip with fram f1169 no-box.
+        display l11694          format "x(40)" skip with fram f1169 no-box.
+        display l11695          format "x(40)" skip with fram f1169 no-box.
+        display l11696          format "x(40)" skip with fram f1169 no-box.
+
+
+        update v1169
+        with  fram f1169 no-label
+        editing:
+            readkey pause wtimeout.
+            if lastkey = -1 then quit.
+            if lastkey = 404 then do: /* disable f4 */
+                pause 0 before-hide.
+                undo, retry.
+            end.
+            apply lastkey.
+        end.
+
+        if v1169 = "e" then  leave mainloop.
+        if v1169 = "$loadmenu" then  run loadmenu.
+        if index ( v1169 ,".") <> 0 then  run runmfgproprogram ( input v1169 ).
+        if v1169 = "s" then  run xsmdf01.p.
+        display  skip wmessage no-label with fram f1169.
+
+
+        display "...processing...  " @ wmessage no-label with fram f1169.
+        pause 0.
+
+        display  "" @ wmessage no-label with fram f1169.
+        pause 0.
+        leave v1169l.
+     end. /*v1169l*/
+
+     pv1169 = v1169.
+     leave v1169lmainloop.
+end. /*v1169lmainloop:*/
+
 
 
    pause 0 before-hide.
