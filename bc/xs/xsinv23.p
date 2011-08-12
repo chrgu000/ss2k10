@@ -1,6 +1,13 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
 /* INV TRANSFER */
 /* Generate date / time  2007-6-8 10:29:06 */
+/*----rev history--------------------------------------------------------------*/
+/* ss - 110321.1  by: roger xiao */     /* 增加日供件转仓逻辑 ,其他逻辑完全照旧*/
+/*-revision end----------------------------------------------------------------*/
+
+
+
+
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -711,7 +718,101 @@ LD_SITE = V1002 AND LD_REF = "" AND
         END.
         /* ROLL BAR END */
 
+        find first ld_det 
+            use-index ld_part_loc
+            where ld_part = v1300 
+            and ld_site = v1002 
+            and index ( "n", substring (ld_loc ,1,1 ) ) = 0  
+            and ld_lot =  input v1500
+            and ld_ref = "" 
+            and ld_qty_oh <> 0  
+        no-lock no-error. /* SS - 110321.1 */
+        if avail ld_det then  /* SS - 110321.1 */
+
         vv_loc_oh = ld_qty_oh.
+
+
+        define variable v_case_nbr      as char format "x(10)".
+        define variable v_recid         as recid .
+        define variable v_qty_rct       like xxship_rcvd_qty .
+        define variable v_loc_to        as char format "x(8)" .
+        define variable v_loc_from      as char format "x(8)" .
+        define variable v_japan         as logical .
+        define variable v_contract_nbr  as char format "x(18)" .
+
+               
+        v_case_nbr = "" .
+        v_recid    = ? .
+        v_qty_rct  = 0 .
+        v_loc_to   = "" .
+        v_loc_from = "TEMP" .
+        v_japan    = no.
+        v_contract_nbr = "" .
+
+        /*
+        find first pt_mstr where pt_part = v1300 no-lock no-error.
+        if avail pt_mstr and pt_pm_code = "P" then do:
+            if index(V1500,"/") > 0 then v_japan = yes .
+        end.
+        */
+        v_case_nbr = trim(substring(v1500,11)).
+        v_contract_nbr = trim(substring(v1500,7,4)) .
+        
+
+        /*
+        v_case_nbr = if num-entries(v1500,"/") >= 3 then  entry(3,v1500,"/") else "" .
+        v_contract_nbr = "VT32/" + if num-entries(v1500,"/") >= 2 then  entry(2,v1500,"/") else "" .
+
+        if v_case_nbr = "" then do:
+                display skip "托号有误,请重新输入" @ wmessage no-label with fram f1500.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        else do:
+        */
+
+        if v_case_nbr <> "" then do:
+            do i = 1 to length(v_case_nbr).
+                if index("0987654321", substring(v_case_nbr,i,1)) = 0 then do:
+                    display skip "托号有误,请重新输入." @ wmessage no-label with fram f1500.
+                    pause 0 before-hide.
+                    undo, retry.
+                end.
+            end.
+        end.
+
+        for each  xxinv_mstr 
+            use-index xxinv_con
+            where substring(xxinv_con,6) = v_contract_nbr 
+        no-lock :
+
+            if v_japan = yes then leave .
+
+            find first xxship_det
+                use-index xxship_case
+                where xxship_no     = xxinv_no
+                and   xxship_case2  = integer(v_case_nbr)
+                and   xxship_part2  = v1300 
+                and   xxship_status = "RCT-PO" 
+            no-lock no-error.
+            if avail xxship_det then do:
+                v_recid     = recid(xxship_det) .
+                v_loc_to    = xxship_rcvd_loc   .
+                v_qty_rct   = xxship_rcvd_qty   .
+                v_japan     = yes .
+            end.         
+            else leave .
+
+        end.  /* for each  xxinv_mstr */
+
+        if v_japan = yes then do:
+            if v_recid = ? then do:
+                display skip "日供件,且发票有误,请重新输入." @ wmessage no-label with fram f1500.
+                pause 0 before-hide.
+                undo, retry.
+            end.
+        end. /*if v_japan = yes then*/
+
 
 
         /* PRESS e EXIST CYCLE */
@@ -764,6 +865,7 @@ LD_SITE = V1002 AND LD_REF = "" AND
         find first poc_ctrl  no-lock no-error.
 If AVAILABLE ( poc_ctrl ) then
         V1510 = poc_insp_loc.
+        if v_japan then V1510 = v_loc_from .     /* SS - 110321.1 */
         V1510 = ENTRY(1,V1510,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 
@@ -789,6 +891,7 @@ If AVAILABLE ( poc_ctrl ) then
 If AVAILABLE ( poc_ctrl ) then
                 L15102 = poc_insp_loc .
                 else L15102 = "" . 
+                if v_japan then L15102 = v_loc_from . 
                 display L15102          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 2 - END */ 
 
@@ -865,6 +968,7 @@ If AVAILABLE ( poc_ctrl ) then
         find first pt_mstr where pt_part = V1300 no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
         V1520 = pt_loc.
+        if v_japan then V1520 = "" .     /* SS - 110321.1 */
         V1520 = ENTRY(1,V1520,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 
@@ -890,7 +994,7 @@ If AVAILABLE ( pt_mstr ) then
 
 
                 /* LABEL 3 - START */ 
-                  L15203 = "" . 
+                  L15203 = if v_japan then  "自动收货库位:" + v_loc_to else "" .  
                 display L15203          format "x(40)" skip with fram F1520 no-box.
                 /* LABEL 3 - END */ 
 
@@ -926,6 +1030,13 @@ If AVAILABLE ( pt_mstr ) then
         find first LOC_MSTR where LOC_LOC = V1520 AND V1520 <> V1510 AND LOC_SITE = V1002  no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
                 display skip "Error , Retry." @ WMESSAGE NO-LABEL with fram F1520.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+
+
+        if v_japan and v1520 <> v_loc_to then do:
+                display skip "仅限转仓到自动收货库位" @ WMESSAGE NO-LABEL with fram F1520.
                 pause 0 before-hide.
                 undo, retry.
         end.
@@ -1056,6 +1167,7 @@ If NOT AVAILABLE ld_det THEN
         /* --CYCLE TIME DEFAULT  VALUE -- START  */
         V1600 = " ".
         V1600 = ENTRY(1,V1600,"@").
+        if v_japan then V1600 = string(v_qty_rct).    /* SS - 110321.1 */
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
 
         /* LOGICAL SKIP START */
@@ -1125,6 +1237,12 @@ If NOT AVAILABLE ld_det THEN
                 display skip "在库数 <:" + string( V1600 ) @ WMESSAGE NO-LABEL with fram F1600.
                 pause 0 before-hide.
                 undo, retry.
+        end.
+
+        if v_japan and V1600 <> string(v_qty_rct) then do:
+            display skip "请按条码数量转仓:" + string(v_qty_rct) @ WMESSAGE NO-LABEL with fram F1600.
+            pause 0 before-hide.
+            undo, retry.
         end.
          /*  ---- Valid Check ---- END */
 
@@ -1365,7 +1483,7 @@ If AVAILABLE ( tr_hist ) then
 
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
-        V9010 = "Y".
+        V9010 = if v_japan then "E" else "Y".
         V9010 = ENTRY(1,V9010,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 
@@ -1403,7 +1521,15 @@ tr_part = V1300     and tr_serial = V1500   and
 tr_time  + 15 >= TIME 
 use-index tr_date_trn no-lock no-error.
 If AVAILABLE ( tr_hist ) then
-                L90102 = "交易号 :" + trim(string(tr_trnbr)) .
+do:     /* SS - 110321.1 */
+    L90102 = "交易号 :" + trim(string(tr_trnbr)) .
+    find first xxship_det
+        where recid(xxship_det)  = v_recid
+    no-error.
+    if avail xxship_det then do:
+        xxship_status = "RCT-TR".
+    end.
+end.
                 else L90102 = "" . 
                 display L90102          format "x(40)" skip with fram F9010 no-box.
                 /* LABEL 2 - END */ 
@@ -1934,6 +2060,22 @@ If AVAILABLE ( upd_det ) then
        TS9130 = substring(TS9130, 1, Index(TS9130 , "&B") - 1) + av9130 
        + SUBSTRING( ts9130 , index(ts9130 ,"&B") + length("&B"), LENGTH(ts9130) - ( index(ts9130 ,"&B" ) + length("&B") - 1 ) ).
        END.
+
+          /*库位*/
+          if index(ts9130, "$C") <> 0 then do:
+             av9130 = trim(V1520).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$C") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$C") 
+                    + length("$C"), length(ts9130) - ( index(ts9130 , "$C") + length("$C") - 1 ) ).
+          end.    /* SS - 110321.1 */
+          /*批序号*/
+          if index(ts9130, "$L") <> 0 then do:
+             av9130 = substring(V1500,1,6) + "/" + substring(V1500,7,4).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$L") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$L") 
+                    + length("$L"), length(ts9130) - ( index(ts9130 , "$L") + length("$L") - 1 ) ).
+          end.
+
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9130 = trim(pt_desc2).
@@ -2400,6 +2542,24 @@ If AVAILABLE ( upd_det ) then
         */
         av9160 = vv_print_qty.
         /*SS - 080912.1 E*/
+
+          /*库位*/
+          if index(ts9130, "$C") <> 0 then do:
+             av9130 = trim(V1520).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$C") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$C") 
+                    + length("$C"), length(ts9130) - ( index(ts9130 , "$C") + length("$C") - 1 ) ).
+          end.    /* SS - 110321.1 */
+
+          /*批序号*/
+          if index(ts9130, "$L") <> 0 then do:
+             av9130 = substring(V1500,1,6) + "/" + substring(V1500,7,4).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$L") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$L") 
+                    + length("$L"), length(ts9130) - ( index(ts9130 , "$L") + length("$L") - 1 ) ).
+          end.
+
+
        IF INDEX(ts9160,"$Q") <> 0  THEN DO:
        TS9160 = substring(TS9160, 1, Index(TS9160 , "$Q") - 1) + av9160 
        + SUBSTRING( ts9160 , index(ts9160 ,"$Q") + length("$Q"), LENGTH(ts9160) - ( index(ts9160 ,"$Q" ) + length("$Q") - 1 ) ).
@@ -2495,6 +2655,22 @@ If AVAILABLE ( pt_mstr )  then
         */
         av9160 = vvv_print_qty.
         /*SS - 080912.1 E*/
+
+          /*库位*/
+          if index(ts9130, "$C") <> 0 then do:
+             av9130 = trim(V1520).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$C") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$C") 
+                    + length("$C"), length(ts9130) - ( index(ts9130 , "$C") + length("$C") - 1 ) ).
+          end.    /* SS - 110321.1 */
+          /*批序号*/
+          if index(ts9130, "$L") <> 0 then do:
+             av9130 = substring(V1500,1,6) + "/" + substring(V1500,7,4).
+             ts9130 = substring(ts9130, 1, index(ts9130 , "$L") - 1) + av9130 
+                    + substring( ts9130 , index(ts9130 ,"$L") 
+                    + length("$L"), length(ts9130) - ( index(ts9130 , "$L") + length("$L") - 1 ) ).
+          end.
+
        IF INDEX(ts9160,"$Q") <> 0  THEN DO:
        TS9160 = substring(TS9160, 1, Index(TS9160 , "$Q") - 1) + av9160 
        + SUBSTRING( ts9160 , index(ts9160 ,"$Q") + length("$Q"), LENGTH(ts9160) - ( index(ts9160 ,"$Q" ) + length("$Q") - 1 ) ).
