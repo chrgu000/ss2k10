@@ -135,8 +135,8 @@ ADD FIELD "xxpsc__log02" of "xxpsc_ctrl" as logical
 
 ADD INDEX "xxpsc_site" on "xxpsc_ctrl"
     AREA "CONTROL_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxpsc_site"  ASCENDING
 
 
@@ -271,8 +271,8 @@ ADD FIELD "xxcase__log02" of "xxcase_mstr" as logical
 
 ADD INDEX "xxcase_nbr" on "xxcase_mstr"
     AREA "STATIC_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxcase_site"  ASCENDING
     INDEX-FIELD  "xxcase_nbr"  ASCENDING
 
@@ -408,8 +408,8 @@ ADD FIELD "xxcased__log02" of "xxcased_det" as logical
 
 ADD INDEX "xxcased_nbr" on "xxcased_det"
     AREA "STATIC_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxcased_site"  ASCENDING
     INDEX-FIELD  "xxcased_nbr"  ASCENDING
     INDEX-FIELD  "xxcased_part"  ASCENDING
@@ -575,8 +575,8 @@ ADD FIELD "xxrest__log02" of "xxrest_det" as logical
 
 ADD INDEX "xxrest_line" on "xxrest_det"
     AREA "TRANSACTION_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxrest_site"  ASCENDING
     INDEX-FIELD  "xxrest_line"  ASCENDING
     INDEX-FIELD  "xxrest_shift"  ASCENDING
@@ -721,8 +721,8 @@ ADD FIELD "xxovd__log02" of "xxovd_det" as logical
 
 ADD INDEX "xxovd_line" on "xxovd_det"
     AREA "TRANSACTION_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxovd_site"  ASCENDING
     INDEX-FIELD  "xxovd_line"  ASCENDING
 
@@ -858,15 +858,15 @@ ADD FIELD "xxpsq__log02" of "xxpsq_det" as logical
 
 ADD INDEX "xxpsq_line" on "xxpsq_det"
     AREA "TRANSACTION_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxpsq_site"  ASCENDING
     INDEX-FIELD  "xxpsq_line"  ASCENDING
     INDEX-FIELD  "xxpsq_seq"  ASCENDING
 
 ADD INDEX "xxpsq_line_part" on "xxpsq_det"
     AREA "TRANSACTION_IDX"
-    UNIQUE 
+    UNIQUE
     INDEX-FIELD  "xxpsq_site"  ASCENDING
     INDEX-FIELD  "xxpsq_line"  ASCENDING
     INDEX-FIELD  "xxpsq_part"  ASCENDING
@@ -1016,14 +1016,14 @@ ADD FIELD "xxpbd__log02" of "xxpbd_det" as logical
 
 ADD INDEX "xxpbd_part" on "xxpbd_det"
     AREA "TRANSACTION_IDX"
-    PRIMARY 
-    UNIQUE 
+    PRIMARY
+    UNIQUE
     INDEX-FIELD  "xxpbd_part"  ASCENDING
     INDEX-FIELD  "xxpbd_site"  ASCENDING
 
 ADD INDEX "xxpbd_site" on "xxpbd_det"
     AREA "TRANSACTION_IDX"
-    UNIQUE 
+    UNIQUE
     INDEX-FIELD  "xxpbd_site"  ASCENDING
     INDEX-FIELD  "xxpbd_part"  ASCENDING
 

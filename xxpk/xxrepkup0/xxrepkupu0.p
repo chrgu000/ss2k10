@@ -231,7 +231,7 @@ define variable ladnbr like lad_nbr.
   for each xxwa_det no-lock where xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-      break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn by xxwa_part:
+      break by xxwa_date by xxwa_site by xxwa_line by xxwa_par by xxwa_sn by xxwa_part:
       assign vqty = xxwa_qty_pln
              vqty1 = 0.
       if first-of(xxwa_sn) then do:
