@@ -26,6 +26,7 @@ form xxpl_site colon 25 sidesc no-label
      xxpl_loc  colon 25 locdesc no-label skip(1)     
      xxpl_type colon 25
      xxpl_rank colon 25
+     xxpl_panel colon 25
      xxpl_cap  colon 25
 with frame bb title color 
 		 normal(getFrameTitle("PREVENTIVE_MAINTENANCE_DETAIL",30))
@@ -47,7 +48,7 @@ repeat with frame a:
                  no-error.
             if available xxpl_ref then do:
                display xxpl_site xxpl_loc xxpl_type 
-               			   xxpl_rank xxpl_cap with frame bb.
+               			   xxpl_rank xxpl_panel xxpl_cap with frame bb.
                run disploc(input xxpl_site,input xxpl_loc).
             end.
          end.
@@ -68,7 +69,7 @@ repeat with frame a:
 
             if recno <> ? then do:
                display xxpl_site xxpl_loc xxpl_type
-               				 xxpl_rank xxpl_cap with frame bb.
+               				 xxpl_rank xxpl_panel xxpl_cap with frame bb.
                run disploc(input xxpl_site,input xxpl_loc).
             end. /* if recno */
          end. /* frame-field */
@@ -89,12 +90,13 @@ repeat with frame a:
                    and xxpl_site = input xxpl_site
             		   and xxpl_loc = input xxpl_loc no-error.
             if available xxpl_ref then do:
-            	 display xxpl_type xxpl_rank xxpl_cap with frame bb.
+            	 display xxpl_type xxpl_rank xxpl_panel xxpl_cap with frame bb.
             	 run disploc(input xxpl_site,input xxpl_loc).
             end.
             else do:
             	 display "" @ xxpl_type 
-            	 				 "" @ xxpl_rank 
+            	 				 "" @ xxpl_rank
+            	 				 "" @ xxpl_panel 
             	 				 "" @ xxpl_cap
             	  with frame bb.
             end.
@@ -142,8 +144,8 @@ repeat with frame a:
                 xxpl_site
                 xxpl_loc.
       end.
-            display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_cap
-      with frame bb.
+            display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_panel xxpl_cap
+      							with frame bb.
 
       set2:
       do on error undo, retry:
@@ -152,9 +154,10 @@ repeat with frame a:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxpl_type xxpl_rank xxpl_cap
+         set xxpl_type xxpl_rank xxpl_panel xxpl_cap
          go-on (F5 CTRL-D) with frame bb.
-         display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_cap with frame bb.
+         display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_panel
+         				 xxpl_cap with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */

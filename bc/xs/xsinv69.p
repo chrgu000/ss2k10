@@ -876,13 +876,13 @@ If AVAILABLE ( pt_mstr ) then
                L15203 = ""
                L15204 = ""
                L15205 = ""
-               L15206 = "". 
-        run xsinv69a.p (input v1300).  
+               L15206 = "".
+        run xsinv69a.p (input v1300).
         assign i = 2.
         for each qad_wkfl no-lock where qad_key1 = "xsinv69.i,locstat"
              and qad_key3 = v1300 break by qad_key4:
-             L15201 = qad_charfld[2]  + "/" + string(qad_decfld[1]) 
-             			  + "/" + string(qad_decfld[2]).
+             L15201 = qad_charfld[2]  + "/" + string(qad_decfld[1])
+                    + "/" + string(qad_decfld[2]).
              if i = 2 then do:
                 assign L15202 = L15201.
              end.
@@ -899,12 +899,12 @@ If AVAILABLE ( pt_mstr ) then
                 assign L15206 = L15201.
              end.
              i = i + 1.
-        end. 
+        end.
            display vtitle skip with fram F1520 no-box.
 
            /* LABEL 1 - START */
            L15201 = "可入库位/托数/总数" .
-           display L15201          format "x(40)" skip with fram F1520 no-box.
+           display L15201 format "x(40)" skip with fram F1520 no-box.
            /* LABEL 1 - END */
            display L15202 format "x(40)" skip with fram F1520 no-box.
            display L15203 format "x(40)" skip with fram F1520 no-box.
@@ -913,8 +913,7 @@ If AVAILABLE ( pt_mstr ) then
            display L15206 format "x(40)" skip with fram F1520 no-box.
            display "输入或按E退出" format "x(40)" skip
         skip with fram F1520 no-box.
-        Update V1520
-        WITH  fram F1520 NO-LABEL
+        Update V1520  WITH  fram F1520 NO-LABEL
         EDITING:
           readkey pause wtimeout.
           if lastkey = -1 Then quit.
@@ -922,15 +921,21 @@ If AVAILABLE ( pt_mstr ) then
            pause 0 before-hide.
            undo, retry.
         end.
-           apply lastkey.
+        IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
+        THEN DO:
+					   
         end.
+        IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
+        THEN DO:
 
+        end.
+        apply lastkey.
+        end.    /* editing: */
         /* PRESS e EXIST CYCLE */
         IF V1520 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1520.
 
          /*  ---- Valid Check ---- START */
-
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1520.
         pause 0.
         /* CHECK FOR NUMBER VARIABLE START  */
