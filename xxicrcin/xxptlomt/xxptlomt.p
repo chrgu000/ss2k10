@@ -37,22 +37,23 @@ view frame a.
 
 mainloop:
 repeat with frame a:
-      prompt-for pt_mstr.pt_part
-      editing:
-          {mfnp.i pt_mstr pt_part pt_part pt_part pt_part pt_part}
-         if recno <> ? then do:
-            display pt_part pt_desc1 pt_desc2 pt_um
-            with frame a.
-            clear frame bb.
-            find first xxpl_ref no-lock where xxpl_part = pt_part
-                 no-error.
-            if available xxpl_ref then do:
-               display xxpl_site xxpl_loc xxpl_type 
-               			   xxpl_rank xxpl_panel xxpl_cap with frame bb.
-               run disploc(input xxpl_site,input xxpl_loc).
-            end.
-         end.
-      end.
+  prompt-for pt_mstr.pt_part
+  editing:
+      {mfnp.i pt_mstr pt_part pt_part pt_part pt_part pt_part}
+     if recno <> ? then do:
+        display pt_part pt_desc1 pt_desc2 pt_um
+        with frame a.
+        clear frame bb.
+        find first xxpl_ref no-lock where xxpl_part = pt_part
+             no-error.
+        if available xxpl_ref then do:
+           display xxpl_site xxpl_loc xxpl_type 
+           			   xxpl_rank xxpl_panel xxpl_cap with frame bb.
+           run disploc(input xxpl_site,input xxpl_loc).
+        end.
+     end.
+  end.
+      
   repeat with frame bb:
   		if input xxpl_site = "" then do:
   			find first si_mstr no-lock where si_site <> "".
