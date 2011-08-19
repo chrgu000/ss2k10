@@ -10,12 +10,15 @@
 define variable lang like lng_lang.
 define variable cdref as character format "x(20)" label {&xxmeiq_p_1}.
 define variable dcount as integer no-undo.
+define variable mndnbr like mnd_nbr.
+define variable nbr1 like mnd_nbr.
 define variable progName like mnd_exec.
 form
    space(1)
-   lang
-   cdref
-   progName skip(1)
+   lang     colon 25
+   mndnbr   colon 25   nbr1 colon 50
+   cdref    colon 25
+   progName colon 25 skip(1)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -28,10 +31,12 @@ lang = global_user_lang.
 repeat:
 
    if c-application-mode <> 'web' then
-      update lang cdref progName with frame a.
+      update lang mndnbr nbr1 cdref progName with frame a.
 
-   {wbrp06.i &command = update &fields = " lang cdref progName " &frm = "a"}
-
+   {wbrp06.i &command = update
+             &fields = " lang mndnbr nbr1 cdref progName "
+             &frm = "a"}
+   assign nbr1 = nbr1 + hi_char.
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
                &printWidth = 320
@@ -50,17 +55,15 @@ repeat:
    dcount = 0.
 
    for each mnt_det no-lock where mnt_lang = lang and
-            (index(mnt_label,cdref) > 0 or cdref = ""),
+            mnt_nbr >= mndnbr and (mnt_nbr <= nbr1 or nbr1 = "") and
+           (index(mnt_label,cdref) > 0 or cdref = ""),
        each mnd_det no-lock where mnd_nbr = mnt_nbr and
             mnd_select = mnt_select and
-            (index(mnd_exec,progName) > 0 or progName = "")
+           (index(mnd_exec,progName) > 0 or progName = "")
     with frame f-a:
-
-      {mfrpchk.i}
-
       setFrameLabels(frame f-a:handle). /* SET EXTERNAL LABELS */
 
-      display mnt_nbr + "." + trim(string(mnt_select,">>>>9")) @ mnt_nbr
+      display mnt_nbr + "." + trim(string(mnt_select,">>>>>9")) @ mnt_nbr
               mnt_label mnd_exec mnd_canrun format "x(250)"
       with width 320.
 
@@ -68,7 +71,7 @@ repeat:
 
       if dev <> "terminal" and dcount modulo 5 = 0 then
          put skip(1).
-
+      {mfrpchk.i}
    end.
 
 /*   {mfreset.i}   */
