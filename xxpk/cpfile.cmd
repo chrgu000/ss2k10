@@ -7,6 +7,7 @@ copy /y %xxpk%\xxlnmmt\xx*.? %src%\
 copy /y %xxpk%\xxlnmrp\xx*.? %src%\
 copy /y %xxpk%\xxlnwkmt\xx*.? %src%\
 copy /y %xxpk%\xxlnwrp\xx*.? %src%\
+copy /y %xxpk%\xxwaini\xx*.? %src%\
 copy /y D:\ss\trunk\showa\bc\xs\xspktr.p %src%\
 copy /y D:\ss\trunk\showa\bc\xs\xspkis.p %src%\
 copy /y D:\ss\trunk\showa\bc\xs\xspkc.p %src%\

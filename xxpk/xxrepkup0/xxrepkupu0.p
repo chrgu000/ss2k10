@@ -51,7 +51,15 @@ define variable ladnbr like lad_nbr.
         delete xxlw_mst.  /*主表*/
     end.
 
-    /* 切割时间段 */
+/*    if can-find(first rps_mstr no-lock  use-index rps_site_line             */
+/*       where rps_due_date = issue                                           */
+/*         and rps_site >= site and (rps_site <= site1 or site1 = "")         */
+/*         and rps_line >= wkctr and (rps_line <= wkctr1 or wkctr1 = "")      */
+/*         and rps_user1 = "") then do:                                       */
+/*         return.                                                            */
+/*    end.                                                                    */
+    /* 切割时间段 */    
+
     for each rps_mstr no-lock use-index rps_site_line
        where rps_due_date = issue
          and rps_site >= site and (rps_site <= site1 or site1 = "")
@@ -73,7 +81,6 @@ define variable ladnbr like lad_nbr.
            vrate = lnd_rate / 3600.
         end.
         itcetimee = itcetimes + rps_qty_req / vrate. /*做到什么时间完成*/
-
     calcloop1:
     repeat:
         find first xxlnw_det no-lock where recid(xxlnw_det) = recno no-error.
@@ -93,6 +100,14 @@ define variable ladnbr like lad_nbr.
            leave calcloop1.
         end.
         else do:
+      		 if itcetimes < xxlnw_etime then do:
+           find first xxlw_mst exclusive-lock where
+           			  xxlw_date = rps_due_date and
+                  xxlw_site = rps_site and
+                  xxlw_line = rps_line and
+                  xxlw_part = rps_part and
+                  xxlw_sn   = xxlnw_sn no-error.
+           if not available xxlw_mst then do:
            create xxlw_mst.
            assign xxlw_date = rps_due_date
                   xxlw_site = rps_site
@@ -100,20 +115,25 @@ define variable ladnbr like lad_nbr.
                   xxlw_part = rps_part
                   xxlw_sn   = xxlnw_sn
                   xxlw_start = itcetimes
-                  xxlw_end = xxlnw_etime
-                  xxlw_qty_src = rps_qty_req.
+                  xxlw_end = xxlnw_etime.
+           end.
+           assign xxlw_qty_src = xxlw_qty_src + rps_qty_req.
 /*                xxlw__dec01 = rps_qty_req   /*调试程序使用,用完删除*/      */
 /*                xxlw__int01 = xxlnw_etime.  /*调试程序使用,用完删除*/      */
-          assign timedif = xxlnw_etime
+           assign timedif = xxlnw_etime
                  itcetimes = xxlnw_etime.
-          find next xxlnw_det no-lock where xxlnw_site = rps_site and
+           find next xxlnw_det no-lock where xxlnw_site = rps_site and
                     xxlnw_line = rps_line and xxlnw_on no-error.
-          IF AVAILABLE xxlnw_det THEN DO:
-             assign recno = recid(xxlnw_det).
-             assign timedif = xxlnw_stime - timedif.
-             assign itcetimee = itcetimee + timedif
-                    itcetimes = itcetimes + timedif.
-          END.
+           IF AVAILABLE xxlnw_det THEN DO:
+              assign recno = recid(xxlnw_det).
+              assign timedif = xxlnw_stime - timedif.
+              assign itcetimee = itcetimee + timedif
+                     itcetimes = itcetimes + timedif.
+           END.
+          end. /*if itcetimes < xxlnw_etime then do:*/
+          else do:
+          	leave.
+          end.
         end.
       end.
         for each xxlw_mst exclusive-lock where xxlw_date = rps_due_date
@@ -122,8 +142,7 @@ define variable ladnbr like lad_nbr.
              assign xxlw_qty_req = ROUND(vrate * (xxlw_end - xxlw_start),0).
         end.
     end. /* for each rps_mstr no-lock user-index rps_site_line where */
-
-      for each xxlw_mst no-lock where
+    for each xxlw_mst no-lock where
            xxlw_date = issue and
            xxlw_site >= site and (xxlw_site <= site1 or site1 = "") and
            xxlw_line >= wkctr and (xxlw_line <= wkctr1 or wkctr1 = ""):
@@ -231,7 +250,8 @@ define variable ladnbr like lad_nbr.
   for each xxwa_det no-lock where xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-      break by xxwa_date by xxwa_site by xxwa_line by xxwa_par by xxwa_sn by xxwa_part:
+      break by xxwa_date by xxwa_site by xxwa_line 
+      			by xxwa_par by xxwa_sn by xxwa_part:
       assign vqty = xxwa_qty_pln
              vqty1 = 0.
       if first-of(xxwa_sn) then do:
@@ -254,6 +274,7 @@ define variable ladnbr like lad_nbr.
          assign vqtya = lad_qty_all - vqtya1
                 vqty = vqty - vqty1.
          if vqty <= vqtya then do:
+         	 message xxwa_nbr xxwa_recid i view-as alert-box.
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr
@@ -271,6 +292,7 @@ define variable ladnbr like lad_nbr.
             leave.
          end.
          else do:
+         	 message xxwa_nbr xxwa_recid i view-as alert-box.
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr

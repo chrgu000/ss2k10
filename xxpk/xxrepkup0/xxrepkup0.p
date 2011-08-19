@@ -201,7 +201,6 @@ repeat:
    end.
    {gprun.i ""xxrepkupd0.p""
             "(input l_use_ord_multiple)"}
-
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS
       THAT WERE CREATED THIS SESSION BUT SHOULD BE DELETED         */
    {gprun.i ""repkupc.p""}
