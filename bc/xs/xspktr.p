@@ -63,7 +63,6 @@ repeat:
   end.
   hide all.
   hide frame framea1.
-  run getTrLoc(output vtrloc,output vtrstat).
 
   display "[生产取料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(2) with fram framea2 no-box.
 
@@ -79,6 +78,7 @@ repeat:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
              and xxwd_pstat <> "C":
+            run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:

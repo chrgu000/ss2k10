@@ -274,7 +274,6 @@ define variable ladnbr like lad_nbr.
          assign vqtya = lad_qty_all - vqtya1
                 vqty = vqty - vqty1.
          if vqty <= vqtya then do:
-         	 message xxwa_nbr xxwa_recid i view-as alert-box.
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr
@@ -292,7 +291,6 @@ define variable ladnbr like lad_nbr.
             leave.
          end.
          else do:
-         	 message xxwa_nbr xxwa_recid i view-as alert-box.
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
                   xxwd_ladnbr = lad_nbr

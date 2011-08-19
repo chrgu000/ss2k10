@@ -63,7 +63,7 @@ repeat:
   end.
   hide all.
   hide frame framea1.
-  run getTrLoc(output vtrloc,output vtrstat).
+
 
   display "[Éú²úËÍÁÏn]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(2) with fram framea2 no-box.
 
@@ -80,6 +80,7 @@ repeat:
              and xxwd_recid = xxwa_recid
              and min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) > 0
              and xxwd_sstat <> "C":
+            run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
