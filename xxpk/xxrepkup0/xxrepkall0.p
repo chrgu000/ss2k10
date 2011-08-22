@@ -104,7 +104,7 @@ then do:
    then do:
       if icc_pk_ord <= 2
       then do:
-         {repkall.i &sort1    = "(if icc_pk_ord = 1
+         {xxrepkall.i &sort1    = "(if icc_pk_ord = 1
                                   then
                                      ld_loc
                                   else
@@ -116,7 +116,7 @@ then do:
       end.
       /* IF icc_pk_ord <= 2 */
       else do:
-         {repkall.i &sort1    = "(if icc_pk_ord = 3
+         {xxrepkall.i &sort1    = "(if icc_pk_ord = 3
                                   then
                                      ld_date
                                   else
@@ -130,7 +130,7 @@ then do:
    else do:
       if icc_pk_ord <= 2
       then do:
-         {repkall.i &part     = part
+         {xxrepkall.i &part     = part
                     &site     = site
                     &nbr      = nbr
                     &dest_loc = location
@@ -142,7 +142,7 @@ then do:
                     &sort2    = "descending"}
       end. /* IF icc_pk_ord <= 2 */
       else do:
-         {repkall.i &part     = part
+         {xxrepkall.i &part     = part
                     &site     = site
                     &nbr      = nbr
                     &dest_loc = location
