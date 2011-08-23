@@ -262,7 +262,8 @@ repeat:
         leave.
       end.
      end.
-   end.
+   end. 
+   leave clearall.
 end. /*clearall repeat*/
 end.
 status input.
