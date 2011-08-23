@@ -48,6 +48,17 @@ DO:
   end.
 END.
 
+ON CTRL-D OF file_name IN FRAME a /* Fill 1 */
+DO:
+  define variable yn as logical initial no.
+  {pxmsg.i &MSGNUM=7169 &ERRORLEVEL=2 &CONFIRM=yn}
+  if yn then do:
+    for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p" and
+           qad_key3 = global_userid:
+      delete qad_wkfl.
+	  end.
+	end.
+END.
 
 /* DETERMINE IF SUPPLIER CONSIGNMENT IS ACTIVE */
 {gprun.i ""gpmfc01.p""
