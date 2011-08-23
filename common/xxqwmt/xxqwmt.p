@@ -137,7 +137,9 @@ repeat with frame a:
    ststatus = stline[2].
    status input ststatus.
    del-yn = no.
-
+   
+clearall:
+repeat:
    do on error undo, retry:
    repeat with frame k:
       update qad_key3 qad_key4 qad_key5 qad_key6 
@@ -152,7 +154,9 @@ repeat with frame a:
          if not del-yn then undo, retry.
          delete qad_wkfl.
          clear frame a.
+         clear frame k.
          del-yn = no.
+         leave clearall.
       end.
       else do:
         apply lastkey.
@@ -178,7 +182,9 @@ repeat with frame a:
          if not del-yn then undo, retry.
          delete qad_wkfl.
          clear frame a.
+         clear frame k.
          del-yn = no.
+         leave clearall.
       end.
       else do:
         apply lastkey.
@@ -204,7 +210,9 @@ repeat with frame a:
          if not del-yn then undo, retry.
          delete qad_wkfl.
          clear frame a.
+         clear frame k.
          del-yn = no.
+         leave clearall.
       end.
       else do:
         apply lastkey.
@@ -245,7 +253,9 @@ repeat with frame a:
          if not del-yn then undo, retry.
          delete qad_wkfl.
          clear frame a.
+         clear frame k.
          del-yn = no.
+         leave clearall.
       end.
       else do:
         apply lastkey.
@@ -253,6 +263,6 @@ repeat with frame a:
       end.
      end.
    end.
-
+end. /*clearall repeat*/
 end.
 status input.
