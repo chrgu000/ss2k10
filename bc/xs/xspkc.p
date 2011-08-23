@@ -79,7 +79,13 @@ repeat:
          leave.
       end.
 
-     for each xxwa_det no-lock where xxwa_nbr = substring(tcnbr,2):
+     for each xxwa_det exclusive-lock where xxwa_nbr = substring(tcnbr,2):
+		     if substring(tcnbr,1,1) = "p" then do:
+		     	  assign xxwa_pstat = "C".
+		   	 end.
+		   	 else do:
+		   	 	  assign xxwa_sstat = "C".
+		   	 end.
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr and
                   xxwd_recid = xxwa_recid:
               if substring(tcnbr,1,1) = "p" then do:
