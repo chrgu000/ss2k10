@@ -4,9 +4,7 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "0BYJ"}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
-
 define variable proc_name as character format "x(24)".
 define variable i         as integer   format ">>>9" label "Files processed".
 define variable err       as integer   format ">>>9" label "Errors".
@@ -52,9 +50,20 @@ view stream crt frame a.
 view stream crt frame b.
 display c-comp-pgms with frame tt.
 
-output to "utcompil.log".
+/*create .r dir*/
+output to mkdir.log.
 input from value(vWorkFile) no-echo no-map.
+repeat:
+  set proc_name.
+  run createDestDir(input destDir, input lng, input proc_name).
+end.
+input close.
+output close.
+
+input from value(vWorkFile) no-echo no-map.
+output to "utcompil.log".
 display dbname today string(time,"hh:mm:ss").
+output close.
 i = 0.
 err = 0.
 repeat:
@@ -64,36 +73,8 @@ repeat:
    set proc_name.
    assign i = i + 1.
 
-   /* FIND PROCEDURE AND SET .R FILE NAME */
-   if search("src/" + proc_name) <> ? then do:
-      proc_name = "src/" + proc_name.
-   end.
-
-   if index(proc_name,".p") > 0 then do:
-      rfile = substring(proc_name,1,index(proc_name,".p") - 1) + ".r".
-   end.
-   else do:
-      rfile = proc_name + ".r".
-      if opsys = "msdos" or opsys = "win32" then
-         proc_name = proc_name + ".p".
-   end.
-
-   /* MOVE .R FILES IF NECESSARY */
-   pfile = proc_name.
-   do while index(pfile,"/") > 0:
-      pfile = substring(pfile,index(pfile,"/") + 1,24).
-   end.
-
-   if i = 1 then dirname = substring(pfile,1,2).
-
-   if substring(pfile,1,2) <> dirname then do:
-      local-msg-arg = dirname + "*.r".
-      {pxmsg.i &MSGNUM=4851 &ERRORLEVEL=1 &MSGARG1=local-msg-arg}
-      output to utdir.log.
-      {xxcompil.i}
-      output to utcompil.log append.
-      dirname = substring(pfile,1,2).
-   end.
+   run getDestFileName(input destDir, input lng, input proc_name,
+                       output dirname).
 
    /* COMPILE PROCEDURE */
    {pxmsg.i &MSGNUM=4852 &ERRORLEVEL=1 &MSGARG1=proc_name}
@@ -101,26 +82,47 @@ repeat:
    display stream crt c-comp proc_name with frame b.
    pause 0.
    down stream crt 1 with frame b.
-
-   compile value(proc_name) no-attr-space save into value(destDir).
-   if search(rfile) = ? then
+   output to "utcompil.log" append.
+          put unformat "compile:" + proc_name skip.
+          compile value(proc_name) no-attr-space save into value(destdir).
+   output close.
+/*    compile value(proc_name) save into value(dirname).*/
+   if opsys = "unix" then do:
+      assign rfile = destdir + "/"
+                   + substring(proc_name , 1 ,index(proc_name,".")) + "r".
+   end.
+   else if opsys = "msdos" or opsys = "win32" then do:
+      assign rfile = destdir + "\\"
+                + substring(proc_name , 1 ,index(proc_name,".")) + "r".
+   end.
+   if search(rfile) = ? then do:
       if search(proc_name) <> ? then err = err + 1.
-
+   end.
    display stream crt i err with frame a.
-
+   output to mkdir.log.
+     if opsys = "unix" then do:
+        unix silent value("mv " + rfile + " " + dirname).
+     end.
+     else if opsys = "msdos" or opsys = "win32" then do:
+        dos silent value("copy " + rfile + " " + dirname).
+        dos silent value("del " + rfile).
+     end.
+   output close.
 end.
 input close.
-/* MOVE LAST .R FILES, APPLEHELP.R AND MF*.R */
+
+/* MOVE LAST .R FILES, APPLEHELP.R AND MF*.R
 local-msg-arg = dirname + "*.r".
 {pxmsg.i &MSGNUM=4851 &ERRORLEVEL=1 &MSGARG1=local-msg-arg}
 local-msg-arg = "ap/applhelp.r, mf*.r".
 {pxmsg.i &MSGNUM=4851 &ERRORLEVEL=1 &MSGARG1=local-msg-arg}
-
+*/
 hide message no-pause.
 pause 0 no-message.
-output to utdir.log.
-{xxcompil.i}
+/* output to utdir.log.  */
+/* {xxcompil.i}          */
 
+output to mkdir.log.
 if opsys = "unix" then do:
    unix silent value("mv ap/applhelp.r .").
    unix silent value("mv src/mf*.r .").
@@ -132,20 +134,23 @@ else
    dos silent value("copy src~\mf*.r").
    dos silent value("del src~\mf*.r").
 end.
-
-output to utcompil.log append.
-  display string(time,"hh:mm:ss").
-  if err = 0 then do:
-     put unformat skip(2).
-     put unformat "**************************************" skip.
-     put unformat "******       OO      KK  KK     ******" skip.
-     put unformat "******     OO  OO    KK KK      ******" skip.
-     put unformat "******     OO  OO    KKK        ******" skip.
-     put unformat "******     OO  OO    KK KK      ******" skip.
-     put unformat "******       OO      KK  KK     ******" skip.
-     put unformat "**************************************" skip.
-  end.
 output close.
+
+if err = 0 then do:
+   output to utcompil.log append.
+     display string(time,"hh:mm:ss").
+     if err = 0 then do:
+        put unformat skip(2).
+        put unformat "**************************************" skip.
+        put unformat "******       OO      KK  KK     ******" skip.
+        put unformat "******     OO  OO    KK KK      ******" skip.
+        put unformat "******     OO  OO    KKK        ******" skip.
+        put unformat "******     OO  OO    KK KK      ******" skip.
+        put unformat "******       OO      KK  KK     ******" skip.
+        put unformat "**************************************" skip.
+     end.
+   output close.
+end.
 
 empty temp-table t_log no-error.
 input from utcompil.log.
@@ -187,10 +192,15 @@ if  yn then do:
        dos silent notepad.exe utcompil.log.
     end.
 end.
-os-delete utdir.log no-error.
-os-delete utcompil.log no-error.
-os-delete value(vworkfile) no-error.
 hide all no-pause.
+
+/*  os-delete comp.txt no-error.                   */
+/*  os-delete comp.tmp no-error.                   */
+/*  os-delete utdir.log no-error.                  */
+    os-delete utcompil.log no-error.
+    os-delete value(vworkfile) no-error.
+    os-delete mkdir.log no-error.
+
 /* if err > 0 then pause 100. */
 /* else pause 2.              */
 /* if err > 0 then do:                                                       */
@@ -201,3 +211,70 @@ hide all no-pause.
 /* end. /* IF ERR > 0 */                                                     */
 /* else                                                                      */
 /*    pause 20.                                                              */
+
+procedure createDestDir:
+  define input parameter iDestDir as character.
+  define input parameter ilng as character.
+  define input parameter icompFile as character.
+
+  define variable vdir as character.
+
+  if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
+     if opsys = "unix" then do:
+        assign vdir = iDestDir + "/trigger".
+        FILE-INFO:FILE-NAME = vdir.
+        if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
+     end.
+     else if opsys = "msdos" or opsys = "win32" then do:
+        assign vdir = destDir + "\\trigger".
+        FILE-INFO:FILE-NAME = vdir.
+        if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
+     end.
+  end.
+  else do:
+     if substring(icompfile,1,2) <> "mf" then do:
+       if opsys = "unix" then do:
+          assign vdir = iDestDir + "/" + ilng.
+          FILE-INFO:FILE-NAME = vdir.
+          if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
+          assign vdir = iDestDir + "/" + ilng + "/" + substring(icompfile,1,2).
+          FILE-INFO:FILE-NAME = vdir.
+          if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
+       end.
+       else if opsys = "msdos" or opsys = "win32" then do:
+          assign vdir = destDir + "\\" + ilng + "\\" + substring(icompfile,1,2).
+          FILE-INFO:FILE-NAME = vdir.
+          if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
+       end.
+     end.
+  end.
+end procedure.
+
+procedure getDestFileName:
+  define input parameter iDestDir as character.
+  define input parameter ilng as character.
+  define input parameter icompFile as character.
+  define output parameter odir as character.
+
+  if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
+     if opsys = "unix" then do:
+        odir = idestdir + "/trigger".
+     end.
+     else if opsys = "msdos" or opsys = "win32" then do:
+        odir = idestdir + "\\trigger".
+     end.
+  end.
+  else do:
+     if substring(icompfile,1,2) = "mf" then do:
+            odir = idestdir.
+     end.
+     else do:
+       if opsys = "unix" then do:
+          odir = idestdir + "/"  + ilng + "/" + substring(icompfile,1,2).
+       end.
+       else if opsys = "msdos" or opsys = "win32" then do:
+          odir = idestdir + "\\" + ilng + "\\" + substring(icompfile,1,2).
+       end.
+     end.
+  end.
+end procedure.

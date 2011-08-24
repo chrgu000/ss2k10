@@ -9,7 +9,7 @@
 /* REVISION: 14YP LAST MODIFIED: 01/04/11 BY: zy Add EB common            *EB*/
 /* REVISION END                                                              */
 
-{mfdtitle.i "14YP"}
+{mfdtitle.i "18YB"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -124,7 +124,7 @@ mainLoop:
 repeat:
 do on error undo, retry:
    update destDir xrcDir fileF fileT bpropath lng destdir with Frame z.
-   if fileT = fileF then assign fileT = fileT + hi_char.
+   assign fileT = fileT + hi_char.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
       {mfmsg.i 7656 3}
       next-prompt lng with frame z.
@@ -186,7 +186,8 @@ output to value(vWorkFile).
 repeat:
    import delimiter " " vFilename.
    if vFileName[3] = "F" and
-      index(".p.w.P.W",substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
+      index(".p.w.P.W,.t,.T"
+            ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
       vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
    then do:
       put unformat vFileName[1] skip.
@@ -195,12 +196,8 @@ end.
 output close.
 input close.
 
-{gprun.i ""xxcompil.p""}
-os-delete comp.txt no-error.
-os-delete comp.tmp no-error.
-os-delete utdir.log no-error.
-os-delete utcompil.log no-error.
-os-delete value(vworkfile) no-error.
+{gprun.i ""xxc001.p""}
+
 leave.
 end. /*mainLoop*/
 
