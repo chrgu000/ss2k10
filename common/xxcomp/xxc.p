@@ -9,7 +9,7 @@
 /* REVISION: 14YP LAST MODIFIED: 01/04/11 BY: zy Add EB common            *EB*/
 /* REVISION END                                                              */
 
-{mfdtitle.i "18YB"}
+{mfdtitle.i "18YX"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -80,17 +80,17 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
    assign destDir.
    if destDir <> vClientDir then do:
       assign destDir:screen-value = trim(vClientDir).
-      assign destDir = trim(destDir).
+      assign destDir.
    end.
    else do:
        find first qad_wkfl exclusive-lock where
-/*EB        qad_domain = global_domain and                                   */
-                  qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
+/*EB          qad_domain = global_domain and                                 */
+              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
        if available qad_wkfl then do:
           if opsys = "unix" then do:
             assign destDir:screen-value = trim(qad_charfld[2]).
           end.
-          else do:
+          else if opsys = "msdos" or opsys = "win32" then do:
             assign destDir:screen-value = trim(qad_charfld1[2]).
           end.
           assign destDir.
@@ -160,22 +160,23 @@ do on error undo, retry:
         if not available qad_wkfl then do:
            create qad_wkfl.
            assign
-/*EB              qad_domain = global_domain                                 */
-                  qad_key1 = qadkey1
-                  qad_key2 = global_userid.
+/*EB          qad_domain = global_domain                                     */
+              qad_key1 = qadkey1
+              qad_key2 = global_userid.
         end.
         assign qad_charfld[3] = filef
-               qad_charfld[4] = filet
-               qad_charfld[5] = vClientDir.
+               qad_charfld[4] = trim(filet).
         if opsys = "msdos" or opsys = "win32" then do:
            assign qad_charfld1[1] = xrcdir
                   qad_charfld1[2] = trim(destDir) when destDir <> ""
-                                and destDir <> vClientDir.
+                                    and destDir <> vClientDir
+                  qad_charfld1[5] = trim(destDir).
         end.
-        if opsys = "unix" then do:
+        else if opsys = "unix" then do:
            assign qad_charfld[1] = xrcdir
                   qad_charfld[2] = trim(destDir) when destDir <> ""
-                               and destDir <> vClientDir.
+                                   and destDir <> vClientDir
+                  qad_charfld[5] = trim(destDir).
         end.
 end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
@@ -204,16 +205,16 @@ end. /*mainLoop*/
 PROCEDURE iniForm:
 /*优先取QAD_WKFL存储的*/
 find first qad_wkfl no-lock where
-/*EB       qad_domain = global_domain and                                    */
-           qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
+/*EB          qad_domain = global_domain and                                 */
+              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
     assign xrcdir  = trim(qad_charfld[1]) when qad_charfld[1] <> ""
-           destDir = trim(qad_charfld[2]) when qad_charfld[2] <> ""
-           filef   = qad_charfld[3]
-           filet   = qad_charfld[4].
+           destDir = trim(qad_charfld[5]) when qad_charfld[5] <> ""
+           filef   = trim(qad_charfld[3])
+           filet   = substring(qad_charfld[4],1,length(qad_charfld[4]) - 1).
     if opsys = "msdos" or opsys = "win32" then do:
-       assign xrcdir  = qad_charfld1[1] when qad_charfld1[1] <> ""
-              destDir = trim(qad_charfld1[2]) when qad_charfld1[2] <> "".
+       assign xrcdir  = qad_charfld1[1]
+              destDir = trim(qad_charfld1[5]).
     end.
 end.
 assign lng = lower(global_user_lang).

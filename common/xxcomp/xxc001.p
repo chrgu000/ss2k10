@@ -3,7 +3,7 @@
 /* REVISION: 0BYJ LAST MODIFIED: 11/19/10   BY: zy                           */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
-
+{mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 define variable proc_name as character format "x(24)".
 define variable i         as integer   format ">>>9" label "Files processed".
@@ -60,12 +60,12 @@ end.
 input close.
 output close.
 
-input from value(vWorkFile) no-echo no-map.
 output to "utcompil.log".
 display dbname today string(time,"hh:mm:ss").
 output close.
 i = 0.
 err = 0.
+input from value(vWorkFile) no-echo no-map.
 repeat:
    hide message no-pause.
    pause 0 no-message.
@@ -136,21 +136,19 @@ else
 end.
 output close.
 
-if err = 0 then do:
-   output to utcompil.log append.
-     display string(time,"hh:mm:ss").
-     if err = 0 then do:
-        put unformat skip(2).
-        put unformat "**************************************" skip.
-        put unformat "******       OO      KK  KK     ******" skip.
-        put unformat "******     OO  OO    KK KK      ******" skip.
-        put unformat "******     OO  OO    KKK        ******" skip.
-        put unformat "******     OO  OO    KK KK      ******" skip.
-        put unformat "******       OO      KK  KK     ******" skip.
-        put unformat "**************************************" skip.
-     end.
-   output close.
-end.
+output to utcompil.log append.
+	 display string(time,"hh:mm:ss").
+	 if err = 0 then do:
+	    put unformat skip(2).
+	    put unformat "**************************************" skip.
+	    put unformat "******       OO      KK  KK     ******" skip.
+	    put unformat "******     OO  OO    KK KK      ******" skip.
+	    put unformat "******     OO  OO    KKK        ******" skip.
+	    put unformat "******     OO  OO    KK KK      ******" skip.
+	    put unformat "******       OO      KK  KK     ******" skip.
+	    put unformat "**************************************" skip.
+	 end.
+output close.
 
 empty temp-table t_log no-error.
 input from utcompil.log.
