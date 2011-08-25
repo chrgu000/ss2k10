@@ -219,12 +219,12 @@ procedure createDestDir:
 
   if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
      if opsys = "unix" then do:
-        assign vdir = iDestDir + "/trigger".
+        assign vdir = iDestDir + "/triggers".
         FILE-INFO:FILE-NAME = vdir.
         if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        assign vdir = destDir + "\\trigger".
+        assign vdir = destDir + "\\triggers".
         FILE-INFO:FILE-NAME = vdir.
         if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
      end.
@@ -256,10 +256,10 @@ procedure getDestFileName:
 
   if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
      if opsys = "unix" then do:
-        odir = idestdir + "/trigger".
+        odir = idestdir + "/triggers".
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        odir = idestdir + "\\trigger".
+        odir = idestdir + "\\triggers".
      end.
   end.
   else do:
