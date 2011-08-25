@@ -6,10 +6,11 @@
 /* REVISION: 0CYT LAST MODIFIED: 12/29/10 BY: zy def os def field rec path   */
 /* REVISION: 0CYV LAST MODIFIED: 12/31/10 BY: zy trim path                   */
 /* REVISION: 14Y1 LAST MODIFIED: 01/04/11 BY: zy check xrcpath exists        */
-/* REVISION: 14YP LAST MODIFIED: 01/04/11 BY: zy Add EB common            *EB*/
+/* REVISION: 14YP LAST MODIFIED: 04/25/11 BY: zy Add EB common            *EB*/
+/* REVISION: 18YP LAST MODIFIED: 08/25/11 BY: zy Add .t comp function        */
 /* REVISION END                                                              */
 
-{mfdtitle.i "18YX"}
+{mfdtitle.i "18YP"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -83,7 +84,7 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
       assign destDir.
    end.
    else do:
-       find first qad_wkfl exclusive-lock where
+       find first qad_wkfl no-lock where
 /*EB          qad_domain = global_domain and                                 */
               qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
        if available qad_wkfl then do:
