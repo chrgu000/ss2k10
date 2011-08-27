@@ -51,7 +51,7 @@ view stream crt frame b.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
-output to mkdir.log.
+output to utcompil0.log.
 input from value(vWorkFile) no-echo no-map.
 repeat:
   set proc_name.
@@ -99,7 +99,7 @@ repeat:
       if search(proc_name) <> ? then err = err + 1.
    end.
    display stream crt i err with frame a.
-   output to mkdir.log.
+   output to utcompil0.log.
      if opsys = "unix" then do:
         unix silent value("mv " + rfile + " " + dirname).
      end.
@@ -122,13 +122,12 @@ pause 0 no-message.
 /* output to utdir.log.  */
 /* {xxcompil.i}          */
 
-output to mkdir.log.
+output to utcompil0.log.
 if opsys = "unix" then do:
    unix silent value("mv ap/applhelp.r .").
    unix silent value("mv src/mf*.r .").
 end.
-else
-   if opsys = "msdos" or opsys = "win32" then do:
+else if opsys = "msdos" or opsys = "win32" then do:
    dos silent value("copy ap~\applhelp.r applhelp.r").
    dos silent value("del ap~\applhelp.r").
    dos silent value("copy src~\mf*.r").
@@ -197,7 +196,7 @@ hide all no-pause.
 /*  os-delete utdir.log no-error.                  */
     os-delete utcompil.log no-error.
     os-delete value(vworkfile) no-error.
-    os-delete mkdir.log no-error.
+    os-delete utcompil0.log no-error.
 
 /* if err > 0 then pause 100. */
 /* else pause 2.              */
