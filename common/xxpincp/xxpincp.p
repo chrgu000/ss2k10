@@ -1,13 +1,12 @@
 /* xxpincp - pin_mstr Copy                                                   */
-/* revision: 110712.1   created on: 20110712   by: zhang yun                 */
-/* revision: 110725.1   created on: 20110725   by: SamSong                   */
+/* revision: 110827.1   created on: 20110827   by: zhang yun                 */
 
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110725.1"}
+{mfdtitle.i "18YR"}
 
 define variable cp-yn  like mfc_logical initial no.
 define variable s_prod like pin_product.
@@ -15,7 +14,13 @@ define variable d_prod like pin_product.
 define variable s_desc like pin_desc.
 define variable d_desc like pin_desc.
 define variable vf     as   character.
-
+define variable l_listVers as character no-undo.
+define variable l_thisVers as character no-undo.
+define variable l_appl_desc like lpm_desc label "Description" no-undo.
+define variable l-err-nbr   like msg_nbr no-undo.
+/* Get Versions List */
+{gprunp.i "lvgenpl" "p" "getVersionList"
+          "(output l_listVers,output l_thisVers)" }
 /* DISPLAY SELECTION FORM */
 
 form
@@ -34,7 +39,12 @@ repeat with frame a:
      if frame-field = "s_prod" then do:
       {mfnp.i pin_mstr s_prod pin_product s_prod pin_product pin_product}
         if recno <> ? then do:
-           display pin_product @ s_prod pin_desc @ s_desc with frame a.
+           {gprunp.i "lvgenpl" "p" "validateApplicationRegistered"
+            "(input  pin_product,
+              input  no,
+              output l_appl_desc,
+              output l-err-nbr)"}
+           display pin_product @ s_prod l_appl_desc @ s_desc with frame a.
         end.
      end.
      else do:
@@ -48,13 +58,26 @@ repeat with frame a:
      undo,retry.
   end.
   if not can-find(first pin_mstr no-lock where pin_product = s_prod) then do:
-     /*源数据不存在*/
+     /*source data not fond.*/
      {pxmsg.i &MSGNUM= 4482 &ERRORLEVEL=3 &MSGARG1=s_prod}
      undo, retry.
   end.
-  do on error undo, retry:
-     update d_prod
-            d_desc.
+
+  do on error undo,retry:
+     prompt-for d_prod editing:
+     /* FIND NEXT/PREVIOUS RECORD */
+     if frame-field = "d_prod" then do:
+      {mfnp.i lpm_mstr d_prod lpm_product d_prod lpm_product lpm_product}
+        if recno <> ? then do:
+           display lpm_prod @ d_prod  lpm_desc @ d_desc with frame a.
+           assign d_prod d_desc.
+        end.
+     end.
+     else do:
+          readkey.
+          apply lastkey.
+     end.
+
       if d_prod = "" then do:
          {pxmsg.i &MSGNUM= 4452 &ERRORLEVEL=3 &MSGARG1=""d_prod""}
          undo,retry.
@@ -64,13 +87,13 @@ repeat with frame a:
          undo, retry.
       end.
       if can-find(first pin_mstr no-lock where pin_product = d_prod ) then do:
-         /*目标数据已存在*/
          {pxmsg.i &MSGNUM= 8922 &ERRORLEVEL=3
                   &MSGARG1=d_prod}
          undo, retry.
       end.
   end.
-
+end.
+    assign d_prod d_desc.
   cp-yn = yes.
 
   /* Please confirm copy */
@@ -109,15 +132,28 @@ repeat with frame a:
           pin_mstr.pin_aud_nbr    = pin.pin_aud_nbr.
       end.
 
-      assign vf = "tmp" + string(today,"99999999") + string(time).
+      assign vf = "tmp.xxpincp." + string(today,"99999999") + string(time).
       output to value(vf + ".in").
-      put unformat global_userid skip.
-      put "-" skip.
-      put "-" skip.
-      put unformat '"' d_prod '"' skip.
-      put unformat "yes" skip.
-      put unformat "." skip.
-      put unformat "yes" skip.
+        if l_thisVers = "eB2" then do:
+             put unformat global_userid skip.
+             put "-" skip.
+             put "-" skip.
+             put unformat '"' d_prod '"' skip.
+             put unformat "yes" skip.
+             put unformat "." skip.
+             put unformat "yes" skip.
+        end.
+        else do:
+            put unformat global_userid skip.
+            put "-" skip.
+            put "-" skip.
+            put "-" skip.
+            put "." skip.
+            put unformat '"' d_prod '"' skip.
+            put unformat "yes" skip.
+            put unformat "." skip.
+            put unformat "yes" skip.
+        end.
       output close.
 
       batchrun  = yes.
@@ -129,11 +165,10 @@ repeat with frame a:
       output close.
       input close.
       batchrun  = no.
-
-      os-delete value(vf + "*") no-error.
+      os-delete value(vf + ".in") no-error.
+      os-delete value(vf + ".ou") no-error.
 
      {pxmsg.i &MSGNUM=7 &ERRORLEVEL=1}
   end.
 end.
-
 status input.
