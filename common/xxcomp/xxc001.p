@@ -51,7 +51,8 @@ view stream crt frame b.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
-output to utcompil0.log.
+os-delete utcompil.log no-error.
+output to utcompil.log append.
 input from value(vWorkFile) no-echo no-map.
 repeat:
   set proc_name.
@@ -60,8 +61,8 @@ end.
 input close.
 output close.
 
-output to "utcompil.log".
-display dbname today string(time,"hh:mm:ss").
+output to "utcompil.log" append.
+put unformat dbname " START:" today " " string(time,"hh:mm:ss") skip.
 output close.
 i = 0.
 err = 0.
@@ -99,7 +100,7 @@ repeat:
       if search(proc_name) <> ? then err = err + 1.
    end.
    display stream crt i err with frame a.
-   output to utcompil0.log.
+   output to utcompil.log append.
      if opsys = "unix" then do:
         unix silent value("mv " + rfile + " " + dirname).
      end.
@@ -122,31 +123,31 @@ pause 0 no-message.
 /* output to utdir.log.  */
 /* {xxcompil.i}          */
 
-output to utcompil0.log.
-if opsys = "unix" then do:
-   unix silent value("mv ap/applhelp.r .").
-   unix silent value("mv src/mf*.r .").
-end.
-else if opsys = "msdos" or opsys = "win32" then do:
-   dos silent value("copy ap~\applhelp.r applhelp.r").
-   dos silent value("del ap~\applhelp.r").
-   dos silent value("copy src~\mf*.r").
-   dos silent value("del src~\mf*.r").
-end.
-output close.
+/* output to utcompil0.log.                                                  */
+/* if opsys = "unix" then do:                                                */
+/*    unix silent value("mv ap/applhelp.r .").                               */
+/*    unix silent value("mv src/mf*.r .").                                   */
+/* end.                                                                      */
+/* else if opsys = "msdos" or opsys = "win32" then do:                       */
+/*    dos silent value("copy ap~\applhelp.r applhelp.r").                    */
+/*    dos silent value("del ap~\applhelp.r").                                */
+/*    dos silent value("copy src~\mf*.r").                                   */
+/*    dos silent value("del src~\mf*.r").                                    */
+/* end.                                                                      */
+/* output close.                                                             */
 
 output to utcompil.log append.
-	 display string(time,"hh:mm:ss").
-	 if err = 0 then do:
-	    put unformat skip(2).
-	    put unformat "**************************************" skip.
-	    put unformat "******       OO      KK  KK     ******" skip.
-	    put unformat "******     OO  OO    KK KK      ******" skip.
-	    put unformat "******     OO  OO    KKK        ******" skip.
-	    put unformat "******     OO  OO    KK KK      ******" skip.
-	    put unformat "******       OO      KK  KK     ******" skip.
-	    put unformat "**************************************" skip.
-	 end.
+   put unformat dbname " END:" today " " string(time,"hh:mm:ss").
+   if err = 0 then do:
+      put unformat skip(2).
+      put unformat "**************************************" skip.
+      put unformat "******       OO      KK  KK     ******" skip.
+      put unformat "******     OO  OO    KK KK      ******" skip.
+      put unformat "******     OO  OO    KKK        ******" skip.
+      put unformat "******     OO  OO    KK KK      ******" skip.
+      put unformat "******       OO      KK  KK     ******" skip.
+      put unformat "**************************************" skip.
+   end.
 output close.
 
 empty temp-table t_log no-error.
@@ -196,7 +197,7 @@ hide all no-pause.
 /*  os-delete utdir.log no-error.                  */
     os-delete utcompil.log no-error.
     os-delete value(vworkfile) no-error.
-    os-delete utcompil0.log no-error.
+/*    os-delete utcompil0.log no-error.            */
 
 /* if err > 0 then pause 100. */
 /* else pause 2.              */
