@@ -1,6 +1,10 @@
 TRIGGER PROCEDURE for write of usr_mstr old buffer OLD_usr_mstr.
 define variable vlvl as integer no-undo.
-{mfdeclre.i}
+/* {mfdeclre.i} */
+define shared variable global_user_lang_dir like lng_mstr.lng_dir.
+define shared variable global_userid as character.
+define shared variable mfguser as character.
+define shared variable execname as character.
 if old_usr_mstr.usr_passwd <> usr_mstr.usr_passwd then do:
 create qad_wkfl .
 assign qad_key1 = "usr_mstr password change record"
@@ -18,7 +22,7 @@ assign qad_key1 = "usr_mstr password change record"
        qad_charfld[1] = "MFGPRO Operater:" + global_userid.
 
 FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
-    EACH qaddb._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
+    EACH Demonstration._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
   assign qad_charfld[2] = "OS Operater:" + _connect-name
          qad_charfld[3] = "connect Device:" + _connect-device
          qad_charfld[4] = "connect Device:" + _connect-device
