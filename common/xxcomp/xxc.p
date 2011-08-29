@@ -8,9 +8,10 @@
 /* REVISION: 14Y1 LAST MODIFIED: 01/04/11 BY: zy check xrcpath exists        */
 /* REVISION: 14YP LAST MODIFIED: 04/25/11 BY: zy Add EB common            *EB*/
 /* REVISION: 18YP LAST MODIFIED: 08/25/11 BY: zy Add .t comp function        */
+/* REVISION: 18YU LAST MODIFIED: 08/30/11 BY: zy fix log display bug         */
 /* REVISION END                                                              */
 
-{mfdtitle.i "18YP"}
+{mfdtitle.i "18YU"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -188,7 +189,7 @@ output to value(vWorkFile).
 repeat:
    import delimiter " " vFilename.
    if vFileName[3] = "F" and
-      index(".p.w.P.W,.t,.T"
+      index(".p.w.t.P.W.T"
             ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
       vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
    then do:
