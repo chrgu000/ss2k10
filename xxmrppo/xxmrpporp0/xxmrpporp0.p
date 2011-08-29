@@ -4,14 +4,15 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
+SESSION:DATE-FORMA = "ymd".
 define variable d as date.
 DEFINE VARIABLE k AS INTEGER. 
-
-DO k = 0 TO  19 WITH FRAME a.
-    RUN getOrdDay(INPUT "W2,4,6",INPUT TODAY + k,INPUT 1,OUTPUT d).
-    DISPLAY TODAY + k d.
+OUTPUT TO xx.csv.
+DO k = 0 TO 59 WITH FRAME a.
+    RUN getOrdDay(INPUT "W3,4,6",INPUT TODAY + k,INPUT 1,OUTPUT d).
+    PUT UNFORMAT TODAY + k ","  d "," WEEKDAY(d) - 1 SKIP.
 END.
-
+OUTPUT CLOSE.
 
 procedure getOrdDay:
   define input parameter iRule as character.
@@ -42,27 +43,23 @@ procedure getOrdDay:
   startDay = startDay + integer(ENTRY(1 , vrule , ",")) - 1.
   
   if substring(iRule,1,1) = "W" then do: 
-     IF idate < startDay THEN DO:
+     IF idate <= startDay THEN DO:
          ASSIGN odate = idate.
      END.
      ELSE DO:
         odate = idate.
-       
         getodate:
-        DO i = 6 TO 1: 
-            MESSAGE i odate VIEW-AS ALERT-BOX.
-            REPEAT WHILE index(vrule,",") > 0 :
-                IF INTEGER(substring(vrule,1,INDEX(vrule,",") - 1)) = weekday(odate) - 1 THEN DO:
-                   LEAVE getodate.
+        REPEAT:   
+            ASSIGN vrule = substring(iRule,2).
+            REPEAT:
+                IF INTEGER(substring(vrule,1,INDEX(vrule,",") - 1)) = weekday(odate) - 1 THEN DO: 
+                   LEAVE getodate. 
                 END.
-                ASSIGN vrule = SUBSTRING(vrule,INDEX(vrule,",",+1)).
-                MESSAGE vrule VIEW-AS ALERT-BOX INFO BUTTONS OK.
+                ASSIGN vrule = SUBSTRING(vrule,INDEX(vrule,",") + 1). 
+                IF INDEX(vrule,",") = 0 THEN LEAVE. 
             END.
-            IF INTEGER(vrule) = WEEKDAY(odate) - 1 THEN DO:
-                LEAVE getodate.
-            END.
-            
-            odate = odate - 1.
+            IF INTEGER(vRule) = WEEKDAY(odate) - 1 THEN LEAVE.
+            odate = odate - 1. 
         END.
      END.
   end. /* if substring(iRule,1,1) = "W" then do: */
