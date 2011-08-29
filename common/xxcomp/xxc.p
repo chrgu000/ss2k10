@@ -97,6 +97,7 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
           end.
           assign destDir.
        end.
+       release qad_wkfl.
    end.
 end.
 
@@ -180,6 +181,7 @@ do on error undo, retry:
                                    and destDir <> vClientDir
                   qad_charfld[5] = trim(destDir).
         end.
+    release qad_wkfl.
 end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
 

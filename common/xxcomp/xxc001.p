@@ -80,7 +80,13 @@ repeat:
    pause 0.
    down stream crt 1 with frame b.
    output to "utcompil.log" append.
-          put unformat "compile:" + proc_name skip.
+          put unformat "compile:" + proc_name.
+          if opsys = "unix" then do:
+          	put skip.
+          end.
+          else  if opsys = "msdos" or opsys = "win32" then do:
+          	put " copy:".
+          end.
           compile value(proc_name) no-attr-space save into value(destdir).
    output close.
    if opsys = "unix" then do:
