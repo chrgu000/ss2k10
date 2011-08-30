@@ -72,9 +72,12 @@ procedure getOrdDay:
      END.
   end.  /* if substring(iRule,1,1) = "W" then do: */
   else if substring(iRule,1,1) = "M" then do:
+      if month(idate) = month(today) then do:
+         assign odate = idate.
+      end.
+      else do:
       EMPTY TEMP-TABLE tmp_int NO-ERROR.
       EMPTY TEMP-TABLE tmp_date NO-ERROR.
-
       REPEAT:
           ASSIGN i = integer(SUBSTRING(vrule,1,INDEX(vrule,",") - 1)).
           CREATE tmp_int.
@@ -127,10 +130,9 @@ procedure getOrdDay:
       IF AVAILABLE tmp_date THEN DO:
           ASSIGN odate = td_start.
       END.
-
+      end. /*if month(idate) = month(today) else do:*/
   end.  /* if substring(iRule,1,1) = "M" then do: */
-
-  /* 如果送货日期为节假日则推到上一个工作日 */
+      /* 如果送货日期为节假日则推到上一个工作日 */
   REPEAT: /*假日*/
      IF CAN-FIND(FIRST hd_mstr NO-LOCK WHERE
                        hd_site = isite AND hd_date = odate) THEN DO:
@@ -140,4 +142,5 @@ procedure getOrdDay:
          LEAVE.
      END.
   END. /* REPEAT: 假日*/
+
 end procedure.
