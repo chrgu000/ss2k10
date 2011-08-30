@@ -9,14 +9,15 @@
 
 define variable del-yn like mfc_logical initial no.
 define variable vdsort like vd_sort.
+define variable ptdesc1 like pt_desc1.
 
 /* DISPLAY SELECTION FORM */
 form
-   xvp_vend colon 25 vdsort no-label
-   xvp_part colon 25 skip(1)
-   xvp_rule colon 25
-   xvp_ord_min colon 25
-   xvp_week colon 25
+   xvp_vend colon 20 vdsort no-label colon 40
+   xvp_part colon 20 ptdesc1 no-label skip(1) 
+   xvp_rule colon 20
+   xvp_ord_min colon 20
+   xvp_week colon 20
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -40,11 +41,23 @@ repeat with frame a:
          else do:
             display "" @ vdsort with frame a.
          end.
+         find first pt_mstr no-lock where pt_part = xvp_part no-error.
+			   if available pt_mstr then do:
+			   	  display pt_desc1 @ ptdesc1 with frame a.
+			   end. 
+			   else do:
+			   	  display "" @ ptdesc1 with frame a.
+			   end.
       end.
    end.
    if not can-find(first vd_mstr no-lock where vd_addr = input xvp_vend)
      then do:
      {pxmsg.i &MSGNUM=2 &ERRORLEVEL=3}
+      undo, retry.
+   end.
+   if not can-find(first pt_mstr no-lock where pt_part = input xvp_part)
+      then do:
+      {pxmsg.i &MSGNUM=16 &ERRORLEVEL=3}
       undo, retry.
    end.
    find first vd_mstr no-lock where vd_addr = input xvp_vend no-error.
@@ -53,6 +66,13 @@ repeat with frame a:
    end.
    else do:
       display "" @ vdsort with frame a.
+   end.
+   find first pt_mstr no-lock where pt_part = input xvp_part no-error.
+   if available pt_mstr then do:
+   	  display pt_desc1 @ ptdesc1 with frame a.
+   end. 
+   else do:
+   	  display "" @ ptdesc1 with frame a.
    end.
    /* ADD/MOD/DELETE  */
    find xvp_ctrl using xvp_vend where xvp_part = input xvp_part no-error.
@@ -68,10 +88,57 @@ repeat with frame a:
    ststatus = stline[2].
    status input ststatus.
    del-yn = no.
-
+	
+	 setx:
    do on error undo, retry:
       set xvp_rule xvp_ord_min xvp_week go-on("F5" "CTRL-D" ).
-
+			if index("MW",substring(xvp_rule,1,1)) = 0 then do:
+		  	 {pxmsg.i &MSGNUM=2479 &ERRORLEVEL=3}
+         undo, retry.
+		  end.
+		  if substring(xvp_rule,1,1) = "W" then do:
+		  	 assign ptdesc1 = substring(xvp_rule,2).
+		  	 del-yn = no.
+		  	 repeat: 
+		  	 	   if integer(substring(ptdesc1,1,index(ptdesc1,",") - 1)) > 6 or
+		  	 	   	  integer(substring(ptdesc1,1,index(ptdesc1,",") - 1)) < 0 
+		  	 	   then do:
+			  	 	   del-yn = yes.
+	         		 leave.
+		  	 	   end.
+		  	 	   assign ptdesc1 = substring(ptdesc1,index(ptdesc1,",") + 1).
+		  	 	   if index(ptdesc1,",") = 0 then do:
+		  	 	      if integer(ptdesc1) < 0 or integer(ptdesc1) > 6 then do:
+		  	 	      	 del-yn = yes.
+		  	 	      end.
+		  	 	   		leave.
+		  	 	   end.
+		  	 end.
+		  end.
+		  else if substring(xvp_rule,1,1) = "M" then do:
+		  	 assign ptdesc1 = substring(xvp_rule,2).
+		  	 del-yn = no.
+		  	 repeat: 
+		  	 	   if integer(substring(ptdesc1,1,index(ptdesc1,",") - 1)) > 28 or
+		  	 	   	  integer(substring(ptdesc1,1,index(ptdesc1,",") - 1)) < 0 
+		  	 	   then do:
+			  	 	   del-yn = yes.
+	         		 leave.
+		  	 	   end.
+		  	 	   assign ptdesc1 = substring(ptdesc1,index(ptdesc1,",") + 1).
+		  	 	   if index(ptdesc1,",") = 0 then do:
+		  	 	      if integer(ptdesc1) < 0 or integer(ptdesc1) > 28 then do:
+		  	 	      	 del-yn = yes.
+		  	 	      end.
+		  	 	   		leave.
+		  	 	   end.
+		  	 end.
+		  end.
+		  if del-yn then do:
+		  	  {pxmsg.i &MSGNUM=2479 &ERRORLEVEL=3}
+		  	  next-prompt xvp_rule with frame a.
+          undo, retry.
+		  end.
       /* DELETE */
       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
       then do:
