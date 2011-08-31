@@ -36,6 +36,8 @@ copy /y %svn%\xxvifile\p.cim %cim%\xxvifile.cim
 copy /y %svn%\xxqwmt\xx*.? %src%\
 copy /y %svn%\xxqwmt\*.cim %cim%\
 copy /y %svn%\xxbdpro\*.cim %cim%\
+copy /y %svn%\xxpincp\*.cim %cim%\
+copy /y %svn%\xxpincp\xx*.p %src%\
 copy /y %svn%\xxmsgiq.p %src%\
 copy /y %svn%\xxmsgmt.p %src%\
 

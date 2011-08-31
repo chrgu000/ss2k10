@@ -1,0 +1,22 @@
+@@batchload xxlbldmt.p
+"s_prod" "xxpincp.p" 
+"&PRODUCT" 
+@@end
+@@batchload xxlbldmt.p
+"d_prod" "xxpincp.p" 
+"&COPY" 
+@@end
+@@batchload xxlbldmt.p
+"d_desc" "xxpincp.p" 
+"COMMENT" 
+@@end
+@@batchload mgmsgmt.p
+"CH" 
+8922 
+"不可复制，已经存在相关数据" 
+@@end
+@@batchload mgmsgmt.p
+"CH" 
+8923 
+"源数据和目标数据完全相同,不可以复制" 
+@@end
