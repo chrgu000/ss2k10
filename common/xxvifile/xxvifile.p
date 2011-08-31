@@ -23,12 +23,10 @@ with frame a side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-
 ON LEAVE OF lngdir IN FRAME a /* Fill 1 */
 DO:
   assign lngdir.
-  for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p" and
-           qad_key3 = global_userid:
+  for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p":
       delete qad_wkfl.
   end.
   if lngdir = "" then assign lngdir:screen-value = ".".
