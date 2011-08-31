@@ -3,10 +3,8 @@
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
-/*注意：cim-showa.xla vba project password:rogercimshowa                     */
 
 {mfdtitle.i "110831.1"}
-&SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable part  like pt_part no-undo.
 define variable part1 like pt_part no-undo.
@@ -34,13 +32,7 @@ repeat:
 
 		if part1 = "" then part1 = hi_char.
 		if due = ? then due = low_date.
-		if due1 = ? then due1 = hi_date.
-  /*excel报表专用,不用再改程式名*/
-/*    if index(execname,".p") <> 0 then v_prgname = entry(1,execname,".p").  */
-/*    else do:                                                               */
-/*        message "错误:无效程式名格式" execname .                           */
-/*        undo,retry.                                                        */
-/*    end.                                                                   */
+		if due1 = ? then due1 = hi_date. 
 
     {gpselout.i &printtype = "printer"
                 &printwidth = 132
@@ -61,7 +53,11 @@ do on error undo, return error on endkey undo, return error:
 export delimiter "~t" getTermLabel("ITEM_NUMBER",18)
 										  getTermLabel("DESCRIPTION",18)
 										  getTermLabel("DUE_DATE",18)
-										  getTermLabel("QUANTITY" ,18).
+										  getTermLabel("DAY_OF_WEEK",18)
+										  getTermLabel("QUANTITY" ,18)
+										  getTermLabel("WEEK",18)
+										  getTermLabel("RULE",18)
+										  getTermLabel("STANDARD_PACK",18).
 FOR EACH mrp_det WHERE mrp_part >= part and mrp_part <= part1 and
          mrp_due_date >= due and mrp_due_date <= due1 and
          mrp_detail = "计划单" USE-INDEX mrp_part:
@@ -70,9 +66,18 @@ FOR EACH mrp_det WHERE mrp_part >= part and mrp_part <= part1 and
 	  if available pt_mstr then do:
 	  	 assign ptdesc = pt_desc1.
 	  end. 
-		export delimiter "~011" mrp_part ptdesc mrp_due_date mrp_qty.
+	  find first xvp_ctrl no-lock where xvp_part = mrp_part no-error.
+	  if availabl xvp_ctrl then do:
+	  	 export delimiter "~011" mrp_part ptdesc mrp_due_date 
+	  	 				weekday(mrp_due_date) - 1 mrp_qty xvp_week xvp_rule xvp_ord_min.
+	  end.
+	  else do:
+	     export delimiter "~011" mrp_part ptdesc mrp_due_date 
+	     				weekday(mrp_due_date) - 1 mrp_qty.
+	  end.
+		
 end.
-put unformatted skip(1) "报表结束"  skip .
+put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}

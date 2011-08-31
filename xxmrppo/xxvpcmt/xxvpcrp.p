@@ -3,10 +3,8 @@
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
-/*注意：cim-showa.xla vba project password:rogercimshowa                     */
 
 {mfdtitle.i "110831.1"}
-&SCOPED-DEFINE sosoiq_p_1 "Qty Open"
 
 define variable vend  like po_vend no-undo.
 define variable vend1 like po_vend no-undo.
@@ -34,13 +32,7 @@ repeat:
 
     if vend1 = "" then vend1 = hi_char.
 		if part1 = "" then part1 = hi_char.
-  /*excel报表专用,不用再改程式名*/
-/*    if index(execname,".p") <> 0 then v_prgname = entry(1,execname,".p").  */
-/*    else do:                                                               */
-/*        message "错误:无效程式名格式" execname .                           */
-/*        undo,retry.                                                        */
-/*    end.                                                                   */
-
+ 
     {gpselout.i &printtype = "printer"
                 &printwidth = 132
                 &pagedflag = "nopage"
@@ -80,7 +72,7 @@ for each xvp_ctrl no-lock where xvp_vend >= vend and xvp_vend <= vend1 and
 		export delimiter "~011" xvp_vend vdsort xvp_part ptdesc xvp_rule
 					 xvp_ord_min xvp_week.
 end.
-put unformatted skip(1) "报表结束"  skip .
+put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}

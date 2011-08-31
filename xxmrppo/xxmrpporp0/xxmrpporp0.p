@@ -9,11 +9,11 @@
 
 define variable site like si_site.
 define variable site1 like si_site.
-define variable part like pt_part.
-define variable part1 like pt_part.
+define variable part like pt_part INITIAL "MHS843-410-0-CK3CR".
+define variable part1 like pt_part INITIAL "MHS843-410-0-CK3CR".
 define variable due as date.
 define variable vend like vd_addr.
-define variable buyer like pt_buyer.
+define variable buyer like pt_buyer /* INITIAL "4RSA" */ .
 define variable area as character format "x(1)".
 define variable type as character format "x(1)" initial "W".
 define variable typedesc as character format "x(40)".
@@ -21,12 +21,15 @@ define variable areaDesc as character format "x(40)".
 define variable date1 as date.
 define variable sendDate as date.
 define variable qty_nextMth like pod_qty_ord.
+define variable act as logical initial yes. 
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
     fields tpo_part like pt_part
     fields tpo_due  like po_due_date
+    fields tpo_dte	as date
+    fields tpo_flag as character
     fields tpo_qty like pod_qty_ord
     fields tpo_qty_req like pod_qty_ord
     fields tpo_qty_mth1 like pod_qty_ord
@@ -53,6 +56,7 @@ form
    vend  colon 25
    area  colon 25 areaDesc no-label
    buyer colon 25 skip(1)
+   act   colon 25 skip(1)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -67,7 +71,6 @@ if available si_mstr then do:
    assign site = si_site
           site1 = si_site.
 end.
-assign buyer = "4RSA".
 /* REPORT BLOCK */
 
 {wbrp01.i}
@@ -77,7 +80,7 @@ repeat:
    if part1 = hi_char then part1 = "".
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 type due vend area buyer with frame a.
+      update site site1 part part1 type due vend area buyer act with frame a.
 
    if index("W,M",type) = 0 then do:
       {pxmsg.i &MSGNUM=4211 &ERRORLEVEL=3}
@@ -87,7 +90,8 @@ repeat:
 
 
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 type due vend area buyer " &frm = "a"}
+      &fields = " site site1 part part1 type due vend area buyer act"
+      &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -140,7 +144,6 @@ repeat:
       run getOrdDay(input pt_site, input xvp_rule,
                     input mrp_due_date,input xvp_week,
                     output date1,output sendDate).
-      /* SET EXTERNAL LABELS */
       find first tmp_po exclusive-lock where tpo_part = mrp_part
              and tpo_vend = xvp_vend and tpo_due = sendDate no-error.
       if available tmp_po then do:
@@ -151,7 +154,11 @@ repeat:
         assign tpo_vend = xvp_vend
                tpo_part = pt_part
                tpo_due = sendDate
+               tpo_dte = date1
                tpo_qty = mrp_qty.
+        if tpo_due < tpo_dte then assign tpo_flag = "0".
+        else if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6 
+        		then assign tpo_flag = "1".
       end.
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
@@ -253,6 +260,18 @@ FOR EACH pt_mstr no-lock where
        end.
     end.
 END.
+
+/*产生单号*/
+assign areaDesc = "".
+for each tmp_po exclusive-lock where tpo_qty > 0 and tpo_flag <> ""
+		break by tpo_vend by tpo_flag by tpo_due:
+		if first-of(tpo_flag) then do:
+			 run getPoNumber(input today,input tpo_vend,output areaDesc).
+	  end.
+	  assign tpo_nbr = areaDesc.
+end.
+assign areaDesc = "".
+
 export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
@@ -262,10 +281,10 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("STANDARD_PACK",12)
                         getTermLabel("MONTH_GUIDE1",12)
                         getTermLabel("MONTH_GUIDE2",12).
-for each tmp_po no-lock,
+for each tmp_po no-lock where tpo_nbr <> "" or not act,
     each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
     export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
-                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2.
+                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2 tpo_dte tpo_flag.
 end.
 
 /* REPORT TRAILER  */
@@ -287,7 +306,7 @@ FUNCTION i2c RETURNS CHARACTER (iNumber AS INTEGER):
     ELSE
        RETURN CHR(87 + iNumber).
 END FUNCTION.
-    
+
 PROCEDURE getPoNumber:
 /*------------------------------------------------------------------------------
     Purpose: 计算PO单号
@@ -366,25 +385,16 @@ procedure getOrdDay:
              startDay = startDay + 1.
          END.
      END.
-     startDay = startDay + integer(ENTRY(1 , vrule , ",")) - 1.
+     startDay = startDay + integer(ENTRY(1 , vrule , ",")) - 1 
+     					+ (iWeek - 1) * 7.
      oDateStart = startDay.
      IF idate <= startDay THEN DO:
          ASSIGN odate = idate.
      END.
      ELSE DO:
         odate = idate.
-        repeat-label01:
         REPEAT:
-            ASSIGN vrule = substring(iRule,2).
-            REPEAT:
-                IF INTEGER(substring(vrule,1,INDEX(vrule,",") - 1)) =
-                   weekday(odate) - 1 THEN DO:
-                   LEAVE repeat-label01.
-                END.
-                ASSIGN vrule = SUBSTRING(vrule,INDEX(vrule,",") + 1).
-                IF INDEX(vrule,",") = 0 THEN LEAVE.
-            END.
-            IF INTEGER(vRule) = WEEKDAY(odate) - 1 THEN LEAVE.
+            if index(irule,string(weekday(odate) - 1,"9")) > 0 then leave.
             odate = odate - 1.
         END.
      END.
