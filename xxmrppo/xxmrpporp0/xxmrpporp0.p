@@ -9,11 +9,11 @@
 
 define variable site like si_site.
 define variable site1 like si_site.
-define variable part like pt_part INITIAL "MHS843-410-0-CK3CR".
-define variable part1 like pt_part INITIAL "MHS843-410-0-CK3CR".
+define variable part like pt_part /* INITIAL "MHS843-410-0-CK3CR" */.
+define variable part1 like pt_part /* INITIAL "MHS843-410-0-CK3CR"  */.
 define variable due as date.
 define variable vend like vd_addr.
-define variable buyer like pt_buyer /* INITIAL "4RSA" */ .
+define variable buyer like pt_buyer INITIAL "4RSA" .
 define variable area as character format "x(1)".
 define variable type as character format "x(1)" initial "W".
 define variable typedesc as character format "x(40)".
@@ -21,14 +21,14 @@ define variable areaDesc as character format "x(40)".
 define variable date1 as date.
 define variable sendDate as date.
 define variable qty_nextMth like pod_qty_ord.
-define variable act as logical initial yes. 
+define variable act as logical initial yes.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
     fields tpo_part like pt_part
     fields tpo_due  like po_due_date
-    fields tpo_dte	as date
+    fields tpo_dte  as date
     fields tpo_flag as character
     fields tpo_qty like pod_qty_ord
     fields tpo_qty_req like pod_qty_ord
@@ -157,8 +157,8 @@ repeat:
                tpo_dte = date1
                tpo_qty = mrp_qty.
         if tpo_due < tpo_dte then assign tpo_flag = "0".
-        else if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6 
-        		then assign tpo_flag = "1".
+        else if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6
+            then assign tpo_flag = "1".
       end.
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
@@ -264,11 +264,11 @@ END.
 /*²úÉúµ¥ºÅ*/
 assign areaDesc = "".
 for each tmp_po exclusive-lock where tpo_qty > 0 and tpo_flag <> ""
-		break by tpo_vend by tpo_flag by tpo_due:
-		if first-of(tpo_flag) then do:
-			 run getPoNumber(input today,input tpo_vend,output areaDesc).
-	  end.
-	  assign tpo_nbr = areaDesc.
+    break by tpo_vend by tpo_flag by tpo_due:
+    if first-of(tpo_flag) then do:
+       run getPoNumber(input today,input tpo_vend,output areaDesc).
+    end.
+    assign tpo_nbr = areaDesc.
 end.
 assign areaDesc = "".
 
@@ -284,7 +284,7 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
 for each tmp_po no-lock where tpo_nbr <> "" or not act,
     each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
     export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
-                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2 tpo_dte tpo_flag.
+                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2.
 end.
 
 /* REPORT TRAILER  */
@@ -326,25 +326,41 @@ PROCEDURE getPoNumber:
      assign oNbr = substring(iVendor,1,2).
   end.
   assign oNbr = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + oNbr.
+ /*******************
   find last po_mstr no-lock where po_nbr begins oNbr no-error.
   if available po_mstr then do:
-       find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
+      find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
                   qad_key2 = oNbr no-error.
       if available qad_wkfl then do:
-         assign qad_intfld[1] = integer(substring(po_nbr,6)).
+         assign qad_intfld[1] = integer(substring(po_nbr,6))
+                qad_key3 = substring(po_nbr,6).
       end.
   end.
+  else do:
+        find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
+                  qad_key2 = oNbr no-error.
+        if not available qad_wkfl then do:
+            create qad_wkfl.
+            assign qad_key1 = "xxmrpporp0.p"
+                   qad_key2 = oNbr.
+        end.
+        assign qad_intfld[1] = 0
+               qad_key3 = "0".
+  end.
+  **********/
   find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
        qad_key2 = oNbr no-error.
   if available qad_wkfl then do:
      assign intI = qad_intfld[1] + 1
-            qad_intfld[1] = qad_intfld[1] + 1.
+            qad_intfld[1] = qad_intfld[1] + 1
+            qad_key3 = string(qad_intfld[1] + 1).
   end.
   else do:
       create qad_wkfl.
       assign qad_key1 = "xxmrpporp0.p"
              qad_key2 = oNbr
-             qad_intfld[1] = 0.
+             qad_intfld[1] = 0
+             qad_key3 = "0".
   end.
   release qad_wkfl.
   assign oNbr = oNbr + substring("0000" + string(inti),
@@ -385,8 +401,8 @@ procedure getOrdDay:
              startDay = startDay + 1.
          END.
      END.
-     startDay = startDay + integer(ENTRY(1 , vrule , ",")) - 1 
-     					+ (iWeek - 1) * 7.
+     startDay = startDay + integer(ENTRY(1 , vrule , ",")) - 1
+              + (iWeek - 1) * 7.
      oDateStart = startDay.
      IF idate <= startDay THEN DO:
          ASSIGN odate = idate.
