@@ -1,11 +1,11 @@
 /* xxmrpporp0.i - vender mrp po report                                       */
-/* revision: 110826.1   created on: 20110826   by: zhang yun                 */
+/* revision: 110830.1   created on: 20110830   by: zhang yun                 */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110826.1"}
+{mfdtitle.i "110830.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -14,10 +14,24 @@ define variable part1 like pt_part.
 define variable due as date.
 define variable vend like vd_addr.
 define variable buyer like pt_buyer.
+define variable area as character format "x(1)".
 define variable type as character format "x(1)" initial "W".
-define variable typedesc as character format "x(20)".
+define variable typedesc as character format "x(40)".
+define variable areaDesc as character format "x(40)".
 define variable date1 as date.
 define variable sendDate as date.
+define variable qty_nextMth like pod_qty_ord.
+
+define temp-table tmp_po
+    fields tpo_nbr like po_nbr
+    fields tpo_vend like vd_addr
+    fields tpo_part like pt_part
+    fields tpo_due  like po_due_date
+    fields tpo_qty like pod_qty_ord
+    fields tpo_qty_req like pod_qty_ord
+    fields tpo_qty_mth1 like pod_qty_ord
+    fields tpo_qty_mth2 like pod_qty_ord
+    index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
 
 DEFINE TEMP-TABLE tmp_int
     FIELDS ti_bk AS CHARACTER
@@ -37,13 +51,15 @@ form
    type  colon 25 typeDesc no-label
    due   colon 25
    vend  colon 25
+   area  colon 25 areaDesc no-label
    buyer colon 25 skip(1)
-   
+
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-assign typeDesc = getTermLabel("XVP_TYPE_DESC",24).
-display typeDesc with frame a.
+assign typeDesc = getTermLabel("XVP_TYPE_DESC",40).
+assign areaDesc = getTermLabel("XVP_AREA_DESC",40).
+display typeDesc areaDesc with frame a.
 assign due = date(month(today),28,year(today)).
 assign due = date(month(due + 5),1,year(due + 5)) - 1.
 find first si_mstr no-lock no-error.
@@ -61,17 +77,17 @@ repeat:
    if part1 = hi_char then part1 = "".
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 type due vend buyer with frame a.
-	 
-	 if index("W,M",type) = 0 then do:
-	 	  {pxmsg.i &MSGNUM=4211 &ERRORLEVEL=3}
-	 	  next-prompt type with frame a.
-	 	  undo,retry.
-	 end.	
+      update site site1 part part1 type due vend area buyer with frame a.
 
-		
+   if index("W,M",type) = 0 then do:
+      {pxmsg.i &MSGNUM=4211 &ERRORLEVEL=3}
+      next-prompt type with frame a.
+      undo,retry.
+   end.
+
+
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 type due vend buyer " &frm = "a"}
+      &fields = " site site1 part part1 type due vend area buyer " &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -106,33 +122,156 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-   {mfphead.i}
+  /* {mfphead.i} */
+  empty temp-table tmp_po no-error.
 
    FOR EACH pt_mstr no-lock where
-            pt_part >= part and pt_part <= part1 and 
+            pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
             and (pt_buyer = buyer or buyer = "")
             and pt_site >= site and (pt_site <= site1 or site1 = ""),
        EACH xvp_ctrl where xvp_part = pt_part and
-       		  substring(xvp_rule,1,1) = type and 
-       		 (xvp_vend = vend or vend = ""),
-       EACH mrp_det WHERE mrp_part = pt_part and 
-       	    mrp_due_date <= (Due + 30) and
-            mrp_detail = "计划单" USE-INDEX mrp_part
-    with frame b width 240:
-      setFrameLabels(frame b:handle).
-			run getOrdDay(input pt_site, input xvp_rule, 
-									  input mrp_due_date,input xvp_week,
-									  output date1,output sendDate).
+            substring(xvp_rule,1,1) = type and
+           (xvp_vend = vend or vend = "" ) and
+           (substring(xvp_vend,1,1) = area or area = ""),
+       EACH mrp_det WHERE mrp_part = pt_part and
+            mrp_due_date <= (Due + 30) and
+            mrp_detail = "计划单" USE-INDEX mrp_part:
+      run getOrdDay(input pt_site, input xvp_rule,
+                    input mrp_due_date,input xvp_week,
+                    output date1,output sendDate).
       /* SET EXTERNAL LABELS */
-      display pt_part xvp_vend mrp_qty mrp_due_date sendDate xvp_rule.
-
-      {mfrpchk.i}
-
+      find first tmp_po exclusive-lock where tpo_part = mrp_part
+             and tpo_vend = xvp_vend and tpo_due = sendDate no-error.
+      if available tmp_po then do:
+         assign tpo_qty = tpo_qty + mrp_qty.
+      end.
+      else do:
+        create tmp_po.
+        assign tpo_vend = xvp_vend
+               tpo_part = pt_part
+               tpo_due = sendDate
+               tpo_qty = mrp_qty.
+      end.
+  /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
 
-   /* REPORT TRAILER  */
-   {mfrtrail.i}
+/*计算最小包装量*/
+for each tmp_po exclusive-lock:
+    find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
+               tpo_part = xvp_part no-error.
+    if available xvp_ctrl then do:
+       IF tpo_qty MODULO xvp_ord_min = 0 then do:
+            assign tpo_qty_req =
+                  (truncate(tpo_qty / xvp_ord_min,0)) * xvp_ord_min.
+       end.
+       else do:
+            assign tpo_qty_req =
+                  (truncate(tpo_qty / xvp_ord_min,0) + 1) * xvp_ord_min.
+       end.
+    end.
+end.
+
+/*计算下月预示*/
+assign sendDate = date(month(today),28,year(today)) + 5.
+FOR EACH pt_mstr no-lock where
+         pt_part >= part and pt_part <= part1 and
+         substring(pt_part,1,1) <> "X"
+         and (pt_buyer = buyer or buyer = "")
+         and pt_site >= site and (pt_site <= site1 or site1 = ""),
+    EACH xvp_ctrl where xvp_part = pt_part and
+          substring(xvp_rule,1,1) = type and
+         (xvp_vend = vend or vend = "" ) and
+         (substring(xvp_vend,1,1) = area or area = ""),
+    EACH mrp_det WHERE mrp_part = pt_part and
+         mrp_due_date <= (Due + 120) and
+         month(mrp_due_date) = month(sendDate) and
+         mrp_detail = "计划单" USE-INDEX mrp_part
+    break by xvp_vend by mrp_part:
+    if first-of(mrp_part) then do:
+       assign qty_nextMth = 0.
+    end.
+       assign qty_nextMth = qty_nextMth + mrp_qty.
+    if last-of(mrp_part) then do:
+       if qty_nextMth > 0 then do:
+          if can-find(first tmp_po where tpo_vend = xvp_vend
+                       and tpo_part = mrp_part) then do:
+             for each tmp_po exclusive-lock where tpo_vend = xvp_vend
+                       and tpo_part = mrp_part:
+                 assign tpo_qty_mth1 = qty_nextMth.
+             end.
+          end.
+          else do:
+             create tmp_po.
+             assign tpo_vend = xvp_vend
+                    tpo_part = pt_part
+                    tpo_due = date(month(sendDate),1,year(sendDate))
+                    tpo_qty = 0
+                    tpo_qty_mth1 = qty_nextMth.
+          end.
+       end.
+    end.
+END.
+
+/*计算下下月预示*/
+assign sendDate = sendDate + 31.
+FOR EACH pt_mstr no-lock where
+         pt_part >= part and pt_part <= part1 and
+         substring(pt_part,1,1) <> "X"
+         and (pt_buyer = buyer or buyer = "")
+         and pt_site >= site and (pt_site <= site1 or site1 = ""),
+    EACH xvp_ctrl where xvp_part = pt_part and
+          substring(xvp_rule,1,1) = type and
+         (xvp_vend = vend or vend = "" ) and
+         (substring(xvp_vend,1,1) = area or area = ""),
+    EACH mrp_det WHERE mrp_part = pt_part and
+         mrp_due_date <= (Due + 120) and
+         month(mrp_due_date) = month(sendDate) and
+         mrp_detail = "计划单" USE-INDEX mrp_part
+    break by xvp_vend by mrp_part:
+    if first-of(mrp_part) then do:
+       assign qty_nextMth = 0.
+    end.
+       assign qty_nextMth = qty_nextMth + mrp_qty.
+    if last-of(mrp_part) then do:
+       if qty_nextMth > 0 then do:
+          if can-find(first tmp_po where tpo_vend = xvp_vend
+                       and tpo_part = mrp_part) then do:
+             for each tmp_po exclusive-lock where tpo_vend = xvp_vend
+                       and tpo_part = mrp_part:
+                 assign tpo_qty_mth2 = qty_nextMth.
+             end.
+          end.
+          else do:
+             create tmp_po.
+             assign tpo_vend = xvp_vend
+                    tpo_part = pt_part
+                    tpo_due = date(month(sendDate),1,year(sendDate))
+                    tpo_qty = 0
+                    tpo_qty_mth2 = qty_nextMth.
+          end.
+       end.
+    end.
+END.
+export delimiter "~011" getTermLabel("PO_NUMBER",12)
+                        getTermLabel("SUPPLIER",12)
+                        getTermLabel("ITEM_NUMBER",12)
+                        getTermLabel("DUE_DATE",12)
+                        getTermLabel("QUANTITY_RECEIVED",12)
+                        getTermLabel("QUANTITY",12)
+                        getTermLabel("STANDARD_PACK",12)
+                        getTermLabel("MONTH_GUIDE1",12)
+                        getTermLabel("MONTH_GUIDE2",12)
+                        skip.
+for each tmp_po no-lock,
+    each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
+    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
+                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2.
+end.
+
+/* REPORT TRAILER  */
+/*   {mfrtrail.i} */
+  {mfreset.i}
 
 end.
 
@@ -158,7 +297,6 @@ procedure getOrdDay:
 /*   DEFINE VARIABLE j AS INTEGER. */
 
   ASSIGN vrule = substring(iRule,2).
-
 
   if substring(iRule,1,1) = "W" then do:
      IF WEEKDAY(TODAY) = 2 THEN DO:
@@ -259,7 +397,7 @@ procedure getOrdDay:
       END.
       end. /*if month(idate) = month(today) else do:*/
   end.  /* if substring(iRule,1,1) = "M" then do: */
-      /* 如果送货日期为节假日则推到上一个工作日 */
+      /* 如果送货日期为节假日则提前到上一个工作日 */
   REPEAT: /*假日*/
      IF CAN-FIND(FIRST hd_mstr NO-LOCK WHERE
                        hd_site = isite AND hd_date = odate) THEN DO:
@@ -269,7 +407,7 @@ procedure getOrdDay:
          LEAVE.
      END.
   END. /* REPEAT: 假日*/
-	if odate < today then do:
-		 assign odate = today.
+  if odate < today then do:
+     assign odate = today.
   end.
 end procedure.

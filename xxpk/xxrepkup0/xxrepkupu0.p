@@ -240,8 +240,14 @@ define variable ladnbr like lad_nbr.
        else do:
           assign vqty = xxwa_qty_req - vqty.
        end.
-       assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult.
-       assign vqty = (truncate(vqty / pt_ord_mult,0) + 1) * pt_ord_mult - vqty.
+       if vqty MODULO pt_ord_mult = 0 then do:
+          assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0)) * pt_ord_mult.
+       end.
+       else do:
+       	  assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) 
+       	  								    * pt_ord_mult.
+       end.
+       assign vqty = xxwa_qty_pln - vqty.
     end.
 
 
