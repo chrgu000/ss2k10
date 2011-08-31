@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110830.1"}
+{mfdtitle.i "110831.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -111,7 +111,7 @@ repeat:
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "printer"
                &printWidth = 240
-               &pagedFlag = " "
+               &pagedFlag = "nopage"
                &stream = " "
                &appendToFile = " "
                &streamedOutputToTerminal = " "
@@ -257,12 +257,11 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
                         getTermLabel("DUE_DATE",12)
-                        getTermLabel("QUANTITY_RECEIVED",12)
-                        getTermLabel("QUANTITY",12)
+                        getTermLabel("RECEIVED_QTY",12)
+                        getTermLabel("MRP_QUANTITY",12)
                         getTermLabel("STANDARD_PACK",12)
                         getTermLabel("MONTH_GUIDE1",12)
-                        getTermLabel("MONTH_GUIDE2",12)
-                        skip.
+                        getTermLabel("MONTH_GUIDE2",12).
 for each tmp_po no-lock,
     each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
     export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
@@ -276,6 +275,62 @@ end.
 end.
 
 {wbrp04.i &frame-spec = a}
+
+FUNCTION i2c RETURNS CHARACTER (iNumber AS INTEGER):
+/*------------------------------------------------------------------------------
+    Purpose: 将数字转换为0~9,a~z.
+      Notes: 输入的数字在0-36之间MOUELO.
+------------------------------------------------------------------------------*/
+    assign iNumber = iNumber MODULO 36.
+    IF iNumber < 10 THEN
+       RETURN CHR(48 + iNumber).
+    ELSE
+       RETURN CHR(87 + iNumber).
+END FUNCTION.
+    
+PROCEDURE getPoNumber:
+/*------------------------------------------------------------------------------
+    Purpose: 计算PO单号
+      Notes:
+------------------------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER iDate AS DATE.
+  DEFINE INPUT PARAMETER iVendor LIKE VD_ADDR.
+  DEFINE OUTPUT PARAMETER oNbr as character.
+
+  DEFINE Variable intI as integer.
+
+  find first vd_mstr no-lock where vd_addr = ivendor no-error.
+  if available vd_mstr then do:
+     assign oNbr = substring(vd_sort,1,2).
+  end.
+  else do:
+     assign oNbr = substring(iVendor,1,2).
+  end.
+  assign oNbr = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + oNbr.
+  find last po_mstr no-lock where po_nbr begins oNbr no-error.
+  if available po_mstr then do:
+       find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
+                  qad_key2 = oNbr no-error.
+      if available qad_wkfl then do:
+         assign qad_intfld[1] = integer(substring(po_nbr,6)).
+      end.
+  end.
+  find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
+       qad_key2 = oNbr no-error.
+  if available qad_wkfl then do:
+     assign intI = qad_intfld[1] + 1
+            qad_intfld[1] = qad_intfld[1] + 1.
+  end.
+  else do:
+      create qad_wkfl.
+      assign qad_key1 = "xxmrpporp0.p"
+             qad_key2 = oNbr
+             qad_intfld[1] = 0.
+  end.
+  release qad_wkfl.
+  assign oNbr = oNbr + substring("0000" + string(inti),
+                       length("0000" + string(inti)) - 2).
+END PROCEDURE.
 
 procedure getOrdDay:
 /*------------------------------------------------------------------------------
