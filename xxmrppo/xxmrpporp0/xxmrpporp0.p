@@ -170,17 +170,22 @@ for each tmp_po exclusive-lock break by tpo_vend by tpo_part by tpo_due:
        assign qtytemp = 0.
     end.
     qtytemp = tpo_qty - qtytemp.
-    find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
-               tpo_part = xvp_part no-error.
-    if available xvp_ctrl then do:
-       IF qtytemp MODULO xvp_ord_min = 0 then do:
-            assign tpo_qty_req =
-                  (truncate(qtytemp / xvp_ord_min,0)) * xvp_ord_min.
+    if qtyTemp > 0 then do:
+       find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
+                  tpo_part = xvp_part no-error.
+       if available xvp_ctrl then do:
+          IF qtytemp MODULO xvp_ord_min = 0 then do:
+               assign tpo_qty_req =
+                     (truncate(qtytemp / xvp_ord_min,0)) * xvp_ord_min.
+          end.
+          else do:
+               assign tpo_qty_req =
+                     (truncate(qtytemp / xvp_ord_min,0) + 1) * xvp_ord_min.
+          end.
        end.
-       else do:
-            assign tpo_qty_req =
-                  (truncate(qtytemp / xvp_ord_min,0) + 1) * xvp_ord_min.
-       end.
+    end.
+    else do:
+       assign tpo_qty_req = 0.
     end.
     qtytemp = tpo_qty_req - qtytemp.
 end.
