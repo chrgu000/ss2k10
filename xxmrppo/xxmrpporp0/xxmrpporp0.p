@@ -1,12 +1,12 @@
 /* xxmrpporp0.i - vender mrp po report                                       */
-/* revision: 110830.1   created on: 20110830   by: zhang yun                 */
+/* revision: 110901.1   created on: 20110901   by: zhang yun                 */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110831.1"}
-
+{mfdtitle.i "110901.1"}
+{xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
 define variable part like pt_part /*INITIAL "MHTA03-NE0-10-CK"*/.
@@ -23,6 +23,7 @@ define variable sendDate as date.
 define variable qty_nextMth like pod_qty_ord.
 define variable act as logical initial yes.
 define variable qtytemp as decimal.
+define variable qtytemp1 as decimal.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -167,27 +168,17 @@ repeat:
 /*计算最小包装量*/
 for each tmp_po exclusive-lock break by tpo_vend by tpo_part by tpo_due:
     if first-of(tpo_part) then do:
-       assign qtytemp = 0.
-    end.
-    qtytemp = tpo_qty - qtytemp.
-    if qtyTemp > 0 then do:
+       assign qtytemp = 0
+       				qtytemp1 = 1.
        find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
                   tpo_part = xvp_part no-error.
        if available xvp_ctrl then do:
-          IF qtytemp MODULO xvp_ord_min = 0 then do:
-               assign tpo_qty_req =
-                     (truncate(qtytemp / xvp_ord_min,0)) * xvp_ord_min.
-          end.
-          else do:
-               assign tpo_qty_req =
-                     (truncate(qtytemp / xvp_ord_min,0) + 1) * xvp_ord_min.
-          end.
+       		assign qtytemp1 = xvp_ord_min.
        end.
-    end.
-    else do:
-       assign tpo_qty_req = 0.
-    end.
-    qtytemp = tpo_qty_req - qtytemp.
+    end. 
+    run MinPackQty(input tpo_qty , input qtytemp1,
+                   input-output qtytemp, 
+                   output tpo_qty_req). 
 end.
 
 /*计算下月预示*/
