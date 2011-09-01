@@ -1,17 +1,12 @@
 /* xxc.p - compile procedure                                                 */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 0BYJ LAST MODIFIED: 11/19/10 BY: zy                             */
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10 BY: zy language be lower case      */
-/* REVISION: 0CYT LAST MODIFIED: 12/29/10 BY: zy def os def field rec path   */
-/* REVISION: 0CYV LAST MODIFIED: 12/31/10 BY: zy trim path                   */
-/* REVISION: 14Y1 LAST MODIFIED: 01/04/11 BY: zy check xrcpath exists        */
 /* REVISION: 14YP LAST MODIFIED: 04/25/11 BY: zy Add EB common            *EB*/
-/* REVISION: 18YP LAST MODIFIED: 08/25/11 BY: zy Add .t comp function        */
-/* REVISION: 18YU LAST MODIFIED: 08/30/11 BY: zy fix log display bug         */
+/* REVISION: 19Y2 LAST MODIFIED: 09/02/11 BY: zy fix mfgutil.ini get methed  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "18YU"}
+{mfdtitle.i "19Y2"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -269,10 +264,11 @@ ASSIGN vfile = ""
 /* ÕÒmfgutil.iniµµ */
 DO WHILE index(vpropath,",") > 0:
     ASSIGN vdir = substring(vpropath,1,INDEX(vpropath,",") - 1).
-    if index(vdir,"src") > 0 or index(vdir,"bbi") > 0 or index(vdir,"xrc") > 0
-    then do:
+    if index(vdir,"bbi") > 0 then do:
        assign vfile = substring(vdir,1,length(vdir) - 3) + "mfgutil.ini".
-       IF SEARCH(vfile) <> ? and substring(vfile,1,1) <> "." THEN DO:
+       IF SEARCH(vfile) <> ? and substring(vfile,1,1) <> "." and
+          index(vpropath,substring(vdir,1,length(vdir) - 3) + "xrc") > 0
+       THEN DO:
           leave.
        END.
     END.
