@@ -9,11 +9,11 @@
 
 define variable site like si_site.
 define variable site1 like si_site.
-define variable part like pt_part /* INITIAL "MHS843-410-0-CK3CR" */.
-define variable part1 like pt_part /* INITIAL "MHS843-410-0-CK3CR"  */.
+define variable part like pt_part /*INITIAL "MHTA03-NE0-10-CK"*/.
+define variable part1 like pt_part /*INITIAL "MHTA03-NE0-10-CK"*/.
 define variable due as date.
 define variable vend like vd_addr.
-define variable buyer like pt_buyer INITIAL "4RSA" .
+define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable type as character format "x(1)" initial "W".
 define variable typedesc as character format "x(40)".
@@ -22,6 +22,7 @@ define variable date1 as date.
 define variable sendDate as date.
 define variable qty_nextMth like pod_qty_ord.
 define variable act as logical initial yes.
+define variable qtytemp as decimal.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -164,19 +165,24 @@ repeat:
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
 
 /*计算最小包装量*/
-for each tmp_po exclusive-lock:
+for each tmp_po exclusive-lock break by tpo_vend by tpo_part by tpo_due:
+    if first-of(tpo_part) then do:
+       assign qtytemp = 0.
+    end.
+    qtytemp = tpo_qty - qtytemp.
     find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
                tpo_part = xvp_part no-error.
     if available xvp_ctrl then do:
-       IF tpo_qty MODULO xvp_ord_min = 0 then do:
+       IF qtytemp MODULO xvp_ord_min = 0 then do:
             assign tpo_qty_req =
-                  (truncate(tpo_qty / xvp_ord_min,0)) * xvp_ord_min.
+                  (truncate(qtytemp / xvp_ord_min,0)) * xvp_ord_min.
        end.
        else do:
             assign tpo_qty_req =
-                  (truncate(tpo_qty / xvp_ord_min,0) + 1) * xvp_ord_min.
+                  (truncate(qtytemp / xvp_ord_min,0) + 1) * xvp_ord_min.
        end.
     end.
+    qtytemp = tpo_qty_req - qtytemp.
 end.
 
 /*计算下月预示*/
