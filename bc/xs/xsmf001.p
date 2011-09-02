@@ -1966,7 +1966,7 @@ IF OkToRun = yes then RUN    xsrep09.p.
 
 
                 /* LABEL 6 - START */
-                  L11406 = "" .
+                  L11406 = "销售出货(台车).46" .
                 display L11406          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 6 - END */
         Update V1140
