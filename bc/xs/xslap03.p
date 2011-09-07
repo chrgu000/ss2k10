@@ -1010,8 +1010,14 @@ If AVAILABLE ( pt_mstr )  then
                put unformat trim(V1300) + "@" + trim(V1500) skip.
                put unformat pt_part skip.  /*图号*/
                put unformat pt_um skip. /*单位*/
-               put unformat pt_desc1 skip. /*名称*/
-               put unformat pt_desc2 skip.
+               if pt_desc1 <> "" then 
+               		put unformat pt_desc1 skip. /*名称*/
+               else 
+               		put skip(1).
+               if pt_desc2 <> "" then
+               		put unformat pt_desc2 skip.
+               else
+               		put skip(1).
                put unformat trim(V1300) + "@" + trim(V1500) skip.
                put unformat today skip.
                put unformat v9010 skip.

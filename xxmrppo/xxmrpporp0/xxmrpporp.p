@@ -11,6 +11,7 @@ define variable part1 like pt_part no-undo.
 define variable due   as   date no-undo.
 define variable due1  as   date no-undo.
 define variable ptdesc like pt_desc1 no-undo.
+define variable vdchr03 as character no-undo.
 
 form
    skip(.2)
@@ -52,27 +53,34 @@ do on error undo, return error on endkey undo, return error:
  
 export delimiter "~t" getTermLabel("ITEM_NUMBER",18)
 										  getTermLabel("DESCRIPTION",18)
-										  getTermLabel("DUE_DATE",18)
+										  getTermLabel("SUPPLIER",18)
+ 										  getTermLabel("DUE_DATE",18)
 										  getTermLabel("DAY_OF_WEEK",18)
 										  getTermLabel("QUANTITY" ,18)
 										  getTermLabel("WEEK",18)
-										  getTermLabel("RULE",18)
+										  getTermLabel("SHIP_TERMS",18)
 										  getTermLabel("STANDARD_PACK",18).
 FOR EACH mrp_det WHERE mrp_part >= part and mrp_part <= part1 and
          mrp_due_date >= due and mrp_due_date <= due1 and
          mrp_detail = "¼Æ»®µ¥" USE-INDEX mrp_part:
-		assign ptdesc = "".
+		assign ptdesc = "" vdchr03 = "".
 	  find first pt_mstr no-lock where pt_part = mrp_part no-error.
 	  if available pt_mstr then do:
 	  	 assign ptdesc = pt_desc1.
 	  end. 
+	  find first vd_mstr no-lock where vd_addr = pt_vend no-error.
+	  if available vd_mstr then do:
+	  	 assign vdchr03 = vd__chr03.
+	  end.
 	  find first xvp_ctrl no-lock where xvp_part = mrp_part no-error.
 	  if availabl xvp_ctrl then do:
-	  	 export delimiter "~011" mrp_part ptdesc mrp_due_date 
-	  	 				weekday(mrp_due_date) - 1 mrp_qty xvp_week xvp_rule xvp_ord_min.
+	  	 export delimiter "~011" mrp_part ptdesc pt_vend mrp_due_date 
+	  	 				weekday(mrp_due_date) - 1 mrp_qty xvp_week 
+	  	 				if vdchr03 <> "" then vdchr03 else xvp_rule
+	  	 			  xvp_ord_min.
 	  end.
 	  else do:
-	     export delimiter "~011" mrp_part ptdesc mrp_due_date 
+	     export delimiter "~011" mrp_part ptdesc pt_vend mrp_due_date 
 	     				weekday(mrp_due_date) - 1 mrp_qty.
 	  end.
 		

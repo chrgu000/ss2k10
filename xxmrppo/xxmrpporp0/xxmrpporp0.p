@@ -168,8 +168,23 @@ repeat:
                tpo_dte = date1
                tpo_qty = mrp_qty.
         if tpo_due < tpo_dte then assign tpo_flag = "0".
-        else if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6
+        else do: 
+        if substring(crule,1,1) = "W" then do:
+           if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6
             then assign tpo_flag = "1".
+        end.
+        else if substring(crule,1,1) = "M" then do:
+        	 if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 7
+              then assign tpo_flag = "1".
+           else if tpo_due >  tpo_dte + 7 and tpo_due <= tpo_dte + 15
+              then assign tpo_flag = "2".
+        end.
+        else if substring(crule,1,1) = "O" then do:
+        	 if month(tpo_due) = month(tpo_dte) then do:
+        	 	  assign tpo_flag = "1".
+        	 end.
+        end.
+        end.        
       end.
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
@@ -291,11 +306,13 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("MRP_QUANTITY",12)
                         getTermLabel("STANDARD_PACK",12)
                         getTermLabel("MONTH_GUIDE1",12)
-                        getTermLabel("MONTH_GUIDE2",12).
+                        getTermLabel("MONTH_GUIDE2",12)
+                        getTermLabel("WEEK",12).
 for each tmp_po no-lock where tpo_nbr <> "" or not act,
     each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
     export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
-                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2.
+                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2
+                            weekday(tpo_due) - 1.
 end.
 
 /* REPORT TRAILER  */
@@ -394,6 +411,8 @@ procedure getOrdDay:
   define variable vrule as character.
   DEFINE VARIABLE i AS INTEGER.
   DEFINE VARIABLE j AS INTEGER.
+  define variable vdate1 as date.
+  define variable vdate2 as date.
 /*   define variable i as integer. */
 /*   DEFINE VARIABLE j AS INTEGER. */
 
@@ -427,68 +446,40 @@ procedure getOrdDay:
      END.
   end.  /* if substring(iRule,1,1) = "W" then do: */
   else if substring(iRule,1,1) = "M" then do:
-      if month(idate) = month(today) then do:
-         assign odate = idate.
-         assign oDateStart = date(month(today),28,year(today)).
-         assign oDateStart = date(month(oDateStart + 5),1,year(oDateStart + 5)).
-      end.
-      else do:
-      EMPTY TEMP-TABLE tmp_int NO-ERROR.
-      EMPTY TEMP-TABLE tmp_date NO-ERROR.
-      REPEAT:
-          ASSIGN i = integer(SUBSTRING(vrule,1,INDEX(vrule,",") - 1)).
-          CREATE tmp_int.
-          ASSIGN ti_bk = "A"
-                 ti_int = i.
-
-          vrule = SUBSTRING(vrule,INDEX(vrule,",") + 1).
-          IF INDEX(vrule,",") = 0 THEN DO:
-              ASSIGN i = integer(SUBSTRING(vrule,1,INDEX(vrule,",") - 1)) .
-              CREATE tmp_int.
-              ASSIGN ti_bk = "A"
-                     ti_int = i.
-              LEAVE.
-          END.
-      END.
-
-      FOR EACH tmp_int BREAK BY ti_bk BY ti_int:
-          IF FIRST-OF(ti_bk) THEN DO:
-              CREATE tmp_date.
-              ASSIGN td_end = DATE(MONTH(idate), ti_int,YEAR(idate)).
-          END.
-          CREATE tmp_date.
-          ASSIGN td_start = DATE(MONTH(idate), ti_int,YEAR(idate)).
-
-      END.
-      FOR EACH tmp_date EXCLUSIVE-LOCK:
-          FIND FIRST tmp_int WHERE ti_int > DAY(td_start) NO-ERROR.
-          IF AVAILABLE(tmp_int) THEN DO:
-              ASSIGN td_end = DATE(MONTH(td_start),ti_int,YEAR(td_start)).
-          END.
-      END.
-      FOR EACH tmp_date EXCLUSIVE-LOCK WHERE td_start = ?:
-          FIND LAST tmp_int NO-ERROR.
-          IF AVAILABLE tmp_int THEN DO:
-             ASSIGN td_start = date(month(td_end - DAY(td_end)), ti_int,
-                               YEAR(td_end - DAY(td_end))).
-          END.
-      END.
-      FOR EACH tmp_date EXCLUSIVE-LOCK WHERE td_end = ?:
-          FIND FIRST tmp_int NO-ERROR.
-          IF AVAILABLE tmp_int THEN DO:
-             ASSIGN td_end = date(MONTH(td_start),28,YEAR(td_start)).
-             ASSIGN td_end = DATE(MONTH(td_end + 5),ti_int,YEAR(td_end + 5)).
-          END.
-      END.
-      FOR EACH tmp_date EXCLUSIVE-LOCK:
-          ASSIGN td_end = td_end - 1.
-      END.
-      FIND FIRST tmp_date WHERE idate >= td_start AND idate <= td_end NO-ERROR.
-      IF AVAILABLE tmp_date THEN DO:
-          ASSIGN odate = td_start.
-      END.
-      end. /*if month(idate) = month(today) else do:*/
+		 	 assign vdate1 = date(month(idate),1,year(idate)).
+		 	 REPEAT:
+     	      if index(entry(2,irule,";"),string(weekday(vdate1) - 1,"9")) > 0
+     	      then leave.
+     	      vdate1 = vdate1 + 1.
+     	 END.
+     	 assign odatestart = vdate1.
+     	 assign vdate2 = date(month(vdate1),28,year(vdate1)) + 5.
+     	 assign vdate2 = date(month(vdate2),1,year(vdate2)).
+		 	 REPEAT:
+     	      if index(entry(2,irule,";"),string(weekday(vdate2) - 1,"9")) > 0
+     	      then leave.
+     	      vdate2 = vdate2 + 1.
+     	 END. 
+     	 
+     	 if substring(entry(1,irule,","),2,1) = "1" then do:
+     	    if idate >= vdate1 and idate < vdate2 then do:
+     	    	 assign odate = date1.
+     	    end.     
+       end.  
+       else if substring(entry(1,irule,","),2,1) = "2" then do:
+       		if idate >= vdate1 and idate <= vdate1 + 13 then do:
+       			 assign odate = vdate1.
+       		end.
+       		else if idate > vdate1 + 13 and idate < vdate2 then do:
+       			 assign odate = vdate1 + 14.
+       		end.
+       end.
   end.  /* if substring(iRule,1,1) = "M" then do: */
+  else if substring(irule,1,1) = "O" then do:
+  		assign odatestart = date(month(today),28,year(today)) + 5.
+  		assign odatestart = date(month(odatestart),1,year(odatestart)).
+  		assign odate = idate.
+  end.
       /* 如果送货日期为节假日则提前到上一个工作日 */
   REPEAT: /*假日*/
      IF CAN-FIND(FIRST hd_mstr NO-LOCK WHERE
