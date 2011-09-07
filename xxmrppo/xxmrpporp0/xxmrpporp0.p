@@ -24,6 +24,7 @@ define variable qty_nextMth like pod_qty_ord.
 define variable act as logical initial yes.
 define variable qtytemp as decimal.
 define variable qtytemp1 as decimal.
+define variable crule as character.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -143,7 +144,15 @@ repeat:
        EACH mrp_det WHERE mrp_part = pt_part and
             mrp_due_date <= (Due + 30) and
             mrp_detail = "计划单" USE-INDEX mrp_part:
-      run getOrdDay(input pt_site, input xvp_rule,
+      find first vd_mstr no-lock where vd_addr = pt_vend no-error.
+      /*如果有设定供应商送货方式,则优先使用供应商送货方式*/
+      if available vd_mstr and vd__chr03 <> "" then do:
+      	 assign crule = vd__chr03.
+    	end.
+    	else do:
+    		 assign crule = xvp_rule.
+      end.
+      run getOrdDay(input pt_site, input crule,
                     input mrp_due_date,input xvp_week,
                     output date1,output sendDate).
       find first tmp_po exclusive-lock where tpo_part = mrp_part

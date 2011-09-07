@@ -12,6 +12,7 @@ define variable part  like pt_part no-undo.
 define variable part1 like pt_part no-undo.
 define variable ptdesc like pt_desc1 no-undo.
 define variable vdsort like vd_sort no-undo.
+define variable codecmmt like code_cmmt no-undo.
 
 form
    skip(.2)
@@ -55,12 +56,13 @@ export delimiter "~t" getTermLabel("SUPPLIER",18)
 										  getTermLabel("ITEM_NUMBER",18)
 										  getTermLabel("DESCRIPTION",18)
 										  getTermLabel("RULE",18)
+										  getTermLabel("COMMENTS",20)
 										  getTermLabel("STANDARD_PACK",18)
 										  getTermLabel("WEEK" ,18).
 for each xvp_ctrl no-lock where xvp_vend >= vend and xvp_vend <= vend1 and
 				 xvp_part >= part and xvp_part <= part1 
 				 break by xvp_vend by xvp_part: 
-		assign ptdesc = "" vdsort = "".
+		assign ptdesc = "" vdsort = "" codecmmt = "".
 	  find first pt_mstr no-lock where pt_part = xvp_part no-error.
 	  if available pt_mstr then do:
 	  	 assign ptdesc = pt_desc1.
@@ -69,8 +71,13 @@ for each xvp_ctrl no-lock where xvp_vend >= vend and xvp_vend <= vend1 and
 	  if available vd_mstr then do:
 	  	 assign vdsort = vd_sort.
 	  end.
+	  find first code_mstr no-lock where code_fldname = "vd__chr03" 
+	  			 and code_value = xvp_rule no-error.
+	  if available code_mstr then do:
+	  	 assign codecmmt = code_cmmt.
+	  end.
 		export delimiter "~011" xvp_vend vdsort xvp_part ptdesc xvp_rule
-					 xvp_ord_min xvp_week.
+					 codecmmt xvp_ord_min xvp_week.
 end.
 put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
 end. /* mainloop: */
