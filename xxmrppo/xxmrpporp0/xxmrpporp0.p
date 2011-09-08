@@ -475,7 +475,7 @@ procedure getOrdDay:
        		end.
        end.
   end.  /* if substring(iRule,1,1) = "M" then do: */
-  else if substring(irule,1,1) = "O" then do:
+  else do: /*其他情况以MRP日期为准*/
   		assign odatestart = date(month(today),28,year(today)) + 5.
   		assign odatestart = date(month(odatestart),1,year(odatestart)).
   		assign odate = idate.
