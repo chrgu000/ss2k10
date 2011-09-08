@@ -25,7 +25,7 @@ define variable act as logical initial yes.
 define variable qtytemp as decimal.
 define variable qtytemp1 as decimal.
 define variable crule as character.
-
+define variable xvpweek like xvp_week.
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
@@ -137,38 +137,46 @@ repeat:
             substring(pt_part,1,1) <> "X"
             and (pt_buyer = buyer or buyer = "")
             and pt_site >= site and (pt_site <= site1 or site1 = ""),
-       EACH xvp_ctrl where xvp_part = pt_part and
-            substring(xvp_rule,1,1) = type and
-           (xvp_vend = vend or vend = "" ) and
-           (substring(xvp_vend,1,1) = area or area = ""),
+/*     EACH xvp_ctrl where xvp_part = pt_part and                            */
+/*          substring(xvp_rule,1,1) = type and                               */
+/*         (xvp_vend = vend or vend = "" ) and                               */
+/*         (substring(xvp_vend,1,1) = area or area = ""),                    */
        EACH mrp_det WHERE mrp_part = pt_part and
             mrp_due_date <= (Due + 30) and
             mrp_detail = "计划单" USE-INDEX mrp_part:
       find first vd_mstr no-lock where vd_addr = pt_vend no-error.
       /*如果有设定供应商送货方式,则优先使用供应商送货方式*/
-      if available vd_mstr and vd__chr03 <> "" then do:
-      	 assign crule = vd__chr03.
-    	end.
+      if type = "M" then do:
+         if available vd_mstr and vd__chr03 <> "" then do:
+        	  assign crule = vd__chr03
+        	  			 xvpweek = 1.
+    	   end.
+      end. 
     	else do:
-    		 assign crule = xvp_rule.
+	  	    find first xvp_ctrl no-lock where xvp_vend = pt_vend and
+	  	               xvp_part = pt_part no-error.
+	  	    if available xvp_ctrl then do:
+	  		  	 assign crule = xvp_rule
+	  		  	 			  xvpweek = xvp_week.
+	  		  end.
       end.
       run getOrdDay(input pt_site, input crule,
-                    input mrp_due_date,input xvp_week,
+                    input mrp_due_date,input xvpweek,
                     output date1,output sendDate).
       find first tmp_po exclusive-lock where tpo_part = mrp_part
-             and tpo_vend = xvp_vend and tpo_due = sendDate no-error.
+             and tpo_vend = pt_vend and tpo_due = sendDate no-error.
       if available tmp_po then do:
          assign tpo_qty = tpo_qty + mrp_qty.
       end.
       else do:
         create tmp_po.
-        assign tpo_vend = xvp_vend
+        assign tpo_vend = pt_vend
                tpo_part = pt_part
                tpo_due = sendDate
                tpo_dte = date1
                tpo_qty = mrp_qty.
         if tpo_due < tpo_dte then assign tpo_flag = "0".
-        else do: 
+        else do:
         if substring(crule,1,1) = "W" then do:
            if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 6
             then assign tpo_flag = "1".
@@ -184,7 +192,7 @@ repeat:
         	 	  assign tpo_flag = "1".
         	 end.
         end.
-        end.        
+        end.
       end.
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
@@ -194,15 +202,23 @@ for each tmp_po exclusive-lock break by tpo_vend by tpo_part by tpo_due:
     if first-of(tpo_part) then do:
        assign qtytemp = 0
        				qtytemp1 = 1.
-       find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
-                  tpo_part = xvp_part no-error.
-       if available xvp_ctrl then do:
-       		assign qtytemp1 = xvp_ord_min.
+       if type = "M" then do:
+          find first pt_mstr no-lock where pt_part = tp_part no-error.
+          if available pt_mstr then do:
+          		assign  qtytemp1 = pt_ord_min.
+          end.
        end.
-    end. 
+       else do:
+          find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
+                     tpo_part = xvp_part no-error.
+          if available xvp_ctrl then do:
+              assign qtytemp1 = xvp_ord_min.
+          end.
+       end.
+    end.
     run MinPackQty(input tpo_qty , input qtytemp1,
-                   input-output qtytemp, 
-                   output tpo_qty_req). 
+                   input-output qtytemp,
+                   output tpo_qty_req).
 end.
 
 /*计算下月预示*/
@@ -459,13 +475,13 @@ procedure getOrdDay:
      	      if index(entry(2,irule,";"),string(weekday(vdate2) - 1,"9")) > 0
      	      then leave.
      	      vdate2 = vdate2 + 1.
-     	 END. 
-     	 
+     	 END.
+
      	 if substring(entry(1,irule,","),2,1) = "1" then do:
      	    if idate >= vdate1 and idate < vdate2 then do:
      	    	 assign odate = date1.
-     	    end.     
-       end.  
+     	    end.
+       end.
        else if substring(entry(1,irule,","),2,1) = "2" then do:
        		if idate >= vdate1 and idate <= vdate1 + 13 then do:
        			 assign odate = vdate1.

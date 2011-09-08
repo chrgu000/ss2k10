@@ -1,0 +1,1581 @@
+@@batchload xxptlocmt.p
+"4" "P-4RSA" - 
+"999999" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"4" "P-4RPS" - 
+"999999" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-01" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-02" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-03" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-04" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-05" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-06" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-07" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-08" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-09" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-10" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-11" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-12" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-13" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-14" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-15" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-16" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-17" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-18" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-19" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-20" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-21" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-22" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-23" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-24" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-25" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-26" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-27" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-28" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-29" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-30" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-31" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"3" "XA-6-32" - 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-01" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-02" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-03" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-04" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-05" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-06" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-07" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-08" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-09" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-10" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-11" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-12" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-13" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-14" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-15" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XR-6-16" - 
+"1" "PS" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-10" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-11" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-12" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-13" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-14" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-15" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-16" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-17" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-18" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-19" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XM-6-20" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-10" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-11" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-12" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-13" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-14" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-15" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-16" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-17" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-18" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-19" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"2" "XL-6-20" - 
+"1" "SA" 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-07" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-08" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-09" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-10" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-11" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-12" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-13" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xo-6-14" "MHS841-415-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-2-06" "MHS842-761-0" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-5-01" "MHSDA3-125-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-5-03" "MHSDA3-125-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-5-04" "MHSDA3-125-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-5-05" "MHSDA3-125-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-13" "MHSDA3-727-1-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-14" "MHSDA3-727-1-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-4-01" "MHSDA3-NE0-0" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "XAA-4-11" "MHSDD3-N52-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "XAA-4-12" "MHSDD3-N52-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-16" "MHSELX-727-10-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-16" "MHSELX-727-10-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-10" "MHSELX-N6B-00-FG" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-4-03" "MHSELX-NE0-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-4-04" "MHSELX-NE0-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-4-05" "MHSELX-NE0-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-4-06" "MHSELX-NE0-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-3-03" "MHSELX-NE0-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-3-04" "MHSELX-NE0-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-3-05" "MHSELX-NE0-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xae-3-06" "MHSELX-NE0-1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-2-05" "MHSFE2-627-0" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-2-01" "MHSLG3-125-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-2-02" "MHSLG3-125-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-2-03" "MHSLG3-125-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-07" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-08" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-09" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-10" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-11" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-12" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-13" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-14" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-15" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-16" "MHSLG3-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-3-01" "MHSLG3-NE0-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-3-02" "MHSLG3-NE0-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-3-03" "MHSLG3-NE0-0-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-01" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-02" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-03" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-04" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-05" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-06" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-07" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-08" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-09" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-10" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-11" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-12" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-13" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xab-1-14" "MHSNA3-727-10 WF" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-07" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-08" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-09" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-10" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-11" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-12" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-13" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-14" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-15" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-16" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-17" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-18" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-19" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xn-6-20" "MHSW51-758-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-01" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-02" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-03" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-04" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-05" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-06" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-07" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-08" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-09" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-10" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-11" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaa-1-12" "MHSWA3-727-0-FW" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-2-02" "MHTA02-668-0-JPBP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-2-03" "MHTA02-668-0-JPBP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xah-2-04" "MHTA02-668-0-JPBP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-01" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-02" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-03" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-04" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-05" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-1-06" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xai-2-02" "MHTA03-125-00-JP" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-01" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-02" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-03" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-04" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-05" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-06" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-07" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-08" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-09" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-10" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-11" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-12" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-13" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-14" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-15" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-4-16" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-01" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-02" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-03" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-04" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-05" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-06" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-07" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-08" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-09" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-10" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-11" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-12" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-13" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-14" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-3-15" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-01" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-02" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-03" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-04" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-05" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-06" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-07" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-08" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-09" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-10" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-11" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-12" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-13" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-14" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-4-15" "MHTA03-727-1-WF" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-2-02" "MHTE13-125-0" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xag-2-03" "MHTE13-125-0" 
+"6" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-15" "MHTF0X-904-X0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-13" "MHTF0X-904-X0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-14" "MHTF0X-904-X0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-15" "MHTF0X-904-X0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-14" "MHTF0X-N6B-1-VR-JP" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-01" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-02" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-03" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-04" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-05" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-06" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-07" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-08" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-09" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-10" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-11" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-2-12" "MHTF0X-N6B-1-VR-JP" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-1-01" "MHTF0X-NA3-X1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-1-02" "MHTF0X-NA3-X1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-2-01" "MHTF0X-NA3-X1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-2-02" "MHTF0X-NA3-X1" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-01" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-02" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-03" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-04" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-05" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-06" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-07" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-08" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-09" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-10" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-11" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-12" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-13" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-4-14" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-01" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-02" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-03" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-04" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-05" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-06" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-07" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-08" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-09" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-10" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-11" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-12" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-13" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-5-14" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-3-10" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-3-11" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-3-12" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-3-13" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-3-14" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-01" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-02" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-03" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-04" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-05" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-06" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-07" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-08" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-09" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-10" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-11" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-12" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-13" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-4-14" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-01" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-02" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-03" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-04" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-05" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-06" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-07" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-08" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-09" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-10" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-11" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-12" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-13" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-5-14" "MHTF0X-W48-3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-06" "MHTF0X-WAG-0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-04" "MHTF0X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-05" "MHTF0X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-3-06" "MHTF0X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-11" "MHTF0X-WC4-0-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-12" "MHTF0X-WC4-0-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-13" "MHTF0X-WC4-0-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-11" "MHTF0X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-12" "MHTF0X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-13" "MHTF0X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-14" "MHTF0X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xP-1-17" "MHTP63-727-1-FW" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xP-1-18" "MHTP63-727-1-FW" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xP-1-19" "MHTP63-727-1-FW" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xP-1-20" "MHTP63-727-1-FW" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-01" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-02" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-03" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-04" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-05" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-06" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-07" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-08" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-09" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-10" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-11" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-12" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-13" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xad-1-14" "MSYN2X-727-10-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-04" "MSYN2X-904-8" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-05" "MSYN2X-904-8" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-1-05" "MSYN2X-S71-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-1-06" "MSYN2X-S71-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-2-05" "MSYN2X-S71-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xaf-2-06" "MSYN2X-S71-0-JP" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-11" "MSYN2X-WAG-0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-12" "MSYN2X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-13" "MSYN2X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-14" "MSYN2X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-15" "MSYN2X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-04" "MSYN2X-WC4-0-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-05" "MSYN2X-WC4-0-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-04" "MSYN2X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-05" "MSYN2X-WC4-0-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-02" "MSYN5X-N6B-1-VR" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-03" "MSYN5X-N6B-1-VR" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-01" "MSYN5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-02" "MSYN5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-03" "MSYN5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-01" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-02" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-03" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-04" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-05" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-06" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-07" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-08" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-09" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-10" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-11" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-12" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-13" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xac-1-14" "MSYY5X-727-0A-CD" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-07" "MSYY5X-N6B-1-VR" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-08" "MSYY5X-N6B-1-VR" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-06" "MSYY5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-07" "MSYY5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-08" "MSYY5X-N6B-1-VR" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-06" "MSYY5X-WAG-0" 
+"2" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-08" "MSYY5X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-09" "MSYY5X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-10" "MSYY5X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-11" "MSYY5X-WAG-0" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-09" "MSYY5X-WC4-1-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-1-10" "MSYY5X-WC4-1-CD" 
+"3" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-09" "MSYY5X-WC4-1-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xr-2-10" "MSYY5X-WC4-1-CD" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-10" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-01" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-02" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-03" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-04" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-05" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-06" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-07" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-08" "NZ0413-010-00-2GU6" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-12" "NZ0413-010-00-TW30" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-13" "NZ0413-010-00-TW30" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-14" "NZ0413-010-00-TW30" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-5-15" "NZ0413-010-00-TW30" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-1-08" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-01" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-02" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-03" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-04" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-05" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
+"1" "xs-6-06" "NZ0413-010-0-F3" 
+"1" - 
+@@end
+@@batchload xxptlocmt.p
