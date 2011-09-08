@@ -18,14 +18,13 @@ with frame a side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
 
 form
-  qad_key3 colon 10 format "x(64)"
-  qad_key4 colon 10 format "x(64)" skip(1)
-  qad_key5 colon 10 format "x(64)"
-  qad_key6 colon 10 format "x(64)" skip(2)
-  
-  qad_user1 colon 10 format "x(64)"
-  qad_user2 colon 10 format "x(64)" 
-  qad__qadc01 colon 10 format "x(64)" 
+  qad_key3 colon 12 format "x(62)"
+  qad_key4 colon 12 format "x(62)" skip(1)
+  qad_key5 colon 12 format "x(62)"
+  qad_key6 colon 12 format "x(62)" skip(2)
+  qad_user1 colon 12 format "x(62)"
+  qad_user2 colon 12 format "x(62)" 
+  qad__qadc01 colon 12 format "x(62)" 
 with frame k side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame k:handle).
