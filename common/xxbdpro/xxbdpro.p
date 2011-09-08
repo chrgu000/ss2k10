@@ -197,7 +197,7 @@ assign vfrom_id        = from_id
    {gpselout.i
       &printType = "printer"
       &printWidth = 132
-      &pagedFlag = "page"
+      &pagedFlag = "nopage"
       &stream = "stream errorlog"
       &appendToFile = "append"
       &streamedOutputToTerminal = " "
@@ -208,7 +208,6 @@ assign vfrom_id        = from_id
       &withEmail = "no"
       &withWinprint = "no"
       &defineVariables = "yes"}
-
    row_count = 0.
 
    if process_file then do:
