@@ -1,4 +1,4 @@
-/* xxcompil.p - COMPILATION PROGRAM  - modify from utcomp1.p                 */
+/* xxc001.p - COMPILATION PROGRAM  - modify from utcomp1.p                   */
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION: 18YU LAST MODIFIED: 08/30/11 BY: zy fix log display bug         */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
@@ -9,15 +9,11 @@ define variable proc_name as character format "x(24)".
 define variable i         as integer   format ">>>9" label "Files processed".
 define variable err       as integer   format ">>>9" label "Errors".
 define variable rfile     as character format "x(24)".
-define variable pfile     as character format "x(24)".
 define variable dirname   as character format "x(15)".
 define variable yn        as logical.
 define variable c-comp    as character format "x(12)" no-undo.
-define variable local-msg-arg as character format "x(24)" no-undo.
-define variable vcompmsg      as character format "x(38)" no-undo.
 define temp-table t_log   fields tt_log as character.
 define stream crt.
-define variable vtoDir as character.
 define shared variable c-comp-pgms as character format "x(20)" no-undo.
 define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
@@ -82,10 +78,10 @@ repeat:
    output to "utcompil.log" append.
           put unformat "compile:" + proc_name.
           if opsys = "unix" then do:
-          	put skip.
+            put skip.
           end.
           else  if opsys = "msdos" or opsys = "win32" then do:
-          	put " copy:".
+            put " copy:".
           end.
           compile value(proc_name) no-attr-space save into value(destdir).
    output close.
