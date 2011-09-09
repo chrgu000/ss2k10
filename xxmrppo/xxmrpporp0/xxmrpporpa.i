@@ -117,8 +117,11 @@ procedure getOrdDay:
             END.
         END.
     END.
+    ELSE if iDate < vStart Then DO:
+         ASSIGN oDate = iDate.  
+    END.
     ELSE DO:
-        ASSIGN oDate = ?.  
+    	   ASSIGN oDate = ?.
     END.
 
 /* 如果送货日期为节假日则提前到上一个工作日 */

@@ -121,32 +121,32 @@ repeat:
        EACH mrp_det WHERE mrp_part = pt_part and 
             mrp_detail = "¼Æ»®µ¥" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "" :
-      run getDateArea(input due,input vd__chr03,output duef, output duet).
- 	    if mrp_due_date < duef or mrp_due_date > duet then do:
- 	    	 next.
- 	    end.
-      run getOrdDay(input site,input vd__chr03,input due,input mrp_due_date, 
-      					    output sendDate).
-      find first tmp_po exclusive-lock where tpo_part = pt_part
-             and tpo_vend = pt_vend and tpo_due = sendDate no-error.
-      if available tmp_po then do:
-         assign tpo_qty = tpo_qty + mrp_qty .
-      end.
-      else do:
-        create tmp_po.
-        assign tpo_vend = pt_vend
-               tpo_part = pt_part
-               tpo_due = sendDate 
-               tpo_qty = mrp_qty
-               tpo_start = duef
-               tpo_end = duet
-               tpo_rule = vd__chr03.
-        find first xvp_ctrl where xvp_vend = pt_vend
-        			 and xvp_part = pt_part no-lock no-error.
-        if availabl xvp_ctrl then do:
-        	 assign tpo_type = "T".
-        end.
-      end.
+       run getDateArea(input due,input vd__chr03,output duef, output duet).
+ 	     if mrp_due_date > duet then do:
+ 	     	 next.
+ 	     end.
+       run getOrdDay(input site,input vd__chr03,input due,
+       						   input mrp_due_date, output sendDate).
+       find first tmp_po exclusive-lock where tpo_part = pt_part
+              and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+       if available tmp_po then do:
+          assign tpo_qty = tpo_qty + mrp_qty .
+       end.
+       else do:
+         create tmp_po.
+         assign tpo_vend = pt_vend
+                tpo_part = pt_part
+                tpo_due = sendDate 
+                tpo_qty = mrp_qty
+                tpo_start = duef
+                tpo_end = duet
+                tpo_rule = vd__chr03.
+         find first xvp_ctrl where xvp_vend = pt_vend
+         			 and xvp_part = pt_part no-lock no-error.
+         if availabl xvp_ctrl then do:
+         	 assign tpo_type = "T".
+         end.
+       end. 
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
 
