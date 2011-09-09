@@ -33,3 +33,102 @@ DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
     END.
     ASSIGN iDiff = iReqQty - iDiff.
 end procedure.
+
+PROCEDURE getDateArea:
+/*------------------------------------------------------------------------------
+    Purpose: 计算日期范围
+      Notes:  
+------------------------------------------------------------------------------*/
+    DEFINE INPUT PARAMETER iDate AS DATE.
+    DEFINE INPUT PARAMETER iRule AS CHARACTER.
+    DEFINE OUTPUT PARAMETER oStart AS DATE.
+    DEFINE OUTPUT PARAMETER oEnd AS DATE.
+    
+    IF SUBSTRING(irule,1,1) = "M" THEN
+        ASSIGN iRule = entry(2,iRule,";").
+    ELSE
+        ASSIGN iRule = substring(iRule,2).
+
+    oStart = date(month(iDate),1,year(iDate)).
+    repeat:
+          if index(iRule,string(weekday(oStart) - 1)) > 0 then do:
+               leave.
+          end.
+          oStart = oStart + 1.
+    end.
+    oEnd = DATE(MONTH(oStart),28,YEAR(oStart)) + 5.
+    oEnd = DATE(MONTH(oEnd),1,YEAR(oEnd)).
+    repeat:
+          if index(iRule,string(weekday(oEnd) - 1)) > 0 then do:
+               leave.
+          end.
+          oEnd = oEnd + 1.
+    end. 
+    oEnd = oEnd - 1.
+END PROCEDURE.
+
+procedure getOrdDay:
+/*------------------------------------------------------------------------------
+    Purpose: 获取送货日期
+      Notes: 如果计算出的日期为非工作日则提前到第一个非工作日.
+------------------------------------------------------------------------------*/
+  define input parameter isite like si_site.
+  define input parameter iRule as character.
+  define input parameter iStart as date.
+  define input parameter iDate as date.
+  define output parameter odate as date.
+
+    define variable vrule as character.  /* 送货原则 */
+    define variable vtype as character.  /* 类别 M/W */
+    define variable vCyc  as integer.    /* 频率  */
+    define variable vStart as date.
+    define variable vEnd as date.
+
+/*   empty temp-table tmp_date no-error. */
+  	ASSIGN vtype = substring(iRule,1,1).  
+    IF vtype = "M" THEN DO: .
+    	ASSIGN vcyc = integer(substring(ENTRY(1,irule,";"),2)).
+    END.
+
+    RUN getDateArea(INPUT iStart,INPUT iRule,OUTPUT vStart,OUTPUT vEnd).
+    IF vtype = "M" THEN ASSIGN vRule = ENTRY(2,iRule,";").
+                   ELSE ASSIGN vrule = SUBSTRING(iRule,2).
+    IF idate >= vstart AND iDate <= vend THEN DO:
+        IF vType = "W" THEN DO:
+           ASSIGN oDate = iDate.
+           REPEAT: 
+               IF INDEX(vRule,STRING(WEEKDAY(odate) - 1)) > 0 THEN DO:
+                   LEAVE.
+               END.
+               oDate = oDate - 1.
+           END.
+        END.
+        ELSE IF vType = "M" THEN DO: 
+            IF vCyc = 1 THEN DO:
+                ASSIGN odate = vStart.
+            END.
+            IF vCyc = 2 THEN DO:
+                IF iDate < vStart + 14 THEN DO:
+                   ASSIGN oDate = vStart.
+                END.
+                ELSE DO:
+                   ASSIGN oDate = vStart + 14.
+                END.
+            END.
+        END.
+    END.
+    ELSE DO:
+        ASSIGN oDate = ?.  
+    END.
+
+/* 如果送货日期为节假日则提前到上一个工作日 */
+  REPEAT: /*假日*/
+     IF CAN-FIND(FIRST hd_mstr NO-LOCK WHERE
+                       hd_site = isite AND hd_date = odate) THEN DO:
+        ASSIGN odate = odate - 1.
+     END.
+     ELSE DO:
+         LEAVE.
+     END.
+  END. /* REPEAT: 假日*/
+end procedure.

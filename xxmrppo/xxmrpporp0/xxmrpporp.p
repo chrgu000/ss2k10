@@ -6,6 +6,8 @@
 
 {mfdtitle.i "110831.1"}
 
+define variable vend  like vd_addr no-undo.
+define variable vend1 like vd_addr no-undo.
 define variable part  like pt_part no-undo.
 define variable part1 like pt_part no-undo.
 define variable due   as   date no-undo.
@@ -15,6 +17,8 @@ define variable vdchr03 as character no-undo.
 
 form
    skip(.2)
+   vend  colon 15
+   vend1 colon 49 label {t001.i}
    part  colon 15
    part1 colon 49 label {t001.i}
    due   colon 15
@@ -27,14 +31,16 @@ setframelabels(frame a:handle).
 repeat:
 
 		if part1 = hi_char then part1 = "".
+		if vend1 = hi_char then vend1 = "".
 		if due = low_date then due = ?.
 		if due1 = hi_date  then due1 = ?.
-    update part part1 due due1 with frame a.
+    update vend vend1 part part1 due due1 with frame a.
 
 		if part1 = "" then part1 = hi_char.
 		if due = ? then due = low_date.
 		if due1 = ? then due1 = hi_date. 
-
+		if vend1 = "" then vend1 = hi_char.
+		
     {gpselout.i &printtype = "printer"
                 &printwidth = 132
                 &pagedflag = "nopage"
@@ -60,14 +66,14 @@ export delimiter "~t" getTermLabel("ITEM_NUMBER",18)
 										  getTermLabel("WEEK",18)
 										  getTermLabel("SHIP_TERMS",18)
 										  getTermLabel("STANDARD_PACK",18).
-FOR EACH mrp_det WHERE mrp_part >= part and mrp_part <= part1 and
+FOR EACH mrp_det no-lock WHERE mrp_part >= part and mrp_part <= part1 and
          mrp_due_date >= due and mrp_due_date <= due1 and
-         mrp_detail = "计划单" USE-INDEX mrp_part:
-		assign ptdesc = "" vdchr03 = "".
-	  find first pt_mstr no-lock where pt_part = mrp_part no-error.
-	  if available pt_mstr then do:
-	  	 assign ptdesc = pt_desc1.
-	  end. 
+         mrp_detail = "计划单" USE-INDEX mrp_part,
+    EACH pt_mstr no-lock where pt_part = mrp_part 
+    											 and (pt_vend >= vend or vend = "")
+    		                   and (pt_vend <= vend1 or vend1 = ""):
+		assign vdchr03 = "". 
+	  assign ptdesc = pt_desc1. 
 	  find first vd_mstr no-lock where vd_addr = pt_vend no-error.
 	  if available vd_mstr then do:
 	  	 assign vdchr03 = vd__chr03.
