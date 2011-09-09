@@ -21,7 +21,8 @@ DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
     iDiff = iSourceQty - iDiff.
     IF iDiff > 0  THEN DO:
        IF iDiff MODULO iBase = 0 then do:
-           assign iReqQty = (truncate(iDiff / iBase,0)) * iBase.
+/*           assign iReqQty = (truncate(iDiff / iBase,0)) * iBase.           */
+						 assign iReqQty = iDiff.
        end.
        else do:
            assign iReqQty = (truncate(iDiff / iBase,0) + 1) * iBase.

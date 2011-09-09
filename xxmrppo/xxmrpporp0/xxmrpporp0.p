@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110901.1"}
+{mfdtitle.i "110909.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
@@ -137,10 +137,6 @@ repeat:
             substring(pt_part,1,1) <> "X"
             and (pt_buyer = buyer or buyer = "")
             and pt_site >= site and (pt_site <= site1 or site1 = ""),
-/*     EACH xvp_ctrl where xvp_part = pt_part and                            */
-/*          substring(xvp_rule,1,1) = type and                               */
-/*         (xvp_vend = vend or vend = "" ) and                               */
-/*         (substring(xvp_vend,1,1) = area or area = ""),                    */
        EACH mrp_det WHERE mrp_part = pt_part and
             mrp_due_date <= (Due + 30) and
             mrp_detail = "计划单" USE-INDEX mrp_part:
@@ -148,17 +144,17 @@ repeat:
       /*如果有设定供应商送货方式,则优先使用供应商送货方式*/
       if type = "M" then do:
          if available vd_mstr and vd__chr03 <> "" then do:
-        	  assign crule = vd__chr03
-        	  			 xvpweek = 1.
-    	   end.
-      end. 
-    	else do:
-	  	    find first xvp_ctrl no-lock where xvp_vend = pt_vend and
-	  	               xvp_part = pt_part no-error.
-	  	    if available xvp_ctrl then do:
-	  		  	 assign crule = xvp_rule
-	  		  	 			  xvpweek = xvp_week.
-	  		  end.
+            assign crule = vd__chr03
+                   xvpweek = 1.
+         end.
+      end.
+      else do:
+          find first xvp_ctrl no-lock where xvp_vend = pt_vend and
+                     xvp_part = pt_part no-error.
+          if available xvp_ctrl then do:
+             assign crule = xvp_rule
+                    xvpweek = xvp_week.
+          end.
       end.
       run getOrdDay(input pt_site, input crule,
                     input mrp_due_date,input xvpweek,
@@ -166,7 +162,8 @@ repeat:
       find first tmp_po exclusive-lock where tpo_part = mrp_part
              and tpo_vend = pt_vend and tpo_due = sendDate no-error.
       if available tmp_po then do:
-         assign tpo_qty = tpo_qty + mrp_qty.
+         assign tpo_qty = tpo_qty + mrp_qty
+                tpo_qty_req = tpo_qty_req + mrp_qty.
       end.
       else do:
         create tmp_po.
@@ -174,6 +171,7 @@ repeat:
                tpo_part = pt_part
                tpo_due = sendDate
                tpo_dte = date1
+               tpo_qty_req = mrp_qty
                tpo_qty = mrp_qty.
         if tpo_due < tpo_dte then assign tpo_flag = "0".
         else do:
@@ -182,15 +180,15 @@ repeat:
             then assign tpo_flag = "1".
         end.
         else if substring(crule,1,1) = "M" then do:
-        	 if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 7
+           if tpo_due >= tpo_dte and tpo_due <= tpo_dte + 7
               then assign tpo_flag = "1".
            else if tpo_due >  tpo_dte + 7 and tpo_due <= tpo_dte + 15
               then assign tpo_flag = "2".
         end.
         else if substring(crule,1,1) = "O" then do:
-        	 if month(tpo_due) = month(tpo_dte) then do:
-        	 	  assign tpo_flag = "1".
-        	 end.
+           if month(tpo_due) = month(tpo_dte) then do:
+              assign tpo_flag = "1".
+           end.
         end.
         end.
       end.
@@ -201,24 +199,28 @@ repeat:
 for each tmp_po exclusive-lock break by tpo_vend by tpo_part by tpo_due:
     if first-of(tpo_part) then do:
        assign qtytemp = 0
-       				qtytemp1 = 1.
+              qtytemp1 = 1.
        if type = "M" then do:
-          find first pt_mstr no-lock where pt_part = tp_part no-error.
+          find first pt_mstr no-lock where pt_part = tpo_part no-error.
           if available pt_mstr then do:
-          		assign  qtytemp1 = pt_ord_min.
+              if pt_ord_min = 0 then assign qtytemp1 = 1.
+                                else assign qtytemp1 = pt_ord_min.
           end.
        end.
        else do:
           find first xvp_ctrl no-lock where tpo_vend = xvp_vend and
                      tpo_part = xvp_part no-error.
           if available xvp_ctrl then do:
-              assign qtytemp1 = xvp_ord_min.
+              if xvp_ord_min = 0 then assign qtytemp1 = 1.
+                                 else assign qtytemp1 = xvp_ord_min.
           end.
        end.
     end.
+    if type = "W" then do:
     run MinPackQty(input tpo_qty , input qtytemp1,
                    input-output qtytemp,
                    output tpo_qty_req).
+    end.
 end.
 
 /*计算下月预示*/
@@ -228,31 +230,31 @@ FOR EACH pt_mstr no-lock where
          substring(pt_part,1,1) <> "X"
          and (pt_buyer = buyer or buyer = "")
          and pt_site >= site and (pt_site <= site1 or site1 = ""),
-    EACH xvp_ctrl where xvp_part = pt_part and
-          substring(xvp_rule,1,1) = type and
-         (xvp_vend = vend or vend = "" ) and
-         (substring(xvp_vend,1,1) = area or area = ""),
+/*    EACH xvp_ctrl where xvp_part = pt_part and                             */
+/*          substring(xvp_rule,1,1) = type and                               */
+/*         (xvp_vend = vend or vend = "" ) and                               */
+/*         (substring(xvp_vend,1,1) = area or area = ""),                    */
     EACH mrp_det WHERE mrp_part = pt_part and
          mrp_due_date <= (Due + 120) and
          month(mrp_due_date) = month(sendDate) and
          mrp_detail = "计划单" USE-INDEX mrp_part
-    break by xvp_vend by mrp_part:
+    break by pt_vend by mrp_part:
     if first-of(mrp_part) then do:
        assign qty_nextMth = 0.
     end.
        assign qty_nextMth = qty_nextMth + mrp_qty.
     if last-of(mrp_part) then do:
        if qty_nextMth > 0 then do:
-          if can-find(first tmp_po where tpo_vend = xvp_vend
+          if can-find(first tmp_po where tpo_vend = pt_vend
                        and tpo_part = mrp_part) then do:
-             for each tmp_po exclusive-lock where tpo_vend = xvp_vend
+             for each tmp_po exclusive-lock where tpo_vend = pt_vend
                        and tpo_part = mrp_part:
                  assign tpo_qty_mth1 = qty_nextMth.
              end.
           end.
           else do:
              create tmp_po.
-             assign tpo_vend = xvp_vend
+             assign tpo_vend = pt_vend
                     tpo_part = pt_part
                     tpo_due = date(month(sendDate),1,year(sendDate))
                     tpo_qty = 0
@@ -269,31 +271,31 @@ FOR EACH pt_mstr no-lock where
          substring(pt_part,1,1) <> "X"
          and (pt_buyer = buyer or buyer = "")
          and pt_site >= site and (pt_site <= site1 or site1 = ""),
-    EACH xvp_ctrl where xvp_part = pt_part and
-          substring(xvp_rule,1,1) = type and
-         (xvp_vend = vend or vend = "" ) and
-         (substring(xvp_vend,1,1) = area or area = ""),
+/*    EACH xvp_ctrl where xvp_part = pt_part and                             */
+/*          substring(xvp_rule,1,1) = type and                               */
+/*         (xvp_vend = vend or vend = "" ) and                               */
+/*         (substring(xvp_vend,1,1) = area or area = ""),                    */
     EACH mrp_det WHERE mrp_part = pt_part and
          mrp_due_date <= (Due + 120) and
          month(mrp_due_date) = month(sendDate) and
          mrp_detail = "计划单" USE-INDEX mrp_part
-    break by xvp_vend by mrp_part:
+    break by pt_vend by mrp_part:
     if first-of(mrp_part) then do:
        assign qty_nextMth = 0.
     end.
        assign qty_nextMth = qty_nextMth + mrp_qty.
     if last-of(mrp_part) then do:
        if qty_nextMth > 0 then do:
-          if can-find(first tmp_po where tpo_vend = xvp_vend
+          if can-find(first tmp_po where tpo_vend = pt_vend
                        and tpo_part = mrp_part) then do:
-             for each tmp_po exclusive-lock where tpo_vend = xvp_vend
+             for each tmp_po exclusive-lock where tpo_vend = pt_vend
                        and tpo_part = mrp_part:
                  assign tpo_qty_mth2 = qty_nextMth.
              end.
           end.
           else do:
              create tmp_po.
-             assign tpo_vend = xvp_vend
+             assign tpo_vend = pt_vend
                     tpo_part = pt_part
                     tpo_due = date(month(sendDate),1,year(sendDate))
                     tpo_qty = 0
@@ -306,6 +308,7 @@ END.
 /*产生单号*/
 assign areaDesc = "".
 for each tmp_po exclusive-lock where tpo_qty > 0 and tpo_flag <> ""
+     and tpo_vend <> ""
     break by tpo_vend by tpo_flag by tpo_due:
     if first-of(tpo_flag) then do:
        run getPoNumber(input today,input tpo_vend,output areaDesc).
@@ -319,15 +322,14 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("ITEM_NUMBER",12)
                         getTermLabel("DUE_DATE",12)
                         getTermLabel("RECEIVED_QTY",12)
-                        getTermLabel("MRP_QUANTITY",12)
+/*                      getTermLabel("MRP_QUANTITY",12)                    */
                         getTermLabel("STANDARD_PACK",12)
                         getTermLabel("MONTH_GUIDE1",12)
                         getTermLabel("MONTH_GUIDE2",12)
                         getTermLabel("WEEK",12).
-for each tmp_po no-lock where tpo_nbr <> "" or not act,
-    each xvp_ctrl no-lock where tpo_vend = xvp_vend and tpo_part = xvp_part:
+for each tmp_po no-lock where tpo_nbr <> "" or not act:
     export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_due tpo_qty_req
-                            tpo_qty xvp_ord_min tpo_qty_mth1 tpo_qty_mth2
+                            tpo_qty tpo_qty_mth1 tpo_qty_mth2
                             weekday(tpo_due) - 1.
 end.
 
@@ -462,39 +464,39 @@ procedure getOrdDay:
      END.
   end.  /* if substring(iRule,1,1) = "W" then do: */
   else if substring(iRule,1,1) = "M" then do:
-		 	 assign vdate1 = date(month(idate),1,year(idate)).
-		 	 REPEAT:
-     	      if index(entry(2,irule,";"),string(weekday(vdate1) - 1,"9")) > 0
-     	      then leave.
-     	      vdate1 = vdate1 + 1.
-     	 END.
-     	 assign odatestart = vdate1.
-     	 assign vdate2 = date(month(vdate1),28,year(vdate1)) + 5.
-     	 assign vdate2 = date(month(vdate2),1,year(vdate2)).
-		 	 REPEAT:
-     	      if index(entry(2,irule,";"),string(weekday(vdate2) - 1,"9")) > 0
-     	      then leave.
-     	      vdate2 = vdate2 + 1.
-     	 END.
+       assign vdate1 = date(month(idate),1,year(idate)).
+       REPEAT:
+            if index(entry(2,irule,";"),string(weekday(vdate1) - 1,"9")) > 0
+            then leave.
+            vdate1 = vdate1 + 1.
+       END.
+       assign odatestart = vdate1.
+       assign vdate2 = date(month(vdate1),28,year(vdate1)) + 5.
+       assign vdate2 = date(month(vdate2),1,year(vdate2)).
+       REPEAT:
+            if index(entry(2,irule,";"),string(weekday(vdate2) - 1,"9")) > 0
+            then leave.
+            vdate2 = vdate2 + 1.
+       END.
 
-     	 if substring(entry(1,irule,","),2,1) = "1" then do:
-     	    if idate >= vdate1 and idate < vdate2 then do:
-     	    	 assign odate = date1.
-     	    end.
+       if substring(entry(1,irule,","),2,1) = "1" then do:
+          if idate >= vdate1 and idate < vdate2 then do:
+             assign odate = date1.
+          end.
        end.
        else if substring(entry(1,irule,","),2,1) = "2" then do:
-       		if idate >= vdate1 and idate <= vdate1 + 13 then do:
-       			 assign odate = vdate1.
-       		end.
-       		else if idate > vdate1 + 13 and idate < vdate2 then do:
-       			 assign odate = vdate1 + 14.
-       		end.
+          if idate >= vdate1 and idate <= vdate1 + 13 then do:
+             assign odate = vdate1.
+          end.
+          else if idate > vdate1 + 13 and idate < vdate2 then do:
+             assign odate = vdate1 + 14.
+          end.
        end.
   end.  /* if substring(iRule,1,1) = "M" then do: */
   else do: /*其他情况以MRP日期为准*/
-  		assign odatestart = date(month(today),28,year(today)) + 5.
-  		assign odatestart = date(month(odatestart),1,year(odatestart)).
-  		assign odate = idate.
+      assign odatestart = date(month(today),28,year(today)) + 5.
+      assign odatestart = date(month(odatestart),1,year(odatestart)).
+      assign odate = idate.
   end.
       /* 如果送货日期为节假日则提前到上一个工作日 */
   REPEAT: /*假日*/
