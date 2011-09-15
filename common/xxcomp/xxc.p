@@ -4,9 +4,10 @@
 /* REVISION: 0CYH LAST MODIFIED: 12/17/10 BY: zy language be lower case      */
 /* REVISION: 14YP LAST MODIFIED: 04/25/11 BY: zy Add EB common            *EB*/
 /* REVISION: 19Y2 LAST MODIFIED: 09/02/11 BY: zy fix mfgutil.ini get methed  */
+/* REVISION: 19YG LAST MODIFIED: 09/16/11 BY: zy auto fill filet text        */
 /* REVISION END                                                              */
 
-{mfdtitle.i "19Y2"}
+{mfdtitle.i "19YG"}
 
 &SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -72,7 +73,14 @@ end.
 on Leave of destDir in frame z do:
    status input "".
 end.
-
+ON Leave of filef in FRAME Z DO:
+   assign filef.
+   assign filet:screen-value = filef + hi_char.
+END.
+ON Leave of filet in FRAME Z DO:
+   assign filet.
+   if index(filet,hi_char) = 0 then assign filet:screen-value = filet + hi_char.
+END.
 ON "CTRL-]" OF destDir IN FRAME z DO:
    assign destDir.
    if destDir <> vClientDir then do:
