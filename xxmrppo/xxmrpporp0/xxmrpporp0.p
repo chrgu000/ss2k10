@@ -1,16 +1,16 @@
 /* xxmrpporp0.i - vender mrp po report                                       */
-/* revision: 110901.1   created on: 20110901   by: zhang yun                 */
+/* revision: 110915.1   created on: 20110901   by: zhang yun                 */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110909.1"}
+{mfdtitle.i "110915.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
-define variable site1 like si_site.
-define variable part like pt_part /*INITIAL "MHTA03-NE0-10-CK"*/.
-define variable part1 like pt_part /*INITIAL "MHTA03-NE0-10-CK"*/.
+define variable site1 like si_site. 
+define variable part like pt_part /* INITIAL "M30033-260-20-CK2" */.
+define variable part1 like pt_part /* INITIAL "MHTA03-NE0-10-CK" */.
 define variable due as date.
 define variable duef as date.
 define variable duet as date.
@@ -24,12 +24,16 @@ define variable act as logical initial yes.
 define variable qtytemp as decimal.
 define variable qtytemp1 as decimal.
 define variable xvpweek like xvp_week.
+define variable xRule AS CHARACTER.
+define variable xCyc as INTEGER.
+define variable xType AS CHARACTER.
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
     fields tpo_part like pt_part
     fields tpo_type as character
     fields tpo_due  like po_due_date
+    fields tpo_mrp_date like po_due_date
     fields tpo_start  as date
     fields tpo_end  as date
     fields tpo_qty like pod_qty_ord
@@ -53,7 +57,7 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 assign due = date(month(today),28,year(today)).
 assign due = date(month(due + 5),1,year(due + 5)).
- 
+
 assign areaDesc = getTermLabel("XVP_AREA_DESC",40).
 display areaDesc with frame a.
 find first si_mstr no-lock no-error.
@@ -109,7 +113,7 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
   /* {mfphead.i} */
-  empty temp-table tmp_po no-error. 
+  empty temp-table tmp_po no-error.
 
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
@@ -118,38 +122,189 @@ repeat:
             and pt_site >= site and (pt_site <= site1 or site1 = "")
             and (pt_vend = vend or vend = "")
             and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_part = pt_part and 
+       EACH mrp_det WHERE mrp_part = pt_part and
             mrp_detail = "计划单" USE-INDEX mrp_part,
-       EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "" :
-       run getDateArea(input due,input vd__chr03,output duef, output duet).
- 	     if mrp_due_date > duet then do:
- 	     	 next.
- 	     end.
-       run getOrdDay(input site,input vd__chr03,input due,
-       						   input mrp_due_date, output sendDate).
-       find first tmp_po exclusive-lock where tpo_part = pt_part
-              and tpo_vend = pt_vend and tpo_due = sendDate no-error.
-       if available tmp_po then do:
-          assign tpo_qty = tpo_qty + mrp_qty .
+       EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
+       break by mrp_part by mrp_due_date:
+       if substring(vd__chr03,1,2) = "M4" then do:
+          if first-of(mrp_part) then do: 
+          	 assign xRule = entry(2,vd__chr03,";").
+          	 assign duef = date(month(due),1,year(due)).
+          	 assign duet = date(month(due),28,year(due)) + 5.
+          	 assign duet = date(month(duet),1,year(duet)).
+          	 repeat:
+          	 	 if index(xRule,string(weekday(duef) - 1)) = 0 and
+          	 	    not can-find(first hd_mstr no-lock where hd_site = pt_site
+          	 	 										and hd_date = duef) then leave.
+          	 	 else duef = duef + 1.
+          	 end.
+          	 repeat:
+          	 	  if index(xRule,string(weekday(duet) - 1)) > 0 and
+          	 	     not can-find(first hd_mstr no-lock where hd_site = pt_site
+          	 	 										and hd_date = duet) then leave.
+          	 	  else duet = duet + 1.
+          	 end.
+          end.
+          if mrp_due_date > duet then do: 
+          	 next.
+          end.
+          else do:
+               if mrp_due_date < duef then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = mrp_due_date
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.
+               else if mrp_due_date >= duef and 
+               				 mrp_due_date < duef + 7 then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = duef
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.
+ 							 else if mrp_due_date >= duef + 7 and 
+               				 mrp_due_date < duef + 14 then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = duef + 7
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.
+               else if mrp_due_date >= duef + 14 and 
+               				 mrp_due_date < duef + 21 then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = duef + 14
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.  
+               else if mrp_due_date >= duef + 21 and 
+               				 mrp_due_date < duef + 28 then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = duef + 21
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.
+               else if mrp_due_date >= duef + 28 then do:
+                  assign senddate = mrp_due_date.
+                  find first tmp_po exclusive-lock where tpo_part = pt_part
+                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                  if available tmp_po then do:
+                     assign tpo_qty = tpo_qty + mrp_qty .
+                  end.
+                  else do:
+                    create tmp_po.
+                    assign tpo_vend = pt_vend
+                           tpo_part = pt_part
+                           tpo_due = duef + 28
+                           tpo_qty = mrp_qty
+                           tpo_mrp_date = mrp_due_date
+                           tpo_start = duef
+                           tpo_end = duet
+                           tpo_rule = vd__chr03.
+                  end.
+               end.               
+          end.  /*if mrp_due_date > duet else do: */
        end.
        else do:
-         create tmp_po.
-         assign tpo_vend = pt_vend
-                tpo_part = pt_part
-                tpo_due = sendDate 
-                tpo_qty = mrp_qty
-                tpo_start = duef
-                tpo_end = duet
-                tpo_rule = vd__chr03.
-         find first xvp_ctrl where xvp_vend = pt_vend
-         			 and xvp_part = pt_part no-lock no-error.
-         if availabl xvp_ctrl then do:
-         	 assign tpo_type = "T".
-         end.
-       end. 
+            run getParams(input due,input vd__chr03,
+                   output xRule,output xCyc,output xType,
+                   output duef, output duet).
+            if mrp_due_date > duet then do:
+               next.
+            end.
+            run getOrdDay(input site,input vd__chr03,input due,
+                           input mrp_due_date, output sendDate).
+            find first tmp_po exclusive-lock where tpo_part = pt_part
+                   and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+            if available tmp_po then do:
+               assign tpo_qty = tpo_qty + mrp_qty .
+            end.
+            else do:
+              create tmp_po.
+              assign tpo_vend = pt_vend
+                     tpo_part = pt_part
+                     tpo_due = sendDate
+                     tpo_qty = mrp_qty
+                     tpo_mrp_date = mrp_due_date
+                     tpo_start = duef
+                     tpo_end = duet
+                     tpo_rule = vd__chr03.
+            end.
+       end.
   /*    {mfrpchk.i} */
     END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
 
+for each tmp_po exclusive-lock,each pt_mstr no-lock where pt_part = tpo_part:
+     find first xvp_ctrl where xvp_vend = pt_vend
+           and xvp_part = pt_part no-lock no-error.
+     if availabl xvp_ctrl then do:
+       assign tpo_type = "T".
+     end.
+end.
 
 /*产生单号
 assign areaDesc = "".
@@ -165,7 +320,7 @@ assign areaDesc = "".
 */
 
 export delimiter "~011" getTermLabel("PO_NUMBER",12)
-											  getTermLabel("TYPE",12)
+                        getTermLabel("TYPE",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
                         getTermLabel("RECEIVED_QTY",12)
@@ -174,17 +329,18 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("SHIP_TERMS",12)
                         getTermLabel("COMMENT",12)
                         getTermLabel("START",12)
-                        getTermLabel("END",12).
+                        getTermLabel("END",12)
+                        getTermLabel("EXPIRATION_DATE",12).
 for each tmp_po no-lock where:
-		assign areaDesc = "".
-		find first code_mstr no-lock where code_fldname = "vd__chr03"
-					 and code_value = tpo_rule no-error.
-		if available code_mstr then do:
-			 assign areaDesc = code_cmmt.
-	  end.
-    export delimiter "~011" tpo_nbr tpo_type tpo_vend tpo_part tpo_qty 
-    											  tpo_due weekday(tpo_due) - 1 tpo_rule areaDesc 
-    											  tpo_start tpo_end.
+    assign areaDesc = "".
+    find first code_mstr no-lock where code_fldname = "vd__chr03"
+           and code_value = tpo_rule no-error.
+    if available code_mstr then do:
+       assign areaDesc = code_cmmt.
+    end.
+    export delimiter "~011" tpo_nbr tpo_type tpo_vend tpo_part tpo_qty
+                            tpo_due weekday(tpo_due) - 1 tpo_rule areaDesc
+                            tpo_start tpo_end tpo_mrp_date.
 end.
 
 /* REPORT TRAILER  */

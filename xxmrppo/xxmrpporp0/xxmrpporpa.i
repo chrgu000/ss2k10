@@ -22,7 +22,7 @@ DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
     IF iDiff > 0  THEN DO:
        IF iDiff MODULO iBase = 0 then do:
 /*           assign iReqQty = (truncate(iDiff / iBase,0)) * iBase.           */
-						 assign iReqQty = iDiff.
+             assign iReqQty = iDiff.
        end.
        else do:
            assign iReqQty = (truncate(iDiff / iBase,0) + 1) * iBase.
@@ -34,20 +34,26 @@ DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
     ASSIGN iDiff = iReqQty - iDiff.
 end procedure.
 
-PROCEDURE getDateArea:
+PROCEDURE getParams:
 /*------------------------------------------------------------------------------
     Purpose: 计算日期范围
-      Notes:  
+      Notes:
 ------------------------------------------------------------------------------*/
     DEFINE INPUT PARAMETER iDate AS DATE.
     DEFINE INPUT PARAMETER iRule AS CHARACTER.
+
+    DEFINE OUTPUT PARAMETER oRule AS CHARACTER.
+    DEFINE OUTPUT PARAMETER oCyc as INTEGER.
+    DEFINE OUTPUT PARAMETER oType AS CHARACTER.
     DEFINE OUTPUT PARAMETER oStart AS DATE.
     DEFINE OUTPUT PARAMETER oEnd AS DATE.
-    
-    IF SUBSTRING(irule,1,1) = "M" THEN
-        ASSIGN iRule = entry(2,iRule,";").
+
+    ASSIGN oType = SUBSTRING(iRule ,1 ,1).
+    IF oType = "M" THEN 
+        ASSIGN oRule = entry(2, iRule , ";")
+               oCyc = integer(substring(entry(1, iRule , ";"),2)).
     ELSE
-        ASSIGN iRule = substring(iRule,2).
+        ASSIGN oRule = substring(iRule,2).
 
     oStart = date(month(iDate),1,year(iDate)).
     repeat:
@@ -63,14 +69,14 @@ PROCEDURE getDateArea:
                leave.
           end.
           oEnd = oEnd + 1.
-    end. 
+    end.
     oEnd = oEnd - 1.
 END PROCEDURE.
 
 procedure getOrdDay:
 /*------------------------------------------------------------------------------
     Purpose: 获取送货日期
-      Notes: 如果计算出的日期为非工作日则提前到第一个非工作日.
+      Notes: 如果计算出的日期为非工作日则提前到上一个送货日.
 ------------------------------------------------------------------------------*/
   define input parameter isite like si_site.
   define input parameter iRule as character.
@@ -78,32 +84,30 @@ procedure getOrdDay:
   define input parameter iDate as date.
   define output parameter odate as date.
 
-    define variable vrule as character.  /* 送货原则 */
-    define variable vtype as character.  /* 类别 M/W */
-    define variable vCyc  as integer.    /* 频率  */
-    define variable vStart as date.
-    define variable vEnd as date.
+  define variable vrule as character.  /* 送货原则 */
+  define variable vtype as character.  /* 类别 M/W */
+  define variable vCyc  as integer.    /* 频率  */
+  define variable vStart as date.
+  define variable vEnd as date.
 
 /*   empty temp-table tmp_date no-error. */
-  	ASSIGN vtype = substring(iRule,1,1).  
-    IF vtype = "M" THEN DO: .
-    	ASSIGN vcyc = integer(substring(ENTRY(1,irule,";"),2)).
-    END.
 
-    RUN getDateArea(INPUT iStart,INPUT iRule,OUTPUT vStart,OUTPUT vEnd).
-    IF vtype = "M" THEN ASSIGN vRule = ENTRY(2,iRule,";").
-                   ELSE ASSIGN vrule = SUBSTRING(iRule,2).
+    RUN getParams(INPUT iStart,INPUT iRule,
+                  OUTPUT vRule,output vCyc,OUTPUT vType,
+                  OUTPUT vStart,OUTPUT vEnd).
+
     IF idate >= vstart AND iDate <= vend THEN DO:
         IF vType = "W" THEN DO:
            ASSIGN oDate = iDate.
-           REPEAT: 
+           REPEAT:
                IF INDEX(vRule,STRING(WEEKDAY(odate) - 1)) > 0 THEN DO:
                    LEAVE.
                END.
                oDate = oDate - 1.
            END.
         END.
-        ELSE IF vType = "M" THEN DO: 
+        ELSE IF vType = "M" THEN DO:
+      
             IF vCyc = 1 THEN DO:
                 ASSIGN odate = vStart.
             END.
@@ -115,16 +119,18 @@ procedure getOrdDay:
                    ASSIGN oDate = vStart + 14.
                 END.
             END.
-        END.
+        END.        
     END.
     ELSE if iDate < vStart Then DO:
-         ASSIGN oDate = iDate.  
+         ASSIGN oDate = iDate.
+         
     END.
     ELSE DO:
-    	   ASSIGN oDate = ?.
+    		 
+         ASSIGN oDate = ?.
     END.
 
-/* 如果送货日期为节假日则提前到上一个工作日 */
+/* 如果送货日期为节假日则提前到上一个送货日 */
   REPEAT: /*假日*/
      IF CAN-FIND(FIRST hd_mstr NO-LOCK WHERE
                        hd_site = isite AND hd_date = odate) THEN DO:
@@ -132,6 +138,9 @@ procedure getOrdDay:
      END.
      ELSE DO:
          LEAVE.
-     END.
+     END.        
+     assign iDate = oDate.
+     run getOrdDay(input isite,input iRule,input iDate, input iDate,
+							     output oDate).
   END. /* REPEAT: 假日*/
 end procedure.
