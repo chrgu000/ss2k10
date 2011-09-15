@@ -9,7 +9,7 @@
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
-define variable part like pt_part /* INITIAL "M30033-260-20-CK2" */.
+define variable part like pt_part INITIAL "M30623-260-50-CK"  .
 define variable part1 like pt_part /* INITIAL "MHTA03-NE0-10-CK" */.
 define variable due as date.
 define variable duef as date.
@@ -62,6 +62,7 @@ assign due = date(month(due + 5),1,year(due + 5)) - 1.
 
 assign areaDesc = getTermLabel("XVP_AREA_DESC",40).
 display areaDesc with frame a.
+display part @ part1 with frame a.
 find first si_mstr no-lock no-error.
 if available si_mstr then do:
    assign site = si_site
@@ -127,7 +128,12 @@ repeat:
        EACH mrp_det WHERE mrp_part = pt_part and
             mrp_detail = "¼Æ»®µ¥" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
-       break by mrp_part by mrp_due_date:
+       break by pt_vend by mrp_part by mrp_due_date:
+       if first-of(pt_vend) then do:
+       		run getParams(input due,input vd__chr03,
+                   output xRule,output xCyc,output xType,
+                   output duef, output duet).
+       end.
        if substring(vd__chr03,1,2) = "M4" then do:
           if first-of(mrp_part) then do:
              assign xRule = entry(2,vd__chr03,";").

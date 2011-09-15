@@ -39,6 +39,7 @@ PROCEDURE getParams:
     Purpose: ¼ÆËãÈÕÆÚ·¶Î§
       Notes:
 ------------------------------------------------------------------------------*/
+		DEFINE INPUT PARAMETER iSite LIKE SI_SITE.
     DEFINE INPUT PARAMETER iDate AS DATE.
     DEFINE INPUT PARAMETER iRule AS CHARACTER.
 
@@ -54,22 +55,25 @@ PROCEDURE getParams:
                oCyc = integer(substring(entry(1, iRule , ";"),2)).
     ELSE
         ASSIGN oRule = substring(iRule,2).
-
     oStart = date(month(iDate),1,year(iDate)).
     repeat:
-          if index(iRule,string(weekday(oStart) - 1)) > 0 then do:
-               leave.
-          end.
-          oStart = oStart + 1.
+       if index(oRule,string(weekday(oStart) - 1)) > 0 and 
+       		not can-find(first hd_mstr no-lock where 
+       											 hd_site = iSite and hd_date = oStart) then do:
+            leave.
+       end.
+       else oStart = oStart + 1.
     end.
     oEnd = DATE(MONTH(oStart),28,YEAR(oStart)) + 5.
     oEnd = DATE(MONTH(oEnd),1,YEAR(oEnd)).
     repeat:
-          if index(iRule,string(weekday(oEnd) - 1)) > 0 then do:
+          if index(oRule,string(weekday(oEnd) - 1)) > 0  and 
+       		not can-find(first hd_mstr no-lock where 
+       											 hd_site = isite and hd_date = oEnd) then do:
                leave.
           end.
-          oEnd = oEnd + 1.
-    end.
+          else oEnd = oEnd + 1.
+    end. 
     oEnd = oEnd - 1.
 END PROCEDURE.
 
@@ -95,19 +99,20 @@ procedure getOrdDay:
     RUN getParams(INPUT iStart,INPUT iRule,
                   OUTPUT vRule,output vCyc,OUTPUT vType,
                   OUTPUT vStart,OUTPUT vEnd).
-
+		 
     IF idate >= vstart AND iDate <= vend THEN DO:
         IF vType = "W" THEN DO:
            ASSIGN oDate = iDate.
            REPEAT:
-               IF INDEX(vRule,STRING(WEEKDAY(odate) - 1)) > 0 THEN DO:
+               IF INDEX(vRule,STRING(WEEKDAY(odate) - 1)) > 0 and 
+               		not can-find (FIRST hd_mstr NO-LOCK WHERE
+                       hd_site = isite AND hd_date = odate) then DO:
                    LEAVE.
                END.
                oDate = oDate - 1.
            END.
         END.
-        ELSE IF vType = "M" THEN DO:
-      
+        ELSE IF vType = "M" THEN DO:      
             IF vCyc = 1 THEN DO:
                 ASSIGN odate = vStart.
             END.
