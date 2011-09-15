@@ -8,7 +8,7 @@
 {mfdtitle.i "110915.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
-define variable site1 like si_site. 
+define variable site1 like si_site.
 define variable part like pt_part /* INITIAL "M30033-260-20-CK2" */.
 define variable part1 like pt_part /* INITIAL "MHTA03-NE0-10-CK" */.
 define variable due as date.
@@ -57,6 +57,8 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 assign due = date(month(today),28,year(today)).
 assign due = date(month(due + 5),1,year(due + 5)).
+assign due = date(month(due),28,year(due)).
+assign due = date(month(due + 5),1,year(due + 5)) - 1.
 
 assign areaDesc = getTermLabel("XVP_AREA_DESC",40).
 display areaDesc with frame a.
@@ -127,32 +129,33 @@ repeat:
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
        break by mrp_part by mrp_due_date:
        if substring(vd__chr03,1,2) = "M4" then do:
-          if first-of(mrp_part) then do: 
-          	 assign xRule = entry(2,vd__chr03,";").
-          	 assign duef = date(month(due),1,year(due)).
-          	 assign duet = date(month(due),28,year(due)) + 5.
-          	 assign duet = date(month(duet),1,year(duet)).
-          	 repeat:
-          	 	 if index(xRule,string(weekday(duef) - 1)) = 0 and
-          	 	    not can-find(first hd_mstr no-lock where hd_site = pt_site
-          	 	 										and hd_date = duef) then leave.
-          	 	 else duef = duef + 1.
-          	 end.
-          	 repeat:
-          	 	  if index(xRule,string(weekday(duet) - 1)) > 0 and
-          	 	     not can-find(first hd_mstr no-lock where hd_site = pt_site
-          	 	 										and hd_date = duet) then leave.
-          	 	  else duet = duet + 1.
-          	 end.
+          if first-of(mrp_part) then do:
+             assign xRule = entry(2,vd__chr03,";").
+             assign duef = date(month(due),1,year(due)).
+             assign duet = date(month(due),28,year(due)) + 5.
+             assign duet = date(month(duet),1,year(duet)).
+             repeat:
+               if index(xRule,string(weekday(duef) - 1)) > 0 and
+                  not can-find(first hd_mstr no-lock where hd_site = pt_site
+                                  and hd_date = duef) then leave.
+               else duef = duef + 1.
+             end.
+             repeat:
+                if index(xRule,string(weekday(duet) - 1)) > 0 and
+                   not can-find(first hd_mstr no-lock where hd_site = pt_site
+                                  and hd_date = duet) then leave.
+                else duet = duet + 1.
+             end.
           end.
-          if mrp_due_date > duet then do: 
-          	 next.
+          if mrp_due_date > duet then do:
+             next.
           end.
           else do:
                if mrp_due_date < duef then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = mrp_due_date
+                         no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -168,11 +171,11 @@ repeat:
                            tpo_rule = vd__chr03.
                   end.
                end.
-               else if mrp_due_date >= duef and 
-               				 mrp_due_date < duef + 7 then do:
+               else if mrp_due_date >= duef and
+                       mrp_due_date < duef + 7 then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = duef no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -188,11 +191,11 @@ repeat:
                            tpo_rule = vd__chr03.
                   end.
                end.
- 							 else if mrp_due_date >= duef + 7 and 
-               				 mrp_due_date < duef + 14 then do:
+               else if mrp_due_date >= duef + 7 and
+                       mrp_due_date < duef + 14 then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = duef + 7 no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -208,11 +211,12 @@ repeat:
                            tpo_rule = vd__chr03.
                   end.
                end.
-               else if mrp_due_date >= duef + 14 and 
-               				 mrp_due_date < duef + 21 then do:
+               else if mrp_due_date >= duef + 14 and
+                       mrp_due_date < duef + 21 then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = duef + 14
+                         no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -227,12 +231,13 @@ repeat:
                            tpo_end = duet
                            tpo_rule = vd__chr03.
                   end.
-               end.  
-               else if mrp_due_date >= duef + 21 and 
-               				 mrp_due_date < duef + 28 then do:
+               end.
+               else if mrp_due_date >= duef + 21 and
+                       mrp_due_date < duef + 28 then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = duef + 21
+                         no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -251,7 +256,8 @@ repeat:
                else if mrp_due_date >= duef + 28 then do:
                   assign senddate = mrp_due_date.
                   find first tmp_po exclusive-lock where tpo_part = pt_part
-                         and tpo_vend = pt_vend and tpo_due = sendDate no-error.
+                         and tpo_vend = pt_vend and tpo_due = duef + 28
+                         no-error.
                   if available tmp_po then do:
                      assign tpo_qty = tpo_qty + mrp_qty .
                   end.
@@ -266,7 +272,7 @@ repeat:
                            tpo_end = duet
                            tpo_rule = vd__chr03.
                   end.
-               end.               
+               end.
           end.  /*if mrp_due_date > duet else do: */
        end.
        else do:
@@ -327,10 +333,10 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("DUE_DATE",12)
                         getTermLabel("WEEK",12)
                         getTermLabel("SHIP_TERMS",12)
-                        getTermLabel("COMMENT",12)
-                        getTermLabel("START",12)
-                        getTermLabel("END",12)
-                        getTermLabel("EXPIRATION_DATE",12).
+                        getTermLabel("COMMENT",12).
+/*                      getTermLabel("START",12)                             */
+/*                      getTermLabel("END",12)                               */
+/*                      getTermLabel("EXPIRATION_DATE",12).                  */
 for each tmp_po no-lock where:
     assign areaDesc = "".
     find first code_mstr no-lock where code_fldname = "vd__chr03"
@@ -339,8 +345,8 @@ for each tmp_po no-lock where:
        assign areaDesc = code_cmmt.
     end.
     export delimiter "~011" tpo_nbr tpo_type tpo_vend tpo_part tpo_qty
-                            tpo_due weekday(tpo_due) - 1 tpo_rule areaDesc
-                            tpo_start tpo_end tpo_mrp_date.
+                            tpo_due weekday(tpo_due) - 1 tpo_rule areaDesc.
+/*                          tpo_start tpo_end tpo_mrp_date.                  */
 end.
 
 /* REPORT TRAILER  */
