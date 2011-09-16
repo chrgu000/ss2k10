@@ -10,7 +10,7 @@
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character initial "xxmrpporp0.p" no-undo.
-define variable part like pt_part INITIAL "M30623-260-50-CK"  .
+define variable part like pt_part /* INITIAL "M30623-260-50-CK" */.
 define variable part1 like pt_part /* INITIAL "MHTA03-NE0-10-CK" */.
 define variable due as date.
 define variable duek as date.
@@ -360,25 +360,23 @@ for each tmp_po exclusive-lock,each pt_mstr no-lock where pt_part = tpo_part:
      end.
 end.
 
-/*产生单号
+/*产生单号*/
 assign areaDesc = "".
-for each tmp_po exclusive-lock where tpo_qty > 0 and tpo_flag <> ""
-     and tpo_vend <> ""
-    break by tpo_vend by tpo_flag by tpo_due:
-    if first-of(tpo_flag) then do:
+for each tmp_po exclusive-lock where tpo_vend <> ""
+    break by tpo_vend :
+    if first-of(tpo_vend) then do:
        run getPoNumber(input today,input tpo_vend,output areaDesc).
     end.
     assign tpo_nbr = areaDesc.
 end.
 assign areaDesc = "".
-*/
 
 export delimiter "~011" getTermLabel("PO_NUMBER",12)
-                        getTermLabel("TYPE",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
                         getTermLabel("RECEIVED_QTY",12)
                         getTermLabel("DUE_DATE",12)
+                        getTermLabel("TYPE",12)
                         getTermLabel("WEEK",12)
                         getTermLabel("SHIP_TERMS",12)
                         getTermLabel("COMMENT",12).
@@ -392,8 +390,8 @@ for each tmp_po no-lock where:
     if available code_mstr then do:
        assign areaDesc = code_cmmt.
     end.
-    export delimiter "~011" tpo_nbr tpo_type tpo_vend tpo_part tpo_qty
-                            tpo_due weekday(tpo_due) - 1 tpo_rule areaDesc.
+    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due tpo_type
+                            weekday(tpo_due) - 1 tpo_rule areaDesc.
 /*                          tpo_start tpo_end tpo_mrp_date.                  */
 end.
 
@@ -461,18 +459,30 @@ PROCEDURE getPoNumber:
   find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
        qad_key2 = oNbr no-error.
   if available qad_wkfl then do:
-     assign intI = qad_intfld[1] + 1
-            qad_intfld[1] = qad_intfld[1] + 1
-            qad_key3 = string(qad_intfld[1] + 1).
+     assign intI = qad_intfld[1].
+     assign oNbr = oNbr + substring("0000" + string(inti),
+                       length("0000" + string(inti)) - 2).
+     find first po_mstr no-lock where po_nbr = oNbr no-error.
+     if not available po_mstr then do:
+         assign intI = qad_intfld[1] + 1
+                qad_intfld[1] = qad_intfld[1] + 1
+                qad_key3 = string(qad_intfld[1] + 1).
+         assign oNbr = oNbr + substring("0000" + string(inti),
+                     length("0000" + string(inti)) - 2).
+     end.
   end.
   else do:
+     assign intI = 0.
+     assign oNbr = oNbr + substring("0000" + string(inti),
+                       length("0000" + string(inti)) - 2).
+     find first po_mstr no-lock where po_nbr = oNbr no-error.
+     if not available po_mstr then do:
       create qad_wkfl.
       assign qad_key1 = "xxmrpporp0.p"
              qad_key2 = oNbr
              qad_intfld[1] = 0
              qad_key3 = "0".
+     end.
   end.
   release qad_wkfl.
-  assign oNbr = oNbr + substring("0000" + string(inti),
-                       length("0000" + string(inti)) - 2).
 END PROCEDURE.
