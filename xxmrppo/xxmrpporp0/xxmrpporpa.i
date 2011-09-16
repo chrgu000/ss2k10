@@ -3,6 +3,12 @@
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
+define temp-table tmp_datearea
+		fields td_rule as character 
+		fields td_key as character
+		fields td_date as date
+		index td_rule is primary td_rule td_date.
+
 
 procedure MinPackQty:
 /*------------------------------------------------------------------------------
