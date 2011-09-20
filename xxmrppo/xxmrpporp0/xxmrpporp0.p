@@ -44,6 +44,8 @@ define temp-table tmp_po
     fields tpo_rule as character
     index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
 
+define buffer md for mrp_det.
+
 /* SELECT FORM */
 form
    site  colon 15
@@ -161,7 +163,8 @@ repeat:
     end.
 */
    assign sendDate = date(month(due),1,year(due)) - 10.
-   for each code_mstr no-lock where code_fldname = "vd__chr03":
+   for each code_mstr no-lock where code_fldname = "vd__chr03" and
+            index(code_value,"M4") = 0:
       run getParams(input "GSA01", input sendDate,input code_value,
                 output xRule,output xCyc,output xType,
                 output duef, output duet).
@@ -257,6 +260,7 @@ repeat:
         end.
    end.
 
+/******************
    for each qad_wkfl exclusive-lock where qad_key1 = key1
         and qad_charfld[2] = "KEY":
         for each tmp_datearea exclusive-lock where td_rule = qad_charfld[1]
@@ -265,6 +269,7 @@ repeat:
 /*           delete tmp_datearea.       */
         end.
    end.
+*******************/
 /*
    for each qad_wkfl no-lock where qad_key1 = key1  :
         display qad_charfld[1] qad_charfld[2] qad_datefld[1] qad_datefld[3].
@@ -274,6 +279,7 @@ repeat:
        display td_rule td_date td_key weekday(td_date) - 1 column-label "week".
    end.
 */
+
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
@@ -281,73 +287,116 @@ repeat:
             and pt_site >= site and (pt_site <= site1 or site1 = "")
             and (pt_vend = vend or vend = "")
             and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_part = pt_part and
-            mrp_detail = "计划单" USE-INDEX mrp_part,
+       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+            mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
-       break by pt_vend by mrp_part
-       by string(year(mrp_due_date),"9999") + string(month(mrp_due_date),"99")
-       by mrp_due_date:
-       if substring(vd__chr03,1,2) <> "M4" then do:
-          if first-of(pt_vend) then do:
-             find first tmp_datearea where td_rule = vd__chr03
-                    and td_key = "Key" no-lock no-error.
-             if available(tmp_datearea) then do:
-                assign duek = td_date.
-             end.
-             find last tmp_datearea where td_rule = vd__chr03 no-lock no-error.
-             if available(tmp_datearea) then do:
-                assign duee = td_date.
-             end.
+       break by pt_vend by mrp_det.mrp_part by mrp_det.mrp_due_date:
+          if substring(vd__chr03,1,2) <> "M4" then do:
+              if first-of(pt_vend) then do:
+                 assign xRule = vd__chr03.
+              end.
+              find first tmp_datearea where td_rule = xRule
+                     and td_key = "Key" no-lock no-error.
+              if available(tmp_datearea) then do:
+                 assign duek = td_date.
+              end.
+              find last tmp_datearea where td_rule = xRule no-lock no-error.
+              if available(tmp_datearea) then do:
+                 assign duee = td_date.
+              end.
           end.
-          if mrp_due_date >= duee then do:
+          else do:
+            for first md use-index mrp_partdate no-lock where
+                       md.mrp_part = mrp_det.mrp_part and
+                       md.mrp_detail = "计划单" and
+                       md.mrp_due_date >= date(month(due),1,year(due)):
+            end.
+            if available md then do:
+               if weekday(md.mrp_due_date) - 1 >= 1 and
+                  weekday(md.mrp_due_date) - 1 <= 2 then do:
+                  assign xRule = "W1".
+               end.
+               if weekday(md.mrp_due_date) - 1 >= 3 and
+                  weekday(md.mrp_due_date) - 1 <= 4 then do:
+                  assign xRule = "W3".
+               end.
+               else do:
+                  assign xRule = "W5".
+               end.
+            end.
+            find first tmp_datearea where td_rule = xRule
+                   and td_key = "Key" no-lock no-error.
+            if available(tmp_datearea) then do:
+               assign duek = td_date.
+            end.
+            find last tmp_datearea where td_rule = xRule no-lock no-error.
+            if available(tmp_datearea) then do:
+               assign duee = td_date.
+            end.
+          end.
+
+          if mrp_det.mrp_due_date >= duee then do:
              next.
           end.
 
-          find last tmp_datearea where td_rule = vd__chr03
-                and mrp_due_date >= td_date no-lock no-error.
+          find last tmp_datearea where td_rule = xRule
+                and mrp_det.mrp_due_date >= td_date no-lock no-error.
           if available tmp_datearea then do:
              assign duef = td_date.
           end.
-          find first tmp_datearea where td_rule = vd__chr03
-                and mrp_due_date < td_date no-lock no-error.
+          find first tmp_datearea where td_rule = xRule
+                and mrp_det.mrp_due_date < td_date no-lock no-error.
            if available tmp_datearea then do:
              assign duet = td_date.
           end.
           find first tmp_po exclusive-lock where tpo_part = pt_part
                  and tpo_vend = pt_vend and tpo_due = duef no-error.
           if available tmp_po then do:
-             assign tpo_qty = tpo_qty + mrp_qty .
+             assign tpo_qty = tpo_qty + mrp_det.mrp_qty .
           end.
           else do:
               create tmp_po.
               assign tpo_vend = pt_vend
                      tpo_part = pt_part
                      tpo_due = duef
-                     tpo_qty = mrp_qty
-                     tpo_mrp_date = mrp_due_date
+                     tpo_qty = mrp_det.mrp_qty
+                     tpo_mrp_date = mrp_det.mrp_due_date
                      tpo_start = duek
                      tpo_end = duee - 1
                      tpo_rule = vd__chr03.
           end.
-       end. /* if substring(vd__chr03,1,2) <> "M4" then do: */
-       else do: 
-            if first-of(string(year(mrp_due_date),"9999") +
-                        string(month(mrp_due_date),"99")) then do:
-							 assign duek = mrp_due_date.
-							 repeat:
-							 	 if index(entry(2,vd__chr03,";"),string(weekday(duek) - 1)) > 0 
-							 	 then do:
-							 	 		  leave.
-							   end.
-							   else do:
-							   	 assign duek = duek - 1.
-							   end.
-							 end.
-							 message mrp_part mrp_due_date duek weekday(duek) - 1 view-as alert-box.
-            end.
-       end.
     /*    {mfrpchk.i} */
    END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
+
+   assign duef = date(month(due),28,year(due)) + 5.
+   assign duef = date(month(duef),1,year(duef)).
+   assign duet = duef + 65.
+   assign duet = date(month(duet),1,year(duet)) - 1.
+
+   FOR EACH pt_mstr no-lock where
+            pt_part >= part and pt_part <= part1 and
+            substring(pt_part,1,1) <> "X"
+            and (pt_buyer = buyer or buyer = "")
+            and pt_site >= site and (pt_site <= site1 or site1 = "")
+            and (pt_vend = vend or vend = "")
+            and (substring(pt_vend,1,1) = area or area = ""),
+       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+            mrp_det.mrp_detail = "计划单" and
+            mrp_det.mrp_due_date >= duef and mrp_det.mrp_due_date <= duet
+            USE-INDEX mrp_part,
+       EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "":
+       find first tmp_po no-lock where tpo_vend = pt_vend
+       				and tpo_part = pt_part no-error.
+       if not available tmp_po then do:
+					create tmp_po.
+					assign tpo_vend = pt_vend
+								 tpo_part = pt_part
+								 tpo_due = duef - 1
+								 tpo_qty = 0
+								 tpo_rule = vd__chr03. 
+       end.       				
+   END.
+
 
 for each tmp_po exclusive-lock,each pt_mstr no-lock where pt_part = tpo_part:
      find first xvp_ctrl where xvp_vend = pt_vend
