@@ -306,11 +306,11 @@ repeat:
               end.
           end.
           else do:
-            for first md use-index mrp_partdate no-lock where
+            find first md use-index mrp_partdate no-lock where
                        md.mrp_part = mrp_det.mrp_part and
                        md.mrp_detail = "¼Æ»®µ¥" and
-                       md.mrp_due_date >= date(month(due),1,year(due)):
-            end.
+                       md.mrp_due_date >= date(month(due),1,year(due)) 
+            no-error.
             if available md then do:
                if weekday(md.mrp_due_date) - 1 >= 1 and
                   weekday(md.mrp_due_date) - 1 <= 2 then do:
