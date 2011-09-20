@@ -17,7 +17,7 @@ define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr.
+define variable vend like vd_addr initial "C02C016".
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -262,7 +262,7 @@ repeat:
         for each tmp_datearea exclusive-lock where td_rule = qad_charfld[1]
              and td_date < qad_datefld[3]:
 /*           assign td_key = "Delete".  */
-             delete tmp_datearea.
+/*           delete tmp_datearea.       */
         end.
    end.
 /*
@@ -284,70 +284,67 @@ repeat:
        EACH mrp_det WHERE mrp_part = pt_part and
             mrp_detail = "¼Æ»®µ¥" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
-       break by pt_vend by mrp_part by mrp_due_date:
-       if first-of(pt_vend) then do:
-          find first tmp_datearea where td_rule = vd__chr03
-                 and td_key = "Key" no-lock no-error.
-          if available(tmp_datearea) then do:
-             assign duek = td_date.
-          end.
-          find last tmp_datearea where td_rule = vd__chr03 no-lock no-error.
-          if available(tmp_datearea) then do:
-             assign duee = td_date.
-          end.
-       end.
-       if mrp_due_date >= duee then do:
-          next.
-       end.
-       if mrp_due_date < duek then do:
-          find first tmp_datearea where td_rule = vd__chr03
-                 and td_date < duek no-lock no-error.
-          if available(tmp_datearea) then do:
-             find first tmp_po exclusive-lock where tpo_part = pt_part
-                   and tpo_vend = pt_vend and tpo_due = td_date no-error.
-             if available tmp_po then do:
-                assign tpo_qty = tpo_qty + mrp_qty .
+       break by pt_vend by mrp_part
+       by string(year(mrp_due_date),"9999") + string(month(mrp_due_date),"99")
+       by mrp_due_date:
+       if substring(vd__chr03,1,2) <> "M4" then do:
+          if first-of(pt_vend) then do:
+             find first tmp_datearea where td_rule = vd__chr03
+                    and td_key = "Key" no-lock no-error.
+             if available(tmp_datearea) then do:
+                assign duek = td_date.
              end.
-             else do:
-                 create tmp_po.
-                 assign tpo_vend = pt_vend
-                        tpo_part = pt_part
-                        tpo_due = td_date
-                        tpo_qty = mrp_qty
-                        tpo_mrp_date = mrp_due_date
-                        tpo_start = duek
-                        tpo_end = duee - 1
-                        tpo_rule = vd__chr03.
-               end.
-          end.    /* if available(tmp_datearea) then do: */
-       end.
-       else do:
-            find last tmp_datearea where td_rule = vd__chr03
-                  and mrp_due_date >= td_date no-lock no-error.
-            if available tmp_datearea then do:
-               assign duef = td_date.
-            end.
-            find first tmp_datearea where td_rule = vd__chr03
-                  and mrp_due_date < td_date no-lock no-error.
-             if available tmp_datearea then do:
-               assign duet = td_date.
-            end.
-            find first tmp_po exclusive-lock where tpo_part = pt_part
-                   and tpo_vend = pt_vend and tpo_due = duef no-error.
-             if available tmp_po then do:
-                assign tpo_qty = tpo_qty + mrp_qty .
+             find last tmp_datearea where td_rule = vd__chr03 no-lock no-error.
+             if available(tmp_datearea) then do:
+                assign duee = td_date.
              end.
-             else do:
-                 create tmp_po.
-                 assign tpo_vend = pt_vend
-                        tpo_part = pt_part
-                        tpo_due = duef
-                        tpo_qty = mrp_qty
-                        tpo_mrp_date = mrp_due_date
-                        tpo_start = duek
-                        tpo_end = duee - 1
-                        tpo_rule = vd__chr03.
-               end.
+          end.
+          if mrp_due_date >= duee then do:
+             next.
+          end.
+
+          find last tmp_datearea where td_rule = vd__chr03
+                and mrp_due_date >= td_date no-lock no-error.
+          if available tmp_datearea then do:
+             assign duef = td_date.
+          end.
+          find first tmp_datearea where td_rule = vd__chr03
+                and mrp_due_date < td_date no-lock no-error.
+           if available tmp_datearea then do:
+             assign duet = td_date.
+          end.
+          find first tmp_po exclusive-lock where tpo_part = pt_part
+                 and tpo_vend = pt_vend and tpo_due = duef no-error.
+          if available tmp_po then do:
+             assign tpo_qty = tpo_qty + mrp_qty .
+          end.
+          else do:
+              create tmp_po.
+              assign tpo_vend = pt_vend
+                     tpo_part = pt_part
+                     tpo_due = duef
+                     tpo_qty = mrp_qty
+                     tpo_mrp_date = mrp_due_date
+                     tpo_start = duek
+                     tpo_end = duee - 1
+                     tpo_rule = vd__chr03.
+          end.
+       end. /* if substring(vd__chr03,1,2) <> "M4" then do: */
+       else do: 
+            if first-of(string(year(mrp_due_date),"9999") +
+                        string(month(mrp_due_date),"99")) then do:
+							 assign duek = mrp_due_date.
+							 repeat:
+							 	 if index(entry(2,vd__chr03,";"),string(weekday(duek) - 1)) > 0 
+							 	 then do:
+							 	 		  leave.
+							   end.
+							   else do:
+							   	 assign duek = duek - 1.
+							   end.
+							 end.
+							 message mrp_part mrp_due_date duek weekday(duek) - 1 view-as alert-box.
+            end.
        end.
     /*    {mfrpchk.i} */
    END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
