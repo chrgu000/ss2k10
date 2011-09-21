@@ -10,15 +10,15 @@
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
-define variable part like pt_part.  /* INITIAL "MHTF01-407-00-CK". */
-define variable part1 like pt_part. /* INITIAL "MHTF01-407-00-CK". */
+define variable part like pt_part.
+define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr. /* initial "C02C016". */
-define variable buyer like pt_buyer. /* INITIAL "4RSA". */
+define variable vend like vd_addr.
+define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
 define variable sendDate as date.
@@ -27,7 +27,6 @@ define variable qty_nextMth like pod_qty_ord.
 define variable act as logical initial yes.
 define variable qtytemp as decimal.
 define variable qtytemp1 as decimal.
-define variable xvpweek like xvp_week.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
@@ -260,27 +259,6 @@ repeat:
         end.
    end.
 
-/******************
-   for each qad_wkfl exclusive-lock where qad_key1 = key1
-        and qad_charfld[2] = "KEY":
-        for each tmp_datearea exclusive-lock where td_rule = qad_charfld[1]
-             and td_date < qad_datefld[3]:
-/*           assign td_key = "Delete".  */
-/*           delete tmp_datearea.       */
-        end.
-   end.
-
-/*
-   for each qad_wkfl no-lock where qad_key1 = key1  :
-        display qad_charfld[1] qad_charfld[2] qad_datefld[1] qad_datefld[3].
-   end.
-
-   for each tmp_datearea NO-LOCK BREAK BY td_rule BY td_date:
-       display td_rule td_date td_key weekday(td_date) - 1 column-label "week".
-   end.
-*/
-*******************/
-
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
@@ -310,7 +288,7 @@ repeat:
             find first md use-index mrp_partdate no-lock where
                  md.mrp_part = mrp_det.mrp_part and
                  md.mrp_detail = "¼Æ»®µ¥" and
-                 md.mrp_due_date >= 
+                 md.mrp_due_date >=
                  date(month(mrp_det.mrp_due_date),1,year(mrp_det.mrp_due_date))
             no-error.
             if available md then do:
@@ -481,30 +459,9 @@ PROCEDURE getPoNumber:
      assign oNbr = substring(iVendor,1,2).
   end.
   assign oNbr = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + oNbr.
- /*******************
-  find last po_mstr no-lock where po_nbr begins oNbr no-error.
-  if available po_mstr then do:
-      find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
-                  qad_key2 = oNbr no-error.
-      if available qad_wkfl then do:
-         assign qad_intfld[1] = integer(substring(po_nbr,6))
-                qad_key3 = substring(po_nbr,6).
-      end.
-  end.
-  else do:
-        find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
-                  qad_key2 = oNbr no-error.
-        if not available qad_wkfl then do:
-            create qad_wkfl.
-            assign qad_key1 = "xxmrpporp0.p"
-                   qad_key2 = oNbr.
-        end.
-        assign qad_intfld[1] = 0
-               qad_key3 = "0".
-  end.
-  **********/
-  find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p" and
-       qad_key2 = oNbr no-error.
+ 
+  find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p.getponbr"
+  		   and qad_key2 = oNbr no-error.
   if available qad_wkfl then do:
      assign intI = qad_intfld[1].
      assign oNbr = oNbr + substring("0000" + string(inti),
@@ -525,7 +482,7 @@ PROCEDURE getPoNumber:
      find first po_mstr no-lock where po_nbr = oNbr no-error.
      if not available po_mstr then do:
       create qad_wkfl.
-      assign qad_key1 = "xxmrpporp0.p"
+      assign qad_key1 = "xxmrpporp0.p.getponbr"
              qad_key2 = oNbr
              qad_intfld[1] = 0
              qad_key3 = "0".
