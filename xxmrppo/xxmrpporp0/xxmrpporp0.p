@@ -9,16 +9,16 @@
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
-define variable key1 as character initial "xxmrpporp0.p" no-undo.
-define variable part like pt_part /* INITIAL "M30623-260-50-CK" */.
-define variable part1 like pt_part /* INITIAL "MHTA03-NE0-10-CK" */.
+define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
+define variable part like pt_part.  /* INITIAL "MHTF01-407-00-CK". */
+define variable part1 like pt_part. /* INITIAL "MHTF01-407-00-CK". */
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr initial "C02C016".
-define variable buyer like pt_buyer INITIAL "4RSA".
+define variable vend like vd_addr. /* initial "C02C016". */
+define variable buyer like pt_buyer. /* INITIAL "4RSA". */
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
 define variable sendDate as date.
@@ -269,7 +269,7 @@ repeat:
 /*           delete tmp_datearea.       */
         end.
    end.
-*******************/
+
 /*
    for each qad_wkfl no-lock where qad_key1 = key1  :
         display qad_charfld[1] qad_charfld[2] qad_datefld[1] qad_datefld[3].
@@ -279,6 +279,7 @@ repeat:
        display td_rule td_date td_key weekday(td_date) - 1 column-label "week".
    end.
 */
+*******************/
 
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
@@ -307,16 +308,17 @@ repeat:
           end.
           else do:
             find first md use-index mrp_partdate no-lock where
-                       md.mrp_part = mrp_det.mrp_part and
-                       md.mrp_detail = "计划单" and
-                       md.mrp_due_date >= date(month(due),1,year(due)) 
+                 md.mrp_part = mrp_det.mrp_part and
+                 md.mrp_detail = "计划单" and
+                 md.mrp_due_date >= 
+                 date(month(mrp_det.mrp_due_date),1,year(mrp_det.mrp_due_date))
             no-error.
             if available md then do:
                if weekday(md.mrp_due_date) - 1 >= 1 and
                   weekday(md.mrp_due_date) - 1 <= 2 then do:
                   assign xRule = "W1".
                end.
-               if weekday(md.mrp_due_date) - 1 >= 3 and
+               else if weekday(md.mrp_due_date) - 1 >= 3 and
                   weekday(md.mrp_due_date) - 1 <= 4 then do:
                   assign xRule = "W3".
                end.
@@ -386,17 +388,16 @@ repeat:
             USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "":
        find first tmp_po no-lock where tpo_vend = pt_vend
-       				and tpo_part = pt_part no-error.
+              and tpo_part = pt_part no-error.
        if not available tmp_po then do:
-					create tmp_po.
-					assign tpo_vend = pt_vend
-								 tpo_part = pt_part
-								 tpo_due = duef - 1
-								 tpo_qty = 0
-								 tpo_rule = vd__chr03. 
-       end.       				
+          create tmp_po.
+          assign tpo_vend = pt_vend
+                 tpo_part = pt_part
+                 tpo_due = duef - 1
+                 tpo_qty = 0
+                 tpo_rule = vd__chr03.
+       end.
    END.
-
 
 for each tmp_po exclusive-lock,each pt_mstr no-lock where pt_part = tpo_part:
      find first xvp_ctrl where xvp_vend = pt_vend
