@@ -29,12 +29,14 @@ define variable code1 like vd_addr.
 define variable name like ad_name.
 define variable name1 like ad_name. 
 define variable codecmmt like code_cmmt.
+define variable act as logical no-undo.
 
 form
-   code           colon 12
-   code1          label {t001.i} colon 46 skip
-   name           colon 12
-   name1          label {t001.i} colon 46 skip(1)
+   code  colon 12
+   code1 label {t001.i} colon 46 skip
+   name  colon 12
+   name1 label {t001.i} colon 46 skip(2)
+   act   colon 32
 with frame a side-labels attr-space width 80.
 
 /* SET EXTERNAL LABELS */
@@ -46,9 +48,9 @@ repeat:
    if name1 = hi_char then name1 = "". 
 
    if c-application-mode <> 'web' then
-      update code code1 name name1 with frame a.
+      update code code1 name name1 act with frame a.
 
-   {wbrp06.i &command = update &fields = "  code code1 name name1"
+   {wbrp06.i &command = update &fields = " code code1 name name1 act"
    					 &frm = "a"}
 
    if (c-application-mode <> 'web') or
@@ -70,7 +72,8 @@ repeat:
    {mfphead.i}
 
    for each vd_mstr where (vd_addr >= code and vd_addr <= code1)
-         and (vd_sort >= name and vd_sort <= name1)
+         and (vd_sort >= name and vd_sort <= name1) and
+          ((act and vd__chr03 <> "") or not act)
          no-lock by vd_sort with frame b width 132 no-attr-space no-box:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
