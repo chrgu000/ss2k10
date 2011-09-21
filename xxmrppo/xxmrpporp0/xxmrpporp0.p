@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110915.1"}
+{mfdtitle.i "110921.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
@@ -24,7 +24,6 @@ define variable areaDesc as character format "x(40)".
 define variable sendDate as date.
 define variable tmpDate as date.
 define variable qty_nextMth like pod_qty_ord.
-define variable act as logical initial yes.
 define variable qtytemp as decimal.
 define variable qtytemp1 as decimal.
 define variable xRule AS CHARACTER.
@@ -55,7 +54,6 @@ form
    vend  colon 25
    area  colon 25 areaDesc no-label
    buyer colon 25 skip(1)
-   act   colon 25 skip(1)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -82,10 +80,10 @@ repeat:
    if part1 = hi_char then part1 = "".
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 due vend area buyer act with frame a.
+      update site site1 part part1 due vend area buyer with frame a.
 
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 due vend area buyer act"
+      &fields = " site site1 part part1 due vend area buyer "
       &frm = "a"}
 
    if (c-application-mode <> 'web') or
@@ -124,47 +122,10 @@ repeat:
   empty temp-table tmp_datearea no-error.
   empty temp-table tmp_po no-error.
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
-/*
-   FOR EACH pt_mstr no-lock where
-            pt_part >= part and pt_part <= part1 and
-            substring(pt_part,1,1) <> "X"
-            and (pt_buyer = buyer or buyer = "")
-            and pt_site >= site and (pt_site <= site1 or site1 = "")
-            and (pt_vend = vend or vend = "")
-            and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_part = pt_part and
-            mrp_detail = "¼Æ»®µ¥" USE-INDEX mrp_part,
-       EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
-       break by vd__chr03 by mrp_due_date:
-       if first-of(vd__chr03) then do:
-          assign sendDate = mrp_due_date - day(mrp_due_date).
-          run getParams(input pt_site, input sendDate,input vd__chr03,
-                   output xRule,output xCyc,output xType,
-                   output duef, output duet).
-          create tmp_datearea.
-          assign td_rule = vd__chr03
-                 td_date = duef.
-          create tmp_datearea.
-          assign td_rule = vd__chr03
-                 td_date = duet.
-       end.
-       if last-of(vd__chr03) then do:
-          run getParams(input pt_site, input due,input vd__chr03,
-                   output xRule,output xCyc,output xType,
-                   output duef, output duet).
-          create tmp_datearea.
-          assign td_rule = vd__chr03
-                 td_date = duet.
-          create tmp_datearea.
-          assign td_rule = vd__chr03
-                 td_date = duet.
-       end.
-    end.
-*/
    assign sendDate = date(month(due),1,year(due)) - 10.
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
-            index(code_value,"M4") = 0:
-      run getParams(input "GSA01", input sendDate,input code_value,
+            index(code_value,"M4") = 0 and code_value <> "":
+      run getParams(input "GSA01", input sendDate, input code_value,
                 output xRule,output xCyc,output xType,
                 output duef, output duet).
       create qad_wkfl.
@@ -187,6 +148,7 @@ repeat:
              qad_charfld[1] = code_value
              qad_datefld[1] = duet + 1.
    end.
+
    for each qad_wkfl no-lock where qad_key1 = key1
             break by qad_charfld[1] by qad_datefld[1]:
        if not last-of(qad_charfld[1]) and substring(qad_charfld[1],1,2) = "M2"
@@ -450,42 +412,61 @@ PROCEDURE getPoNumber:
   DEFINE OUTPUT PARAMETER oNbr as character.
 
   DEFINE Variable intI as integer.
-
+	DEFINE VARIABLE KEY1 AS CHARACTER INITIAL "xxmrpporp0.p.getponbr".
+	DEFINE VARIABLE KEY2 AS CHARACTER.
+	
   find first vd_mstr no-lock where vd_addr = ivendor no-error.
   if available vd_mstr then do:
-     assign oNbr = substring(vd_sort,1,2).
+     assign KEY2 = substring(vd_sort,1,2).
   end.
   else do:
-     assign oNbr = substring(iVendor,1,2).
+     assign KEY2 = substring(iVendor,1,2).
   end.
-  assign oNbr = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + oNbr.
- 
-  find first qad_wkfl exclusive-lock where qad_key1 = "xxmrpporp0.p.getponbr"
-  		   and qad_key2 = oNbr no-error.
+  assign KEY2 = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + KEY2.
+  
+  find first qad_wkfl exclusive-lock where qad_key1 = KEY1
+         and qad_key2 = KEY2 no-error.
   if available qad_wkfl then do:
-     assign intI = qad_intfld[1].
-     assign oNbr = oNbr + substring("0000" + string(inti),
-                       length("0000" + string(inti)) - 2).
-     find first po_mstr no-lock where po_nbr = oNbr no-error.
-     if not available po_mstr then do:
-         assign intI = qad_intfld[1] + 1
-                qad_intfld[1] = qad_intfld[1] + 1
-                qad_key3 = string(qad_intfld[1] + 1).
-         assign oNbr = oNbr + substring("0000" + string(inti),
-                     length("0000" + string(inti)) - 2).
+    assign intI = qad_intfld[1].
+    assign oNbr = KEY2 + substring("0000" + string(inti),
+                      length("0000" + string(inti)) - 2).
+     repeat:
+         find first po_mstr no-lock where po_nbr = oNbr no-error.
+         if available po_mstr then do:
+             assign intI = qad_intfld[1] + 1
+                    qad_intfld[1] = qad_intfld[1] + 1
+                    qad_key3 = iVendor
+                    qad_user1 = string(intI).
+             assign oNbr = oNbr + substring("0000" + string(inti),
+                         length("0000" + string(inti)) - 2).
+         end.
+         else do:
+              leave.
+         end.
      end.
   end.
   else do:
      assign intI = 0.
      assign oNbr = oNbr + substring("0000" + string(inti),
                        length("0000" + string(inti)) - 2).
-     find first po_mstr no-lock where po_nbr = oNbr no-error.
-     if not available po_mstr then do:
-      create qad_wkfl.
-      assign qad_key1 = "xxmrpporp0.p.getponbr"
-             qad_key2 = oNbr
-             qad_intfld[1] = 0
-             qad_key3 = "0".
+     repeat:
+         find first po_mstr no-lock where po_nbr = oNbr no-error.
+         if available po_mstr then do:
+             assign intI = qad_intfld[1] + 1
+                    qad_intfld[1] = qad_intfld[1] + 1
+                    qad_key3 = string(qad_intfld[1] + 1).
+             assign oNbr = KEY2 + substring("0000" + string(inti),
+                         length("0000" + string(inti)) - 2).
+         end.
+         else do:
+              create qad_wkfl.
+              assign qad_key1 = "xxmrpporp0.p.getponbr"
+                     qad_key2 = KEY2
+                     qad_key3 = iVendor
+                     qad_user1 = "0"
+                     qad_intfld[1] = 0.
+              leave.
+          end.
      end.
   end.
   release qad_wkfl.
