@@ -50,7 +50,6 @@ define variable ladnbr like lad_nbr.
              end.
         delete xxlw_mst.  /*主表*/
     end.
-
 /*    if can-find(first rps_mstr no-lock  use-index rps_site_line             */
 /*       where rps_due_date = issue                                           */
 /*         and rps_site >= site and (rps_site <= site1 or site1 = "")         */
@@ -83,8 +82,9 @@ define variable ladnbr like lad_nbr.
         itcetimee = itcetimes + rps_qty_req / vrate. /*做到什么时间完成*/
     calcloop1:
     repeat:
-        find first xxlnw_det no-lock where recid(xxlnw_det) = recno no-error.
-        if xxlnw_etime >= itcetimee then do:
+
+    find first xxlnw_det no-lock where recid(xxlnw_det) = recno no-error.
+        if available (xxlnw_det) and etime >= itcetimee then do:
            create xxlw_mst.
            assign xxlw_date = rps_due_date
                   xxlw_site = rps_site
@@ -161,7 +161,6 @@ define variable ladnbr like lad_nbr.
               xxwa_rtime = xxlw_start.
             end.
       end.
-
   /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
            xxwa_date = issue and
@@ -253,6 +252,7 @@ define variable ladnbr like lad_nbr.
 
 
   /*对应发料库位及数量*/
+  assign recno = ?.
   for each xxwa_det no-lock where xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
@@ -274,7 +274,7 @@ define variable ladnbr like lad_nbr.
              assign recno = recid(lad_det).
           end.
       end.
-
+      if recno <> ? then do:
       repeat:
          find first lad_det where recid(lad_det) = recno no-lock no-error.
          assign vqtya = lad_qty_all - vqtya1
@@ -324,4 +324,5 @@ define variable ladnbr like lad_nbr.
            end.
          end.  /*else do:*/
       end.   /* repeat */
-  end.
+    end. /* recno <> ? */
+end.
