@@ -9,6 +9,7 @@ define variable sstat as character.
 define variable vcimfile as character.
 define variable part as character format "x(30)".
 define variable qtyreq as decimal format "->>>,>>>,>>9".
+define variable qtytemp as decimal format "->>>,>>>,>>9".
 
 assign vernbr = "110808.2".
 {mfdtitle.i vernbr}
@@ -212,7 +213,8 @@ repeat:
     input close.
     batchrun  = no.
 
-    for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
+    for each xxwa_det exclusive-lock where "p" + xxwa_nbr = tcnbr:
+    		 assign qtytemp = 0.
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_part = part:
              for each tr_hist no-lock where
@@ -221,8 +223,10 @@ repeat:
                   accum tr_qty_loc(total).
              end.
              assign xxwd_qty_piss = accum total tr_qty_loc.
+             assign qtytemp = accum total tr_qty_loc.
              if xxwd_qty_plan - xxwd_qty_piss <= 0 then assign xxwd_pstat = "C".
          end.
+         assign xxwa_qty_piss = qtytemp.
      end.
       end. /* repeat:   ÁÏºÅ/Ïî´Î*/
   end. /*  if procall else do: */
