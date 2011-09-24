@@ -31,6 +31,9 @@ define variable bpropath   as character bgcolor 15 view-as editor size 50 by 7.
 define variable filef      as character format "x(22)".
 define variable filet      as character format "x(22)".
 define variable vClientDir as character no-undo.
+define temp-table tmpfile
+  fields fn as CHARACTER
+  index fn is primary fn.
 
 run inivar.
 run iniForm.
@@ -189,21 +192,27 @@ end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
 
 /*generate vworkfile.*/
+empty temp-table tmpfile no-error.
 input from OS-DIR (xrcDir).
-output to value(vWorkFile).
 repeat:
    import delimiter " " vFilename.
    if vFileName[3] = "F" and
       index(".p.w.t.P.W.T"
+
             ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
       vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
    then do:
-      put unformat vFileName[1] skip.
+      create tmpfile.
+      assign fn = vFileName[1].
    end.
 end.
-output close.
 input close.
 
+output to value(vWorkFile).
+  for each tmpfile no-lock by fn:
+      export fn.
+  end.
+output close.
 {gprun.i ""xxc001.p""}
 
 leave.
