@@ -64,8 +64,8 @@ repeat:
       setFrameLabels(frame f-a:handle). /* SET EXTERNAL LABELS */
 
       display mnt_nbr + "." + trim(string(mnt_select,">>>>>9")) @ mnt_nbr
-              mnt_label mnd_exec mnd__qadc01 column-label "REV"
-              mnd_canrun format "x(240)"
+              mnt_label mnd_exec mnd__qadc01 column-label "REV" format "x(36)"
+              mnd_canrun format "x(212)"
       with width 320.
 
       dcount = dcount + 1.
