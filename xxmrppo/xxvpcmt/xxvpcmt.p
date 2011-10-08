@@ -32,24 +32,24 @@ repeat with frame a:
    prompt-for xvp_part editing:
 
       /* FIND NEXT/PREVIOUS RECORD */
-      {mfnp.i xvp_ctrl xvp_part xvp_part xvp_part xvp_part xvp_vend_part}
+      {mfnp.i xvp_ctrl xvp_part xvp_part xvp_part xvp_part xvp_part_vend}
 
       if recno <> ? then do:
          display xvp_vend xvp_part xvp_rule xvp_ord_min xvp_week.
          find first pt_mstr no-lock where pt_part = xvp_part no-error.
          if available pt_mstr then do:
             display pt_vend @ xvp_vend pt_desc1 @ ptdesc1 with frame a.
-  	        find first vd_mstr no-lock where vd_addr = pt_vend no-error.
+         end.
+         else do:
+            display "" @ ptdesc1 "" @ vdsort with frame a.
+         end.
+         find first vd_mstr no-lock where vd_addr = xvp_vend no-error.
   	        if available vd_mstr then do:
   	           display vd_sort @ vdsort with frame a.
   	        end.
   	        else do:
   	           display "" @ xvp_vend "" @ vdsort with frame a.
   	        end.
-         end.
-         else do:
-            display "" @ ptdesc1 "" @ vdsort with frame a.
-         end.
          find first code_mstr no-lock where code_fldname = "vd__chr03"
                 and code_value = xvp_rule no-error.
          if available code_mstr then do:
@@ -74,15 +74,16 @@ repeat with frame a:
       next-prompt xvp_part with frame a.
       undo, retry.
    end.
-   find first vd_mstr no-lock where vd_addr = input xvp_vend no-error.
-   if available vd_mstr then do:
-      display vd_sort @ vdsort with frame a.
-   end.
-   else do:
-      display "" @ vdsort with frame a.
-   end.
+ 
    find first pt_mstr no-lock where pt_part = input xvp_part no-error.
    if available pt_mstr then do:
+      find first vd_mstr no-lock where vd_addr = pt_vend no-error.
+	    if available vd_mstr then do:
+	       display vd_sort @ vdsort with frame a.
+	    end.
+	    else do:
+	       display "" @ vdsort with frame a.
+	    end.
       display pt_desc1 @ ptdesc1 with frame a.
    end.
    else do:
@@ -90,7 +91,7 @@ repeat with frame a:
    end.
 
    /* ADD/MOD/DELETE  */
-   find xvp_ctrl using xvp_vend where xvp_part = input xvp_part no-error.
+   find first xvp_ctrl use-index xvp_part_vend where xvp_part = input xvp_part no-error.
    if not available xvp_ctrl then do:
    		find first pt_mstr no-lock where pt_part = input xvp_part no-error.
    		if available pt_mstr then do:
