@@ -1,7 +1,7 @@
 /* xxptlorp.p - part loc reference Report                                    */
 /* revision: 110818.1   created on: 20110818   by: zhang yun                 */
 /*V8:ConvertMode=Maintenance                                                 */
-/* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
+/* Environment: Progress:91.D  QAD:eb2sp12    Interface:Character            */
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
@@ -17,12 +17,12 @@ define variable um like pt_um.
 
 /* SELECT FORM */
 form
-   part           colon 15
-   part1          label "To" colon 49 skip
-   site           colon 15
-   site1          label "To" colon 49 skip
-   loc            colon 15
-   loc1           label "To" colon 49 skip
+   part  colon 15
+   part1 label "To" colon 49 skip
+   site  colon 15
+   site1 label "To" colon 49 skip
+   loc   colon 15
+   loc1  label "To" colon 49 skip
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -83,21 +83,30 @@ repeat:
       and (xxloc_site >= site and xxloc_site <= site1)
       and (xxloc_loc >= loc and xxloc_loc <= loc1)
       use-index xxloc_part,
-      each pt_mstr no-lock where pt_part = xxloc_part,
       each loc_mstr no-lock where loc_loc = xxloc_loc and loc_site = xxloc_site,
       each si_mstr no-lock where si_site = xxloc_site
    break by xxloc_part by xxloc_site by xxloc_loc
    with frame b width 160:
-
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
-      display pt_part pt_desc1 xxloc_site si_desc xxloc_loc loc_desc
-              xxloc_type xxloc_qty xxloc_part_type.
-
+      if xxloc_part = "" then do:
+        display "" @ pt_part "" @ pt_desc1 xxloc_site si_desc
+                    xxloc_loc loc_desc xxloc_type xxloc_qty xxloc_part_type.
+      end.
+      else do:
+           find first pt_mstr no-lock where pt_part = xxloc_part no-error.
+           if available pt_mstr then do:
+              display pt_part pt_desc1 xxloc_site si_desc xxloc_loc loc_desc
+                      xxloc_type xxloc_qty xxloc_part_type.
+           end.
+           else do:
+              display "" @ pt_part "" @ pt_desc1 xxloc_site si_desc
+                      xxloc_loc loc_desc xxloc_type xxloc_qty xxloc_part_type.
+           end.
+      end.
       if last-of(xxloc_part) then do:
          down 1.
       end.
-
       {mfrpchk.i}
 
    end.
