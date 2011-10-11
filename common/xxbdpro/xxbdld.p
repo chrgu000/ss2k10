@@ -279,12 +279,11 @@ repeat on stop undo, retry:
 /*EB                             bdl_id                                     */
 /*EB                             mf_sq04                                    */
 /*EB                             next_id}                                   */
-
-           {mfnxtsq1.i "bdl_source      = """" and"
-                               bdl_mstr
-                               bdl_id
-                               mf_sq04
-                               next_id}
+           
+                  {mfnxtsq1.i bdl_mstr
+                              "bdl_source = """" and bdl_id"
+                              mf_sq04
+                              next_id}
                                
                   create bdl_mstr.
 /*EB                     bdl_mstr.bdl_domain = global_domain.                */
