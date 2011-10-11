@@ -9,7 +9,7 @@
 
 {mfdtitle.i "19YG"}
 
-&SCOPED-DEFINE xxcomp_p_1 "Source Code Directory"
+&SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
 &SCOPED-DEFINE xxcomp_p_3 "To"
 &SCOPED-DEFINE xxcomp_p_4 "Compile ProPath"
