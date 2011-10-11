@@ -6,6 +6,7 @@ define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
 define variable wsection as char format "x(16)".
 define variable i as integer .
+define variable vloc like ld_loc.
 
 define variable wtimeout as integer init 99999 .
 find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="wtimeout" no-lock no-error. /*  Timeout - All Level */
@@ -38,6 +39,7 @@ REPEAT:
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         {xsdfsite.i}
+        vloc = "".
         V1002 = wDefSite.
         V1002 = ENTRY(1,V1002,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
@@ -194,8 +196,10 @@ REPEAT:
                               PT_PART >=  INPUT V1300
                                no-lock no-error.
                   end.
-                  IF AVAILABLE PT_MSTR then display skip
+                  IF AVAILABLE PT_MSTR then do: 
+     				 				 display skip
             PT_PART @ V1300 PT_DESC1 @ WMESSAGE NO-LABEL with fram F1300.
+          			  end.
                   else   display skip "" @ WMESSAGE with fram F1300.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -211,15 +215,17 @@ REPEAT:
                               PT_PART >=  INPUT V1300
                                no-lock no-error.
                   end.
-                  IF AVAILABLE PT_MSTR then display skip
+                  IF AVAILABLE PT_MSTR then do: 
+                   display skip
             PT_PART @ V1300 PT_DESC1 @ WMESSAGE NO-LABEL with fram F1300.
+                  end.
                   else   display skip "" @ WMESSAGE with fram F1300.
             END.
             APPLY LASTKEY.
         END.
         /* ROLL BAR END */
-
-
+			  if recid(pt_mstr) <> ? then 
+            assign vloc = pt_loc. 
         /* PRESS e EXIST CYCLE */
         IF V1300 = "e" THEN  LEAVE MAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1300.
@@ -335,8 +341,10 @@ If available pt_mstr then
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   end.
-                  IF AVAILABLE LD_DET then display skip
+                  IF AVAILABLE LD_DET then do: 
+                     display skip
             LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
+                   end.
                   else   display skip "" @ WMESSAGE with fram F1500.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -355,15 +363,16 @@ If available pt_mstr then
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   end.
-                  IF AVAILABLE LD_DET then display skip
+                  IF AVAILABLE LD_DET then do:
+                   display skip
             LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
+            	    end.
                   else   display skip "" @ WMESSAGE with fram F1500.
             END.
             APPLY LASTKEY.
         END.
         /* ROLL BAR END */
-
-
+        if recid(ld_det) <> ? then assign vloc = ld_loc.
         /* PRESS e EXIST CYCLE */
         IF V1500 = "e" THEN  LEAVE MAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1500.
@@ -947,6 +956,13 @@ If AVAILABLE ( pt_mstr )  then
        TS9030 = substring(TS9030, 1, Index(TS9030 , "$U") - 1) + av9030
        + SUBSTRING( ts9030 , index(ts9030 ,"$U") + length("$U"), LENGTH(ts9030) - ( index(ts9030 ,"$U" ) + length("$U") - 1 ) ).
        END.
+ 
+       av9030 = vloc.
+       IF INDEX(ts9030,"$C") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$C") - 1) + av9030
+       + SUBSTRING( ts9030 , index(ts9030 ,"$C") + length("$C"), LENGTH(ts9030) - ( index(ts9030 ,"$C" ) + length("$C") - 1 ) ).
+       END.
+       
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9030 = trim(pt_desc2).
@@ -994,39 +1010,31 @@ If AVAILABLE ( pt_mstr )  then
       run lap039030l.
 
      procedure lap03090801:
-     	 define variable icnt as integer.
        find first prd_det where prd_dev = v9030 no-lock no-error.
        if availabl prd_det and prd_type = "BARCODE" and prd_path = "DIR"
           and prd_init_pro <> "" then do:
-          do icnt = 1 to integer(wtm_num):
           if substring(prd_init_pro,length(prd_init_pro)) = "/" then do:
-             output to value(prd_init_pro + trim(wsection) + string(icnt) + ".l").
+             output to value(prd_init_pro + trim(wsection) + ".l").
           end.
           else do:
-             output to value(prd_init_pro + "/" + trim(wsection) + string(icnt) + ".l").
+             output to value(prd_init_pro + "/" + trim(wsection) + ".l").
           end.
             find first pt_mstr no-lock where pt_part = v1300 no-error.
             if available pt_mstr then do:
-               put unformat trim(V1300) + "@" + trim(V1500) skip.
+               put unformat v1510 skip.
                put unformat pt_part skip.  /*图号*/
                put unformat pt_um skip. /*单位*/
-               if pt_desc1 <> "" then 
-               		put unformat pt_desc1 skip. /*名称*/
-               else 
-               		put skip(1).
-               if pt_desc2 <> "" then
-               		put unformat pt_desc2 skip.
-               else
-               		put skip(1).
-               put unformat trim(V1300) + "@" + trim(V1500) skip.
+               put unformat pt_desc1 skip. /*名称*/
+               put unformat pt_desc2 skip.
+               put unformat v1510 skip.
                put unformat today skip.
                put unformat v9010 skip.
-               put unformat pt_loc skip.
+               put unformat vloc skip.
                put unformat v1500 skip.
             end.
           output close.
        end.
-			end. /*do*/
+
      end procedure.
 
      run lap03090801.
