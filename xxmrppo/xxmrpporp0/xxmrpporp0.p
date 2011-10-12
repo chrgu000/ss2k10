@@ -222,6 +222,19 @@ repeat:
    end.
 
    FOR EACH pt_mstr no-lock where
+         pt_part >= part and pt_part <= part1 and
+         substring(pt_part,1,1) <> "X"
+         and (pt_buyer = buyer or buyer = "")
+         and pt_site >= site and (pt_site <= site1 or site1 = "")
+         and (pt_vend = vend or vend = "")
+         and (substring(pt_vend,1,1) = area or area = ""),
+       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+            mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,
+       EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "":
+
+   end.
+
+   FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
             and (pt_buyer = buyer or buyer = "")
@@ -310,11 +323,11 @@ repeat:
     /*    {mfrpchk.i} */
    END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
 
+   /*如下2月有计划则产生数量为0的记录*/
    assign duef = date(month(due),28,year(due)) + 5.
    assign duef = date(month(duef),1,year(duef)).
    assign duet = duef + 65.
    assign duet = date(month(duet),1,year(duet)) - 1.
-
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
@@ -348,11 +361,25 @@ for each tmp_po exclusive-lock,each pt_mstr no-lock where pt_part = tpo_part:
 end.
 
 /*产生单号*/
-assign areaDesc = "".
+
 for each tmp_po exclusive-lock where tpo_vend <> ""
     break by tpo_vend :
     if first-of(tpo_vend) then do:
-       run getPoNumber(input today,input tpo_vend,output areaDesc).
+       assign areaDesc = "P" + substring(string(year(due),"9999"),3)
+                       + string(month(due),"99").
+       find first vd_mstr no-lock where vd_addr = tpo_vend no-error.
+       if available vd_mstr then do:
+          assign areaDesc = areaDesc + substring(vd_sort,1,2).
+       end.
+       find last po_mstr use-index po_nbr where po_nbr begins(areadesc) and
+                                   po_nbr <= areadesc + "9" no-error.
+       if available po_mstr then do:
+         assign areaDesc = areaDesc
+              + string(int(substring(po_nbr,length(po_nbr))) + 1,"9").
+       end.
+       else do:
+         assign areaDesc = areaDesc + "1".
+       end.
     end.
     assign tpo_nbr = areaDesc.
 end.
@@ -412,9 +439,9 @@ PROCEDURE getPoNumber:
   DEFINE OUTPUT PARAMETER oNbr as character.
 
   DEFINE Variable intI as integer.
-	DEFINE VARIABLE KEY1 AS CHARACTER INITIAL "xxmrpporp0.p.getponbr".
-	DEFINE VARIABLE KEY2 AS CHARACTER.
-	
+  DEFINE VARIABLE KEY1 AS CHARACTER INITIAL "xxmrpporp0.p.getponbr".
+  DEFINE VARIABLE KEY2 AS CHARACTER.
+
   find first vd_mstr no-lock where vd_addr = ivendor no-error.
   if available vd_mstr then do:
      assign KEY2 = substring(vd_sort,1,2).
@@ -423,7 +450,7 @@ PROCEDURE getPoNumber:
      assign KEY2 = substring(iVendor,1,2).
   end.
   assign KEY2 = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + KEY2.
-  
+
   find first qad_wkfl exclusive-lock where qad_key1 = KEY1
          and qad_key2 = KEY2 no-error.
   if available qad_wkfl then do:
