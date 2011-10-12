@@ -83,15 +83,15 @@ repeat:
           else  if opsys = "msdos" or opsys = "win32" then do:
             put " copy:".
           end.
-          compile value(proc_name) no-attr-space save into value(destdir).
+          compile value(proc_name) no-attr-space save into value(".").
    output close.
    if opsys = "unix" then do:
-      assign rfile = destdir + "/"
+      assign rfile = "." + "/"
                    + substring(proc_name , 1 ,index(proc_name,".")) + "r".
    end.
    else if opsys = "msdos" or opsys = "win32" then do:
-      assign rfile = destdir + "\\"
-                + substring(proc_name , 1 ,index(proc_name,".")) + "r".
+      assign rfile = "." + "~\"
+                   + substring(proc_name , 1 ,index(proc_name,".")) + "r".
    end.
    if search(rfile) = ? then do:
       if search(proc_name) <> ? then err = err + 1.
@@ -184,7 +184,7 @@ procedure createDestDir:
         if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        assign vdir = destDir + "\\triggers".
+        assign vdir = destDir + "~\triggers".
         FILE-INFO:FILE-NAME = vdir.
         if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
      end.
@@ -200,7 +200,7 @@ procedure createDestDir:
           if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
        end.
        else if opsys = "msdos" or opsys = "win32" then do:
-          assign vdir = destDir + "\\" + ilng + "\\" + substring(icompfile,1,2).
+          assign vdir = destDir + "~\" + ilng + "~\" + substring(icompfile,1,2).
           FILE-INFO:FILE-NAME = vdir.
           if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
        end.
@@ -219,7 +219,7 @@ procedure getDestFileName:
         odir = idestdir + "/triggers".
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        odir = idestdir + "\\triggers".
+        odir = idestdir + "~\triggers".
      end.
   end.
   else do:
@@ -231,7 +231,7 @@ procedure getDestFileName:
           odir = idestdir + "/"  + ilng + "/" + substring(icompfile,1,2).
        end.
        else if opsys = "msdos" or opsys = "win32" then do:
-          odir = idestdir + "\\" + ilng + "\\" + substring(icompfile,1,2).
+          odir = idestdir + "~\" + ilng + "~\" + substring(icompfile,1,2).
        end.
      end.
   end.
