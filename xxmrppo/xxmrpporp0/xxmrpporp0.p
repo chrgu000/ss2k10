@@ -59,7 +59,8 @@ define temp-table tmp_tmd
    fields tm_edate as date  /* end send date*/
    fields tm_qty like mrp_qty
    index tm_rule is primary tm_rule
-   index tm_vpa tm_vend tm_part tm_adate.
+   index tm_vpa tm_vend tm_part tm_adate
+   index tm_pm tm_part tm_month.
 
 define buffer md for mrp_det.
 
@@ -309,25 +310,29 @@ repeat:
        end.
    end.
 
-   for each tmp_tmd exclusive-lock where substring(tm_rule,1,2) = "M4":
-       find first mrp_det use-index mrp_partdate no-lock where
-                  mrp_part = tm_part and
-                  mrp_detail = "计划单" and
-                  mrp_due_date >=
-                  date(month(tm_adate),1,year(tm_adate)) no-error.
-       if available mrp_det then do:
-          if weekday(mrp_due_date) - 1 >= 1 and
-             weekday(mrp_due_date) - 1 <= 2 then do:
-             assign tm_Rule = "W1".
-          end.
-          else if weekday(mrp_due_date) - 1 >= 3 and
-             weekday(mrp_due_date) - 1 <= 4 then do:
-             assign tm_Rule = "W3".
-          end.
-          else do:
-             assign tm_Rule = "W5".
+   /*计算M4之Rule*/
+   for each tmp_tmd use-index tm_pm exclusive-lock where
+       substring(tm_rule,1,2) = "M4" break by tm_part by tm_month by tm_sdate:
+       if first-of(tm_month) then do:
+          find first mrp_det use-index mrp_partdate no-lock where
+                     mrp_part = tm_part and
+                     mrp_detail = "计划单" and
+                     mrp_due_date >= tm_adate no-error.
+          if available mrp_det then do:
+             if weekday(mrp_due_date) - 1 >= 1 and
+                weekday(mrp_due_date) - 1 <= 2 then do:
+                assign xRule = "W1".
+             end.
+             else if weekday(mrp_due_date) - 1 >= 3 and
+                weekday(mrp_due_date) - 1 <= 4 then do:
+                assign xRule = "W3".
+             end.
+             else do:
+                assign xRule = "W5".
+             end.
           end.
        end.
+       assign tm_rule = xrule.
    end.
 
    /*删除不要的月份资料*/
@@ -337,30 +342,55 @@ repeat:
           delete tmp_tmd.
        end.
    end.
-	 
-	 /*计算到货日*/
-	 for each tmp_tmd use-index tm_vpa exclusive-lock where tm_rule begins "M"
-	     break by tm_vend by tm_part by tm_adate:
-	     if first-of(tm_vend) then do:
-	     	  assign duek = tm_adate.
-	     	  assign tm_edate = tm_adate.
-	     end.
-	     else do:
-	     	  if substring(tm_rule,1,2) = "M1" then do:
-	     	     assign tm_edate = duek.
-	     	  end.
-	     	  else if substring(tm_rule,1,2) = "M2" then do:
-	     	  	 if tm_adate > duek + 14 then do:
-	     	  	    assign tm_edate = duek + 14.
-	     	  	 end.
-	     	  	 else do:
-	     	  	    assign tm_edate = duek.
-	     	  	 end.
-	     	  end.
-	     end.	 	   
-	 end.
 
-   for each tmp_tmd no-lock:
+   /*计算到货日月*/
+   for each tmp_tmd use-index tm_vpa exclusive-lock where tm_rule begins "M"
+       break by tm_vend by tm_part by tm_adate:
+       if first-of(tm_vend) then do:
+          assign duek = tm_adate.
+          assign tm_edate = tm_adate.
+       end.
+       else do:
+          if substring(tm_rule,1,2) = "M1" then do:
+             assign tm_edate = duek.
+          end.
+          else if substring(tm_rule,1,2) = "M2" then do:
+             if tm_adate >= duek + 14 then do:
+                assign tm_edate = duek + 14.
+             end.
+             else do:
+                assign tm_edate = duek.
+             end.
+          end.
+       end.
+   end.
+   /*计算到货日周*/
+   for each tmp_tmd use-index tm_pm exclusive-lock where tm_rule begins "W"
+       break by tm_part by tm_month by tm_adate:
+       if first-of(tm_month) then do:
+          assign duek = tm_adate.
+          assign tm_edate = tm_adate.
+       end.
+       else do:
+            if tm_adate >= duek and tm_adate < duek + 7 then do:
+                assign tm_edate = duek.
+            end.
+            else if tm_adate >= duek + 7 and tm_adate < duek + 14 then do:
+                assign tm_edate = duek + 7.
+            end.
+            else if tm_adate >= duek + 14 and tm_adate < duek + 21 then do:
+                assign tm_edate = duek + 14.
+            end.
+            else if tm_adate >= duek + 21 and tm_adate < duek + 28 then do:
+                assign tm_edate = duek + 21.
+            end.
+            else do:
+                assign tm_edate = duek + 28.
+            end.
+       end.
+   end.
+
+   for each tmp_tmd use-index tm_pm no-lock break by tm_part by tm_month by tm_sdate:
        display tmp_tmd with width 300.
    end.
 /*
