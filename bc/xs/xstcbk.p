@@ -89,7 +89,7 @@ repeat:
   hide frame framea1.
   hide frame framea2.
 
-  assign ret-ok = no.
+  assign ret-ok = yes.
   display "[台车回收n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(6) with fram framea3 no-box.
   display "继续回收或退出?"     format "x(40)"
     skip with fram framea3 no-box.
