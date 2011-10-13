@@ -5,19 +5,19 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110921.1"}
+{mfdtitle.i "111013.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
-define variable part like pt_part.
+define variable part like pt_part INITIAL "MHSE02-407-0-LX".
 define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr.
+define variable vend like vd_addr INITIAL "C02C016".
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -29,6 +29,7 @@ define variable qtytemp1 as decimal.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
+
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
@@ -41,6 +42,24 @@ define temp-table tmp_po
     fields tpo_qty like pod_qty_ord
     fields tpo_rule as character
     index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
+
+define temp-table tmp_rule_date
+    fields trd_rule AS CHARACTER
+    fields trd_datef AS DATE
+    fields trd_datet AS DATE.
+
+define temp-table tmp_tmd
+   fields tm_vend like vd_addr
+   fields tm_part like pt_part
+   fields tm_rule0 as character
+   fields tm_rule as character
+   fields tm_month as integer
+   fields tm_sdate as date  /* mrp_due_date */
+   fields tm_adate as date  /* first available send date */
+   fields tm_edate as date  /* end send date*/
+   fields tm_qty like mrp_qty
+   index tm_rule is primary tm_rule
+   index tm_vpa tm_vend tm_part tm_adate.
 
 define buffer md for mrp_det.
 
@@ -121,6 +140,9 @@ repeat:
   /* {mfphead.i} */
   empty temp-table tmp_datearea no-error.
   empty temp-table tmp_po no-error.
+  empty temp-table tmp_tmd no-error.
+  empty temp-table tmp_rule_date no-error.
+
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
    assign sendDate = date(month(due),1,year(due)) - 10.
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
@@ -221,6 +243,27 @@ repeat:
         end.
    end.
 
+   For EACH vd_mstr no-lock where vd__chr03 <> "" break by vd__chr03:
+       if first-of(vd__chr03) AND substring(vd__chr03,1,2) <> "M4"
+       then do:
+            assign duek = ?
+                   duee = ?.
+            find first tmp_datearea where td_rule = vd__chr03
+                     and td_key = "Key" no-lock no-error.
+            if available(tmp_datearea) then do:
+               assign duek = td_date.
+            end.
+            find last tmp_datearea where td_rule = vd__chr03 no-lock no-error.
+            if available(tmp_datearea) then do:
+               assign duee = td_date.
+            end.
+            create tmp_rule_date.
+            assign trd_rule = vd__chr03
+                   trd_datef = duek
+                   trd_datet = duee - 1.
+       end.
+   end.
+
    FOR EACH pt_mstr no-lock where
          pt_part >= part and pt_part <= part1 and
          substring(pt_part,1,1) <> "X"
@@ -228,12 +271,99 @@ repeat:
          and pt_site >= site and (pt_site <= site1 or site1 = "")
          and (pt_vend = vend or vend = "")
          and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+       EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and
             mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "":
-
+           create tmp_tmd.
+           assign tm_vend = pt_vend
+              tm_part = pt_part
+              tm_rule0 = vd__chr03
+              tm_rule = vd__chr03
+              tm_sdate = mrp_due_date
+              tm_qty = mrp_qty.
+   end.
+   for each tmp_rule_date no-lock:
+       display tmp_rule_date.
    end.
 
+   /* 计算可到货日 */
+   for each tmp_tmd exclusive-lock break by tm_rule:
+       if first-of(tm_rule) then do:
+          if substring(tm_rule,1,1) = "M" then do:
+              assign xRule = entry(2,tm_rule,";").
+          end.
+          else do:
+              assign xRule = substring(tm_rule,2).
+          end.
+       end.
+       assign duek = tm_sdate.
+       repeat:
+          if index(xrule,string(weekday(duek) - 1)) > 0 then do:
+             assign tm_adate = duek
+                    tm_month = month(duek).
+             leave.
+          end.
+          else do:
+             assign duek = duek - 1.
+          end.
+       end.
+   end.
+
+   for each tmp_tmd exclusive-lock where substring(tm_rule,1,2) = "M4":
+       find first mrp_det use-index mrp_partdate no-lock where
+                  mrp_part = tm_part and
+                  mrp_detail = "计划单" and
+                  mrp_due_date >=
+                  date(month(tm_adate),1,year(tm_adate)) no-error.
+       if available mrp_det then do:
+          if weekday(mrp_due_date) - 1 >= 1 and
+             weekday(mrp_due_date) - 1 <= 2 then do:
+             assign tm_Rule = "W1".
+          end.
+          else if weekday(mrp_due_date) - 1 >= 3 and
+             weekday(mrp_due_date) - 1 <= 4 then do:
+             assign tm_Rule = "W3".
+          end.
+          else do:
+             assign tm_Rule = "W5".
+          end.
+       end.
+   end.
+
+   /*删除不要的月份资料*/
+   for each tmp_tmd exclusive-lock,
+       each tmp_rule_date no-lock where trd_rule = tm_rule:
+       if tm_sdate > trd_datet then do:
+          delete tmp_tmd.
+       end.
+   end.
+	 
+	 /*计算到货日*/
+	 for each tmp_tmd use-index tm_vpa exclusive-lock where tm_rule begins "M"
+	     break by tm_vend by tm_part by tm_adate:
+	     if first-of(tm_vend) then do:
+	     	  assign duek = tm_adate.
+	     	  assign tm_edate = tm_adate.
+	     end.
+	     else do:
+	     	  if substring(tm_rule,1,2) = "M1" then do:
+	     	     assign tm_edate = duek.
+	     	  end.
+	     	  else if substring(tm_rule,1,2) = "M2" then do:
+	     	  	 if tm_adate > duek + 14 then do:
+	     	  	    assign tm_edate = duek + 14.
+	     	  	 end.
+	     	  	 else do:
+	     	  	    assign tm_edate = duek.
+	     	  	 end.
+	     	  end.
+	     end.	 	   
+	 end.
+
+   for each tmp_tmd no-lock:
+       display tmp_tmd with width 300.
+   end.
+/*
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
@@ -241,7 +371,7 @@ repeat:
             and pt_site >= site and (pt_site <= site1 or site1 = "")
             and (pt_vend = vend or vend = "")
             and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+       EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and
             mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
        break by pt_vend by mrp_det.mrp_part by mrp_det.mrp_due_date:
@@ -322,7 +452,7 @@ repeat:
           end.
     /*    {mfrpchk.i} */
    END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
-
+*/
    /*如下2月有计划则产生数量为0的记录*/
    assign duef = date(month(due),28,year(due)) + 5.
    assign duef = date(month(duef),1,year(duef)).
@@ -404,9 +534,9 @@ for each tmp_po no-lock where:
     if available code_mstr then do:
        assign areaDesc = code_cmmt.
     end.
-    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due tpo_type
+/*    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due tpo_type
                             weekday(tpo_due) - 1 tpo_rule areaDesc.
-/*                          tpo_start tpo_end tpo_mrp_date.                  */
+                          tpo_start tpo_end tpo_mrp_date.                  */
 end.
 
 /* REPORT TRAILER  */
