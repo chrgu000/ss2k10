@@ -5,19 +5,19 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111013.1"}
+{mfdtitle.i "111014.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
-define variable part like pt_part INITIAL "MHSE02-407-0-LX".
+define variable part like pt_part. /* INITIAL "MHSE02-407-0-LX".*/
 define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr INITIAL "C02C016".
+define variable vend like vd_addr. /* INITIAL "C02C016". */
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -25,7 +25,6 @@ define variable sendDate as date.
 define variable tmpDate as date.
 define variable qty_nextMth like pod_qty_ord.
 define variable qtytemp as decimal.
-define variable qtytemp1 as decimal.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
@@ -121,6 +120,7 @@ repeat:
       {mfquoter.i due  }
       {mfquoter.i vend }
       {mfquoter.i buyer}
+      {mfquoter.i detsum}
 
       if site1 = "" then site1 = hi_char.
       if part1 = "" then part1 = hi_char.
@@ -389,114 +389,114 @@ repeat:
             end.
        end.
    end.
-if detsum then do:
-	 export delimiter "~011" getTermLabel("SUPPLIER",12)
-                           getTermLabel("ITEM_NUMBER",12)
-                           getTermLabel("SHIP_TERMS",12)
-                           getTermLabel("AS_OF_DATE",12)
-                           getTermLabel("ARRIVE_DATE",12)
-                           getTermLabel("QUANTITY_REQUESTED",12)
-                           .
-   for each tmp_tmd use-index tm_pm no-lock
-            break by tm_part by tm_month by tm_sdate:
-        export delimiter "~011" tm_vend tm_part tm_rule0 tm_sdate 
-        								 tm_edate tm_qty.
-   end.
-end.      /*if detsum then do:    */
-else do:  /* display summary data */
-	  for each tmp_tmd no-lock break by tm_part by tm_month by tm_adate:
-	      
-	  end.
-    /*
-       FOR EACH pt_mstr no-lock where
-                pt_part >= part and pt_part <= part1 and
-                substring(pt_part,1,1) <> "X"
-                and (pt_buyer = buyer or buyer = "")
-                and pt_site >= site and (pt_site <= site1 or site1 = "")
-                and (pt_vend = vend or vend = "")
-                and (substring(pt_vend,1,1) = area or area = ""),
-           EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and
-                mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,
-           EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""
-           break by pt_vend by mrp_det.mrp_part by mrp_det.mrp_due_date:
-              if substring(vd__chr03,1,2) <> "M4" then do:
-                  if first-of(pt_vend) then do:
-                     assign xRule = vd__chr03.
-                  end.
-                  find first tmp_datearea where td_rule = xRule
-                         and td_key = "Key" no-lock no-error.
-                  if available(tmp_datearea) then do:
-                     assign duek = td_date.
-                  end.
-                  find last tmp_datearea where td_rule = xRule no-lock no-error.
-                  if available(tmp_datearea) then do:
-                     assign duee = td_date.
-                  end.
-              end.
-              else do:
-                find first md use-index mrp_partdate no-lock where
-                     md.mrp_part = mrp_det.mrp_part and
-                     md.mrp_detail = "计划单" and
-                     md.mrp_due_date >=
-                     date(month(mrp_det.mrp_due_date),1,year(mrp_det.mrp_due_date))
-                no-error.
-                if available md then do:
-                   if weekday(md.mrp_due_date) - 1 >= 1 and
-                      weekday(md.mrp_due_date) - 1 <= 2 then do:
-                      assign xRule = "W1".
-                   end.
-                   else if weekday(md.mrp_due_date) - 1 >= 3 and
-                      weekday(md.mrp_due_date) - 1 <= 4 then do:
-                      assign xRule = "W3".
-                   end.
-                   else do:
-                      assign xRule = "W5".
-                   end.
-                end.
-                find first tmp_datearea where td_rule = xRule
-                       and td_key = "Key" no-lock no-error.
-                if available(tmp_datearea) then do:
-                   assign duek = td_date.
-                end.
-                find last tmp_datearea where td_rule = xRule no-lock no-error.
-                if available(tmp_datearea) then do:
-                   assign duee = td_date.
-                end.
-              end.
 
-              if mrp_det.mrp_due_date >= duee then do:
-                 next.
-              end.
+    for each tmp_tmd no-lock break by tm_part by tm_month by tm_edate:
+        if first-of(tm_edate) then do:
+           qtytemp = tm_qty.
+        end.
+        else do:
+           qtytemp = qtytemp + tm_qty.
+        end.
+        if last-of(tm_edate) then do:
+             create tmp_po.
+             assign tpo_vend = tm_vend
+                    tpo_part = tm_part
+                    tpo_due = tm_edate
+                    tpo_qty = qtytemp
+                    tpo_rule = tm_rule0.
+        end.
+    end.
 
-              find last tmp_datearea where td_rule = xRule
-                    and mrp_det.mrp_due_date >= td_date no-lock no-error.
-              if available tmp_datearea then do:
-                 assign duef = td_date.
-              end.
-              find first tmp_datearea where td_rule = xRule
-                    and mrp_det.mrp_due_date < td_date no-lock no-error.
-               if available tmp_datearea then do:
-                 assign duet = td_date.
-              end.
-              find first tmp_po exclusive-lock where tpo_part = pt_part
-                     and tpo_vend = pt_vend and tpo_due = duef no-error.
-              if available tmp_po then do:
-                 assign tpo_qty = tpo_qty + mrp_det.mrp_qty .
-              end.
-              else do:
-                  create tmp_po.
-                  assign tpo_vend = pt_vend
-                         tpo_part = pt_part
-                         tpo_due = duef
-                         tpo_qty = mrp_det.mrp_qty
-                         tpo_mrp_date = mrp_det.mrp_due_date
-                         tpo_start = duek
-                         tpo_end = duee - 1
-                         tpo_rule = vd__chr03.
-              end.
-        /*    {mfrpchk.i} */
-       END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */
-    */
+/*------- 旧的日期计算方法已被新方法替代                                      */
+/* FOR EACH pt_mstr no-lock where                                             */
+/*          pt_part >= part and pt_part <= part1 and                          */
+/*          substring(pt_part,1,1) <> "X"                                     */
+/*          and (pt_buyer = buyer or buyer = "")                              */
+/*          and pt_site >= site and (pt_site <= site1 or site1 = "")          */
+/*          and (pt_vend = vend or vend = "")                                 */
+/*          and (substring(pt_vend,1,1) = area or area = ""),                 */
+/*     EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and              */
+/*          mrp_det.mrp_detail = "计划单" USE-INDEX mrp_part,                 */
+/*     EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> ""       */
+/*     break by pt_vend by mrp_det.mrp_part by mrp_det.mrp_due_date:          */
+/*        if substring(vd__chr03,1,2) <> "M4" then do:                        */
+/*            if first-of(pt_vend) then do:                                   */
+/*               assign xRule = vd__chr03.                                    */
+/*            end.                                                            */
+/*            find first tmp_datearea where td_rule = xRule                   */
+/*                   and td_key = "Key" no-lock no-error.                     */
+/*            if available(tmp_datearea) then do:                             */
+/*               assign duek = td_date.                                       */
+/*            end.                                                            */
+/*            find last tmp_datearea where td_rule = xRule no-lock no-error.  */
+/*            if available(tmp_datearea) then do:                             */
+/*               assign duee = td_date.                                       */
+/*            end.                                                            */
+/*        end.                                                                */
+/*        else do:                                                            */
+/*          find first md use-index mrp_partdate no-lock where                */
+/*               md.mrp_part = mrp_det.mrp_part and                           */
+/*               md.mrp_detail = "计划单" and                                 */
+/*               md.mrp_due_date >=                                           */
+/*             date(month(mrp_det.mrp_due_date),1,year(mrp_det.mrp_due_date)) */
+/*          no-error.                                                         */
+/*          if available md then do:                                          */
+/*             if weekday(md.mrp_due_date) - 1 >= 1 and                       */
+/*                weekday(md.mrp_due_date) - 1 <= 2 then do:                  */
+/*                assign xRule = "W1".                                        */
+/*             end.                                                           */
+/*             else if weekday(md.mrp_due_date) - 1 >= 3 and                  */
+/*                weekday(md.mrp_due_date) - 1 <= 4 then do:                  */
+/*                assign xRule = "W3".                                        */
+/*             end.                                                           */
+/*             else do:                                                       */
+/*                assign xRule = "W5".                                        */
+/*             end.                                                           */
+/*          end.                                                              */
+/*          find first tmp_datearea where td_rule = xRule                     */
+/*                 and td_key = "Key" no-lock no-error.                       */
+/*          if available(tmp_datearea) then do:                               */
+/*             assign duek = td_date.                                         */
+/*          end.                                                              */
+/*          find last tmp_datearea where td_rule = xRule no-lock no-error.    */
+/*          if available(tmp_datearea) then do:                               */
+/*             assign duee = td_date.                                         */
+/*          end.                                                              */
+/*        end.                                                                */
+/*                                                                            */
+/*        if mrp_det.mrp_due_date >= duee then do:                            */
+/*           next.                                                            */
+/*        end.                                                                */
+/*                                                                            */
+/*        find last tmp_datearea where td_rule = xRule                        */
+/*              and mrp_det.mrp_due_date >= td_date no-lock no-error.         */
+/*        if available tmp_datearea then do:                                  */
+/*           assign duef = td_date.                                           */
+/*        end.                                                                */
+/*        find first tmp_datearea where td_rule = xRule                       */
+/*              and mrp_det.mrp_due_date < td_date no-lock no-error.          */
+/*         if available tmp_datearea then do:                                 */
+/*           assign duet = td_date.                                           */
+/*        end.                                                                */
+/*        find first tmp_po exclusive-lock where tpo_part = pt_part           */
+/*               and tpo_vend = pt_vend and tpo_due = duef no-error.          */
+/*        if available tmp_po then do:                                        */
+/*           assign tpo_qty = tpo_qty + mrp_det.mrp_qty .                     */
+/*        end.                                                                */
+/*        else do:                                                            */
+/*            create tmp_po.                                                  */
+/*            assign tpo_vend = pt_vend                                       */
+/*                   tpo_part = pt_part                                       */
+/*                   tpo_due = duef                                           */
+/*                   tpo_qty = mrp_det.mrp_qty                                */
+/*                   tpo_mrp_date = mrp_det.mrp_due_date                      */
+/*                   tpo_start = duek                                         */
+/*                   tpo_end = duee - 1                                       */
+/*                   tpo_rule = vd__chr03.                                    */
+/*        end.                                                                */
+/*  /*    {mfrpchk.i} */                                                      */
+/* END. /* FOR EACH PT_MSTR,XVP_CTRL,MRP_DET */                               */
+
        /*如下2月有计划则产生数量为0的记录*/
        assign duef = date(month(due),28,year(due)) + 5.
        assign duef = date(month(duef),1,year(duef)).
@@ -558,31 +558,45 @@ else do:  /* display summary data */
         end.
         assign tpo_nbr = areaDesc.
     end.
-
-    assign areaDesc = "".
-    export delimiter "~011" getTermLabel("PO_NUMBER",12)
-                            getTermLabel("SUPPLIER",12)
-                            getTermLabel("ITEM_NUMBER",12)
-                            getTermLabel("RECEIVED_QTY",12)
-                            getTermLabel("DUE_DATE",12)
-                            getTermLabel("TYPE",12)
-                            getTermLabel("WEEK",12)
-                            getTermLabel("SHIP_TERMS",12)
-                            getTermLabel("COMMENT",12).
-    /*                      getTermLabel("START",12)                        */
-    /*                      getTermLabel("END",12)                          */
-    /*                      getTermLabel("EXPIRATION_DATE",12).             */
-    for each tmp_po no-lock where:
-        assign areaDesc = "".
-        find first code_mstr no-lock where code_fldname = "vd__chr03"
-               and code_value = tpo_rule no-error.
-        if available code_mstr then do:
-           assign areaDesc = code_cmmt.
-        end.
-    /*    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due tpo_type
-                                weekday(tpo_due) - 1 tpo_rule areaDesc.
-                              tpo_start tpo_end tpo_mrp_date.                  */
-    end.
+    if detsum then do:
+       export delimiter "~011" getTermLabel("SUPPLIER",12)
+                               getTermLabel("ITEM_NUMBER",12)
+                               getTermLabel("SHIP_TERMS",12)
+                               getTermLabel("AS_OF_DATE",12)
+                               getTermLabel("ARRIVE_DATE",12)
+                               getTermLabel("QUANTITY_REQUESTED",12)
+                               .
+       for each tmp_tmd use-index tm_pm no-lock
+                break by tm_part by tm_month by tm_sdate:
+            export delimiter "~011" tm_vend tm_part tm_rule0 tm_sdate
+                             tm_edate tm_qty.
+       end.
+    end.      /*if detsum then do:    */
+    else do:  /* display summary data */
+         assign areaDesc = "".
+         export delimiter "~011" getTermLabel("PO_NUMBER",12)
+                                 getTermLabel("SUPPLIER",12)
+                                 getTermLabel("ITEM_NUMBER",12)
+                                 getTermLabel("RECEIVED_QTY",12)
+                                 getTermLabel("DUE_DATE",12)
+                                 getTermLabel("TYPE",12)
+                                 getTermLabel("WEEK",12)
+                                 getTermLabel("SHIP_TERMS",12)
+                                 getTermLabel("COMMENT",12).
+         /*                      getTermLabel("START",12)                    */
+         /*                      getTermLabel("END",12)                      */
+         /*                      getTermLabel("EXPIRATION_DATE",12).         */
+         for each tmp_po no-lock where:
+             assign areaDesc = "".
+             find first code_mstr no-lock where code_fldname = "vd__chr03"
+                    and code_value = tpo_rule no-error.
+             if available code_mstr then do:
+                assign areaDesc = code_cmmt.
+             end.
+             export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due
+                    tpo_type weekday(tpo_due) - 1 tpo_rule areaDesc.
+           /*       tpo_start tpo_end tpo_mrp_date.   */
+         end.
 
 end.      /*if detsum else do:    */
 /* REPORT TRAILER  */
