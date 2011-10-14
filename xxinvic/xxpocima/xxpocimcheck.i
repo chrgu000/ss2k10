@@ -210,30 +210,29 @@
     
                     usection = "pomt" + TRIM ( string(year(rcvddate)) + string(MONTH(rcvddate)) + string(DAY(rcvddate)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
                     output to value( trim(usection) + ".i") .
-                    PUT UNFORMATTED tt1a_nbr skip.
-                    PUT UNFORMATTED tt1a_vend skip.
-                    PUT UNFORMATTED " - " skip.
+                    PUT UNFORMATTED '"' tt1a_nbr '"' skip.
+                    PUT UNFORMATTED '"' tt1a_vend '"' skip.
+                    PUT UNFORMATTED "-" skip.
                     /*本程式自动创建的PO, so_job = "AC" */
-                    put UNFORMATTED '- - - - "AC" - - - - - - '.
-                    PUT UNFORMATTED tt1a_site skip.
+                    put UNFORMATTED '- - - - "AC" - - - - - - "' tt1a_site '"' skip.
             
                     if curr <> "rmb" then do:
-                       PUT UNFORMATTED  " - " skip.
+                       PUT UNFORMATTED  "-" skip.
                     end.
-                    PUT UNFORMATTED " - " skip.          /* 税 */
+                    PUT UNFORMATTED "-" skip.          /* 税 */
                 END.
     
                 PUT UNFORMATTED STRING(tt1a_line) skip.          /* 项次 */   
                 PUT UNFORMATTED tt1a_site skip.    /* 地点 */
-                put UNFORMATTED " - " skip.
-                put UNFORMATTED tt1a_part skip.
+                put UNFORMATTED "-" skip.
+                put UNFORMATTED '"' tt1a_part '"' skip.
                 put UNFORMATTED string(tt1a_openqty) skip.
                 /* 汇率问题要等财务AP模块上线后才确定 */
                 /*
                 put UNFORMATTED tmp_cost skip.
                 */
-                put UNFORMATTED " - " skip.
-                put UNFORMATTED " - " skip.
+                put UNFORMATTED "-" skip.
+                put UNFORMATTED "-" skip.
     
                 FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend AND ad_taxable = YES NO-LOCK NO-ERROR.
                 IF AVAIL ad_mstr THEN PUT UNFORMATTED " - " SKIP.
@@ -241,8 +240,8 @@
                 IF LAST-OF(tt1a_nbr) THEN DO:
                     put "." skip.
                     put "." skip.
-                    put " - " skip.
-                    put " - " skip.   
+                    put "-" skip.
+                    put "-" skip.   
                     put "." skip.   
                     output close.
 
