@@ -115,27 +115,41 @@ if not avail tempcase then do: /* not avail tempcase */
             {xxptlocf.i}
         end.  /*for each xxloc_det*/
     end. /*临时库位*/
+    
+/*ae  货架放不下时，需要放通道，PS的零件就放在P-4RPS                         */
+/*ae  SA的就放在P-4RSA （P-4RSA，P-4RPS分别代表通道）                        */
 
-    if v_loc_to = "" then do:  /*过道库位*/
-        for each xxloc_det 
-            where xxloc_type = "4" 
-            and   xxloc_part_type = v_part_type
-            no-lock
-            break by xxloc_type by xxloc_site by xxloc_loc :
-            v_loc_to = xxloc_loc . 
-        end. 
+/*ae    if v_loc_to = "" then do:  /*过道库位*/                              */
+/*ae        for each xxloc_det                                               */
+/*ae            where xxloc_type = "4"                                       */
+/*ae            and   xxloc_part_type = v_part_type                          */
+/*ae            no-lock                                                      */
+/*ae            break by xxloc_type by xxloc_site by xxloc_loc :             */
+/*ae            v_loc_to = xxloc_loc .                                       */
+/*ae        end.                                                             */
+/*ae                                                                         */
+/*ae        if v_loc_to = "" then do:                                        */
+/*ae            for each xxloc_det                                           */
+/*ae                where xxloc_type = "4"                                   */
+/*ae                no-lock                                                  */
+/*ae                break by xxloc_type by xxloc_site by xxloc_loc :         */
+/*ae                v_loc_to = xxloc_loc.                                    */
+/*ae            end.                                                         */
+/*ae        end.                                                             */
+/*ae    end.  /*过道库位*/                                                   */
 
-        if v_loc_to = "" then do:
-            for each xxloc_det 
-                where xxloc_type = "4" 
-                no-lock
-                break by xxloc_type by xxloc_site by xxloc_loc :
-                v_loc_to = xxloc_loc . 
-            end. 
-        end.
-    end.  /*过道库位*/
+/*ae*/   if v_loc_to = "" then do:
+/*ae*/   	 if v_part_type = "PS" then do:
+/*ae*/   	 	  assign v_loc_to = "P-4RPS".
+/*ae*/   	 end.
+/*ae*/   	 else if v_part_type = "SA" then do:
+/*ae*/   	 		assign v_loc_to = "P-4RSA".
+/*ae*/      end.
+/*ae*/   	 else do:
+/*ae*/   	    assign v_loc_to = v_loc_error .
+/*ae*/   	 end.
+/*ae*/   end.
 
-    if v_loc_to = "" then v_loc_to = v_loc_error .
     /*查找v_loc_to--------------------------------------end*/
 
 
