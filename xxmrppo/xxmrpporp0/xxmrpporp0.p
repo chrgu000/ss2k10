@@ -565,11 +565,17 @@ repeat:
                                getTermLabel("AS_OF_DATE",12)
                                getTermLabel("ARRIVE_DATE",12)
                                getTermLabel("QUANTITY_REQUESTED",12)
-                               .
+                               getTermLabel("AS_OF_DATE_Week",12)
+                               getTermLabel("ARRIVE_DATE_WEEK",12)
+                               getTermLabel("COMMENT",12).
        for each tmp_tmd use-index tm_pm no-lock
                 break by tm_part by tm_month by tm_sdate:
+            find first code_mstr no-lock where code_fldname = "vd__chr03"
+            		   and code_value = tm_rule0 no-error.
             export delimiter "~011" tm_vend tm_part tm_rule0 tm_sdate
-                             tm_edate tm_qty.
+                             tm_edate tm_qty weekday(tm_sdate) - 1
+                             weekday(tm_edate) - 1 
+                             code_cmmt when available code_mstr.
        end.
     end.      /*if detsum then do:    */
     else do:  /* display summary data */
