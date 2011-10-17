@@ -509,7 +509,7 @@ repeat:
                 and pt_site >= site and (pt_site <= site1 or site1 = "")
                 and (pt_vend = vend or vend = "")
                 and (substring(pt_vend,1,1) = area or area = ""),
-           EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+           EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and
                 mrp_det.mrp_detail = "¼Æ»®µ¥" and
                 mrp_det.mrp_due_date >= duef and mrp_det.mrp_due_date <= duet
                 USE-INDEX mrp_part,
