@@ -99,6 +99,7 @@ define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
 define variable recnop as recid.
 define variable nbr1 as character.
+define variable xxwpnbr like xxwp_nbr.
 /* USE TEMP-TABLE IN PLACE OF WORKFILE TO IMPROVE PERFORMANCE     */
 
 define temp-table shortages no-undo
@@ -254,21 +255,33 @@ by wr_start by wr_part by wr_op
 /*zy            wr_op                                                */
 /*zy            wr_mch                                               */
 /*zy            wr_start.                                            */
- 
-			      	 create xxwp_mst.
-			         assign xxwp_site = wo_site
-			        			  xxwp_line = wr_wkctr
-			        			  xxwp_part = wod_part.
-			        if delete_pklst then assign xxwp_nbr = nbr_replace.
-			        								else assign xxwp_nbr = string(nbr,"x(10)"). 
- 
-			 			assign xxwp_qty_req = max(wod_qty_req - wod_qty_iss,0)
-			 						 xxwp_um = um
-			 						 xxwp_par = wr_par
-			 						 xxwp_date = wo_due_date
-			 						 xxwp_op = wr_op
-			 						 xxwp_mch = wr_mch
-			 						 xxwp_start = wr_start.  
+ 					if delete_pklst then assign xxwpnbr = nbr_replace.
+			    								else assign xxwpnbr = string(nbr,"x(10)").
+			    find first xxwp_mst where 
+ 										 xxwp_date = wo_due_date and 
+ 										 xxwp_site = wo_site and
+ 										 xxwp_line = wr_wkctr and
+ 										 xxwp_nbr = xxwpnbr and
+ 										 xxwp_part = wod_part and
+ 										 xxwp_par = wr_par exclusive-lock no-error. 	
+ 		       if not available xxwp_mst then do:
+			            create xxwp_mst.
+			            assign xxwp_date = wo_due_date
+			            			 xxwp_site = wo_site
+			            		   xxwp_line = wr_wkctr
+			            		   xxwp_nbr = xxwpnbr
+			            		   xxwp_part = wod_part 
+			            			 xxwp_par = wr_par 
+			            		   xxwp_qty_req = max(wod_qty_req - wod_qty_iss,0)
+			 		        	     xxwp_um = um
+			 		        	     xxwp_op = wr_op
+			 		        	     xxwp_mch = wr_mch
+			 		        	     xxwp_start = wr_start.  
+			 			end.
+			 			else do:		
+			 					 assign xxwp_qty_req = xxwp_qty_req 
+			 					 										 + max(wod_qty_req - wod_qty_iss,0).
+			 		  end.
 				end.
 
       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
