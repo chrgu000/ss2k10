@@ -291,7 +291,7 @@ define variable ladnbr like lad_nbr.
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
-                  xxwd_qty_plan = vqty.
+                  xxwd_qty_plan = max(vqty,0).
             assign i = i + 1.
             assign vqtya1 = vqtya1 + vqty.
             leave.
@@ -308,7 +308,7 @@ define variable ladnbr like lad_nbr.
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref
-                  xxwd_qty_plan = vqtya.
+                  xxwd_qty_plan = max(vqtya,0).
            assign i = i + 1.
            assign vqty = vqty - vqtya
                   vqtya1 = vqtya1 + vqty.

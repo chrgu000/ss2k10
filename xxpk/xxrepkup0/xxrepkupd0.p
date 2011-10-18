@@ -278,10 +278,10 @@ by wr_start by wr_part by wr_op
 			 		        	     xxwp_mch = wr_mch
 			 		        	     xxwp_start = wr_start.  
 			 			end.
-			 			else do:		
-			 					 assign xxwp_qty_req = xxwp_qty_req 
-			 					 										 + max(wod_qty_req - wod_qty_iss,0).
-			 		  end.
+/*  	 			else do:		                                                     */
+/*  	 					 assign xxwp_qty_req = xxwp_qty_req                          */
+/*  	 					 										 + max(wod_qty_req - wod_qty_iss,0).     */
+/*  	 		  end.                                                             */
 				end.
 
       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
