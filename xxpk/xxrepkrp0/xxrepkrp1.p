@@ -146,7 +146,7 @@ do on error undo, return error on endkey undo, return error:
                      truncate(xxwa_qty_pln,0)
                      vMultiple
                      vtype
-                     truncate(xxwd_qty_plan,0)
+                     max(truncate(xxwd_qty_plan,0),0)
                      xxwd_loc
                      xxwd_lot
                      truncate(xxwd_qty_piss,0)
@@ -156,9 +156,9 @@ do on error undo, return error on endkey undo, return error:
   end.
   if cate = "A" or cate = "S" then do:
      for each xxwa_det no-lock where
-            xxwa_date = issue  and
-            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+              xxwa_date = issue  and
+              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+              xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
               xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
@@ -188,7 +188,7 @@ do on error undo, return error on endkey undo, return error:
                      truncate(xxwa_qty_pln,0)
                      vMultiple
                      vtype
-                     truncate(xxwd_qty_plan,0)
+                     max(truncate(xxwd_qty_plan,0),0)
                      xxwd_loc
                      xxwd_lot
                      truncate(xxwd_qty_siss,0)
