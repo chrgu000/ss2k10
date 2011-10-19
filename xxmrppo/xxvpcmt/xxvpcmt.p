@@ -20,6 +20,7 @@ form
    xvp_rule colon 20 format "x(12)" terms no-label format "x(30)"
    xvp_ord_min colon 20
    xvp_week colon 20
+   xvp__chr01 colon 20
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -35,7 +36,7 @@ repeat with frame a:
       {mfnp.i xvp_ctrl xvp_part xvp_part xvp_part xvp_part xvp_part_vend}
 
       if recno <> ? then do:
-         display xvp_vend xvp_part xvp_rule xvp_ord_min xvp_week.
+         display xvp_vend xvp_part xvp_rule xvp_ord_min xvp_week xvp__chr01.
          find first pt_mstr no-lock where pt_part = xvp_part no-error.
          if available pt_mstr then do:
             display pt_vend @ xvp_vend pt_desc1 @ ptdesc1 with frame a.
@@ -109,7 +110,7 @@ repeat with frame a:
    end.
    recno = recid(xvp_ctrl).
 
-   display xvp_vend xvp_part xvp_rule xvp_ord_min xvp_week.
+   display xvp_vend xvp_part xvp_rule xvp_ord_min xvp_week xvp__chr01.
 
    ststatus = stline[2].
    status input ststatus.
@@ -117,7 +118,7 @@ repeat with frame a:
 
    setx:
    do on error undo, retry:
-      set xvp_rule xvp_ord_min xvp_week go-on("F5" "CTRL-D" ).
+      set xvp_rule xvp_ord_min xvp_week xvp__chr01 go-on("F5" "CTRL-D" ).
       if not can-find(first code_mstr no-lock where code_fldname = "vd__chr03"
                          and code_value = xvp_rule) then do:
          {pxmsg.i &MSGNUM=716 &ERRORLEVEL=3}

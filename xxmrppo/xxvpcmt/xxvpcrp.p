@@ -58,7 +58,8 @@ export delimiter "~t" getTermLabel("SUPPLIER",18)
 										  getTermLabel("RULE",18)
 										  getTermLabel("COMMENTS",20)
 										  getTermLabel("STANDARD_PACK",18)
-										  getTermLabel("WEEK" ,18).
+										  getTermLabel("WEEK",18)
+										  getTermLabel("PURCHASE_TYPE",18).
 for each xvp_ctrl no-lock where xvp_vend >= vend and xvp_vend <= vend1 and
 				 xvp_part >= part and xvp_part <= part1 
 				 break by xvp_vend by xvp_part: 
@@ -77,7 +78,7 @@ for each xvp_ctrl no-lock where xvp_vend >= vend and xvp_vend <= vend1 and
 	  	 assign codecmmt = code_cmmt.
 	  end.
 		export delimiter "~011" xvp_vend vdsort xvp_part ptdesc xvp_rule
-					 codecmmt xvp_ord_min xvp_week.
+					 codecmmt xvp_ord_min xvp_week xvp__chr01.
 end.
 put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
 end. /* mainloop: */
