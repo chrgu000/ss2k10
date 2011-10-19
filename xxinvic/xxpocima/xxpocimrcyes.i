@@ -7,8 +7,16 @@
 find first gl_ctrl no-lock no-error.
 If AVAILABLE (gl_ctrl) then assign glbasecurr = gl_base_curr.    
 
-tmp_loc = if pod_det.pod_part begins "P" then "PT" else "TEMP".
-
+if pod_det.pod_part begins "P" then do:
+	 assign tmp_loc = "PT".
+end.
+else do:
+	 find first code_mstr no-lock where code_fldname = "xxpocima.p" 
+	 			  and code_value = "DefRcLoc" no-error.
+	 if available code_mstr then do:
+	 		assign tmp_loc = code_cmmt.
+	 end.
+end.
 
 tmp_fix_rate = if po_mstr.po_fix_rate = yes then "Y" else "N".
 usection = "porc" + TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100)))  .
@@ -64,7 +72,7 @@ for each vv:
         and tr_type    = "rct-po"  
         and tr_part    = trim(pod_det.pod_part)  
         and tr_site    = trim(xxinv_site)    
-        and tr_loc     = trim( tmp_loc )
+        and tr_loc     = trim(tmp_loc )
         and tr_serial  = trim(tmp_lot)   
         and tr_qty_chg = v_qty_rct 
     then do:
