@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111019.1"}
+{mfdtitle.i "111020.1"}
 {xxmrpporpa.i}
 define variable site like si_site.
 define variable site1 like si_site.
@@ -24,6 +24,8 @@ define variable areaDesc as character format "x(40)".
 define variable sendDate as date.
 define variable tmpDate as date.
 define variable qty_nextMth like pod_qty_ord.
+define variable qty_tpod like pod_qty_ord.
+define variable qty_pod like pod_qty_ord.
 define variable qtytemp as decimal.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
@@ -40,8 +42,12 @@ define temp-table tmp_po
     fields tpo_mrp_date like po_due_date
     fields tpo_start  as date
     fields tpo_end  as date
+    fields tpo_mrp_qty like mrp_qty
     fields tpo_qty like pod_qty_ord
+    fields tpo_po like pod_qty_ord
+    fields tpo_tpo like pod_qty_ord
     fields tpo_rule as character
+    fields tpo_rule0 as character
     index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
 
 define temp-table tmp_rule_date
@@ -58,6 +64,7 @@ define temp-table tmp_tmd
    fields tm_sdate as date  /* mrp_due_date */
    fields tm_adate as date  /* first available send date */
    fields tm_edate as date  /* end send date*/
+   fields tm_mrp_qty like mrp_qty
    fields tm_qty like mrp_qty
    index tm_rule is primary tm_rule
    index tm_vpa tm_vend tm_part tm_adate
@@ -287,7 +294,8 @@ repeat:
               tm_rule0 = vd__chr03
               tm_rule = vd__chr03
               tm_sdate = mrp_due_date
-              tm_qty = mrp_qty.
+              tm_qty = mrp_qty
+              tm_mrp_qty = mrp_qty.
    end.
 
    /*计算P之Rule*/
@@ -347,7 +355,6 @@ repeat:
        end.
        assign tm_rule = xrule.
    end.
-
 
    /*删除不要的月份资料*/
    for each tmp_tmd exclusive-lock,
@@ -418,7 +425,9 @@ repeat:
                    tpo_part = tm_part
                    tpo_due = tm_edate
                    tpo_qty = qtytemp
-                   tpo_rule = tm_rule0.
+                   tpo_mrp_qty = qtytemp
+                   tpo_rule0 = tm_rule0
+                   tpo_rule = tm_rule.
        end.
    end.
 
@@ -450,7 +459,8 @@ repeat:
                  tpo_part = pt_part
                  tpo_due = duef - 1
                  tpo_qty = 0
-                 tpo_rule = vd__chr03.
+                 tpo_rule = vd__chr03
+                 tpo_rule0 = vd__chr03.
        end.
    END.
 
@@ -463,8 +473,33 @@ repeat:
          end.
     end.
 
-    /*产生单号*/
+    for each tmp_po exclusive-lock where tpo_type = "T" and tpo_qty > 0:
+        find first tmp_datearea where td_rule = tpo_rule and
+                   td_date > tpo_due no-error.
+        if available tmp_datearea then do:
+           assign tpo_end = td_date - 1.
+        end.
+        else do:
+           assign tpo_end = hi_date.
+        end.
+        assign qty_tpod = 0
+               qty_pod = 0.
+        for each pod_det no-lock use-index pod_partdue where
+                 pod_part = tpo_part and pod_due_date >= tpo_due and
+                 pod_due_date <= tpo_end:
+            if pod_type = "T" then do:
+               assign qty_tpod = qty_tpod + pod_qty_ord.
+            end.
+            else do:
+               assign qty_pod = qty_pod + pod_qty_ord.
+            end.
+        end.
+        assign tpo_po = qty_pod
+               tpo_tpo = qty_tpod
+               tpo_qty = qty_tpod -(tpo_qty + qty_pod).
+    end.
 
+    /*产生单号*/
     for each tmp_po exclusive-lock where tpo_vend <> ""
         break by tpo_vend :
         if first-of(tpo_vend) then do:
@@ -528,8 +563,8 @@ repeat:
                 assign areaDesc = code_cmmt.
              end.
              export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due
-                    tpo_type weekday(tpo_due) - 1 tpo_rule areaDesc.
-           /*       tpo_start tpo_end tpo_mrp_date.   */
+                    tpo_type weekday(tpo_due) - 1 tpo_rule0 areaDesc.
+                    /* tpo_end tpo_rule.  tpo_mrp_date. */
          end.
 
 end.      /*if detsum else do:    */
