@@ -1,8 +1,14 @@
 /* ss - 100628.1 by: jack */    /* prh__chr01 记录结果 1，2，3，4 , 空未检验  prh__dte01 品检日期*/
 /* ss - 100920.1 by: jack */  /* 昭和*/
 /* ss - 100922.1 by:jack */
+/* ss - 101012.1 by:SamSong */
+/* ss - 110104.1 by: jack */  /* 排序修改  */
+
 /******************************************************************************/
-{mfdtitle.i "100922.1 "}
+/*
+{mfdtitle.i "101012.1 "}
+*/
+{mfdtitle.i "110104.1 "}
 
 {cxcustom.i "xxmqc001.P"}
 
@@ -34,6 +40,9 @@ DEFINE  TEMP-TABLE tt
     FIELD t1_status LIKE xxmqp_status
     FIELD t1_loc LIKE loc_loc
     FIELD t1_site LIKE loc_site
+    /* ss - 110104.1 -b */
+    INDEX t1_part t1_part t1_receiver t1_line
+    /* ss - 110104.1 -e */
     .
 /* ss - 100810.1 -b */
 DEFINE VAR v_go AS LOGICAL .
@@ -135,7 +144,7 @@ repeat:
   for each  prh_hist NO-LOCK USE-INDEX prh_rcp_date  WHERE   (prh_rcp_date >= rdate AND prh_rcp_date <= rdate1) 
                    AND (prh_receiver >= receiver AND prh_receiver <= receiver1 ) AND (prh_vend >= vendor AND prh_vend <= vendor1)
                     AND (prh_part >= part AND prh_part <= part1)  /* ss - 100922.1 -b  AND prh__chr01 = "" ss - 100922.1 -e */    AND prh_rcvd <> 0 ,
-      EACH tr_hist  NO-LOCK WHERE  tr_type = "rct-po" AND tr_lot = prh_receiver AND tr_line = prh_line AND tr_qty_loc <> 0
+      EACH tr_hist  NO-LOCK use-index tr_nbr_eff WHERE  tr_type = "rct-po" AND tr_nbr = prh_nbr AND  tr_lot = prh_receiver AND tr_line = prh_line AND tr_qty_loc <> 0
       BREAK BY prh_receiver :
 
      
@@ -234,9 +243,13 @@ repeat:
            define var vv_recid as recid .
            define var vv_first_recid as recid .
            define var v_framesize as integer .
+          /* ss - 110104.1 -b 
            vv_recid       = ? .
+           ss - 110104.1 -e */
+          
            vv_first_recid = ? .
            v_framesize    = 17 .
+           
 
 
          
@@ -254,6 +267,7 @@ repeat:
 
            scroll_loop:
            do with frame zzz1:
+               /* ss - 110104.1 -b
                {xxsoivpst003.i 
                    &domain       = "true and "
                    &buffer       = tt
@@ -274,6 +288,29 @@ repeat:
                     &first-recid  = vv_first_recid
                     &logical1     = true 
             }
+            ss - 110104.1 -e */
+               /* ss - 110104.1 -b */
+               {xxsoivpst003.i 
+                   &domain       = "true and "
+                   &buffer       = tt
+                   &scroll-field = t1_part
+                   &searchkey    = "true"
+                   &framename    = "zzz1"
+                   &framesize    = v_framesize
+                   &display1     = t1_receiver
+                   &display2     = t1_line
+                   &display3     = t1_part     
+                   &display4    = t1_serial        
+                    &display5     = t1_rcp_date       
+                    &display6     = t1_rcvd       
+                    &display7     = t1_status    
+                   &exitlabel    = scroll_loop
+                    &exit-flag    = "true"
+                    &record-id    = vv_recid
+                    &first-recid  = vv_first_recid
+                    &logical1     = true 
+            }
+               /* ss - 110104.1 -e */
 
          
         end. /*scroll_loop*/
@@ -312,7 +349,7 @@ repeat:
              message "请输入批核结果1 检验合格  2 不合格   空 为未检验" .
                 update t1_status with frame zzz1 .   
 
-                 
+              
             end.
           
         end.
