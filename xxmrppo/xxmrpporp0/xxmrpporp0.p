@@ -564,7 +564,7 @@ repeat:
              end.
              export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due
                     tpo_type weekday(tpo_due) - 1 tpo_rule0 areaDesc.
-                    /* tpo_end tpo_rule.  tpo_mrp_date. */
+              /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
          end.
 
 end.      /*if detsum else do:    */
