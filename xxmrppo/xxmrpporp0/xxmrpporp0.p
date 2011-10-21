@@ -43,7 +43,7 @@ define temp-table tmp_po
     fields tpo_start  as date
     fields tpo_end  as date
     fields tpo_mrp_qty like mrp_qty
-    fields tpo_qty like pod_qty_ord
+    fields tpo_qty like mrp_qty
     fields tpo_po like pod_qty_ord
     fields tpo_tpo like pod_qty_ord
     fields tpo_rule as character
@@ -496,7 +496,7 @@ repeat:
         end.
         assign tpo_po = qty_pod
                tpo_tpo = qty_tpod
-               tpo_qty = qty_tpod -(tpo_qty + qty_pod).
+               tpo_qty = tpo_qty - qty_tpod.
     end.
 
     /*²úÉúµ¥ºÅ*/
