@@ -836,6 +836,12 @@ If AVAILABLE ( poc_ctrl ) then
                 pause 0 before-hide.
                 undo, retry.
         end.
+        
+        if v1002 <> "CHECK" then do:
+            display skip "Error , ±ÿ–Î «checkø‚." @ WMESSAGE NO-LABEL with fram F1510.
+            pause 0 before-hide.
+            undo, retry.
+        end.
          /*  ---- Valid Check ---- END */
 
         display  "" @ WMESSAGE NO-LABEL with fram F1510.
