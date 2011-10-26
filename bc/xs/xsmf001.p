@@ -389,7 +389,7 @@ REPEAT:
 
 
                 /* LABEL 4 - START */
-                  L11104 = "" .
+                  L11104 = "库存调拨-物料..14" .
                 display L11104          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 4 - END */
 
@@ -814,6 +814,133 @@ IF OkToRun = yes then RUN    xspor03.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
+   
+   /**********14*************/
+      V1114LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle1113    */
+   IF NOT (V1110 = "14" OR V1100 = "14" ) THEN LEAVE V1114LMAINLOOP.
+     /* START  LINE :1113  1.1.3 PO收货[严控]  */
+     V1114L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1114           as char format "x(50)".
+        define variable PV1114          as char format "x(50)".
+        define variable L11141          as char format "x(40)".
+        define variable L11142          as char format "x(40)".
+        define variable L11143          as char format "x(40)".
+        define variable L11144          as char format "x(40)".
+        define variable L11145          as char format "x(40)".
+        define variable L11146          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1114 = " ".
+        V1114 = ENTRY(1,V1114,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1110 = "".
+RUN CheckSecurity (INPUT "xsinv23n.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes then RUN xsinv23n.p.
+        leave V1114L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1114 no-box.
+
+                /* LABEL 1 - START */
+                  L11141 = "" .
+                display L11141          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L11142 = "" .
+                display L11142          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L11143 = "" .
+                display L11143          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L11144 = "" .
+                display L11144          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L11145 = "" .
+                display L11145          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L11146 = "" .
+                display L11146          format "x(40)" skip with fram F1114 no-box.
+                /* LABEL 6 - END */
+        Update V1114
+        WITH  fram F1114 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V1114 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V1114 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V1114 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1114 ).
+        /* **CHANGE Default Site END ** */
+        IF V1114 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F1114.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1114.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1114.
+        pause 0.
+        leave V1114L.
+     END.
+     PV1114 = V1114.
+     /* END    LINE :1113  1.1.3 PO收货[严控]  */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V1114LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :1113    */
+   END.
+   pause 0 before-hide.
+   
+   
+   /**********14*************/
+   
+   
    /* Internal Cycle Input :1115    */
    V1115LMAINLOOP:
    REPEAT:

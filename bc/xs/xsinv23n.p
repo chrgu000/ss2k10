@@ -1346,7 +1346,7 @@ If AVAILABLE ( tr_hist ) then
         display "...PROCESSING...  " NO-LABEL with fram F9000X no-box.
         pause 0.
      /*  Update MFG/PRO START  */ 
-     {xsinv23u.i "Y"}
+     {xsinv23u.i "N"}
      /*  Update MFG/PRO END  */ 
         display  "" NO-LABEL with fram F9000X no-box .
         pause 0.
