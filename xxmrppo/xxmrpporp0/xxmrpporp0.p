@@ -17,7 +17,7 @@ define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr INITIAL "C02C016".
+define variable vend like vd_addr. /* INITIAL "C02C016".         */
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -49,6 +49,7 @@ define temp-table tmp_po
     fields tpo_tpo like pod_qty_ord
     fields tpo_rule as character
     fields tpo_rule0 as character
+    fields tpo_fut as logical initial no
     index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
 
 define temp-table tmp_rule_date
@@ -467,7 +468,8 @@ repeat:
                  tpo_due = duef - 1
                  tpo_qty = 0
                  tpo_rule = vd__chr03
-                 tpo_rule0 = vd__chr03.
+                 tpo_rule0 = vd__chr03
+                 tpo_fut = yes.
        end.
    END.
 
@@ -504,9 +506,12 @@ repeat:
         assign tpo_po = qty_pod
                tpo_tpo = qty_tpod
                tpo_qty = tpo_qty - qty_tpod.
-        assign tpo_qty0 = tpo_qty.
     end.
-
+	
+		for each tmp_po exclusive-lock:
+				assign tpo_qty0 = tpo_qty.
+	  end.
+	
     /*²úÉúµ¥ºÅ*/
     for each tmp_po exclusive-lock where tpo_vend <> ""
         break by tpo_vend :
@@ -560,7 +565,7 @@ repeat:
                                  getTermLabel("RECEIVED_QTY",12)
                                  getTermLabel("DUE_DATE",12)
                                  getTermLabel("TYPE",12)
-         /*                      getTermLabel("QTY_DIFF",12)                 */
+                                 getTermLabel("QTY_DIFF",12)
                                  getTermLabel("WEEK",12)
                                  getTermLabel("SHIP_TERMS",12)
                                  getTermLabel("COMMENT",12).
@@ -586,28 +591,29 @@ repeat:
                  if qtytemp = 0 and tpo_qty >= 0 then do:
                     next.
                  end.
-								 if qtytemp <= 0 then do:
-								 		assign qtytemp = qtytemp + tpo_qty.
-								 		if qtytemp >= 0 then do:
-								 			 assign tpo_qty = qtytemp.
-								 			 assign qtytemp = 0.
-								 	  end.
-								 	  else do:
-								 	  	 assign tpo_qty = 0.
-								  	end.
-							 	 end.
+                 if qtytemp <= 0 then do:
+                    assign qtytemp = qtytemp + tpo_qty.
+                    if qtytemp >= 0 then do:
+                       assign tpo_qty = qtytemp.
+                       assign qtytemp = 0.
+                    end.
+                    else do:
+                       assign tpo_qty = 0.
+                    end.
+                 end.
              end.
          end.
 
-         for each tmp_po no-lock where:
+         for each tmp_po no-lock:
+  /*         where tpo_qty > 0 or (tpo_qty = 0 and tpo_fut):              */
              assign areaDesc = "".
              find first code_mstr no-lock where code_fldname = "vd__chr03"
                     and code_value = tpo_rule no-error.
              if available code_mstr then do:
                 assign areaDesc = code_cmmt.
              end.
-             export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due
-                    tpo_type /* tpo_qty0 */
+             export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty
+                    tpo_due tpo_type tpo_qty0
                     weekday(tpo_due) - 1 tpo_rule0 areaDesc.
              /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
          end.
