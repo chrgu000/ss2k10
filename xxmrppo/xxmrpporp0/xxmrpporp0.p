@@ -32,6 +32,7 @@ define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
 define variable detsum like mfc_logical
        label "Detail/Summary" format "Detail/Summary" initial NO.
+define variable act as logical initial YES.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -90,7 +91,8 @@ form
    vend   colon 25
    area   colon 25 areaDesc no-label
    buyer  colon 25 skip(1)
-   detsum colon 25 skip(1)
+   detsum colon 25
+   act    colon 25 skip(1)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -117,10 +119,10 @@ repeat:
    if part1 = hi_char then part1 = "".
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 due vend area buyer detsum with frame a.
+      update site site1 part part1 due vend area buyer detsum act with frame a.
 
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 due vend area buyer detsum "
+      &fields = " site site1 part part1 due vend area buyer detsum act "
       &frm = "a"}
 
    if (c-application-mode <> 'web') or
@@ -136,6 +138,7 @@ repeat:
       {mfquoter.i vend }
       {mfquoter.i buyer}
       {mfquoter.i detsum}
+      {mfquoter.i act}
 
       if site1 = "" then site1 = hi_char.
       if part1 = "" then part1 = hi_char.
@@ -604,8 +607,8 @@ repeat:
              end.
          end.
 
-         for each tmp_po no-lock:
-  /*         where tpo_qty > 0 or (tpo_qty = 0 and tpo_fut):              */
+         for each tmp_po no-lock
+             where (tpo_qty > 0 or tpo_fut) or not act:           
              assign areaDesc = "".
              find first code_mstr no-lock where code_fldname = "vd__chr03"
                     and code_value = tpo_rule no-error.
