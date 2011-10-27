@@ -1,23 +1,23 @@
 /* xxmrpporp0.i - vender mrp po report                                       */
-/* revision: 110915.1   created on: 20110901   by: zhang yun                 */
+/* revision: 110915.1   created on: 20110901  by: zhang yun                  */
 /* V8:ConvertMode=Report                                                     */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111020.1"}
-{xxmrpporpa.i}
+{mfdtitle.i "111027.1"}
+
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
-define variable part like pt_part. /* INITIAL "MHSE02-407-0-LX".*/
+define variable part like pt_part. /* INITIAL "MHSE02-407-0-LX". */
 define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr. /* INITIAL "C15G002". */
+define variable vend like vd_addr INITIAL "C02C016".
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -31,7 +31,7 @@ define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
 define variable detsum like mfc_logical
-       label "Detail/Summary" format "Detail/Summary" initial no.
+       label "Detail/Summary" format "Detail/Summary" initial NO.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -44,6 +44,7 @@ define temp-table tmp_po
     fields tpo_end  as date
     fields tpo_mrp_qty like mrp_qty
     fields tpo_qty like mrp_qty
+    fields tpo_qty0 like mrp_qty
     fields tpo_po like pod_qty_ord
     fields tpo_tpo like pod_qty_ord
     fields tpo_rule as character
@@ -54,6 +55,12 @@ define temp-table tmp_rule_date
     fields trd_rule AS CHARACTER
     fields trd_datef AS DATE
     fields trd_datet AS DATE.
+
+define temp-table tmp_datearea
+    fields td_rule as character
+    fields td_key as character
+    fields td_date as date
+    index td_rule is primary td_rule td_date.
 
 define temp-table tmp_tmd
    fields tm_vend like vd_addr
@@ -74,14 +81,14 @@ define buffer md for mrp_det.
 
 /* SELECT FORM */
 form
-   site  colon 15
-   site1 label {t001.i} colon 49 skip
-   part  colon 15
-   part1 label {t001.i} colon 49 skip(1)
-   due   colon 25
-   vend  colon 25
-   area  colon 25 areaDesc no-label
-   buyer colon 25 skip(1)
+   site   colon 15
+   site1  label {t001.i} colon 49 skip
+   part   colon 15
+   part1  label {t001.i} colon 49 skip(1)
+   due    colon 25
+   vend   colon 25
+   area   colon 25 areaDesc no-label
+   buyer  colon 25 skip(1)
    detsum colon 25 skip(1)
 
 with frame a side-labels width 80.
@@ -497,6 +504,7 @@ repeat:
         assign tpo_po = qty_pod
                tpo_tpo = qty_tpod
                tpo_qty = tpo_qty - qty_tpod.
+        assign tpo_qty0 = tpo_qty.
     end.
 
     /*产生单号*/
@@ -543,18 +551,54 @@ repeat:
     end.      /*if detsum then do:    */
     else do:  /* display summary data */
          assign areaDesc = "".
+         for each qad_wkfl exclusive-lock where qad_key1 = key1 + "_Det":
+             delete qad_wkfl.
+         end.
          export delimiter "~011" getTermLabel("PO_NUMBER",12)
                                  getTermLabel("SUPPLIER",12)
                                  getTermLabel("ITEM_NUMBER",12)
                                  getTermLabel("RECEIVED_QTY",12)
                                  getTermLabel("DUE_DATE",12)
                                  getTermLabel("TYPE",12)
+         /*                      getTermLabel("QTY_DIFF",12)                 */
                                  getTermLabel("WEEK",12)
                                  getTermLabel("SHIP_TERMS",12)
                                  getTermLabel("COMMENT",12).
          /*                      getTermLabel("START",12)                    */
          /*                      getTermLabel("END",12)                      */
          /*                      getTermLabel("EXPIRATION_DATE",12).         */
+
+         for each tmp_po no-lock where tpo_qty < 0 break by tpo_part:
+             if first-of(tpo_part) then do:
+                create qad_wkfl.
+                assign qad_key1 = key1 + "_Det"
+                       qad_key2 = tpo_part.
+            end.
+         end.
+
+         for each qad_wkfl use-index qad_index2 where qad_key1 = key1 + "_Det"
+             break by qad_key1 by qad_key2:
+             for each tmp_po exclusive-lock where tpo_part = qad_key2
+                 break by tpo_part by tpo_due:
+                 if first-of(tpo_part) then do:
+                    assign qtytemp = 0.
+                 end.
+                 if qtytemp = 0 and tpo_qty >= 0 then do:
+                    next.
+                 end.
+								 if qtytemp <= 0 then do:
+								 		assign qtytemp = qtytemp + tpo_qty.
+								 		if qtytemp >= 0 then do:
+								 			 assign tpo_qty = qtytemp.
+								 			 assign qtytemp = 0.
+								 	  end.
+								 	  else do:
+								 	  	 assign tpo_qty = 0.
+								  	end.
+							 	 end.
+             end.
+         end.
+
          for each tmp_po no-lock where:
              assign areaDesc = "".
              find first code_mstr no-lock where code_fldname = "vd__chr03"
@@ -563,8 +607,9 @@ repeat:
                 assign areaDesc = code_cmmt.
              end.
              export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due
-                    tpo_type weekday(tpo_due) - 1 tpo_rule0 areaDesc.
-              /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
+                    tpo_type /* tpo_qty0 */
+                    weekday(tpo_due) - 1 tpo_rule0 areaDesc.
+             /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
          end.
 
 end.      /*if detsum else do:    */
@@ -576,86 +621,47 @@ end.
 
 {wbrp04.i &frame-spec = a}
 
-FUNCTION i2c RETURNS CHARACTER (iNumber AS INTEGER):
+PROCEDURE getParams:
 /*------------------------------------------------------------------------------
-    Purpose: 将数字转换为0~9,a~z.
-      Notes: 输入的数字在0-36之间MOUELO.
-------------------------------------------------------------------------------*/
-    assign iNumber = iNumber MODULO 36.
-    IF iNumber < 10 THEN
-       RETURN CHR(48 + iNumber).
-    ELSE
-       RETURN CHR(87 + iNumber).
-END FUNCTION.
-
-PROCEDURE getPoNumber:
-/*------------------------------------------------------------------------------
-    Purpose: 计算PO单号
+    Purpose: 计算日期范围
       Notes:
 ------------------------------------------------------------------------------*/
-  DEFINE INPUT PARAMETER iDate AS DATE.
-  DEFINE INPUT PARAMETER iVendor LIKE VD_ADDR.
-  DEFINE OUTPUT PARAMETER oNbr as character.
+    DEFINE INPUT PARAMETER iSite LIKE SI_SITE.
+    DEFINE INPUT PARAMETER iDate AS DATE.
+    DEFINE INPUT PARAMETER iRule AS CHARACTER.
 
-  DEFINE Variable intI as integer.
-  DEFINE VARIABLE KEY1 AS CHARACTER INITIAL "xxmrpporp0.p.getponbr".
-  DEFINE VARIABLE KEY2 AS CHARACTER.
+    DEFINE OUTPUT PARAMETER oRule AS CHARACTER.
+    DEFINE OUTPUT PARAMETER oCyc as INTEGER.
+    DEFINE OUTPUT PARAMETER oType AS CHARACTER.
+    DEFINE OUTPUT PARAMETER oStart AS DATE.
+    DEFINE OUTPUT PARAMETER oEnd AS DATE.
 
-  find first vd_mstr no-lock where vd_addr = ivendor no-error.
-  if available vd_mstr then do:
-     assign KEY2 = substring(vd_sort,1,2).
-  end.
-  else do:
-     assign KEY2 = substring(iVendor,1,2).
-  end.
-  assign KEY2 = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + KEY2.
-
-  find first qad_wkfl exclusive-lock where qad_key1 = KEY1
-         and qad_key2 = KEY2 no-error.
-  if available qad_wkfl then do:
-    assign intI = qad_intfld[1].
-    assign oNbr = KEY2 + substring("0000" + string(inti),
-                      length("0000" + string(inti)) - 2).
-     repeat:
-         find first po_mstr no-lock where po_nbr = oNbr no-error.
-         if available po_mstr then do:
-             assign intI = qad_intfld[1] + 1
-                    qad_intfld[1] = qad_intfld[1] + 1
-                    qad_key3 = iVendor
-                    qad_user1 = string(intI).
-             assign oNbr = oNbr + substring("0000" + string(inti),
-                         length("0000" + string(inti)) - 2).
-         end.
-         else do:
-              leave.
-         end.
-     end.
-  end.
-  else do:
-     assign intI = 0.
-     assign oNbr = oNbr + substring("0000" + string(inti),
-                       length("0000" + string(inti)) - 2).
-     repeat:
-         find first po_mstr no-lock where po_nbr = oNbr no-error.
-         if available po_mstr then do:
-             assign intI = qad_intfld[1] + 1
-                    qad_intfld[1] = qad_intfld[1] + 1
-                    qad_key3 = string(qad_intfld[1] + 1).
-             assign oNbr = KEY2 + substring("0000" + string(inti),
-                         length("0000" + string(inti)) - 2).
-         end.
-         else do:
-              create qad_wkfl.
-              assign qad_key1 = "xxmrpporp0.p.getponbr"
-                     qad_key2 = KEY2
-                     qad_key3 = iVendor
-                     qad_user1 = "0"
-                     qad_intfld[1] = 0.
-              leave.
+    ASSIGN oType = SUBSTRING(iRule ,1 ,1).
+    IF oType = "M" THEN
+        ASSIGN oRule = entry(2, iRule , ";")
+               oCyc = integer(substring(entry(1, iRule , ";"),2)).
+    ELSE
+        ASSIGN oRule = substring(iRule,2).
+    oStart = date(month(iDate),1,year(iDate)).
+    repeat:
+       if index(oRule,string(weekday(oStart) - 1)) > 0 and
+          not can-find(first hd_mstr no-lock where
+                             hd_site = iSite and hd_date = oStart) then do:
+            leave.
+       end.
+       else oStart = oStart + 1.
+    end.
+    oEnd = DATE(MONTH(oStart),28,YEAR(oStart)) + 5.
+    oEnd = DATE(MONTH(oEnd),1,YEAR(oEnd)).
+    repeat:
+          if index(oRule,string(weekday(oEnd) - 1)) > 0  and
+          not can-find(first hd_mstr no-lock where
+                             hd_site = isite and hd_date = oEnd) then do:
+               leave.
           end.
-     end.
-  end.
-  release qad_wkfl.
+          else oEnd = oEnd + 1.
+    end.
+    oEnd = oEnd - 1.
 END PROCEDURE.
 
 procedure expTmd:

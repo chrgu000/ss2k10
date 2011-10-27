@@ -9,37 +9,6 @@ define temp-table tmp_datearea
 		fields td_date as date
 		index td_rule is primary td_rule td_date.
 
-
-procedure MinPackQty:
-/*------------------------------------------------------------------------------
-    Purpose: 用于圆整最小包装量
-  Parameter: iSourceQty - 原始数量
-             iBase      - 基数如无则初始化为1
-             iDiff      - 中间数,初始化时为0其他时候以返回为准.
-             iReqQty    - 返回的实际需求
-      Notes:
-------------------------------------------------------------------------------*/
-DEFINE INPUT PARAMETER iSourceQty AS DECIMAL.
-DEFINE INPUT PARAMETER iBase AS DECIMAL.
-DEFINE INPUT-OUTPUT PARAMETER iDiff AS DECIMAL.
-DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
-
-    iDiff = iSourceQty - iDiff.
-    IF iDiff > 0  THEN DO:
-       IF iDiff MODULO iBase = 0 then do:
-/*           assign iReqQty = (truncate(iDiff / iBase,0)) * iBase.           */
-             assign iReqQty = iDiff.
-       end.
-       else do:
-           assign iReqQty = (truncate(iDiff / iBase,0) + 1) * iBase.
-       end.
-    END.
-    ELSE DO:
-        ASSIGN iReqQty = 0.
-    END.
-    ASSIGN iDiff = iReqQty - iDiff.
-end procedure.
-
 PROCEDURE getParams:
 /*------------------------------------------------------------------------------
     Purpose: 计算日期范围
@@ -82,6 +51,36 @@ PROCEDURE getParams:
     end. 
     oEnd = oEnd - 1.
 END PROCEDURE.
+
+procedure MinPackQty:
+/*------------------------------------------------------------------------------
+    Purpose: 用于圆整最小包装量
+  Parameter: iSourceQty - 原始数量
+             iBase      - 基数如无则初始化为1
+             iDiff      - 中间数,初始化时为0其他时候以返回为准.
+             iReqQty    - 返回的实际需求
+      Notes:
+------------------------------------------------------------------------------*/
+DEFINE INPUT PARAMETER iSourceQty AS DECIMAL.
+DEFINE INPUT PARAMETER iBase AS DECIMAL.
+DEFINE INPUT-OUTPUT PARAMETER iDiff AS DECIMAL.
+DEFINE OUTPUT PARAMETER iReqQty AS DECIMAL.
+
+    iDiff = iSourceQty - iDiff.
+    IF iDiff > 0  THEN DO:
+       IF iDiff MODULO iBase = 0 then do:
+/*           assign iReqQty = (truncate(iDiff / iBase,0)) * iBase.           */
+             assign iReqQty = iDiff.
+       end.
+       else do:
+           assign iReqQty = (truncate(iDiff / iBase,0) + 1) * iBase.
+       end.
+    END.
+    ELSE DO:
+        ASSIGN iReqQty = 0.
+    END.
+    ASSIGN iDiff = iReqQty - iDiff.
+end procedure.
 
 procedure getOrdDay:
 /*------------------------------------------------------------------------------
@@ -155,3 +154,85 @@ procedure getOrdDay:
 							     output oDate).
   END. /* REPEAT: 假日*/
 end procedure.
+
+FUNCTION i2c RETURNS CHARACTER (iNumber AS INTEGER):
+/*------------------------------------------------------------------------------
+    Purpose: 将数字转换为0~9,a~z.
+      Notes: 输入的数字在0-36之间MOUELO.
+------------------------------------------------------------------------------*/
+    assign iNumber = iNumber MODULO 36.
+    IF iNumber < 10 THEN
+       RETURN CHR(48 + iNumber).
+    ELSE
+       RETURN CHR(87 + iNumber).
+END FUNCTION.
+
+PROCEDURE getPoNumber:
+/*------------------------------------------------------------------------------
+    Purpose: 计算PO单号
+      Notes:
+------------------------------------------------------------------------------*/
+  DEFINE INPUT PARAMETER iDate AS DATE.
+  DEFINE INPUT PARAMETER iVendor LIKE VD_ADDR.
+  DEFINE OUTPUT PARAMETER oNbr as character.
+
+  DEFINE Variable intI as integer.
+  DEFINE VARIABLE KEY1 AS CHARACTER INITIAL "xxmrpporp0.p.getponbr".
+  DEFINE VARIABLE KEY2 AS CHARACTER.
+
+  find first vd_mstr no-lock where vd_addr = ivendor no-error.
+  if available vd_mstr then do:
+     assign KEY2 = substring(vd_sort,1,2).
+  end.
+  else do:
+     assign KEY2 = substring(iVendor,1,2).
+  end.
+  assign KEY2 = "P" + i2c(YEAR(iDate) - 2010) + i2c(month(iDate)) + KEY2.
+
+  find first qad_wkfl exclusive-lock where qad_key1 = KEY1
+         and qad_key2 = KEY2 no-error.
+  if available qad_wkfl then do:
+    assign intI = qad_intfld[1].
+    assign oNbr = KEY2 + substring("0000" + string(inti),
+                      length("0000" + string(inti)) - 2).
+     repeat:
+         find first po_mstr no-lock where po_nbr = oNbr no-error.
+         if available po_mstr then do:
+             assign intI = qad_intfld[1] + 1
+                    qad_intfld[1] = qad_intfld[1] + 1
+                    qad_key3 = iVendor
+                    qad_user1 = string(intI).
+             assign oNbr = oNbr + substring("0000" + string(inti),
+                         length("0000" + string(inti)) - 2).
+         end.
+         else do:
+              leave.
+         end.
+     end.
+  end.
+  else do:
+     assign intI = 0.
+     assign oNbr = oNbr + substring("0000" + string(inti),
+                       length("0000" + string(inti)) - 2).
+     repeat:
+         find first po_mstr no-lock where po_nbr = oNbr no-error.
+         if available po_mstr then do:
+             assign intI = qad_intfld[1] + 1
+                    qad_intfld[1] = qad_intfld[1] + 1
+                    qad_key3 = string(qad_intfld[1] + 1).
+             assign oNbr = KEY2 + substring("0000" + string(inti),
+                         length("0000" + string(inti)) - 2).
+         end.
+         else do:
+              create qad_wkfl.
+              assign qad_key1 = "xxmrpporp0.p.getponbr"
+                     qad_key2 = KEY2
+                     qad_key3 = iVendor
+                     qad_user1 = "0"
+                     qad_intfld[1] = 0.
+              leave.
+          end.
+     end.
+  end.
+  release qad_wkfl.
+END PROCEDURE.

@@ -248,7 +248,7 @@ PROCEDURE getPoNumber:
   end.
   else do:
      assign intI = 0.
-     assign oNbr = oNbr + substring("0000" + string(inti),
+     assign oNbr = KEY2 + substring("0000" + string(inti),
                        length("0000" + string(inti)) - 2).
      repeat:
          find first po_mstr no-lock where po_nbr = oNbr no-error.
