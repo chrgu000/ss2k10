@@ -569,6 +569,8 @@ repeat:
                                  getTermLabel("DUE_DATE",12)
                                  getTermLabel("TYPE",12)
                                  getTermLabel("QTY_DIFF",12)
+                                 getTermLabel("PO_QTY",12)
+                                 getTermLabel("TEMP_PO_QTY",12)
                                  getTermLabel("WEEK",12)
                                  getTermLabel("SHIP_TERMS",12)
                                  getTermLabel("COMMENT",12).
@@ -616,8 +618,9 @@ repeat:
                 assign areaDesc = code_cmmt.
              end.
              export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty
-                    tpo_due tpo_type tpo_qty0
-                    weekday(tpo_due) - 1 tpo_rule0 areaDesc.
+                    tpo_due tpo_type tpo_qty0 tpo_po tpo_tpo 
+                    weekday(tpo_due) - 1 
+                    tpo_rule0 areaDesc.
              /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
          end.
 
