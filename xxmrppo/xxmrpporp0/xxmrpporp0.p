@@ -45,6 +45,7 @@ define temp-table tmp_po
     fields tpo_end  as date
     fields tpo_mrp_qty like mrp_qty
     fields tpo_qty like mrp_qty
+    fields tpo_qtys like mrp_qty
     fields tpo_qty0 like mrp_qty
     fields tpo_po like pod_qty_ord
     fields tpo_tpo like pod_qty_ord
@@ -436,6 +437,7 @@ repeat:
                    tpo_part = tm_part
                    tpo_due = tm_edate
                    tpo_qty = qtytemp
+                   tpo_qtys = qtytemp
                    tpo_mrp_qty = qtytemp
                    tpo_rule0 = tm_rule0
                    tpo_rule = tm_rule.
@@ -568,7 +570,7 @@ repeat:
                                  getTermLabel("RECEIVED_QTY",12)
                                  getTermLabel("DUE_DATE",12)
                                  getTermLabel("TYPE",12)
-                                 getTermLabel("QTY_DIFF",12)
+                                 getTermLabel("DEMAND_QTY",12)
                                  getTermLabel("PO_QTY",12)
                                  getTermLabel("TEMP_PO_QTY",12)
                                  getTermLabel("WEEK",12)
@@ -618,7 +620,7 @@ repeat:
                 assign areaDesc = code_cmmt.
              end.
              export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty
-                    tpo_due tpo_type tpo_qty0 tpo_po tpo_tpo 
+                    tpo_due tpo_type tpo_qtys tpo_po tpo_tpo 
                     weekday(tpo_due) - 1 
                     tpo_rule0 areaDesc.
              /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
