@@ -81,7 +81,7 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
    {mfphead.i}
-
+	 empty temp-table tmp_wo no-error.
    for each tr_hist
             fields(tr_part tr_effdate tr_type tr_qty_loc tr_qty_chg tr_rmks)
             use-index tr_type
@@ -143,14 +143,14 @@ repeat:
 
 
    for each tmp_wo no-lock,each pt_mstr no-lock where pt_part = two_part:
-   		 if  two_qty_op <> 0 then unitconsumed = two_qty_iss / two_qty_op.
+   		 if  two_qty_iss <> 0 then unitconsumed = two_qty_op / two_qty_iss.
    		                     else unitconsumed = 0.
-       export delimiter "~011" two_par two_qty_iss  two_part pt_desc1
-              two_qty_op two_qty_chk unitconsumed.
+       export delimiter "~011" two_par two_qty_op  two_part pt_desc1
+              two_qty_iss two_qty_chk unitconsumed.
    end.
 
    /* REPORT TRAILER  */
-  {mfreset.i}
+  {mfrtrail.i}
 end.
 
 {wbrp04.i &frame-spec = a}
