@@ -7,7 +7,7 @@
 /* REVISION: 19YG LAST MODIFIED: 09/16/11 BY: zy auto fill filet text        */
 /* REVISION END                                                              */
 
-{mfdtitle.i "1AYC"}
+{mfdtitle.i "1BY3"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -163,7 +163,7 @@ do on error undo, retry:
       undo,retry.
    end.
    assign xrcDir = lower(trim(xrcDir)).
-   find first qad_wkfl exclusive-lock where
+   find first qad_wkfl where
 /*EB          qad_domain = global_domain and                                 */
               qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
         if not available qad_wkfl then do:
@@ -173,21 +173,23 @@ do on error undo, retry:
               qad_key1 = qadkey1
               qad_key2 = global_userid.
         end.
-        assign qad_charfld[3] = filef
-               qad_charfld[4] = trim(filet).
-        if opsys = "msdos" or opsys = "win32" then do:
-           assign qad_charfld1[1] = xrcdir
-                  qad_charfld1[2] = trim(destDir) when destDir <> ""
-                                    and destDir <> vClientDir
-                  qad_charfld1[5] = trim(destDir).
+        if not locked(qad_wkfl) then do:
+           assign qad_charfld[3] = filef
+                  qad_charfld[4] = trim(filet).
+           if opsys = "msdos" or opsys = "win32" then do:
+              assign qad_charfld1[1] = xrcdir
+                     qad_charfld1[2] = trim(destDir) when destDir <> ""
+                                       and destDir <> vClientDir
+                     qad_charfld1[5] = trim(destDir).
+           end.
+           else if opsys = "unix" then do:
+              assign qad_charfld[1] = xrcdir
+                     qad_charfld[2] = trim(destDir) when destDir <> ""
+                                      and destDir <> vClientDir
+                     qad_charfld[5] = trim(destDir).
+           end.
         end.
-        else if opsys = "unix" then do:
-           assign qad_charfld[1] = xrcdir
-                  qad_charfld[2] = trim(destDir) when destDir <> ""
-                                   and destDir <> vClientDir
-                  qad_charfld[5] = trim(destDir).
-        end.
-    release qad_wkfl.
+        release qad_wkfl.
 end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
 
