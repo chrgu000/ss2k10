@@ -1,6 +1,7 @@
 /* xxswtbl - SCROLLING INQUIRY ON PROGRESS TABLE CP FROM swdb.p              */
 /* REVISION: 0CYH LAST MODIFIED: 05/26/11   BY: zy                           */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/*V8:ConvertMode=Report                                                      */
 /* REVISION END                                                              */
 
 define shared variable global_user_lang_dir like lng_mstr.lng_dir.
