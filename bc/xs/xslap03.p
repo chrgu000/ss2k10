@@ -995,16 +995,7 @@ If AVAILABLE ( pt_mstr )  then
 
      procedure lap03090801:
      	 define variable icnt as integer.
-       find first prd_det where prd_dev = v9030 no-lock no-error.
-       if availabl prd_det and prd_type = "BARCODE" and prd_path = "DIR"
-          and prd_init_pro <> "" then do:
-          do icnt = 1 to integer(wtm_num):
-          if substring(prd_init_pro,length(prd_init_pro)) = "/" then do:
-             output to value(prd_init_pro + trim(wsection) + string(icnt) + ".l").
-          end.
-          else do:
-             output to value(prd_init_pro + "/" + trim(wsection) + string(icnt) + ".l").
-          end.
+            output to value("./" + trim(wsection) + ".l").
             find first pt_mstr no-lock where pt_part = v1300 no-error.
             if available pt_mstr then do:
                put unformat trim(V1300) + "@" + trim(V1500) skip.
@@ -1024,13 +1015,26 @@ If AVAILABLE ( pt_mstr )  then
                put unformat pt_loc skip.
                put unformat v1500 skip.
             end.
-          output close.
+            output close.
+     end procedure.
+
+	   procedure lap031111:
+       find first prd_det where prd_dev = v9030 no-lock no-error.
+       if availabl prd_det and prd_type = "BARCODE" and prd_path = "DIR"
+          and prd_init_pro <> "" then do:
+          if substring(prd_init_pro,length(prd_init_pro)) = "/" then do:
+             unix silent value("sudo -u root mv " + "./" + trim(wsection) 
+             									 + ".l " + prd_init_pro).
+          end.
+          else do:
+             unix silent value("sudo -u root mv " + "./" + trim(wsection) 
+             									+ ".l " +	prd_init_pro + "/").
+          end. 
        end.
-			end. /*do*/
      end procedure.
 
      run lap03090801.
-
+		 run lap031111.
 
 
      do i = 1 to integer(wtm_num):
