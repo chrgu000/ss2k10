@@ -995,7 +995,7 @@ If AVAILABLE ( pt_mstr )  then
 
      procedure lap03090801:
      	 define variable icnt as integer.
-            output to value("./" + trim(wsection) + ".l").
+       output to value("./" + trim(wsection) + ".l").
             find first pt_mstr no-lock where pt_part = v1300 no-error.
             if available pt_mstr then do:
                put unformat trim(V1300) + "@" + trim(V1500) skip.
@@ -1009,15 +1009,18 @@ If AVAILABLE ( pt_mstr )  then
                		put unformat pt_desc2 skip.
                else
                		put skip(1).
-               put unformat trim(V1300) + "@" + trim(V1500) skip.
+               if trim(v1300) <> "" then
+               	  put unformat trim(V1300) + "@" + trim(V1500) skip.
+               else 
+               	  put skip(1).
                put unformat today skip.
                put unformat v9010 skip.
                put unformat pt_loc skip.
                put unformat v1500 skip.
             end.
-            output close.
+          output close.
      end procedure.
-
+     
 	   procedure lap031111:
        find first prd_det where prd_dev = v9030 no-lock no-error.
        if availabl prd_det and prd_type = "BARCODE" and prd_path = "DIR"
@@ -1032,10 +1035,11 @@ If AVAILABLE ( pt_mstr )  then
           end. 
        end.
      end procedure.
-
+     
      run lap03090801.
-		 run lap031111.
-
+    
+     run lap031111.
+    
 
      do i = 1 to integer(wtm_num):
        find first PRD_DET where PRD_DEV = V9030 no-lock no-error.
