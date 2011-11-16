@@ -993,9 +993,8 @@ If AVAILABLE ( pt_mstr )  then
 
       run lap039030l.
 
-     procedure lap03090801:
-     	 define variable icnt as integer.
-       output to value("./" + trim(wsection) + string(icnt) + ".l").
+     procedure lap03090801: 
+       output to value("./" + trim(wsection) + "ap03.l").
             find first pt_mstr no-lock where pt_part = v1300 no-error.
             if available pt_mstr then do:
                put unformat trim(V1300) + "@" + trim(V1500) skip.
@@ -1027,11 +1026,11 @@ If AVAILABLE ( pt_mstr )  then
           and prd_init_pro <> "" then do:
           if substring(prd_init_pro,length(prd_init_pro)) = "/" then do:
              unix silent value("sudo -u root mv " + "./" + trim(wsection) 
-             									 + ".l " + prd_init_pro).
+             									 + "ap03.l " + prd_init_pro).
           end.
           else do:
              unix silent value("sudo -u root mv " + "./" + trim(wsection) 
-             									+ ".l " +	prd_init_pro + "/").
+             									+ "ap03.l " +	prd_init_pro + "/").
           end. 
        end.
      end procedure.

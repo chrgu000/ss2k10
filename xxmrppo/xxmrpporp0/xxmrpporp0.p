@@ -423,7 +423,7 @@ repeat:
             end.
        end.
    end.
-
+		
    for each tmp_tmd no-lock break by tm_part by tm_month by tm_edate:
        if first-of(tm_edate) then do:
           qtytemp = tm_qty.
@@ -442,6 +442,14 @@ repeat:
                    tpo_rule0 = tm_rule0
                    tpo_rule = tm_rule.
        end.
+   end.
+   
+   for each tmp_po exclusive-lock:
+   		 find last tmp_datearea where td_rule = tpo_rule and td_date <= tpo_due 
+   		 			no-lock no-error.
+   		 if tpo_due <> td_date then do:	
+   		 		assign tpo_due = td_date.
+   		 end.
    end.
 
    /*如下2月有计划则产生数量为0的记录*/
