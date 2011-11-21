@@ -6,6 +6,7 @@ define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
 define variable wsection as char format "x(16)".
 define variable i as integer .
+define variable v1300z as character.
 
 define variable wtimeout as integer init 99999 .
 find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="wtimeout" no-lock no-error. /*  Timeout - All Level */
@@ -180,6 +181,7 @@ REPEAT:
            pause 0 before-hide.
            undo, retry.
         end.
+        assign v1300z = input v1300.
         display skip "^" @ WMESSAGE NO-LABEL with fram F1300.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
@@ -991,7 +993,7 @@ If AVAILABLE ( pt_mstr )  then
      unix silent value ("chmod 777  " + trim(wsection) + ".l").
      END PROCEDURE.
 
-      run lap039030l.
+
 
      procedure lap03090801: 
        output to value("./" + trim(wsection) + "ap03.l").
@@ -1008,10 +1010,10 @@ If AVAILABLE ( pt_mstr )  then
                		put unformat pt_desc2 skip.
                else
                		put skip(1).
-               if trim(v1300) = "" then 
+               if trim(v1510) = "" then 
                		put skip(1).
                else
-                  put unformat trim(V1300) + "@" + trim(V1500) skip.
+                  put unformat trim(V1510) skip.
                put unformat today skip.
                put unformat v9010 skip.
                put unformat pt_loc skip.
@@ -1035,6 +1037,7 @@ If AVAILABLE ( pt_mstr )  then
        end.
      end procedure.
      
+     run lap039030l.
      run lap03090801.
 		 run lap031111.
 
