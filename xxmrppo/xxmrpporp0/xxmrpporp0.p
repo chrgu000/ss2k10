@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111027.1"}
+{mfdtitle.i "111121.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -33,6 +33,10 @@ define variable xType AS CHARACTER.
 define variable detsum like mfc_logical
        label "Detail/Summary" format "Detail/Summary" initial NO.
 define variable act as logical initial YES.
+define variable tpoqty  like mrp_qty.
+define variable tpoqtys like mrp_qty.
+define variable tpopo   like mrp_qty.
+define variable tpotpo  like mrp_qty.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -447,7 +451,7 @@ repeat:
    for each tmp_po exclusive-lock:
    		 find last tmp_datearea where td_rule = tpo_rule and td_date <= tpo_due 
    		 			no-lock no-error.
-   		 if tpo_due <> td_date then do:	
+   		 if available(tmp_datearea) and tpo_due <> td_date then do:	
    		 		assign tpo_due = td_date.
    		 end.
    end.
@@ -620,18 +624,31 @@ repeat:
          end.
 
          for each tmp_po no-lock
-             where (tpo_qty > 0 or tpo_fut) or not act:           
-             assign areaDesc = "".
-             find first code_mstr no-lock where code_fldname = "vd__chr03"
-                    and code_value = tpo_rule no-error.
-             if available code_mstr then do:
-                assign areaDesc = code_cmmt.
-             end.
-             export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty
-                    tpo_due tpo_type tpo_qtys tpo_po tpo_tpo 
-                    weekday(tpo_due) - 1 
-                    tpo_rule0 areaDesc.
-             /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
+             where (tpo_qty > 0 or tpo_fut) or not act 
+             break by tpo_nbr by tpo_vend by tpo_part by tpo_due: 
+             if first-of(tpo_due) then do:
+             	  assign tpoqty = 0
+             	  			 tpoqtys = 0
+             	  			 tpopo = 0
+             	  			 tpotpo = 0.
+             end.          
+             assign tpoqty = tpoqty + tpo_qty
+             				tpoqtys = tpoqtys + tpo_qtys
+             				tpopo = tpopo + tpo_po
+             				tpotpo = tpotpo + tpo_tpo.
+             if last-of(tpo_due) then do:
+                 assign areaDesc = "".
+                 find first code_mstr no-lock where code_fldname = "vd__chr03"
+                        and code_value = tpo_rule no-error.
+                 if available code_mstr then do:
+                    assign areaDesc = code_cmmt.
+                 end.
+                 export delimiter "~011" tpo_nbr tpo_vend tpo_part tpoqty
+                        tpo_due tpo_type tpoqtys tpopo tpotpo 
+                        weekday(tpo_due) - 1 
+                        tpo_rule0 areaDesc.
+                 /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
+            end.
          end.
 
 end.      /*if detsum else do:    */
