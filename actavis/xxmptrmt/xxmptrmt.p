@@ -1,33 +1,6 @@
-/* mptrmt.p - RECORD TEST RESULTS MAINTENANCE                           */
-/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                  */
-/* All rights reserved worldwide.  This is an unpublished work.         */
-/* $Revision: 1.7.1.7 $                                                         */
+/* xxmptrmt.p - RECORD TEST RESULTS MAINTENANCE                         */ 
 /*V8:ConvertMode=Maintenance                                            */
-/* REVISION: 6.0     LAST MODIFIED: 08/01/91    BY: smm                     */
-/* REVISION: 7.0     LAST MODIFIED: 03/16/92    BY: ram *F298*              */
-/* REVISION: 7.0     LAST MODIFIED: 04/13/92    BY: smm *F383*(rev only)    */
-/* REVISION: 7.0     LAST MODIFIED: 06/15/92    BY: smm *F614*              */
-/* REVISION: 7.3     LAST MODIFIED: 11/02/92    BY: ram *G261*              */
-/* REVISION: 7.5     LAST MODIFIED: 12/10/94    BY: mwd *J034*              */
-/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane        */
-/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan       */
-/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan       */
-/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane */
-/* REVISION: 9.1      LAST MODIFIED: 08/13/00   BY: *N0KR* myb              */
-/* Old ECO marker removed, but no ECO header exists *F0PN*                  */
-/* Revision: 1.7.1.4  BY: Rajesh Thomas DATE: 06/19/01 ECO: *M18V* */
-/* Revision: 1.7.1.6.1.1  BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00J* */
-/* $Revision: 1.7.1.7 $  BY: Michael Hansen  DATE: 07/06/04 ECO: *Q06H* */
-/*-Revision end---------------------------------------------------------------*/
-
-/******************************************************************************/
-/* All patch markers and commented out code have been removed from the source */
-/* code below. For all future modifications to this file, any code which is   */
-/* no longer required should be deleted and no in-line patch markers should   */
-/* be added.  The ECO marker should only be included in the Revision History. */
-/******************************************************************************/
-
-{mfdtitle.i "1+ "}
+{mfdtitle.i "111123.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 

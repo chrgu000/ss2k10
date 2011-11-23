@@ -427,7 +427,7 @@ assign vfrom_id        = from_id
 end.
 
 do transaction:
-   find qad_wkfl exclusive-lock where
+   find qad_wkfl where
 /*EB    qad_wkfl.qad_domain = global_domain and                               */
         qad_key1 = "Cim Process Session" and
         qad_key2 = session_no no-error.
@@ -436,7 +436,7 @@ do transaction:
       delete qad_wkfl.
    end.
    /** save frame variable **/
-   find first qad_wkfl exclusive-lock where
+   find first qad_wkfl where
 /*EB          qad_domain = global_domain and                                  */
               qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
    if avail qad_wkfl and not locked(qad_wkfl) then do:
@@ -1247,9 +1247,10 @@ PROCEDURE get_CIM_session:
             use-index qad_index1 no-error.
          if not available qad_wkfl then
             leave.
-         else
+         else do:
          if decimal(qad_key2) > i + 1 then
             leave.
+         end.
       end.
 
       if i = 999 then do:
@@ -1286,7 +1287,6 @@ PROCEDURE check_CIM:
    define input parameter start_date as date no-undo.
    define input parameter start_time as character no-undo.
    define input parameter in_loop as logical no-undo.
-
    /* Determine if CIM processing session has been lost */
    find qad_wkfl exclusive-lock where
 /*EB  qad_wkfl.qad_domain = global_domain and                                */
