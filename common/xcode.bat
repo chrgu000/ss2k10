@@ -38,8 +38,8 @@ copy /y %svn%\xxqwmt\*.cim %cim%\
 copy /y %svn%\xxbdpro\*.cim %cim%\
 copy /y %svn%\xxpincp\*.cim %cim%\
 copy /y %svn%\xxpincp\xx*.p %src%\
-copy /y %svn%\xxmsgiq.p %src%\
-copy /y %svn%\xxmsgmt.p %src%\
+copy /y %svn%\xxmsgmt\xxmsgiq.p %src%\
+copy /y %svn%\xxmsgmt\xxmsgmt.p %src%\
 
 
 rem Xcode.
