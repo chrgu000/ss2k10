@@ -371,6 +371,15 @@ repeat:
        end.
        assign tm_rule = xrule.
    end.
+   
+   /*料号有rule以料号设定的rule为准*/
+   for each tmp_tmd use-index tm_pm exclusive-lock:
+   		 find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
+   		      no-error.
+   		 if available pt_mstr then do:
+   		 		assign tm_rule = pt_rev.
+   		 end.
+   end.
 
    /*删除不要的月份资料*/
    for each tmp_tmd exclusive-lock,
