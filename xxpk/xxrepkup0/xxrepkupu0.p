@@ -249,8 +249,6 @@ define variable ladnbr like lad_nbr.
        assign vqty = xxwa_qty_pln - vqty.
     end.
 
-
-
   /*对应发料库位及数量*/
   assign recno = ?.
   for each xxwa_det no-lock where xxwa_date = issue and
