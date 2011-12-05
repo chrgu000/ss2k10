@@ -7,7 +7,7 @@
 /* REVISION: 19YG LAST MODIFIED: 09/16/11 BY: zy auto fill filet text        */
 /* REVISION END                                                              */
 
-{mfdtitle.i "1BY3"}
+{mfdtitle.i "21Y5"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -24,10 +24,8 @@ define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
-define variable bpropath   as character view-as editor no-box size 50 by 7.
-/****gui format
-define variable bpropath   as character bgcolor 15 view-as editor size 50 by 7.
-****/
+define variable bpropath   as character /*V8! bgcolor 15 */
+						    view-as editor size 50 by 7.
 define variable filef      as character format "x(22)".
 define variable filet      as character format "x(22)".
 define variable vClientDir as character no-undo.
