@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111121.1"}
+{mfdtitle.i "111205.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -314,17 +314,20 @@ repeat:
               tm_mrp_qty = mrp_qty.
    end.
 
-   /*料号有rule以料号设定的rule为准*/
+   /*料号有rule以料号设定的rule为准  计算P之Rule */
    for each tmp_tmd use-index tm_pm exclusive-lock:
-   		 find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
-   		      no-error.
-   		 if available pt_mstr then do:
-   		 		assign tm_rule0 = pt_rev
-   		 					 tm_rule = pt_rev.
-   		 end.
+       find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
+              and pt_rev <> "1"
+            no-error.
+       if available pt_mstr and
+            can-find(first code_mstr where code_fldname = ""
+                      and code_value = pt_rev) then do:
+          assign tm_rule0 = pt_rev
+                 tm_rule = pt_rev.
+       end.
    end.
-   
-   /*计算P之Rule*/
+
+/*  计算P之Rule
    for each tmp_tmd use-index tm_pm exclusive-lock where tm_rule0 = "P":
        find first xvp_ctrl no-lock where xvp_vend = tm_vend and
                   xvp_part = tm_part no-error.
@@ -332,7 +335,7 @@ repeat:
          assign tm_rule = xvp_rule.
        end.
    end.
-
+*/
    /* 计算可到货日 */
    for each tmp_tmd exclusive-lock break by tm_rule:
        if first-of(tm_rule) then do:
@@ -381,7 +384,7 @@ repeat:
        end.
        assign tm_rule = xrule.
    end.
-   
+
 
    /*删除不要的月份资料*/
    for each tmp_tmd exclusive-lock,
@@ -438,7 +441,7 @@ repeat:
             end.
        end.
    end.
-		
+
    for each tmp_tmd no-lock break by tm_part by tm_month by tm_edate:
        if first-of(tm_edate) then do:
           qtytemp = tm_qty.
@@ -458,13 +461,25 @@ repeat:
                    tpo_rule = tm_rule.
        end.
    end.
-   
+
    for each tmp_po exclusive-lock:
-   		 find last tmp_datearea where td_rule = tpo_rule and td_date <= tpo_due 
-   		 			no-lock no-error.
-   		 if available(tmp_datearea) and tpo_due <> td_date then do:	
-   		 		assign tpo_due = td_date.
-   		 end.
+       find last tmp_datearea where td_rule = tpo_rule and td_date <= tpo_due
+            no-lock no-error.
+       if available(tmp_datearea) and tpo_due <> td_date then do:
+          assign tpo_due = td_date.
+       end.
+   end.
+
+	 /*    合并非第一笔日期到第一笔日期.	 */
+   for each tmp_po exclusive-lock,
+       each pt_mstr no-lock where pt_part = tpo_part
+        and pt_rev = "1" break by tpo_part by tpo_due:
+        if first-of(tpo_part) then do:
+            assign duef = tpo_due.
+        end.
+        else do:
+             assign tpo_due = duef.
+        end.
    end.
 
    /*如下2月有计划则产生数量为0的记录*/
@@ -535,11 +550,11 @@ repeat:
                tpo_tpo = qty_tpod
                tpo_qty = tpo_qty - qty_tpod.
     end.
-	
-		for each tmp_po exclusive-lock:
-				assign tpo_qty0 = tpo_qty.
-	  end.
-	
+
+    for each tmp_po exclusive-lock:
+        assign tpo_qty0 = tpo_qty.
+    end.
+
     /*产生单号*/
     for each tmp_po exclusive-lock where tpo_vend <> ""
         break by tpo_vend :
@@ -635,18 +650,18 @@ repeat:
          end.
 
          for each tmp_po no-lock
-             where (tpo_qty > 0 or tpo_fut) or not act 
-             break by tpo_nbr by tpo_vend by tpo_part by tpo_due: 
+             where (tpo_qty > 0 or tpo_fut) or not act
+             break by tpo_nbr by tpo_vend by tpo_part by tpo_due:
              if first-of(tpo_due) then do:
-             	  assign tpoqty = 0
-             	  			 tpoqtys = 0
-             	  			 tpopo = 0
-             	  			 tpotpo = 0.
-             end.          
+                assign tpoqty = 0
+                       tpoqtys = 0
+                       tpopo = 0
+                       tpotpo = 0.
+             end.
              assign tpoqty = tpoqty + tpo_qty
-             				tpoqtys = tpoqtys + tpo_qtys
-             				tpopo = tpopo + tpo_po
-             				tpotpo = tpotpo + tpo_tpo.
+                    tpoqtys = tpoqtys + tpo_qtys
+                    tpopo = tpopo + tpo_po
+                    tpotpo = tpotpo + tpo_tpo.
              if last-of(tpo_due) then do:
                  assign areaDesc = "".
                  find first code_mstr no-lock where code_fldname = "vd__chr03"
@@ -655,8 +670,8 @@ repeat:
                     assign areaDesc = code_cmmt.
                  end.
                  export delimiter "~011" tpo_nbr tpo_vend tpo_part tpoqty
-                        tpo_due tpo_type tpoqtys tpopo tpotpo 
-                        weekday(tpo_due) - 1 
+                        tpo_due tpo_type tpoqtys tpopo tpotpo
+                        weekday(tpo_due) - 1
                         tpo_rule0 areaDesc.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.
