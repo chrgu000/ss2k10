@@ -314,6 +314,16 @@ repeat:
               tm_mrp_qty = mrp_qty.
    end.
 
+   /*料号有rule以料号设定的rule为准*/
+   for each tmp_tmd use-index tm_pm exclusive-lock:
+   		 find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
+   		      no-error.
+   		 if available pt_mstr then do:
+   		 		assign tm_rule0 = pt_rev
+   		 					 tm_rule = pt_rev.
+   		 end.
+   end.
+   
    /*计算P之Rule*/
    for each tmp_tmd use-index tm_pm exclusive-lock where tm_rule0 = "P":
        find first xvp_ctrl no-lock where xvp_vend = tm_vend and
@@ -372,14 +382,6 @@ repeat:
        assign tm_rule = xrule.
    end.
    
-   /*料号有rule以料号设定的rule为准*/
-   for each tmp_tmd use-index tm_pm exclusive-lock:
-   		 find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
-   		      no-error.
-   		 if available pt_mstr then do:
-   		 		assign tm_rule = pt_rev.
-   		 end.
-   end.
 
    /*删除不要的月份资料*/
    for each tmp_tmd exclusive-lock,
