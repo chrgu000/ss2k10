@@ -249,7 +249,7 @@ repeat with frame a:
       loc_cap loc_cap_um
       loc_project
       reserved_cust
-      loc_xfer_ownership when (using_supplier_consignment).
+      loc_xfer_ownership when (using_supplier_consignment)
 /*Y175*/ loc_user1
       loc_user2.
 

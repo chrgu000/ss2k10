@@ -1,4 +1,4 @@
-/* iclorp01.p - LOCATION MASTER REPORT                                        */
+/* xxiclorp01.p - LOCATION MASTER REPORT                                      */
 /* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
 /* $Revision: 1.15 $                                                          */
@@ -25,15 +25,15 @@
 /******************************************************************************/
 /* Environment: Progress:9.1D   QAD:eb2sp12    Interface:Character            */
 /*Y175  - 110705.1    ZY      *Y175*
-  Purpose:做库位分组,以便统计库存状态报表
+  Purpose:做库位分组,以便统计库存状态报表,及确定备料库位
   Parameters:<none>
-  Notes:借用loc_user1
+  Notes:借用loc_user1,loc_user2
   Change List:
         xxiclomt.p
         xxicstrp.p
 */
 /* DISPLAY TITLE */
-{mfdtitle.i "110705.1"}
+{mfdtitle.i "111205.1"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
@@ -110,7 +110,7 @@ repeat:
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "printer"
-               &printWidth = 142
+               &printWidth = 162
                &pagedFlag = " "
                &stream = " "
                &appendToFile = " "
@@ -131,6 +131,7 @@ repeat:
       loc_desc
       loc_type
 /*Y175*/ loc_user1 column-label "GROUPS"
+			loc_user2 column-label "ALLOCATION_LOCATION"
       loc_perm
       loc_single
       loc__qad01 column-label "Single!Lot"
@@ -142,7 +143,7 @@ repeat:
       is_nettable
       is_overissue
       loc_xfer_ownership column-label "Xfer"
-   with frame b width 142 no-attr-space down.
+   with frame b width 162 no-attr-space down.
 
    /* SET EXTERNAL LABELS */
    setFrameLabels(frame b:handle).
@@ -196,7 +197,7 @@ repeat:
       each si_mstr no-lock where si_site = loc_site,
       each is_mstr no-lock where is_status = loc_status
    break by loc_site by loc_loc
-   with frame b width 142:
+   with frame b width 162:
 
       find first whl_mstr where whl_site = loc_site
                             and whl_loc  = loc_loc
@@ -231,6 +232,7 @@ repeat:
             loc_desc
             loc_type
 /*Y175*/    loc_user1
+					  loc_user2
             loc_perm
             loc_single
             loc__qad01
@@ -250,6 +252,7 @@ repeat:
             loc_desc
             loc_type
 /*Y175*/    loc_user1
+					  loc_user2
             loc_perm
             loc_single
             loc__qad01
