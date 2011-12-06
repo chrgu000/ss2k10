@@ -69,6 +69,7 @@ DEFINE TEMP-TABLE tt2
     FIELD tt2_addr LIKE xxsod_addr
     FIELD tt2_load_date LIKE xxsod_due_date1
     FIELD tt2_load_time LIKE xxsod_due_time1
+    FIELD tt2_ship_date like xxsod_due_date1
     FIELD tt2_plan AS CHARACTER
     FIELD tt2_model_zy AS CHARACTER
     FIELD TT2_SY AS CHARACTER
@@ -355,6 +356,7 @@ do on error undo, return error on endkey undo, return error:
                        /* ss - 111130.1 -e */
                        tt2_qty_ord = tt1_qty_ord
                        tt2_addr = tt1_addr
+                       tt2_ship_date = tt1_ship_date
                        tt2_load_date = tt1_load_date
                        tt2_load_time = tt1_load_time
                        tt2_plan = tt1_plan
@@ -389,6 +391,7 @@ do on error undo, return error on endkey undo, return error:
                                /* ss - 111130.1 -e */
                                tt2_qty_ord = tt1_per_qty
                                tt2_addr = tt1_addr
+                               tt2_ship_date = tt1_ship_date
                                tt2_load_date = tt1_load_date
                                tt2_load_time = tt1_load_time
                                tt2_plan = tt1_plan
@@ -412,6 +415,7 @@ do on error undo, return error on endkey undo, return error:
                                /* ss - 111130.1 -e */
                                tt2_qty_ord = tt1_qty_ord - (j - 1) * tt1_per_qty
                                tt2_addr = tt1_addr
+                               tt2_ship_date = tt1_ship_date
                                tt2_load_date = tt1_load_date
                                tt2_load_time = tt1_load_time
                                tt2_plan = tt1_plan
@@ -447,7 +451,8 @@ do on error undo, return error on endkey undo, return error:
                                          tt2_soil
                                          tt2_style
                                          tt2_grade
-                                         substring(tt2_cust_part,10,2).
+                                         substring(tt2_cust_part,10,2)
+                                         tt2_ship_date.
                 END.
             END.
             ELSE DO:
@@ -474,7 +479,8 @@ do on error undo, return error on endkey undo, return error:
                                          tt2_soil
                                          tt2_style
                                          tt2_grade
-                                         substring(tt2_cust_part,10,2).
+                                         substring(tt2_cust_part,10,2)
+                                         tt2_ship_date.
                 END.
             END.
 end. /* mainloop: */
