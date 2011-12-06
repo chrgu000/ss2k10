@@ -1,14 +1,14 @@
 /* repkall.p - REPETITIVE PICK LIST HARD ALLOCATIONS                    */
 /* Copyright 1986-2005 QAD Inc., Carpinteria, CA, USA.                  */
 /* All rights reserved worldwide.  This is an unpublished work.         */
-/* $Revision: 1.4.1.1.3.3 $                                                         */
+/* $Revision: 1.4.1.1.3.3 $                                             */
 /*V8:ConvertMode=Maintenance                                            */
 /* REVISION: 7.3      LAST MODIFIED: 09/06/92       BY: emb *G071*      */
 /* REVISION: 8.5      LAST MODIFIED: 09/29/97   BY: *J1PS* Felcy D'Souza*/
 /* REVISION: 8.6      LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan   */
 /* REVISION: 9.1      LAST MODIFIED: 08/12/00   BY: *N0KP* myb          */
 /* Old ECO marker removed, but no ECO header exists *F0PN*              */
-/* $Revision: 1.4.1.1.3.3 $    BY: Kirti Desai  DATE: 10/31/05  ECO: *P467*         */
+/* $Revision: 1.4.1.1.3.3 $ BY: Kirti Desai  DATE: 10/31/05  ECO: *P467**/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */

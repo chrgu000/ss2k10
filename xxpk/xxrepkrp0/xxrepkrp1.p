@@ -173,7 +173,7 @@ do on error undo, return error on endkey undo, return error:
                  vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid:
+            and xxwd_recid = xxwa_recid and xxwd_qty_plan > 0:
               export delimiter "~011"
                      "S"
                      "s" + xxwa_nbr

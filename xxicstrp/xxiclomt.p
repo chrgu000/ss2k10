@@ -51,7 +51,7 @@
         xxicstrp.p
 */
 /* DISPLAY TITLE */
-{mfdtitle.i "110705.1"}
+{mfdtitle.i "111205.1"}
 {cxcustom.i "ICLOMT.P"}
 
 define variable del-yn  like mfc_logical initial no.
@@ -78,7 +78,8 @@ form
    loc_cap        colon 30 loc_cap_um label "UM"
    reserved_cust  colon 30 label "Reserved Locations"
    loc_xfer_ownership colon 30
-/*Y175*/   loc_user1      colon 30
+/*Y175*/   loc_user1  colon 30
+					 loc_user2  colon 30	
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -159,6 +160,7 @@ repeat with frame a:
                reserved_cust
                loc_xfer_ownership when (using_supplier_consignment)
 /*Y175*/       loc_user1
+						   loc_user2
             with frame a
             .
          end.  /* if recno <> ? */
@@ -218,7 +220,8 @@ repeat with frame a:
                                 then si_xfer_ownership
                                 else no
          loc_perm = yes
-/*Y175*/ loc_user1.
+/*Y175*/ loc_user1
+				 loc_user2.	
          locdesc = " ".
    end.
    assign
@@ -248,7 +251,7 @@ repeat with frame a:
       reserved_cust
       loc_xfer_ownership when (using_supplier_consignment).
 /*Y175*/ loc_user1
-      .
+      loc_user2.
 
    ststatus = stline[2].
    status input ststatus.
@@ -269,6 +272,7 @@ repeat with frame a:
          reserved_cust
          loc_xfer_ownership when (using_supplier_consignment)
 /*Y175*/ loc_user1
+				 loc_user2
          go-on (F5 CTRL-D).
 
       /* VALIDATING THE INVENTORY STATUS */
