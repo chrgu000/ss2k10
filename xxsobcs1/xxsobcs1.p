@@ -447,7 +447,7 @@ do on error undo, return error on endkey undo, return error:
                                          tt2_soil
                                          tt2_style
                                          tt2_grade
-                                         "'" + substring(tt2_cust_part,10,2).
+                                         substring(tt2_cust_part,10,2).
                 END.
             END.
             ELSE DO:
@@ -474,7 +474,7 @@ do on error undo, return error on endkey undo, return error:
                                          tt2_soil
                                          tt2_style
                                          tt2_grade
-                                         "'" + substring(tt2_cust_part,10,2).
+                                         substring(tt2_cust_part,10,2).
                 END.
             END.
 end. /* mainloop: */

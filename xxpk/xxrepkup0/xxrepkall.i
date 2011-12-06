@@ -22,7 +22,7 @@ ldloop:
 for each ld_det where ld_site = {&site}
    and ld_part = {&part}
    and can-find(is_mstr where is_status = ld_status and is_avail = yes)
-   and can-find(loc_mstr where loc_site = ld_site and loc_loc = ld_loc and loc_user1 <> "")
+   and can-find(loc_mstr where loc_site = ld_site and loc_loc = ld_loc and loc_user2 = "Y")
    and ld_qty_oh - ld_qty_all > 0
    and (ld_expire > today or ld_expire = ?)
    and ld_loc <> {&dest_loc}
@@ -62,7 +62,7 @@ for each ld_det where ld_site = {&site}
                and can-find(is_mstr where is_status = lddet.ld_status
              					  and is_avail = yes)
                and can-find(loc_mstr where loc_site = lddet.ld_site
-               					and loc_loc = lddet.ld_loc and loc_user1 <> "")
+               					and loc_loc = lddet.ld_loc and loc_user2 = "Y")
                and (lddet.ld_expire > today or lddet.ld_expire = ?)
                and lddet.ld_loc <> {&dest_loc}
                and lddet.ld_qty_oh - lddet.ld_qty_all > 0:
