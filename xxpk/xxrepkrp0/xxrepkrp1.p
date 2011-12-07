@@ -6,7 +6,8 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "110803.1"}
+{mfdtitle.i "111207.1"}
+
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
@@ -121,7 +122,8 @@ do on error undo, return error on endkey undo, return error:
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 0
+          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 
+          								  (if pt__chr10 = "A" then pt__dec01 else 0)
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
@@ -131,7 +133,7 @@ do on error undo, return error on endkey undo, return error:
                  vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid:
+            and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL":
               export delimiter "~011"
                      "P"
                      "p" + xxwa_nbr
@@ -143,10 +145,10 @@ do on error undo, return error on endkey undo, return error:
                      substring(xxwd_ladnbr,9)
                      xxwa_part
                      vdesc1
-                     truncate(xxwa_qty_pln,0)
+                     truncate(xxwa__dec01,0)
                      vMultiple
                      vtype
-                     max(truncate(xxwd_qty_plan,0),0)
+                     max(truncate(xxwd__dec01,0),0)
                      xxwd_loc
                      xxwd_lot
                      truncate(xxwd_qty_piss,0)
@@ -163,7 +165,8 @@ do on error undo, return error on endkey undo, return error:
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 0
+          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 
+          								  (if pt__chr10 = "A" then pt__dec01 else 0)
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
@@ -189,7 +192,7 @@ do on error undo, return error on endkey undo, return error:
                      vMultiple
                      vtype
                      max(truncate(xxwd_qty_plan,0),0)
-                     xxwd_loc
+                     "P-ALL"
                      xxwd_lot
                      truncate(xxwd_qty_siss,0)
                      xxwd_sstat.

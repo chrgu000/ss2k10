@@ -57,7 +57,7 @@ define variable ladnbr like lad_nbr.
 /*         and rps_user1 = "") then do:                                       */
 /*         return.                                                            */
 /*    end.                                                                    */
-    /* 切割时间段 */    
+    /* 切割时间段 */
 
     for each rps_mstr no-lock use-index rps_site_line
        where rps_due_date = issue
@@ -100,9 +100,9 @@ define variable ladnbr like lad_nbr.
            leave calcloop1.
         end.
         else do:
-      		 if itcetimes < xxlnw_etime then do:
+           if itcetimes < xxlnw_etime then do:
            find first xxlw_mst exclusive-lock where
-           			  xxlw_date = rps_due_date and
+                  xxlw_date = rps_due_date and
                   xxlw_site = rps_site and
                   xxlw_line = rps_line and
                   xxlw_part = rps_part and
@@ -132,7 +132,7 @@ define variable ladnbr like lad_nbr.
            END.
           end. /*if itcetimes < xxlnw_etime then do:*/
           else do:
-          	leave.
+            leave.
           end.
         end.
       end.
@@ -158,6 +158,7 @@ define variable ladnbr like lad_nbr.
               xxwa_sn = xxlw_sn
               xxwa_qty_req = xxwp_qty_req * (xxlw_qty_req / xxlw_qty_src)
               xxwa_qty_pln = xxwa_qty_req
+              xxwa__dec01 = xxwp_qty_req
               xxwa_rtime = xxlw_start.
             end.
       end.
@@ -220,7 +221,7 @@ define variable ladnbr like lad_nbr.
              xxwa_date = issue and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-        each pt_mstr fields(pt_part pt_ord_mult pt__chr10) no-lock WHERE
+        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__dec01) no-lock WHERE
              pt_mstr.pt_part = xxwa_part and
              pt_mstr.pt__chr10 = "C" and pt_mstr.pt_ord_mult <> 0
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
@@ -243,10 +244,44 @@ define variable ladnbr like lad_nbr.
           assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0)) * pt_ord_mult.
        end.
        else do:
-       	  assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1) 
-       	  								    * pt_ord_mult.
+          assign xxwa_qty_pln = (truncate(vqty / pt_ord_mult,0) + 1)
+                              * pt_ord_mult.
        end.
        assign vqty = xxwa_qty_pln - vqty.
+    end.
+
+/*A类物料以台车发放*/
+    for each xxwa_det exclusive-lock where
+             xxwa_date = issue and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__dec01) no-lock WHERE
+             pt_mstr.pt_part = xxwa_part and
+             pt_mstr.pt__chr10 = "A" and pt_mstr.pt__dec01 <> 0
+    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+       if first-of(xxwa_line) then do:
+          find first lad_det where lad_dataset = "rps_det" and
+                     lad_site = xxwa_site and lad_line = xxwa_line
+               no-lock no-error.
+          if available(lad_det) then do:
+             assign ladnbr = lad_nbr.
+          end.
+       end.
+       assign xxwa_ladnbr = ladnbr.
+       if first-of(xxwa_part) then do:
+          assign vqty = xxwa_qty_req.
+       end.
+       else do:
+          assign vqty = xxwa_qty_req - vqty.
+       end.
+       if vqty MODULO pt__dec01 = 0 then do:
+          assign xxwa__dec01 = (truncate(vqty / pt__dec01,0)) * pt__dec01.
+       end.
+       else do:
+          assign xxwa__dec01 = (truncate(vqty / pt__dec01,0) + 1)
+                              * pt__dec01.
+       end.
+       assign vqty = xxwa__dec01 - vqty.
     end.
 
   /*对应发料库位及数量*/
@@ -254,10 +289,15 @@ define variable ladnbr like lad_nbr.
   for each xxwa_det no-lock where xxwa_date = issue and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-      break by xxwa_date by xxwa_site by xxwa_line 
-      			by xxwa_par by xxwa_sn by xxwa_part:
-      assign vqty = xxwa_qty_pln
-             vqty1 = 0.
+      break by xxwa_date by xxwa_site by xxwa_line
+            by xxwa_par by xxwa_sn by xxwa_part:
+      find first pt_mstr no-lock where pt_part = xxwa_part no-error.
+      if not available pt_mstr then do:
+          next.
+      end.
+      assign vqty1 = 0.
+      if pt__chr10 = "A" then assign vqty = xxwa__dec01.
+                         else assign vqty = xxwa_qty_pln.
       if first-of(xxwa_sn) then do:
          assign i = 1.
       end.
@@ -288,8 +328,9 @@ define variable ladnbr like lad_nbr.
                   xxwd_line = lad_line
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
-                  xxwd_ref = lad_ref
-                  xxwd_qty_plan = max(vqty,0).
+                  xxwd_ref = lad_ref.
+           if pt__chr10 = "A" then assign xxwd__dec01 = max(vqty,0).
+                              else assign xxwd_qty_plan = max(vqty,0).
             assign i = i + 1.
             assign vqtya1 = vqtya1 + vqty.
             leave.
@@ -305,8 +346,9 @@ define variable ladnbr like lad_nbr.
                   xxwd_line = lad_line
                   xxwd_loc = lad_loc
                   xxwd_lot = lad_lot
-                  xxwd_ref = lad_ref
-                  xxwd_qty_plan = max(vqtya,0).
+                  xxwd_ref = lad_ref.
+           if pt__chr10 = "A" then assign xxwd__dec01 = max(vqty,0).
+                              else assign xxwd_qty_plan = max(vqty,0).
            assign i = i + 1.
            assign vqty = vqty - vqtya
                   vqtya1 = vqtya1 + vqty.
