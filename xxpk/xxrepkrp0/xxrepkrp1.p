@@ -21,6 +21,7 @@ define variable vMultiple like pt_ord_mult label "Order_Multiple".
 define variable vtype  as character format "x(2)" label "ABC_ALLOCATE".
 define variable vdesc1 like pt_desc1.
 define variable pnbr like xxwa_nbr.
+define variable vqty  as decimal no-undo.
 /* SELECT FORM */
 form
    site   colon 20
@@ -134,25 +135,29 @@ do on error undo, return error on endkey undo, return error:
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
             and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL":
-              export delimiter "~011"
-                     "P"
-                     "p" + xxwa_nbr
-                     xxwd_line
-                     string(xxwa_rtime,"hh:mm:ss")
-                     string(xxwa_pstime,"hh:mm:ss")
-                     string(xxwa_petime,"hh:mm:ss")
-                     xxwd_sn
-                     substring(xxwd_ladnbr,9)
-                     xxwa_part
-                     vdesc1
-                     truncate(xxwa__dec01,0)
-                     vMultiple
-                     vtype
-                     max(truncate(xxwd__dec01,0),0)
-                     xxwd_loc
-                     xxwd_lot
-                     truncate(xxwd_qty_piss,0)
-                     xxwd_pstat.
+            	if vtype = "A" then assign vqty = xxwa__dec01.
+            								 else assign vqty = xxwd_qty_plan.
+            	if vqty > 0 then do:
+                 export delimiter "~011"
+                        "P"
+                        "p" + xxwa_nbr
+                        xxwd_line
+                        string(xxwa_rtime,"hh:mm:ss")
+                        string(xxwa_pstime,"hh:mm:ss")
+                        string(xxwa_petime,"hh:mm:ss")
+                        xxwd_sn
+                        substring(xxwd_ladnbr,9)
+                        xxwa_part
+                        vdesc1
+                        truncate(xxwa_qty_pln,0)
+                        vMultiple
+                        vtype
+                        max(truncate(vqty,0),0)
+                        xxwd_loc
+                        xxwd_lot
+                        truncate(xxwd_qty_piss,0)
+                        xxwd_pstat.
+             end.
        end.
     end.
   end.
@@ -176,26 +181,30 @@ do on error undo, return error on endkey undo, return error:
                  vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid and xxwd_qty_plan > 0:
-              export delimiter "~011"
-                     "S"
-                     "s" + xxwa_nbr
-                     xxwd_line
-                     string(xxwa_rtime,"hh:mm:ss")
-                     string(xxwa_sstime,"hh:mm:ss")
-                     string(xxwa_setime,"hh:mm:ss")
-                     xxwd_sn
-                     substring(xxwd_ladnbr,9)
-                     xxwa_part
-                     vdesc1
-                     truncate(xxwa_qty_pln,0)
-                     vMultiple
-                     vtype
-                     max(truncate(xxwd_qty_plan,0),0)
-                     "P-ALL"
-                     xxwd_lot
-                     truncate(xxwd_qty_siss,0)
-                     xxwd_sstat.
+            and xxwd_recid = xxwa_recid:
+            	if vtype = "A" then assign vqty = xxwa__dec01.
+            						  	 else assign vqty = xxwd_qty_plan.
+            	if vqty > 0 then do:
+                 export delimiter "~011"
+                        "S"
+                        "s" + xxwa_nbr
+                        xxwd_line
+                        string(xxwa_rtime,"hh:mm:ss")
+                        string(xxwa_sstime,"hh:mm:ss")
+                        string(xxwa_setime,"hh:mm:ss")
+                        xxwd_sn
+                        substring(xxwd_ladnbr,9)
+                        xxwa_part
+                        vdesc1
+                        truncate(xxwa_qty_pln,0)
+                        vMultiple
+                        vtype
+                        max(truncate(xxwd_qty_plan,0),0)
+                        "P-ALL"
+                        xxwd_lot
+                        truncate(xxwd_qty_siss,0)
+                        xxwd_sstat.
+              end.
        end.
     end.
   end.
