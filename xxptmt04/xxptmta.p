@@ -518,10 +518,8 @@ repeat:
             display pt_draw pt_rev
                pt_dsgn_grp pt_drwg_loc pt_drwg_size
                pt_prod_line pt_group pt_added
-
-               pt_part_type pt_status
-               pt_break_cat
-               pt_promo pt__chr01 pt__chr09 pt__chr10 pt__qad18
+               pt_part_type pt_status pt_break_cat pt_promo 
+               pt__chr01 pt__chr09 pt__chr10 pt__qad18 pt__dec01
             with frame a1.
 
             if ppform = "" or ppform = "b" then do:

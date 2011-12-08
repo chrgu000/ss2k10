@@ -41,3 +41,4 @@
    pt__chr09      colon 15 format "x(20)"
    pt__chr10      colon 58 format "x(4)"
    pt__qad18      colon 15 format "->,>>>,>>9.9<"
+   pt__dec01      colon 58 format "->,>>>,>>9.9<"
