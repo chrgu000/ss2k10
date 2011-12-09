@@ -1,31 +1,19 @@
+/* GUI CONVERTED from repkupd.p (converter v1.76) Wed Dec 18 20:55:28 2002 */
 /* repkupd.p - REPETITIVE PICKLIST CALCULATION                                */
-/* Copyright 1986-2005 QAD Inc., Carpinteria, CA, USA.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.6.1.7.3.2 $                                                   */
-/*V8:ConvertMode=FullGUIReport                                                */
-/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*               */
-/* REVISION: 7.4   LAST MODIFIED: 11/15/96   BY: *H0P6* Murli Shastri         */
-/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane          */
-/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan         */
-/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan         */
-/* REVISION: 8.6E     LAST MODIFIED: 11/29/99   BY: *J3MK* Prashanth Narayan  */
-/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
-/* REVISION: 9.1      LAST MODIFIED: 04/17/00   BY: *J3PH* Kirti Desai        */
-/* REVISION: 9.1      LAST MODIFIED: 08/12/00   BY: *N0KP* myb                */
-/* Revision: 1.6.1.6   BY: Hualin Zhong   DATE: 06/13/01 ECO: *N0ZF*          */
-/* Revision: 1.6.1.7   BY: Nishit V       DATE: 12/10/02 ECO: *N21K*          */
-/* Revision: 1.6.1.7.3.1 BY: Manish Dani  DATE: 04/20/05 ECO: *P3HL*          */
-/* $Revision: 1.6.1.7.3.2 $   BY: Kirti Desai DATE: 10/31/05 ECO: *P467*      */
-/******************************************************************************/
-/* All patch markers and commented out code have been removed from the source */
-/* code below. For all future modifications to this file, any code which is   */
-/* no longer required should be deleted and no in-line patch markers should   */
-/* be added.  The ECO marker should only be included in the Revision History. */
-/******************************************************************************/
+
+
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
-
+{xxrepkup0.i "new"}
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE repkupd_p_1 "Production Date"
@@ -60,8 +48,6 @@
 
 /* ********** End Translatable Strings Definitions ********* */
 
-define input parameter l_use_ord_multiple like mfc_logical no-undo.
-
 define shared variable site like si_site.
 define shared variable site1 like si_site.
 define shared variable wkctr like op_wkctr.
@@ -90,6 +76,7 @@ define shared variable netgr like mfc_logical initial yes
 define shared variable detail_display like mfc_logical
    label {&repkupd_p_4}.
 define shared variable um like pt_um.
+
 define shared variable wc_qoh like ld_qty_oh.
 define shared variable temp_qty like wod_qty_chg.
 define shared variable temp_nbr like lad_nbr.
@@ -97,10 +84,9 @@ define shared variable ord_max like pt_ord_max.
 define shared variable comp_max like wod_qty_chg.
 define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
-define variable recnop as recid.
-define variable nbr1 as character.
-define variable xxwpnbr like xxwp_nbr.
+
 /* USE TEMP-TABLE IN PLACE OF WORKFILE TO IMPROVE PERFORMANCE     */
+/* 使用临时表代替工作文件提高性能                                 */
 
 define temp-table shortages no-undo
    field short-part  like ps_comp
@@ -111,11 +97,27 @@ define temp-table shortages no-undo
 
 /* TEMP-TABLE TO STORE NET AVAILABLE QUANTITY FOR EACH COMPONENT */
 /* TO PRINT SHORTAGE LIST                                        */
+/* 临时表用于存放净可用量，并打印短缺列表                        */
 
 define temp-table net_comp no-undo
    field net_part like ps_comp
    field net_qty  like wod_qty_chg
    index net net_part.
+
+/*临时表用于记录成品对应物料领料关系*/
+define temp-table xx_pklst no-undo
+	fields xx_site like si_site
+	fields xx_line like op_wkctr
+	fields xx_nbr  as character format "x(10)"
+	fields xx_comp like wod_part
+	fields xx_qty_req like wod_qty_req
+	fields xx_um like pt_um
+	fields xx_par  like wo_part
+	fields xx_due_date like wo_due_date
+	fields xx_op  like wr_op
+	fields xx_mch like wr_mch
+	fields xx_start like wr_start.
+
 
 assign
    nbr_replace = getTermLabel("TEMPORARY",10)
@@ -123,7 +125,13 @@ assign
    pick-used   = no
    temp_nbr    = nbr.
 
+      
+run gett0(input reldate, input reldate1,
+				  input site, input site1,
+				  input wkctr, input wkctr1).
+
 /* FIND AND DISPLAY */
+/* rps_mstr 重复生产排程表 */
 for each rps_mstr no-lock
 where rps_part >= part and rps_part <= part1
   and rps_site >= site and rps_site <= site1
@@ -160,8 +168,8 @@ by wr_start by wr_part by wr_op
               and lad_nbr begins
               trim(string(wo_site,"x(8)") + string(nbr,"x(10)"))):
             {gprun.i ""gpnbr.p"" "(16,input-output nbr)"}
-
-         end.
+            /* gpnbr.p 加密程序 */
+         end. /* do while can-find */
 
          create lad_det.
          assign
@@ -173,32 +181,32 @@ by wr_start by wr_part by wr_op
             lad_loc     = "rps_det"
             lad_lot     = "rps_det"
             lad_ref     = "rps_det".
-      end.
+      end. /* do on error undo, retry */
 
       /* ADDED frame b DEFINITION */
-/*zy     form                                                       */
-/*zy        wo_site                                                 */
-/*zy        wr_wkctr                                                */
-/*zy        wc_desc no-label                                        */
-/*zy        nbr                                                     */
-/*zy        skip(1)                                                 */
-/*zy     with frame b width 132 side-labels page-top.               */
-/*zy                                                                */
-/*zy     /* SET EXTERNAL LABELS */                                  */
-/*zy     setFrameLabels(frame b:handle).                            */
-/*zy                                                                */
-/*zy      display                                                   */
-/*zy         wo_site                                                */
-/*zy         wr_wkctr                                               */
-/*zy         wc_desc no-label    when (available wc_mstr)           */
-/*zy         string(nbr,"x(10)") when (not delete_pklst) @ nbr      */
-/*zy         nbr_replace         when (delete_pklst) @ nbr          */
-/*zy         skip(1)                                                */
-/*zy      with frame b width 132 side-labels page-top.              */
-			  							
-   end.
+      FORM /*GUI*/ 
+         wo_site
+         wr_wkctr
+         wc_desc no-label
+         nbr
+         skip(1)
+      with STREAM-IO /*GUI*/  frame b width 132 side-labels page-top.
 
-/*zy    view frame b.    */
+      /* SET EXTERNAL LABELS */
+      setFrameLabels(frame b:handle).
+
+      display
+         wo_site
+         wr_wkctr
+         wc_desc no-label    when (available wc_mstr)
+         string(nbr,"x(10)") when (not delete_pklst) @ nbr
+         nbr_replace         when (delete_pklst) @ nbr
+         skip(1)
+      with frame b width 132 side-labels page-top STREAM-IO /*GUI*/ .
+   end. /* if first-of(wr_wkctr) */
+
+   view frame b.
+   /* isspol = Yes 发放原则 */
    isspol = yes.
    find ptp_det no-lock
    where ptp_site = wod_site
@@ -210,7 +218,7 @@ by wr_start by wr_part by wr_op
       if available pt_mstr then
          isspol = pt_iss_pol.
    end.
-
+   
    if isspol then do:
       accumulate max(wod_qty_req - wod_qty_all - wod_qty_pick - wod_qty_iss,0)
          (total by wod_deliver).
@@ -226,64 +234,41 @@ by wr_start by wr_part by wr_op
                desc1 = pt_desc1
                desc2 = pt_desc2
                um    = pt_um.
-         if detail_display then
-/*zy            display wod_part @ ps_comp desc1.
-					do: 
-			        create xxwp_mst.
-			        assign xxwp_site = wo_site
-			        			 xxwp_line = wr_wkctr
-			        			 xxwp_part = wod_part.
-			        if delete_pklst then assign xxwp_nbr = nbr_replace.
-			        								else assign xxwp_nbr = string(nbr,"x(10)"). 
- 						  
-				  end.
- */
-      end.
- /*zy     else
+         if detail_display then 
+            display wod_part @ ps_comp desc1 WITH STREAM-IO /*GUI*/ .
+
+      end. /* if first-of (wod_deliver) do */
+      else
       if desc2 <> "" and detail_display then do with frame c:
          display
-            desc2 @ desc1.
+            desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
          desc2 = "".
-      end.
-*/
-      if detail_display then do:
-/*zy         display                                                 */
-/*zy            max(wod_qty_req - wod_qty_iss,0) @ wod_qty_req       */
-/*zy            um                                                   */
-/*zy            wr_part @ ps_par                                     */
-/*zy            wo_due_date                                          */
-/*zy            wr_op                                                */
-/*zy            wr_mch                                               */
-/*zy            wr_start.                                            */
- 					if delete_pklst then assign xxwpnbr = nbr_replace.
-			    								else assign xxwpnbr = string(nbr,"x(10)").
-			    find first xxwp_mst where 
- 										 xxwp_date = wo_due_date and 
- 										 xxwp_site = wo_site and
- 										 xxwp_line = wr_wkctr and
- 										 xxwp_nbr = xxwpnbr and
- 										 xxwp_part = wod_part and
- 										 xxwp_par = wr_par exclusive-lock no-error. 	
- 		       if not available xxwp_mst then do:
-			            create xxwp_mst.
-			            assign xxwp_date = wo_due_date
-			            			 xxwp_site = wo_site
-			            		   xxwp_line = wr_wkctr
-			            		   xxwp_nbr = xxwpnbr
-			            		   xxwp_part = wod_part 
-			            			 xxwp_par = wr_par 
-			            		   xxwp_qty_req = max(wod_qty_req - wod_qty_iss,0)
-			 		        	     xxwp_um = um
-			 		        	     xxwp_op = wr_op
-			 		        	     xxwp_mch = wr_mch
-			 		        	     xxwp_start = wr_start.  
-			 			end.
-/*  	 			else do:		                                                     */
-/*  	 					 assign xxwp_qty_req = xxwp_qty_req                          */
-/*  	 					 										 + max(wod_qty_req - wod_qty_iss,0).     */
-/*  	 		  end.                                                             */
-				end.
+      end. /* if first-of (wod_deliver) else */
 
+      if detail_display then do:      		
+         display
+            max(wod_qty_req - wod_qty_iss,0) @ wod_qty_req
+            um
+            wr_part @ ps_par
+            wo_due_date
+            wr_op
+            wr_mch
+            wr_start WITH STREAM-IO /*GUI*/ .
+         
+         create xx_pklst.
+         assign xx_site = wo_site                                 
+	              xx_line = wr_wkctr                                
+	              xx_nbr = string(nbr)                                  
+	              xx_comp = wod_part                                 
+	              xx_qty_req =  max(wod_qty_req - wod_qty_iss,0)                       
+	              xx_um = um                             
+	              xx_par = wr_part                        
+	              xx_due_date = wo_due_date
+	              xx_op = wr_op
+	              xx_mch = wr_mch
+	              xx_start =wr_start.
+            
+			end.
       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
       run store_demand (buffer wod_det, buffer wr_route).
 
@@ -292,32 +277,23 @@ by wr_start by wr_part by wr_op
          ord_max = 0.
          find ptp_det no-lock
          where ptp_part = wo_part and ptp_site = wo_site no-error.
-         if available ptp_det
-         then
-            ord_max = if l_use_ord_multiple
-                      then
-                         ptp_ord_max
-                      else
-                         0.
+         if available ptp_det then
+            ord_max = ptp_ord_max.
          else do:
             find pt_mstr no-lock where pt_part = wo_part no-error.
-            if available pt_mstr
-            then
-               ord_max = if l_use_ord_multiple
-                         then
-                            pt_ord_max
-                         else
-                            0.
-         end.
+            if available pt_mstr then
+               ord_max = pt_ord_max.
+         end. /* if available ptp_det */
          comp_max = 0.
          if ord_max <> 0 then
             comp_max = wod_qty_req / wo_qty_ord * ord_max.
-
+         /* qtyneed 为需求数量，从Wod表进行合计汇总 */
          qtyneed = (accum total by wod_deliver
                    (max(wod_qty_req - wod_qty_all -
                     wod_qty_pick - wod_qty_iss,0))).
 
-         if netgr then do:
+         /* netgr = yes  考虑工作中心在库 */
+	 if netgr then do:
             /* Added wo_lot as input parameter */
             {gprun.i ""repkupb.p"" "(wo_site,
                                      wr_wkctr,
@@ -333,40 +309,39 @@ by wr_start by wr_part by wr_op
             assign
                temp_qty = min(qtyneed, wc_qoh)
                qtyneed  = qtyneed - temp_qty.
-
+         /* 如果考虑车间在库，则减去车间在库wc_qoh */
          nbr = string(wo_site,"x(8)") + nbr.
 
-         {gprun.i ""xxrepkall0.p"" "(nbr,
+         {gprun.i ""xxrepkall.p"" "(nbr,
                                   wod_part,
                                   wo_site,
                                   wr_wkctr,
-                                  wod_deliver ,
-                                  comp_max ,
-                                  l_use_ord_multiple,
+                                  wod_deliver,
+                                  comp_max,
                                   input-output qtyneed)" }
 
          if detail_display then do
             with frame dd width 132 no-attr-space down no-box:
-/*
+
             display
                skip
-            with frame e.
+            with frame e STREAM-IO /*GUI*/ .
 
             /* SET EXTERNAL LABELS */
             setFrameLabels(frame dd:handle).
 
             display
-               " " @ ps_comp no-label
-               " " @ desc1 no-label.
+               "" @ ps_comp no-label
+               "" @ desc1 no-label WITH STREAM-IO /*GUI*/ .
 
             display
                accum total by wod_deliver
                (max(wod_qty_req - wod_qty_all -
                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um.
+               um WITH STREAM-IO /*GUI*/ .
 
             display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13}.
+               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH STREAM-IO /*GUI*/ .
 
             wc_qoh = wc_qoh - temp_qty.
 
@@ -380,16 +355,15 @@ by wr_start by wr_part by wr_op
 
                display
                   lad_loc
-                  lad_lot     format "x(14)"
-                  lad_ref     column-label "Ref"
+                  lad_lot
                   lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver.
+                  lad_user1 @ wod_deliver WITH STREAM-IO /*GUI*/ .
 
                accumulate lad_qty_all (total).
 
                if last-of (lad_site) = no then
                   down 1.
-            end.
+            end. 
 
             if qtyneed > 0 then do with frame dd:
                if can-find
@@ -400,29 +374,30 @@ by wr_start by wr_part by wr_op
                   down 1.
 
                display
-                  getTermLabelRtColon("QUANTITY_SHORT",14) @ lad_lot
-                  qtyneed @ lad_qty_all.
+                  getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
+                  qtyneed @ lad_qty_all WITH STREAM-IO /*GUI*/ .
 
             end.
 
             down 1.
-*/
-         end.
+
+         end.  /* detail_display 详细显示 */
+               /* 简略显示 Start */
          else do with frame d width 132 no-attr-space down no-box:
 
             /* SET EXTERNAL LABELS */
             setFrameLabels(frame d:handle).
             display
-               wod_part @ ps_comp desc1.
+               wod_part @ ps_comp desc1 WITH STREAM-IO /*GUI*/ .
 
             display
                accum total by wod_deliver
                (max(wod_qty_req - wod_qty_all -
                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um.
+               um WITH STREAM-IO /*GUI*/ .
 
             display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13}.
+               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH STREAM-IO /*GUI*/ .
 
             wc_qoh = wc_qoh - temp_qty.
 
@@ -436,10 +411,9 @@ by wr_start by wr_part by wr_op
 
                display
                   lad_loc
-                  lad_lot     format "x(14)"
-                  lad_ref     column-label "Ref"
+                  lad_lot
                   lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver.
+                  lad_user1 @ wod_deliver WITH STREAM-IO /*GUI*/ .
 
                accumulate lad_qty_all (total).
 
@@ -449,7 +423,7 @@ by wr_start by wr_part by wr_op
 
                if detail_display = no and desc2 <> "" then
                   display
-                     desc2 @ desc1.
+                     desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
 
                desc2 = "".
             end.
@@ -465,19 +439,19 @@ by wr_start by wr_part by wr_op
 
                if detail_display = no and desc2 <> "" then
                   display
-                     desc2 @ desc1.
+                     desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
 
                desc2 = "".
 
                display
-                  getTermLabelRtColon("QUANTITY_SHORT",14) @ lad_lot
-                  qtyneed @ lad_qty_all.
+                  getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
+                  qtyneed @ lad_qty_all WITH STREAM-IO /*GUI*/ .
 
             end.
 
             down 1.
 
-         end.
+         end. /* 简略显示 */
 
          /* STORE AVAILABLE QUANTITY IN shortages TABLE */
 
@@ -508,91 +482,108 @@ by wr_start by wr_part by wr_op
       find first shortages no-error.
       if available shortages then do:
 
-/*zy         hide frame b.                                                   */
+         hide frame b.
 
-/*zy   page.                                                                 */
-/*zy                                                                         */
-/*zy   form                                                                  */
-/*zy      skip(1) space(19)                                                  */
-/*zy      wo_site wr_wkctr                                                   */
-/*zy      wc_desc no-label                                                   */
-/*zy      nbr_replace label {&repkupd_p_3}                                   */
-/*zy   with frame shortage page-top width 132 side-labels                    */
-/*zy   title color normal (getFrameTitle("S_H_O_R_T_A_G_E___L_I_S_T",36)).   */
-/*zy                                                                         */
-/*zy   /* SET EXTERNAL LABELS */                                             */
-/*zy   setFrameLabels(frame shortage:handle).                                */
-/*zy                                                                         */
-/*zy   display                                                               */
-/*zy      wo_site                                                            */
-/*zy      wo_site                                                            */
-/*zy      wr_wkctr                                                           */
-/*zy      wc_desc             when (available wc_mstr)                       */
-/*zy      string(nbr,"x(10)") when (not delete_pklst) @ nbr_replace          */
-/*zy      nbr_replace         when (delete_pklst)                            */
-/*zy   with frame shortage.                                                  */
+         page.
+
+
+         /* 打印物料短缺清单 */
+         FORM /*GUI*/ 
+            skip(1) space(19)
+            wo_site wr_wkctr
+            wc_desc no-label
+            nbr_replace label {&repkupd_p_3}
+         with STREAM-IO /*GUI*/  frame shortage page-top width 132 side-labels
+         title color normal (getFrameTitle("S_H_O_R_T_A_G_E___L_I_S_T",36)).
+
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame shortage:handle).
+
+         display
+            wo_site
+            wo_site
+            wr_wkctr
+            wc_desc             when (available wc_mstr)
+            string(nbr,"x(10)") when (not delete_pklst) @ nbr_replace
+            nbr_replace         when (delete_pklst)
+         with frame shortage STREAM-IO /*GUI*/ .
 
          /* PRINT DESCRIPTION OF PART ONLY ONCE. */
 
          for each shortages exclusive-lock
-         break by short-part by short-date :
-/*zy       with frame short width 132 no-attr-space:                         */
+         break by short-part by short-date
+         with frame short width 132 no-attr-space:
 
             /* SET EXTERNAL LABELS */
-/*zy            setFrameLabels(frame short:handle).                          */
+            setFrameLabels(frame short:handle).
 
             find pt_mstr no-lock
             where pt_part = short-part no-error.
 
-/*zy        if page-size - line-counter < 1 then                             */
-/*zy           page.                                                         */
-/*zy                                                                         */
-/*zy        display                                                          */
-/*zy           space(19)                                                     */
-/*zy        with frame short.                                                */
-/*zy                                                                         */
-/*zy        if first-of(short-part) then                                     */
-/*zy           display                                                       */
-/*zy              short-part @ ps_comp                                       */
-/*zy              pt_desc1 when (available pt_mstr)                          */
-/*zy           with frame short.                                             */
-/*zy                                                                         */
-/*zy        display                                                          */
-/*zy           short-qty                                                     */
-/*zy           pt_um when (available pt_mstr)                                */
-/*zy           short-assy @ ps_par                                           */
-/*zy        with frame short.                                                */
-            if not delete_pklst then nbr1 = string(nbr,"x(10)").
-            		                else nbr1 = nbr_replace.
-            FOR EACH xxwp_mst EXCLUSIVE-LOCK where xxwp_date = reldate 
-            		 and xxwp_site = wo_site and xxwp_line = wr_wkctr
-            		 and xxwp_par = short-assy and xxwp_part = short-part 
-            		 and xxwp_nbr = nbr1 :
-						     assign xxwp_qty_all = short-qty.						    
-						END. 
+            if page-size - line-counter < 1 then
+               page.
 
-/*zy         if first-of(short-part) then do:                               */
-/*zy            down 1.                                                     */
-/*zy            if available pt_mstr and pt_desc2 <> "" then                */
-/*zy               display                                                  */
-/*zy                  pt_desc2 @ pt_desc1                                   */
-/*zy               with frame short.                                        */
-/*zy         end. /* FIRST-OF(short-part) */                                */
-/*zy                                                                        */
-/*zy         if last-of(short-part) then                                    */
-/*zy            down 1.                                                     */
+            display
+               space(19)
+            with frame short STREAM-IO /*GUI*/ .
+
+            if first-of(short-part) then
+               display
+                  short-part @ ps_comp
+                  pt_desc1 when (available pt_mstr)
+               with frame short STREAM-IO /*GUI*/ .
+
+            display
+               short-qty
+               pt_um when (available pt_mstr)
+               short-assy @ ps_par
+            with frame short STREAM-IO /*GUI*/ .
+
+            if first-of(short-part) then do:
+               down 1.
+               if available pt_mstr and pt_desc2 <> "" then
+                  display
+                     pt_desc2 @ pt_desc1
+                  with frame short STREAM-IO /*GUI*/ .
+            end. /* FIRST-OF(short-part) */
+
+            if last-of(short-part) then
+               down 1.
 
             delete shortages.
          end.
 
-/*zy     hide frame shortage.                                               */
-/*zy     view frame b.                                                      */
-/*zy     if not last (wr_wkctr) then page.                                  */
+         hide frame shortage.
+         view frame b.
+         if not last (wr_wkctr) then page.
       end.
    end.
 
 end.
 
+for each tmp_file0 no-lock , each xx_pklst no-lock
+	  where xx_due_date = t0_date 
+		  and xx_line = t0_line
+		  and xx_site = t0_site
+		  and xx_par = t0_part by t0_date by t0_site by t0_line by t0_start:
+	  display t0_date t0_site t0_line t0_part 
+					  t0_wktime
+						t0_tttime
+						string(t0_start,"hh:mm:ss") @ t0_start 
+						string(t0_end,"hh:mm:ss") @ t0_end   
+						t0_qtya  
+						t0_qty   
+						xx_comp
+					  xx_qty_req
+					  xx_nbr
+					  xx_op
+					  xx_start
+					  t0_tttime / t0_wktime * xx_qty_req @ t0_time
+					  t0_qty / t0_qtya * xx_qty_req @ xx_start
+						with width 300 stream-io.
+end.
+
+/* ========================================================= */
 /* PROCEDURE TO STORE COMPONENT DEMAND FOR EACH PARENT ITEM. */
 /* UNIQUE RECORDS ARE CREATED FOR EACH SCHEDULE DATE.        */
 
@@ -710,3 +701,84 @@ PROCEDURE adjust_demand:
    end. /* FOR EACH shortages */
 
 END PROCEDURE. /* adjust_demand */
+
+/** 分割时间段 **/
+PROCEDURE gett0:
+
+define input parameter iDate as date.
+define input parameter iDate1 as date.
+define input parameter isite like si_site.
+define input parameter isite1 like si_site.
+define input parameter iline like ln_line.
+define input parameter iline1 like ln_line.
+
+define variable vtime   as decimal.
+DEFINE VARIABLE recno   AS RECID.
+
+EMPTY TEMP-TABLE tmp_file0 NO-ERROR.
+ 
+for each rps_mstr no-lock where rps_rel_date >= idate
+     and rps_rel_date <= idate1
+     and rps_line >= iLine
+     and rps_line <= iline1 
+     AND rps_qty_req - rps_qty_comp > 0,
+    each lnd_det no-lock where lnd_line = rps_line
+     and lnd_site = rps_site and
+        lnd_part = rps_part 
+ BREAK BY rps_rel_date BY rps_site BY rps_line BY rps_part BY rps_user1:
+       IF FIRST-OF(rps_line) THEN DO:
+           EMPTY TEMP-TABLE tmp_file1.
+           FOR EACH xxlnw_det NO-LOCK WHERE xxlnw_site = rps_site
+               AND xxlnw_line = rps_line AND xxlnw_on:
+               CREATE tmp_file1.
+               ASSIGN t1_sn = xxlnw_sn
+                      t1_avli = xxlnw_wktime
+                      t1_start = xxlnw_stime
+                      t1_end = xxlnw_etime.
+           END.
+          
+       END.
+       ASSIGN vtime = (rps_qty_req - rps_qty_comp) / lnd_rate.
+       FOR EACH tmp_file1 EXCLUSIVE-LOCK WHERE 
+       			    t1_avli > 0 AND vtime > 0 BY t1_sn:
+          IF t1_avli >= vtime THEN DO:
+               CREATE tmp_file0.
+               ASSIGN t0_record = rps_record
+                   t0_date = rps_rel_date
+                   t0_site = rps_site
+                   t0_line = rps_line
+                   t0_part  = rps_part
+                   t0_user1 = rps_user1
+                   t0_sn = t1_sn
+                   t0_start = t1_start
+                   t0_end   = t1_end
+                   t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate
+                   t0_qtya = rps_qty_req - rps_qty_comp
+                   t0_qty =truncate(t0_qtya * (vtime / t0_wktime),0)
+                   t0_tttime = vtime.
+               ASSIGN t1_avli = t1_avli - vtime.
+               LEAVE.
+           END.
+           ELSE DO:
+               CREATE tmp_file0.
+               ASSIGN t0_record = rps_record
+                  t0_date = rps_rel_date
+                  t0_site = rps_site
+                  t0_line = rps_line
+                  t0_sn = t1_sn
+                  t0_part  = rps_part
+                  t0_user1 = rps_user1
+                  t0_start = t1_start
+                  t0_end   = t1_end
+                  t0_qtya = rps_qty_req - rps_qty_comp
+                  t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate
+                  t0_tttime = t1_avli
+                  t0_qty = truncate(t0_qtya * (t1_avli / t0_wktime),0)
+                  .
+               ASSIGN vtime = vtime - t1_avli.
+               ASSIGN t1_avli = 0.
+           END.
+       END.
+end.
+
+END PROCEDURE.

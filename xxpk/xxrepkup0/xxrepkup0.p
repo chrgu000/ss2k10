@@ -1,27 +1,67 @@
-/* xxrepkup0.p - REPETITIVE PICKLIST CALCULATION                             */
-/*V8:ConvertMode=FullGUIReport                                               */
-/* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
-/* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
-/*-revision end--------------------------------------------------------------*/
+/* GUI CONVERTED from repkup.p (converter v1.76) Wed Dec 18 20:55:26 2002 */
+/* repkup.p - REPETITIVE PICKLIST CALCULATION                           */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                  */
+/* All rights reserved worldwide.  This is an unpublished work.         */
+/* $Revision: 1.6.1.9 $                                                 */
+/*V8:ConvertMode=Report                                                 */
+/* REVISION: 7.3      LAST MODIFIED: 09/06/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 10/13/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 10/26/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 02/22/93   BY: emb  *G722*         */
+/* REVISION: 7.3      LAST MODIFIED: 09/27/93   BY: ram  *GF97*         */
+/* REVISION: 7.3      LAST MODIFIED: 11/01/94   by: ame  *GN86*         */
+/* REVISION: 7.3      LAST MODIFIED: 11/07/94   by: pxd  *GO32*         */
+/* REVISION: 8.5      LAST MODIFIED: 01/03/95   BY: mwd  *J034*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/04/95   by: srk  *G0B8*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/30/95   BY: qzl  *G0DD*         */
+/* REVISION: 7.3      LAST MODIFIED: 03/09/95   BY: pxe  *G0GW*         */
+/* REVISION: 7.3      LAST MODIFIED: 03/14/95   BY: ais  *G0HC*         */
+/* REVISION: 7.3      LAST MODIFIED: 06/09/95   BY: qzl  *G0PT*         */
+/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*         */
+/* REVISION: 8.5      LAST MODIFIED: 09/05/95   BY: srk  *J07G*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/29/96   BY: jym  *G1LC*         */
+/* REVISION: 8.5      LAST MODIFIED: 06/20/96   BY: taf  *J0VG*         */
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane    */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan   */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan   */
+/* REVISION: 8.6E     LAST MODIFIED: 11/19/99   BY: *J3MK* Prashanth Narayan  */
+/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
+/* REVISION: 9.1      LAST MODIFIED: 07/25/00   BY: *N0GD* Peggy Ng           */
+/* Old ECO marker removed, but no ECO header exists *F0PN*                    */
+/* Old ECO marker removed, but no ECO header exists *GOGW*                    */
+/* Revision: 1.6.1.8      BY: Katie Hilbert      DATE: 05/15/02  ECO: *P06H*  */
+/* $Revision: 1.6.1.9 $           BY: Nishit V           DATE: 12/10/02  ECO: *N21K*  */
+/******************************************************************************/
+/* All patch markers and commented out code have been removed from the source */
+/* code below. For all future modifications to this file, any code which is   */
+/* no longer required should be deleted and no in-line patch markers should   */
+/* be added.  The ECO marker should only be included in the Revision History. */
+/******************************************************************************/
 
 
-{mfdtitle.i "111207.1"}
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+{mfdtitle.i "111.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
-define new shared variable wkctr          like op_wkctr.
-define new shared variable wkctr1         like op_wkctr.
-define new shared variable part           like ps_par.
+define new shared variable wkctr          like op_wkctr initial "HPS".
+define new shared variable wkctr1         like op_wkctr initial "HPS".
+define new shared variable part           like ps_par
+                                          label "父零件".
 define new shared variable part1          like ps_par.
-define new shared variable comp1          like ps_comp.
+define new shared variable comp1          like ps_comp
+                                          label "子零件".
 define new shared variable comp2          like ps_comp.
 define new shared variable desc1          like pt_desc1.
 define new shared variable desc2          like pt_desc1.
 define new shared variable issue          like wo_rel_date
-                                          label "Production Date".
+                                          label "生产日期".
 define new shared variable issue1         like wo_rel_date.
 define new shared variable reldate        like wo_rel_date
-                                          label "Release Date" initial today.
+                                          label "发放日期".
 define new shared variable reldate1       like wo_rel_date.
 define new shared variable nbr            as character format "x(10)"
                                           label "Picklist Number".
@@ -32,8 +72,8 @@ define new shared variable qtyneed        like wod_qty_chg
                                           label "Qty Required".
 define new shared variable netgr          like mfc_logical initial yes
                                           label "Use Work Center Inventory".
-define new shared variable detail_display like mfc_logical
-                  label "Detail Requirements" initial yes.
+define new shared variable detail_display like mfc_logical initial yes
+                                          label "Detail Requirements".
 define new shared variable um             like pt_um.
 define new shared variable wc_qoh         like ld_qty_oh.
 define new shared variable temp_qty       like wod_qty_chg.
@@ -42,35 +82,53 @@ define new shared variable ord_max        like pt_ord_max.
 define new shared variable comp_max       like wod_qty_chg.
 define new shared variable pick-used      like mfc_logical.
 define new shared variable isspol         like pt_iss_pol.
-define new shared variable nbrstart       as   character format "x(10)".
-define variable l_use_ord_multiple        like mfc_logical
-                                          label "Use Order Multiple" no-undo.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
-form
-   site               colon 22
-   site1              label {t001.i} colon 49 skip
-   part               colon 22
-   part1              label {t001.i} colon 49 skip
-   comp1              colon 22
-   comp2              label {t001.i} colon 49 skip
-   wkctr              colon 22
-   wkctr1             label {t001.i} colon 49 skip
-/*   issue              colon 22                            */
-/*   issue1             label {t001.i} colon 49             */
-   reldate            colon 22
-/*   reldate1           label {t001.i} colon 49 skip(1)     */
-   netgr              colon 30
-   l_use_ord_multiple colon 30
-   detail_display     colon 30
-   nbr                colon 30
-   delete_pklst       colon 30
-with frame a side-labels width 80 attr-space.
+assign issue = today
+			 issue1 = today
+			 reldate = today
+			 reldate1 = today.
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
 
+FORM /*GUI*/
+
+/* RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/  */
+   site           label "地点" colon 22
+   site1          label "到" colon 49 skip
+   part           label "父零件" colon 22
+   part1          label "到" colon 49 skip
+   comp1          label "子零件" colon 22
+   comp2          label "到" colon 49 skip
+   wkctr          label "工作中心" colon 22
+   wkctr1         label "到" colon 49 skip
+   issue          label "生产日期" colon 22
+   issue1         label "到" colon 49
+   reldate        label "发放日期" colon 22
+   reldate1       label "到" colon 49 skip(1)
+   netgr          label "使用工作中心库存" colon 30
+   detail_display label "详细需求量" colon 30
+   nbr            label "领料单号" colon 30
+   delete_pklst   label "完成删除" colon 30
+with frame a side-labels width 80 attr-space. /* NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+ */
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+/* 取消自动翻译 Frame
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-
+*/
 if not can-find(first rpc_ctrl) then do transaction:
    create rpc_ctrl.
    release rpc_ctrl.
@@ -80,25 +138,10 @@ assign
    site  = global_site
    site1 = global_site.
 
-/*  find first qad_wkfl exclusive-lock where qad_key1 = "xxrepkup0.p"      */
-/*         and qad_key2 = "xxrepkup1.p" no-error.                          */
-/*  if available qad_wkfl then do:                                         */
-/*       assign qad_key3 = nbr.                                            */
-/*  end.                                                                   */
-/*  else do:                                                               */
-/*       create qad_wkfl.                                                  */
-/*       assign qad_key1 = "xxrepkup0.p"                                   */
-/*              qad_key2 = "xxrepkup1.p"                                   */
-/*              qad_key3 = nbr.                                            */
-/*  end.                                                                   */
-      assign nbrstart = nbr.
 repeat:
 
    find first rpc_ctrl no-lock no-error.
-
-   assign
-      l_use_ord_multiple = yes
-      nbr                = rpc_nbr_pre + string(rpc_nbr).
+   nbr = rpc_nbr_pre + string(rpc_nbr).
 
    if site1    = hi_char  then site1    = "".
    if part1    = hi_char  then part1    = "".
@@ -112,53 +155,27 @@ repeat:
    display nbr with frame a.
 
    update
-      site
-      site1
-      part
-      part1
-      comp1
-      comp2
-      wkctr
-      wkctr1
-/*      issue           */
-/*      issue1          */
-      reldate
-/*      reldate1        */
+      site  site1
+      part  part1
+      comp1 comp2
+      wkctr wkctr1
+      issue issue1
+      reldate reldate1
       netgr
-      l_use_ord_multiple
       detail_display
       nbr
       delete_pklst
    with frame a.
-   assign issue = reldate
-          issue1 = reldate
-          reldate1 = reldate.
+
    if delete_pklst then nbr = mfguser.
 
    bcdparm = "".
 
-   {gprun.i ""gpquote.p"" "(input-output bcdparm,
-                            17,
-                            site,
-                            site1,
-                            part,
-                            part1,
-                            comp1,
-                            comp2,
-                            wkctr,
-                            wkctr1,
-                            string(issue),
-                            string(issue1),
-                            string(reldate),
-                            string(reldate1),
-                            string(netgr),
-                            string(l_use_ord_multiple),
-                            string(detail_display),
-                            nbr,
-                            string(delete_pklst),
-                            null_char,
-                            null_char,
-                            null_char)"}
+   {gprun.i ""gpquote.p"" "(input-output bcdparm,16,
+        site,site1,part,part1,comp1,comp2,wkctr,wkctr1,
+        string(issue),string(issue1),string(reldate),string(reldate1),
+        string(netgr),string(detail_display),nbr,string(delete_pklst),
+        null_char,null_char,null_char,null_char)"}
 
    if site1    = "" then site1    = hi_char.
    if part1    = "" then part1    = hi_char.
@@ -179,7 +196,7 @@ repeat:
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "printer"
+   {xxgpselout.i &printType = "printer"
                &printWidth = 132
                &pagedFlag = " "
                &stream = " "
@@ -192,67 +209,23 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-  {mfphead.i}
+
+/* /*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2. */
+
+   {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
    /* APPLY TO THE REPETITVE MODULE.  THEREFORE, DO NOT CALL REPKUPA.P  */
-   for each xxwp_mst exclusive-lock where xxwp_date = reldate:
-     delete xxwp_mst.
-   end.
-   {gprun.i ""xxrepkupd0.p"" "(input l_use_ord_multiple)"}
+
+   {gprun.i ""xxrepkupd0.p""}
+
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS
       THAT WERE CREATED THIS SESSION BUT SHOULD BE DELETED         */
+
    {gprun.i ""repkupc.p""}
-   {gprun.i ""xxrepkupu0.p""}
-/* FOR EACH xxwp_mst use-index xxwp_par_part NO-LOCK WHERE : */
-/*     display  xxwp_date                                    */
-/*                 xxwp_site                                 */
-/*                 xxwp_line                                 */
-/*                 xxwp_nbr                                  */
-/*                 xxwp_part                                 */
-/*                 xxwp_par                                  */
-/*                 xxwp_qty_req                              */
-/*                 xxwp_um                                   */
-/*                 xxwp_qty_oh                               */
-/*                 xxwp_qty_all                              */
-/*                 xxwp_op                                   */
-/*                 xxwp_mch                                  */
-/*                 xxwp_start                                */
-/*             WITH WIDTH 200 STREAM-IO.                     */
-/* END.                                                      */
-/* for each xxlw_mst no-lock:                                */
-/* display xxlw_mst with width 320.                          */
-/* end.                                                      */
 
-
-   for each xxwa_det no-lock where
-            xxwa_date = issue and
-            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-        with frame x width 320
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_sn 
-       by xxwa_part by xxwa_rtime:
-       find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
-       display xxwa_nbr xxwa_recid xxwa_date xxwa_site xxwa_line xxwa_part
-               string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime 
-               xxwa_qty_pln
-               pt_mstr.pt_ord_min pt_mstr.pt__chr10
-           /*    xxwa_qty_piss xxwa_qty_siss                        */
-                 string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
-                 string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
-           /*    xxwa_pouser xxwa_podate                            */
-           /*    string(xxwa_potime,"hh:mm:ss") @ xxwa_potime       */
-               string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
-               string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
-           /*  xxwa_souser xxwa_sodate                              */
-           /*  string(xxwa_sotime,"hh:mm:ss") @  xxwa_sotime        */
-               with frame x down.
-
-       setFrameLabels(frame x:handle).
-  end.
    /* REPORT TRAILER  */
-    {mfrtrail.i}
-/* {mfreset.i} */
+   {mfrtrail.i}
    if temp_nbr = rpc_nbr_pre + string(rpc_nbr)
       and pick-used
       and not delete_pklst
