@@ -38,11 +38,6 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
-
-/*GUI preprocessor directive settings */
-&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-
 {mfdtitle.i "111.1"}
 
 define new shared variable site           like si_site.
@@ -86,17 +81,13 @@ define new shared variable isspol         like pt_iss_pol.
 nbr_replace = getTermLabel("TEMPORARY",10).
 
 assign issue = today
-			 issue1 = today
-			 reldate = today
-			 reldate1 = today.
+       issue1 = today
+       reldate = today
+       reldate1 = today.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/
-
-/* RECT-FRAME       AT ROW 1 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
- SKIP(.1)  /*GUI*/  */
+FORM
    site           label "地点" colon 22
    site1          label "到" colon 49 skip
    part           label "父零件" colon 22
@@ -113,20 +104,11 @@ FORM /*GUI*/
    detail_display label "详细需求量" colon 30
    nbr            label "领料单号" colon 30
    delete_pklst   label "完成删除" colon 30
-with frame a side-labels width 80 attr-space. /* NO-BOX THREE-D /*GUI*/.
-
- DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:HIDDEN in frame a = yes.
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
- */
+with frame a side-labels width 80 attr-space.
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
 
 /* 取消自动翻译 Frame
-/* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 */
 if not can-find(first rpc_ctrl) then do transaction:
@@ -197,7 +179,7 @@ repeat:
 
    /* OUTPUT DESTINATION SELECTION */
    {xxgpselout.i &printType = "printer"
-               &printWidth = 132
+               &printWidth = 130
                &pagedFlag = " "
                &stream = " "
                &appendToFile = " "
@@ -209,9 +191,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-
-/* /*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2. */
-
+ 
    {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */

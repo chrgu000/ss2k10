@@ -22,6 +22,7 @@ define variable vtype  as character format "x(2)" label "ABC_ALLOCATE".
 define variable vdesc1 like pt_desc1.
 define variable pnbr like xxwa_nbr.
 define variable vqty  as decimal no-undo.
+define variable tax_bonded as logical no-undo.
 /* SELECT FORM */
 form
    site   colon 20
@@ -31,7 +32,9 @@ form
    issue  colon 20
    nbr    colon 20
    nbr1   label {t001.i} colon 50 skip(1)
-   cate   colon 20 skip(1)
+   cate   colon 20 skip
+   tax_bonded  colon 20 skip(1)
+
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -45,14 +48,14 @@ repeat:
     if issue = low_date then issue = ?.
 
 if c-application-mode <> 'web' then
-update site site1 line line1 issue nbr nbr1 cate
+update site site1 line line1 issue nbr nbr1 cate tax_bonded
        with frame a.
 if index("APS",cate) = 0 then do:
     {mfmsg.i 4212 3}
     undo,retry.
 end.
 {wbrp06.i &command = update
-          &fields = " site site1 line line1 issue nbr nbr1 cate "
+          &fields = " site site1 line line1 issue nbr nbr1 cate tax_bonded "
           &frm = "a"}
 
 if (c-application-mode <> 'web') or
@@ -119,11 +122,13 @@ do on error undo, return error on endkey undo, return error:
             xxwa_date = issue  and
             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")
+            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
+            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
+             (tax_bonded and substring(xxwa_part,1,1)= "P"))
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 
+          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else
           								  (if pt__chr10 = "A" then pt__dec01 else 0)
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
@@ -134,7 +139,8 @@ do on error undo, return error on endkey undo, return error:
                  vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL":
+            and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
+       break by xxwd_line:
             	if vtype = "A" then assign vqty = xxwa__dec01.
             								 else assign vqty = xxwd_qty_plan.
             	if vqty > 0 then do:
@@ -166,11 +172,13 @@ do on error undo, return error on endkey undo, return error:
               xxwa_date = issue  and
               xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
               xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")
+              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")and
+            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
+             (tax_bonded and substring(xxwa_part,1,1)= "P"))
         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else 
+          assign vMultiple = if pt__chr10 = "C" Then pt_ord_mult else
           								  (if pt__chr10 = "A" then pt__dec01 else 0)
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
@@ -181,7 +189,7 @@ do on error undo, return error on endkey undo, return error:
                  vdesc1 = "".
        end.
        for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid:
+            and xxwd_recid = xxwa_recid break by xxwd_line:
             	if vtype = "A" then assign vqty = xxwa__dec01.
             						  	 else assign vqty = xxwd_qty_plan.
             	if vqty > 0 then do:
