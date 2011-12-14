@@ -138,6 +138,8 @@ end.
 
 partloop:
 do on error undo,retry on endkey undo,leave :
+        find xxinv_mstr where xxinv_nbr = v_nbr no-lock no-error.
+        v_inv_pm = if avail xxinv_mstr then xxinv_pm else no .
         find xxship_det 
             use-index xxship_line 
             where xxship_nbr   = v_nbr  
@@ -145,8 +147,7 @@ do on error undo,retry on endkey undo,leave :
             and   xxship_line  = line 
         exclusive-lock no-error.
         if not available xxship_det then do on error undo, retry :
-            find xxinv_mstr where xxinv_nbr = v_nbr no-lock no-error.
-            v_inv_pm = if avail xxinv_mstr then xxinv_pm else no .
+
 
             {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1} 
             create xxship_det.
@@ -158,7 +159,10 @@ do on error undo,retry on endkey undo,leave :
                 xxship_rate  = if xxship_curr = base_curr then 1 else 0
                 xxship_type  = "Z" 
                 xxship_site  = if avail xxinv_mstr then xxinv_site else "GSA01".
-
+        end. /*if not available xxship_det*/
+        else do:
+            {pxmsg.i &MSGNUM=10 &ERRORLEVEL=1} 
+        end.
 
             update 
                 xxship_part 
@@ -180,11 +184,6 @@ do on error undo,retry on endkey undo,leave :
             xxship_part2 = vp_part .  /*ÕÑºÍÍ¼ºÅ*/
             xxship_pm    = v_inv_pm .     
 
-
-        end. /*if not available xxship_det*/
-        else do:
-            {pxmsg.i &MSGNUM=10 &ERRORLEVEL=1} 
-        end.
 
 
 
