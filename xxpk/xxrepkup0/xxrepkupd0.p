@@ -130,7 +130,6 @@ assign
    pick-used   = no
    temp_nbr    = nbr.
 
-
 run gett0(input reldate, input reldate1,
           input site, input site1,
           input wkctr, input wkctr1).
@@ -566,7 +565,6 @@ by wr_start by wr_part by wr_op
 
 end.
 
-
 /* 资料写入xxwa_det. */
  for each xxwa_det exclusive-lock where
           xxwa_date >= issue and xxwa_date <= issue1 and
@@ -580,7 +578,6 @@ end.
      end.
      delete xxwa_det.   /*明细表*/
  end.
-
 
 for each tmp_file0 no-lock , each xx_pklst no-lock
     where xx_due_date = t0_date
@@ -700,6 +697,21 @@ end.
        assign vqty = xxwa_qty_pln - vqty.
     end.  /*A类物料以托数发放 C类物料以最小包装量发放*/
 
+/**************
+for each xxwa_det no-lock with frame ee width 200:
+    display xxwa_date
+            xxwa_site
+            xxwa_line
+            xxwa_par
+            xxwa_part
+            xxwa_ladnbr
+            xxwa_sn
+            string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
+            xxwa_qty_req
+            xxwa_qty_pln
+            xxwa__dec01.
+end.
+*****************/
 
     /***** 计算备料明细 ***/.
 
@@ -724,6 +736,7 @@ end.
         for each lad_det exclusive-lock where lad_dataset = "rps_det" 
              and lad_site = xxwa_site
              and lad_line = xxwa_line and lad_part = xxwa_part
+             and index(lad_nbr,xxwa_ladnbr) > 0
              and vqty > 0 and lad_qty_all > 0:
            create xxwd_det.
            assign xxwd_nbr = xxwa_nbr
@@ -746,21 +759,6 @@ end.
               assign lad_qty_all = 0
                      xxwd_qty_plan = lad_qty_all
                      vqty = vqty - lad_qty_all.
-           end.
-           if vqty > 0 then do:
-            create xxwd_det.
-            assign xxwd_nbr = xxwa_nbr
-                  xxwd_ladnbr = lad_nbr
-                  xxwd_recid = xxwa_recid
-                  xxwd_part = lad_part
-                  xxwd_site = lad_site
-                  xxwd_line = lad_line
-                  xxwd_loc = lad_loc
-                  xxwd_sn =  errornum 
-                  xxwd_lot = lad_lot
-                  xxwd_ref = lad_ref
-                  xxwd_qty_plan = vqty
-             errornum =  errornum + 1.
            end.
         end.
         
