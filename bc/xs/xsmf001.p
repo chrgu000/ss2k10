@@ -2635,7 +2635,7 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
    /*Logical Enter Cycle1145    */
    IF NOT (V1140 = "45" OR V1100 = "45" ) THEN LEAVE V1145LMAINLOOP.
      /* START  LINE :1145  1.4.5 销售出货（新）  */
-     V1145L:
+  /*  V1145L:
      REPEAT:
 
         /* --DEFINE VARIABLE -- START */
@@ -2740,7 +2740,7 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
         pause 0.
         leave V1145L.
      END.
-     PV1145 = V1145.
+     PV1145 = V1145. */
      /* END    LINE :1145  1.4.5 销售出货（新）  */
 
 

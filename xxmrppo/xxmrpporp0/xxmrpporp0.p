@@ -10,7 +10,7 @@
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
-define variable part like pt_part. /* INITIAL "MHSE02-407-0-LX". */
+define variable part like pt_part. /* INITIAL "M72059-215-1".  */
 define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
@@ -32,7 +32,7 @@ define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
 define variable detsum like mfc_logical
        label "Detail/Summary" format "Detail/Summary" initial NO.
-define variable act as logical initial YES.
+define variable act as logical initial yes.
 define variable tpoqty  like mrp_qty.
 define variable tpoqtys like mrp_qty.
 define variable tpopo   like mrp_qty.
@@ -253,6 +253,7 @@ repeat:
        end.
    end.
 
+   /* 排除节假日 */
    for each tmp_datearea exclusive-lock:
        find last qad_wkfl where qad_key1 = key1 and qad_charfld[1] = td_rule
        no-error.
@@ -389,7 +390,6 @@ repeat:
        assign tm_rule = xrule.
    end.
 
-
    /*删除不要的月份资料*/
    for each tmp_tmd exclusive-lock,
        each tmp_rule_date no-lock where trd_rule = tm_rule:
@@ -398,6 +398,7 @@ repeat:
        end.
    end.
 
+/**************************
    /*计算到货日月*/
    for each tmp_tmd use-index tm_vpa exclusive-lock where tm_rule begins "M"
        break by tm_vend by tm_month by tm_adate:
@@ -445,6 +446,32 @@ repeat:
             end.
        end.
    end.
+
+   put unformat "tmp_datearea" skip.
+   for each tmp_datearea no-lock:
+       display tmp_datearea with width 200.
+   end.
+   
+   put unformat skip(2) "tmp_rule_date" skip.
+   for each tmp_rule_date no-lock:
+       display tmp_rule_date with width 300.
+   end.
+
+   put unformat skip(2) "tmp_tmd" skip.
+   for each tmp_tmd no-lock:
+   display tmp_tmd with width 300.
+   end.
+*************************/
+
+   /* 计算到货日  */
+   for each tmp_tmd exclusive-lock:
+       find last tmp_datearea where td_rule = tm_rule
+             and td_date <= tm_sdate no-error.
+       if available tmp_tmd then do:
+          assign tm_edate = td_date.
+       end.
+   end.
+
 
    for each tmp_tmd no-lock break by tm_part by tm_month by tm_edate:
        if first-of(tm_edate) then do:

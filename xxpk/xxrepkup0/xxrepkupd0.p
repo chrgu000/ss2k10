@@ -85,6 +85,7 @@ define shared variable comp_max like wod_qty_chg.
 define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
 
+define variable aviqty as decimal.
 define variable vqty as decimal no-undo.
 define variable vtype as character no-undo.
 define variable decmult as decimal no-undo.
@@ -123,6 +124,10 @@ define temp-table xx_pklst no-undo
   fields xx_mch like wr_mch
   fields xx_start like wr_start.
 
+define temp-table xx_ld
+  fields xl_recid as integer
+  fields xl_qty   as decimal
+  index xl_recid is primary xl_recid.
 
 assign
    nbr_replace = getTermLabel("TEMPORARY",10)
@@ -714,14 +719,90 @@ end.
 *****************/
 
     /***** 计算备料明细 ***/.
-
+    empty temp-table xx_ld no-error.
+    assign errornum = 1.
     for each xxwa_det no-lock where
              xxwa_date >= issue and xxwa_date <= issue1 and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
              xxwa_qty_pln > 0
              break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
-             			 by xxwa_part by xxwa_rtime:
+                   by xxwa_part by xxwa_rtime:
+             if first-of(xxwa_part) then do:
+                assign vqty = xxwa_qty_pln.
+             end.
+              FOR EACH ld_det use-index ld_part_loc WHERE ld_part = xxwa_part 
+                   and ld_site = xxwa_site 
+                   AND can-find(first loc_mstr no-lock where loc_site = ld_site 
+                   								and loc_loc = ld_loc and loc_user2 = "Y")
+                                 NO-LOCK BY ld_lot:
+                  find first xx_ld where xl_recid = integer(recid(ld_det)) no-error.
+                  if available xx_ld then do:
+                  	 assign aviqty = ld_qty_oh - ld_qty_all - xl_qty.
+                  end.
+                  else do:
+                       assign aviqty = ld_qty_oh - ld_qty_all.
+                  end.
+                  if aviqty <= 0 then next.
+                  IF vqty > 0 THEN DO:
+                    IF vqty >= aviqty THEN DO:
+                        CREATE xxwd_det.
+                        assign xxwd_nbr = xxwa_nbr
+                               xxwd_ladnbr = ""
+                               xxwd_recid = xxwa_recid
+                               xxwd_part = ld_part
+                               xxwd_site = ld_site
+                               xxwd_line = xxwa_line
+                               xxwd_loc = ld_loc
+                               xxwd_sn =  errornum
+                               xxwd_lot = ld_lot
+                               xxwd_ref = ld_ref
+                               xxwd_qty_plan  = aviqty.
+                               vqty = vqty - aviqty.
+                         errornum = errornum + 1.
+                         find first xx_ld where xl_recid = integer(recid(ld_det)) no-error.
+                         if not available xx_ld then do:
+                         	  create xx_ld.
+                         	  assign xl_recid = integer(recid(ld_det)).
+                         end.
+                          	assign xl_qty = xl_qty + aviqty.
+                    END.
+                    ELSE DO:
+                        CREATE xxwd_det.
+                        assign xxwd_nbr = xxwa_nbr
+                               xxwd_ladnbr = ""
+                               xxwd_recid = xxwa_recid
+                               xxwd_part = ld_part
+                               xxwd_site = ld_site
+                               xxwd_line = xxwa_line
+                               xxwd_loc = ld_loc
+                               xxwd_sn =  errornum
+                               xxwd_lot = ld_lot
+                               xxwd_ref = ld_ref
+                               xxwd_qty_plan = vqty.
+                               vqty = 0.
+                         errornum = errornum + 1.
+                         find first xx_ld where 
+                         				    xl_recid = integer(recid(ld_det)) no-error.
+                         if not available xx_ld then do:
+                         	  create xx_ld.
+                         	  assign xl_recid = integer(recid(ld_det)).
+                         end.
+                          	xl_qty = xl_qty + vqty.
+                    END.
+                END.
+
+              end.   /* FOR EACH ld_det */
+
+
+
+
+
+
+
+
+
+/****
         if first-of(xxwa_nbr) then errornum = 1.
         if first-of(xxwa_part) then do:
            assign decmult = 1
@@ -731,9 +812,9 @@ end.
               if pt_mstr.pt__chr10 = "A" then decmult = pt_mstr.pt__dec01.
                                          else decmult = pt_mstr.pt_ord_mult.
            end.
-        end.
+         end.
         assign vqty = max(xxwa_qty_pln - vqty , 0).
-        for each lad_det exclusive-lock where lad_dataset = "rps_det" 
+        for each lad_det exclusive-lock where lad_dataset = "rps_det"
              and lad_site = xxwa_site
              and lad_line = xxwa_line and lad_part = xxwa_part
              and index(lad_nbr,xxwa_ladnbr) > 0
@@ -746,7 +827,7 @@ end.
                   xxwd_site = lad_site
                   xxwd_line = lad_line
                   xxwd_loc = lad_loc
-                  xxwd_sn =  errornum 
+                  xxwd_sn =  errornum
                   xxwd_lot = lad_lot
                   xxwd_ref = lad_ref.
            errornum =  errornum + 1.
@@ -761,8 +842,8 @@ end.
                      vqty = vqty - lad_qty_all.
            end.
         end.
-        
-/****        if vqty > 0 then do:
+
+    if vqty > 0 then do:
         for each ld_det exclusive-lock where ld_site = xxwa_site and ld_line = xxwa_line
              and ld_part = xxwa_part and vqty > 0 and ld_qty_oh - ld_qty_all > 0
              and can-find(first loc_mstr no-lock where loc_site = ld_site
@@ -784,7 +865,7 @@ end.
                   assign vqty = 0.
              end.
              else do:
-             		create xxwd_det.
+                create xxwd_det.
                 assign xxwd_nbr = xxwa_nbr
                        xxwd_ladnbr = ""
                        xxwd_recid = xxwa_recid
@@ -801,7 +882,7 @@ end.
              end.
         end.
         end.
-*****/        
+*****/
     end.
 
 
