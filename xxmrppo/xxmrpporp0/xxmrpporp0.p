@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111205.1"}
+{mfdtitle.i "111216.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -37,6 +37,8 @@ define variable tpoqty  like mrp_qty.
 define variable tpoqtys like mrp_qty.
 define variable tpopo   like mrp_qty.
 define variable tpotpo  like mrp_qty.
+define variable T       as   logical.
+
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -97,7 +99,8 @@ form
    area   colon 25 areaDesc no-label
    buyer  colon 25 skip(1)
    detsum colon 25
-   act    colon 25 skip(1)
+   act    colon 25
+   t      colon 25 skip(1)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -124,10 +127,11 @@ repeat:
    if part1 = hi_char then part1 = "".
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 due vend area buyer detsum act with frame a.
+      update site site1 part part1 due vend area buyer detsum act t
+      with frame a.
 
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 due vend area buyer detsum act "
+      &fields = " site site1 part part1 due vend area buyer detsum act t "
       &frm = "a"}
 
    if (c-application-mode <> 'web') or
@@ -470,7 +474,7 @@ repeat:
        end.
    end.
 
-	 /*    合并非第一笔日期到第一笔日期.	 */
+   /*    合并非第一笔日期到第一笔日期.   */
    for each tmp_po exclusive-lock,
        each pt_mstr no-lock where pt_part = tpo_part
         and pt_rev = "1" break by tpo_part by tpo_due:
@@ -591,10 +595,12 @@ repeat:
                 break by tm_part by tm_month by tm_sdate:
             find first code_mstr no-lock where code_fldname = "vd__chr03"
                    and code_value = tm_rule0 no-error.
+            if (act and tm_qty > 0) or (not act) then do:
             export delimiter "~011" tm_vend tm_part tm_rule0 tm_sdate
                              tm_edate tm_qty weekday(tm_sdate) - 1
                              weekday(tm_edate) - 1
                              code_cmmt when available code_mstr tm_rule.
+            end.
        end.
     end.      /*if detsum then do:    */
     else do:  /* display summary data */
@@ -625,30 +631,31 @@ repeat:
                        qad_key2 = tpo_part.
             end.
          end.
-
-         for each qad_wkfl use-index qad_index2 where qad_key1 = key1 + "_Det"
-             break by qad_key1 by qad_key2:
-             for each tmp_po exclusive-lock where tpo_part = qad_key2
-                 break by tpo_part by tpo_due:
-                 if first-of(tpo_part) then do:
-                    assign qtytemp = 0.
-                 end.
-                 if qtytemp = 0 and tpo_qty >= 0 then do:
-                    next.
-                 end.
-                 if qtytemp <= 0 then do:
-                    assign qtytemp = qtytemp + tpo_qty.
-                    if qtytemp >= 0 then do:
-                       assign tpo_qty = qtytemp.
+         if t then do:
+            for each qad_wkfl use-index qad_index2
+               where qad_key1 = key1 + "_Det"
+                break by qad_key1 by qad_key2:
+                for each tmp_po exclusive-lock where tpo_part = qad_key2
+                    break by tpo_part by tpo_due:
+                    if first-of(tpo_part) then do:
                        assign qtytemp = 0.
                     end.
-                    else do:
-                       assign tpo_qty = 0.
+                    if qtytemp = 0 and tpo_qty >= 0 then do:
+                       next.
                     end.
-                 end.
-             end.
-         end.
-
+                    if qtytemp <= 0 then do:
+                       assign qtytemp = qtytemp + tpo_qty.
+                       if qtytemp >= 0 then do:
+                          assign tpo_qty = qtytemp.
+                          assign qtytemp = 0.
+                       end.
+                       else do:
+                          assign tpo_qty = 0.
+                       end.
+                    end.
+                end.
+            end.
+         end.       /** if t then do:   */
          for each tmp_po no-lock
              where (tpo_qty > 0 or tpo_fut) or not act
              break by tpo_nbr by tpo_vend by tpo_part by tpo_due:
@@ -669,10 +676,12 @@ repeat:
                  if available code_mstr then do:
                     assign areaDesc = code_cmmt.
                  end.
+                 if (act and tpoqty > 0) or (not act) then do:
                  export delimiter "~011" tpo_nbr tpo_vend tpo_part tpoqty
                         tpo_due tpo_type tpoqtys tpopo tpotpo
                         weekday(tpo_due) - 1
                         tpo_rule0 areaDesc.
+                 end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.
          end.
