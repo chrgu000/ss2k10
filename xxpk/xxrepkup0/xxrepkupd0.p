@@ -1,4 +1,4 @@
-/* GUI CONVERTED from repkupd.p (converter v1.76) Wed Dec 18 20:55:28 2002 */
+/* GUI CONVERTED from repkupd.p (converter v1.76) Wed Dec 18 20:55:28 2002    */
 /* repkupd.p - REPETITIVE PICKLIST CALCULATION                                */
 
 
@@ -141,6 +141,12 @@ run gett0(input reldate, input reldate1,
 
 /* FIND AND DISPLAY */
 /* rps_mstr 重复生产排程表 */
+
+/* for each qad_wkfl no-lock where qad_key1 = "xxpsref":               */
+/*    delete qad_wkfl.                                                 */
+/* end.                                                                */
+/* assign errornum = 1.                                                */
+
 for each rps_mstr no-lock
 where rps_part >= part and rps_part <= part1
   and rps_site >= site and rps_site <= site1
@@ -253,7 +259,24 @@ by wr_start by wr_part by wr_op
             desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
          desc2 = "".
       end. /* if first-of (wod_deliver) else */
-
+      create xx_pklst.
+      assign xx_site = wo_site
+             xx_line = wr_wkctr
+             xx_nbr = string(nbr)
+             xx_comp = wod_part
+             xx_qty_req = max(wod_qty_req - wod_qty_iss,0)
+             xx_um = um
+             xx_par = wr_part
+             xx_due_date = wo_due_date
+             xx_op = wr_op
+             xx_mch = wr_mch
+             xx_start =wr_start.
+/*      create qad_wkfl.                                          */
+/*      assign qad_key1 = "xxpsref"                               */
+/*             qad_key2 = string(errnumber)                       */
+/*             qad_key3 = wod_part                                */
+/*             qad_key5 = wr_part                                 */
+/*             qad_decfld[1] = max(wod_qty_req - wod_qty_iss,0).  */
       if detail_display then do:
          display
             max(wod_qty_req - wod_qty_iss,0) @ wod_qty_req
@@ -263,20 +286,6 @@ by wr_start by wr_part by wr_op
             wr_op
             wr_mch
             wr_start WITH STREAM-IO /*GUI*/ .
-
-         create xx_pklst.
-         assign xx_site = wo_site
-                xx_line = wr_wkctr
-                xx_nbr = string(nbr)
-                xx_comp = wod_part
-                xx_qty_req =  max(wod_qty_req - wod_qty_iss,0)
-                xx_um = um
-                xx_par = wr_part
-                xx_due_date = wo_due_date
-                xx_op = wr_op
-                xx_mch = wr_mch
-                xx_start =wr_start.
-
       end.
       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
       run store_demand (buffer wod_det, buffer wr_route).
@@ -561,7 +570,6 @@ by wr_start by wr_part by wr_op
 
             delete shortages.
          end.
-
          hide frame shortage.
          view frame b.
          if not last (wr_wkctr) then page.
@@ -588,22 +596,30 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
     where xx_due_date = t0_date
       and xx_line = t0_line
       and xx_site = t0_site
-      and xx_par = t0_part by t0_date by t0_site by t0_line by t0_start:
-      create xxwa_det.
-      assign xxwa_date = t0_date
-             xxwa_site = t0_site
-             xxwa_line = t0_line
-             xxwa_par  = t0_par
-             xxwa_part = xx_comp
-             xxwa_ladnbr = xx_nbr
-             xxwa_sn = t0_sn
-             xxwa_rtime = t0_start
-             xxwa_qty_req = round(t0_tttime / t0_wktime * xx_qty_req,0)
-             xxwa_qty_pln = round(t0_tttime / t0_wktime * xx_qty_req,0)
-             xxwa__dec01 = round(t0_tttime / t0_wktime * xx_qty_req,0)
-             xxwa_recid = recid(xxwa_det)
-             .
-
+      and xx_par = t0_part break by t0_date by t0_site by t0_line
+                                 by t0_start by xx_comp :
+      if first-of(xx_comp) then do:
+         assign aviqty = 0
+                vqty = 0.
+      end.
+      assign vqty = vqty + xx_qty_req
+             aviqty = aviqty +  round(t0_tttime / t0_wktime * xx_qty_req,0).
+      if last-of(xx_comp) then do:
+         create xxwa_det.
+         assign xxwa_date = t0_date
+                xxwa_site = t0_site
+                xxwa_line = t0_line
+                xxwa_par  = t0_par
+                xxwa_part = xx_comp
+                xxwa_ladnbr = xx_nbr
+                xxwa_sn = t0_sn
+                xxwa_rtime = t0_start
+                xxwa_qty_req = vqty
+                xxwa_qty_pln = aviqty
+                xxwa__dec01 = aviqty
+                xxwa_recid = recid(xxwa_det)
+                .
+      end.
 /*
     display t0_date t0_site t0_line t0_part
             t0_wktime
@@ -674,53 +690,90 @@ end.
       assign xxwa_nbr = vtype .
   end.
 
-/*A类物料以托数发放 C类物料以最小包装量发放*/
-    for each xxwa_det exclusive-lock where
-             xxwa_date >= issue and xxwa_date <= issue1 and
-             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__dec01) no-lock
-            WHERE pt_mstr.pt_part = xxwa_part and
-                ((pt_mstr.pt__chr10 = "C" or pt_mstr.pt__chr10 = "A") and
-                  pt_mstr.pt__dec01 <> 0)
-    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
-       if first-of(xxwa_part) then do:
-       if (pt_mstr.pt__chr10 = "A" or pt_mstr.pt__chr10 = "C")
-          then decmult = pt_mstr.pt__dec01.
-          assign vqty = xxwa_qty_req.
-       end.
-       else do:
-          assign vqty = xxwa_qty_req - vqty.
-       end.
-       if vqty MODULO decmult = 0 then do:
-            assign xxwa_qty_pln = (truncate(vqty / decmult,0)) * decmult.
-       end.
-       else do:
-            assign xxwa_qty_pln = (truncate(vqty / decmult,0) + 1)
-                                * decmult.
-       end.
-       assign vqty = xxwa_qty_pln - vqty.
-    end.  /*A类物料以托数发放 C类物料以最小包装量发放*/
 
-/**************
-for each xxwa_det no-lock with frame ee width 200:
-    display xxwa_date
-            xxwa_site
-            xxwa_line
-            xxwa_par
-            xxwa_part
-            xxwa_ladnbr
-            xxwa_sn
-            string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
-            xxwa_qty_req
-            xxwa_qty_pln
-            xxwa__dec01.
-end.
-*****************/
-
-    /***** 计算备料明细 ***/.
+    /***** 计算备料明细 ***/
     empty temp-table xx_ld no-error.
-    assign errornum = 1.
+    assign errornum = 10000.
+
+    for each xxwa_det no-lock where
+         xxwa_date >= issue and xxwa_date <= issue1 and
+         xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+         xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+         xxwa_qty_pln > 0
+         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
+               by xxwa_part by xxwa_rtime:
+    if first-of(xxwa_part) then do:
+       assign vqty = xxwa_qty_pln.
+    end.
+    for each lad_det exclusive-lock where lad_dataset = "rps_det"
+             and lad_site = xxwa_site
+             and lad_line = xxwa_line
+             and lad_part = xxwa_part
+             and index(lad_nbr,xxwa_ladnbr) > 0
+        AND can-find(first loc_mstr no-lock where loc_site = lad_site
+                          and loc_loc = lad_loc and loc_user2 = "Y")
+        by lad_lot:
+        find first xx_ld where
+                   xl_recid = integer(recid(lad_det)) no-error.
+        if available xx_ld then do:
+           assign aviqty = lad_qty_all - xl_qty.
+        end.
+        else do:
+           assign aviqty = lad_qty_all.
+        end.
+     if aviqty <= 0 then next.
+          IF vqty > 0 THEN DO:
+            IF vqty >= aviqty THEN DO:
+                CREATE xxwd_det.
+                assign xxwd_nbr = xxwa_nbr
+                       xxwd_ladnbr = lad_nbr
+                       xxwd_recid = xxwa_recid
+                       xxwd_part = lad_part
+                       xxwd_site = lad_site
+                       xxwd_line = xxwa_line
+                       xxwd_loc = lad_loc
+                       xxwd_sn =  errornum
+                       xxwd_lot = lad_lot
+                       xxwd_ref = lad_ref
+                       xxwd_qty_plan  = aviqty.
+                       vqty = vqty - aviqty.
+                 errornum = errornum + 1.
+                 find first xx_ld where
+                            xl_recid = integer(recid(lad_det)) no-error.
+                 if not available xx_ld then do:
+                    create xx_ld.
+                    assign xl_recid = integer(recid(lad_det)).
+                 end.
+                    assign xl_qty = xl_qty + aviqty.
+            END.
+            ELSE DO:
+                CREATE xxwd_det.
+                assign xxwd_nbr = xxwa_nbr
+                       xxwd_ladnbr = lad_nbr
+                       xxwd_recid = xxwa_recid
+                       xxwd_part = lad_part
+                       xxwd_site = lad_site
+                       xxwd_line = xxwa_line
+                       xxwd_loc = lad_loc
+                       xxwd_sn =  errornum
+                       xxwd_lot = lad_lot
+                       xxwd_ref = lad_ref
+                       xxwd_qty_plan = vqty.
+                       vqty = 0.
+                 errornum = errornum + 1.
+                 find first xx_ld where
+                            xl_recid = integer(recid(lad_det)) no-error.
+                 if not available xx_ld then do:
+                    create xx_ld.
+                    assign xl_recid = integer(recid(lad_det)).
+                 end.
+                    xl_qty = xl_qty + vqty.
+            END.
+        END.    /* IF vqty > 0 THEN DO: */
+    end.  /*for each lad_det*/
+    end.
+
+/************************
     for each xxwa_det no-lock where
              xxwa_date >= issue and xxwa_date <= issue1 and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -735,8 +788,8 @@ end.
            and ld_site = xxwa_site
            AND can-find(first loc_mstr no-lock where loc_site = ld_site
                           and loc_loc = ld_loc and loc_user2 = "Y")
-                         NO-LOCK BY ld_lot:
-          find first xx_ld where 
+                   NO-LOCK BY ld_lot:
+          find first xx_ld where
                      xl_recid = integer(recid(ld_det)) no-error.
           if available xx_ld then do:
              assign aviqty = ld_qty_oh - ld_qty_all - xl_qty.
@@ -761,7 +814,7 @@ end.
                        xxwd_qty_plan  = aviqty.
                        vqty = vqty - aviqty.
                  errornum = errornum + 1.
-                 find first xx_ld where 
+                 find first xx_ld where
                             xl_recid = integer(recid(ld_det)) no-error.
                  if not available xx_ld then do:
                     create xx_ld.
@@ -793,16 +846,54 @@ end.
                     xl_qty = xl_qty + vqty.
             END.
         END.
-
       end.   /* FOR EACH ld_det */
 
-
-
-
-
-
-
-
+    end.
+************************/
+/*A类物料以托数发放 C类物料以最小包装量发放*/
+/************************
+    for each xxwa_det exclusive-lock where
+             xxwa_date >= issue and xxwa_date <= issue1 and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__dec01) no-lock
+            WHERE pt_mstr.pt_part = xxwa_part and
+                ((pt_mstr.pt__chr10 = "C" or pt_mstr.pt__chr10 = "A") and
+                  pt_mstr.pt__dec01 <> 0)
+    break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
+       if first-of(xxwa_part) then do:
+       if (pt_mstr.pt__chr10 = "A" or pt_mstr.pt__chr10 = "C")
+          then decmult = pt_mstr.pt__dec01.
+          assign vqty = xxwa_qty_req.
+       end.
+       else do:
+          assign vqty = xxwa_qty_req - vqty.
+       end.
+       if vqty MODULO decmult = 0 then do:
+            assign xxwa_qty_pln = (truncate(vqty / decmult,0)) * decmult.
+       end.
+       else do:
+            assign xxwa_qty_pln = (truncate(vqty / decmult,0) + 1)
+                                * decmult.
+       end.
+       assign vqty = xxwa_qty_pln - vqty.
+    end.  /*A类物料以托数发放 C类物料以最小包装量发放*/
+************************/
+/***********************
+for each xxwa_det no-lock with frame ee width 200:
+    display xxwa_date
+            xxwa_site
+            xxwa_line
+            xxwa_par
+            xxwa_part
+            xxwa_ladnbr
+            xxwa_sn
+            string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
+            xxwa_qty_req
+            xxwa_qty_pln
+            xxwa__dec01.
+end.
+*****************/
 
 /****
         if first-of(xxwa_nbr) then errornum = 1.
@@ -885,7 +976,7 @@ end.
         end.
         end.
 *****/
-    end.
+
 
 
 /* ========================================================= */
@@ -1021,7 +1112,10 @@ define variable vtime   as decimal.
 DEFINE VARIABLE recno   AS RECID.
 
 EMPTY TEMP-TABLE tmp_file0 NO-ERROR.
-
+for each qad_wkfl where qad_key1 = "xxrepkup0.p" and qad_datefld[1] >= idate
+                    and qad_datefld[1] <= idate1:
+     delete qad_wkfl.
+end.
 for each rps_mstr no-lock where rps_rel_date >= idate
      and rps_rel_date <= idate1
      and rps_line >= iLine
@@ -1085,5 +1179,19 @@ for each rps_mstr no-lock where rps_rel_date >= idate
            END.
        END.
 end.
-
+for each tmp_file0 no-lock:
+    create qad_wkfl.
+    assign qad_key1 = "xxrepkup0.p"
+           qad_key2 = string(t0_start,"HH:MM:SS") + t0_part + string(t0_qty)
+           qad_key3 = rps_part
+           qad_datefld[1] = rps_rel_date
+           qad_charfld[1] = rps_site
+           qad_charfld[2] = rps_line
+           qad_intfld[2] = t0_end
+           qad_intfld[1] = t0_start
+           qad_decfld[1] = t0_tttime / t0_wktime
+           qad_decfld[2] = t0_qty
+           qad_decfld[3] = t0_qtya
+           .
+end.
 END PROCEDURE.

@@ -3,7 +3,7 @@
 /* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
-
+/*** 测试程序,查看同个料号同个时间点是否合并     *****************************/
 {mfdtitle.i "111217.1"}
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -67,42 +67,13 @@ end.
         /* SELECT PRINTER  */
   {mfselbpr.i "printer" 200}
   {mfphead.i}
+		for each xxwa_det no-lock break by xxwa_rtime by xxwa_part
+				with frame xx width 200:
+				  setFrameLabels(frame xx:handle).
+			display xxwa_par xxwa_part xxwa_qty_req xxwa_qty_pln
+						string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime.
+		end.
 
-  for each qad_wkfl no-lock where qad_key1 = "xxrepkup0.p"
-      with frame x width 200:
-  setFrameLabels(frame x:handle).
-  display  qad_key3 format "x(18)" label "Item"
-           qad_datefld[1] label "issue"
-           qad_charfld[1] label "site"
-           qad_charfld[2] label "line"
-           string(qad_intfld[1],"hh:mm:ss") label "Stime"
-           string(qad_intfld[2],"hh:mm:ss") label "Etime"
-           qad_decfld[1] label "schUM"
-           qad_decfld[2] label "qty"
-           qad_decfld[3] label "req".
-  end.
-
-   for each xxwa_det no-lock where
-            xxwa_date = issue and (xxwa_date <= issue1 or issue1 = ?) and
-            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= line and (xxwa_line <= line1 or line1 = "")
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid
-        with frame y width 200:
-        setFrameLabels(frame y:handle).
-        find first pt_mstr no-lock where pt_part = xxwa_part no-error.
-        if available pt_mstr then do:
-        display xxwa_date
-                xxwa_site
-                xxwa_line
-                xxwa_par
-                xxwa_part
-                pt__chr10
-                xxwa_qty_req
-                xxwa_qty_pln
-                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime.
-        end.
-       {mfrpchk.i}
-  end.
   /*  REPORT TRAILER  */
    {mfrtrail.i}
 

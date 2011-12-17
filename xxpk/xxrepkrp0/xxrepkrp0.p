@@ -1,3 +1,4 @@
+
 /* xxrepkrp0.p - REPETITIVE PICKLIST report                                  */
 /*V8:ConvertMode=FullGUIReport                                               */
 /* REVISION: 0CYH LAST MODIFIED: 05/30/11   BY: zy                           */
@@ -6,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "111207.1"}
+{mfdtitle.i "111217.2"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -95,7 +96,7 @@ end.
 mainloop:
 do on error undo, return error on endkey undo, return error:
   export delimiter "~011" ""
-         "xxrepkrp1.p" "" "" ""
+         "xxrepkrp0.p" "" "" ""
          getTermLabel("P_I_C_K_U_P_S_E_N_D_P_R_I_N_T",30).
   export delimiter "~011"
          getTermLabel("Type",12)
@@ -118,18 +119,32 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("STATUS",12)
          .
   if cate = "A" or cate = "P" then do:
-    for each xxwa_det no-lock where
-            xxwa_date = issue  and
-            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-            xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-            xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
-            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
-             (tax_bonded and substring(xxwa_part,1,1)= "P"))
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
+ 		 run printP.
+  end.
+  if cate = "A" or cate = "S" then do:
+     run printS.
+  end.
+  /*  REPORT TRAILER  */
+ end.
+ {mfreset.i}
+end.  /* repeat: */
+
+{wbrp04.i &frame-spec = a}
+
+procedure printP:
+   for each xxwa_det no-lock where
+             xxwa_date = issue  and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+             xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
+           ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
+            (tax_bonded and substring(xxwa_part,1,1)= "P")),
+         each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
+          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
+        break by xxwd_line by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if (pt__chr10 = "C" or pt__chr10 = "A")
-          		              then pt__dec01 else 0
+          assign vMultiple = pt__dec01
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
@@ -138,9 +153,6 @@ do on error undo, return error on endkey undo, return error:
                  vtype = ""
                  vdesc1 = "".
        end.
-       for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
-       break by xxwd_recid by xxwd_line by xxwd_part by xxwd_loc by xxwd_lot:
             	if (vtype = "A" or vtype = "C") then assign vqty = xxwa__dec01.
             	if vqty > 0 then do:
                  export delimiter "~011"
@@ -164,21 +176,22 @@ do on error undo, return error on endkey undo, return error:
                         xxwd_pstat.
              end.
        end.
-    end.
-  end.
-  if cate = "A" or cate = "S" then do:
-     for each xxwa_det no-lock where
+end procedure.
+
+
+procedure printS:
+ for each xxwa_det no-lock where
               xxwa_date = issue  and
               xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
               xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
               xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")and
             ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
-             (tax_bonded and substring(xxwa_part,1,1)= "P"))
-        break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr by xxwa_recid:
+             (tax_bonded and substring(xxwa_part,1,1)= "P")),
+         each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
+          and xxwd_recid = xxwa_recid break by xxwd_line by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = if (pt__chr10 = "C" or pt__chr10 = "A")
-          		              then pt__dec01 else 0
+          assign vMultiple = pt__dec01
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
@@ -187,37 +200,27 @@ do on error undo, return error on endkey undo, return error:
                  vtype = ""
                  vdesc1 = "".
        end.
-       for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid break by xxwd_line:
-            	if (vtype = "A" or vtype = "C") then assign vqty = xxwa__dec01.
-            	if vqty > 0 then do:
-                 export delimiter "~011"
-                        "S"
-                        "s" + xxwa_nbr
-                        xxwd_line
-                        string(xxwa_rtime,"hh:mm:ss")
-                        string(xxwa_sstime,"hh:mm:ss")
-                        string(xxwa_setime,"hh:mm:ss")
-                        xxwd_sn
-                        substring(xxwd_ladnbr,9)
-                        xxwa_part
-                        vdesc1
-                        truncate(xxwa_qty_pln,0)
-                        vMultiple
-                        vtype
-                        max(truncate(xxwd_qty_plan,0),0)
-                        "P-ALL"
-                        xxwd_lot
-                        truncate(xxwd_qty_siss,0)
-                        xxwd_sstat.
-              end.
-       end.
-    end.
-  end.
-  /*  REPORT TRAILER  */
- end.
- {mfreset.i}
-end.  /* repeat: */
-
-{wbrp04.i &frame-spec = a}
-
+       if (vtype = "A" or vtype = "C") then assign vqty = xxwa__dec01.
+       if vqty > 0 then do:
+           export delimiter "~011"
+                  "S"
+                  "s" + xxwa_nbr
+                  xxwd_line
+                  string(xxwa_rtime,"hh:mm:ss")
+                  string(xxwa_sstime,"hh:mm:ss")
+                  string(xxwa_setime,"hh:mm:ss")
+                  xxwd_sn
+                  substring(xxwd_ladnbr,9)
+                  xxwa_part
+                  vdesc1
+                  truncate(xxwa_qty_pln,0)
+                  vMultiple
+                  vtype
+                  max(truncate(xxwd_qty_plan,0),0)
+                  "P-ALL"
+                  xxwd_lot
+                  truncate(xxwd_qty_siss,0)
+                  xxwd_sstat.
+        end.
+     end.
+end procedure.
