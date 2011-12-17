@@ -622,12 +622,10 @@ repeat:
                 break by tm_part by tm_month by tm_sdate:
             find first code_mstr no-lock where code_fldname = "vd__chr03"
                    and code_value = tm_rule0 no-error.
-            if (act and tm_qty > 0) or (not act) then do:
             export delimiter "~011" tm_vend tm_part tm_rule0 tm_sdate
                              tm_edate tm_qty weekday(tm_sdate) - 1
                              weekday(tm_edate) - 1
                              code_cmmt when available code_mstr tm_rule.
-            end.
        end.
     end.      /*if detsum then do:    */
     else do:  /* display summary data */
@@ -703,12 +701,10 @@ repeat:
                  if available code_mstr then do:
                     assign areaDesc = code_cmmt.
                  end.
-                 if (act and tpoqty > 0) or (not act) then do:
                  export delimiter "~011" tpo_nbr tpo_vend tpo_part tpoqty
                         tpo_due tpo_type tpoqtys tpopo tpotpo
                         weekday(tpo_due) - 1
                         tpo_rule0 areaDesc.
-                 end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.
          end.
