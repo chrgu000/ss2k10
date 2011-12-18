@@ -50,11 +50,13 @@
              end.
              /* pt_ord_mult Îª1.4.7¶©µ¥±¶Êý */
              /* ord_mult = pt_ord_mult. */
+/**************
        ord_mult = pt_ord_min.
              find ptp_det no-lock where ptp_part = part
                   and ptp_site = site no-error.
              if available ptp_det then ord_mult = ptp_ord_mult.
-
+*****************/
+						 ord_mult = pt__dec01.
              if icc_ascend then do:
                  if icc_pk_ord <= 2 then do:
                     {xxrepkall.i &sort1 = "(if icc_pk_ord = 1 then
