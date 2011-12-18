@@ -1,7 +1,6 @@
 /* xxrepkup0.i - REPETITIVE PICK LIST HARD ALLOCATIONS                       */
 /*V8:ConvertMode=Maintenance                                                 */
 
-
 /*临时表用于分割时间段*/
 DEFINE {1} SHARED TEMP-TABLE tmp_file0 no-undo
     FIELDS t0_date   LIKE rps_rel_date
@@ -26,6 +25,18 @@ DEFINE {1} SHARED TEMP-TABLE tmp_file1 no-undo
     fields t1_end   like xxlnw_etime
     FIELDS t1_avli AS DECIMAL.
 
+FUNCTION getMult RETURNS DECIMAL (qty as decimal, mult as decimal) :
+/*------------------------------------------------------------------------------
+  Purpose:  以倍数圆整.
+    Notes:  
+------------------------------------------------------------------------------*/
+
+  if mult <> 0 AND qty / mult <> truncate(qty / mult,0)
+  then
+      RETURN  MAX(qty,(truncate (qty / mult,0) + 1) * mult).    
+  ELSE 
+      RETURN qty.
+END FUNCTION.
 
 
 /* run gett0(input today - 2 ,input today  ,           */

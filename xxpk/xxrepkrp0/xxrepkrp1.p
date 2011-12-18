@@ -19,6 +19,8 @@ define variable vMultiple like pt_ord_mult label "Order_Multiple".
 define variable vtype    as character label "ABC_ALLOCATE".
 define variable pnbr like xxwa_nbr.
 /* SELECT FORM */
+assign issue = issue + 1
+       issue1 = issue1 + 1.
 form
    site   colon 20
    site1  label {t001.i} colon 50 skip
@@ -69,6 +71,8 @@ end.
   {mfphead.i}
 
   for each qad_wkfl no-lock where qad_key1 = "xxrepkup0.p"
+  		break by qad_charfld[1] by qad_charfld[2] by qad_datefld[1] 
+  		      by qad_intfld[1]
       with frame x width 200:
   setFrameLabels(frame x:handle).
   display  qad_key3 format "x(18)" label "Item"
@@ -94,12 +98,15 @@ end.
         display xxwa_date
                 xxwa_site
                 xxwa_line
-                xxwa_par
                 xxwa_part
                 pt__chr10
+                xxwa_ord_mult
                 xxwa_qty_req
                 xxwa_qty_pln
-                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime.
+                string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
+                xxwa_qty_loc
+                xxwa_qty_need
+                xxwa__dec03.
         end.
        {mfrpchk.i}
   end.

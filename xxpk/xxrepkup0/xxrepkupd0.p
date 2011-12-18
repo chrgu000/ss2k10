@@ -699,7 +699,6 @@ end.
   end. /* for each xxwa_det exclusive-lock where  */
 
   /*计算需要物料的项次,时间点*/
-
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and xxwa_date <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -714,18 +713,30 @@ end.
  			  end. 
  			  if aviqty > xxwa_qty_pln then do:
  			  	 assign xxwa_qty_loc = aviqty
- 			  	        xxwa_qty_atp = aviqty - xxwa_qty_pln
+ 			  	        xxwa_ord_mult = aviqty - xxwa_qty_pln
  			  	        xxwa_qty_need = 0.
  			  	 assign aviqty = aviqty - xxwa_qty_pln.
  			  end.
  			  else do:
  			  		assign xxwa_qty_loc = aviqty
- 			  					 xxwa_qty_atp = 0
+ 			  					 xxwa_ord_mult = 0
  			  					 xxwa_qty_need =  xxwa_qty_pln - aviqty.
  			  					 aviqty = 0.
  			  					 
  		    end.
   end.
+
+	/* 将ABC类的倍数记录在xxwa_ord_mult */
+	  for each xxwa_det exclusive-lock:
+	  		find first pt_mstr no-lock where pt_part = xxwa_part no-error.
+	  		if available pt_mstr and (pt__chr10 = "A" or pt__chr10 = "C")
+	  						 and pt__dec01 <> 0 then do:
+	  			   assign xxwa_ord_mult = pt__dec01.
+	  	  end.
+	  	  else do:
+	  	  		 assign xxwa_ord_mult = 1.
+	  	  end.
+	  end.
 
 
   /*计算单号,序号*/
@@ -744,9 +755,31 @@ end.
 
 
     /***** 计算备料明细 ***/
-    /** 车间库存不足才从备料单取,备料单取时按包装数取 ***********/
+    /** 从备料单取,备料单取时按包装数取 ***********/
     empty temp-table xx_ld no-error.
     assign errornum = 100.
+
+  for each xxwa_det EXCLUSIVE-LOCK where
+       xxwa_date >= issue and xxwa_date <= issue1 and
+       xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+       xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+       xxwa_qty_need > 0 AND xxwa_ord_mult <> 1
+       break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
+             by xxwa_part by xxwa_rtime:
+ 			 for each lad_det exclusive-lock where lad_dataset = "rps_det"
+             and lad_site = xxwa_site
+             and lad_line = xxwa_line
+             and lad_part = xxwa_part
+             and index(lad_nbr,xxwa_ladnbr) > 0
+        AND can-find(first loc_mstr no-lock where loc_site = lad_site
+                       and loc_loc = lad_loc and loc_user2 = "Y")
+        by lad_lot:
+        	 
+        end.
+  end.  /* for each xxwa_det */
+
+    
+/*******************    
     for each xxwa_det no-lock where
          xxwa_date >= issue and xxwa_date <= issue1 and
          xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -860,7 +893,7 @@ end.
          		assign vqty = 0.
          end.
     end.
-
+**************/
 /**************
     for each xxwa_det no-lock where
          xxwa_date >= issue and xxwa_date <= issue1 and
