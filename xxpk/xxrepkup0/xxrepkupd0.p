@@ -786,7 +786,7 @@ end.
              else do:
                 assign aviqty = lad_qty_all.
              end.
-             if aviqty >= multqty then do:
+             if aviqty > multqty then do:
                 CREATE xxwd_det.
                 assign xxwd_nbr = xxwa_nbr
                        xxwd_ladnbr = lad_nbr
@@ -824,7 +824,7 @@ end.
                        xxwd_ref = lad_ref
                        xxwd__dec01 = xxwa_qty_need
                        xxwd_qty_plan  = aviqty.
-                       vqty = vqty - aviqty.
+                       assign multqty = getmult(multqty - aviqty, xxwa_ord_mult).
                        errornum = errornum + 1.
                        find first xx_ld where
                                   xl_recid = integer(recid(lad_det)) no-error.
