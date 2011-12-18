@@ -274,9 +274,9 @@ by wr_start by wr_part by wr_op
              xx_nbr = string(nbr)
              xx_comp = wod_part
 /*             xx_qty_req = max(wod_qty_req - wod_qty_iss,0)   */
-						 xx_qty_req = wod_qty_req
-						 xx_qty_need = max(wod_qty_req - wod_qty_iss,0)
-						 xx_qty_iss = wod_qty_iss
+             xx_qty_req = wod_qty_req
+             xx_qty_need = max(wod_qty_req - wod_qty_iss,0)
+             xx_qty_iss = wod_qty_iss
              xx_um = um
              xx_par = wr_part
              xx_due_date = wo_due_date
@@ -704,41 +704,41 @@ end.
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part  by xxwa_rtime:
- 			  if first-of (xxwa_part) then do:
- 			  	 assign aviqty = 0.
- 			     for each ld_det no-lock where ld_site = xxwa_site and
-         					  ld_loc = xxwa_line and ld_part = xxwa_part:
-         					  aviqty = aviqty + ld_qty_oh.
-         	  end.
- 			  end.
- 			  if aviqty > xxwa_qty_pln then do:
- 			  	 assign xxwa_qty_loc = aviqty
- 			  	        xxwa_ord_mult = aviqty - xxwa_qty_pln
- 			  	        xxwa_qty_need = 0
- 			  	        xxwa__dec01 = 0.
- 			  	 assign aviqty = aviqty - xxwa_qty_pln.
- 			  end.
- 			  else do:
- 			  		assign xxwa_qty_loc = aviqty
- 			  					 xxwa_ord_mult = 0
- 			  					 xxwa_qty_need =  xxwa_qty_pln - aviqty
- 			  					 xxwa__dec01 = xxwa_qty_pln - aviqty.
- 			  					 aviqty = 0.
+        if first-of (xxwa_part) then do:
+           assign aviqty = 0.
+           for each ld_det no-lock where ld_site = xxwa_site and
+                    ld_loc = xxwa_line and ld_part = xxwa_part:
+                    aviqty = aviqty + ld_qty_oh.
+            end.
+        end.
+        if aviqty > xxwa_qty_pln then do:
+           assign xxwa_qty_loc = aviqty
+                  xxwa_ord_mult = aviqty - xxwa_qty_pln
+                  xxwa_qty_need = 0
+                  xxwa__dec01 = 0.
+           assign aviqty = aviqty - xxwa_qty_pln.
+        end.
+        else do:
+            assign xxwa_qty_loc = aviqty
+                   xxwa_ord_mult = 0
+                   xxwa_qty_need =  xxwa_qty_pln - aviqty
+                   xxwa__dec01 = xxwa_qty_pln - aviqty.
+                   aviqty = 0.
 
- 		    end.
+        end.
   end.
 
-	/* 将ABC类的倍数记录在xxwa_ord_mult */
-	  for each xxwa_det exclusive-lock:
-	  		find first pt_mstr no-lock where pt_part = xxwa_part no-error.
-	  		if available pt_mstr and (pt__chr10 = "A" or pt__chr10 = "C")
-	  						 and pt__dec01 <> 0 then do:
-	  			   assign xxwa_ord_mult = pt__dec01.
-	  	  end.
-	  	  else do:
-	  	  		 assign xxwa_ord_mult = 1.
-	  	  end.
-	  end.
+  /* 将ABC类的倍数记录在xxwa_ord_mult */
+    for each xxwa_det exclusive-lock:
+        find first pt_mstr no-lock where pt_part = xxwa_part no-error.
+        if available pt_mstr and (pt__chr10 = "A" or pt__chr10 = "C")
+                 and pt__dec01 <> 0 then do:
+             assign xxwa_ord_mult = pt__dec01.
+        end.
+        else do:
+             assign xxwa_ord_mult = 1.
+        end.
+    end.
 
 
   /*计算单号,序号*/
@@ -767,31 +767,26 @@ end.
          xxwa_qty_need > 0
          break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
                by xxwa_part by xxwa_rtime:
-    if first-of(xxwa_part) then do:
-       assign vqty = getmult(xxwa_qty_need , xxwa_ord_mult).
-    end.
-    else do:
-    	 assign vqty = getmult(xxwa_qty_need - vqty, xxwa_ord_mult).
-    end.
-    for each lad_det exclusive-lock where lad_dataset = "rps_det"
-             and lad_site = xxwa_site
-             and lad_line = xxwa_line
-             and lad_part = xxwa_part
-             and index(lad_nbr,xxwa_ladnbr) > 0
-        AND can-find(first loc_mstr no-lock where loc_site = lad_site
-                       and loc_loc = lad_loc and loc_user2 = "Y")
-        by lad_lot:
-        find first xx_ld where
-                   xl_recid = integer(recid(lad_det)) no-error.
-        if available xx_ld then do:
-           assign aviqty = lad_qty_all - xl_qty.
-        end.
-        else do:
-           assign aviqty = lad_qty_all.
-        end.
-     if aviqty <= 0 then next.
-          IF vqty > 0 THEN DO:
-            IF vqty >= aviqty THEN DO:
+         if first-of(xxwa_part)then do:
+            assign multqty = 0.
+         end.
+         assign multqty = getmult(xxwa_qty_need - multqty, xxwa_ord_mult).
+         for each lad_det no-lock where lad_dataset = "rps_det"
+               and index(lad_nbr,xxwa_ladnbr) > 0
+               and lad_line = xxwa_line
+               and lad_part = xxwa_part
+               and lad_site = xxwa_site
+          AND can-find(first loc_mstr no-lock where loc_site = lad_site
+                         and loc_loc = lad_loc and loc_user2 = "Y"):
+             find first xx_ld where
+                        xl_recid = integer(recid(lad_det)) no-error.
+             if available xx_ld then do:
+                assign aviqty = lad_qty_all - xl_qty.
+             end.
+             else do:
+                assign aviqty = lad_qty_all.
+             end.
+             if aviqty >= multqty then do:
                 CREATE xxwd_det.
                 assign xxwd_nbr = xxwa_nbr
                        xxwd_ladnbr = lad_nbr
@@ -803,42 +798,125 @@ end.
                        xxwd_sn =  errornum
                        xxwd_lot = lad_lot
                        xxwd_ref = lad_ref
+                       xxwd__dec01 = xxwa_qty_need
+                       xxwd_qty_plan  = multqty.
+                      errornum = errornum + 1.
+                      find first xx_ld where
+                                 xl_recid = integer(recid(lad_det)) no-error.
+                      if not available xx_ld then do:
+                         create xx_ld.
+                         assign xl_recid = integer(recid(lad_det)).
+                      end.
+                      assign xl_qty = xl_qty + multqty.
+                leave.
+             end.
+             else do:
+                CREATE xxwd_det.
+                assign xxwd_nbr = xxwa_nbr
+                       xxwd_ladnbr = lad_nbr
+                       xxwd_recid = xxwa_recid
+                       xxwd_part = lad_part
+                       xxwd_site = lad_site
+                       xxwd_line = xxwa_line
+                       xxwd_loc = lad_loc
+                       xxwd_sn =  errornum
+                       xxwd_lot = lad_lot
+                       xxwd_ref = lad_ref
+                       xxwd__dec01 = xxwa_qty_need
                        xxwd_qty_plan  = aviqty.
                        vqty = vqty - aviqty.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(lad_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(lad_det)).
-                 end.
-                    assign xl_qty = xl_qty + aviqty.
-            END.
-            ELSE DO:
-                CREATE xxwd_det.
-                assign xxwd_nbr = xxwa_nbr
-                       xxwd_ladnbr = lad_nbr
-                       xxwd_recid = xxwa_recid
-                       xxwd_part = lad_part
-                       xxwd_site = lad_site
-                       xxwd_line = xxwa_line
-                       xxwd_loc = lad_loc
-                       xxwd_sn =  errornum
-                       xxwd_lot = lad_lot
-                       xxwd_ref = lad_ref
-                       xxwd_qty_plan = vqty.
-                       vqty = 0.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(lad_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(lad_det)).
-                 end.
-                    xl_qty = xl_qty + vqty.
-            END.
-        END.    /* IF vqty > 0 THEN DO: */
-    end.  /*for each lad_det*/
+                       errornum = errornum + 1.
+                       find first xx_ld where
+                                  xl_recid = integer(recid(lad_det)) no-error.
+                       if not available xx_ld then do:
+                              create xx_ld.
+                              assign xl_recid = integer(recid(lad_det)).
+                       end.
+                       assign xl_qty = xl_qty + aviqty.
+             end.
+          end.
+
+
+/*      if first-of(xxwa_part) then do:                                  */
+/*         assign aviqty = 0.                                            */
+/*      end.                                                             */
+/*      else do:                                                         */
+/*         assign aviqty = multqty - vqty.                               */
+/*      end.                                                             */
+/*      assign vqty = xxwa_qty_need                                      */
+/*             multqty = getmult(vqty - aviqty , xxwa_ord_mult).         */
+/*    if first-of(xxwa_part) then do:                                    */
+/*       assign vqty = getmult(xxwa_qty_need , xxwa_ord_mult).           */
+/*    end.                                                               */
+/*    else do:                                                           */
+/*       assign vqty = getmult(xxwa_qty_need - vqty, xxwa_ord_mult).     */
+/*    end.                                                                    */
+/*    for each lad_det exclusive-lock where lad_dataset = "rps_det"           */
+/*             and lad_site = xxwa_site                                       */
+/*             and lad_line = xxwa_line                                       */
+/*             and lad_part = xxwa_part                                       */
+/*             and index(lad_nbr,xxwa_ladnbr) > 0                             */
+/*        AND can-find(first loc_mstr no-lock where loc_site = lad_site       */
+/*                       and loc_loc = lad_loc and loc_user2 = "Y")           */
+/*        by lad_lot:                                                         */
+/*        find first xx_ld where                                              */
+/*                   xl_recid = integer(recid(lad_det)) no-error.             */
+/*        if available xx_ld then do:                                         */
+/*           assign aviqty = lad_qty_all - xl_qty.                            */
+/*        end.                                                                */
+/*        else do:                                                            */
+/*           assign aviqty = lad_qty_all.                                     */
+/*        end.                                                                */
+/*     if aviqty <= 0 then next.                                              */
+/*            IF vqty >= aviqty THEN DO:                                      */
+/*                CREATE xxwd_det.                                            */
+/*                assign xxwd_nbr = xxwa_nbr                                  */
+/*                       xxwd_ladnbr = lad_nbr                                */
+/*                       xxwd_recid = xxwa_recid                              */
+/*                       xxwd_part = lad_part                                 */
+/*                       xxwd_site = lad_site                                 */
+/*                       xxwd_line = xxwa_line                                */
+/*                       xxwd_loc = lad_loc                                   */
+/*                       xxwd_sn =  errornum                                  */
+/*                       xxwd_lot = lad_lot                                   */
+/*                       xxwd_ref = lad_ref                                   */
+/*                       xxwd__dec01 = xxwa_qty_need                          */
+/*                       xxwd_qty_plan  = aviqty.                             */
+/*                       vqty = vqty - aviqty.                                */
+/*                 errornum = errornum + 1.                                   */
+/*                 find first xx_ld where                                     */
+/*                            xl_recid = integer(recid(lad_det)) no-error.    */
+/*                 if not available xx_ld then do:                            */
+/*                    create xx_ld.                                           */
+/*                    assign xl_recid = integer(recid(lad_det)).              */
+/*                 end.                                                       */
+/*                    assign xl_qty = xl_qty + aviqty.                        */
+/*            END.                                                            */
+/*            ELSE DO:                                                        */
+/*                CREATE xxwd_det.                                            */
+/*                assign xxwd_nbr = xxwa_nbr                                  */
+/*                       xxwd_ladnbr = lad_nbr                                */
+/*                       xxwd_recid = xxwa_recid                              */
+/*                       xxwd_part = lad_part                                 */
+/*                       xxwd_site = lad_site                                 */
+/*                       xxwd_line = xxwa_line                                */
+/*                       xxwd_loc = lad_loc                                   */
+/*                       xxwd_sn =  errornum                                  */
+/*                       xxwd_lot = lad_lot                                   */
+/*                       xxwd_ref = lad_ref                                   */
+/*                       xxwd_qty_plan = vqty                                 */
+/*                       xxwd__dec01 = xxwa_qty_need.                         */
+/*                       vqty = 0.                                            */
+/*                 errornum = errornum + 1.                                   */
+/*                 find first xx_ld where                                     */
+/*                            xl_recid = integer(recid(lad_det)) no-error.    */
+/*                 if not available xx_ld then do:                            */
+/*                    create xx_ld.                                           */
+/*                    assign xl_recid = integer(recid(lad_det)).              */
+/*                 end.                                                       */
+/*                    xl_qty = xl_qty + vqty.                                 */
+/*            END.                                                            */
+/*    end.  /*for each lad_det*/                                              */
     end.
 
 /*******************
@@ -852,11 +930,11 @@ end.
          if first-of(xxwa_part) then do:
             find first pt_mstr no-lock where pt_part = xxwa_part no-error.
             assign aviqty = 0
-            			 vqty = xxwa_qty_pln.
-         		for each ld_det no-lock where ld_site = xxwa_site and
-         						 ld_loc = xxwa_line and ld_part = xxwa_part:
-         						 aviqty = aviqty + ld_qty_oh.
-         	  end.
+                   vqty = xxwa_qty_pln.
+            for each ld_det no-lock where ld_site = xxwa_site and
+                     ld_loc = xxwa_line and ld_part = xxwa_part:
+                     aviqty = aviqty + ld_qty_oh.
+            end.
          end.
          if vqty > aviqty then do:
 
@@ -892,7 +970,7 @@ end.
         and ladqtyall / pt__dec01 <> truncate(ladqtyall / pt__dec01,0)
      then
      assign ladqtyall = min(ladqtyall ,
-     		  	(truncate(ladqtyall / pt__dec01 , 0) + 1) * pt__dec01).
+            (truncate(ladqtyall / pt__dec01 , 0) + 1) * pt__dec01).
 
      aviqty = aviqty + ladqtyall.
 
@@ -951,8 +1029,8 @@ end.
 
          end.
          else do:
-         		assign aviqty = aviqty - vqty.
-         		assign vqty = 0.
+            assign aviqty = aviqty - vqty.
+            assign vqty = 0.
          end.
     end.
 **************/
