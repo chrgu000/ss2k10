@@ -80,10 +80,10 @@ define new shared variable isspol         like pt_iss_pol.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
-assign issue = today
-       issue1 = today
-       reldate = today
-       reldate1 = today.
+assign issue = today + 1
+       issue1 = today + 1
+       reldate = today + 1
+       reldate1 = today + 1.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 

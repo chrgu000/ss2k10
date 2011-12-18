@@ -85,12 +85,13 @@ define shared variable comp_max like wod_qty_chg.
 define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
 
-define variable aviqty as decimal.
+define variable aviqty as decimal no-undo.
 define variable vqty as decimal no-undo.
 define variable vtype as character no-undo.
 define variable decmult as decimal no-undo.
 define variable errorst as character no-undo.
 define variable errornum as integer  no-undo.
+define variable i        as integer  no-undo.
 /* USE TEMP-TABLE IN PLACE OF WORKFILE TO IMPROVE PERFORMANCE     */
 /* 使用临时表代替工作文件提高性能                                 */
 
@@ -146,6 +147,11 @@ run gett0(input reldate, input reldate1,
 /*    delete qad_wkfl.                                                 */
 /* end.                                                                */
 /* assign errornum = 1.                                                */
+
+for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
+delete usrw_wkfl.
+end.
+assign i = 1.
 
 for each rps_mstr no-lock
 where rps_part >= part and rps_part <= part1
@@ -205,7 +211,7 @@ by wr_start by wr_part by wr_op
          wc_desc no-label
          nbr
          skip(1)
-      with STREAM-IO /*GUI*/  frame b width 132 side-labels page-top.
+      with  /*GUI*/  frame b width 132 side-labels page-top.
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
@@ -217,7 +223,7 @@ by wr_start by wr_part by wr_op
          string(nbr,"x(10)") when (not delete_pklst) @ nbr
          nbr_replace         when (delete_pklst) @ nbr
          skip(1)
-      with frame b width 132 side-labels page-top STREAM-IO /*GUI*/ .
+      with frame b width 132 side-labels page-top  /*GUI*/ .
    end. /* if first-of(wr_wkctr) */
 
    view frame b.
@@ -250,13 +256,13 @@ by wr_start by wr_part by wr_op
                desc2 = pt_desc2
                um    = pt_um.
          if detail_display then
-            display wod_part @ ps_comp desc1 WITH STREAM-IO /*GUI*/ .
+            display wod_part @ ps_comp desc1 WITH  /*GUI*/ .
 
       end. /* if first-of (wod_deliver) do */
       else
       if desc2 <> "" and detail_display then do with frame c:
          display
-            desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
+            desc2 @ desc1 WITH  /*GUI*/ .
          desc2 = "".
       end. /* if first-of (wod_deliver) else */
       create xx_pklst.
@@ -285,7 +291,7 @@ by wr_start by wr_part by wr_op
             wo_due_date
             wr_op
             wr_mch
-            wr_start WITH STREAM-IO /*GUI*/ .
+            wr_start WITH  /*GUI*/ .
       end.
       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
       run store_demand (buffer wod_det, buffer wr_route).
@@ -343,23 +349,23 @@ by wr_start by wr_part by wr_op
 
             display
                skip
-            with frame e STREAM-IO /*GUI*/ .
+            with frame e  /*GUI*/ .
 
             /* SET EXTERNAL LABELS */
             setFrameLabels(frame dd:handle).
 
             display
                "" @ ps_comp no-label
-               "" @ desc1 no-label WITH STREAM-IO /*GUI*/ .
+               "" @ desc1 no-label WITH  /*GUI*/ .
 
             display
                accum total by wod_deliver
                (max(wod_qty_req - wod_qty_all -
                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um WITH STREAM-IO /*GUI*/ .
+               um WITH  /*GUI*/ .
 
             display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH STREAM-IO /*GUI*/ .
+               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .
 
             wc_qoh = wc_qoh - temp_qty.
 
@@ -375,7 +381,7 @@ by wr_start by wr_part by wr_op
                   lad_loc
                   lad_lot
                   lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver WITH STREAM-IO /*GUI*/ .
+                  lad_user1 @ wod_deliver WITH  /*GUI*/ .
 
                accumulate lad_qty_all (total).
 
@@ -393,7 +399,7 @@ by wr_start by wr_part by wr_op
 
                display
                   getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
-                  qtyneed @ lad_qty_all WITH STREAM-IO /*GUI*/ .
+                  qtyneed @ lad_qty_all WITH  /*GUI*/ .
 
             end.
 
@@ -406,19 +412,19 @@ by wr_start by wr_part by wr_op
             /* SET EXTERNAL LABELS */
             setFrameLabels(frame d:handle).
             display
-               wod_part @ ps_comp desc1 WITH STREAM-IO /*GUI*/ .
+               wod_part @ ps_comp desc1 WITH  /*GUI*/ .
 
             display
                accum total by wod_deliver
                (max(wod_qty_req - wod_qty_all -
                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um WITH STREAM-IO /*GUI*/ .
+               um WITH  /*GUI*/ .
 
             display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH STREAM-IO /*GUI*/ .
+               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .
 
             wc_qoh = wc_qoh - temp_qty.
-
+message wod_part view-as alert-box.
             for each lad_det no-lock
             where lad_dataset = "rps_det"
               and lad_nbr = nbr and lad_line = wr_wkctr
@@ -426,12 +432,24 @@ by wr_start by wr_part by wr_op
               and lad_user1 = wod_deliver
             break by lad_dataset by lad_nbr by lad_line
             by lad_part by lad_site with frame d:
-
+							 create usrw_wkfl.
+							 assign usrw_key1 = "xxrepkup0.p"
+							 				usrw_key2 = string(i)
+							 				usrw_key3 = wod_part
+							 				usrw_key4 = nbr
+							 				usrw_key5 = wo_site
+							 				usrw_key6 = wr_wkctr
+							 				usrw_charfld[1] = lad_lot
+							 				usrw_charfld[2] = lad_lot
+							 				usrw_decfld[1] = max(wod_qty_req - wod_qty_all -
+              												 wod_qty_pick - wod_qty_iss,0)
+              			  usrw_decfld[2] = lad_qty_all.
+               assign i = i + 1.
                display
                   lad_loc
                   lad_lot
                   lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver WITH STREAM-IO /*GUI*/ .
+                  lad_user1 @ wod_deliver WITH  /*GUI*/ .
 
                accumulate lad_qty_all (total).
 
@@ -441,7 +459,7 @@ by wr_start by wr_part by wr_op
 
                if detail_display = no and desc2 <> "" then
                   display
-                     desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
+                     desc2 @ desc1 WITH  /*GUI*/ .
 
                desc2 = "".
             end.
@@ -457,13 +475,13 @@ by wr_start by wr_part by wr_op
 
                if detail_display = no and desc2 <> "" then
                   display
-                     desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
+                     desc2 @ desc1 WITH  /*GUI*/ .
 
                desc2 = "".
 
                display
                   getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
-                  qtyneed @ lad_qty_all WITH STREAM-IO /*GUI*/ .
+                  qtyneed @ lad_qty_all WITH  /*GUI*/ .
 
             end.
 
@@ -511,7 +529,7 @@ by wr_start by wr_part by wr_op
             wo_site wr_wkctr
             wc_desc no-label
             nbr_replace label {&repkupd_p_3}
-         with STREAM-IO /*GUI*/  frame shortage page-top width 132 side-labels
+         with  /*GUI*/  frame shortage page-top width 132 side-labels
          title color normal (getFrameTitle("S_H_O_R_T_A_G_E___L_I_S_T",36)).
 
          /* SET EXTERNAL LABELS */
@@ -524,7 +542,7 @@ by wr_start by wr_part by wr_op
             wc_desc             when (available wc_mstr)
             string(nbr,"x(10)") when (not delete_pklst) @ nbr_replace
             nbr_replace         when (delete_pklst)
-         with frame shortage STREAM-IO /*GUI*/ .
+         with frame shortage  /*GUI*/ .
 
          /* PRINT DESCRIPTION OF PART ONLY ONCE. */
 
@@ -543,26 +561,26 @@ by wr_start by wr_part by wr_op
 
             display
                space(19)
-            with frame short STREAM-IO /*GUI*/ .
+            with frame short  /*GUI*/ .
 
             if first-of(short-part) then
                display
                   short-part @ ps_comp
                   pt_desc1 when (available pt_mstr)
-               with frame short STREAM-IO /*GUI*/ .
+               with frame short  /*GUI*/ .
 
             display
                short-qty
                pt_um when (available pt_mstr)
                short-assy @ ps_par
-            with frame short STREAM-IO /*GUI*/ .
+            with frame short  /*GUI*/ .
 
             if first-of(short-part) then do:
                down 1.
                if available pt_mstr and pt_desc2 <> "" then
                   display
                      pt_desc2 @ pt_desc1
-                  with frame short STREAM-IO /*GUI*/ .
+                  with frame short  /*GUI*/ .
             end. /* FIRST-OF(short-part) */
 
             if last-of(short-part) then
@@ -577,7 +595,7 @@ by wr_start by wr_part by wr_op
    end.
 
 end.
-
+message "FL" view-as alert-box.
 /* 资料写入xxwa_det. */
  for each xxwa_det exclusive-lock where
           xxwa_date >= issue and xxwa_date <= issue1 and
@@ -635,7 +653,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
             xx_start
             t0_tttime / t0_wktime * xx_qty_req @ t0_time
             t0_qty / t0_qtya * xx_qty_req @ xx_start
-            with width 300 stream-io.
+            with width 300 .
 */
 end.
 
@@ -711,7 +729,7 @@ end.
              and lad_part = xxwa_part
              and index(lad_nbr,xxwa_ladnbr) > 0
         AND can-find(first loc_mstr no-lock where loc_site = lad_site
-                          and loc_loc = lad_loc and loc_user2 = "Y")
+                       and loc_loc = lad_loc and loc_user2 = "Y")
         by lad_lot:
         find first xx_ld where
                    xl_recid = integer(recid(lad_det)) no-error.
@@ -772,6 +790,31 @@ end.
         END.    /* IF vqty > 0 THEN DO: */
     end.  /*for each lad_det*/
     end.
+
+/*  A类物料以托数发放 C类物料以最小包装量发放  */
+    for each xxwd_det exclusive-lock,
+        each pt_mstr no-lock where pt_part = xxwd_part and
+             (pt__chr10 = "A" or pt__chr10 = "C") and pt__dec01 <> 0
+        break by xxwd_part by xxwd_sn:
+        find first xxwa_det no-lock where xxwa_nbr = xxwd_nbr
+               and xxwa_recid = xxwd_recid no-error.
+       if first-of(xxwd_part) then do:
+          assign decmult = pt_mstr.pt__dec01
+                 vqty = xxwa_qty_req.
+       end.
+       else do:
+          assign vqty = xxwa_qty_req - vqty.
+       end.
+       if vqty MODULO decmult = 0 then do:
+            assign xxwd_qty_plan = (truncate(vqty / decmult,0)) * decmult.
+       end.
+       else do:
+            assign xxwd_qty_plan = (truncate(vqty / decmult,0) + 1)
+                                 * decmult.
+       end.
+            assign vqty = xxwa_qty_pln - vqty.
+    end.
+
 
 /************************
     for each xxwa_det no-lock where
@@ -1179,10 +1222,12 @@ for each rps_mstr no-lock where rps_rel_date >= idate
            END.
        END.
 end.
+assign errornum = 1.
 for each tmp_file0 no-lock:
     create qad_wkfl.
     assign qad_key1 = "xxrepkup0.p"
-           qad_key2 = string(t0_start,"HH:MM:SS") + t0_part + string(t0_qty)
+           qad_key2 = string(errornum) 
+           					+ string(t0_start,"HH:MM:SS") + t0_part + string(t0_qty) 
            qad_key3 = rps_part
            qad_datefld[1] = rps_rel_date
            qad_charfld[1] = rps_site
@@ -1193,5 +1238,6 @@ for each tmp_file0 no-lock:
            qad_decfld[2] = t0_qty
            qad_decfld[3] = t0_qtya
            .
+    assign errornum = errornum + 1.
 end.
 END PROCEDURE.
