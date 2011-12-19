@@ -23,6 +23,7 @@ DEFINE {1} SHARED TEMP-TABLE tmp_file1 no-undo
     FIELDS t1_sn LIKE xxlnw_sn
     FIELDS t1_start like xxlnw_stime
     fields t1_end   like xxlnw_etime
+    fields t1_pick  like xxlnw_ptime
     FIELDS t1_avli AS DECIMAL.
 
 FUNCTION getMult RETURNS DECIMAL (qty as decimal, mult as decimal) :

@@ -274,8 +274,8 @@ by wr_start by wr_part by wr_op
              xx_nbr = string(nbr)
              xx_comp = wod_part
 /*             xx_qty_req = max(wod_qty_req - wod_qty_iss,0)   */
-             xx_qty_req = wod_qty_req
-             xx_qty_need = max(wod_qty_req - wod_qty_iss,0)
+             xx_qty_req = wod_qty_req       /* 总需求量 */
+             xx_qty_need = max(wod_qty_req - wod_qty_iss,0)  /* 缺料量 */
              xx_qty_iss = wod_qty_iss
              xx_um = um
              xx_par = wr_part
@@ -625,7 +625,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 vqty = 0.
       end.
       assign vqty = vqty + xx_qty_req
-             aviqty = aviqty +  round(t0_tttime / t0_wktime * xx_qty_req,0).
+             aviqty = aviqty +  round(t0_tttime / t0_wktime) * xx_qty_req,0).
       if last-of(xx_comp) then do:
          create xxwa_det.
          assign xxwa_date = t0_date
@@ -698,12 +698,13 @@ end.
         end.
   end. /* for each xxwa_det exclusive-lock where  */
 
-  /*计算需要物料的项次,时间点*/
+  /*计算需要物料的项次,时间点 ------- 扣减在线库存*/
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and xxwa_date <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part  by xxwa_rtime:
+  /*
         if first-of (xxwa_part) then do:
            assign aviqty = 0.
            for each ld_det no-lock where ld_site = xxwa_site and
@@ -726,7 +727,10 @@ end.
                    aviqty = 0.
 
         end.
+        */
+        assign xxwa_qty_need = xxwa_qty_pln.
   end.
+ 
 
   /* 将ABC类的倍数记录在xxwa_ord_mult */
     for each xxwa_det exclusive-lock:
@@ -1499,6 +1503,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                ASSIGN t1_sn = xxlnw_sn
                       t1_avli = xxlnw_wktime
                       t1_start = xxlnw_stime
+                      t1_pick = xxlnw_ptime
                       t1_end = xxlnw_etime.
            END.
 
@@ -1515,7 +1520,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                    t0_part  = rps_part
                    t0_user1 = rps_user1
                    t0_sn = t1_sn
-                   t0_start = t1_start
+                   t0_start = t1_pick   /*生产时间*/
                    t0_end   = t1_end
                    t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate
                    t0_qtya = rps_qty_req - rps_qty_comp
@@ -1533,7 +1538,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                   t0_sn = t1_sn
                   t0_part  = rps_part
                   t0_user1 = rps_user1
-                  t0_start = t1_start
+                  t0_start = t1_pick
                   t0_end   = t1_end
                   t0_qtya = rps_qty_req - rps_qty_comp
                   t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate

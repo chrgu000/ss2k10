@@ -14,7 +14,10 @@ define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
-define variable issue  as date no-undo initial today.
+define variable part   like pt_part no-undo initial "MHTA03-N60-0-CK".
+define variable part1  like pt_part no-undo initial "MHTA03-N60-0-CK".
+define variable issue   as date no-undo initial today.
+define variable issue1  as date no-undo initial today.
 define variable nbr  as character format "x(12)" label "Picklist Number".
 define variable nbr1 as character format "x(12)".
 define variable cate as character format "x(1)" initial "A".
@@ -24,17 +27,26 @@ define variable vdesc1 like pt_desc1.
 define variable pnbr like xxwa_nbr.
 define variable vqty  as decimal no-undo.
 define variable tax_bonded as logical no-undo.
+define variable del-yn   as logical no-undo.
+
+assign issue = today + 1
+       issue1 = today + 1.
+
 /* SELECT FORM */
 form
    site   colon 20
    site1  label {t001.i} colon 50 skip
    line   colon 20
    line1  label {t001.i} colon 50 skip
+   part   colon 20
+   part1  label {t001.i} colon 50 skip
    issue  colon 20
+   issue1  label {t001.i} colon 50 skip
    nbr    colon 20
    nbr1   label {t001.i} colon 50 skip(1)
    cate   colon 20 skip
    tax_bonded  colon 20 skip(1)
+   del-yn    colon 20 skip(2)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -46,17 +58,20 @@ repeat:
     if site1 = hi_char then site1 = "".
     if line1 = hi_char then line1 = "".
     if nbr1 = hi_char then nbr1 = "".
+    if part1 = hi_char then part1 = "".
     if issue = low_date then issue = ?.
+    if issue1 = hi_date then issue1 = ?.
 
 if c-application-mode <> 'web' then
-update site site1 line line1 issue nbr nbr1 cate tax_bonded
+update site site1 line line1 part part1 issue issue1 nbr nbr1 cate tax_bonded del-yn
        with frame a.
 if index("APS",cate) = 0 then do:
     {mfmsg.i 4212 3}
     undo,retry.
 end.
 {wbrp06.i &command = update
-          &fields = " site site1 line line1 issue nbr nbr1 cate tax_bonded "
+          &fields = " site site1 line line1 part part1 issue issue1
+                      nbr nbr1 cate tax_bonded del-yn"
           &frm = "a"}
 
 if (c-application-mode <> 'web') or
@@ -68,14 +83,19 @@ if (c-application-mode <> 'web') or
    {mfquoter.i site1}
    {mfquoter.i line}
    {mfquoter.i line1}
+   {mfquoter.i part}
+   {mfquoter.i part1}
    {mfquoter.i nbr}
    {mfquoter.i nbr1}
    {mfquoter.i issue}
+   {mfquoter.i issue1}
 
-   line1 = line1 + hi_char.
    site1 = site1 + hi_char.
+   line1 = line1 + hi_char.
+   part1 = part1 + hi_char.
    nbr1 = nbr1 + hi_char.
    if issue = ? then issue = low_date.
+   if issue1 = ? then issue1 = hi_date.
 
 end.
         /* SELECT PRINTER  */
@@ -119,12 +139,28 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("STATUS",12)
          .
   if cate = "A" or cate = "P" then do:
- 		 run printP.
+     run printP.
   end.
   if cate = "A" or cate = "S" then do:
      run printS.
   end.
   /*  REPORT TRAILER  */
+  if del-yn then do:
+     for each xxwa_det exclusive-lock where
+             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
+             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+             xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
+             xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
+           ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
+            (tax_bonded and substring(xxwa_part,1,1)= "P")):
+         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
+              and xxwd_recid = xxwa_recid:
+              delete xxwd_det.
+         end.
+         delete xxwa_det.
+      end.		
+  end.
  end.
  {mfreset.i}
 end.  /* repeat: */
@@ -133,9 +169,10 @@ end.  /* repeat: */
 
 procedure printP:
    for each xxwa_det no-lock where
-             xxwa_date = issue  and
+             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+             xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
             (tax_bonded and substring(xxwa_part,1,1)= "P")),
@@ -153,8 +190,10 @@ procedure printP:
                  vtype = ""
                  vdesc1 = "".
        end.
-            	if (vtype = "A" or vtype = "C") then assign vqty = xxwa__dec01.
-            	if vqty > 0 then do:
+              if (vtype = "A" or vtype = "C") 
+                        then assign vqty = xxwd_qty_plan.
+              	 		    else assign vqty = xxwa_qty_need.
+              if vqty > 0 then do:
                  export delimiter "~011"
                         "P"
                         "p" + xxwa_nbr
@@ -166,7 +205,7 @@ procedure printP:
                         substring(xxwd_ladnbr,9)
                         xxwa_part
                         vdesc1
-                        truncate(xxwa_qty_pln,0)
+                        truncate(xxwa_qty_need,0)
                         vMultiple
                         vtype
                         max(truncate(vqty,0),0)
@@ -181,9 +220,10 @@ end procedure.
 
 procedure printS:
  for each xxwa_det no-lock where
-              xxwa_date = issue  and
+              xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
               xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
               xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
+              xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
               xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")and
             ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
              (tax_bonded and substring(xxwa_part,1,1)= "P")),
@@ -200,7 +240,8 @@ procedure printS:
                  vtype = ""
                  vdesc1 = "".
        end.
-       if (vtype = "A" or vtype = "C") then assign vqty = xxwa__dec01.
+       if vtype = "C" then assign vqty = xxwd_qty_plan.
+              	 	    else assign vqty = xxwa_qty_need.
        if vqty > 0 then do:
            export delimiter "~011"
                   "S"
@@ -213,10 +254,10 @@ procedure printS:
                   substring(xxwd_ladnbr,9)
                   xxwa_part
                   vdesc1
-                  truncate(xxwa_qty_pln,0)
+                  truncate(xxwa_qty_need,0)
                   vMultiple
                   vtype
-                  max(truncate(xxwd_qty_plan,0),0)
+                  truncate(vqty,0)
                   "P-ALL"
                   xxwd_lot
                   truncate(xxwd_qty_siss,0)
