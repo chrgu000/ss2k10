@@ -79,13 +79,24 @@ end.
   {mfselbpr.i "printer" 200}
   {mfphead.i}
 
+	for each rps_mstr no-lock where 
+		       rps_rel_date >= issue and (rps_rel_date <= issue1 or issue1 = ?) and
+		       rps_site >= site and (rps_site <= site1 or site1 = ?) and
+		       rps_line >= line and (rps_line <= line1 or line1 = ?) and
+		       rps_user1 >= "1" by rps_user1 with frame rps width 200:
+		       setFrameLabels(frame rps:handle).
+		       display rps_rel_date rps_site rps_line rps_user1 label "ITEM_LINE"
+		       				 rps_part rps_routing rps_qty_req rps_qty_comp.
+	
+  end.
+
   for each qad_wkfl no-lock where qad_key1 = "xxrepkup0.p"
       break by qad_charfld[1] by qad_charfld[2] by qad_datefld[1]
             by qad_intfld[1]
       with frame x width 200:
   setFrameLabels(frame x:handle).
-  display  qad_key3 format "x(18)" label "Item"
-           qad_datefld[1] label "issue"
+  display  qad_key3 format "x(18)" label "PRODUCT"
+  				 qad_datefld[1] label "issue"
            qad_charfld[1] label "site"
            qad_charfld[2] label "line"
            string(qad_intfld[1],"hh:mm:ss") label "Stime"
