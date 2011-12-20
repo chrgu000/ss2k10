@@ -116,17 +116,18 @@ end.
         setFrameLabels(frame y:handle).
         find first pt_mstr no-lock where pt_part = xxwa_part no-error.
         if available pt_mstr then do:
-        display xxwa_date
-                xxwa_ladnbr
+        display xxwa_date 
                 xxwa_site
                 xxwa_line
                 xxwa_part
                 pt__chr10
+                pt__qad20
+                xxwa_pka_mult
+                pt__qad19
                 xxwa_ord_mult
                 xxwa_qty_req
                 xxwa_qty_pln
                 string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
-                xxwa_qty_loc
                 xxwa_qty_need
                 xxwa__dec03.
         end.

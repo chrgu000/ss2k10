@@ -187,7 +187,7 @@ procedure printP:
         break by xxwd_line by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = pt__dec01
+          assign vMultiple = pt__qad19
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
@@ -237,7 +237,7 @@ procedure printS:
           and xxwd_recid = xxwa_recid break by xxwd_line by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
-          assign vMultiple = pt__dec01
+          assign vMultiple = pt__qad19
                  vtype = pt__chr10
                  vdesc1 = pt_desc1.
        end.
