@@ -698,8 +698,44 @@ end.
             assign xxwa_pstime = -1.
         end.
   end. /* for each xxwa_det exclusive-lock where  */
+  
+  /* 计算最小包装量到 xxwa_ord_mult*/
+  for each xxwa_det exclusive-lock:
+    assign xxwa_ord_mult = xxwa_qty_pln.
+  end.
+  for each xxwa_det EXCLUSIVE-LOCK where
+           xxwa_date >= issue and xxwa_date <= issue1 and                  
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and     
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and 
+           xxwa_qty_pln > 0,
+      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND 
+          (pt__chr10 = "A" OR pt__chr10 = "C") AND
+           pt__dec01 <> 0
+           break by xxwa_date by xxwa_site by xxwa_line 
+                 by xxwa_part by xxwa_rtime:
+      IF FIRST-OF(xxwa_part) THEN DO:
+          COLOR DISPLAY MESSAGE xxwa_part.
+           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__dec01).
+           aviqty = xxwa_ord_mult - xxwa_qty_pln.
+      END.
+      ELSE DO:
+          IF aviqty >= xxwa_qty_pln THEN DO:
+              ASSIGN xxwa_ord_mult = 0. 
+              ASSIGN aviqty = aviqty - xxwa_qty_pln.
+          END.
+          ELSE DO:
+              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__dec01).
+              aviqty = xxwa_ord_mult - xxwa_qty_pln. 
+          END.
+      END.
+      
+  END.
 
-  /*计算需要物料的项次,时间点 ------- 扣减在线库存*/
+
+
+
+
+  /*计算需要物料的项次,时间点 ------- 扣减在线库存
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and xxwa_date <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -729,20 +765,7 @@ end.
                    aviqty = 0.
         end.
   end.
-
-
-  /* 将ABC类的倍数记录在xxwa_ord_mult */
-    for each xxwa_det exclusive-lock:
-        find first pt_mstr no-lock where pt_part = xxwa_part no-error.
-        if available pt_mstr and (pt__chr10 = "A" or pt__chr10 = "C")
-                 and pt__dec01 <> 0 then do:
-             assign xxwa_ord_mult = pt__dec01.
-        end.
-        else do:
-             assign xxwa_ord_mult = 1.
-        end.
-    end.
-
+  */
 
   /*计算单号,序号*/
   for each xxwa_det exclusive-lock where
@@ -757,9 +780,9 @@ end.
       end.
       assign xxwa_nbr = vtype .
   end.
-
+/*
   run calcXxwaByld.
-
+*/
 /*      if first-of(xxwa_part) then do:                                  */
 /*         assign aviqty = 0.                                            */
 /*      end.                                                             */

@@ -164,8 +164,8 @@ do on error undo, return error on endkey undo, return error:
      			and qad_datefld[1] >= issue and qad_datefld[1] <= issue1
           and qad_charfld[1] >= site and qad_charfld[1] <= site1
           and qad_charfld[2] >= line and qad_charfld[2] <= line1:
-     delete qad_wkfl.
-end.
+       delete qad_wkfl.
+    end.
   end.
  end.
  {mfreset.i}
