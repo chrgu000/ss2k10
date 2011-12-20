@@ -699,7 +699,7 @@ end.
         end.
   end. /* for each xxwa_det exclusive-lock where  */
   
-  /* 计算最小包装量到 xxwa_ord_mult*/
+  /* 按最小包装量计算需求到 xxwa_ord_mult*/
   for each xxwa_det exclusive-lock:
     assign xxwa_ord_mult = xxwa_qty_pln.
   end.
@@ -710,12 +710,11 @@ end.
            xxwa_qty_pln > 0,
       EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND 
           (pt__chr10 = "A" OR pt__chr10 = "C") AND
-           pt__dec01 <> 0
+           pt__qad19 <> 0
            break by xxwa_date by xxwa_site by xxwa_line 
                  by xxwa_part by xxwa_rtime:
       IF FIRST-OF(xxwa_part) THEN DO:
-          COLOR DISPLAY MESSAGE xxwa_part.
-           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__dec01).
+           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__qad19).
            aviqty = xxwa_ord_mult - xxwa_qty_pln.
       END.
       ELSE DO:
@@ -724,13 +723,56 @@ end.
               ASSIGN aviqty = aviqty - xxwa_qty_pln.
           END.
           ELSE DO:
-              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__dec01).
+              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).
               aviqty = xxwa_ord_mult - xxwa_qty_pln. 
           END.
       END.
-      
+  END.
+  
+ /* 按最小包装量计算需求到 xxwa_ord_mult*/
+  for each xxwa_det exclusive-lock:
+    assign xxwa_ord_mult = xxwa_qty_pln.
+  end.
+  for each xxwa_det EXCLUSIVE-LOCK where
+           xxwa_date >= issue and xxwa_date <= issue1 and                  
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and     
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and 
+           xxwa_qty_pln > 0,
+      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND 
+          (pt__chr10 = "A" OR pt__chr10 = "C") AND
+           pt__qad19 <> 0
+           break by xxwa_date by xxwa_site by xxwa_line 
+                 by xxwa_part by xxwa_rtime:
+      IF FIRST-OF(xxwa_part) THEN DO:
+           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__qad19).
+           aviqty = xxwa_ord_mult - xxwa_qty_pln.
+      END.
+      ELSE DO:
+          IF aviqty >= xxwa_qty_pln THEN DO:
+              ASSIGN xxwa_ord_mult = 0. 
+              ASSIGN aviqty = aviqty - xxwa_qty_pln.
+          END.
+          ELSE DO:
+              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).
+              aviqty = xxwa_ord_mult - xxwa_qty_pln. 
+          END.
+      END.
   END.
 
+
+  /*计算单号,序号*/
+  for each xxwa_det exclusive-lock where
+           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_rtime by xxwa_part:
+      if first-of(xxwa_rtime) then do:
+        assign vtype = "".
+        {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
+                                 ,output errorst,output errornum)" }
+      end.
+      assign xxwa_nbr = vtype .
+  end.
 
 
 
@@ -767,19 +809,6 @@ end.
   end.
   */
 
-  /*计算单号,序号*/
-  for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_rtime by xxwa_part:
-      if first-of(xxwa_rtime) then do:
-        assign vtype = "".
-        {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
-                                 ,output errorst,output errornum)" }
-      end.
-      assign xxwa_nbr = vtype .
-  end.
 /*
   run calcXxwaByld.
 */
@@ -912,11 +941,11 @@ end.
         assign ladqtyall = lad_qty_all.
      end.
 
-     if (pt__chr10 = "A" or pt__chr10 = "C") and pt__dec01 <> 0
-        and ladqtyall / pt__dec01 <> truncate(ladqtyall / pt__dec01,0)
+     if (pt__chr10 = "A" or pt__chr10 = "C") and pt__qad19 <> 0
+        and ladqtyall / pt__qad19 <> truncate(ladqtyall / pt__qad19,0)
      then
      assign ladqtyall = min(ladqtyall ,
-            (truncate(ladqtyall / pt__dec01 , 0) + 1) * pt__dec01).
+            (truncate(ladqtyall / pt__qad19 , 0) + 1) * pt__qad19).
 
      aviqty = aviqty + ladqtyall.
 
@@ -1065,10 +1094,10 @@ end.
         each xxwa_det no-lock where xxwa_nbr = xxwd_nbr and
              xxwa_recid = xxwd_recid ,
         each pt_mstr no-lock where pt_part = xxwd_part and
-             (pt__chr10 = "A" or pt__chr10 = "C") and pt__dec01 <> 0
+             (pt__chr10 = "A" or pt__chr10 = "C") and pt__qad19 <> 0
         break by xxwd_part by xxwd_sn:
        if first-of(xxwd_part) then do:
-          assign decmult = pt_mstr.pt__dec01
+          assign decmult = pt_mstr.pt__qad19
                  vqty = xxwa_qty_req.
        end.
        else do:
@@ -1094,14 +1123,14 @@ end.
              xxwa_date >= issue and xxwa_date <= issue1 and
              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
              xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__dec01) no-lock
+        each pt_mstr fields(pt_part pt_ord_mult pt__chr10 pt__qad19) no-lock
             WHERE pt_mstr.pt_part = xxwa_part and
                 ((pt_mstr.pt__chr10 = "C" or pt_mstr.pt__chr10 = "A") and
-                  pt_mstr.pt__dec01 <> 0)
+                  pt_mstr.pt__qad19 <> 0)
     break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_sn:
        if first-of(xxwa_part) then do:
        if (pt_mstr.pt__chr10 = "A" or pt_mstr.pt__chr10 = "C")
-          then decmult = pt_mstr.pt__dec01.
+          then decmult = pt_mstr.pt__qad19.
           assign vqty = xxwa_qty_req.
        end.
        else do:
@@ -1140,7 +1169,7 @@ end.
                   vqty = 0.
            find first pt_mstr no-lock where pt_part = xxwa_part no-error.
            if available pt_mstr then do:
-              if pt_mstr.pt__chr10 = "A" then decmult = pt_mstr.pt__dec01.
+              if pt_mstr.pt__chr10 = "A" then decmult = pt_mstr.pt__qad19.
                                          else decmult = pt_mstr.pt_ord_mult.
            end.
          end.
