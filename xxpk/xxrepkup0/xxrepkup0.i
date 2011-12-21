@@ -1,6 +1,19 @@
 /* xxrepkup0.i - REPETITIVE PICK LIST HARD ALLOCATIONS                       */
 /*V8:ConvertMode=Maintenance                                                 */
 
+define {1} shared temp-table tmp_ld
+		fields tld_site like ld_site
+		fields tld_part like ld_part
+		fields tld_abc  like pt_abc
+		fields tld_pk   like pt__qad20
+		fields tld_tp   like pt__qad19
+		fields tld_loc  like ld_loc
+		fields tld_lot  like ld_lot
+		fields tld_ref  like ld_ref
+		fields tld_qty  like ld_qty_oh
+		fields tld_sort as   character
+		index tld_part tld_part tld_lot.
+
 /*临时表用于分割时间段*/
 DEFINE {1} SHARED TEMP-TABLE tmp_file0 no-undo
     FIELDS t0_date   LIKE rps_rel_date
@@ -39,6 +52,11 @@ FUNCTION getMult RETURNS DECIMAL (qty as decimal, mult as decimal) :
       RETURN qty.
 END FUNCTION.
 
+procedure getld:
+		define input parameter iLine as character.
+		define input parameter iPart as character.
+		
+end procedure.
 
 /* run gett0(input today - 2 ,input today  ,           */
 /*                     input "gsa01" ,input "gsa01" ,  */

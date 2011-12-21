@@ -33,12 +33,12 @@ form
    xxlnw_sn colon 20
    xxlnw_on colon 20
    xxlnw_Start   colon 20
-   xxlnw_End     colon 40 skip(1)
-   xxlnw_pick    colon 20 skip(1)
+   xxlnw_End     colon 46  
+   xxlnw_pick    colon 20 
    xxlnw_picks   colon 20 
-   xxlnw_picke   colon 40
+   xxlnw_picke   colon 46
    xxlnw_sends   colon 20
-   xxlnw_sende   colon 40
+   xxlnw_sende   colon 46
    xxlnw_rstmin  colon 20
    xxlnw_shift    colon 20 shiftdesc no-label at 26
    xxlnw_wktime  colon 20
