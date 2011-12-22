@@ -833,7 +833,8 @@ for each xxwa_det no-lock where
 end.
 for each tiss1 break by tss1_part:
   if first-of(tss1_part) then do:
-    for each ld_det no-lock where ld_site = "gsa01" and ld_part = tss1_part and ld_qty_oh > 0 :
+    for each ld_det no-lock where ld_site = "gsa01" and 
+    		     ld_part = tss1_part and ld_qty_oh > 0 :
       create tsupp.
       assign
         tsu_loc       =  ld_loc
