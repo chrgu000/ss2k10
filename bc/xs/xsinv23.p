@@ -2579,6 +2579,47 @@ If AVAILABLE ( pt_mstr )  then
      unix silent value ("chmod 777  " + trim(wsection) + ".l").
      END PROCEDURE.
 
+/*1z*/     procedure lap03090801: 
+/*1z*/       output to value("./" + trim(wsection) + "inv23.l").
+/*1z*/            find first pt_mstr no-lock where pt_part = v1300 no-error.
+/*1z*/            if available pt_mstr then do:
+/*1z*/               put unformat trim(V1300) + "@" + trim(V1500) skip.
+/*1z*/               put unformat pt_part skip.  /*Í¼ºÅ*/
+/*1z*/               put unformat pt_um skip. /*µ¥Î»*/
+/*1z*/               if pt_desc1 <> "" then 
+/*1z*/               		put unformat pt_desc1 skip. /*Ãû³Æ*/
+/*1z*/               else 
+/*1z*/               		put skip(1).
+/*1z*/               if pt_desc2 <> "" then
+/*1z*/               		put unformat pt_desc2 skip.
+/*1z*/               else
+/*1z*/               		put skip(1).
+/*1z*/               if trim(v1510) = "" then 
+/*1z*/               		put skip(1).
+/*1z*/               else
+/*1z*/                  put unformat trim(V1510) skip.
+/*1z*/               put unformat today skip.
+/*1z*/               put unformat v9010 skip.
+/*1z*/               put unformat pt_loc skip.
+/*1z*/               put unformat v1500 skip.
+/*1z*/            end.
+/*1z*/          output close.
+/*1z*/     end procedure.
+/*1z*/     
+/*1z*/	   procedure lap031111:
+/*1z*/       find first prd_det where prd_dev = v9030 no-lock no-error.
+/*1z*/       if availabl prd_det and prd_type = "BARCODE" and prd_path = "DIR"
+/*1z*/          and prd_init_pro <> "" then do:
+/*1z*/          if substring(prd_init_pro,length(prd_init_pro)) = "/" then do:
+/*1z*/             unix silent value("sudo -u root mv " + "./" + trim(wsection) 
+/*1z*/             									 + "inv23.l " + prd_init_pro).
+/*1z*/          end.
+/*1z*/          else do:
+/*1z*/             unix silent value("sudo -u root mv " + "./" + trim(wsection) 
+/*1z*/             									+ "inv23.l " +	prd_init_pro + "/").
+/*1z*/          end. 
+/*1z*/       end.
+/*1z*/     end procedure.
 
      /*SS - 080912.1 b*/
      FIND FIRST pt_mstr WHERE pt_part = v1300  NO-LOCK NO-ERROR.
@@ -2600,7 +2641,8 @@ If AVAILABLE ( pt_mstr )  then
        IF decimal(V1600) <> 0 AND (decimal(V1600) / decimal(V9110) ) - TRUNCATE(decimal(V1600) / decimal(V9110),0) > 0 AND decimal(V9110) <> 0  THEN DO:
             vv_print_qty = string(decimal(V1600) MOD decimal(V9110)) .
            run inv239160l.
-
+/*1z*/					 run lap03090801.
+/*1z*/					 run lap031111.
            find first PRD_DET where PRD_DEV = V9130 no-lock no-error.
            IF AVAILABLE PRD_DET then do:
              unix silent value (trim(prd_path) + " " + trim(wsection) + ".l").
