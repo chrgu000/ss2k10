@@ -43,8 +43,8 @@ view stream crt frame b.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
-os-delete utcompil.log no-error.
-output to utcompil.log append.
+os-delete utcompile.log no-error.
+output to utcompile.log append.
 input from value(vWorkFile) no-echo no-map.
 repeat:
   set proc_name.
@@ -53,7 +53,7 @@ end.
 input close.
 output close.
 
-output to "utcompil.log" append.
+output to "utcompile.log" append.
 put unformat dbname " START:" today " " string(time,"hh:mm:ss") skip.
 output close.
 i = 0.
@@ -75,7 +75,7 @@ repeat:
    display stream crt c-comp proc_name with frame b.
    pause 0.
    down stream crt 1 with frame b.
-   output to "utcompil.log" append.
+   output to "utcompile.log" append.
           put unformat "compile:" + proc_name.
           if opsys = "unix" then do:
             put skip.
@@ -97,7 +97,7 @@ repeat:
       if search(proc_name) <> ? then err = err + 1.
    end.
    display stream crt i err with frame a.
-   output to utcompil.log append.
+   output to utcompile.log append.
      if opsys = "unix" then do:
         unix silent value("mv " + rfile + " " + dirname).
      end.
@@ -111,7 +111,7 @@ input close.
 hide message no-pause.
 pause 0 no-message.
 
-output to utcompil.log append.
+output to utcompile.log append.
    put unformat dbname " END:" today " " string(time,"hh:mm:ss").
    if err = 0 then do:
       put unformat skip(2).
@@ -126,7 +126,7 @@ output to utcompil.log append.
 output close.
 
 empty temp-table t_log no-error.
-input from utcompil.log.
+input from utcompile.log.
 repeat:
   create t_log.
   import delimiter "|" tt_log.
@@ -159,15 +159,15 @@ assign yn = no.
 {pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
 if  yn then do:
    if opsys = "unix" then do:
-      unix silent vi utcompil.log.
+      unix silent vi utcompile.log.
    end.
    if opsys = "msdos" or opsys = "win32" then do:
-       dos silent notepad.exe utcompil.log.
+       dos silent notepad.exe utcompile.log.
     end.
 end.
 hide all no-pause.
 
-os-delete utcompil.log no-error.
+os-delete utcompile.log no-error.
 os-delete value(vworkfile) no-error.
 
 procedure createDestDir:
