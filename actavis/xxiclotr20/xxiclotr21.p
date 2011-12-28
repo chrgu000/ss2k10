@@ -100,7 +100,7 @@
 /*
 {mfdtitle.i "100510.1 "}
 */
-{mfdtitle.i "100701.1 "}
+{mfdtitle.i "111130.1"}
 
 {cxcustom.i "ICLOTR.P"}
 {&ICLOTR-P-TAG1}
@@ -161,7 +161,7 @@ define variable to-label       as   character   no-undo.
 define variable l_auth         like cncix_auth  no-undo initial "" .
 define variable l_trfqty_avail like ld_qty_oh   no-undo initial 0.
 define variable l_ldrecno      as   recid       no-undo.
-define variable endeff_from    as   date        no-undo. 
+define new shared variable endeff_from    as   date        no-undo. 
 define variable endeff_to    as   date        no-undo. 
 
 define buffer lddet for ld_det.
@@ -225,18 +225,7 @@ part             colon 22
    status_from      colon 22     lddet.ld_status  colon 55
    endeff_from      colon 22     endeff_to        colon 55
  SKIP(.4)  /*GUI*/
-with frame a side-labels attr-space width 80 NO-BOX THREE-D /*GUI*/.
-
- DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:HIDDEN in frame a = yes.
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
-
-/*GUI preprocessor Frame A undefine */
-&UNDEFINE PP_FRAME_NAME
-
+with frame a side-labels attr-space width 80.
 
 {&ICLOTR-P-TAG4}
 
@@ -495,7 +484,7 @@ repeat with frame a:
                      ld_det.ld_lot = lotser_from
                      ld_det.ld_ref = lotref_from
                      ld_det.ld_status = loc_status
-		     ld_det.ld__dte01 = endeff_from
+		     						 ld_det.ld__dte01 = endeff_from
                      status_from = loc_status.
 
                end.
@@ -531,12 +520,12 @@ repeat with frame a:
             end. /* IF ld_det.ld_qty_oh */
 
             else do:
-	       endeff_from = ld_det.ld__dte01.
+	             endeff_from = ld_det.ld__dte01.
                endeff_to = ld_det.ld__dte01.
                status_from = ld_det.ld_status.
             end.
 
-            display endeff_from endeff_to  status_from with frame a.
+            display endeff_from endeff_to status_from with frame a.
 
             ld_recid_from = recid(ld_det).
 
@@ -702,7 +691,7 @@ repeat with frame a:
                   lddet.ld_part = pt_part
                   lddet.ld_lot = lotser_to
                   lddet.ld_ref = lotref_to
-		  lddet.ld__dte01 = endeff_to.
+                  lddet.ld__dte01 = endeff_from.
 
                find loc_mstr  where loc_mstr.loc_domain = global_domain and
                loc_site = site_to and
@@ -716,6 +705,7 @@ repeat with frame a:
                   si_site = site_to no-lock no-error.
                   if available si_mstr then do:
                      lddet.ld_status = si_status.
+                     ld__dte01 = endeff_from.
                   end.
                end.
 
@@ -770,7 +760,8 @@ repeat with frame a:
                   lddet.ld_date  = ld_det.ld_date
                   lddet.ld_assay = ld_det.ld_assay
                   lddet.ld_grade = ld_det.ld_grade
-                  lddet.ld_expire = ld_det.ld_expire.
+                  lddet.ld_expire = ld_det.ld_expire
+                  lddet.ld__dte01 = endeff_from.
             end.
             else do:
                /*Assay, grade or expiration conflict. Xfer not allowed*/
@@ -866,6 +857,7 @@ repeat with frame a:
                               undo,retry.
                            end. /* IF ({ gppswd3.i */
                            lddet.ld_status = ld_det.ld_status.
+                           lddet.ld__dte01 = endeff_from.
                            display lddet.ld_status.
                         end.
 
@@ -906,6 +898,7 @@ repeat with frame a:
                               undo,retry.
                            end. /* IF ({ gppswd3.i */
                            lddet.ld_status = ld_det.ld_status.
+                           ld_det.ld__dte01 = endeff_from.
                            display lddet.ld_status.
                         end.
 	          end.
@@ -1098,7 +1091,7 @@ repeat with frame a:
                global_part = pt_part.                                       
 
 /*ss-20100510.1         {gprun.i ""icxfer.p""*/
-/*ss-20100510.1*/         {gprun.i ""xxicxfer.p""
+/*ss-20100510.1*/         {gprun.i ""xxicxfer2.p""
             "("""",
               lotserial,
               lotref_from,

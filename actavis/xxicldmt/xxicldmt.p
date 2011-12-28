@@ -4,10 +4,10 @@
 /*Add user access control                                                     */
 /*   code_mstr : code_fldname = "xxicldmt-accesslist"                         */
 /*               code_value = user_id                                         */
-/*	         code_cmmt = separated With ";" , * can access all item       */
+/*           code_cmmt = separated With ";" , * can access all item       */
 
 
-{mfdtitle.i "111123.1"}
+{mfdtitle.i "111130.1"}
 
 {gldydef.i new}
 {gldynrm.i new}
@@ -32,7 +32,8 @@ define variable tmp_status like ld_status.
 define variable tmp_expire like ld_expire.
 define variable ldrecno    as recid no-undo.
 define variable vaccess    as logical.
-define variable vcmmt    like code_cmmt.
+define variable vcmmt      like code_cmmt.
+define variable vtxt       as character.
 define variable l_yn       like mfc_logical    no-undo.
 
 form
@@ -189,12 +190,45 @@ repeat with frame a:
 
 find ld_det using  ld_site and ld_loc and ld_part and ld_lot and ld_ref where
 ld_det.ld_domain = global_domain  no-lock no-error.
-
-
-
    if not available ld_det then do:
       {pxmsg.i &MSGNUM=305 &ERRORLEVEL=3} /* LD_DET DOES NOT EXIST */
       undo, retry.
+   end.
+
+   assign vaccess = no.
+   find first code_mstr where code_domain = global_domain and
+              code_fldname = "xxicldmt-accesslist" and
+              code_value = global_userid no-error.
+   if available code_mstr then do:
+    if index(code_cmmt,'*') > 0 then do:
+       assign vaccess = yes.
+    end.
+    else do:
+         assign vcmmt = code_cmmt.
+         repeat while length(vcmmt) > 0 :
+            if index(vcmmt,";") > 0 and vcmmt <> "" then do:
+               assign vtxt = substring(vcmmt,1,index(vcmmt,";") - 1).
+            end.
+            else do:
+               assign vtxt = vcmmt.
+            end.
+             if ld_part begins vtxt  then do:
+                 assign vaccess = yes.
+                 leave.
+             end.
+             if index(vcmmt,";") > 0 then do:
+                assign vcmmt = substring(vcmmt,index(vcmmt,";") + 1).
+             end.
+             else do:
+                assign vcmmt = "".
+             end.
+         end.
+      end.
+   end.
+   
+   if NOT vaccess then do:
+      {mfmsg.i 9010 3}
+      undo,retry.
    end.
 
    /* TO RETAIN THE VALUE OF CREATE DATE SO THAT CREATE DATE */
@@ -286,31 +320,7 @@ ld_det.ld_domain = global_domain  no-lock no-error.
    end.
 
    old_stat = ld_status.
-   
-   assign vaccess = no.
-   find first code_mstr where code_domain = global_domain and
-              code_fldname = "xxicldmt-accesslist" and 
-              code_value = global_userid no-error.
-   if available code_mstr then do:
-      assign vcmmt = code_cmmt.
-    repeat while length(vcmmt) > 0 :
-        if index(input ld_part,substring(vcmmt,1,index(vcmmt,";") - 1)) > 0 
-	   or substring(vcmmt,1,index(vcmmt,";") - 1) = "*" then do:
-            assign vaccess = yes.
-            leave.
-        end.
-        if index(vcmmt,";") > 0 then do:
-           assign vcmmt = substring(vcmmt,index(vcmmt,";") + 1).
-        end.
-        else do:
-           assign vcmmt = "".
-        end.
-    end.
-   end.
-   if NOT vaccess then do:
-      {mfmsg.i 4280 3}
-      undo,retry.
-   end.
+
    /* Display the latest E-Signature */
    if ll_isesig_on then run displayLatestESig( buffer ld_det ).
 

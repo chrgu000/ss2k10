@@ -32,6 +32,6 @@ define new shared variable trtype as character.
 
 trtype = "SITE/LOC".
 /*ss-20100510.1  {gprun.i ""iclotr.p""}*/
-/*ss-20100510.1*/  {gprun.i ""xxiclotr.p""}
+/*ss-20100510.1*/  {gprun.i ""xxiclotr21.p""}
 /*GUI*/ if global-beam-me-up then undo, leave.
 

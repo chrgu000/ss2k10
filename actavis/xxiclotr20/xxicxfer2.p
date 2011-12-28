@@ -185,6 +185,7 @@ define variable xx_qty           like lad_qty_all   no-undo.
 define variable xx_qty2           like lad_qty_all   no-undo.
 define variable xxld_qty           like lad_qty_all   no-undo.
 define variable xxld_qty2           like lad_qty_all   no-undo.
+define shared variable endeff_from    as   date        no-undo. 
 /*ss-20100510.1 add*******************************************************/
 
 /* CONSIGNMENT INVENTORY VARIABLES */
@@ -545,7 +546,7 @@ end. /*repeat*/
    end.
 
 /*ss-20100510.1   {ictrans.i   */
-/*ss-20100510.1*/   {xxictrans.i
+/*ss-20100510.1*/   {xxictrans2.i
       &addrid=global_addr
       &bdnstd=0
       &cracct="
@@ -887,7 +888,7 @@ then
       to_cost = sct_cst_tot.
 
 /*ss-20100510.1   {ictrans.i   */
-/*ss-20100510.1*/   {xxictrans.i
+/*ss-20100510.1*/   {xxictrans2.i
       &addrid=global_addr
       &bdnstd=0
       &cracct=xfer_acct

@@ -294,7 +294,9 @@
                          ld_part = {&part}
                          ld_lot = {&lotserial}
                          ld_ref = {&lotref}
-                         ld_status = loc_status.
+                         ld_status = loc_status
+                         ld__dte01 = endeff_from
+                         .
                   if recid(ld_det) = -1 then .
 
                   if {&transtype} begins "R" then do:
@@ -336,6 +338,7 @@
                   tr_last_date = ?.
 
                ld_qty_oh = ld_qty_oh + {&quantity}.
+               ld__dte01 = endeff_from.
                   /* ss - 100701.1 -b
 /*ss-20100510.1*/ ld_qty_all = ld_qty_all + {&quantity2}.
                  ss - 100701.1 -e */
