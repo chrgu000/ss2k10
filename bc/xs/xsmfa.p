@@ -79,7 +79,6 @@ input close.
     end.
     else do:
     REPEAT:
-
     display skip (16) "** 条码软件注册 **"        at 48 no-label skip
           "公司:" + temp1       format "x(32)"      at 48 no-label skip
           "系统:" + trim ( opsys )  format "x(28)"        at 48 no-label skip
