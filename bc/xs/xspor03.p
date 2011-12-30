@@ -4174,7 +4174,7 @@ If AVAILABLE ( pt_mstr )  then
 /*1z*/       output to value("./" + trim(wsection) + "por03.l").
 /*1z*/            find first pt_mstr no-lock where pt_part = V1005 no-error.
 /*1z*/            if available pt_mstr then do:
-/*1z*/               put unformat trim(V1005) + "@" + trim(V1100) skip.
+/*1z*/               put unformat trim(V1005) + "@" + trim(V1500) skip.
 /*1z*/               put unformat pt_part skip.  /*Í¼ºÅ*/
 /*1z*/               put unformat pt_um skip. /*µ¥Î»*/
 /*1z*/               if pt_desc1 <> "" then
