@@ -2,7 +2,7 @@
 /*V8:ConvertMode=FullGUIReport                                                */
 /******************************************************************************/
 {xxfaderp01.i "new"}
-{mfdtitle.i "111208.1"}
+{mfdtitle.i "120104.1"}
 
 
 /* DEFINE LOCAL VARIABLES */
@@ -114,8 +114,8 @@ repeat:
    then
    */
       /* ASSIGN yrPeriod TO TODAY'S DATE */
-      yrPeriod = string(year(today), "9999") + string(month(today), "99").
-			l-yrper2 = string(year(today), "9999") + string(month(today), "99").
+      l-yrper2 = string(year(today), "9999") + string(month(today), "99").
+
    if c-application-mode <> "WEB"
    then
       update
@@ -165,7 +165,7 @@ repeat:
    	  next-prompt l-yrper2 with frame a.
    	  undo,retry.
    end.
-   
+   assign yrPeriod = l-yrper2.  
    /* CHANGED yrPeriod TO l-yrper               */
    /* ADDED l-yrper1 TO &fields                 */
    /* ADDED l-ndep TO &fields AS THE LAST FIELD */
@@ -244,7 +244,6 @@ repeat:
                &withEmail                = "yes"
                &withWinprint             = "yes"
                &defineVariables          = "yes"}
-
 
 /* PRINTS PAGE HEADING FOR REPORT */
 {mfphead.i}
