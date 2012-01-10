@@ -7,7 +7,7 @@
 /* REVISION: 19YG LAST MODIFIED: 09/16/11 BY: zy auto fill filet text        */
 /* REVISION END                                                              */
 
-{mfdtitle.i "1CY5"}
+{mfdtitle.i "21YA"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -89,19 +89,19 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
       assign destDir.
    end.
    else do:
-       find first qad_wkfl no-lock where
-/*EB          qad_domain = global_domain and                                 */
-              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
-       if available qad_wkfl then do:
+       find first usrw_wkfl no-lock where
+/*EB          usrw_domain = global_domain and                                 */
+              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       if available usrw_wkfl then do:
           if opsys = "unix" then do:
-            assign destDir:screen-value = trim(qad_charfld[2]).
+            assign destDir:screen-value = trim(usrw_charfld[2]).
           end.
           else if opsys = "msdos" or opsys = "win32" then do:
-            assign destDir:screen-value = trim(qad_charfld1[2]).
+            assign destDir:screen-value = trim(usrw_charfld[12]).
           end.
           assign destDir.
        end.
-       release qad_wkfl.
+       release usrw_wkfl.
    end.
 end.
 
@@ -161,33 +161,33 @@ do on error undo, retry:
       undo,retry.
    end.
    assign xrcDir = lower(trim(xrcDir)).
-   find first qad_wkfl where
-/*EB          qad_domain = global_domain and                                 */
-              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
-        if not available qad_wkfl then do:
-           create qad_wkfl.
+   find first usrw_wkfl where
+/*EB          usrw_domain = global_domain and                                 */
+              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+        if not available usrw_wkfl then do:
+           create usrw_wkfl.
            assign
-/*EB          qad_domain = global_domain                                     */
-              qad_key1 = qadkey1
-              qad_key2 = global_userid.
+/*EB          usrw_domain = global_domain                                     */
+              usrw_key1 = qadkey1
+              usrw_key2 = global_userid.
         end.
-        if not locked(qad_wkfl) then do:
-           assign qad_charfld[3] = filef
-                  qad_charfld[4] = trim(filet).
+        if not locked(usrw_wkfl) then do:
+           assign usrw_charfld[3] = filef
+                  usrw_charfld[4] = trim(filet).
            if opsys = "msdos" or opsys = "win32" then do:
-              assign qad_charfld1[1] = xrcdir
-                     qad_charfld1[2] = trim(destDir) when destDir <> ""
+              assign usrw_charfld[11] = xrcdir
+                     usrw_charfld[12] = trim(destDir) when destDir <> ""
                                        and destDir <> vClientDir
-                     qad_charfld1[5] = trim(destDir).
+                     usrw_charfld[15] = trim(destDir).
            end.
            else if opsys = "unix" then do:
-              assign qad_charfld[1] = xrcdir
-                     qad_charfld[2] = trim(destDir) when destDir <> ""
+              assign usrw_charfld[1] = xrcdir
+                     usrw_charfld[2] = trim(destDir) when destDir <> ""
                                       and destDir <> vClientDir
-                     qad_charfld[5] = trim(destDir).
+                     usrw_charfld[5] = trim(destDir).
            end.
         end.
-        release qad_wkfl.
+        release usrw_wkfl.
 end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
 
@@ -219,18 +219,18 @@ leave.
 end. /*mainLoop*/
 
 PROCEDURE iniForm:
-/*优先取QAD_WKFL存储的*/
-find first qad_wkfl no-lock where
-/*EB          qad_domain = global_domain and                                 */
-              qad_key1 = qadkey1 and qad_key2 = global_userid no-error.
-if available qad_wkfl then do:
-    assign xrcdir  = trim(qad_charfld[1]) when qad_charfld[1] <> ""
-           destDir = trim(qad_charfld[5]) when qad_charfld[5] <> ""
-           filef   = trim(qad_charfld[3])
-           filet   = substring(qad_charfld[4],1,length(qad_charfld[4]) - 1).
+/*优先取usrw_WKFL存储的*/
+find first usrw_wkfl no-lock where
+/*EB          usrw_domain = global_domain and                                 */
+              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+if available usrw_wkfl then do:
+    assign xrcdir  = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""
+           destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
+           filef   = trim(usrw_charfld[3])
+           filet   = substring(usrw_charfld[4],1,length(usrw_charfld[4]) - 1).
     if opsys = "msdos" or opsys = "win32" then do:
-       assign xrcdir  = qad_charfld1[1]
-              destDir = trim(qad_charfld1[5]).
+       assign xrcdir  = usrw_charfld[11]
+              destDir = trim(usrw_charfld[15]).
     end.
 end.
 assign lng = lower(global_user_lang).
