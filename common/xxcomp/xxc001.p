@@ -5,8 +5,8 @@
 /* REVISION END                                                              */
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
-define variable proc_name as character format "x(24)".
-define variable i         as integer   format ">>>9" label "Files processed".
+define variable proc_name as character format "x(18)" label "File".
+define variable i         as integer   format ">>>9" label "PROCESSED".
 define variable err       as integer   format ">>>9" label "Errors".
 define variable rfile     as character format "x(24)".
 define variable dirname   as character format "x(15)".
@@ -19,21 +19,21 @@ define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
 define shared variable lng     as character format "x(2)".
 
-assign c-comp = getTermLabel("COMPILING",11) + " ".
+assign c-comp = getTermLabel("COMPILING",8) + " ".
 
 output stream crt to terminal.
 
-form c-comp-pgms at 12 with frame tt no-labels width 40.
+form c-comp-pgms at 12 with frame tt no-labels width 34.
 
-form i space(2)
+form i space(1)
      err
-with frame a side-labels width 40.
+with frame a side-labels width 34.
 setFrameLabels(frame a:handle).
 
 form
    c-comp no-label
-   proc_name
-with frame b down no-labels width 40.
+   proc_name no-label
+with frame b down no-labels width 34.
 
 hide all no-pause.
 hide stream crt all no-pause.
@@ -115,13 +115,13 @@ output to utcompile.log append.
    put unformat dbname " END:" today " " string(time,"hh:mm:ss").
    if err = 0 then do:
       put unformat skip(2).
-      put unformat "**************************************" skip.
-      put unformat "******       OO      KK  KK     ******" skip.
-      put unformat "******     OO  OO    KK KK      ******" skip.
-      put unformat "******     OO  OO    KKK        ******" skip.
-      put unformat "******     OO  OO    KK KK      ******" skip.
-      put unformat "******       OO      KK  KK     ******" skip.
-      put unformat "**************************************" skip.
+      put unformat "********************************************" skip.
+      put unformat "******           OO      KK  KK       ******" skip.
+      put unformat "******         OO  OO    KK KK        ******" skip.
+      put unformat "******         OO  OO    KKK          ******" skip.
+      put unformat "******         OO  OO    KK KK        ******" skip.
+      put unformat "******           OO      KK  KK       ******" skip.
+      put unformat "********************************************" skip.
    end.
 output close.
 
@@ -136,9 +136,9 @@ input close.
 hide frame m.
 hide frame n.
 if err = 0 then do:
-   for each t_log where tt_log <> "" with overlay frame m column 41
-       title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 40:
-       display tt_log format "x(38)".
+   for each t_log where tt_log <> "" with overlay frame m column 35
+       title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 46:
+       display tt_log format "x(44)".
    end.
 end.
 else do:

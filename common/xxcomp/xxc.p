@@ -5,6 +5,7 @@
 /* REVISION: 14YP LAST MODIFIED: 04/25/11 BY: zy Add EB common            *EB*/
 /* REVISION: 19Y2 LAST MODIFIED: 09/02/11 BY: zy fix mfgutil.ini get methed  */
 /* REVISION: 19YG LAST MODIFIED: 09/16/11 BY: zy auto fill filet text        */
+/* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
 {mfdtitle.i "21YA"}
@@ -25,7 +26,7 @@ define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
 define variable bpropath   as character /*V8! bgcolor 15 */
-						    view-as editor size 50 by 7.
+                view-as editor size 50 by 7.
 define variable filef      as character format "x(22)".
 define variable filet      as character format "x(22)".
 define variable vClientDir as character no-undo.
@@ -78,10 +79,12 @@ ON Leave of filef in FRAME Z DO:
    assign filef.
    assign filet:screen-value = filef + hi_char.
 END.
+
 ON Leave of filet in FRAME Z DO:
    assign filet.
    if index(filet,hi_char) = 0 then assign filet:screen-value = filet + hi_char.
 END.
+
 ON "CTRL-]" OF destDir IN FRAME z DO:
    assign destDir.
    if destDir <> vClientDir then do:
@@ -104,6 +107,28 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
        release usrw_wkfl.
    end.
 end.
+
+ON "F5" of destDir in Frame Z Do:
+   apply "CTRL-D":U to destDir.
+END.
+
+ON "CTRL-D" OF destDir IN FRAME z DO:
+   define variable yn as logical.
+   assign yn = no.
+   {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=yn}
+   if yn then do:
+       release usrw_wkfl.
+       find first usrw_wkfl exclusive-lock where
+/*EB          usrw_domain = global_domain and                                 */
+              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       if available usrw_wkfl then do:
+          delete usrw_wkfl.
+          release usrw_wkfl.
+       end.
+       clear frame z.
+       assign destDir.
+   end.
+END.
 
 on RETURN of xrcdir in frame z do:
    assign xrcdir.
@@ -198,8 +223,7 @@ repeat:
    import delimiter " " vFilename.
    if vFileName[3] = "F" and
       index(".p.w.t.P.W.T"
-
-            ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
+           ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
       vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
    then do:
       create tmpfile.
