@@ -30,7 +30,7 @@ with frame a side-labels width 80.
 setFrameLabels(frame a:handle).
 
 form
-   xxlnm_type colon 20 lnmtpdesc no-label skip(1)
+   xxlnm_time colon 20 skip(1)
    xxlnm_interval colon 20
    xxlnm_pkstart colon 20
    xxlnm_pkend colon 45
@@ -200,24 +200,16 @@ repeat:
       end. /* FOR FIRST ln_mstr */
 
       prompt-for
-         xxlnm_type
+         xxlnm_time
       editing:
-
-         if frame-field = "xxlnm_type" then do:
+         if frame-field = "xxlnm_time" then do:
             {mfnp06.i xxlnm_det xxlnm_line
                "xxlnm_line = input ln_line and xxlnm_site = input ln_site"
-               xxlnm_type "input xxlnm_type" """" """"}
+               xxlnm_time "input xxlnm_time" """" """"}
 
             if recno <> ? then do:
-               assign lnmtpdesc = "".
-               find first code_mstr no-lock where
-                          code_fldname = "xxlnm_type" and
-                          code_value = xxlnm_type no-error.
-               if available code_mstr then do:
-                  assign lnmtpdesc = code_cmmt.
-               end.
                display
-                    xxlnm_type lnmtpdesc
+                    xxlnm_time
                     xxlnm_interval
                     xxlnm_pkstart
                     xxlnm_pkend
@@ -226,17 +218,6 @@ repeat:
                     xxlnm_desc
                with frame bb.
             end. /* if recno */
-            else do:
-               assign lnmtpdesc = "".
-               find first code_mstr no-lock where
-                          code_fldname = "xxlnm_type" and
-                          code_value = input xxlnm_type no-error.
-               if available code_mstr then do:
-                  assign lnmtpdesc = code_cmmt.
-               end.
-               display lnmtpdesc with frame bb.
-            end.
-
          end. /* frame-field */
 
          else do:
@@ -248,22 +229,26 @@ repeat:
       find xxlnm_det
          where xxlnm_line = ln_line
            and xxlnm_site = ln_site
-           and xxlnm_type = input xxlnm_type
+           and xxlnm_time = input xxlnm_time
       exclusive-lock no-error.
 
       if not available xxlnm_det then do:
          create xxlnm_det.
          assign xxlnm_line = ln_line
                 xxlnm_site = ln_site
-                xxlnm_type
+                xxlnm_time
                 xxlnm_interval
                 xxlnm_pkstart
                 xxlnm_pkend
                 xxlnm_sdstart
-                xxlnm_sdend.  
+                xxlnm_sdend.
+         assign xxlnm_itime = s2t(xxlnm_time).
+      end.
+      else do:
+         assign xxlnm_itime = s2t(xxlnm_time).
       end.
 
-      display xxlnm_type
+      display xxlnm_time
               xxlnm_interval
               xxlnm_pkstart
               xxlnm_pkend
@@ -279,11 +264,11 @@ repeat:
          ststatus = stline[2].
          status input ststatus.
 
-         set xxlnm_interval xxlnm_pkstart xxlnm_pkend xxlnm_sdstart 
-         		 xxlnm_sdend xxlnm_desc
+         set xxlnm_interval xxlnm_pkstart xxlnm_pkend xxlnm_sdstart
+             xxlnm_sdend xxlnm_desc
          go-on (F5 CTRL-D) with frame bb.
          display
-              xxlnm_type
+              xxlnm_time
               xxlnm_interval
               xxlnm_pkstart
               xxlnm_pkend

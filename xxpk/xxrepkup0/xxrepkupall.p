@@ -178,6 +178,7 @@ for each trlt1 where trt1_loc <> "p-all"
 	  assign 
 	    trt2_seq      = myseq
 	    trt2_date     = trt1_pdate
+	    trt2_line     = trt1_line
 	    trt2_time     = trt1_ptime
 	    trt2_loc      = trt1_loc
 	    trt2_part     = trt1_part

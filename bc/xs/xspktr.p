@@ -78,7 +78,7 @@ repeat:
      for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_pstat <> "C":
+             and xxwd_pstat <> "C" and xxwd_loc <> "P-All":
             run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
@@ -182,7 +182,7 @@ repeat:
      for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_pstat <> "C" and xxwd_part = part:
+             and xxwd_pstat <> "C" and xxwd_part = part and xxwd_loc <> "P-all":
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
