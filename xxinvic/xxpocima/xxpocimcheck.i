@@ -315,7 +315,7 @@
                 end.
                 tmp_lot = datestr
                         + substring(xxinv_con,6) /*取合同号vt32/后面的字符*/
-                        + string(xxship_case2,"99")    /*托号*/
+/*0112                      + string(xxship_case2,"99")    /*托号*/     */
                         .  /* SS - 110307.1 */
 
                 /* 取得ERP图号 */

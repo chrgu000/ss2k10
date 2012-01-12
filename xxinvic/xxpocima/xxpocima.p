@@ -5,8 +5,9 @@
 
 /* SS - 110307.1  By: Roger Xiao */ /*原版{mfdtitle.i "2+ "}, vp_mstr 区分保税非保税,vp_part : P,M开头区分 */
 /* SS - 110321.1  By: Roger Xiao */  /*收货到指定库位temp */
-/* SS - 110326.1  By: Roger Xiao */  /*托号用流水号xxship_case2,不用原发票托号xxship_case,以缩减条码长度 */
+/* SS - 110326.1  By: Roger Xiao */  /*托号用流水号xxship_case,不用原发票托号xxship_case,以缩减条码长度 */
 /* SS - 110408.1  By: Roger Xiao */  /*xxinv_mstr,一个发票号可能对应多个供应商*/
+/* SS - 120112.1  BY: ZY         */  /*托号用流水号取消,以缩减条码长度 */
 /*-Revision end---------------------------------------------------------------*/
 
 

@@ -137,6 +137,7 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("LOT/SERIAL",12)
          getTermLabel("ISSUED",12)
          getTermLabel("STATUS",12)
+         getTermLabel("Date",12)
          .
   if cate = "A" or cate = "P" then do:
      run printP.
@@ -218,7 +219,8 @@ procedure printP:
                         xxwd_loc
                         xxwd_lot
                         truncate(xxwd_qty_piss,0)
-                        xxwd_pstat.
+                        xxwd_pstat
+                        xxwa_date.
              end.
        end.
 end procedure.
@@ -267,7 +269,8 @@ procedure printS:
                   "P-ALL"
                   xxwd_lot
                   truncate(xxwd_qty_siss,0)
-                  xxwd_sstat.
+                  xxwd_sstat
+                  xxwa_date.
         end.
      end.
 end procedure.
