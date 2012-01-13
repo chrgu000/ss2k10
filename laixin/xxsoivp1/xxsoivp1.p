@@ -121,7 +121,7 @@
 /******************************************************************************/
 
 /* ss 20070530.1 - b */
-/* 
+/*
 message 9901 9902 改成 9951 9952 .
 */
 /* ss 20070530.1 - e */
@@ -144,7 +144,7 @@ message 9901 9902 改成 9951 9952 .
 */
 /* SS - 20060524.3 - E */
 
-/* SS - 20060524.2 - B */   
+/* SS - 20060524.2 - B */
 /*
 1. 不删除已结的SO和SOD
 2. 执行列表:
@@ -154,7 +154,7 @@ message 9901 9902 改成 9951 9952 .
 */
 /* SS - 20060524.2 - E */
 
-/* SS - 20060524.1 - B */   
+/* SS - 20060524.1 - B */
 /*
 1. 删除已结的SO和SOD
 2. 执行列表:
@@ -180,7 +180,7 @@ define            variable trans_conv like sod_um_conv no-undo.
 {txcalvar.i}
 /* SS - 20060401 - E */
 
-/* SS - 20060313 - B */   
+/* SS - 20060313 - B */
 /*
 1. 根据申请过账
 2. 更新了以下表:XXRQM,ABS
@@ -569,7 +569,7 @@ repeat:
          /* SS - 20060324 - E */
          AND (xxrqm_cust = cust OR cust = "")
          AND xxrqm_invoiced = NO
-       
+
          USE-INDEX xxrqm_nbr
          :
 
@@ -582,7 +582,7 @@ repeat:
             .
 
          FOR EACH xxabs_mstr
-            WHERE  xxabs_domain = global_domain and xxabs_nbr = xxrqm_nbr 
+            WHERE  xxabs_domain = global_domain and xxabs_nbr = xxrqm_nbr
             BREAK BY xxabs_order
             BY xxabs_line
             :
@@ -604,11 +604,11 @@ repeat:
             /* 更新SOD */
             ACCUMULATE xxabs_ship_qty (TOTAL BY xxabs_order BY xxabs_line).
             IF LAST-OF(xxabs_line) THEN DO:
-               FIND FIRST sod_det WHERE sod_domain = global_domain and sod_nbr = xxabs_order AND STRING(sod_line) = xxabs_line 
+               FIND FIRST sod_det WHERE sod_domain = global_domain and sod_nbr = xxabs_order AND STRING(sod_line) = xxabs_line
                       EXCLUSIVE-LOCK NO-ERROR.
                IF AVAILABLE sod_det THEN DO:
                   /* SS - 20060401 - B */
-                  FIND FIRST ABS_mstr WHERE abs_domain = global_domain  and ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id 
+                  FIND FIRST ABS_mstr WHERE abs_domain = global_domain  and ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id
                     NO-LOCK NO-ERROR.
                   IF AVAILABLE ABS_mstr AND ABS__qad02 <> sod_um THEN DO:
                      {gprun.i ""gpumcnv.p""
@@ -660,7 +660,7 @@ repeat:
             END.
 
             /* 更新ABS */
-            FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id 
+            FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id
                   EXCLUSIVE-LOCK NO-ERROR.
            IF AVAILABLE ABS_mstr THEN DO:
 /*ss - 111110.1 - b*
@@ -685,7 +685,7 @@ repeat:
                   ABS__dec01 = ABS__dec01 + xxabs_ship_qty
                   */
                   ABS__dec04 = ABS__dec04 + xxabs_ship_qty
-		  abs__dec07 = abs__dec07 - xxabs_ship_qty
+                  abs__dec07 = abs__dec07 - xxabs_ship_qty
                   /* SS - 20060324 - E */
                   ABS__chr02 = xxabs__chr01
                   .
@@ -699,7 +699,7 @@ repeat:
                RELEASE ABS_mstr.
             END.
             xxabs__chr10 = "pass".
-	    xxabs__dec10 = 0.
+            xxabs__dec10 = 0.
          END. /* FOR EACH xxabs_mstr NO-LOCK */
       END. /* FOR EACH xxrqm_mstr EXCLUSIVE-LOCK */
    END. /* DO TRANSACTION: */
@@ -707,7 +707,7 @@ repeat:
    ASSIGN
       inv = inv_nbr
       inv1 = inv_nbr
-      . 
+      .
    /* SS - 20060313 - E */
 
    l_increment = no.

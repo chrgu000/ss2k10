@@ -194,6 +194,8 @@
 /* SS - 20060524.1 - E */
 
 
+/*0111 »’º«’À¥ÌŒÛ*/
+
 {mfdeclre.i }
 {cxcustom.i "SOIVPST1.P"}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
@@ -1543,7 +1545,7 @@ do on error undo, leave:
                /* THE LOGIC INTRODUCED IN gpcurcnv.i FOR HANDLING         */
                /* ROUNDING ISSUES                                         */
 
-               {gprun.i ""sosogla.p""
+/*0111*/  {gprun.i ""xxsogla.p""
                   "(input-output l_ar_gl_line,
                     input-output l_ar_gltw_line,
                     input-output l_tot_amt,
@@ -1699,13 +1701,13 @@ do on error undo, leave:
                     input-output l_tot_amt1,
                     input-output l_tot_ramt1)" }
                   */
-                                       {gprun.i ""xxsoivp1a.p""
-                                          "(input        l_consolidate,
-                                            input        l_po_schd_nbr,
-                                            output       viar_recno,
-                                            output       vglamt,
-                                            input-output l_tot_amt1,
-                                            input-output l_tot_ramt1)" }
+                  {gprun.i ""xxsoivp1a.p""
+                     "(input        l_consolidate,
+                       input        l_po_schd_nbr,
+                       output       viar_recno,
+                       output       vglamt,
+                       input-output l_tot_amt1,
+                       input-output l_tot_ramt1)" }
                   /* SS - 20060524.1 - E */
                                           /* SS - 20060524.2 - E */
 
@@ -2019,7 +2021,7 @@ do on error undo, leave:
             display
                accum total (dr_amt) @ dr_amt
                accum total (cr_amt) @ cr_amt with frame gltwtot.
-            down 1 with frame gltwtot.
+            down 1 with frame gltwtot.	
          end. /* DO ON ENDKEY UNDO, LEAVE */
       end.
 

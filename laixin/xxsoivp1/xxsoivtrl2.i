@@ -60,8 +60,8 @@
 /* Revision: 1.79         BY: Dan Herman          DATE: 10/25/04  ECO: *P2QS* */
 /* Revision: 1.80         BY: Bharath Kumar       DATE: 11/09/04  ECO: *P2TB* */
 /* Revision: 1.82         BY: Shivganesh Hegde    DATE: 01/03/05  ECO: *Q0G5* */
-/* $Revision: 1.82.1.1 $    BY: Dayanand Jethwa       DATE: 02/24/05 ECO: *P27M* */
-/* $Revision: 1.57.1.23 $   BY: Bill Jiang          DATE: 05/24/06  ECO: *SS - 20060524.3* */
+/* $Revision: 1.82.1.1 $  BY: Dayanand Jethwa     DATE: 02/24/05  ECO: *P27M* */
+/* $Revision: 1.57.1.23 $  BY: Bill Jia DATE: 05/24/06 ECO: *SS - 20060524.3* */
 /* By: Neil Gao Date: 07/05/16 ECO: * ss 20070516.1 */
 
 /*-Revision end---------------------------------------------------------------*/
@@ -291,9 +291,8 @@ do for so_mstr:     /*scope this trans */
                so_nbr so_ord_date so_prepaid so_print_pl so_print_so
                so_rev so_sched so_ship so_ship_date so_stat
                so_tax_date so_tax_env so_to_inv so_trl1_amt so_trl1_cd
-
      /*SS-IVAN 06101001  E*/ 
-                 so_trl2_amt so_trl2_cd so_trl3_amt so_trl3_cd
+               so_trl2_amt so_trl2_cd so_trl3_amt so_trl3_cd
      /*SS-IVAN 06101001  B*/ 
      /*
                  so__qadl01 so__qadc03)

@@ -1,17 +1,17 @@
-/* xxsoivm1.p - INVOICE MAINTENANCE                                             */
-/* Copyright 1996-2006 Softspeed, China.                        */
+/* xxsoivm1.p - INVOICE MAINTENANCE                                           */
+/* Copyright 1996-2006 Softspeed, China.                                      */
 /* All rights reserved worldwide.  This is an unpublished work.               */
 /* $Revision: 1.95.1.6 $                                                      */
-/* REVISION: 1.0      LAST MODIFIED: 02/21/06   BY: Apple Tam *SS - 20060221*                  */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 02/25/06  ECO: *SS - 20060225* */
-/* $Revision: 1.95.1.6 $    BY: Micho Yang        DATE: 03/07/06  ECO: *SS - 20060307* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/11/06  ECO: *SS - 20060311* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/16/06  ECO: *SS - 20060316* */
-/* $Revision: 1.95.1.6 $    BY: Micho Yang        DATE: 03/20/06  ECO: *SS - 20060320* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/24/06  ECO: *SS - 20060324* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/31/06  ECO: *SS - 20060331* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 04/01/06  ECO: *SS - 20060401* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 06/12/06  ECO: *SS - 20060612.1* */
+/* REVISION: 1.0      LAST MODIFIED: 02/21/06   BY: Apple Tam *SS - 20060221**/
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 02/25/06  ECO: *SS - 20060225* */
+/* $Revision: 1.95.1.6 $ BY: Micho Yang DATE: 03/07/06  ECO: *SS - 20060307* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/11/06  ECO: *SS - 20060311* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/16/06  ECO: *SS - 20060316* */
+/* $Revision: 1.95.1.6 $ BY: Micho Yang DATE: 03/20/06  ECO: *SS - 20060320* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/24/06  ECO: *SS - 20060324* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/31/06  ECO: *SS - 20060331* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 04/01/06  ECO: *SS - 20060401* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 06/12/06  ECO: *SS - 20060612.1*/
 /* By: Neil Gao Date: 20070227 ECO: *ss 20070227.1 * */
 /* By: Neil Gao Date: 20070302 ECO: *ss 20070302.1 * */
 /* By: Neil Gao Date: 20070312 ECO: *ss 20070312.1 * */
@@ -54,6 +54,11 @@
 1. 处理了计量单位
 2. 改变为集中处理已选择的金额
 */
+/* ss 20120106.1 - B */
+/*	
+  放开发票金额可以调整   
+*/
+/* ss 20120106.1 - E */
 define variable trans_conv like sod_um_conv no-undo.
 /* SS - 20060401 - E */
 
@@ -168,9 +173,9 @@ DEFINE NEW SHARED FRAME match_maintenance .
 DEFINE NEW SHARED FRAME w.
 
 form
-   xxrqmnbr	              colon 15
+   xxrqmnbr               colon 15
    xxrqmsite              COLON 40
-   xxrqmcust  	          colon 65
+   xxrqmcust              colon 65
    xxrqmrqby_userid       colon 15
    xxrqmreq_date          colon 40
    xxrqmtax_in            colon 15
@@ -209,7 +214,8 @@ FORM
    tt1_stat LABEL "Sel"
    tt1_disp_id
    tt1_ship_qty
-   WITH FRAME sel_shipper WIDTH 80 TITLE COLOR normal (getFrameTitle("SHIPPER_SELECTION_MAINTENANCE",42)).
+   WITH FRAME sel_shipper WIDTH 80 TITLE COLOR
+        normal (getFrameTitle("SHIPPER_SELECTION_MAINTENANCE",42)).
 /* SS - 20060311 - E */
 
 /* SET EXTERNAL LABELS */
@@ -257,7 +263,7 @@ FORM
 setFrameLabels(frame match_maintenance:handle).
 /* SS - 20060307 - E */
 
-xxrqmnbr	       = "".
+xxrqmnbr         = "".
 xxrqmsite        = "".
 xxrqmcust        = "".
 xxrqmrqby_userid = "".
@@ -283,7 +289,7 @@ repeat on error undo, retry:
 
       if recno <> ? then do:
          assign
-            xxrqmnbr	        = xxrqm_nbr
+            xxrqmnbr          = xxrqm_nbr
             xxrqmsite         = xxrqm_site
             xxrqmcust         = xxrqm_cust
             xxrqmrqby_userid  = xxrqm_rqby_userid
@@ -316,13 +322,13 @@ repeat on error undo, retry:
       end.
 /* ss 20070302.1 - b */
       else if xxrqm_open then do:
-      	 message "该申请号是委托申请" .
-      	 undo,retry.
+         message "该申请号是委托申请" .
+         undo,retry.
       end.
 /* ss 20070302.1 - e */
       else do:
          assign
-            xxrqmnbr	= xxrqm_nbr
+            xxrqmnbr  = xxrqm_nbr
             xxrqmsite = xxrqm_site
             xxrqmcust         = xxrqm_cust
             xxrqmrqby_userid     = xxrqm_rqby_userid
@@ -344,7 +350,7 @@ repeat on error undo, retry:
                xxrqmnbr = fill("0",8 - length(string(integer(xxrqmnbr) + 1))) + string(integer(xxrqmnbr) + 1).
             end.
             else do:
-					leave.
+          leave.
             end.
          end. /*repeat*/
       end.
@@ -383,7 +389,7 @@ repeat on error undo, retry:
          with frame a editing:
          readkey.
          apply lastkey.
-		  end.
+      end.
 
       FIND FIRST si_mstr WHERE si_site = xxrqmsite
 /* ss 20072027.1 */ and si_domain = global_domain
@@ -407,12 +413,12 @@ repeat on error undo, retry:
       FIND first xxrqm_mstr where xxrqm_nbr = xxrqmnbr AND xxrqm_site <> "" AND xxrqm_cust <> ""
 /* ss 20070227.1 */ and xxrqm_domain = global_domain
       no-lock NO-ERROR.
-		IF available xxrqm_mstr and (xxrqm_site <> xxrqmsite OR xxrqm_cust <> xxrqmcust) THEN DO:
+    IF available xxrqm_mstr and (xxrqm_site <> xxrqmsite OR xxrqm_cust <> xxrqmcust) THEN DO:
          /* TODO */
          message "该申请号已存在，不能修改地点和客户。请重新输入".
-			next-prompt xxrqmsite with frame a.
-			undo,retry.
-		END.
+      next-prompt xxrqmsite with frame a.
+      undo,retry.
+    END.
       /* 地点和客户 - E */
 
       /* 删除或编辑 - B */
@@ -482,7 +488,7 @@ repeat on error undo, retry:
             /* SS - 20060311 - E */
             clear frame a.
             ASSIGN
-               xxrqmnbr	       = ""
+               xxrqmnbr        = ""
                xxrqmsite = ""
                xxrqmcust         = ""
                xxrqmrqby_userid     = ""
@@ -625,7 +631,7 @@ repeat on error undo, retry:
 /*
                and abs_shipto = xxrqmcust
 */
-								and abs_shipto begins xxrqmcust
+                and abs_shipto begins xxrqmcust
 /* ss 20070421.1 - e */
                and abs_type      = "s"
 /* ss 20070227.1 */ and abs_domain = global_domain
@@ -637,12 +643,12 @@ repeat on error undo, retry:
          for each abs_mstr
              where abs_shipfrom = xxrqmsite
                and abs_id       >= range  and abs_id      <= range1
-								/*and abs_shipto begins xxrqmcust*/
+                /*and abs_shipto begins xxrqmcust*/
                and abs_type      = "s"  and abs_domain = global_domain
                AND ABS_shp_date >= ship_date_from AND ABS_shp_date <= ship_date_to
                no-lock,
             each ad_mstr where ad_domain = global_domain and ad_addr = abs_shipto
-            		and (ad_ref = xxrqmcust or ad_addr = xxrqmcust) break by abs_id:
+                and (ad_ref = xxrqmcust or ad_addr = xxrqmcust) break by abs_id:
 
 /*SS 20080418 - E*/
             if substring(abs_status,2,1) = " "
@@ -713,10 +719,10 @@ repeat on error undo, retry:
 
 /* ss 20070711 - b */
 
-						for each cp_mstr where cp_domain = global_domain
-							and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
-								tt1_desc2 = cp_cust_part.
-						end.
+            for each cp_mstr where cp_domain = global_domain
+              and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
+                tt1_desc2 = cp_cust_part.
+            end.
 /* ss 20070711 - e */
 
             ASSIGN
@@ -812,10 +818,10 @@ repeat on error undo, retry:
 
 /* ss 20070711 - b */
 
-									for each cp_mstr where cp_domain = global_domain
-										and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
-											tt1_desc2 = cp_cust_part.
-									end.
+                  for each cp_mstr where cp_domain = global_domain
+                    and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
+                      tt1_desc2 = cp_cust_part.
+                  end.
 /* ss 20070711 - e */
 
                /* SS - 20060401 - B */
@@ -986,7 +992,7 @@ repeat on error undo, retry:
                   /* SS - 20060331 - E */
 
 /* ss 20070728.1 - b */
-								run xxmj (input tt1_item ).
+                run xxmj (input tt1_item ).
 /* ss 20070728 - e */
 
                   "
@@ -1034,10 +1040,10 @@ repeat on error undo, retry:
             END.
 */
 
-						for each cp_mstr where cp_domain = global_domain
-							and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
-								tt1_cust_part = cp_cust_part.
-						end.
+            for each cp_mstr where cp_domain = global_domain
+              and cp_part = tt1_item and cp_cust = xxrqmcust no-lock by cp_cust_eco :
+                tt1_cust_part = cp_cust_part.
+            end.
 
 /* ss 20070709 - e */
 
@@ -1109,7 +1115,7 @@ repeat on error undo, retry:
 /* ss 20070312.1 - b */
       if keyfunction(lastkey) = "end-error"
       then do:
-      	leave loopf1.
+        leave loopf1.
       end.
 /* ss 20070312.1 - e */
 
@@ -1188,20 +1194,29 @@ repeat on error undo, retry:
             tt1_qty_inv
             go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
 */
-					do on endkey undo,retry :
-						set tt1_qty_inv tt1_price go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
-						if tt1_qty_inv > tt1_ship_qty then do:
-							message "发票数量不能大于发运数量".
-							disp tt1_ship_qty @ tt1_qty_inv with FRAME match_maintenance .
-							undo,retry.
-						end.
-					end.
+          do on endkey undo,retry :
+            set tt1_qty_inv tt1_price go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
+            if tt1_qty_inv > tt1_ship_qty then do:
+              message "发票数量不能大于发运数量".
+              disp tt1_ship_qty @ tt1_qty_inv with FRAME match_maintenance .
+              undo,retry.
+            end.
+          end.
 /* SS 090805.1 - E */
-
+/* ss 20120106.1 - B */
          sel_total = sel_total + tt1_qty_inv * tt1_price.
 
+         find first sod_det exclusive-lock where sod_domain = global_domain
+                and sod_nbr = tt1_order and sod_line = integer(tt1_line)
+         no-error.
+         if available sod_det and sod_price <> tt1_price then do:
+            assign sod_price = tt1_price
+            			 sod_list_pr = tt1_price
+            		   sod_qty_chg = tt1_qty_inv. 
+         end.
+/* ss 20120106.1 - E */
 /* ss 20070728 - b */
-				 run xxmj (input tt1_item ).
+         run xxmj (input tt1_item ).
 /* ss 20070728 - e */
 
          DISP
@@ -1252,9 +1267,9 @@ repeat on error undo, retry:
          ELSE DO:
 /* ss 20071017 - b */
 /*
-         	 if tt1_ship_qty < tt1_qty_inv then
+           if tt1_ship_qty < tt1_qty_inv then
 */
-         	 if abs(tt1_ship_qty) < abs(tt1_qty_inv) then
+           if abs(tt1_ship_qty) < abs(tt1_qty_inv) then
 /* ss 20071017 - e */
             tt1_close_abs = yes.
            else tt1_close_abs = no.
@@ -1343,78 +1358,78 @@ STATUS input.
 /* ss 20070728.1 - b */
 procedure xxmj:
 
-		define input parameter p_part like pt_part no-undo.
-		for first xxmj_mstr where xxmj_domain = global_domain and
-			xxmj_cust = xxrqmcust and xxmj_part = p_part and
-			xxmj_start_date <= xxrqmreq_date
-			no-lock:
+    define input parameter p_part like pt_part no-undo.
+    for first xxmj_mstr where xxmj_domain = global_domain and
+      xxmj_cust = xxrqmcust and xxmj_part = p_part and
+      xxmj_start_date <= xxrqmreq_date
+      no-lock:
 
-			v_qty = 0.
-			IF xxmj_type = '1' or xxmj_type = "3" THEN DO:
-				if xxmj_type = "3" then do:
-					if xxmj_end_date < xxrqmreq_date then do:
-						message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX.
-      			leave.
-      		end.
-				end.
+      v_qty = 0.
+      IF xxmj_type = '1' or xxmj_type = "3" THEN DO:
+        if xxmj_type = "3" then do:
+          if xxmj_end_date < xxrqmreq_date then do:
+            message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX.
+            leave.
+          end.
+        end.
 
-				for each btt11 where btt11.tt1_item = xxmj_part and btt11.tt1_stat <> "" no-lock:
+        for each btt11 where btt11.tt1_item = xxmj_part and btt11.tt1_stat <> "" no-lock:
 
-					IF v_qty < xxmj_qty THEN
-      				v_qty = v_qty + btt11.tt1_qty_inv.
-      		if v_qty >= xxmj_qty then do:
-      				message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
-      				leave.
-      		end.
-      	end. /* for each btt11 */
+          IF v_qty < xxmj_qty THEN
+              v_qty = v_qty + btt11.tt1_qty_inv.
+          if v_qty >= xxmj_qty then do:
+              message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
+              leave.
+          end.
+        end. /* for each btt11 */
 
-      	if v_qty >= xxmj_qty then leave.
+        if v_qty >= xxmj_qty then leave.
 
-				for each xxrqm_mstr where xxrqm_domain = global_domain and xxrqm_cust = xxrqmcust and
-					xxrqm_nbr <> xxrqmnbr and not xxrqm_invoiced  no-lock,
-					EACH xxabs_mstr WHERE xxabs_domain = global_domain and xxabs_nbr = xxrqm_nbr no-lock,
-					each sod_det WHERE sod_domain = GLOBAL_domain AND sod_nbr = xxabs_order and sod_line = int(xxabs_line) and sod_part = xxmj_part no-lock:
+        for each xxrqm_mstr where xxrqm_domain = global_domain and xxrqm_cust = xxrqmcust and
+          xxrqm_nbr <> xxrqmnbr and not xxrqm_invoiced  no-lock,
+          EACH xxabs_mstr WHERE xxabs_domain = global_domain and xxabs_nbr = xxrqm_nbr no-lock,
+          each sod_det WHERE sod_domain = GLOBAL_domain AND sod_nbr = xxabs_order and sod_line = int(xxabs_line) and sod_part = xxmj_part no-lock:
 
-					IF v_qty < xxmj_qty then
-						v_qty = v_qty + xxabs_ship_qty.
+          IF v_qty < xxmj_qty then
+            v_qty = v_qty + xxabs_ship_qty.
 
-					if v_qty >= xxmj_qty then do:
-      			message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
-      			leave.
-      		end.
-				end.
+          if v_qty >= xxmj_qty then do:
+            message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
+            leave.
+          end.
+        end.
 
-				if v_qty >= xxmj_qty then leave.
-				FOR EACH ih_hist WHERE ih_domain = GLOBAL_domain
+        if v_qty >= xxmj_qty then leave.
+        FOR EACH ih_hist WHERE ih_domain = GLOBAL_domain
                  AND ih_cust = xxmj_cust
                  AND ih_inv_date >= xxmj_start_date
                  NO-LOCK,
-  					EACH idh_hist WHERE idh_domain = GLOBAL_domain
+            EACH idh_hist WHERE idh_domain = GLOBAL_domain
                   AND idh_inv_nbr = ih_inv_nbr
                   AND idh_nbr = ih_nbr
                   AND idh_part = xxmj_part NO-LOCK
                   BY ih_inv_date :
 
-						IF v_qty < xxmj_qty THEN
-      				v_qty = v_qty + idh_qty_inv .
-      			if v_qty >= xxmj_qty then do:
-      				message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
-      				leave.
-      			end.
-  			END.
+            IF v_qty < xxmj_qty THEN
+              v_qty = v_qty + idh_qty_inv .
+            if v_qty >= xxmj_qty then do:
+              message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
+              leave.
+            end.
+        END.
 
-  			if v_qty >= xxmj_qty then leave.
+        if v_qty >= xxmj_qty then leave.
 
-			end.
+      end.
 
-			IF xxmj_type = '2' THEN DO:
-				if xxmj_end_date < xxrqmreq_date then do:
-					message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
-      		leave.
-				end.
-			end.
+      IF xxmj_type = '2' THEN DO:
+        if xxmj_end_date < xxrqmreq_date then do:
+          message '模具' xxmj_nbr '已经分摊完' VIEW-AS ALERT-BOX .
+          leave.
+        end.
+      end.
 
-		end.
+    end.
 
 end procedure.
 

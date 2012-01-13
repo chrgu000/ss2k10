@@ -341,7 +341,7 @@ define variable l_po_schd_nbr       like sod_contr_id      no-undo.
 define variable l_remote-base-curr  like gl_base_curr      no-undo.
 define variable l_exch-rate         like exr_rate          no-undo.
 define variable l_exch-rate2        like exr_rate2         no-undo.
-
+define variable l_ret_flag          like mfc_logical       no-undo initial no.
 /* CONSIGNMENT VARIABLES */
 {socnvars.i}
 using_cust_consignment = consignment.
@@ -1504,8 +1504,10 @@ do on error undo, leave:
                   {&RCSOIS1A-P-TAG2}
                   next_inv_nbr = soc_inv - 1.
               
-               {gprun.i ""sosoina.p""}
-               
+               {gprun.i ""sosoina.p"" "(output l_ret_flag)"}
+               if l_ret_flag
+               then
+                  undo progloop,leave progloop.
               
 
                {&RCSOIS1A-P-TAG13}

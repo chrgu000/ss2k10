@@ -277,6 +277,7 @@ define variable auth_price          like sod_price
 define variable auth_found          as logical      no-undo.
 
 define shared temp-table t_absr_det            no-undo
+	 field t_absr_id        like absr_id
    field t_absr_reference like absr_reference
    field t_absr_qty       as decimal format "->>>>,>>>,>>9.99"
    field t_absr_ext       as decimal format "->>>>,>>>,>>9.99".
