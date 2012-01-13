@@ -14,8 +14,8 @@ define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
-define variable part   like pt_part no-undo initial "MHTA03-N60-0-CK".
-define variable part1  like pt_part no-undo initial "MHTA03-N60-0-CK".
+define variable part   like pt_part no-undo. /* initial "MHTA03-N60-0-CK". */
+define variable part1  like pt_part no-undo. /* initial "MHTA03-N60-0-CK". */
 define variable issue   as date no-undo initial today.
 define variable issue1  as date no-undo initial today.
 define variable nbr  as character format "x(12)" label "Picklist Number".
