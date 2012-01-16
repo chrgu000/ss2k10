@@ -7,7 +7,7 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character           */
 
 /*bg:直接处理来自文件设置为NO,方便CIM_PRO处理                                 */
-/*bg*/{mfdtitle.i "14YL"}
+/*bg*/{mfdtitle.i "21YG"}
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE mgbdld_p_2 "Input File/Continuous Process Name"
@@ -60,15 +60,15 @@ define variable l_sudden_exit like mfc_logical no-undo.
 
 /*cn*/ do transaction:
 /*cn*/ /*initial variable*/
-/*cn*/ find first qad_wkfl exclusive-lock where
-/*EB              qad_domain = global_domain and                             */
-/*cn*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-/*cn*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
+/*cn*/ find first usrw_wkfl no-lock where
+/*EB*/            usrw_domain = global_domain and
+/*cn*/            usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
+/*cn*/ if avail usrw_wkfl then do:
 /*cn*/   if opsys = "unix" then do:
-/*cn*/      assign sourcename = qad_charfld[1].
+/*cn*/      assign sourcename = usrw_charfld[1].
 /*cn*/   end.
 /*cn*/   else if opsys = "msdos" or opsys = "win32" then do:
-/*cn*/      assign sourcename = qad_charfld[2].
+/*cn*/      assign sourcename = usrw_charfld[2].
 /*cn*/   end.
 /*cn*/ end.
 /*cn*/ end. /*do transaction:*/
@@ -91,7 +91,7 @@ start_time = string(time, "hh:MM:ss").
 do transaction:
    do i = 0 to 999:
       find first qad_wkfl exclusive-lock where
-/*EB       qad_wkfl.qad_domain = global_domain and                          */
+/*EB*/   qad_wkfl.qad_domain = global_domain and
          qad_key1 = "CIM Load Session" and
          qad_key2 > string(i, "999")
          use-index qad_index1 no-error.
@@ -116,7 +116,7 @@ do transaction:
    if available qad_wkfl then release qad_wkfl.
 
    create qad_wkfl.
-/*EB   qad_wkfl.qad_domain = global_domain.                                  */
+/*EB*/    qad_wkfl.qad_domain = global_domain.
    assign
       qad_key1 = "CIM Load Session"
       qad_key2 = session_no
@@ -149,7 +149,7 @@ repeat on stop undo, retry:
 
    do transaction:
       find qad_wkfl exclusive-lock  where
-/*EB     qad_wkfl.qad_domain = global_domain and                             */
+/*EB*/   qad_wkfl.qad_domain = global_domain and
          qad_key1 = "CIM Load Session" and
          qad_key2 = session_no    no-error.
 
@@ -191,7 +191,7 @@ repeat on stop undo, retry:
       undo, retry.
    end.
    find first qad_wkfl where
-/*EB  qad_wkfl.qad_domain = global_domain and                                */
+/*EB*/  qad_wkfl.qad_domain = global_domain and
       qad_key1 = "CIM Load Session" and
       qad_key2 <> session_no        and
       qad_charfld[3] = string(datasource)   and
@@ -208,7 +208,7 @@ repeat on stop undo, retry:
 
    do transaction:
       find qad_wkfl exclusive-lock where
-/*EB       qad_wkfl.qad_domain = global_domain and                           */
+/*EB*/       qad_wkfl.qad_domain = global_domain and
            qad_key1 = "CIM Load Session" and
            qad_key2 = session_no no-error.
       if not available qad_wkfl or
@@ -271,22 +271,23 @@ repeat on stop undo, retry:
             do transaction:
                assign_bdl_id:
                repeat on error undo:
-
-/*EB                {mfnxtsq1.i                                             */
-/*EB                            "bdl_mstr.bdl_domain = global_domain and    */
-/*EB                             bdl_source = """" and"                     */
-/*EB                             bdl_mstr                                   */
-/*EB                             bdl_id                                     */
-/*EB                             mf_sq04                                    */
-/*EB                             next_id}                                   */
-           
+/*EB*/
+                    {mfnxtsq1.i
+                                "bdl_mstr.bdl_domain = global_domain and
+                                 bdl_source = """" and"
+                                 bdl_mstr
+                                 bdl_id
+                                 mf_sq04
+                                 next_id}
+/*EB*/
+/*EB*
                   {mfnxtsq1.i bdl_mstr
                               "bdl_source = """" and bdl_id"
                               mf_sq04
                               next_id}
-                               
+/*EB*/ */
                   create bdl_mstr.
-/*EB                     bdl_mstr.bdl_domain = global_domain.                */
+/*EB*/                     bdl_mstr.bdl_domain = global_domain.
                   assign
                      bdl_mstr.bdl_source = ""
                      bdl_mstr.bdl_id = next_id
@@ -316,7 +317,7 @@ repeat on stop undo, retry:
                for each work_input no-lock:
                   i = i + 1.
                   create bdld_det.
-/*EB                       bdld_det.bdld_domain = global_domain.               */
+/*EB*/                   bdld_det.bdld_domain = global_domain.
                   assign
                      bdld_source = ""
                      bdld_id = next_id
@@ -331,7 +332,7 @@ repeat on stop undo, retry:
 
             do transaction:
                find qad_wkfl exclusive-lock where
-/*EB                qad_wkfl.qad_domain = global_domain and                  */
+/*EB*/              qad_wkfl.qad_domain = global_domain and
                   qad_key1 = "CIM Load Session" and
                   qad_key2 = session_no    no-error.
 
@@ -382,31 +383,25 @@ repeat on stop undo, retry:
    end.
 /*cn*/ do transaction:
 /*cn*/ /* 备份变量以便装入时使用. */
-/*cn*/ release qad_wkfl.
-/*cn*/ find first qad_wkfl exclusive-lock where
-/*EB              ad_domain = global_domain and                              */
-/*cn*/            qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-/*cn*/ if avail qad_wkfl and not locked(qad_wkfl) then do:
-/*cn*/   assign qad_intfld[1] = f_id
-/*cn*/          qad_intfld[2] = l_id
-/*cn*/          qad_logfld[2] = no.
-/*cn*/   if opsys = "unix" then assign qad_charfld[1] = sourcename.
-/*cn*/   if opsys = "msdos" or opsys = "win32" then
-/*cn*/      assign qad_charfld[2] = sourcename.
-/*cn*/ end.
-/*cn*/ else do:
-/*cn*/   create qad_wkfl.
+/*cn*/ release usrw_wkfl.
+/*cn*/ find first usrw_wkfl exclusive-lock where
+/*EB*/            usrw_domain = global_domain and
+/*cn*/            usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
+/*cn*/ if not avail usrw_wkfl then do:
+/*cn*/   create usrw_wkfl.
 /*cn*/   assign
-/*EB            qad_domain = global_domain                                   */
-/*cn*/          qad_key1 = "mgbdpro"
-/*cn*/          qad_key2 = global_userid
-/*cn*/          qad_intfld[1] = f_id
-/*cn*/          qad_intfld[2] = l_id
-/*cn*/          qad_logfld[2] = no.
-/*cn*/   if opsys = "unix" then assign qad_charfld[1] = sourcename.
-/*cn*/   if opsys = "msdos" or opsys = "win32" then
-/*cn*/      assign qad_charfld[2] = sourcename.
+/*EB*/          usrw_domain = global_domain
+/*cn*/          usrw_key1 = "mgbdpro"
+/*cn*/          usrw_key2 = global_userid.
 /*cn*/ end.
+/*cn*/   if not locked(usrw_wkfl) then  do:
+/*cn*/      assign usrw_intfld[1] = f_id
+/*cn*/             usrw_intfld[2] = l_id
+/*cn*/             usrw_logfld[2] = no.
+/*cn*/      if opsys = "unix" then assign usrw_charfld[1] = sourcename.
+/*cn*/      if opsys = "msdos" or opsys = "win32" then
+/*cn*/         assign usrw_charfld[2] = sourcename.
+/*cn*/   end.
 /*cn*/ end. /*do transaction:*/
    input stream batchdata close.
    display sets_entered f_id l_id with frame a.
@@ -427,7 +422,7 @@ PROCEDURE p-delete-qadwkfl:
 
    do transaction:
       find first qad_wkfl where
-/*EB          qad_wkfl.qad_domain = global_domain and                        */
+/*EB*/         qad_wkfl.qad_domain = global_domain and
                qad_key1 = "CIM Load Session" and
                qad_key2 = session_no exclusive-lock no-error.
       if available qad_wkfl

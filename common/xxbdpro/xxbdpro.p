@@ -5,7 +5,7 @@
 /* REVISION:Y0BG LAST MODIFIED: 10/27/10 BY: zy                  *cn         */
 /* REVISION:14YL LAST MODIFIED: 03/26/11   BY: zy        Add EB common    *EB*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-{mfdtitle.i "14YL"}
+{mfdtitle.i "21YG"}
 
 define variable repeat_process like mfc_logical
    label "Repeat Processing" .
@@ -115,21 +115,21 @@ do on error undo, return error:
    run get_CIM_session (output session_no).
 end.
 
-find first qad_wkfl no-lock where
-/*EB       qad_domain = global_domain and                                    */
-           qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-if avail qad_wkfl then do:
-  assign from_id = qad_intfld[1] when qad_intfld[1] <> 0
-         to_id   = qad_intfld[2] when qad_intfld[2] <> 0
-                                 and qad_intfld[2] <> 99999999
-         repeat_process = qad_logfld[1]
-         pause_seconds  = qad_intfld[3]
-         process_file   = qad_logfld[2].
+find first usrw_wkfl no-lock where
+/*EB*/     usrw_domain = global_domain and
+           usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
+if avail usrw_wkfl then do:
+  assign from_id = usrw_intfld[1] when usrw_intfld[1] <> 0
+         to_id   = usrw_intfld[2] when usrw_intfld[2] <> 0
+                                   and usrw_intfld[2] <> 99999999
+         repeat_process = usrw_logfld[1]
+         pause_seconds  = usrw_intfld[3]
+         process_file   = usrw_logfld[2].
 /*cn*/   if opsys = "unix" then do:
-/*cn*/      assign file_name = qad_charfld[1].
+/*cn*/      assign file_name = usrw_charfld[1].
 /*cn*/   end.
 /*cn*/   else if opsys = "msdos" or opsys = "win32" then do:
-/*cn*/      assign file_name = qad_charfld[2].
+/*cn*/      assign file_name = usrw_charfld[2].
 /*cn*/   end.
 end.
 
@@ -327,13 +327,13 @@ assign vfrom_id        = from_id
                /* Retrieve batch data load master record (bdl_mstr) */
                if first_shot then
                   find first bdl_mstr no-lock where
-/*EB                         bdl_mstr.bdl_domain = global_domain and         */
+/*EB*/                       bdl_mstr.bdl_domain = global_domain and
                              bdl_source = "" and
                              bdl_id >= from_id and bdl_id <= to_id
                              no-error no-wait.
                else
                   find next bdl_mstr no-lock where
-/*EB                        bdl_mstr.bdl_domain = global_domain and          */
+/*EB*/                      bdl_mstr.bdl_domain = global_domain and
                             bdl_source = "" and
                             bdl_id >= from_id and bdl_id <= to_id
                             no-error no-wait.
@@ -367,7 +367,7 @@ assign vfrom_id        = from_id
          end.
 
          find first bdld_det no-lock where
-/*EB                bdld_det.bdld_domain = global_domain and                 */
+/*EB*/              bdld_det.bdld_domain = global_domain and
                     bdld_source = current_bdl_source and
                     bdld_id = current_bdl_id and
                    (bdld_data begins "@ACTION") no-error.
@@ -379,7 +379,7 @@ assign vfrom_id        = from_id
 
          do transaction:
             find bdl_mstr exclusive-lock where
-/*EB             bdl_mstr.bdl_domain = global_domain and                     */
+/*EB*/           bdl_mstr.bdl_domain = global_domain and
                  bdl_source = current_bdl_source and bdl_id = current_bdl_id.
             assign
                bdl_pgm_errs = group_function_errors
@@ -427,8 +427,8 @@ assign vfrom_id        = from_id
 end.
 
 do transaction:
-   find qad_wkfl where
-/*EB    qad_wkfl.qad_domain = global_domain and                               */
+   find qad_wkfl exclusive-lock where
+/*EB*/  qad_wkfl.qad_domain = global_domain and
         qad_key1 = "Cim Process Session" and
         qad_key2 = session_no no-error.
 
@@ -436,33 +436,33 @@ do transaction:
       delete qad_wkfl.
    end.
    /** save frame variable **/
-   find first qad_wkfl where
-/*EB          qad_domain = global_domain and                                  */
-              qad_key1 = "mgbdpro" and qad_key2 = global_userid no-error.
-   if avail qad_wkfl and not locked(qad_wkfl) then do:
-     assign qad_intfld[1] = from_id
-            qad_intfld[2] = to_id
-            qad_logfld[1] = repeat_process
-            qad_intfld[3] = pause_seconds
-            qad_logfld[2] = process_file.
-/*cn*/   if opsys = "unix" then assign qad_charfld[1] = file_name.
+   find first usrw_wkfl where
+/*EB*/        usrw_domain = global_domain and
+              usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
+   if avail usrw_wkfl and not locked(usrw_wkfl) then do:
+     assign usrw_intfld[1] = from_id
+            usrw_intfld[2] = to_id
+            usrw_logfld[1] = repeat_process
+            usrw_intfld[3] = pause_seconds
+            usrw_logfld[2] = process_file.
+/*cn*/   if opsys = "unix" then assign usrw_charfld[1] = file_name.
 /*cn*/   if opsys = "msdos" or opsys = "win32" then
-/*cn*/      assign qad_charfld[2] = file_name.
+/*cn*/      assign usrw_charfld[2] = file_name.
    end.
    else do:
-     create qad_wkfl.
+     create usrw_wkfl.
      assign
-/*EB        qad_domain = global_domain                                       */
-            qad_key1 = "mgbdpro"
-            qad_key2 = global_userid
-            qad_intfld[1] = from_id
-            qad_intfld[2] = to_id
-            qad_logfld[1] = repeat_process
-            qad_intfld[3] = pause_seconds
-            qad_logfld[2] = process_file.
-/*cn*/   if opsys = "unix" then assign qad_charfld[1] = file_name.
+/*EB*/      usrw_domain = global_domain
+            usrw_key1 = "mgbdpro"
+            usrw_key2 = global_userid
+            usrw_intfld[1] = from_id
+            usrw_intfld[2] = to_id
+            usrw_logfld[1] = repeat_process
+            usrw_intfld[3] = pause_seconds
+            usrw_logfld[2] = process_file.
+/*cn*/   if opsys = "unix" then assign usrw_charfld[1] = file_name.
 /*cn*/   if opsys = "msdos" or opsys = "win32" then
-/*cn*/      assign qad_charfld[2] = file_name.
+/*cn*/      assign usrw_charfld[2] = file_name.
    end.
 end.
 
@@ -585,7 +585,7 @@ PROCEDURE process_by_screen:
             /*... otherwise, get data from database */
             else do:
                find first bdld_det no-lock where
-/*EB              bdld_det.bdld_domain = global_domain and                   */
+/*EB*/            bdld_det.bdld_domain = global_domain and
                   bdld_source = "" and
                   bdld_id = current_bdl_id and
                   bdld_line > current_line no-error.
@@ -1007,7 +1007,7 @@ PROCEDURE process_all:
       end.
       else do:
          find first bdld_det no-lock where
-/*EB                bdld_det.bdld_domain = global_domain and                 */
+/*EB*/              bdld_det.bdld_domain = global_domain and
                     bdld_source = current_bdl_source and
                     bdld_id = current_bdl_id and
                     bdld_line > current_line no-error.
@@ -1241,7 +1241,7 @@ PROCEDURE get_CIM_session:
       /* Find first CIM process session - leave if more than 999 CIM sessions*/
       do i = 0 to 999:
          find first qad_wkfl exclusive-lock where
-/*EB        qad_wkfl.qad_domain = global_domain and                          */
+/*EB*/      qad_wkfl.qad_domain = global_domain and
             qad_key1 = "Cim Process Session" and
             qad_key2 > string(i, "999")
             use-index qad_index1 no-error.
@@ -1266,7 +1266,7 @@ PROCEDURE get_CIM_session:
 
       /* Set up CIM process session in qad_wkfl record */
       create qad_wkfl.
-/*EB         qad_wkfl.qad_domain = global_domain.                            */
+/*EB*/       qad_wkfl.qad_domain = global_domain.
       assign
          qad_key1 = "Cim Process Session"
          qad_key2 = session_no
@@ -1289,7 +1289,7 @@ PROCEDURE check_CIM:
    define input parameter in_loop as logical no-undo.
    /* Determine if CIM processing session has been lost */
    find qad_wkfl exclusive-lock where
-/*EB  qad_wkfl.qad_domain = global_domain and                                */
+/*EB*/  qad_wkfl.qad_domain = global_domain and
       qad_key1 = "Cim Process Session" and
       qad_key2 = session_no    no-error.
 
