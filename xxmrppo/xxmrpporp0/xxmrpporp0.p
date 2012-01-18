@@ -277,25 +277,24 @@ repeat:
         end.
    end.
 
-   For EACH vd_mstr no-lock where vd__chr03 <> "" break by vd__chr03:
-       if first-of(vd__chr03) AND substring(vd__chr03,1,2) <> "M4"
-       then do:
+   for each code_mstr no-lock where code_fldname = "vd__chr03" and
+            code_value <> "" and substring(code_value,1,2) <> "M4" and
+            code_value <> "P": 
             assign duek = ?
                    duee = ?.
-            find first tmp_datearea where td_rule = vd__chr03
+            find first tmp_datearea where td_rule = code_value
                      and td_key = "Key" no-lock no-error.
             if available(tmp_datearea) then do:
                assign duek = td_date.
             end.
-            find last tmp_datearea where td_rule = vd__chr03 no-lock no-error.
+            find last tmp_datearea where td_rule = code_value no-lock no-error.
             if available(tmp_datearea) then do:
                assign duee = td_date.
             end.
             create tmp_rule_date.
-            assign trd_rule = vd__chr03
+            assign trd_rule = code_value
                    trd_datef = duek
-                   trd_datet = duee - 1.
-       end.
+                   trd_datet = duee - 1. 
    end.
 
    FOR EACH pt_mstr no-lock where pt_part >= part and pt_part <= part1
@@ -316,6 +315,7 @@ repeat:
               tm_rule0 = vd__chr03
               tm_rule = vd__chr03
               tm_sdate = mrp_due_date
+              tm_edate = mrp_due_date
               tm_qty = mrp_qty
               tm_mrp_qty = mrp_qty.
    end.
@@ -468,7 +468,7 @@ repeat:
    for each tmp_tmd exclusive-lock:
        find last tmp_datearea where td_rule = tm_rule
              and td_date <= tm_sdate no-error.
-       if available tmp_tmd then do:
+       if available tmp_datearea then do:
           assign tm_edate = td_date.
        end.
    end.
@@ -493,7 +493,7 @@ repeat:
                    tpo_rule = tm_rule.
        end.
    end.
-
+/*
    for each tmp_po exclusive-lock:
        find last tmp_datearea where td_rule = tpo_rule and td_date <= tpo_due
             no-lock no-error.
@@ -501,7 +501,7 @@ repeat:
           assign tpo_due = td_date.
        end.
    end.
-
+*/
    /*    合并非第一笔日期到第一笔日期.   */
    for each tmp_po exclusive-lock,
        each pt_mstr no-lock where pt_part = tpo_part
