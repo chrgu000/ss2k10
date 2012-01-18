@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111216.1"}
+{mfdtitle.i "120118.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -259,6 +259,7 @@ repeat:
        no-error.
        if available(qad_wkfl) and td_date > qad_datefld[1] then do:
           delete tmp_datearea.
+          next.
        end.
        find first hd_mstr no-lock where hd_site = "gsa01"
               and hd_date = td_date no-error.
@@ -325,7 +326,7 @@ repeat:
               and pt_rev <> "1"
             no-error.
        if available pt_mstr and
-            can-find(first code_mstr where code_fldname = ""
+            can-find(first code_mstr where code_fldname = "pt_rev"
                       and code_value = pt_rev) then do:
           assign tm_rule0 = pt_rev
                  tm_rule = pt_rev.
