@@ -11,7 +11,7 @@ define variable part as character format "x(30)".
 define variable qtyreq as decimal format "->>>,>>>,>>9".
 define variable qtytemp as decimal format "->>>,>>>,>>9".
 
-assign vernbr = "110808.2".
+assign vernbr = ".2117".
 {mfdtitle.i vernbr}
 {xsdfsite.i}
 {xspkpub.i}
@@ -78,7 +78,7 @@ repeat:
      for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_pstat <> "C" and xxwd_loc <> "P-All":
+             and xxwd_pstat <> "C" and upper(xxwd_loc) <> "P-All":
             run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
@@ -87,10 +87,10 @@ repeat:
             end.
             put unformat '"' xxwd_part '"' skip.
             put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
-            put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
+            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn)) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
-            put unformat '- "' vtrloc '"' skip.
+            put unformat '- "' vtrloc '" -' skip.
             if vtrstat <> sstat then do:
               put unformat "yes" skip.
             end.
@@ -118,8 +118,10 @@ repeat:
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid:
              for each tr_hist no-lock where
-                      tr_nbr = 'p' + xxwd_nbr + "," + string(xxwd_recid)
-                  and tr_part = xxwd_part and tr_type = "rct-tr":
+                      tr_nbr = 'p' + xxwd_nbr and
+                      tr_so_job = string(xxwd_sn) and
+                      tr_part = xxwd_part and
+                      tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.
              assign xxwd_qty_piss = accum total tr_qty_loc.
@@ -162,7 +164,7 @@ repeat:
         if qtyreq > xxwd_qty_plan - xxwd_qty_piss then do:
            assign ret-ok = no.
             hide frame frameq.
-            display "[生产取料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
+            display "[生产取料n]" + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
             display "取料单:" + trim(tcnbr) format "x(40)"  skip with frame framer no-box.
             display "料号:" + part format "x(40)" skip with frame framer no-box.
             display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame framer no-box.
@@ -189,8 +191,8 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
-            put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
+            put unformat qtyreq " - ".
+            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn)) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
             put unformat '- "' vtrloc '"' skip.
@@ -214,12 +216,14 @@ repeat:
     batchrun  = no.
 
     for each xxwa_det exclusive-lock where "p" + xxwa_nbr = tcnbr:
-    		 assign qtytemp = 0.
+         assign qtytemp = 0.
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_part = part:
              for each tr_hist no-lock where
-                      tr_nbr = 'p' + xxwd_nbr + "," + string(xxwd_recid)
-                  and tr_part = xxwd_part and tr_type = "rct-tr":
+                      tr_nbr = 'p' + xxwd_nbr and
+                      tr_so_job = string(xxwd_sn) and
+                      tr_part = xxwd_part and
+                      tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.
              assign xxwd_qty_piss = accum total tr_qty_loc.

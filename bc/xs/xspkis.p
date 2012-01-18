@@ -11,7 +11,7 @@ define variable part as character format "x(30)".
 define variable qtyreq as decimal format "->>>,>>>,>>9".
 define variable qtytmp as decimal format "->>>,>>>,>>9".
 
-assign vernbr = "110808.1".
+assign vernbr = "2117".
 {mfdtitle.i vernbr}
 {xsdfsite.i}
 {xspkpub.i}
@@ -79,7 +79,7 @@ repeat:
      for each xxwa_det no-lock where "s" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid
-             and min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) > 0
+/*           and min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) > 0   */
              and xxwd_sstat <> "C":
             run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
@@ -88,11 +88,11 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss) , 0) " - ".
-            put unformat '"s' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
+            put unformat xxwd_qty_plan " - ".
+            put unformat '"s' + xxwd_nbr + '" "' trim(string(xxwd_sn)) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' vtrloc '" "' xxwd_lot '"' skip.
-            put unformat '- "' xxwd_line '"' skip.
+            put unformat '- "' xxwd_line '" -' skip.
             if vtrstat <> sstat then do:
               put unformat "yes" skip.
             end.
@@ -121,7 +121,8 @@ repeat:
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid:
              for each tr_hist no-lock where
-                      tr_nbr = 's' + xxwd_nbr + "," + string(xxwd_recid)
+                      tr_nbr = 's' + xxwd_nbr  and
+                      tr_so_job = string(xxwd_sn)
                   and tr_part = xxwd_part and tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.
@@ -180,7 +181,7 @@ repeat:
         leave.
       end.  /* repeate ÊýÁ¿*/
 
-     assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
+     assign vcimfile = "xspkis.p" + string(today,"999999") + string(time).
      output to value(vcimfile + ".i").
      for each xxwa_det no-lock where "s" + xxwa_nbr = tcnbr:
          for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
@@ -192,11 +193,11 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(min((xxwd_qty_plan - xxwd_qty_siss) , xxwd_qty_piss),0) " - ".
-            put unformat '"p' xxwd_nbr + "," + string(xxwd_recid) '" "' xxwd_line '"' skip.
+            put unformat qtyreq " - ".
+            put unformat '"s'  xxwd_nbr '" "' trim(string(xxwd_sn)) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' vtrloc '" "' xxwd_lot '"' skip.
-            put unformat '- "' xxwd_line '"' skip.
+            put unformat '- "' xxwd_line '" -' skip.
             if vtrstat <> sstat then do:
               put unformat "yes" skip.
             end.
@@ -217,11 +218,12 @@ repeat:
       batchrun  = no.
 
     for each xxwa_det exclusive-lock where "s" + xxwa_nbr = tcnbr:
-    		 assign qtytmp = 0.
+         assign qtytmp = 0.
          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
              and xxwd_recid = xxwa_recid and xxwd_part = part:
              for each tr_hist no-lock where
-                      tr_nbr = 's' + xxwd_nbr + "," + string(xxwd_recid)
+                      tr_nbr = 's' + xxwd_nbr and
+                      tr_so_job = string(xxwd_sn)
                   and tr_part = xxwd_part and tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.

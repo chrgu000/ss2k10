@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "111217.2"}
+{mfdtitle.i "120118.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -184,8 +184,8 @@ procedure printP:
            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
             (tax_bonded and substring(xxwa_part,1,1)= "P")),
          each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
-        break by xxwd_line by xxwd_sn:
+          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL" 
+        break by xxwd_nbr by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
           assign vMultiple = pt__qad19
@@ -236,7 +236,7 @@ procedure printS:
             ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
              (tax_bonded and substring(xxwa_part,1,1)= "P")),
          each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid break by xxwd_line by xxwd_sn:
+          and xxwd_recid = xxwa_recid break by xxwd_nbr by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
           assign vMultiple = pt__qad19
@@ -248,7 +248,8 @@ procedure printS:
                  vtype = ""
                  vdesc1 = "".
        end.
-       if vtype = "C" then assign vqty = xxwd_qty_plan.
+       if (vtype = "A" or vtype = "C") 
+                      then assign vqty = xxwd_qty_plan.
               	 	    else assign vqty = xxwa_qty_need.
        if vqty > 0 then do:
            export delimiter "~011"
