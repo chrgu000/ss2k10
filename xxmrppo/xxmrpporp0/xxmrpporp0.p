@@ -175,7 +175,7 @@ repeat:
   empty temp-table tmp_rule_date no-error.
 
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
-   assign sendDate = date(month(due),1,year(due)) - 10.
+   assign sendDate = today - 3.
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
             index(code_value,"M4") = 0 and code_value <> "" and
             code_value <> "P":
