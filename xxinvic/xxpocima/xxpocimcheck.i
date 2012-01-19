@@ -238,7 +238,7 @@
                 put UNFORMATTED tmp_cost skip.
                 */
                 put UNFORMATTED "-" skip.
-                put UNFORMATTED "-" skip.
+                put UNFORMATTED '-' skip.
 
                 FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend
                        AND ad_taxable = YES NO-LOCK NO-ERROR.
