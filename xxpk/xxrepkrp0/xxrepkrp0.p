@@ -29,7 +29,7 @@ define variable vqty  as decimal no-undo.
 define variable tax_bonded as logical no-undo.
 define variable del-yn   as logical no-undo.
 
-find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p" and
+find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
            usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
 assign issue = usrw_datefld[1]
@@ -67,7 +67,8 @@ repeat:
     if issue1 = hi_date then issue1 = ?.
 
 if c-application-mode <> 'web' then
-update site site1 line line1 part part1 issue issue1 nbr nbr1 cate tax_bonded del-yn
+update site site1 line line1 part part1 issue issue1 nbr nbr1
+       cate tax_bonded del-yn
        with frame a.
 if index("APS",cate) = 0 then do:
     {mfmsg.i 4212 3}

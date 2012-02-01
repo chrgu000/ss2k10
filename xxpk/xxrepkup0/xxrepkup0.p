@@ -1,30 +1,30 @@
-/* GUI CONVERTED from repkup.p (converter v1.76) Wed Dec 18 20:55:26 2002 */
-/* repkup.p - REPETITIVE PICKLIST CALCULATION                           */
-/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                  */
-/* All rights reserved worldwide.  This is an unpublished work.         */
-/* $Revision: 1.6.1.9 $                                                 */
-/*V8:ConvertMode=Report                                                 */
-/* REVISION: 7.3      LAST MODIFIED: 09/06/92   BY: emb  *G071*         */
-/* REVISION: 7.3      LAST MODIFIED: 10/13/92   BY: emb  *G071*         */
-/* REVISION: 7.3      LAST MODIFIED: 10/26/92   BY: emb  *G071*         */
-/* REVISION: 7.3      LAST MODIFIED: 02/22/93   BY: emb  *G722*         */
-/* REVISION: 7.3      LAST MODIFIED: 09/27/93   BY: ram  *GF97*         */
-/* REVISION: 7.3      LAST MODIFIED: 11/01/94   by: ame  *GN86*         */
-/* REVISION: 7.3      LAST MODIFIED: 11/07/94   by: pxd  *GO32*         */
-/* REVISION: 8.5      LAST MODIFIED: 01/03/95   BY: mwd  *J034*         */
-/* REVISION: 7.3      LAST MODIFIED: 01/04/95   by: srk  *G0B8*         */
-/* REVISION: 7.3      LAST MODIFIED: 01/30/95   BY: qzl  *G0DD*         */
-/* REVISION: 7.3      LAST MODIFIED: 03/09/95   BY: pxe  *G0GW*         */
-/* REVISION: 7.3      LAST MODIFIED: 03/14/95   BY: ais  *G0HC*         */
-/* REVISION: 7.3      LAST MODIFIED: 06/09/95   BY: qzl  *G0PT*         */
-/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*         */
-/* REVISION: 8.5      LAST MODIFIED: 09/05/95   BY: srk  *J07G*         */
-/* REVISION: 7.3      LAST MODIFIED: 01/29/96   BY: jym  *G1LC*         */
-/* REVISION: 8.5      LAST MODIFIED: 06/20/96   BY: taf  *J0VG*         */
-
-/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane    */
-/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan   */
-/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan   */
+/* GUI CONVERTED from repkup.p (converter v1.76) Wed Dec 18 20:55:26 2002     */
+/* repkup.p - REPETITIVE PICKLIST CALCULATION                                 */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/* $Revision: 1.6.1.9 $                                                       */
+/*V8:ConvertMode=Report                                                       */
+/* REVISION: 7.3      LAST MODIFIED: 09/06/92   BY: emb  *G071*               */
+/* REVISION: 7.3      LAST MODIFIED: 10/13/92   BY: emb  *G071*               */
+/* REVISION: 7.3      LAST MODIFIED: 10/26/92   BY: emb  *G071*               */
+/* REVISION: 7.3      LAST MODIFIED: 02/22/93   BY: emb  *G722*               */
+/* REVISION: 7.3      LAST MODIFIED: 09/27/93   BY: ram  *GF97*               */
+/* REVISION: 7.3      LAST MODIFIED: 11/01/94   by: ame  *GN86*               */
+/* REVISION: 7.3      LAST MODIFIED: 11/07/94   by: pxd  *GO32*               */
+/* REVISION: 8.5      LAST MODIFIED: 01/03/95   BY: mwd  *J034*               */
+/* REVISION: 7.3      LAST MODIFIED: 01/04/95   by: srk  *G0B8*               */
+/* REVISION: 7.3      LAST MODIFIED: 01/30/95   BY: qzl  *G0DD*               */
+/* REVISION: 7.3      LAST MODIFIED: 03/09/95   BY: pxe  *G0GW*               */
+/* REVISION: 7.3      LAST MODIFIED: 03/14/95   BY: ais  *G0HC*               */
+/* REVISION: 7.3      LAST MODIFIED: 06/09/95   BY: qzl  *G0PT*               */
+/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*               */
+/* REVISION: 8.5      LAST MODIFIED: 09/05/95   BY: srk  *J07G*               */
+/* REVISION: 7.3      LAST MODIFIED: 01/29/96   BY: jym  *G1LC*               */
+/* REVISION: 8.5      LAST MODIFIED: 06/20/96   BY: taf  *J0VG*               */
+                                                                              
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane          */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan         */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan         */
 /* REVISION: 8.6E     LAST MODIFIED: 11/19/99   BY: *J3MK* Prashanth Narayan  */
 /* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
 /* REVISION: 9.1      LAST MODIFIED: 07/25/00   BY: *N0GD* Peggy Ng           */
@@ -38,7 +38,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120117.1"}
+{mfdtitle.i "120201.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -80,7 +80,7 @@ define new shared variable isspol         like pt_iss_pol.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
-find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p" and
+find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
            usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
 assign wkctr = usrw_charfld[15]
@@ -94,22 +94,22 @@ end.
 &SCOPED-DEFINE PP_FRAME_NAME A
 
 FORM
-   site           label "地点" colon 22
+   site           label "地点" colon 18
    site1          label "到" colon 49 skip
-   part           label "父零件" colon 22
+   part           label "父零件" colon 18
    part1          label "到" colon 49 skip
-   comp1          label "子零件" colon 22
+   comp1          label "子零件" colon 18
    comp2          label "到" colon 49 skip
-   wkctr          label "工作中心" colon 22
+   wkctr          label "工作中心" colon 18
    wkctr1         label "到" colon 49 skip
-   issue          label "生产日期" colon 22
+   issue          label "生产日期" colon 18
    issue1         label "到" colon 49
-   reldate        label "发放日期" colon 22
+   reldate        label "发放日期" colon 18
    reldate1       label "到" colon 49 skip(1)
    netgr          label "使用工作中心库存" colon 30
    detail_display label "详细需求量" colon 30
    nbr            label "领料单号" colon 30
-   delete_pklst   label "完成删除" colon 30
+   delete_pklst   label "完成删除" colon 30 skip
 with frame a side-labels width 80 attr-space.
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
@@ -154,15 +154,7 @@ repeat:
       nbr
       delete_pklst
    with frame a.
-   find first usrw_wkfl where usrw_key1 = "xxrepkup0.p" and
-              usrw_key2 = global_userid no-error.
-   if not available usrw_wkfl then do:
-      create usrw_wkfl.
-      assign usrw_key1 = "xxrepkup0.p"
-             usrw_key2 = global_userid.
-   end.
-      assign usrw_datefld[1] = issue
-             usrw_charfld[15] = wkctr1.
+
    if delete_pklst then nbr = mfguser.
 
    bcdparm = "".
@@ -191,6 +183,16 @@ repeat:
       end.
    end.
 
+   find first usrw_wkfl where usrw_key1 = "xxrepkup0.p.param.ref" and
+              usrw_key2 = global_userid no-error.
+   if not available usrw_wkfl then do:
+      create usrw_wkfl.
+      assign usrw_key1 = "xxrepkup0.p.param.ref"
+             usrw_key2 = global_userid.
+   end.
+      assign usrw_datefld[1] = issue
+             usrw_charfld[15] = wkctr1.
+
    /* OUTPUT DESTINATION SELECTION */
    {xxgpselout.i &printType = "printer"
                &printWidth = 130
@@ -205,6 +207,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
+
 
    {mfphead.i}
 
