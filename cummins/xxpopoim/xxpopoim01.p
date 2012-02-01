@@ -32,7 +32,7 @@ DEFINE SHARED TEMP-TABLE xxpod_det
    INDEX index1 xxpod_nbr xxpod_line.
 
 
-DEFINE TEMP-TABLE tt1 
+DEFINE TEMP-TABLE tt1
     FIELD tt1_field1 AS CHARACTER.
 
    /*检查数据&cimload*/
@@ -48,7 +48,6 @@ DEFINE TEMP-TABLE tt1
 
    xpath = FILE_name.
 
-
    INPUT FROM VALUE(file_name) .
    REPEAT:
       CREATE tt1 .
@@ -56,33 +55,56 @@ DEFINE TEMP-TABLE tt1
    END.
    INPUT CLOSE.
 
+    /* 日期YYYY-MM-DD转换为QAD日期格式 */
+    FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
+        DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
+        DEFINE VARIABLE cfg  as CHARACTER NO-UNDO INITIAL "-".
+        DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
+        DEFINE VARIABLE od   AS DATE      NO-UNDO.
+        if datestr = "" OR datestr = ? then do:
+            assign od = ?.
+        end.
+        else do:
+            ASSIGN sstr = datestr.
+            IF INDEX(sstr,"/") > 0 then assign cfg = "/".
+            ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+            ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,cfg) + 1).
+            ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+            ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,cfg) + 1)).
+            ASSIGN od = DATE(im,id,iy) NO-ERROR.
+        end.
+        RETURN od.
+    END FUNCTION.
+
    v_i = 0.
    FOR EACH tt1 WHERE tt1_field1 <> "":
        v_i = v_i + 1.
        IF v_i > 1 THEN DO:
           CREATE xxpod_det.
-          ASSIGN xxpod_nbr = ENTRY(1,tt1_field1)
-                 xxpod_status = trim(ENTRY(6,tt1_field1)).
+          ASSIGN xxpod_nbr = ENTRY(1,tt1_field1).
+          assign xxpod_status = trim(ENTRY(6,tt1_field1)) no-error.
 
           ASSIGN xxpod_line = INTEGER(trim(ENTRY(2,tt1_field1))) NO-ERROR.
           IF ERROR-STATUS:ERROR THEN DO:
              ASSIGN xxpod_error = "PO Line Format is error".
-          END.                 
-          
+          END.
+
           IF ENTRY(3,tt1_field1) <> "" THEN
-              ASSIGN xxpod_due_date = DATE(ENTRY(3,tt1_field1)) NO-ERROR.
+              ASSIGN xxpod_due_date = str2Date(ENTRY(3,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
                  ASSIGN xxpod_error = "PO Line Due Date Format is error".
-              END.                 
+              END.
 
           IF ENTRY(4,tt1_field1) <> "" THEN
-              ASSIGN xxpod_per_date = DATE(ENTRY(4,tt1_field1)) NO-ERROR.
+              ASSIGN xxpod_per_date = str2Date(ENTRY(4,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
                  ASSIGN xxpod_error = "PO Line Performance Date Format is error".
               END.
 
           IF ENTRY(5,tt1_field1) <> "" THEN
-              ASSIGN xxpod_need = DATE(ENTRY(5,tt1_field1)) NO-ERROR.
+              ASSIGN xxpod_need = str2Date(ENTRY(5,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
                  ASSIGN xxpod_error = "PO Line Need Date Format is error".
               END.
@@ -91,9 +113,11 @@ DEFINE TEMP-TABLE tt1
              ASSIGN xxpod_error = "PO Line status Format is error".
           END.
 
-          FIND FIRST pod_det WHERE pod_domain = GLOBAL_domain AND pod_nbr = xxpod_nbr AND pod_line = xxpod_line NO-LOCK NO-ERROR.
+          FIND FIRST pod_det WHERE pod_domain = GLOBAL_domain AND
+                     pod_nbr = xxpod_nbr AND pod_line = xxpod_line
+          NO-LOCK NO-ERROR.
           IF NOT AVAIL pod_det THEN DO:
-             ASSIGN xxpod_error = "PO Line not available".
+             ASSIGN xxpod_error = "ERROR:PO Line not available".
           END.
        END.
    END.
@@ -104,7 +128,7 @@ DEFINE TEMP-TABLE tt1
       v_flag = "1".
    END.
    ELSE DO:
-     
+
       FIND FIRST xxpod_det WHERE xxpod_error <> "" NO-LOCK NO-ERROR.
       IF AVAIL xxpod_det THEN DO:
          v_flag = "2".
