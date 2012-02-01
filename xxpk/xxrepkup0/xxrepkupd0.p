@@ -613,7 +613,7 @@ end.
      delete xxwa_det.   /*Ã÷Ï¸±í*/
  end.
 
-for each tmp_file0 no-lock , each xx_pklst no-lock
+for each tmp_file0 no-lock,each xx_pklst no-lock
     where xx_due_date = t0_date
       and xx_line = t0_line
       and xx_site = t0_site
@@ -626,20 +626,28 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
       assign vqty = vqty + xx_qty_req
              aviqty = aviqty +  round((t0_tttime / t0_wktime)  * xx_qty_req,0).
       if last-of(xx_comp) then do:
-         create xxwa_det.
-         assign xxwa_date = t0_date
-                xxwa_site = t0_site
-                xxwa_line = t0_line
-                xxwa_par  = t0_par
-                xxwa_part = xx_comp
-                xxwa_ladnbr = xx_nbr
-                xxwa_sn = t0_sn
-                xxwa_rtime = t0_start
-                xxwa_qty_req = vqty
-                xxwa_qty_pln = aviqty
-                xxwa__dec01 = xx_qty_need
-                xxwa_recid = recid(xxwa_det)
-                .
+      	 find first xxwa_det exclusive-lock 
+      	 		  where xxwa_date = t0_date and
+                    xxwa_site = t0_site and
+                    xxwa_line = t0_line and
+                    xxwa_part = xx_comp and
+                    xxwa_rtime = t0_start no-error.
+				if not available xxwa_det then do:      	 		  
+           create xxwa_det.
+           assign xxwa_date = t0_date
+                  xxwa_site = t0_site
+                  xxwa_line = t0_line
+                  xxwa_part = xx_comp
+                  xxwa_rtime = t0_start.
+        end.
+           assign xxwa_par = t0_par
+                  xxwa_sn = t0_sn
+                  xxwa_ladnbr = xx_nbr
+                  xxwa_qty_req = xxwa_qty_req + vqty
+                  xxwa_qty_pln = xxwa_qty_pln + aviqty
+                  xxwa__dec01 = xxwa__dec01 + xx_qty_need
+                  xxwa_recid = recid(xxwa_det)
+                  .
       end.
 
 /*

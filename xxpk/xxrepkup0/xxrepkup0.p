@@ -38,12 +38,12 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "111217.1"}
+{mfdtitle.i "120117.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
-define new shared variable wkctr          like op_wkctr initial "HPS".
-define new shared variable wkctr1         like op_wkctr initial "HPS".
+define new shared variable wkctr          like op_wkctr.
+define new shared variable wkctr1         like op_wkctr.
 define new shared variable part           like ps_par
                                           label "¸¸Áã¼þ".
 define new shared variable part1          like ps_par.
@@ -80,10 +80,16 @@ define new shared variable isspol         like pt_iss_pol.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
-assign issue = today + 1
-       issue1 = today + 1
-       reldate = today + 1
-       reldate1 = today + 1.
+find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p" and
+           usrw_key2 = global_userid no-error.
+if available usrw_wkfl then do:
+assign wkctr = usrw_charfld[15]
+       wkctr1 = usrw_charfld[15]
+       issue = usrw_datefld[1]
+       issue1 = usrw_datefld[1]
+       reldate = usrw_datefld[1]
+       reldate1 = usrw_datefld[1].
+end.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
@@ -148,7 +154,15 @@ repeat:
       nbr
       delete_pklst
    with frame a.
-
+   find first usrw_wkfl where usrw_key1 = "xxrepkup0.p" and
+              usrw_key2 = global_userid no-error.
+   if not available usrw_wkfl then do:
+      create usrw_wkfl.
+      assign usrw_key1 = "xxrepkup0.p"
+             usrw_key2 = global_userid.
+   end.
+      assign usrw_datefld[1] = issue
+             usrw_charfld[15] = wkctr1.
    if delete_pklst then nbr = mfguser.
 
    bcdparm = "".
@@ -191,7 +205,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
- 
+
    {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */

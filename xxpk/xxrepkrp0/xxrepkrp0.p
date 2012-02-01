@@ -29,8 +29,12 @@ define variable vqty  as decimal no-undo.
 define variable tax_bonded as logical no-undo.
 define variable del-yn   as logical no-undo.
 
-assign issue = today + 1
-       issue1 = today + 1.
+find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p" and
+           usrw_key2 = global_userid no-error.
+if available usrw_wkfl then do:
+assign issue = usrw_datefld[1]
+       issue1 = usrw_datefld[1].
+end.
 
 /* SELECT FORM */
 form
@@ -160,9 +164,9 @@ do on error undo, return error on endkey undo, return error:
               delete xxwd_det.
          end.
          delete xxwa_det.
-      end.		
-     for each qad_wkfl where qad_key1 = "xxrepkup0.p" 
-     			and qad_datefld[1] >= issue and qad_datefld[1] <= issue1
+      end.
+     for each qad_wkfl where qad_key1 = "xxrepkup0.p"
+          and qad_datefld[1] >= issue and qad_datefld[1] <= issue1
           and qad_charfld[1] >= site and qad_charfld[1] <= site1
           and qad_charfld[2] >= line and qad_charfld[2] <= line1:
        delete qad_wkfl.
@@ -184,7 +188,7 @@ procedure printP:
            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
             (tax_bonded and substring(xxwa_part,1,1)= "P")),
          each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL" 
+          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
         break by xxwd_nbr by xxwd_sn:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
        if available pt_mstr then do:
@@ -197,9 +201,9 @@ procedure printP:
                  vtype = ""
                  vdesc1 = "".
        end.
-              if (vtype = "A" or vtype = "C") 
+              if (vtype = "A" or vtype = "C")
                         then assign vqty = xxwd_qty_plan.
-              	 		    else assign vqty = xxwa_qty_need.
+                        else assign vqty = xxwa_qty_need.
               if vqty > 0 then do:
                  export delimiter "~011"
                         "P"
@@ -248,9 +252,9 @@ procedure printS:
                  vtype = ""
                  vdesc1 = "".
        end.
-       if (vtype = "A" or vtype = "C") 
+       if (vtype = "A" or vtype = "C")
                       then assign vqty = xxwd_qty_plan.
-              	 	    else assign vqty = xxwa_qty_need.
+                      else assign vqty = xxwa_qty_need.
        if vqty > 0 then do:
            export delimiter "~011"
                   "S"
