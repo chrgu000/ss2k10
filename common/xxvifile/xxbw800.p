@@ -17,8 +17,8 @@ if not available brw_mstr then do:
           assign brw_mstr.brw_name = 'xx800'.
 end.
 assign brw_mstr.brw_desc = 'FILE_NAME'.
-assign brw_mstr.brw_view = 'qad_wkfl'
-       brw_mstr.brw_filter    = 'qad_key1 = "xxvifile.p" and qad_key3 = global_userid'
+assign brw_mstr.brw_view = 'usrw_wkfl'
+       brw_mstr.brw_filter    = 'usrw_key1 = "xxvifile.p" and usrw_key3 = global_userid'
        brw_mstr.brw_userid    = 'mfg'
        brw_mstr.brw_mod_date  = today
        brw_mstr.brw_sort_col  = '1'
@@ -33,7 +33,7 @@ if not available brwt_det then do:
           assign brwt_det.brw_name = 'xx800'.
 end.
 assign brwt_det.brwt_seq   = 1
-       brwt_det.brwt_table = 'qad_wkfl'
+       brwt_det.brwt_table = 'usrw_wkfl'
        brwt_det.brwt_userid   = 'mfg'
        brwt_det.brwt_mod_date = today.
 find first brwf_det exclusive-lock where brwf_det.brw_name = 'xx800' and
@@ -43,11 +43,11 @@ if not available brwf_det then do:
           assign brwf_det.brw_name = 'xx800'
                  brwf_det.brwf_seq = 1.
 end.
-assign brwf_det.brwf_field    = 'qad_key4'
+assign brwf_det.brwf_field    = 'usrw_key4'
        brwf_det.brwf_datatype = 'character'
        brwf_det.brwf_format   = 'x(24)'
        brwf_det.brwf_label    = 'FILE_NAME'
-       brwf_det.brwf_table    = 'qad_wkfl'
+       brwf_det.brwf_table    = 'usrw_wkfl'
        brwf_det.brwf_select   = yes
        brwf_det.brwf_sort     = yes
        brwf_det.brwf_userid   = 'mfg'

@@ -26,23 +26,23 @@ setFrameLabels(frame a:handle).
 ON LEAVE OF lngdir IN FRAME a /* Fill 1 */
 DO:
   assign lngdir.
-  for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p":
-      delete qad_wkfl.
+  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p":
+      delete usrw_wkfl.
   end.
   if lngdir = "" then assign lngdir:screen-value = ".".
   assign lngdir.
   INPUT FROM OS-DIR(lngdir).
   REPEAT:
-      CREATE qad_wkfl.
-      IMPORT qad_key4 qad_key2 qad_key5.
-      assign qad_key1 = "xxvifile.p"
-             qad_key3 = global_userid.
+      CREATE usrw_wkfl.
+      IMPORT usrw_key4 usrw_key2 usrw_key5.
+      assign usrw_key1 = "xxvifile.p"
+             usrw_key3 = global_userid.
   END.
   INPUT CLOSE.
 
-  for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p"
-       and qad_key5 <> "F":
-      delete qad_wkfl.
+  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p"
+       and usrw_key5 <> "F":
+      delete usrw_wkfl.
   end.
 END.
 
@@ -51,9 +51,9 @@ DO:
   define variable yn as logical initial no.
   {pxmsg.i &MSGNUM=7169 &ERRORLEVEL=2 &CONFIRM=yn}
   if yn then do:
-    for each qad_wkfl exclusive-lock where qad_key1 = "xxvifile.p" and
-           qad_key3 = global_userid:
-      delete qad_wkfl.
+    for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p" and
+           usrw_key3 = global_userid:
+      delete usrw_wkfl.
 	  end.
 	end.
 END.
@@ -97,21 +97,21 @@ repeat:
                &defineVariables = "yes"}
 	  empty temp-table tf no-error.
 /*    {mfphead.i}     */
-    for each qad_wkfl no-lock where qad_key1 = "xxvifile.p" and
-             qad_key3 = global_userid and
-             index(qad_key4,file_name) > 0:
+    for each usrw_wkfl no-lock where usrw_key1 = "xxvifile.p" and
+             usrw_key3 = global_userid and
+             index(usrw_key4,file_name) > 0:
         create tf.
-        assign tf_txt = "-- File:[" + trim(qad_key4) + "] Beging "
-                      + fill("-", 71 - length(trim(qad_key4))).
-        input from value(qad_key2).
+        assign tf_txt = "-- File:[" + trim(usrw_key4) + "] Beging "
+                      + fill("-", 71 - length(trim(usrw_key4))).
+        input from value(usrw_key2).
         repeat:
           create tf.
           import unformat tf_txt.
         end.
         input close.
         create tf.
-        assign tf_txt = "-- File:[" + trim(qad_key4) + "] End "
-                      + fill("-", 74 - length(trim(qad_key4))).
+        assign tf_txt = "-- File:[" + trim(usrw_key4) + "] End "
+                      + fill("-", 74 - length(trim(usrw_key4))).
     end.
 
     for each tf no-lock with frame b:
