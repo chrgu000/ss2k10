@@ -624,15 +624,15 @@ for each tmp_file0 no-lock,each xx_pklst no-lock
                 vqty = 0.
       end.
       assign vqty = vqty + xx_qty_req
-             aviqty = aviqty +  round((t0_tttime / t0_wktime)  * xx_qty_req,0).
+             aviqty = aviqty + round((t0_tttime / t0_wktime)  * xx_qty_req,0).
       if last-of(xx_comp) then do:
-      	 find first xxwa_det exclusive-lock 
-      	 		  where xxwa_date = t0_date and
+         find first xxwa_det exclusive-lock
+              where xxwa_date = t0_date and
                     xxwa_site = t0_site and
                     xxwa_line = t0_line and
                     xxwa_part = xx_comp and
                     xxwa_rtime = t0_start no-error.
-				if not available xxwa_det then do:      	 		  
+        if not available xxwa_det then do:
            create xxwa_det.
            assign xxwa_date = t0_date
                   xxwa_site = t0_site
@@ -643,11 +643,10 @@ for each tmp_file0 no-lock,each xx_pklst no-lock
            assign xxwa_par = t0_par
                   xxwa_sn = t0_sn
                   xxwa_ladnbr = xx_nbr
-                  xxwa_qty_req = xxwa_qty_req + vqty
-                  xxwa_qty_pln = xxwa_qty_pln + aviqty
-                  xxwa__dec01 = xxwa__dec01 + xx_qty_need
-                  xxwa_recid = recid(xxwa_det)
-                  .
+                  xxwa_qty_req = xxwa_qty_req + vqty      /* 总需求量     */
+                  xxwa_qty_pln = xxwa_qty_pln + aviqty    /* 时段内需求量 */
+                  xxwa__dec01 = xxwa__dec01 + xx_qty_need /* 缺料量       */
+                  xxwa_recid = recid(xxwa_det).
       end.
 
 /*
@@ -715,36 +714,6 @@ end.
 /*      end.                                                                 */
   end. /* for each xxwa_det exclusive-lock where  */
 
-  /* 按最小包装量计算需求到 xxwa_ord_mult*/
-  for each xxwa_det exclusive-lock:
-    assign xxwa_ord_mult = xxwa_qty_pln.
-  end.
-  for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-           xxwa_qty_pln > 0,
-      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND
-          (pt__chr10 = "A" OR pt__chr10 = "C") AND
-           pt__qad19 <> 0
-           break by xxwa_date by xxwa_site by xxwa_line
-                 by xxwa_part by xxwa_rtime:
-      IF FIRST-OF(xxwa_part) THEN DO:
-           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__qad19).
-           aviqty = xxwa_ord_mult - xxwa_qty_pln.
-      END.
-      ELSE DO:
-          IF aviqty >= xxwa_qty_pln THEN DO:
-              ASSIGN xxwa_ord_mult = 0.
-              ASSIGN aviqty = aviqty - xxwa_qty_pln.
-          END.
-          ELSE DO:
-              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).
-              aviqty = xxwa_ord_mult - xxwa_qty_pln.
-          END.
-      END.
-  END.
-
  /* 按最小包装量计算需求到 xxwa_ord_mult*/
   for each xxwa_det exclusive-lock:
     assign xxwa_ord_mult = xxwa_qty_pln.
@@ -811,7 +780,7 @@ end.
            xxwa_date >= issue and xxwa_date <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_rtime by xxwa_part:
+  break by xxwa_date by xxwa_site by xxwa_line by xxwa_rtime by xxwa_part:
       if first-of(xxwa_rtime) then do:
         assign vtype = "".
         {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
@@ -906,6 +875,18 @@ end.
 /*            i = i + 1.                                                     */
 /* end.                                                                      */
 
+/*分配备料明细*/
+for each xxwa_det no-lock use-index xxwa_partrtime where
+         xxwa_date >= issue and xxwa_date <= issue1 and
+         xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+         xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+break by xxwa_date by xxwa_site by xxwa_part by xxwa_rtime by xxwa_line:
+	    if first-of(xxwa_part) then do:
+	    	 
+	    end.
+end.
+
+/* 2-2 marked
 empty temp-table xx_ld no-error.
 assign errornum = 800.
 for each xxwa_det no-lock where
@@ -981,6 +962,7 @@ for each xxwa_det no-lock where
        end.   /*库存量小于需求量*/
   end.
 end.
+*/
 
 /* 删除计划量为0的数据 */
 for each  xxwa_det no-lock where
@@ -992,15 +974,16 @@ for each  xxwa_det no-lock where
           delete xxwd_det.
 end.
 
+/*重新给xxwd_sn编序号*/
 for each  xxwa_det no-lock where
           xxwa_date >= issue and xxwa_date <= issue1 and
           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-    each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid
+    each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr and
+         xxwd_recid = xxwa_recid
     break by xxwa_nbr:
     if first-of(xxwa_nbr) then do:
-    	 assign errornum = 1.
+       assign errornum = 1.
     end.
        assign xxwd_sn = errornum.
        assign errornum = errornum + 1.
