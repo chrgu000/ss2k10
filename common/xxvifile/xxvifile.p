@@ -1,6 +1,6 @@
 /* xxvifile.p - View file                                                    */
 /* revision: 110712.1   created on: 20110712   by: zhang yun                 */
-/*V8:ConvertMode=Report                                                      */
+/* V8:ConvertMode=Report                                                     */
 /* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
 /*-Revision end--------------------------------------------------------------*/
 
@@ -11,7 +11,7 @@
 {pocnvars.i}
 
 define variable file_name as character format "x(50)".
-define variable lngdir    like lng_dir.
+define variable lngdir    like lng_dir format "x(50)".
 define temp-table tf
     fields tf_txt as character format "x(200)" column-label "CONTENT".
 
@@ -52,7 +52,7 @@ DO:
   {pxmsg.i &MSGNUM=7169 &ERRORLEVEL=2 &CONFIRM=yn}
   if yn then do:
     for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p" and
-           usrw_key3 = global_userid:
+             usrw_key3 = global_userid:
       delete usrw_wkfl.
 	  end.
 	end.
@@ -72,7 +72,7 @@ repeat:
    if c-application-mode <> 'web' then
       update lngdir file_name with frame a.
 
-   {wbrp06.i &command = update &fields = "  file_name" &frm = "a"}
+   {wbrp06.i &command = update &fields = " file_name" &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
