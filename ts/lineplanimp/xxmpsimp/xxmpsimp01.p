@@ -59,7 +59,23 @@ DEFINE VARIABLE v_j AS INTEGER.
 
    END.
    ELSE DO:
-      FOR EACH xxmps:
+
+      v_i  = 0.
+      FOR EACH xxmps BREAK BY xxmps_cx BY xxmps_line BY xxmps_date BY xxmps_seq:
+
+
+          v_i = v_i + 1.
+
+
+          IF LAST-OF(xxmps_seq) THEN DO:
+
+             IF v_i > 1 THEN DO:
+                xxmps_error = "序号重复".
+             END.
+             v_i = 0.
+          END.
+
+
           FIND FIRST usrw_wkfl WHERE usrw_domain = GLOBAL_domain
              AND usrw_key1 = "SSGZTS-CX"
              AND usrw_key3 = xxmps_dept
@@ -78,7 +94,6 @@ DEFINE VARIABLE v_j AS INTEGER.
           IF NOT AVAIL lnd_det THEN DO:
              xxmps_error = "零件生产线没维护".
           END.
-
       END.
 
 
@@ -93,7 +108,9 @@ DEFINE VARIABLE v_j AS INTEGER.
       END.
       ELSE DO:
           /*cimload */
+          
           {gprun.i ""xxmpsimp02.p""}
+          
           v_flag = "3".
       END.
    END.

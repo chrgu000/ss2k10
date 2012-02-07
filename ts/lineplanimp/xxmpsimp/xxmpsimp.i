@@ -16,4 +16,4 @@ DEFINE {1} SHARED TEMP-TABLE xxmps
    FIELD xxmps_qty  AS DECIMAL LABEL "数量"
    FIELD xxmps_part LIKE pt_part
    FIELD xxmps_error AS CHARACTER FORMAT "x(20)" LABEL "提示"
-   INDEX index1 xxmps_dept xxmps_seq .
+   INDEX index1 xxmps_dept xxmps_date xxmps_seq .

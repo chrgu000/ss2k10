@@ -1,7 +1,12 @@
 /*Gui */
 /*V8:ConvertMode=Report                                                       */
-
+/*SS - 111220.1 BY EKN*/
+/*
 {mfdtitle.i "111031.1"}
+*/
+
+{mfdtitle.i "111220.1"}
+
 {xxmpsimp.i "new"}
 FORM /*GUI*/
     SKIP(1)
@@ -84,7 +89,6 @@ repeat on error undo, retry:
 
      IF v_flag = "3" THEN DO:
          FOR EACH xxmps:
-
              DISP xxmps WITH WIDTH 200.
          END.
      END.
