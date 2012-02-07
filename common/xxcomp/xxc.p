@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "21YA"}
+{mfdtitle.i "22Y7"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -21,6 +21,7 @@ define new shared variable c-comp-pgms as character format "x(20)" no-undo.
 define new shared variable vWorkFile   as character initial "utcompile.wrk".
 define new shared variable destDir     as character format "x(50)".
 define new shared variable lng         as character format "x(2)".
+define new shared variable l_show_wrng as logical initial no.
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
@@ -50,6 +51,7 @@ form
    bproPath colon 22 label {&xxcomp_p_4}
    skip(1)
    lng      colon 22 label {&xxcomp_p_5}
+   l_show_wrng colon 50
    skip(1)
    destDir  colon 22 label {&xxcomp_p_6}
 with Frame z side-labels width 80.
@@ -149,13 +151,15 @@ end.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
-display xrcDir filef filet bproPath lower(lng) @ lng destdir with Frame z.
-ENABLE  xrcDir filef filet bproPath lng destdir WITH Frame z.
+display xrcDir filef filet bproPath lower(lng) @ lng l_show_wrng destdir 
+				with Frame z.
+ENABLE  xrcDir filef filet bproPath lng l_show_wrng destdir WITH Frame z.
 
 mainLoop:
 repeat:
 do on error undo, retry:
-   update destDir xrcDir fileF fileT bpropath lng destdir with Frame z.
+   update destDir xrcDir fileF fileT bpropath lng l_show_wrng destdir 
+   with Frame z.
    assign fileT = fileT + hi_char.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
       {mfmsg.i 7656 3}
@@ -198,7 +202,8 @@ do on error undo, retry:
         end.
         if not locked(usrw_wkfl) then do:
            assign usrw_charfld[3] = filef
-                  usrw_charfld[4] = trim(filet).
+                  usrw_charfld[4] = trim(filet)
+                  usrw_logfld[1] = l_show_wrng.
            if opsys = "msdos" or opsys = "win32" then do:
               assign usrw_charfld[11] = xrcdir
                      usrw_charfld[12] = trim(destDir) when destDir <> ""
@@ -251,7 +256,8 @@ if available usrw_wkfl then do:
     assign xrcdir  = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""
            destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
            filef   = trim(usrw_charfld[3])
-           filet   = substring(usrw_charfld[4],1,length(usrw_charfld[4]) - 1).
+           filet   = substring(usrw_charfld[4],1,length(usrw_charfld[4]) - 1)
+           l_show_wrng = usrw_logfld[1].
     if opsys = "msdos" or opsys = "win32" then do:
        assign xrcdir  = usrw_charfld[11]
               destDir = trim(usrw_charfld[15]).

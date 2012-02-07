@@ -18,7 +18,7 @@ define shared variable c-comp-pgms as character format "x(20)" no-undo.
 define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
 define shared variable lng     as character format "x(2)".
-
+define shared variable l_show_wrng as logical. 
 assign c-comp = getTermLabel("COMPILING",8) + " ".
 
 output stream crt to terminal.
@@ -152,21 +152,22 @@ else do:
 end.
 
 /* Compile complete */
-{pxmsg.i &MSGNUM=4853 &ERRORLEVEL=1}
-bell.
-
-assign yn = no.
-{pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
-if  yn then do:
-   if opsys = "unix" then do:
-      unix silent vi utcompile.log.
+   {pxmsg.i &MSGNUM=4853 &ERRORLEVEL=1}
+   bell.
+   
+   assign yn = no.
+   if err > 0 or l_show_wrng then do:
+   		{pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
    end.
-   if opsys = "msdos" or opsys = "win32" then do:
-       dos silent notepad.exe utcompile.log.
-    end.
-end.
-hide all no-pause.
-
+   if yn then do:
+      if opsys = "unix" then do:
+         unix silent vi utcompile.log.
+      end.
+      if opsys = "msdos" or opsys = "win32" then do:
+          dos silent notepad.exe utcompile.log.
+       end.
+   end.
+   hide all no-pause.
 os-delete utcompile.log no-error.
 os-delete value(vworkfile) no-error.
 
