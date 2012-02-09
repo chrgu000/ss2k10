@@ -18,7 +18,7 @@ define shared variable c-comp-pgms as character format "x(20)" no-undo.
 define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
 define shared variable lng     as character format "x(2)".
-define shared variable l_show_wrng as logical. 
+define shared variable kbc_display_pause as integer.
 assign c-comp = getTermLabel("COMPILING",8) + " ".
 
 output stream crt to terminal.
@@ -154,10 +154,11 @@ end.
 /* Compile complete */
    {pxmsg.i &MSGNUM=4853 &ERRORLEVEL=1}
    bell.
-   
+
+   if kbc_display_pause > 0 and err = 0 then pause kbc_display_pause.
    assign yn = no.
-   if err > 0 or l_show_wrng then do:
-   		{pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
+   if err > 0 then do:
+      {pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
    end.
    if yn then do:
       if opsys = "unix" then do:

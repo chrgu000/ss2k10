@@ -1,7 +1,13 @@
 /*V8:ConvertMode=Report                                                       */
 /*by Ken chen 111031.1*/
 
+/*SS - 111220.1 BY EKN*/
+/*
 {mfdtitle.i "111031.1"}
+*/
+
+{mfdtitle.i "111220.1"}
+
 {xxmpsim2.i "new"}
 
 find first qad_wkfl no-lock where qad_domain = global_domain and

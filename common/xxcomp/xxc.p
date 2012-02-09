@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "22Y7"}
+{mfdtitle.i "22Y8"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -21,7 +21,7 @@ define new shared variable c-comp-pgms as character format "x(20)" no-undo.
 define new shared variable vWorkFile   as character initial "utcompile.wrk".
 define new shared variable destDir     as character format "x(50)".
 define new shared variable lng         as character format "x(2)".
-define new shared variable l_show_wrng as logical initial no.
+define new shared variable kbc_display_pause as integer initial 1 format ">9".
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable xrcDir     as character format "x(50)" no-undo.
@@ -51,7 +51,7 @@ form
    bproPath colon 22 label {&xxcomp_p_4}
    skip(1)
    lng      colon 22 label {&xxcomp_p_5}
-   l_show_wrng colon 50
+   kbc_display_pause colon 50
    skip(1)
    destDir  colon 22 label {&xxcomp_p_6}
 with Frame z side-labels width 80.
@@ -128,6 +128,7 @@ ON "CTRL-D" OF destDir IN FRAME z DO:
           release usrw_wkfl.
        end.
        clear frame z.
+       return.
        assign destDir.
    end.
 END.
@@ -151,14 +152,15 @@ end.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
-display xrcDir filef filet bproPath lower(lng) @ lng l_show_wrng destdir 
-				with Frame z.
-ENABLE  xrcDir filef filet bproPath lng l_show_wrng destdir WITH Frame z.
+display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause destdir
+        with Frame z.
+ENABLE  xrcDir filef filet bproPath lng kbc_display_pause destdir
+        WITH Frame z.
 
 mainLoop:
 repeat:
 do on error undo, retry:
-   update destDir xrcDir fileF fileT bpropath lng l_show_wrng destdir 
+   update destDir xrcDir fileF fileT bpropath lng kbc_display_pause destdir
    with Frame z.
    assign fileT = fileT + hi_char.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
@@ -203,7 +205,7 @@ do on error undo, retry:
         if not locked(usrw_wkfl) then do:
            assign usrw_charfld[3] = filef
                   usrw_charfld[4] = trim(filet)
-                  usrw_logfld[1] = l_show_wrng.
+                  usrw_intfld[1] = kbc_display_pause.
            if opsys = "msdos" or opsys = "win32" then do:
               assign usrw_charfld[11] = xrcdir
                      usrw_charfld[12] = trim(destDir) when destDir <> ""
@@ -248,7 +250,7 @@ leave.
 end. /*mainLoop*/
 
 PROCEDURE iniForm:
-/*优先取usrw_WKFL存储的*/
+/*read form variabls from usrw_WKFL*/
 find first usrw_wkfl no-lock where
 /*EB          usrw_domain = global_domain and                                 */
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
@@ -257,7 +259,7 @@ if available usrw_wkfl then do:
            destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
            filef   = trim(usrw_charfld[3])
            filet   = substring(usrw_charfld[4],1,length(usrw_charfld[4]) - 1)
-           l_show_wrng = usrw_logfld[1].
+           kbc_display_pause = usrw_intfld[1].
     if opsys = "msdos" or opsys = "win32" then do:
        assign xrcdir  = usrw_charfld[11]
               destDir = trim(usrw_charfld[15]).
@@ -290,7 +292,7 @@ if xrcdir <> "" and index(bpropath,xrcdir + chr(10)) = 0
    end.
 end procedure.
 
-/* 读取属性值 */
+/* get propties */
 FUNCTION getKey RETURNS CHARACTER(ikey AS CHARACTER,iSource AS CHARACTER):
     DEFINE VARIABLE ret AS CHARACTER NO-UNDO.
     IF index(isource,ikey)>0 THEN DO:
@@ -299,7 +301,7 @@ FUNCTION getKey RETURNS CHARACTER(ikey AS CHARACTER,iSource AS CHARACTER):
     RETURN ret.
 END.
 
-/* 从mfgutil.ini读取系统参数 */
+/* read system parameter from mfgutil.ini */
 PROCEDURE iniVar:
 DEFINE VARIABLE vincomp AS LOGICAL.
 DEFINE VARIABLE vfile   AS CHARACTER NO-UNDO.
@@ -308,7 +310,7 @@ DEFINE VARIABLE vinput  AS CHARACTER NO-UNDO.
 
 ASSIGN vfile = ""
        vpropath = trim(propath).
-/* 找mfgutil.ini档 */
+/* read mfgutil.ini */
 DO WHILE index(vpropath,",") > 0:
     ASSIGN vdir = substring(vpropath,1,INDEX(vpropath,",") - 1).
     if index(vdir,"bbi") > 0 then do:

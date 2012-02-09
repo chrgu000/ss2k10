@@ -5,7 +5,6 @@
 
 define variable fn as character.
 define variable i as integer.
-define variable chk as logical.
 assign fn = "xxsoimp" + string(time).
 output to value(fn + ".bpi").
 FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
@@ -14,9 +13,7 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
             PUT UNFORMAT '"' tso_cust '"' SKIP.
             PUT UNFORMAT '"' tso_bill '"' SKIP.
             PUT UNFORMAT '"' tso_ship '"' SKIP.
-            PUT UNFORMAT '- "' tso_req_date '" - "' tso_due_date '" - - - '.
-            if tso_rmks = "-" then put unformat '- '.
-                              else put unformat '"' tso_rmks '" '.
+            PUT UNFORMAT '- "' tso_req_date '" - "' tso_due_date '" - - - "' tso_rmks '" ' .
             PUT UNFORMAT '- - "' tso_site '" - - '.
             PUT UNFORMAT '- ' tso_curr SKIP.
             PUT UNFORMAT '-' SKIP.
@@ -36,14 +33,25 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
 
         PUT UNFORMAT tsod_line SKIP.
         PUT UNFORMAT '"' tsod_part '"' SKIP.
-        if tsod_site = ? or tsod_site = "" then PUT UNFORMAT '-' SKIP.
-           else PUT UNFORMAT '"' tsod_site '"' SKIP.
+        PUT UNFORMAT '"' tsod_site '"' SKIP.
         PUT UNFORMAT trim(string(tsod_qty_ord,"->>>>,>>9.9<")) SKIP.
         PUT UNFORMAT "-" SKIP.
         PUT UNFORMAT "-" SKIP.
         PUT UNFORMAT "-" SKIP.
-        PUT UNFORMAT '"' tsod_loc '" - - "' tsod_acct '" "' tsod_sub.
-            put unformat '" - - - - - - - - - ' tsod_due_date SKIP.
+        /* PUT UNFORMAT '"' tsod_loc '" - - "' tsod_acct '" "' tsod_sub. */
+	 if tsod_loc = "-" then
+	    PUT UNFORMAT "- - - ".
+	 ELSE 
+	    PUT UNFORMAT '"' tsod_loc '" - - '.
+	 IF tsod_acct = "-" then
+	    PUT UNFORMAT "- ".
+	 ELSE 
+	    PUT UNFORMAT '"' tsod_acct '" '.
+	 IF tsod_sub = "-" then
+	    PUT UNFORMAT "- ".
+	 ELSE 
+	    PUT UNFORMAT '"' tsod_sub '" '.
+            put unformat '- - - - - - - - - ' tsod_due_date SKIP.
         IF tsod_rmks1 <> "-" THEN DO:
            PUT UNFORMAT '- - - - - - - - - - y' skip.
            PUT UNFORMAT '-' SKIP.
@@ -65,27 +73,9 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
 OUTPUT CLOSE.
 
 batchrun = yes.
-INPUT FROM VALUE(fn + ".bpi").
-OUTPUT TO VALUE(fn + ".bpo").
+INPUT FROM VALUE(fn  + ".bpi") .
+OUTPUT TO VALUE(fn + ".bpo") .
 {gprun.i ""sosomt.p""}
 INPUT CLOSE .
 OUTPUT CLOSE .
 batchrun = NO.
-
-assign chk = yes.
-for each tmp-so exclusive-lock:
-    if not can-find(first sod_det where sod_domain = global_domain and
-                          sod_nbr = tso_nbr and sod_line = tsod_line and
-                          sod_part = tsod_part and sod_qty_ord = tsod_qty_ord)
-    then do:
-       assign tsod_chk = "导入失败".
-       chk = no.
-    end.
-	  else do:
-	  	 assign tsod_chk = "导入成功".
-	  end.
-end.
-if chk then do:
-   os-delete VALUE(fn + ".bpi").
-   os-delete VALUE(fn + ".bpo").
-end.
