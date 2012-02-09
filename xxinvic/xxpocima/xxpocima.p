@@ -11,23 +11,24 @@
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "110408.1"}
+{mfdtitle.i "120209.1"}
    
 /*定义变量*/
 Define variable Eoutputstatment AS CHARACTER FORMAT "x(200)". 
 Define variable Eonetime        AS CHARACTER FORMAT "x(1)" init "N".
 Define variable outputstatment AS CHARACTER FORMAT "x(200)".
 Define variable woutputstatment AS CHARACTER .
+DEFINE VARIABLE UKKEY1 AS CHARACTER INITIAL "xxpocima.p.shippo_ref".
 DEF VAR fn_me AS CHAR FORMAT "x(30)" INIT "po-rct-error.txt" .
 def var v9000 as char.
 define var v_rctdate as date initial today .
 
 def var site like si_site init "gsa01".
 def var site1 like   si_site init "gsa01".
-def var vend like  po_vend  .
-def var vend1 like    po_vend  .
-def var shipno like xxship_nbr  .
-def var shipno1 like xxship_nbr  .
+def var vend like  po_vend initial "J19X004".
+def var vend1 like po_vend initial "J19X004".
+def var shipno like xxship_nbr  initial "VT32/443".
+def var shipno1 like xxship_nbr initial "VT32/443".
 def var shipline like xxship_line init 0.
 def var shipline1 like xxship_line init 9999.
 def var rcvddate like tr_effdate init today.
@@ -61,11 +62,7 @@ DEF VAR v_flagpo AS LOGICAL INIT NO .
 
 define var v_qty_rct like tr_qty_loc .
 
-
-define temp-table vv no-undo field vv_rec as recid .
-
-
-
+define variable vtrrecid as recid .
 
 /* 取得xxinv_mstr 和 xxship_det中的原始资料 */
 DEF TEMP-TABLE pott 
@@ -102,6 +99,7 @@ DEF TEMP-TABLE  tt1a
     field   tt1a_vend like po_vend
     field   tt1a_fix_rate  as char
     field   tt1a_openqty like pod_qty_ord
+    field   tt1a_qty     like pod_qty_ord
     field   tt1a_part like pod_part
     field   tt1a_site like pod_site
     field   tt1a_lot like tr_serial
@@ -125,6 +123,14 @@ DEF TEMP-TABLE tte
     FIELD tte_vend LIKE po_vend
     FIELD tte_part LIKE pt_part
     FIELD tte_desc AS CHAR FORMAT "x(120)".
+
+define temp-table shippo_ref
+		fields spr_ship_nbr  like xxship_nbr
+		fields spr_ship_vend like xxship_vend
+		fields spr_ship_line like xxship_line
+		fields spr_pod_nbr   like pod_nbr
+		fields spr_pod_line  like pod_line
+		fields spr_qty       like pod_qty_ord.
 
 /*定义过程*/
 {xxpocimdatain_out.i}  

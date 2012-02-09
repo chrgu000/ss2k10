@@ -83,6 +83,7 @@
     		     	    tt1a_vend     = po_vend /* 供应商 */
     				    tt1a_fix_rate = if po_fix_rate = yes then "Y" else "N"
     				    tt1a_openqty  = tmp_qty  /* PO未收量   */
+    				    tt1a_qty      = tmp_qty
     				    tt1a_part     = pod_part	/* ERP图号 */			    
     				    tt1a_site     = pod_site /* 地点 */				     
     			        tt1a_loc      = if avail pt_mstr then pt_loc else ""  /* 默认库位 */
@@ -101,6 +102,7 @@
 					   tt1a_vend      = po_vend /* 供应商 */
 					   tt1a_fix_rate  = if po_fix_rate = yes then "Y" else "N"
 					   tt1a_openqty   = pott_qty - (tmp_order_qty - tmp_qty)  /* PO未收量   */
+					   tt1a_qty       = pott_qty - (tmp_order_qty - tmp_qty)
 					   tt1a_part      = pod_part	/* ERP图号 */			    
 					   tt1a_site      = pod_site /* 地点 */				     
 					   tt1a_loc       = if avail pt_mstr then pt_loc else ""  /* 默认库位 */
@@ -132,6 +134,7 @@
                    tt1a_vend     = pott_vend /* 供应商 */
                    tt1a_fix_rate = ""
                    tt1a_openqty  = pott_qty - tmp_order_qty  /* PO未收量   */
+                   tt1a_qty      = pott_qty - tmp_order_qty
                    tt1a_part     = tmp_part	/* ERP图号 */			    
                    tt1a_site     = pott_site /* 地点 */				     
                    tt1a_loc      = pott_loc  /* 默认库位 */
@@ -164,6 +167,7 @@
 				   tt1a_vend     = pott_vend /* 供应商 */
 				   tt1a_fix_rate = ""
 				   tt1a_openqty  = pott_qty  /*   未决量   */
+				   tt1a_qty      = pott_qty
 				   tt1a_part     = tmp_part	/* 图号 */			    
 				   tt1a_site     = pott_site /* 地点 */				     
 				   tt1a_loc      = pott_loc  /* 默认库位 */

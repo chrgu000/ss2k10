@@ -1,8 +1,7 @@
-/*----rev history------------------------------------------------------------*/
-/*原版{mfdtitle.i "2+ "}                                                     */
-/* SS - 110307.1  By: Roger Xiao                                             */
-/* vp_mstr 区分保税非保税,vp_part : P,M开头区分                              */
-/*-Revision end--------------------------------------------------------------*/
+/*----rev history-------------------------------------------------------------------------------------*/
+/*原版{mfdtitle.i "2+ "}*/
+/* SS - 110307.1  By: Roger Xiao */ /* vp_mstr 区分保税非保税,vp_part : P,M开头区分 */
+/*-Revision end---------------------------------------------------------------*/
 
 
     /* "1,取符合条件的数据,请等待......" 按供应商，图号汇总. B*/
@@ -177,7 +176,7 @@
              with frame ab1c width 200 down.
     end.
 
-    for each tt1a where tt1a_openqty <> 0   with frame ab2c:
+    for each tt1a where tt1a_openqty <> 0 with frame ab2c:
         /* SET EXTERNAL LABELS */
         setFrameLabels(frame ab2c:handle).
 
@@ -198,51 +197,113 @@
             with frame ab2c width 200 down.
     end.
 
-    /* REPORT TRAILER */
-    {mfrtrail.i}
+for each usrw_wkfl where usrw_key1 = ukkey1:
+    delete usrw_wkfl.
+end.
+for each xxinv_mstr
+        where xxinv_nbr >= shipno
+        and xxinv_nbr   <= shipno1
+        and xxinv_vend >= vend
+        and xxinv_vend <= vend1
+        and xxinv_site >= site
+        and xxinv_site <= site1
+        no-lock,
+    each xxship_det
+        where xxship_nbr  =  xxinv_nbr
+        and xxship_vend   = xxinv_vend
+        and xxship_line >= shipline
+        and xxship_line <= shipline1
+        and xxship_status = ""
+        and xxship_qty > xxship_rcvd_qty
+    by xxship_nbr by xxship_line:
+      /** 生成批号存到xxship__chr01. */
+       tmp_lot = "".
+       if v_rctdate <> ? then do:
+           datestr = substring(string(year(v_rctdate),"9999"),3,2)
+                   + string(month(v_rctdate),"99")
+                   + string(day(v_rctdate),"99").
+       end.
+       tmp_lot = datestr
+               + substring(xxinv_con,6) /*取合同号vt32/后面的字符*/
+               + string(xxship_case2,"99")    /*托号*/
+               .  /* SS - 110307.1 */
+       assign xxship__chr01 = tmp_lot.
+       tmp_order_qty = xxship_qty - xxship_rcvd_qty.
+       for each tt1a where tt1a_part = xxship_part2 and
+                  tt1a_qty > 0 by tt1a_nbr by tt1a_line:
+              create usrw_wkfl.
+              assign usrw_key1 = ukkey1
+                     usrw_key2 = substring(trim(string(recid(xxship_det)))
+                               + trim(string(recid(tt1a))),1,22)
+                     usrw_key3 = xxship_vend
+                     usrw_key4 = xxship_nbr
+                     usrw_intfld[1] = xxship_line
+                     usrw_charfld[1]   = tt1a_nbr
+                     usrw_intfld[2]   = tt1a_line.
+           if tmp_order_qty < tt1a_qty then do:
+              assign tt1a_qty = tt1a_qty - tmp_order_qty.
+              assign usrw_decfld[1] = tmp_order_qty.
+              leave.
+           end.
+           else do:
+               assign tmp_order_qty  = tmp_order_qty  - tt1a_qty.
+               assign usrw_decfld[1] = tt1a_qty.
+               assign tt1a_qty = 0.
+           end.
+       end.
+ end.
 
+for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref:
+        /* SET EXTERNAL LABELS */
+        setFrameLabels(frame fshippo_ref:handle).
+display usrw_key3       column-label "SUPPLIER"
+        usrw_key4       column-label "INVOICE_NUMBER"
+        usrw_intfld[1]  column-label "LINE_NUMBER"
+        usrw_charfld[1] column-label "PO_NUMBER"
+        usrw_intfld[2]  column-label "LINE_NUMBER"
+        usrw_decfld[1]  column-label "SCHED_RECEIPT"
+        with width 200 frame fshippo_ref.
+end.
+
+   /* REPORT TRAILER  */
+   {mfrtrail.i}
     IF v_flag = YES THEN DO:
-        IF v_flagpo = YES THEN DO:
-            FOR EACH tt1a WHERE tt1a_type = "1" BREAK BY tt1a_nbr BY tt1a_line:
+        IF v_flagpo = YES and v_flagpo = no THEN DO:
+            FOR EACH tt1a WHERE tt1a_type = "1" BREAK BY tt1a_nbr BY tt1a_line :
                 IF FIRST-OF(tt1a_nbr) THEN DO:
                     FOR FIRST vd_mstr WHERE vd_addr = tt1a_vend NO-LOCK :
                     END.
                     IF AVAIL vd_mstr THEN curr = vd_curr.
 
-                    usection = "pomt" + TRIM ( string(year(rcvddate))
-                                      + string(MONTH(rcvddate))
-                                      + string(DAY(rcvddate)))
-                                      + trim(STRING(TIME))
-                                      + trim(string(RANDOM(1,100))).
-                    output to value( trim(usection) + ".i") .
-                    PUT UNFORMATTED '"' tt1a_nbr '"' skip.
-                    PUT UNFORMATTED '"' tt1a_vend '"' skip.
+                    usection = "pomt" + TRIM ( string(year(rcvddate)) + string(MONTH(rcvddate)) + string(DAY(rcvddate)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
+                    output to value( trim(usection) + ".bpi") .
+                    PUT UNFORMATTED tt1a_nbr skip.
+                    PUT UNFORMATTED tt1a_vend skip.
                     PUT UNFORMATTED "-" skip.
                     /*本程式自动创建的PO, so_job = "AC" */
-                    put UNFORMATTED '- - - - "AC" - - - - - - "'
-                        trim(tt1a_site) '"' skip.
+                    put UNFORMATTED '- - - - "AC" - - - - - - '.
+                    PUT UNFORMATTED tt1a_site skip.
 
                     if curr <> "rmb" then do:
                        PUT UNFORMATTED  "-" skip.
                     end.
-                    PUT UNFORMATTED "-" skip.             /* 税 */
+                    PUT UNFORMATTED "-" skip.          /* 税 */
                 END.
 
-                PUT UNFORMATTED STRING(tt1a_line) skip.   /* 项次 */
-                PUT UNFORMATTED tt1a_site skip.           /* 地点 */
+                PUT UNFORMATTED STRING(tt1a_line) skip.          /* 项次 */
+                PUT UNFORMATTED tt1a_site skip.    /* 地点 */
                 put UNFORMATTED "-" skip.
-                put UNFORMATTED '"' tt1a_part '"' skip.
+                put UNFORMATTED tt1a_part skip.
                 put UNFORMATTED string(tt1a_openqty) skip.
                 /* 汇率问题要等财务AP模块上线后才确定 */
                 /*
                 put UNFORMATTED tmp_cost skip.
                 */
                 put UNFORMATTED "-" skip.
-                put UNFORMATTED '-' skip.
+                put UNFORMATTED "-" skip.
 
-                FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend
-                       AND ad_taxable = YES NO-LOCK NO-ERROR.
-                IF AVAIL ad_mstr THEN PUT UNFORMATTED " - " SKIP.
+                FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend AND ad_taxable = YES NO-LOCK NO-ERROR.
+                IF AVAIL ad_mstr THEN PUT UNFORMATTED "-" SKIP.
 
                 IF LAST-OF(tt1a_nbr) THEN DO:
                     put "." skip.
@@ -252,8 +313,8 @@
                     put "." skip.
                     output close.
 
-                    input from value ( usection + ".i") .
-                    output to  value ( usection + ".o") .
+                    input from value (usection + ".bpi") .
+                    output to  value (usection + ".bpo") .
                     batchrun = yes.
                     {gprun.i ""popomt.p""}
                     batchrun = no.
@@ -261,15 +322,16 @@
                     output close.
 
                     errstr="".
-                    ciminputfile = usection + ".i".
-                    cimoutputfile = usection + ".o".
+                    ciminputfile = usection + ".bpi".
+                    cimoutputfile = usection + ".bpo".
                     {xserrlg5.i}
 
-                    /**/
+                    /*
                     if errstr = "" then do:
-                        unix silent value ( "rm -f "  + Trim(usection) + ".i").
-                        unix silent value ( "rm -f "  + Trim(usection) + ".o").
+                        unix silent value ( "rm -f "  + Trim(usection) + ".bpi").
+                        unix silent value ( "rm -f "  + Trim(usection) + ".bpo").
                     end.
+                    */
                 END.
             END.
         END. /* v_flagpo = yes */
@@ -278,16 +340,28 @@
             j = 0.
 
             for each xxship_det
-                where xxship_nbr  >= shipno
+               where xxship_nbr  >= shipno
                 and  xxship_nbr   <= shipno1
-                and xxship_vend   >= vend
-                and xxship_vend   <= vend1
+                 and xxship_vend   >= vend
+                 and xxship_vend   <= vend1
                 break by xxship_nbr by xxship_part by xxship_case :
                 if first-of(xxship_part) then  j = 0.
                 j = j + 1 .
                 xxship_case2 = j .
             end.
 
+
+       /*  采购收货 start*/
+       find first gl_ctrl no-lock no-error.
+       If AVAILABLE (gl_ctrl) then assign glbasecurr = gl_base_curr.
+       
+       for each usrw_wkfl where usrw_key1 = ukkey1:
+          {xxpocimrcyes.i}
+       end.
+
+       /*  采购收货 End*/
+
+/**************
             j = 0.
 
             for each xxinv_mstr
@@ -305,7 +379,32 @@
                     and xxship_line <= shipline1
                     and xxship_status = ""
                     and xxship_qty > xxship_rcvd_qty
-                BY xxinv_nbr BY xxship_line :
+                by xxship_nbr by xxship_line:
+                   tmp_order_qty = xxship_qty - xxship_rcvd_qty.
+                   for each tt1a where tt1a_part = xxship_part2 and
+                              tt1a_qty > 0:
+                          create usrw_wkfl.
+                          assign usrw_key1 = ukk1
+                                 usrw_key2 = string(recid(xxship_det))
+                                           + string(recid(tt1a))
+                                 usrw_key[3] = xxship_vend
+                                 usrw_key[4] = xxship_nbr
+                                 usrw_key[5] = xxship_line
+                                 usrw_charfld[1]   = tt1a_nbr
+                                 usrw_charfld[2]   = tt1a_line
+                       if tmp_order_qty < tt1a_qty then do:
+                          assign tt1a_qty = tt1a_qty - tmp_order_qty.
+                          assign usrw_decfld[1] = tmp_order_qty.
+                          leave.
+                       end.
+                       else do:
+                           assign tmp_order_qty  = tmp_order_qty  - tt1a_qty.
+                           assign usrw_decfld[1] = tt1a_qty.
+                           assign tt1a_qty = 0.
+                       end.
+                   end.
+
+
                 /* 生成批号 */
                 tmp_lot = "".
                 if v_rctdate <> ? then do:
@@ -315,7 +414,7 @@
                 end.
                 tmp_lot = datestr
                         + substring(xxinv_con,6) /*取合同号vt32/后面的字符*/
-/*0112                      + string(xxship_case2,"99")    /*托号*/     */
+                        + string(xxship_case2,"99")    /*托号*/
                         .  /* SS - 110307.1 */
 
                 /* 取得ERP图号 */
@@ -372,8 +471,11 @@
                             LEAVE.
                         end.
                 end. /* for each po_mstr where po_vend = xxinv_vend  */
-
             END. /*for each xxinv_mstr */
+**********/
+/*
             MESSAGE "本次共导入" + string(j) + "条数据,请检查导出的信息文件以确认数据是否完整正确的导入到系统!" VIEW-AS ALERT-BOX.
+*/
         END. /*IF v_flagyn = YES*/
     END. /* v_flag = yes */
+
