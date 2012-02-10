@@ -35,11 +35,17 @@ form
    proc_name no-label
 with frame b down no-labels width 34.
 
+form
+   c-comp format "x(40)"
+with overlay frame m0 column 35 24 down
+       title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 46.
+
 hide all no-pause.
 hide stream crt all no-pause.
 view stream crt frame tt.
 view stream crt frame a.
 view stream crt frame b.
+view stream crt frame m0.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
@@ -56,6 +62,9 @@ output close.
 output to "utcompile.log" append.
 put unformat dbname " START:" today " " string(time,"hh:mm:ss") skip.
 output close.
+
+display c-comp with frame m0.
+
 i = 0.
 err = 0.
 input from value(vWorkFile) no-echo no-map.
@@ -66,6 +75,8 @@ repeat:
    set proc_name.
    assign i = i + 1.
 
+   display trim(c-comp) + substring(fill(".",30),1,i MODULO 30)
+           @ c-comp with frame m0.
    run getDestFileName(input destDir, input lng, input proc_name,
                        output dirname).
 
@@ -133,9 +144,10 @@ repeat:
 end.
 input close.
 
+hide frame m0.
 hide frame m.
 hide frame n.
-if err = 0 then do:
+if err = 0 and kbc_display_pause <= 9 then do:
    for each t_log where tt_log <> "" with overlay frame m column 35
        title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 46:
        display tt_log format "x(44)".
@@ -157,7 +169,7 @@ end.
 
    if kbc_display_pause > 0 and err = 0 then pause kbc_display_pause.
    assign yn = no.
-   if err > 0 then do:
+   if err > 0 or kbc_display_pause >= 10 then do:
       {pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
    end.
    if yn then do:

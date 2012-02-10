@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "22Y8"}
+{mfdtitle.i "22YA"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -119,17 +119,30 @@ ON "CTRL-D" OF destDir IN FRAME z DO:
    assign yn = no.
    {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=yn}
    if yn then do:
-       release usrw_wkfl.
-       find first usrw_wkfl exclusive-lock where
+       find first usrw_wkfl where
 /*EB          usrw_domain = global_domain and                                 */
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
+          assign usrw_charfld[1] = ""
+                 usrw_charfld[2] = ""
+                 usrw_charfld[3] = ""
+                 usrw_charfld[4] = ""
+                 usrw_charfld[5] = ""
+                 usrw_charfld[11] = ""
+                 usrw_charfld[12] = ""
+                 usrw_charfld[13] = ""
+                 usrw_charfld[14] = ""
+                 usrw_charfld[15] = ""
+                 usrw_intfld[1] = 0.
           delete usrw_wkfl.
-          release usrw_wkfl.
        end.
+       assign xrcDir = ""
+              destDir = ""
+              filef = ""
+              filet = ""
+              lng = lower(global_user_lang)
+              kbc_display_pause = 0.
        clear frame z.
-       return.
-       assign destDir.
    end.
 END.
 
@@ -192,6 +205,7 @@ do on error undo, retry:
       undo,retry.
    end.
    assign xrcDir = lower(trim(xrcDir)).
+   if xrcdir <> "" and destdir <> "" then do:
    find first usrw_wkfl where
 /*EB          usrw_domain = global_domain and                                 */
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
@@ -220,6 +234,7 @@ do on error undo, retry:
            end.
         end.
         release usrw_wkfl.
+    end.
 end.
 assign ProPath = replace(trim(bpropath),chr(10),",").
 
