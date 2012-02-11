@@ -233,14 +233,16 @@ for each xxinv_mstr
                   tt1a_qty > 0 by tt1a_nbr by tt1a_line:
               create usrw_wkfl.
               assign usrw_key1 = ukkey1
-                     usrw_key2 = substring(trim(string(recid(xxship_det)))
-                               + trim(string(recid(tt1a))),1,22)
+              			 usrw_key2 = string(recid(xxship_det)) + "-" +
+              			 						 string(recid(tt1a))
+ /*                    usrw_key2 = substring(string(recid(xxship_det)) + "000000000",1,11)      */
+ /*                              + substring(string(recid(tt1a)) + "000000000",1,11)            */
                      usrw_key3 = xxship_vend
                      usrw_key4 = xxship_nbr
                      usrw_intfld[1] = xxship_line
                      usrw_charfld[1]   = tt1a_nbr
                      usrw_intfld[2]   = tt1a_line.
-           if tmp_order_qty < tt1a_qty then do:
+           if tmp_order_qty <= tt1a_qty then do:
               assign tt1a_qty = tt1a_qty - tmp_order_qty.
               assign usrw_decfld[1] = tmp_order_qty.
               leave.
@@ -253,22 +255,22 @@ for each xxinv_mstr
        end.
  end.
 
-for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref:
-        /* SET EXTERNAL LABELS */
-        setFrameLabels(frame fshippo_ref:handle).
-display usrw_key3       column-label "SUPPLIER"
-        usrw_key4       column-label "INVOICE_NUMBER"
-        usrw_intfld[1]  column-label "LINE_NUMBER"
-        usrw_charfld[1] column-label "PO_NUMBER"
-        usrw_intfld[2]  column-label "LINE_NUMBER"
-        usrw_decfld[1]  column-label "SCHED_RECEIPT"
-        with width 200 frame fshippo_ref.
-end.
+ for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref:
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame fshippo_ref:handle).
+ display usrw_key3       column-label "SUPPLIER"
+         usrw_key4       column-label "INVOICE_NUMBER"
+         usrw_intfld[1]  column-label "LINE_NUMBER"
+         usrw_charfld[1] column-label "PO_NUMBER"
+         usrw_intfld[2]  column-label "LINE_NUMBER"
+         usrw_decfld[1]  column-label "SCHED_RECEIPT"
+         with width 200 frame fshippo_ref.
+ end.
 
    /* REPORT TRAILER  */
    {mfrtrail.i}
     IF v_flag = YES THEN DO:
-        IF v_flagpo = YES and v_flagpo = no THEN DO:
+        IF v_flagpo = YES THEN DO:
             FOR EACH tt1a WHERE tt1a_type = "1" BREAK BY tt1a_nbr BY tt1a_line :
                 IF FIRST-OF(tt1a_nbr) THEN DO:
                     FOR FIRST vd_mstr WHERE vd_addr = tt1a_vend NO-LOCK :
@@ -276,7 +278,7 @@ end.
                     IF AVAIL vd_mstr THEN curr = vd_curr.
 
                     usection = "pomt" + TRIM ( string(year(rcvddate)) + string(MONTH(rcvddate)) + string(DAY(rcvddate)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
-                    output to value( trim(usection) + ".bpi") .
+                    output to value(trim(usection) + ".bpi") .
                     PUT UNFORMATTED tt1a_nbr skip.
                     PUT UNFORMATTED tt1a_vend skip.
                     PUT UNFORMATTED "-" skip.
@@ -313,8 +315,8 @@ end.
                     put "." skip.
                     output close.
 
-                    input from value (usection + ".bpi") .
-                    output to  value (usection + ".bpo") .
+                    input from value(trim(usection) + ".bpi") .
+                    output to  value(trim(usection) + ".bpo") .
                     batchrun = yes.
                     {gprun.i ""popomt.p""}
                     batchrun = no.
@@ -322,9 +324,9 @@ end.
                     output close.
 
                     errstr="".
-                    ciminputfile = usection + ".bpi".
-                    cimoutputfile = usection + ".bpo".
-                    {xserrlg5.i}
+ /*                   ciminputfile = usection + ".bpi".    */
+ /*                   cimoutputfile = usection + ".bpo".   */
+ /*                   {xserrlg5.i}                         */
 
                     /*
                     if errstr = "" then do:
@@ -354,7 +356,7 @@ end.
        /*  采购收货 start*/
        find first gl_ctrl no-lock no-error.
        If AVAILABLE (gl_ctrl) then assign glbasecurr = gl_base_curr.
-       
+
        for each usrw_wkfl where usrw_key1 = ukkey1:
           {xxpocimrcyes.i}
        end.
@@ -475,7 +477,8 @@ end.
 **********/
 /*
             MESSAGE "本次共导入" + string(j) + "条数据,请检查导出的信息文件以确认数据是否完整正确的导入到系统!" VIEW-AS ALERT-BOX.
-*/
+ */
         END. /*IF v_flagyn = YES*/
+
     END. /* v_flag = yes */
 

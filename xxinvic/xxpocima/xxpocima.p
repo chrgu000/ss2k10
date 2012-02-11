@@ -54,7 +54,7 @@ def var tmp_qty like tr_qty_loc.
 def var tmp_part like pt_part.
 def var tmp_flagt like pt_part.
 def var tmp_line like pod_line.
-def var  curr like  po_curr.
+def var curr like  po_curr.
 DEF VAR jj AS INTEGER .
 DEF VAR tmp_ponbr LIKE po_nbr.
 DEF VAR v_flagyn AS LOGICAL INIT NO .
@@ -232,26 +232,25 @@ end.
 
 
     /* 检测数据,并执行cimload */
-    {xxpocimcheck.i} 
-    
-    find first tte no-lock no-error.
-    if avail tte then do:
-        output to value (fn_me) .
-        export delimiter ";" 
-            "类型" 
-            "错误类型" 
-            "客户代码" 
-            "订单/零件号"
-            "错误描述" 
-            .
-
-        for each tte :
-            export delimiter ";" tte .
-        end.
-        output close .
-    end.
-
-    undo mainloop, retry mainloop.   
+    {xxpocimcheck.i}  
+   /* find first tte no-lock no-error.          */
+   /* if avail tte then do:                     */
+   /*     output to value (fn_me) .             */
+   /*     export delimiter ";"                  */
+   /*         "类型"                            */
+   /*         "错误类型"                        */
+   /*         "客户代码"                        */
+   /*         "订单/零件号"                     */
+   /*         "错误描述"                        */
+   /*         .                                 */
+   /*                                           */
+   /*     for each tte :                        */
+   /*         export delimiter ";" tte .        */
+   /*     end.                                  */
+   /*     output close .                        */
+   /* end.                                      */
+   /*                                           */
+   /* undo mainloop, retry mainloop.            */
 end.
  
  
