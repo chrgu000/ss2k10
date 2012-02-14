@@ -86,7 +86,7 @@ output to xxxse.txt.
            ASSIGN xxmps_error = "³µÐÍ´íÎó".
         END.
         else do:
-        	   ASSIGN xxmps_error = "".
+             ASSIGN xxmps_error = "".
         end.
    end.
 output close.
@@ -101,6 +101,6 @@ output close.
    END.
    ELSE DO:
        /*cimload */
-      {gprun.i ""xxmpsim202.p""}
+     {gprun.i ""xxmpsim202.p""}
        v_flag = "3".
    END.

@@ -8,61 +8,76 @@
 
 define variable vppt like seq_priority.
 DEFINE SHARED VARIABLE v_date AS DATE EXTENT 32.
-
+define variable datef as date.
+define variable datet as date.
+define variable linef as character.
+define variable linet as character.
 DEFINE VARIABLE v_i AS INTEGER.
 
 /*SS - 111220.1 B*/
-  /*
+
   FOR EACH xxmps,
       EACH usrw_wkfl no-lock where
            usrw_wkfl.usrw_domain = global_domain and
            usrw_wkfl.usrw_key1 = key1 and
            usrw_wkfl.usrw_key3 = xxmps_dept and
            usrw_wkfl.usrw_key4 = xxmps_cx
-     BREAK BY usrw_key6 BY xxmps_date:
-     if first-of(xxmps_date) then do:
-         for each seq_mstr use-index seq_sequence exclusive-lock where
-                  seq_mstr.seq_domain = global_domain and
-                  seq_mstr.seq_site = "TS" and
-                  seq_mstr.seq_line = usrw_key6 and
-                  seq_due_date = xxmps_date:
-           delete seq_mstr.
-         end.
+     BREAK BY xxmps_dept by usrw_wkfl.usrw_key6 BY xxmps_date:
+     if first-of(xxmps_dept) then do:
+        assign datef = xxmps_date
+               datet = xxmps_date
+               linef = usrw_key6
+               linet = usrw_key6.
      end.
+     if datef > xxmps_date then assign datef = xxmps_date.
+     if datet < xxmps_date then assign datet = xxmps_date.
+     if linef > usrw_key6 then assign linef = usrw_key6.
+     if linet < usrw_key6 then assign linet = usrw_key6.
   end.
-  */
 
+  for each seq_mstr use-index seq_sequence exclusive-lock where
+           seq_mstr.seq_domain = global_domain and
+           seq_mstr.seq_site = "TS" and
+           seq_mstr.seq_line >= linef and seq_mstr.seq_line <= linet and
+           seq_due_date >= datef and seq_due_date <= datet:
+    delete seq_mstr.
+  end.
+
+
+/*****************
   for each xxmps no-lock break by xxmps_dept:
       if first-of(xxmps_dept) then do:
             DO v_i = 1 TO 32:
                IF v_date[v_i] <> ? THEN DO:
-                   for each seq_mstr  where
-                            seq_mstr.seq_domain = global_domain 
-                            AND seq_mstr.seq_site = "TS" 
-                            AND seq_due_date = v_date[v_i]
-                            :
-                             FIND FIRST usrw_wkfl WHERE usrw_domain = GLOBAL_domain
-                                          AND usrw_key1 = "SSGZTS-CX"
-                                          AND usrw_key6 = seq_line
-                                          AND usrw_key5 = seq_part 
-                                          AND CAN-FIND(FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain AND CODE_fldname = "dept-34" AND CODE_value = usrw_key3)
-                                 NO-LOCK NO-ERROR.
-                             IF AVAIL usrw_wkfl THEN DO:
-                                delete seq_mstr.
-                             END.                                 
-                   END.
+      for each seq_mstr where
+               seq_mstr.seq_domain = global_domain
+               AND seq_mstr.seq_site = "TS"
+               AND seq_due_date = v_date[v_i]:
+                FIND FIRST usrw_wkfl WHERE usrw_domain = GLOBAL_domain
+                       AND usrw_key1 = "SSGZTS-CX"
+                       AND usrw_key6 = seq_line
+                       AND usrw_key5 = seq_part
+                       AND CAN-FIND(FIRST CODE_mstr WHERE
+                                          CODE_domain = GLOBAL_domain AND
+                                          CODE_fldname = "dept-34" AND
+                                          CODE_value = usrw_key3)
+                    NO-LOCK NO-ERROR.
+                IF AVAIL usrw_wkfl THEN DO:
+                   delete seq_mstr.
+                END.
+      END.   /* for each seq_mstr where */
                END.
             END.
       END.
   end.
-
+**************************/
 
 /*SS - 111220.1 E*/
 
-  
+
 /*cimload */
 v_i = 0.
-FOR EACH xxmps,
+FOR EACH xxmps where xxmps_qty > 0,
    EACH usrw_wkfl no-lock where
        usrw_wkfl.usrw_domain = global_domain and
        usrw_wkfl.usrw_key1 = key1 and
@@ -79,9 +94,9 @@ FOR EACH xxmps,
         END.
 
         FIND FIRST seq_mstr WHERE seq_domain = GLOBAL_domain
-             AND seq_site = "ts" 
+             AND seq_site = "ts"
              AND seq_line = usrw_wkfl.usrw_key6
-             AND seq_due_date = xxmps_date 
+             AND seq_due_date = xxmps_date
              AND seq_priority = v_i NO-ERROR.
         IF NOT AVAIL seq_mstr THEN DO:
 
@@ -94,7 +109,6 @@ FOR EACH xxmps,
                     seq_mstr.seq_part = usrw_wkfl.usrw_key5
                     seq_mstr.seq_qty_req = xxmps_qty
                     seq_mstr.seq_due_date = xxmps_date.
-
                     xxmps_error = "导入成功".
         END.
         ELSE DO:

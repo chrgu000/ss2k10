@@ -47,7 +47,7 @@ end.
 */
 /*cimload 18.22.1.14  */
   
-  FOR EACH xxmps:
+  FOR EACH xxmps where xxmps_qty > 0:
       create seq_mstr.
       assign
          seq_domain = global_domain
