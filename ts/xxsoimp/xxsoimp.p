@@ -16,14 +16,14 @@ setFrameLabels(frame a:handle).
 
 {wbrp01.i}
 repeat:
-	 find first code_mstr where code_domain = global_domain and 
-	 						code_fldname = "xxsoimp.p_filename" and 
-	 						code_value = global_userid no-error.
-	 if available code_mstr then do:
-	 		if code_cmmt <> "" then do:
-	 			 assign file_name =  code_cmmt.
-	 	  end.
-	 end. 
+   find first code_mstr where code_domain = global_domain and 
+              code_fldname = "xxsoimp.p_filename" and 
+              code_value = global_userid no-error.
+   if available code_mstr then do:
+      if code_cmmt <> "" then do:
+         assign file_name =  code_cmmt.
+      end.
+   end. 
    if c-application-mode <> 'web' then
    update file_name with frame a.
 
@@ -36,19 +36,19 @@ repeat:
          undo, retry.
      END.
      else do:
-	   			find first code_mstr where code_domain = global_domain and 
-	   									code_fldname = "xxsoimp.p_filename" and 
-	   									code_value = global_userid no-error.
-	   			if available code_mstr then do:
-	   						 assign code_cmmt = file_name.
-	   			end.      		
-	   			else do:
-	   					create code_mstr. 
-	   					assign code_domain = global_domain
-	   					       code_fldname = "xxsoimp.p_filename"
-	   					       code_value = global_userid
-	   					       code_cmmt = file_name.
-	   		  end.
+          find first code_mstr where code_domain = global_domain and 
+                      code_fldname = "xxsoimp.p_filename" and 
+                      code_value = global_userid no-error.
+          if available code_mstr then do:
+                 assign code_cmmt = file_name.
+          end.          
+          else do:
+              create code_mstr. 
+              assign code_domain = global_domain
+                     code_fldname = "xxsoimp.p_filename"
+                     code_value = global_userid
+                     code_cmmt = file_name.
+          end.
      end.
 
    if (c-application-mode <> 'web') or
@@ -83,7 +83,7 @@ repeat:
      else do:
         {gprun.i ""xxsoimp1.p""}
      end.
-
+    
      for each tmp-so no-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
