@@ -39,12 +39,16 @@ usection = "porc" + TRIM (string(year(TODAY)) +
                           trim(usrw_key2).
 output to value(usection + ".bpi") .
       PUT  UNFORMATTED trim(po_mstr.po_nbr) format "x(50)"  skip .
-
-      PUT  UNFORMATTED xxship_nbr + " - " + string(rcvddate) +  " N N N " format "x(50)" skip .
+      PUT  UNFORMATTED xxship_nbr + " - " + string(rcvddate) +  " N N N" skip.
       /* 判断采购币与本位币是否相同，是否固定汇率*/
-      If po_curr <> glbasecurr AND tmp_fix_rate  = "N" then PUT UNFORMATTED " - " SKIP.
-      PUT UNFORMATTED trim ( string(pod_det.pod_line) )  format "x(50)" skip .
-      PUT UNFORMATTED trim ( string(usrw_decfld[1]) ) + " - N - - - " + trim (xxship_site) + " " +  trim( tmp_loc ) + " " + """" + trim(xxship__chr01) + """" + " - - N N N "   format "X(50)" skip.
+      If po_curr <> glbasecurr AND tmp_fix_rate  = "N"
+         then PUT UNFORMATTED " -" SKIP.
+      PUT UNFORMATTED trim(string(pod_det.pod_line)) skip .
+      PUT UNFORMATTED trim(string(usrw_decfld[1])) + ' - N - - - '
+                    + trim(xxship_site) + ' ' + trim( tmp_loc ) + ' "'
+                    + trim(xxship__chr01) + '" - "'
+                    + xxship_nbr + ':' + string(xxship_line) + ':'
+                    + string(xxship_case) '" N N N' skip.
       PUT UNFORMATTED "." skip.
       PUT UNFORMATTED "Y" skip.
       PUT UNFORMATTED "Y" skip.
@@ -64,9 +68,6 @@ assign vtrrecid = current-value(tr_sq01).
     hide message no-pause.
     input close.
     output close.
-/*    display vtrrecid  usrw_key2 format "x(40)" po_mst.po_nbr rcvddate pod_det.pod_line pod_det.pod_part   */
-/*            xxship_site tmp_loc xxship__chr01 usrw_decfld[1].                                             */
-/*            pause 5.                                                                                      */
   find first tr_hist use-index tr_trnbr no-lock where
              tr_trnbr   > integer(vtrrecid) and
              tr_nbr     = trim(po_mstr.po_nbr) and
@@ -86,20 +87,15 @@ assign vtrrecid = current-value(tr_sq01).
             xxship_rcvd_date    = v_rctdate
             xxship_rcvd_loc     = ""  /*在条码打印时分配*/
             .
-        if xxship_rcvd_qty >= xxship_qty then xxship_status = 'RCT-PO'.   /*xxship_status 可以等于:收货OK'RCT-PO',转仓OK'RCT-TR',未收货留空 */
+        /*xxship_status 可以等于:收货OK'RCT-PO',转仓OK'RCT-TR',未收货留空 */
+        if xxship_rcvd_qty >= xxship_qty then xxship_status = 'RCT-PO'.
+   os-delete value(Trim(usection) + ".bpi") no-error.
+   os-delete value(Trim(usection) + ".bpo") no-error.
   end.
-
-
-errstr = "".
-ciminputfile = usection + ".bpi".
-cimoutputfile = usection + ".bpo".
-{xserrlg5.i}
+/*  errstr = "".                           */
+/*  ciminputfile = usection + ".bpi".      */
+/*  cimoutputfile = usection + ".bpo".     */
+/*  {xserrlg5.i}                           */
 leave.
 end.
-/*
-if errstr = "" then do:
-    unix silent value ( "rm -f "  + Trim(usection) + ".bpi").
-    unix silent value ( "rm -f "  + Trim(usection) + ".bpo").
-end.
-*/
 

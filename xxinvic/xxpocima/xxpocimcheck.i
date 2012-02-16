@@ -1,6 +1,7 @@
-/*----rev history-------------------------------------------------------------------------------------*/
-/*原版{mfdtitle.i "2+ "}*/
-/* SS - 110307.1  By: Roger Xiao */ /* vp_mstr 区分保税非保税,vp_part : P,M开头区分 */
+/*----rev history-------------------------------------------------------------*/
+/*原版{mfdtitle.i "2+ "}                                                      */
+/* SS - 110307.1  By: Roger Xiao                                              */
+/* vp_mstr 区分保税非保税,vp_part : P,M开头区分                               */
 /*-Revision end---------------------------------------------------------------*/
 
 
@@ -20,7 +21,8 @@
                            break by xxinv_site by xxinv_vend
                            by xxship_part :
 
-        ACCUMULATE (xxship_qty - xxship_rcvd_qty) ( TOTAL by xxinv_site by xxinv_vend BY xxship_part ) .
+        ACCUMULATE (xxship_qty - xxship_rcvd_qty)
+                   (TOTAL by xxinv_site by xxinv_vend BY xxship_part ).
 
         IF LAST-OF(xxship_part) THEN DO:
            find first vd_mstr where vd_addr = xxinv_vend no-lock no-error.
@@ -48,9 +50,11 @@
 
            /* 生成批号 */
             if v_rctdate <> ? then do:
-                datestr = substring(string(year(v_rctdate),"9999"),3,2) + string(month(v_rctdate),"99") + string(day(v_rctdate),"99")   .
+                datestr = substring(string(year(v_rctdate),"9999"),3,2) 
+                			  + string(month(v_rctdate),"99") 
+                			  + string(day(v_rctdate),"99").
             end.
-            assign pott_lot = datestr + substring(xxinv_con,6) /*取合同号vt32/后面的字符*/.  /* SS - 110307.1 */ .
+            assign pott_lot = datestr + substring(xxinv_con,6). /*取合同号vt32/后面的字符*/  /* SS - 110307.1 */ .
 
            /* 取得生成PO的单价 */
            /* showa 要求:不用发票上的价格,直接用1.10.2.1价格表的价格 */
@@ -114,7 +118,8 @@
                 AND pott_rcvddate <= exr_end_date NO-LOCK NO-ERROR.
             IF NOT AVAIL exr_rate THEN DO:
                 FIND FIRST tte WHERE tte_type1 = "兑换率" AND tte_type = "错误"
-                    AND tte_vend = pott_vend AND tte_part = vd_curr NO-LOCK NO-ERROR.
+                       AND tte_vend = pott_vend 
+                       AND tte_part = vd_curr NO-LOCK NO-ERROR.
                 IF NOT AVAIL tte THEN DO:
                     CREATE tte.
                     ASSIGN
@@ -233,10 +238,8 @@ for each xxinv_mstr
                   tt1a_qty > 0 by tt1a_nbr by tt1a_line:
               create usrw_wkfl.
               assign usrw_key1 = ukkey1
-              			 usrw_key2 = string(recid(xxship_det)) + "-" +
-              			 						 string(recid(tt1a))
- /*                    usrw_key2 = substring(string(recid(xxship_det)) + "000000000",1,11)      */
- /*                              + substring(string(recid(tt1a)) + "000000000",1,11)            */
+              			 usrw_key2 = string(recid(xxship_det)) + "-"
+              			 					 + string(recid(tt1a))
                      usrw_key3 = xxship_vend
                      usrw_key4 = xxship_nbr
                      usrw_intfld[1] = xxship_line
@@ -255,7 +258,8 @@ for each xxinv_mstr
        end.
  end.
 
- for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref:
+ for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref
+ 		      by usrw_key4 by usrw_intfld[1] by usrw_charfld[1] by usrw_intfld[2]:
          /* SET EXTERNAL LABELS */
          setFrameLabels(frame fshippo_ref:handle).
  display usrw_key3       column-label "SUPPLIER"
@@ -271,13 +275,16 @@ for each xxinv_mstr
    {mfrtrail.i}
     IF v_flag = YES THEN DO:
         IF v_flagpo = YES THEN DO:
-            FOR EACH tt1a WHERE tt1a_type = "1" BREAK BY tt1a_nbr BY tt1a_line :
+            FOR EACH tt1a WHERE tt1a_type = "1" BREAK BY tt1a_nbr BY tt1a_line:
                 IF FIRST-OF(tt1a_nbr) THEN DO:
                     FOR FIRST vd_mstr WHERE vd_addr = tt1a_vend NO-LOCK :
                     END.
                     IF AVAIL vd_mstr THEN curr = vd_curr.
-
-                    usection = "pomt" + TRIM ( string(year(rcvddate)) + string(MONTH(rcvddate)) + string(DAY(rcvddate)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
+                    usection = "pomt" + TRIM ( string(year(rcvddate))
+                    								  + string(MONTH(rcvddate))
+                    								  + string(DAY(rcvddate)))
+                    								  + trim(STRING(TIME))
+                    								  + trim(string(RANDOM(1,100))).
                     output to value(trim(usection) + ".bpi") .
                     PUT UNFORMATTED tt1a_nbr skip.
                     PUT UNFORMATTED tt1a_vend skip.
@@ -289,11 +296,10 @@ for each xxinv_mstr
                     if curr <> "rmb" then do:
                        PUT UNFORMATTED  "-" skip.
                     end.
-                    PUT UNFORMATTED "-" skip.          /* 税 */
+                    PUT UNFORMATTED "-" skip.             /* 税 */
                 END.
-
-                PUT UNFORMATTED STRING(tt1a_line) skip.          /* 项次 */
-                PUT UNFORMATTED tt1a_site skip.    /* 地点 */
+                PUT UNFORMATTED STRING(tt1a_line) skip.   /* 项次 */
+                PUT UNFORMATTED tt1a_site skip.           /* 地点 */
                 put UNFORMATTED "-" skip.
                 put UNFORMATTED tt1a_part skip.
                 put UNFORMATTED string(tt1a_openqty) skip.
@@ -303,10 +309,9 @@ for each xxinv_mstr
                 */
                 put UNFORMATTED "-" skip.
                 put UNFORMATTED "-" skip.
-
-                FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend AND ad_taxable = YES NO-LOCK NO-ERROR.
+                FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend AND
+                					 ad_taxable = YES NO-LOCK NO-ERROR.
                 IF AVAIL ad_mstr THEN PUT UNFORMATTED "-" SKIP.
-
                 IF LAST-OF(tt1a_nbr) THEN DO:
                     put "." skip.
                     put "." skip.
@@ -314,7 +319,6 @@ for each xxinv_mstr
                     put "-" skip.
                     put "." skip.
                     output close.
-
                     input from value(trim(usection) + ".bpi") .
                     output to  value(trim(usection) + ".bpo") .
                     batchrun = yes.
@@ -324,16 +328,16 @@ for each xxinv_mstr
                     output close.
 
                     errstr="".
- /*                   ciminputfile = usection + ".bpi".    */
- /*                   cimoutputfile = usection + ".bpo".   */
- /*                   {xserrlg5.i}                         */
+                    ciminputfile = usection + ".bpi".
+                    cimoutputfile = usection + ".bpo".
+                    {xserrlg5.i}
 
-                    /*
-                    if errstr = "" then do:
-                        unix silent value ( "rm -f "  + Trim(usection) + ".bpi").
-                        unix silent value ( "rm -f "  + Trim(usection) + ".bpo").
+                    if can-find(first pod_det where pod_nbr = tt1a_nbr
+                    							and pod_line = tt1a_line
+                    							and pod_part = tt1a_part) then do:
+                        os-delete value(Trim(usection) + ".bpi") no-error.
+                        os-delete value(Trim(usection) + ".bpo") no-error.
                     end.
-                    */
                 END.
             END.
         END. /* v_flagpo = yes */

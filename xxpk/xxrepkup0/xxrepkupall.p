@@ -14,9 +14,9 @@ break by xxwa_site
    string(xxwa_rtime,"hh:mm:ss") label "time" xxwa_ord_mult.
    */
    find first tiss1 where 
-     tiss1_sdate    = xxwa_date     and
-     tiss1_stime    = xxwa_sstime   and
-     tiss1_line     = xxwa_line     and
+     tiss1_sdate    = xxwa_date   and
+     tiss1_stime    = xxwa_sstime and
+     tiss1_line     = xxwa_line   and
      tiss1_part     = xxwa_part   
      no-error.
    if not avail tiss1 then do:
@@ -59,7 +59,7 @@ for each tiss1 break  by tiss1_line by tiss1_part by tiss1_sdate by tiss1_stime:
 	/* 消耗生产线物料 */
 	if first-of(tiss1_part) then do:
 		myqty = 0.
-    for each tsupp no-lock where tsu_loc = tiss1_line and tsu_part = tiss1_part :
+    for each tsupp no-lock where tsu_loc = tiss1_line and tsu_part = tiss1_part:
     	myqty = myqty + tsu_qty.
     end.
 	end.
@@ -202,8 +202,7 @@ for each trlt1 where trt1_loc <> "p-all"
 	    trt2_part     = trt1_part
 	    trt2_lot      = trt1_lot
 	    trt2_ref      = trt1_ref
-	    trt2_qty      = tsu_big
-	  .
+	    trt2_qty      = tsu_big.
 		myqty = myqty + tsu_big.
 		tsu_bpacks = tsu_bpacks - 1.
 	end.

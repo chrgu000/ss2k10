@@ -24,11 +24,11 @@ def var v9000 as char.
 define var v_rctdate as date initial today .
 
 def var site like si_site init "gsa01".
-def var site1 like   si_site init "gsa01".
-def var vend like  po_vend initial "J19X004".
-def var vend1 like po_vend initial "J19X004".
-def var shipno like xxship_nbr  initial "VT32/443".
-def var shipno1 like xxship_nbr initial "VT32/443".
+def var site1 like si_site init "gsa01".
+def var vend like po_vend initial "".
+def var vend1 like po_vend initial "".
+def var shipno like xxship_nbr  initial "".
+def var shipno1 like xxship_nbr initial "".
 def var shipline like xxship_line init 0.
 def var shipline1 like xxship_line init 9999.
 def var rcvddate like tr_effdate init today.
@@ -201,8 +201,6 @@ if rcvddate = ? then do:
     undo,retry.
 end.
 
-
-
     {gpselout.i &printType = "printer"
                &printWidth = 132
                &pagedFlag = " "
@@ -252,5 +250,3 @@ end.
    /*                                           */
    /* undo mainloop, retry mainloop.            */
 end.
- 
- 
