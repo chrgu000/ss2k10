@@ -57,7 +57,6 @@ repeat:
       update tbl datefrom uid uid1 with frame a.
 
    {wbrp06.i &command = update &fields = " tbl datefrom uid uid1 " &frm = "a"}
-
    find first qad_wkfl no-lock where qad_domain = "xxtcgen.p-domain" and
               qad_key1 = "xxtcgen.p-tracegenrecord" and
         index(qad_key2,tbl) > 0 no-error.
@@ -124,7 +123,7 @@ put unformat getTermLabel("ID",12) "~t"
 
    for each tce_hist no-lock
        where tce_domain = global_domain and tce_table = tbl
-         and tce_date >= tce_date
+         and tce_date >= datefrom
          and tce_userid >= uid and tce_userid <= uid1
    with frame b width 132 no-attr-space by recid(tce_hist) desc:
 
