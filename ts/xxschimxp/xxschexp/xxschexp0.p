@@ -26,9 +26,9 @@ session:set-wait-stat("general").
    xws:cells(1,3) = getTermLabel("IMPORT",12) + ":xxrssmt.p(5.5.3.3)".
    xws:cells(1,4) = getTermLabel("RELEASE_ID",12).
    xws:cells(1,5) = "'" + vrlseid.
-   xws:cells(2,3) = "'" 
-                  + string(year(today) , "9999") + "-" 
-                  + string(month(today) , "99") + "-" 
+   xws:cells(2,3) = "'"
+                  + string(year(today) , "9999") + "-"
+                  + string(month(today) , "99") + "-"
                   + string(day(today) , "99") + " "
                   + string(time,"HH:MM:SS").
    xws:cells(4,1) = getTermLabel("PO_NUMBER",12).
@@ -38,7 +38,7 @@ session:set-wait-stat("general").
    xws:cells(4,5) = getTermLabel("PRIOR_CUM_DATE",16).
    xws:cells(4,6) = getTermLabel("FORECAST1",16).
    xws:cells(4,7) = getTermLabel("FORECAST2",17).
-   xws:cells(5,8):select no-error. 
+   xws:cells(5,8):select no-error.
    xap:ActiveWindow:FreezePanes = TRUE NO-ERROR.
    for each schd_det no-lock where schd_domain = global_domain
         and schd_nbr = vpo and schd_rlse_id = vrlseid by schd_line:
@@ -57,11 +57,17 @@ session:set-wait-stat("general").
    end.
 
    for each xxsch_dtidx exclusive-lock break by xdti_idx:
-       xws:cells(3,xdti_idx) =  "'" 
-                            + string(year(xdti_date) , "9999") + "-" 
-                            + string(month(xdti_date) , "99") + "-" 
+       xws:cells(3,xdti_idx) =  "'"
+                            + string(year(xdti_date) , "9999") + "-"
+                            + string(month(xdti_date) , "99") + "-"
                             + string(day(xdti_date) , "99").
+       xws:cells(3,xdti_idx):AddComment.
+       xws:cells(3,xdti_idx):Comment:Visible = False.
+       xws:cells(3,xdti_idx):Comment:Text("请不要删除文本前面的'").
        xws:cells(4,xdti_idx) = "'" + string(xdti_time,"99:99").
+       xws:cells(4,xdti_idx):AddComment.
+       xws:cells(4,xdti_idx):Comment:Visible = False.
+       xws:cells(4,xdti_idx):Comment:Text("请不要删除文本前面的'").
    end.
    xap:visible = true.
    assign vl = 5.
@@ -71,21 +77,24 @@ session:set-wait-stat("general").
       find first pod_det no-lock where pod_domain = sch_domain and
                  pod_nbr = sch_nbr and pod_line = sch_line.
       if not available pod_det then do:
-      	 next.
+         next.
       end.
       xws:cells(vl,1) = "'" + sch_nbr.
       xws:cells(vl,2) = sch_line.
       xws:cells(vl,3) = "'" + pod_part.
       xws:cells(vl,4) = sch_pcr_qty.
-      xws:cells(vl,5) = "'" + string(year(sch_pcs_date) , "9999") + "-" 
-                            + string(month(sch_pcs_date) , "99") + "-" 
-                            + string(day(sch_pcs_date) , "99"). 
+      xws:cells(vl,5) = "'" + string(year(sch_pcs_date) , "9999") + "-"
+                            + string(month(sch_pcs_date) , "99") + "-"
+                            + string(day(sch_pcs_date) , "99").
+      xws:cells(vl,5):AddComment.
+      xws:cells(vl,5):Comment:Visible = False.
+      xws:cells(vl,5):Comment:Text("请不要删除文本前面的'").
       xws:cells(vl,6) = sch__dec01.
       xws:cells(vl,7) = sch__dec02.
 
       for each schd_det no-lock where schd_domain = sch_domain
-      		and schd_type = sch_type and schd_nbr = sch_nbr 
-      		and schd_line = sch_line
+          and schd_type = sch_type and schd_nbr = sch_nbr
+          and schd_line = sch_line
           and schd_rlse_id = sch_rlse_id:
           find first xxsch_dtidx where xdti_date = schd_date
                  and xdti_time = schd_time no-error.
