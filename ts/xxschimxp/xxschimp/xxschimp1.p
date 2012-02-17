@@ -33,7 +33,7 @@ output to value(fn + ".bpi").
       end.
   end.
 output close.
-
+/*
 batchrun = yes.
 INPUT FROM VALUE(fn + ".bpi").
 OUTPUT TO VALUE(fn + ".bpo").
@@ -44,3 +44,4 @@ batchrun = NO.
 
 os-delete VALUE(fn + ".bpi") no-error.
 os-delete value(fn + ".bpo") no-error.
+*/
