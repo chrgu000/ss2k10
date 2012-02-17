@@ -7,7 +7,7 @@
 
 define variable browse1 like brwf_det.brw_name no-undo.
 define variable browse2 like brwf_det.brw_name no-undo.
-define variable consolidate as logical label "consolidate" no-undo .
+define variable cons_ship1 as logical label "CONSOLIDATE" no-undo .
 define variable filename as character format "x(40)" no-undo.
 
 define stream history.
@@ -16,7 +16,7 @@ form
    browse1 colon 21
    browse2 colon 42 label {t001.i}
    skip(1)
-   consolidate colon 21 skip
+   cons_ship1 colon 21 skip
    filename colon 21
 with frame a side-labels attr-space width 80.
 
@@ -25,8 +25,8 @@ setFrameLabels(frame a:handle).
 
 repeat:
    if browse2   = hi_char then browse2   = "".
-   update browse1 browse2 consolidate with frame a.
-      if consolidate
+   update browse1 browse2 cons_ship1 with frame a.
+      if cons_ship1
       then do:
          /*  FILE NAME CREATION  IS CHANGED. GENERATED  FILE NAME   IS       */
          /*  INDEPENDENT  OF PROGRESS -D PARAMETER  AND  UNIFORM IN ALL      */
@@ -35,7 +35,7 @@ repeat:
             + string(day(today),"99") + ".p".
          display filename with frame a.
          update filename with frame a.
-      end. /* IF consolidate */
+      end. /* IF cons_ship1 */
 
 if browse2 = "" then browse2 = hi_char.
 if filename <> "" then do:
