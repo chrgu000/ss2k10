@@ -22,7 +22,6 @@ find first qad_wkfl no-lock where qad_domain = global_domain
 if available qad_wkfl then do:
    assign file_name = qad_charfld[1].
 end.
-
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
           update FILE_name with frame a
@@ -39,7 +38,9 @@ repeat on error undo, retry:
            next-prompt FILE_name.
            undo, retry.
        END.
-
+       for each xxmps:
+       		 delete xxmps.
+       end.
    find first qad_wkfl where qad_domain = global_domain
          and qad_key1 = "xxmpsimp.p"
          and qad_key2 = global_userid no-error.
@@ -54,7 +55,7 @@ repeat on error undo, retry:
              qad_key2 = global_userid
              qad_charfld[1] = file_name.
    end.
-
+   empty temp-table xxmps no-error.
     MESSAGE "正在处理请等待......".
 
    /* OUTPUT DESTINATION SELECTION */

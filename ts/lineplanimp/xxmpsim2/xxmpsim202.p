@@ -16,12 +16,13 @@ DEFINE VARIABLE v_i AS INTEGER.
 
 /*SS - 111220.1 B*/
 
-  FOR EACH xxmps,
+  FOR EACH xxmps WHERE xxmps_date <> ? and xxmps_qty >= 0,
       EACH usrw_wkfl no-lock where
            usrw_wkfl.usrw_domain = global_domain and
            usrw_wkfl.usrw_key1 = key1 and
            usrw_wkfl.usrw_key3 = xxmps_dept and
-           usrw_wkfl.usrw_key4 = xxmps_cx
+           usrw_wkfl.usrw_key4 = xxmps_cx and
+           usrw_wkfl.usrw_key6 <> ""
      BREAK BY xxmps_dept by usrw_wkfl.usrw_key6 BY xxmps_date:
      if first-of(xxmps_dept) then do:
         assign datef = xxmps_date
@@ -33,7 +34,7 @@ DEFINE VARIABLE v_i AS INTEGER.
      if datet < xxmps_date then assign datet = xxmps_date.
      if linef > usrw_key6 then assign linef = usrw_key6.
      if linet < usrw_key6 then assign linet = usrw_key6.
-  end.
+  END.
 
   for each seq_mstr use-index seq_sequence exclusive-lock where
            seq_mstr.seq_domain = global_domain and
@@ -77,12 +78,13 @@ DEFINE VARIABLE v_i AS INTEGER.
 
 /*cimload */
 v_i = 0.
-FOR EACH xxmps where xxmps_qty > 0,
+FOR EACH xxmps where xxmps_qty >=1 ,
    EACH usrw_wkfl no-lock where
        usrw_wkfl.usrw_domain = global_domain and
        usrw_wkfl.usrw_key1 = key1 and
        usrw_wkfl.usrw_key3 = xxmps_dept and
-       usrw_wkfl.usrw_key4 = xxmps_cx
+       usrw_wkfl.usrw_key4 = xxmps_cx and
+       usrw_wkfl.usrw_key6 <> ""
    BREAK BY usrw_key6 BY xxmps_date BY usrw_key5:
 
         IF FIRST-OF(xxmps_date) THEN DO:

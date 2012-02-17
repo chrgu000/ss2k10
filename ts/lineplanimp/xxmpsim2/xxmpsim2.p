@@ -24,7 +24,6 @@ with frame a side-labels width 80 ATTR-SPACE NO-BOX.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 {wbrp01.i}
-
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
           update FILE_name with frame a
@@ -35,12 +34,14 @@ repeat on error undo, retry:
        end.
        {wbrp06.i &command = update &fields = "file_name"
           &frm = "a"}
-
        IF SEARCH(FILE_name) = ? THEN DO:
            {mfmsg.i 53 3}
            next-prompt FILE_name.
            undo, retry.
        END.
+       for each xxmps:
+       		 delete xxmps.
+       end.
        find first qad_wkfl where qad_domain = global_domain and
        			     qad_key1 = "xxmpsim2.p.param" no-error.
        if not available qad_wkfl then do:
@@ -76,14 +77,7 @@ repeat on error undo, retry:
      IF v_flag = "1" THEN DO:
         PUT "无数据,请重新输入".
      END.
-    
-     IF v_flag = "2" THEN DO:
-         FOR EACH xxmps WHERE xxmps_error <> "" NO-LOCK:           
-             DISP xxmps WITH WIDTH 200.
-         END.
-     END.
-
-     IF v_flag = "3" THEN DO:
+     ELSE DO:
          FOR EACH xxmps:
              DISP xxmps WITH WIDTH 200.
          END.

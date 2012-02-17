@@ -11,9 +11,7 @@ DEFINE VARIABLE v_i AS INTEGER.
 DEFINE VARIABLE v_j AS INTEGER.
 
    /*¼ì²éÊý¾Ý&cimload*/
-   FOR EACH xxmps:
-       DELETE xxmps.
-   END.
+   empty temp-table xxmps no-error.
 
    v_flag = "".
 
