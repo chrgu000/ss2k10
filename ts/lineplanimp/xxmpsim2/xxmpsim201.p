@@ -75,9 +75,7 @@ DEFINE NEW SHARED VARIABLE v_dept AS CHARACTER.
       */
 
    END.
-output to xxxse.txt.
    for each xxmps exclusive-lock:
-   export xxmps_dept xxmps_cx.
        if not can-find (first usrw_wkfl no-lock where
            usrw_wkfl.usrw_domain = global_domain and
            usrw_wkfl.usrw_key1 = key1 and
@@ -89,7 +87,6 @@ output to xxxse.txt.
              ASSIGN xxmps_error = "".
         end.
    end.
-output close.
    FIND FIRST xxmps WHERE xxmps_error <> "" NO-LOCK NO-ERROR.
    IF AVAIL xxmps THEN DO:
       v_flag = "2".
