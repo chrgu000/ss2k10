@@ -33,31 +33,31 @@ CREATE WIDGET-POOL.
 /* ***************************  Definitions  ************************** */
 
 /* Parameters Definitions ---                                           */
-
+{xxsoimp.i "new"}
 /* Local Variable Definitions ---                                       */
 
-DEFINE TEMP-TABLE tmp-so
-    FIELDS tso_nbr    LIKE so_nbr
-    FIELDS tso_cust   LIKE so_cust
-    FIELDS tso_bill   LIKE so_bill
-    FIELDS tso_ship   LIKE so_ship
-    FIELDS tso_req_date LIKE so_req_date
-    FIELDS tso_due_date LIKE so_due_date
-    FIELDS tso_rmks     LIKE so_rmks
-    FIELDS tso_site     LIKE so_site
-    FIELDS tso_curr     LIKE so_curr
-    FIELDS tsod_line    LIKE sod_line
-    FIELDS tsod_part    LIKE sod_part
-    FIELDS tsod_site    LIKE sod_site
-    FIELDS tsod_qty_ord LIKE sod_qty_ord
-    FIELDS tsod_loc     LIKE sod_loc 
-    FIELDS tsod_acct    LIKE sod_acct
-    FIELDS tsod_sub     LIKE sod_sub
-    FIELDS tsod_due_date LIKE sod_due_date
-    FIELDS tsod_rmks1    LIKE so_rmks
-    FIELDS tsod_chk      AS   CHARACTER FORMAT "x(40)"   
-    INDEX tso_nbr IS PRIMARY tso_nbr tsod_line
-    .
+/* DEFINE TEMP-TABLE tmp-so                               */
+/*     FIELDS tso_nbr    LIKE so_nbr                      */
+/*     FIELDS tso_cust   LIKE so_cust                     */
+/*     FIELDS tso_bill   LIKE so_bill                     */
+/*     FIELDS tso_ship   LIKE so_ship                     */
+/*     FIELDS tso_req_date LIKE so_req_date               */
+/*     FIELDS tso_due_date LIKE so_due_date               */
+/*     FIELDS tso_rmks     LIKE so_rmks                   */
+/*     FIELDS tso_site     LIKE so_site                   */
+/*     FIELDS tso_curr     LIKE so_curr                   */
+/*     FIELDS tsod_line    LIKE sod_line                  */
+/*     FIELDS tsod_part    LIKE sod_part                  */
+/*     FIELDS tsod_site    LIKE sod_site                  */
+/*     FIELDS tsod_qty_ord LIKE sod_qty_ord               */
+/*     FIELDS tsod_loc     LIKE sod_loc                   */
+/*     FIELDS tsod_acct    LIKE sod_acct                  */
+/*     FIELDS tsod_sub     LIKE sod_sub                   */
+/*     FIELDS tsod_due_date LIKE sod_due_date             */
+/*     FIELDS tsod_rmks1    LIKE so_rmks                  */
+/*     FIELDS tsod_chk      AS   CHARACTER FORMAT "x(40)" */
+/*     INDEX tso_nbr IS PRIMARY tso_nbr tsod_line         */
+/*     .                                                  */
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -158,7 +158,7 @@ DEFINE QUERY brList FOR
 DEFINE BROWSE brList
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brList wWin _FREEFORM
   QUERY brList DISPLAY
-      tso_nbr   column-label    "订单号"
+      tso_nbr         column-label    "订单号"
 tso_cust        column-label    "销往"
 tso_bill        column-label    "发票地址"
 tso_ship        column-label    "货物发往"
@@ -185,7 +185,7 @@ tsod_chk        column-label    "状态"
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     fiFile AT ROW 1.58 COL 5.11 COLON-ALIGNED
+     fiFile AT ROW 1.58 COL 5.1 COLON-ALIGNED
      btnOpen AT ROW 1.58 COL 48
      btnDelBOM AT ROW 1.58 COL 60
      btnGenCimFile AT ROW 1.58 COL 70
@@ -216,11 +216,11 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
          HIDDEN             = YES
          TITLE              = "销售订单装入(xxpoimp.p)"
          HEIGHT             = 31
-         WIDTH              = 101.11
+         WIDTH              = 101.1
          MAX-HEIGHT         = 39.95
-         MAX-WIDTH          = 146.22
+         MAX-WIDTH          = 146.2
          VIRTUAL-HEIGHT     = 39.95
-         VIRTUAL-WIDTH      = 146.22
+         VIRTUAL-WIDTH      = 146.2
          RESIZE             = yes
          SCROLL-BARS        = no
          STATUS-AREA        = yes
@@ -424,84 +424,86 @@ DO:
     ASSIGN fifile.
 
 EMPTY TEMP-TABLE tmp-so NO-ERROR.
-IF selet = TRUE THEN DO:
-    SESSION:SET-WAIT-STAT("GENERAL").
-    IF search(fifile) <>  ? THEN DO:
-        CREATE "Excel.Application" excelAppl.   
-        xworkbook = excelAppl:Workbooks:OPEN(fifile).
-        xworksheet = excelAppl:sheets:item(1).
-        DO vsn = 2 TO xworksheet:UsedRange:Rows:Count:
-        	  if trim(xworksheet:cells(vsn,1):VALUE) <> "" then do:
-	             CREATE tmp-so.
-	             ASSIGN  tso_nbr = string(xworksheet:cells(vsn,1):VALUE)
-	                     tso_cust =  string(xworksheet:cells(vsn,2):VALUE)
-	                     tso_bill =  string(xworksheet:cells(vsn,3):VALUE)
-	                     tso_ship =  string(xworksheet:cells(vsn,4):VALUE)
-	                     tso_req_date =   xworksheet:cells(vsn,5):VALUE
-	                     tso_due_date =   xworksheet:cells(vsn,6):VALUE
-	                     tso_rmks =   string(xworksheet:cells(vsn,7):VALUE)
-	                     tso_site =   string(xworksheet:cells(vsn,8):VALUE)
-	                     tso_curr =   string(xworksheet:cells(vsn,9):VALUE)
-	                     tsod_line =   xworksheet:cells(vsn,10):VALUE
-	                     tsod_part =   string(xworksheet:cells(vsn,11):VALUE)
-	                     tsod_site =   string(xworksheet:cells(vsn,12):VALUE)
-	                     tsod_qty_ord = xworksheet:cells(vsn,13):VALUE
-	                     tsod_loc =   string(xworksheet:cells(vsn,14):VALUE)
-	                     tsod_acct =   string(xworksheet:cells(vsn,15):VALUE)
-	                     tsod_sub =   string(xworksheet:cells(vsn,16):VALUE)
-	                     tsod_due_date   =   xworksheet:cells(vsn,17):VALUE
-	                     tsod_rmks1  =   string(xworksheet:cells(vsn,18):VALUE).
-             end.
-             else do:
-             			next.
-             end.
-
-        END.
-       excelAppl:quit.
-       release object excelAppl.
-       RELEASE OBJECT xworkbook.
-       RELEASE OBJECT xworksheet.
-    SESSION:SET-WAIT-STAT("").
- END.
-
-
-    FOR EACH TMP-SO EXCLUSIVE-LOCK :
-        ASSIGN vsn = vsn + 1.
-         IF  TSO_NBR = '' OR tso_nbr = ? THEN DO:
-             DELETE TMP-SO.
-         END.
-         ELSE DO:
-              IF tso_curr = ? THEN DO:
-                  FIND FIRST cm_mstr NO-LOCK WHERE cm_addr = tso_cust NO-ERROR.
-                  IF AVAILABLE cm_mstr THEN DO:
-                      ASSIGN tso_curr = cm_curr.
-                  END.
-                  ELSE DO:
-                        for first en_mstr
-                          fields( en_domain en_curr en_entity en_name)
-                           where en_mstr.en_domain = global_domain and en_entity = current_entity
-                          no-lock:
-                        END.
-                        IF AVAILABLE en_mstr THEN DO:
-                            ASSIGN tso_curr = en_curr.
-                        END. 
-                  END.
-              END.
-              IF tso_rmks = ? THEN ASSIGN tso_rmks = "-".
-              IF tsod_acct = ? THEN ASSIGN tsod_acct = "-".
-              IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".
-              IF tsod_rmks1 = ? THEN ASSIGN tsod_rmks1 = "-".
-              IF tsod_loc = ? THEN ASSIGN tsod_loc = "-".
-         END.
-    END.
+IF selet THEN DO:
+    ASSIGN file_name = fifile.
+    {gprun.i ""xxsoimp0.p""}
+END.                    
+/* IF selet = TRUE THEN DO:                                                                          */
+/*     SESSION:SET-WAIT-STAT("GENERAL").                                                             */
+/*     IF search(fifile) <>  ? THEN DO:                                                              */
+/*         CREATE "Excel.Application" excelAppl.                                                     */
+/*         xworkbook = excelAppl:Workbooks:OPEN(fifile).                                             */
+/*         xworksheet = excelAppl:sheets:item(1).                                                    */
+/*         DO vsn = 2 TO xworksheet:UsedRange:Rows:Count:                                            */
+/*                   if trim(xworksheet:cells(vsn,1):VALUE) <> "" then do:                           */
+/*                      CREATE tmp-so.                                                               */
+/*                      ASSIGN  tso_nbr = string(xworksheet:cells(vsn,1):VALUE)                      */
+/*                              tso_cust =  string(xworksheet:cells(vsn,2):VALUE)                    */
+/*                              tso_bill =  string(xworksheet:cells(vsn,3):VALUE)                    */
+/*                              tso_ship =  string(xworksheet:cells(vsn,4):VALUE)                    */
+/*                              tso_req_date =   xworksheet:cells(vsn,5):VALUE                       */
+/*                              tso_due_date =   xworksheet:cells(vsn,6):VALUE                       */
+/*                              tso_rmks =   string(xworksheet:cells(vsn,7):VALUE)                   */
+/*                              tso_site =   string(xworksheet:cells(vsn,8):VALUE)                   */
+/*                              tso_curr =   string(xworksheet:cells(vsn,9):VALUE)                   */
+/*                              tsod_line =   xworksheet:cells(vsn,10):VALUE                         */
+/*                              tsod_part =   string(xworksheet:cells(vsn,11):VALUE)                 */
+/*                              tsod_site =   string(xworksheet:cells(vsn,12):VALUE)                 */
+/*                              tsod_qty_ord = xworksheet:cells(vsn,13):VALUE                        */
+/*                              tsod_loc =   string(xworksheet:cells(vsn,14):VALUE)                  */
+/*                              tsod_acct =   string(xworksheet:cells(vsn,15):VALUE)                 */
+/*                              tsod_sub =   string(xworksheet:cells(vsn,16):VALUE)                  */
+/*                              tsod_due_date   =   xworksheet:cells(vsn,17):VALUE                   */
+/*                              tsod_rmks1  =   string(xworksheet:cells(vsn,18):VALUE).              */
+/*              end.                                                                                 */
+/*              else do:                                                                             */
+/*                                 next.                                                             */
+/*              end.                                                                                 */
+/*                                                                                                   */
+/*         END.                                                                                      */
+/*        excelAppl:quit.                                                                            */
+/*        release object excelAppl.                                                                  */
+/*        RELEASE OBJECT xworkbook.                                                                  */
+/*        RELEASE OBJECT xworksheet.                                                                 */
+/*     SESSION:SET-WAIT-STAT("").                                                                    */
+/*  END.                                                                                             */
+/*                                                                                                   */
+/*                                                                                                   */
+/*     FOR EACH TMP-SO EXCLUSIVE-LOCK :                                                              */
+/*         ASSIGN vsn = vsn + 1.                                                                     */
+/*          IF  TSO_NBR = '' OR tso_nbr = ? THEN DO:                                                 */
+/*              DELETE TMP-SO.                                                                       */
+/*          END.                                                                                     */
+/*          ELSE DO:                                                                                 */
+/*               IF tso_curr = ? THEN DO:                                                            */
+/*                   FIND FIRST cm_mstr NO-LOCK WHERE cm_addr = tso_cust NO-ERROR.                   */
+/*                   IF AVAILABLE cm_mstr THEN DO:                                                   */
+/*                       ASSIGN tso_curr = cm_curr.                                                  */
+/*                   END.                                                                            */
+/*                   ELSE DO:                                                                        */
+/*                         for first en_mstr                                                         */
+/*                           fields( en_domain en_curr en_entity en_name)                            */
+/*                            where en_mstr.en_domain = global_domain and en_entity = current_entity */
+/*                           no-lock:                                                                */
+/*                         END.                                                                      */
+/*                         IF AVAILABLE en_mstr THEN DO:                                             */
+/*                             ASSIGN tso_curr = en_curr.                                            */
+/*                         END.                                                                      */
+/*                   END.                                                                            */
+/*               END.                                                                                */
+/*               IF tso_rmks = ? THEN ASSIGN tso_rmks = "-".                                         */
+/*               IF tsod_acct = ? THEN ASSIGN tsod_acct = "-".                                       */
+/*               IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".                                         */
+/*               IF tsod_rmks1 = ? THEN ASSIGN tsod_rmks1 = "-".                                     */
+/*               IF tsod_loc = ? THEN ASSIGN tsod_loc = "-".                                         */
+/*          END.                                                                                     */
+/*     END.                                                                                          */
         
    
     OPEN QUERY brlist FOR EACH tmp-so.
     brList:REFRESH().
     STATUS INPUT getstat().
-
- END.
-
+ 
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -523,96 +525,12 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL tnLoad wWin
 ON CHOOSE OF tnLoad IN FRAME fMain /* 装入 */
 DO:
-    DEFINE VARIABLE fname AS CHARACTER NO-UNDO.
-    DEFINE VARIABLE errmsg AS CHARACTER NO-UNDO.
-    IF NOT CAN-FIND (FIRST tmp-so NO-LOCK) THEN DO:
-        MESSAGE "未查到资料！请先装入资料"   VIEW-AS ALERT-BOX ERROR BUTTONS OK.
-        RETURN.
-    END.
-
-    SESSION:SET-WAIT-STATE("GENERAL") .
-    ASSIGN fname = "cim" + STRING(TIME) + ".cim".
-    OUTPUT TO VALUE(fname).
-    FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
-        IF FIRST-OF(tso_nbr) THEN DO:
-            PUT UNFORMAT '"' tso_nbr '"' SKIP.
-            PUT UNFORMAT '"' tso_cust '"' SKIP.
-            PUT UNFORMAT '"' tso_bill '"' SKIP.
-            PUT UNFORMAT '"' tso_ship '"' SKIP.
-            PUT UNFORMAT '- "' tso_req_date '" - "' tso_due_date '" - - - - '.
-            PUT UNFORMAT '- - "' tso_site '" - - '.
-            PUT UNFORMAT '- ' tso_curr SKIP.
-            PUT UNFORMAT '-' SKIP.
-            PUT UNFORMAT '-' SKIP.
-            for first en_mstr
-              fields( en_domain en_curr en_entity en_name)
-               where en_mstr.en_domain = global_domain and en_entity = current_entity
-              no-lock:
-            END.
-            IF AVAILABLE en_mstr THEN DO:
-                IF tso_curr <> en_curr THEN DO:
-                    PUT "-" SKIP.
-                END.
-            END. 
-        END. /* if first-of tso_nbr */
-        
-        PUT UNFORMAT tsod_line SKIP.
-        PUT UNFORMAT '"' tsod_part '"' SKIP.
-        PUT UNFORMAT '"' tsod_site '"' SKIP.
-        PUT UNFORMAT trim(string(tsod_qty_ord,"->>>>,>>9.9<")) SKIP.
-        PUT UNFORMAT "-" SKIP.
-        PUT UNFORMAT "-" SKIP. 
-        PUT UNFORMAT "-" SKIP.
-        PUT UNFORMAT '"' tsod_loc '" - - "' tsod_acct '" "' tsod_sub '" - - - - ' tsod_due_date ' '.
-        IF tsod_rmks1 <> "-" THEN DO:
-           PUT UNFORMAT '- - - - - - - - - - y' skip. 
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '"' tsod_rmks1 '"' SKIP.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '.' SKIP.
-        END.
-        ELSE DO:
-           PUT UNFORMAT '-' SKIP.
-        END.
-        IF LAST-OF(tso_nbr) THEN DO:
-           PUT UNFORMAT '.' SKIP.
-           PUT UNFORMAT '.' SKIP.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '-' SKIP.
-        END. /*  IF LAST-OF(tso_nbr) THEN DO: */
-    END.
-    OUTPUT CLOSE.
-    errmsg = "".
-  
-    batchrun  = yes.
-    input from value(fname).
-    output to value(fname + ".rpt") keep-messages.
-    hide message no-pause.
-    {gprun.i ""sosomt.p""}
-    hide message no-pause.
-    output close.
-    input close.
-    batchrun  = no.
-
-    FOR EACH tmp-so EXCLUSIVE-LOCK:
-        FIND FIRST sod_det WHERE sod_nbr = tso_nbr AND sod_line = tsod_line AND sod_part = tsod_part NO-ERROR.
-        IF NOT AVAILABLE sod_det THEN DO:
-           ASSIGN tsod_chk  = tsod_chk  +  ";资料装入失败.".
-        END.
-    END.
-    SESSION:SET-WAIT-STATE("") .
+    SESSION:SET-WAIT-STAT("GENERAL").
+    {gprun.i ""xxsoimp1.p""}
+    SESSION:SET-WAIT-STAT("").
+    OPEN QUERY brlist FOR EACH tmp-so.
     brList:REFRESH().
-    IF errmsg = "" THEN DO:
-/*        OS-DELETE VALUE(fname).          */
-/*        OS-DELETE VALUE(fname + ".rpt"). */
-       MESSAGE "操作完成！！！" VIEW-AS ALERT-BOX INFORMATION TITLE "系统消息".
-    END.
-
- 
- 
-
-
+    STATUS INPUT getstat().
 END.
 
 /* _UIB-CODE-BLOCK-END */
