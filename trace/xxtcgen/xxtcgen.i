@@ -227,10 +227,10 @@ function getTrigname returns character(
          when "W" then assign vevent = "Write".
     end case.
 
-    for each _file no-lock where _file-name = itabname:
-        find first _file-trig no-lock where _file-recid = RECID(_File)
+    for each qaddb._file no-lock where _file-name = itabname:
+        find first qaddb._file-trig no-lock where _file-recid = RECID(_File)
              and _Event = vevent NO-ERROR.
-        if available _file-trig then do:
+        if available qaddb._file-trig then do:
            assign ret = _proc-name.
         end.
     end.
@@ -266,11 +266,11 @@ procedure createTrigRecord:
     END.
     ELSE DO:
        if oret = 0 then do:
-          for First _file exclusive-lock where _file-name = itablename:
+          for First qaddb._file exclusive-lock where _file-name = itablename:
               assign _Frozen = no.
           end.
-          FOR EACH _file NO-LOCK WHERE _file-name = itablename:
-              CREATE _file-trig.
+          FOR EACH qaddb._file NO-LOCK WHERE _file-name = itablename:
+              CREATE qaddb._file-trig.
               ASSIGN
                   _File-Recid = RECID(_file)
                   _Event = vevent
@@ -279,7 +279,7 @@ procedure createTrigRecord:
                   _Trig-CRC = ?
                   .
           END.
-          for First _file exclusive-lock where _file-name = itablename:
+          for First qaddb._file exclusive-lock where _file-name = itablename:
               assign _Frozen = yes.
           end.
        END.
