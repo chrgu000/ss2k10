@@ -8,7 +8,7 @@
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "111214.1"} 
+{mfdtitle.i "110408.1"} 
 define var wsection      as char . /*for barcode print*/
 define var ts9030        as char . /*for barcode print*/
 define var av9030        as char . /*for barcode print*/
@@ -136,12 +136,12 @@ repeat:
         v_nbr  = xxinv_nbr + " No." + trim(string(xxship_case)).
         v_date = xxship_rcvd_date .
         v_qty  = xxship_qty .
-        v_part = xxship_part2.
+        v_part = xxship_part2 .
         v_loc  = xxship_rcvd_loc . 
 
         v_lot  = if xxship_rcvd_date <> ? then substring(string(year(xxship_rcvd_date),"9999"),3,2) + string(month(xxship_rcvd_date),"99") + string(day(xxship_rcvd_date),"99") else "Error".
         v_lot  = v_lot + ( if xxinv_con <> "" then trim(substring(xxinv_con,6)) else "Error" ) .
-        v_lot  = v_lot + string(xxship_case2,"99") .
+/*      v_lot  = v_lot + string(xxship_case2,"99") .  */
 
         if v_part <> "" then 
        /* µº ¥Ú”°*/ 
