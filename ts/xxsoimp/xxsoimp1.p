@@ -5,6 +5,7 @@
 
 define variable fn as character.
 define variable i as integer.
+define variable taxable as logical.
 assign fn = "xxsoimp" + string(time).
 output to value(fn + ".bpi").
 FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
@@ -17,7 +18,7 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
             PUT UNFORMAT '"' tso_ship '"' SKIP.
             PUT UNFORMAT '- "' tso_req_date '" - "' tso_due_date '" - - - '.
             if tso_rmks = "-" then PUT UNFORMAT '- '.
-            	                else PUT UNFORMAT '"' tso_rmks '" ' .
+                              else PUT UNFORMAT '"' tso_rmks '" ' .
             PUT UNFORMAT '- - "' tso_site '" - - '.
             PUT UNFORMAT '- ' tso_curr SKIP.
             PUT UNFORMAT '-' SKIP.
@@ -58,7 +59,20 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         PUT UNFORMAT '- - - - - - - - - ' tsod_due_date SKIP.
         find first cm_mstr no-lock where cm_domain = global_domain and
                    cm_addr = tso_cust no-error.
-        if available cm_mstr and cm_taxable then do:
+        if available cm_mstr then do:
+           assign taxable = cm_taxable.
+        end.
+        for first ad_mstr where ad_domain = global_domain
+              and ad_addr   = tso_ship no-lock:
+           assign taxable = ad_taxable.
+        end.
+        for first ad_mstr where ad_domain = global_domain
+              and ad_addr   = tso_cust no-lock:
+           assign taxable = ad_taxable.
+        end.
+        find first pt_mstr no-lock where pt_domain = global_domain and
+                   pt_part = tsod_part no-error.
+        if available pt_mstr and pt_taxable and taxable then do:
             PUT UNFORMAT '-' SKIP. /*˰*/
         end.
         if not available pt_mstr then do:
@@ -93,7 +107,7 @@ assign i = 0.
 for each tmp-so exclusive-lock:
      find first sod_det no-lock where sod_domain = global_domain
             and sod_nbr = tso_nbr and sod_line = tsod_line
-            and sod_part = tsod_part and sod_qty_ord = tsod_qty_ord 
+            and sod_part = tsod_part and sod_qty_ord = tsod_qty_ord
      no-error.
      if not available sod_det then do:
         assign tsod_chk = "ERROR......".
