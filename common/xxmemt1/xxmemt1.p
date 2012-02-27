@@ -140,7 +140,10 @@ repeat with frame frame-a:
                         put unformat '"' dsc[iCnt] '" '.
                      else
                         put unformat dsc[iCnt] ' '.
-                     put unformat '"' sortkey[iCnt] '" '.
+                     if sortkey[iCnt] = "" then
+                        put unformat '"" '.
+                     else
+                        put unformat sortkey[iCnt] ' '.
                      put unformat '"' exec[iCnt] '"' skip.
                      put "." skip.
                   end.
@@ -156,6 +159,7 @@ repeat with frame frame-a:
            hide message no-pause.
            output close.
            input close.
+
            do iCnt = 1 to 10:
               if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
                  then do:
