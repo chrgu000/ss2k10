@@ -2,19 +2,19 @@
 /* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
 /* $Revision: 1.7 $                                                           */
-/*                                                                            */
 /*-Revision end---------------------------------------------------------------*/
 
 /*V8:ConvertMode=Maintenance                                                  */
 
 /* DISPLAY TITLE */
 
-{mfdtitle.i "22YP"}
+{mfdtitle.i "22YR"}
 
 {xxmemt1.i}
 
 /* DISPLAY */
 define variable iCnt as integer.
+define variable yn1  like mfc_logical initial no.
 /*V8! session:SET-WAIT-STATE(""). */
 ststatus = stline[3].
 status input ststatus.
@@ -32,23 +32,39 @@ repeat with frame frame-a:
                    sel[iCnt] = usrw_intfld[iCnt]
                    exec[iCnt] = entry(iCnt,usrw_key4,"#")
                    sortkey[iCnt] = entry(iCnt,usrw_key5,"#")
-                   dsc[iCnt] = entry(iCnt,usrw_key6,"#") no-error.
+                   dsc[iCnt] = entry(iCnt,usrw_key6,"#")
+                   stat[iCnt] = "" no-error.
             if sel[iCnt] = 0 then do:
                display "" @ sel[iCnt].
             end.
             else do:
                display sel[iCnt].
             end.
+            assign stat[iCnt] = "".
+            if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
+            then do:
+                 find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt]
+                          and mnd_select = sel[iCnt] no-error.
+                  if available mnd_det then do:
+                      if mnd_exec = exec[iCnt] then do:
+                         assign stat[iCnt] = "Y".
+                      end.
+                      else do:
+                         assign stat[iCnt] = "N".
+                      end.
+                  end.
+                  else do:
+                        assign stat[iCnt] = "A".
+                  end.
+            end.
          end.
-         display cdref mndnbr exec sortkey dsc cLoadFile.
+         display cdref mndnbr exec sortkey dsc stat cLoadFile.
       end.
    end.
-
    if input cdref = "" then do:
       clear frame frame-a.
       assign cdref:screen-value = global_userid + " " +
                    string(today) + " " + string(time,"hh:mm:ss").
-      assign cdref.
       do iCnt = 1 to 10:
       assign mndnbr[iCnt] = ""
              sel[iCnt] = 0
@@ -58,7 +74,7 @@ repeat with frame frame-a:
       end.
       cLoadFile = NO.
    end.
-
+   assign cdref.
    update mndnbr[1] sel[1] exec[1]  sortkey[1] dsc[1]
           mndnbr[2] sel[2] exec[2]  sortkey[2] dsc[2]
           mndnbr[3] sel[3] exec[3]  sortkey[3] dsc[3]
@@ -71,7 +87,7 @@ repeat with frame frame-a:
           mndnbr[10] sel[10] exec[10]  sortkey[10] dsc[10]
           cLoadFile.
     do on error undo, retry:
-      assign yn = Yes.
+      display yn.
       set yn go-on("F5" "CTRL-D" ).
       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
           del-yn = yes.
@@ -110,18 +126,13 @@ repeat with frame frame-a:
                usrw_key6 = usrw_key6 + "#" + dsc[iCnt].
         end.
         if recid(pin_mstr) = -1 then.
-        if (mndnbr[1] <> "" and sel[1] > 0 and exec[1] <> "") or
-           (mndnbr[2] <> "" and sel[2] > 0 and exec[2] <> "") or
-           (mndnbr[3] <> "" and sel[3] > 0 and exec[3] <> "") or
-           (mndnbr[4] <> "" and sel[4] > 0 and exec[4] <> "") or
-           (mndnbr[5] <> "" and sel[5] > 0 and exec[5] <> "") or
-           (mndnbr[6] <> "" and sel[6] > 0 and exec[6] <> "") or
-           (mndnbr[7] <> "" and sel[7] > 0 and exec[7] <> "") or
-           (mndnbr[8] <> "" and sel[8] > 0 and exec[8] <> "") or
-           (mndnbr[9] <> "" and sel[9] > 0 and exec[9] <> "") or
-           (mndnbr[10] <> "" and sel[10] > 0 and exec[10] <> "") then do:
+        assign yn1 = no.
+        do iCnt = 1 to 10:
+          if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> "" then do:
+             assign yn1 = yes.
+          end.
         end.
-        if cLoadFile then do:
+        if cLoadFile and yn1 then do:
            output to "xxmemt1.22yp.bpi".
                do iCnt = 1 to 10:
                   if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and
@@ -149,9 +160,30 @@ repeat with frame frame-a:
            hide message no-pause.
            output close.
            input close.
-           os-delete "xxmemt1.22yp.bpi".
-           os-delete "xxmemt1.22yp.bpo".
-        end. /** if cLoadFile */
+           do iCnt = 1 to 10:
+              if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
+                 then do:
+                 find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt] and
+                            mnd_select = sel[iCnt] no-error.
+                 if available mnd_det then do:
+                    if mnd_exec <> exec[iCnt] then do:
+                       yn1 = no.
+                    end.
+                 end.
+                 else do:
+                     assign yn1 = no.
+                 end.
+              end.
+           end.
+           if yn1 then do:
+              os-delete "xxmemt1.22yp.bpi" no-error.
+              os-delete "xxmemt1.22yp.bpo" no-error.
+              {mfmsg.i 4171 1}
+           end.
+           else do:
+              {pxmsg.i &MSGNUM=5012 &ERRORLEVEL=1 &MSGARG1=""xxmemt1.22yp.bpi""}
+           end.
+        end. /** if cLoadFile and yn1 */
     end.
 end.
 
