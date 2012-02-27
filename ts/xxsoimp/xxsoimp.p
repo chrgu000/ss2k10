@@ -81,7 +81,9 @@ repeat:
           {mfmsg.i 5935 1}
      end.
      else do:
-        {gprun.i ""xxsoimp1.p""}
+       	 if not can-find(first tmp-so no-lock where tsod_chk <> "") then do:
+   			     {gprun.i ""xxsoimp1.p""}
+         end.
      end.
     
      for each tmp-so no-lock with width 320 frame c:

@@ -22,23 +22,23 @@ empty temp-table tmp-so no-error.
        if trim(xworksheet:cells(intI,1):VALUE) <> "" then do:
        CREATE tmp-so.
        ASSIGN  tso_nbr = string(xworksheet:cells(intI,1):VALUE)
-               tso_cust =  string(xworksheet:cells(intI,2):VALUE)
-               tso_bill =  string(xworksheet:cells(intI,3):VALUE)
-               tso_ship =  string(xworksheet:cells(intI,4):VALUE)
-               tso_req_date =   xworksheet:cells(intI,5):VALUE
-               tso_due_date =   xworksheet:cells(intI,6):VALUE
-               tso_rmks =   string(xworksheet:cells(intI,7):VALUE)
-               tso_site =   string(xworksheet:cells(intI,8):VALUE)
-               tso_curr =   string(xworksheet:cells(intI,9):VALUE)
-               tsod_line =   xworksheet:cells(intI,10):VALUE
-               tsod_part =   string(xworksheet:cells(intI,11):VALUE)
-               tsod_site =   string(xworksheet:cells(intI,12):VALUE)
+               tso_cust = string(xworksheet:cells(intI,2):VALUE)
+               tso_bill = string(xworksheet:cells(intI,3):VALUE)
+               tso_ship = string(xworksheet:cells(intI,4):VALUE)
+               tso_req_date = xworksheet:cells(intI,5):VALUE
+               tso_due_date = xworksheet:cells(intI,6):VALUE
+               tso_rmks = string(xworksheet:cells(intI,7):VALUE)
+               tso_site = string(xworksheet:cells(intI,8):VALUE)
+               tso_curr = string(xworksheet:cells(intI,9):VALUE)
+               tsod_line = xworksheet:cells(intI,10):VALUE
+               tsod_part = string(xworksheet:cells(intI,11):VALUE)
+               tsod_site = string(xworksheet:cells(intI,12):VALUE)
                tsod_qty_ord = xworksheet:cells(intI,13):VALUE
-               tsod_loc =   string(xworksheet:cells(intI,14):VALUE)
-               tsod_acct =   string(xworksheet:cells(intI,15):VALUE)
-               tsod_sub =   string(xworksheet:cells(intI,16):VALUE)
-               tsod_due_date   =   xworksheet:cells(intI,17):VALUE
-               tsod_rmks1  =   string(xworksheet:cells(intI,18):VALUE).
+               tsod_loc = string(xworksheet:cells(intI,14):VALUE)
+               tsod_acct = string(xworksheet:cells(intI,15):VALUE)
+               tsod_sub = string(xworksheet:cells(intI,16):VALUE)
+               tsod_due_date = xworksheet:cells(intI,17):VALUE
+               tsod_rmks1 = string(xworksheet:cells(intI,18):VALUE).
       end.
       else do:
           next.
@@ -64,7 +64,7 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK :
              ELSE DO:
                    for first en_mstr
                      fields( en_domain en_curr en_entity en_name)
-                      where en_mstr.en_domain = global_domain 
+                      where en_mstr.en_domain = global_domain
                         and en_entity = current_entity
                      no-lock:
                    END.
@@ -74,14 +74,14 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK :
              END.
          END.
          IF tso_rmks = ? THEN ASSIGN tso_rmks = "-".
-         
+
          IF tsod_acct = ? THEN do:
            ASSIGN tsod_acct = "-".
          END.
          IF index(tsod_acct,".") > 0 THEN DO:
              ASSIGN tsod_acct = substring(tsod_acct,1,index(tsod_acct,".") - 1).
          END.
-         
+
          IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".
          IF tsod_rmks1 = ? THEN ASSIGN tsod_rmks1 = "-".
          IF tsod_loc = ? THEN ASSIGN tsod_loc = "-".
@@ -89,3 +89,11 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK :
     END.
 END.
 
+/* Check user data*/
+for each tmp-so exclusive-lock:
+    assign tsod_chk = "".
+    if not can-find(pt_mstr no-lock where pt_domain = global_domain and
+                    pt_part = tsod_part) then do:
+       assign tsod_chk = "Item number " + tsod_part + " does not exist".
+    end.
+end.

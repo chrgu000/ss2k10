@@ -1,18 +1,13 @@
-/* xxmemt1.p - Menu quick Maintenance                                         */
-/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.7 $                                                           */
-/*-Revision end---------------------------------------------------------------*/
-
-/*V8:ConvertMode=Maintenance                                                  */
+/* xxmemt1.p - Menu quick Maintenance                                        */
+/*V8:ConvertMode=Maintenance                                                 */
+/* Environment: Progress:10.1C   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 21YA LAST MODIFIED: 02/27/12 BY: zy                             */
+/* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-
 {mfdtitle.i "22YR"}
-
 {xxmemt1.i}
 
-/* DISPLAY */
 define variable iCnt as integer.
 define variable yn1  like mfc_logical initial no.
 /*V8! session:SET-WAIT-STATE(""). */
@@ -32,33 +27,34 @@ repeat with frame frame-a:
                    sel[iCnt] = usrw_intfld[iCnt]
                    exec[iCnt] = entry(iCnt,usrw_key4,"#")
                    sortkey[iCnt] = entry(iCnt,usrw_key5,"#")
-                   dsc[iCnt] = entry(iCnt,usrw_key6,"#")
-                   stat[iCnt] = "" no-error.
+                   dsc[iCnt] = entry(iCnt,usrw_key6,"#") no-error.
             if sel[iCnt] = 0 then do:
                display "" @ sel[iCnt].
             end.
             else do:
                display sel[iCnt].
             end.
-            assign stat[iCnt] = "".
             if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
             then do:
                  find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt]
                           and mnd_select = sel[iCnt] no-error.
                   if available mnd_det then do:
                       if mnd_exec = exec[iCnt] then do:
-                         assign stat[iCnt] = "Y".
+                         color display NORMAL mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                               sortkey[iCnt] dsc[iCnt].
                       end.
                       else do:
-                         assign stat[iCnt] = "N".
+                        color display input mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                              sortkey[iCnt] dsc[iCnt].
                       end.
                   end.
                   else do:
-                        assign stat[iCnt] = "A".
+                        color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                              sortkey[iCnt] dsc[iCnt].
                   end.
             end.
          end.
-         display cdref mndnbr exec sortkey dsc stat cLoadFile.
+         display cdref mndnbr exec sortkey dsc cLoadFile.
       end.
    end.
    if input cdref = "" then do:
@@ -168,13 +164,22 @@ repeat with frame frame-a:
                  if available mnd_det then do:
                     if mnd_exec <> exec[iCnt] then do:
                        yn1 = no.
+                       color display input mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                             sortkey[iCnt] dsc[iCnt].
+                    end.
+                    else do:
+                      color display NORMAL mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                              sortkey[iCnt] dsc[iCnt].
                     end.
                  end.
                  else do:
                      assign yn1 = no.
+                     color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                              sortkey[iCnt] dsc[iCnt].
                  end.
               end.
            end.
+           display cdref mndnbr exec sortkey dsc cLoadFile.
            if yn1 then do:
               os-delete "xxmemt1.22yp.bpi" no-error.
               os-delete "xxmemt1.22yp.bpo" no-error.
