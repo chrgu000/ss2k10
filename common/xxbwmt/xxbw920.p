@@ -1,5 +1,5 @@
 /*V8:ConvertMode=Maintenance                                                  */
-{mfdtitle.i "120217.1"}
+{mfdtitle.i "120228.1"}
 define variable yn like mfc_logical no-undo.
 {gpcdget.i "UT"}
 
@@ -71,6 +71,40 @@ assign brwf_det.brwf_field    = 'brw_desc'
        brwf_det.brwf_mod_date = today
        brwf_det.brwf__qadc01  = '35'
        brwf_det.brwf_enable   = no.
+find first flh_mstr exclusive-lock where flh_mstr.flh_field = 'browse1' and
+           flh_mstr.flh_call_pgm = '' no-error.
+if not available flh_mstr then do:
+          create flh_mstr.
+          assign flh_mstr.flh_field = 'browse1'
+                 flh_call_pgm = ''.
+end.
+assign flh_mstr.flh_desc = "BROWSE_COLLECTION"
+       flh_mstr.flh_exec = "xxlu920.p"
+       flh_mstr.flh_x = 0
+       flh_mstr.flh_y = 7
+       flh_mstr.flh_down = 6
+       flh_mstr.flh_user1 = ""
+       flh_mstr.flh_user2 = ""
+       flh_mstr.flh__qadc01 = ""
+       flh_mstr.flh_mod_userid = "mfg"
+       flh_mstr.flh_mod_date = today.
+find first flh_mstr exclusive-lock where flh_mstr.flh_field = 'browse2' and
+           flh_mstr.flh_call_pgm = '' no-error.
+if not available flh_mstr then do:
+          create flh_mstr.
+          assign flh_mstr.flh_field = 'browse2'
+                 flh_call_pgm = ''.
+end.
+assign flh_mstr.flh_desc = "BROWSE_COLLECTION"
+       flh_mstr.flh_exec = "xxlu920.p"
+       flh_mstr.flh_x = 0
+       flh_mstr.flh_y = 7
+       flh_mstr.flh_down = 6
+       flh_mstr.flh_user1 = ""
+       flh_mstr.flh_user2 = ""
+       flh_mstr.flh__qadc01 = ""
+       flh_mstr.flh_mod_userid = "mfg"
+       flh_mstr.flh_mod_date = today.
       {mfmsg.i 4171 1}
        pause.
        return.

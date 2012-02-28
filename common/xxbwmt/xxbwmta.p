@@ -142,6 +142,36 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put skip.
         put unformat fill(" ",7) "brwf_det.brwf_enable   = " brwf_enable "." skip.
     END.
+    for each flh_mstr no-lock where 
+    				 flh_exec = substring(vbrowse,1,2) + "lu" 
+    				 					+ substring(vbrowse,3,3) + ".p":
+    		put unformat "find first flh_mstr exclusive-lock where ".
+    		put unformat "flh_mstr.flh_field = '" flh_mstr.flh_field "' and" skip.
+    		put unformat fill(" ",11) "flh_mstr.flh_call_pgm = '".
+    		put unformat flh_mstr.flh_call_pgm "' no-error." skip.
+    		put unformat "if not available flh_mstr then do:" skip.
+    		PUT UNFORMAT fill(" ",10) "create flh_mstr." SKIP.
+    		put unformat fill(" ",10) "assign flh_mstr.flh_field = '".
+    		put unformat flh_field "'" skip.
+    		put unformat fill(" ",17) "flh_call_pgm = '" flh_call_pgm "'." skip.
+    		put unformat "end." skip.
+    		put unformat "assign flh_mstr.flh_desc = """.
+        put unformat flh_mstr.flh_desc """" skip.        
+        put unformat fill(" ",7) "flh_mstr.flh_exec = """.  
+        put unformat flh_mstr.flh_exec """" skip.       
+        put unformat fill(" ",7) "flh_mstr.flh_x = " flh_mstr.flh_x skip.           
+        put unformat fill(" ",7) "flh_mstr.flh_y = " flh_mstr.flh_y skip.           
+        put unformat fill(" ",7) "flh_mstr.flh_down = " flh_mstr.flh_down skip.        
+        put unformat fill(" ",7) "flh_mstr.flh_user1 = """.
+        put unformat flh_mstr.flh_user1 """" skip.        
+        put unformat fill(" ",7) "flh_mstr.flh_user2 = """.
+        put unformat flh_mstr.flh_user2 """" skip.            
+        put unformat fill(" ",7) "flh_mstr.flh__qadc01 = """.     
+        put unformat flh_mstr.flh__qadc01 """" skip.     
+        put unformat fill(" ",7) "flh_mstr.flh_mod_userid = """.  
+        put unformat flh_mstr.flh_mod_userid """" skip.     
+        put unformat fill(" ",7) "flh_mstr.flh_mod_date = today." skip.    
+    end.
 END.
 if vfname = "" then do:
 	 put unformat fill(" ",6) "~{mfmsg.i 4171 1~}"skip.
