@@ -10,7 +10,7 @@
 
 define variable iCnt as integer.
 define variable yn1  like mfc_logical initial no.
-/*V8! session:SET-WAIT-STATE(""). */
+
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
@@ -39,17 +39,20 @@ repeat with frame frame-a:
                  find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt]
                           and mnd_select = sel[iCnt] no-error.
                   if available mnd_det then do:
-                      if mnd_exec = exec[iCnt] then do:
-                         color display NORMAL mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                      if mnd_exec <> exec[iCnt] then do:
+                         color display input
+                               mndnbr[iCnt] sel[iCnt] exec[iCnt]
                                sortkey[iCnt] dsc[iCnt].
                       end.
                       else do:
-                        color display input mndnbr[iCnt] sel[iCnt] exec[iCnt]
-                              sortkey[iCnt] dsc[iCnt].
+                         color display NORMAL
+                               mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                               sortkey[iCnt] dsc[iCnt].
                       end.
                   end.
                   else do:
-                        color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                        color display message
+                              mndnbr[iCnt] sel[iCnt] exec[iCnt]
                               sortkey[iCnt] dsc[iCnt].
                   end.
             end.
