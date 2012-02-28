@@ -28,6 +28,7 @@ copy /y %svn%\xxlbldmt\xx*.? %src%\
 copy /y %svn%\xxlbliq\xx*iq.? %src%\
 copy /y %svn%\xxmecm\xx*.? %src%\
 copy /y %svn%\xxmeiq\xx*.? %src%\
+copy /y %svn%\xxmemt1\xx*.? %src%\
 copy /y %svn%\xxmgflh1\xx*.? %src%\
 copy /y %svn%\xxmgflh1\l.cim %cim%\xxmgflh1.cim
 copy /y %svn%\xxnrgnmt\xx*.? %src%\
@@ -51,8 +52,7 @@ cd /d %src%
 copy %cim%\*.cim %xrc%\xrc\p.cim
 
 rem convert.
-mkdir %xrc%\gui
-if %1=="A" goto exitme
+mkdir %xrc%\gui 
 echo srcSearchPath=%src%> %xrc%\convert.tmp
 echo targetDir=%xrc%\gui>> %xrc%\convert.tmp
 echo workDir=%xrc%>> %xrc%\convert.tmp
@@ -60,4 +60,3 @@ echo workDir=%xrc%>> %xrc%\convert.tmp
 %xcode%\convert.exe -r -ini=%xrc%\convert.tmp %src%\xx*.i>>%xrc%\convert.log
 rem del %xrc%\convert.tmp /s/q/f/a
 
-:exitme

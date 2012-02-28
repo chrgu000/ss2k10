@@ -1,6 +1,6 @@
 /* xxvifile.p - View file                                                    */
 /* revision: 110712.1   created on: 20110712   by: zhang yun                 */
-/* V8:ConvertMode=Report                                                     */
+/*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
 /*-Revision end--------------------------------------------------------------*/
 

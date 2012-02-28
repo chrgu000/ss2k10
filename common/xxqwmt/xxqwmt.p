@@ -1,5 +1,5 @@
 /* xxqwmt.p - QAD_WORKFL MAINTENANCE                                         */
-/*F0PN*/ /*V8:ConvertMode=Maintenance                                        */
+/*F0PN*/ /*V8:ConvertMode=Report                                             */
 /* REVISION: 0CYH LAST MODIFIED: 07/21/11   BY: zy                        *eb*/
 /* Environment: Progress:10.1C04   QAD:eb21sp7    Interface:Character        */
 /*-revision end--------------------------------------------------------------*/

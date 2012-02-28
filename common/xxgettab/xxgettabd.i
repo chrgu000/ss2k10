@@ -1,5 +1,5 @@
 /* xxgettabd.i - gettable field detail                                       */
-/*V8:ConvertMode=Maintance                                                   */
+/*V8:ConvertMode=Report                                                      */
 /* REVISION: 0CYH LAST MODIFIED: 04/24/11   BY: zy        Add EB common   *EB*/
 /* Environment: Progress:10.1C   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */

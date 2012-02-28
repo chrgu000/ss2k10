@@ -59,13 +59,13 @@ assign dcount = 0.
       if available lbl_mstr then do:
         display lbld_term lbld_execname format "x(24)"
                 lbld_fieldname format "x(24)" lbl_long lbl_medium lbl_short
-                with width 320 stream-io.
+                with width 320.
       end.
       else do:
        display lbld_term lbld_execname format "x(24)"
                lbld_fieldname format "x(24)"
                "#" @ lbl_long  "#" @  lbl_medium  "#" @  lbl_short
-                with width 320 stream-io.
+                with width 320.
       end.
       dcount = dcount + 1.
 

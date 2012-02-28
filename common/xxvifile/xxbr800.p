@@ -1,8 +1,8 @@
 /* xxbr800.p - ÎÄ¼þÃû³Æ Browse UI                                           */
 /* Copyright 1986-2011 QAD Inc., Carpinteria, CA, USA.                      */
 /* All rights reserved worldwide.  This is an unpublished work.             */
-/* $Revision: 1.81.3.3 $    */
-/*V8:ConvertMode=NoConvert                                                  */
+/* $Revision: 1.81.3.3 $                                                    */
+/*V8:ConvertMode=Maintenance                                                */
 /********************************** History *********************************
  * $Revision: 1.2 $    Default User             DATE: 07/14/11  ECO: *XXXX*
  ****************************************************************************/
