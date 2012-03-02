@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "22YA"}
+{mfdtitle.i "23Y2"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"

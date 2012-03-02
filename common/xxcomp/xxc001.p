@@ -11,17 +11,20 @@ define variable err       as integer   format ">>>9" label "Errors".
 define variable rfile     as character format "x(24)".
 define variable dirname   as character format "x(15)".
 define variable yn        as logical.
+define variable okProg    as character.
 define variable c-comp    as character format "x(12)" no-undo.
 define temp-table t_log   fields tt_log as character.
 define stream crt.
+define stream cmp.
 define shared variable c-comp-pgms as character format "x(20)" no-undo.
 define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
 define shared variable lng     as character format "x(2)".
 define shared variable kbc_display_pause as integer.
-assign c-comp = getTermLabel("COMPILING",8) + " ".
+assign c-comp = trim(getTermLabel("COMPILING",12)) + " ".
 
 output stream crt to terminal.
+output stream cmp to terminal.
 
 form c-comp-pgms at 12 with frame tt no-labels width 34.
 
@@ -42,12 +45,13 @@ with overlay frame m0 column 35 24 down
 
 hide all no-pause.
 hide stream crt all no-pause.
+hide stream cmp all no-pause.
 view stream crt frame tt.
 view stream crt frame a.
 view stream crt frame b.
-view stream crt frame m0.
+view stream cmp frame m0.
 display c-comp-pgms with frame tt.
-
+assign okprog = "".
 /*create .r dir*/
 os-delete utcompile.log no-error.
 output to utcompile.log append.
@@ -74,16 +78,20 @@ repeat:
 
    set proc_name.
    assign i = i + 1.
-
-   display trim(c-comp) + substring(fill(".",30),1,i MODULO 30)
-           @ c-comp with frame m0.
+   assign c-comp = trim(trim(getTermLabel("COMPILING",12)))
+                 + substring(fill(".",20),1,i MODULO 20).
+   hide frame m0.
+   view frame m0.
+   display stream cmp c-comp with frame m0.
+   display skip proc_name with frame m0.
    run getDestFileName(input destDir, input lng, input proc_name,
                        output dirname).
 
    /* COMPILE PROCEDURE */
    {pxmsg.i &MSGNUM=4852 &ERRORLEVEL=1 &MSGARG1=proc_name}
 
-   display stream crt c-comp proc_name with frame b.
+   display stream crt  trim(getTermLabel("COMPILING",12)) + "...." @ c-comp
+                       proc_name with frame b.
    pause 0.
    down stream crt 1 with frame b.
    output to "utcompile.log" append.
@@ -104,8 +112,15 @@ repeat:
       assign rfile = "." + "~\"
                    + substring(proc_name , 1 ,index(proc_name,".")) + "r".
    end.
+
    if search(rfile) = ? then do:
       if search(proc_name) <> ? then err = err + 1.
+      display trim(getTermLabel("COMPILE_ERROR",20)) @ c-comp with frame m0.
+   end.
+   else do:
+      if okprog = "" then assign okProg = proc_name.
+                     else assign okProg = okProg + ";" + proc_name.
+      display trim(getTermLabel("COMPLETED",20)) @ c-comp with frame m0.
    end.
    display stream crt i err with frame a.
    output to utcompile.log append.
@@ -159,6 +174,14 @@ else do:
    hide frame b.
    for each t_log where tt_log <> "" with overlay frame n column 1 title color
        normal(getFrameTitle("COMPILE_LOG",25)) no-labels width 80:
+       if index(tt_log,"compile:") > 0 and
+          index(okProg,substring(tt_log,9)) > 0 then do:
+       next.
+       end.
+       if index(tt_log,"compile:") > 0 then do:
+          display fill("-",78) @ tt_log.
+          down with frame n.
+       end.
        display tt_log format "x(78)".
    end.
 end.
