@@ -112,9 +112,9 @@ if not avail tempcase then do: /* not avail tempcase */
             {xxptlocf.i}
         end.  /*for each xxloc_det*/
     end. /*临时库位*/
-
-/*ae  货架放不下时，需要放通道，PS的零件就放在P-4RPS                         */
-/*ae  SA的就放在P-4RSA （P-4RSA，P-4RPS分别代表通道）                        */
+/*ae  货架放不下时，需要放通道， 保税的放在PT                                */
+/*ae  非保税的PS的零件就放在P-4RPS                                           */
+/*ae  非保税的SA的就放在P-4RSA （P-4RSA，P-4RPS分别代表通道）                */
     if v_loc_to = "" then do:  /*过道库位*/
         for each xxloc_det
             where xxloc_type = "4"
@@ -134,17 +134,22 @@ if not avail tempcase then do: /* not avail tempcase */
         end.
     end.  /*过道库位*/
 
-/*ae     if v_loc_to = "" then do:                                           */
-/*ae       if v_part_type = "PS" then do:                                    */
-/*ae          assign v_loc_to = "P-4RPS".                                    */
-/*ae       end.                                                              */
-/*ae       else if v_part_type = "SA" then do:                               */
-/*ae          assign v_loc_to = "P-4RSA".                                    */
-/*ae        end.                                                             */
-/*ae       else do:                                                          */
-/*ae          assign v_loc_to = v_loc_error .                                */
-/*ae       end.                                                              */
-/*ae     end.                                                                */
+     if v_loc_to = "" then do: 
+       if substring(v_part,1,1) = "P" then do:
+       		assign v_loc_to = "PT".
+       end.
+       else do:                                         
+            if v_part_type = "PS" then do:                                   
+               assign v_loc_to = "P-4RPS".                                   
+            end.                                                             
+            else if v_part_type = "SA" then do:                              
+               assign v_loc_to = "P-4RSA".                                   
+             end.                                                            
+            else do:                                                         
+               assign v_loc_to = v_loc_error .                               
+            end. 
+       end.                                                            
+     end.                                                               
 
     /*查找v_loc_to--------------------------------------end*/
 
