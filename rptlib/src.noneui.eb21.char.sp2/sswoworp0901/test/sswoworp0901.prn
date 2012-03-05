@@ -1,0 +1,4 @@
+BEGIN: 08:11:13
+"acct";"sub";"cc";"project";"nbr";"lot";"part";"site";"desc1";"qty_ord";"qty_comp";"mtl_tot";"lbr_tot";"bdn_tot";"sub_tot";"wip_tot";"avg_cost";"total_std";"qty_open";"batch"
+"1600";"";"0100";"";"1007";"402205";"sp1";"train";"STANDARD PURCHASE 1";10;1;0;10;21;0;31;0;0;9;""
+END: 08:11:13

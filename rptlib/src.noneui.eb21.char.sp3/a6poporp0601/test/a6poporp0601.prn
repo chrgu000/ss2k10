@@ -1,0 +1,4 @@
+BEGIN: 18:43:58
+"prh_nbr";"prh_vend";"descname";"prh_receiver";"prh_line";"prh_part";"prh_rcp_date";"qty_open";"prh_rcp_type";"std_cost";"disp_curr";"base_cost";"std_ext";"pur_ext";"std_var";"prh_ps_nbr";"prh_ps_qty";"poders";"prh_ship_date";"tax_amt";"prh_curr";"ex_rate";"ex_rate2";"ex_rate_rmks";"pvo_id"
+"P0010000";"002";"Toronto Computer Services";"R0010000";1;"m1";05/15/07;10;"";0;"";2;0;20;20;"";10;" 1";05/15/07;2;"USD";1;1;"none";0
+END: 18:43:58

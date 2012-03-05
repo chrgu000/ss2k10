@@ -1,0 +1,57 @@
+ppcprp 1+                                                 1.18 客户物料报表                                           日期: 11/08/08
+页:      0                                                  United States                                             时间: 08:03:01
+      客户     客户物料                       显示客户物料                   客户物料工程变更单号
+      -------- ------------------------------ ------------------------------ ---------------------
+
+物料: 0995576-0018       M & E Assy 7.24 x 11.02 XC35-5K214-FC            
+      A1       KC35-5K214-FC-1
+      A2       KC35-5K214-FC-2
+      auto1    XC35-5K214-FC
+
+物料: 10-10000           OASIS(TM) SYSTEM INDUST MODEL                    
+               MIL-10000
+               NATO-10000
+               NSN-10000
+               P313768
+      01000000 COL-CON-10000
+
+物料: 10-15000           NOMAD(TM) COOLING SYSTEM AUTOMOTIVE UNIT         
+               P313767
+
+物料: 1A1                Motor Asm 8 Way Seat Adj 24V 3amp 2hp            
+      Auto1    F-017800-1A1-002
+
+物料: 2a1                Motor Asm 6 Way Seat Adj 24V 3amp 1.5hp          
+      Auto1    F-017800-2A1-001
+
+物料: part-ato-dir       EMT Use ATO Item, Direct Ship                    
+      PBU-Cust part-ato-dir
+
+物料: part-ato-trans     EMT Use ATO Item, Transship                      
+      PBU-Cust part-ato-trans
+
+物料: part-kit-dir       EMT Use Kit Item, Direct Ship                    
+      PBU-Cust part-kit-dir
+
+物料: part-kit-trans     EMT Use KIT Item, TRANSHIP                       
+      PBU-Cust part-kit-trans
+
+物料: part-pur-dir       EMT Use Pur item, direct ship                    
+               part-pur-dir
+      PBU-Cust part-pur-dir
+
+物料: part-pur-trans     EMT Use Purchased Item, TRANSHIP                 
+      PBU-Cust part-pur-trans
+
+
+                                                           报表结束
+
+
+
+
+报表选择条件:                           报表提交人:                ch
+
+        物料号:                               至:
+          客户:                               至:
+                                                               输出: BI
+                                                          批处理 ID:

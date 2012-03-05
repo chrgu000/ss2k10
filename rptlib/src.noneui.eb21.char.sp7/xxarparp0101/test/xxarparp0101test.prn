@@ -1,0 +1,4 @@
+BEGIN: 17:45:02
+"batch";"nbr";"bill";"name";"type";"check";"base_amt";"date";"effdate";"entity";"acct";"sub";"cc";"po";"ard_ref";"ard_type";"ard_entity";"ard_acct";"ard_sub";"ard_cc";"disp_curr";"base_damt"
+"1151";"1000026";"00010000";"University of Cal - Ship To";"A";"1000025";2;09/08/30;09/08/30;"1000";"1200";"";"";"";"1000024";"M";"rsh";"1200";"";"";" ";2
+END: 17:45:02

@@ -1,0 +1,74 @@
+sfacrp01 b+                                     17.13.10 Operations Accounting Report                                 Date: 09/27/05
+Page:    1                                           MFG/PRO Training DB - eB 92                                      Time: 23:51:14
+
+                                     WO ID                                              DR Acct  Sub-Acct CC
+Eff Date Tran Nbr Work Order         Op       GL Reference   Description                CR Acct  Sub-Acct CC          Amount
+-------- -------- ------------------ -------- -------------- -------------------------- -------- -------- ---- -------------
+
+                  03-0030            1000                    DISPLAY RACK
+01/01/97        2 1000               20       WO970101000001 LBR-2000: Labor            1600                           10.00
+                                              WO970101000002 BDN-2000: Burden           1600                           20.00
+                                                                                        6400              5040
+                  03-0030            1000                    DISPLAY RACK
+01/01/97        3 1000               10       WO970101000003 LBR-2000: Labor            1600                           10.00
+                                              WO970101000004 BDN-2000: Burden           1600                           20.00
+                                                                                        6400              5040
+                  03-0030            1000                    DISPLAY RACK
+01/01/97        4 1000               30       WO970101000005 SUB-0002: Sub Usage Var                                  -20.00
+                                                                                        1600
+sfacrp01 b+                                     17.13.10 Operations Accounting Report                                 Date: 09/27/05
+Page:    2                                           MFG/PRO Training DB - eB 92                                      Time: 23:51:14
+
+
+General Ledger Detail
+
+Entity   Account  Sub-Acct CC   Project  Date     Eff Date Description                        Debit Amount      Credit Amount
+-------- -------- -------- ---- -------- -------- -------- ---------------------------- ------------------ ------------------
+1000                            DESIGN   12/12/96 01/01/97 1000 1000 30                               0.00              20.00
+                                                                                        ------------------ ------------------
+                                                                                                      0.00              20.00
+         1600                   DESIGN   12/12/96 01/01/97 1000 1000 20                              10.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 20                              20.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 10                              10.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 10                              20.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 30                              20.00
+                                                                                        ------------------ ------------------
+                                                                                                     80.00               0.00
+         6400              5040 DESIGN   12/12/96 01/01/97 1000 1000 20                                                 20.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 10                                                 20.00
+                                                                                        ------------------ ------------------
+                                                                                                      0.00              40.00
+         6500              5040 DESIGN   12/12/96 01/01/97 1000 1000 20                                                 10.00
+                                DESIGN   12/12/96 01/01/97 1000 1000 10                                                 10.00
+                                                                                        ------------------ ------------------
+                                                                                                      0.00              20.00
+                                                                                        ------------------ ------------------
+                                                                                                     80.00              80.00
+
+
+
+                                                           End of Report
+sfacrp01 b+                                     17.13.10 Operations Accounting Report                                 Date: 09/27/05
+Page:    3                                           MFG/PRO Training DB - eB 92                                      Time: 23:51:14
+
+
+
+
+
+Report Criteria:                        Report Submitted By:       us
+
+        Item Number:                          To:
+         Work Order:                          To:
+                 ID:                          To:
+     Effective Date:                          To:
+       GL Reference:                          To:
+            Account:                          To:
+        Sub-Account:                          To:
+        Cost Center:                          To:
+            Project:                          To:
+   Transaction Date:                          To:
+
+             Detail by Transaction: Yes
+              Detail by GL Account: Yes                      Output: netterm
+                                                           Batch ID:
+

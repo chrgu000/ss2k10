@@ -1,0 +1,4 @@
+BEGIN: 16:11:35
+"fabd_entity";"fabd_fabk_id";"fabd_facls_id";"fabd_fa_id";"fa_desc1";"costAmt";"accDepr";"expAmt";"netBook";"annDepr";"fa_puramt"
+"1000";"ZM01";"C01";"FA01";"FA01 desc";363600;0;18000;345600;33000;363600
+END: 16:11:35

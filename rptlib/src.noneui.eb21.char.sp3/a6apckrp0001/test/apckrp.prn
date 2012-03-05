@@ -1,0 +1,6 @@
+BEGIN: 04:43:29
+"ap_batch";"ck_bank";"ck_nbr";"ck_ref";"ap_vend";"name";"ap_date";"ap_effdate";"ap_curr";"ap_ex_rate";"ap_ex_rate2";"ap_entity";"ap_acct";"ap_sub";"ap_cc";"ckstatus";"base_disp_amt";"ap_entity1";"ckd_voucher";"ckd_type";"order";"rmks";"invoice";"ckd_acct";"ckd_sub";"ckd_cc";"base_ckd_amt";"base_disc"
+"1006";"AA";996;"AA996";"002";"Toronto Computer Services";04/16/07;04/16/07;"USD";1;1;"1000";"1040";"";"";"";12;"1000";"";"N";"";"";"";"1035";"";"";12;0
+"1008";"EE";400001;"EE400001";"5001000";"METAL SUPPLY COMPANY";04/16/07;04/16/07;"CHF";1.5;1;"1000";"1043";"";"";"";10;"1000";"";"N";"";"";"";"1035";"";"";10;0
+"101";"AA";995;"AA995";"5001000";"METAL SUPPLY COMPANY";04/01/91;04/01/91;"USD";1;1;"1000";"1040";"";"";"";4000;"1000";"9100001";"VO";"";"";"51023";"2100";"";"";4000;0
+END: 04:43:29
