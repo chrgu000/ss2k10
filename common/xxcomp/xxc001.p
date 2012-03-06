@@ -261,7 +261,12 @@ procedure getDestFileName:
   end.
   else do:
      if substring(icompfile,1,2) = "mf" then do:
-            odir = idestdir.
+        if opsys = "unix" then do:
+             odir = idestdir + "/"  + ilng.
+        end.
+        else if opsys = "msdos" or opsys = "win32" then do:
+             odir = idestdir + "~\" + ilng.
+        end.
      end.
      else do:
        if opsys = "unix" then do:
