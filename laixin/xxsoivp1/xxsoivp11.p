@@ -305,7 +305,7 @@ define variable l_invoice_nbr   like so_inv_nbr  no-undo.
 define variable l_tempref       like tx2d_ref    no-undo.
 /*SS-IVAN 06101001 E*/
 define new shared frame d.
-
+define variable xxresult-status     as integer                no-undo.
 {pxpgmmgr.i}
 define variable acct as character no-undo.
 define variable sub  as character no-undo.
@@ -587,8 +587,8 @@ do on error undo, leave:
             for first rnd_mstr
 
          /* ssamy---061011---B */
-	   /*    fields (rnd_domain rnd_dec_pt rnd_rnd_mthd)  */
-	         fields (rnd_dec_pt rnd_domain rnd_rnd_mthd
+     /*    fields (rnd_domain rnd_dec_pt rnd_rnd_mthd)  */
+           fields (rnd_dec_pt rnd_domain rnd_rnd_mthd
                        rnd_thrshld rnd_unit)
          /* ssamy---061011---E */
 
@@ -947,13 +947,23 @@ do on error undo, leave:
                           input '16')"}
                   end. /* IF so_fsm_type = "FSM-RO" */
                   else do:
-                     {gprun.i ""txdetcpy.p""
-                        "(input so_nbr,
-                          input '',
-                          input '13',
-                          input so_inv_nbr,
-                          input so_nbr,
-                          input '16')"}
+                 {gprun.i ""txcalc.p""  "(input  "16",
+                          input  so_nbr,
+                          input  '',
+                          input  0, /* ALL LINES */
+                          input  no,
+                          output xxresult-status)"}
+
+/*À∞÷ÿ∏¥º∆À„????**********/
+                       {gprun.i ""txdetcpy.p""
+                          "(input so_nbr,
+                            input '',
+                            input '13',
+                            input so_inv_nbr,
+                            input so_nbr,
+                            input '16')"}
+
+
                   end. /* IF so_fsm_type <> "FSM-RO" */
                end. /* IF NOT l_consolflg */
                   /* SS - 20060524.3 - B */
@@ -1063,7 +1073,7 @@ do on error undo, leave:
                      then do:
                         {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
                      end. /* IF mc-error-number <> 0 */
-									   end. /* IF CAN-FIND.... */
+                     end. /* IF CAN-FIND.... */
                      ext_price = ext_price * sod_qty_per.
 
                   end. /* IF so_fsm_type = "SC" */
@@ -1197,7 +1207,7 @@ do on error undo, leave:
                      then do:
                         {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
                      end. /* IF mc-error-number <> 0 */
-									   end. /* IF CAN-FIND.... */
+                     end. /* IF CAN-FIND.... */
                      ext_gr_margin = ext_gr_margin * sod_qty_per.
 
                   end. /* IF so_fsm_type = "SC" */
@@ -1569,7 +1579,7 @@ do on error undo, leave:
            /* ssamy---061011---B */
                  /*    fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref
                              tx2d_tax_amt tx2d_tr_type)   */
-		       fields (tx2d_cur_tax_amt tx2d_domain tx2d_line
+           fields (tx2d_cur_tax_amt tx2d_domain tx2d_line
                              tx2d_nbr tx2d_ref tx2d_tax_amt tx2d_tax_in
                              tx2d_totamt tx2d_tottax tx2d_trl tx2d_tr_type)
            /* ssamy---061011---E */
@@ -1671,12 +1681,12 @@ do on error undo, leave:
                /* UPDATE AR MASTER FILE AND DELETE ORDER */
                /* INVOICE NUMBER HAS TO BE STORED IN CASE OF SO DELETION */
 
-	       /* ssamy---061011---B */
+         /* ssamy---061011---B */
            /*   assign promo_inv = if last-of(so_inv_nbr) then so_inv_nbr  */
                 assign
                       promo_inv = if last-of(so_inv_nbr) then
                                      so_inv_nbr
-	       /* ssamy---061011---E */
+         /* ssamy---061011---E */
 
                                   else ""
 
@@ -2021,7 +2031,7 @@ do on error undo, leave:
             display
                accum total (dr_amt) @ dr_amt
                accum total (cr_amt) @ cr_amt with frame gltwtot.
-            down 1 with frame gltwtot.	
+            down 1 with frame gltwtot.
          end. /* DO ON ENDKEY UNDO, LEAVE */
       end.
 
@@ -2201,7 +2211,7 @@ PROCEDURE processCreditCard:
 
 /* ssamy---061011---B */
         /*    ar_ex_rate ar_ex_rate2)   */
-	      ar_ex_rate ar_ex_rate2 ar_base_amt ar_bill ar_check
+        ar_ex_rate ar_ex_rate2 ar_base_amt ar_bill ar_check
               ar_curr )
 /* ssamy---061011---E */
 

@@ -1511,8 +1511,7 @@ repeat:
 			use_shipper = no.
 			consolidate = no.
       update
-         auto_inv
-/*
+/*       auto_inv
          auto_post   when (not l_auto_noupdate)
          use_shipper when (not creditCardOrder)
          consolidate when (not creditCardOrder)

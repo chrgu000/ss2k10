@@ -255,7 +255,11 @@ define variable inv_nbr              like so_inv_nbr label "Invoice".
 /* SS - 20060225 - E */
 
 post = yes.
-
+find first usrw_wkfl no-lock where usrw_domain = global_domain
+						 and usrw_key1 = "xxsoivm1.p.xxrqm_nbr" no-error.
+if availabl usrw_wkfl then do:
+	 assign nbr = usrw_key2.
+end.
 {&SOIVPST-P-TAG1}
 {&SOIVPST-P-TAG9}
 form
@@ -481,7 +485,8 @@ repeat:
    /* SS - 20060324 - E */
 
    /* SS - 20060608.1 - B */
-   FIND FIRST xxrqm_mstr WHERE xxrqm_domain = global_domain and (xxrqm_nbr = nbr)   USE-INDEX xxrqm_nbr NO-LOCK NO-ERROR.
+   FIND FIRST xxrqm_mstr WHERE xxrqm_domain = global_domain and xxrqm_nbr = nbr
+    USE-INDEX xxrqm_nbr NO-LOCK NO-ERROR.
    IF NOT AVAILABLE xxrqm_mstr THEN DO:
       {pxmsg.i &MSGNUM=5011 &ERRORLEVEL=3} /* 记录不存在 */
       next-prompt nbr with frame a.
@@ -589,7 +594,8 @@ repeat:
 
             /* 更新SO */
             IF LAST-OF(xxabs_order) THEN DO:
-               FIND FIRST so_mstr WHERE  so_domain = global_domain and  so_nbr = xxabs_order  EXCLUSIVE-LOCK NO-ERROR.
+               FIND FIRST so_mstr WHERE  so_domain = global_domain and
+                          so_nbr = xxabs_order  EXCLUSIVE-LOCK NO-ERROR.
                IF AVAILABLE so_mstr THEN DO:
                   ASSIGN
                      so_inv_nbr = inv_nbr
@@ -640,22 +646,20 @@ repeat:
                     input  0, /* ALL LINES */
                     input  no,
                     output result-status)"}
-
                   /* CREATES TAX RECORDS WITH TRANSACTION TYPE "11" */
                   /* FOR THE QUANTITY BACKORDER DURING PENDING      */
                   /* INVOICE MAINTENANCE                            */
-                  if not so_sched
-                  then do:
+                    if not so_sched
+                    then do:
 
-                     {gprun.i ""txcalc.p""
-                        "(input  "11",
-                          input  xxabs_order,
-                          input  '',
-                          input  0,
-                          input  no,
-                          output result-status)"}
-
-                  end. /* IF NOT so_sched */
+                       {gprun.i ""txcalc.p""
+                          "(input  "11",
+                            input  xxabs_order,
+                            input  '',
+                            input  0,
+                            input  no,
+                            output result-status)"}
+                    end. /* IF NOT so_sched */
                END.
             END.
 

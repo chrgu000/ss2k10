@@ -60,13 +60,13 @@
 /* Revision: 1.79         BY: Dan Herman          DATE: 10/25/04  ECO: *P2QS* */
 /* Revision: 1.80         BY: Bharath Kumar       DATE: 11/09/04  ECO: *P2TB* */
 /* Revision: 1.82         BY: Shivganesh Hegde    DATE: 01/03/05  ECO: *Q0G5* */
-/* $Revision: 1.82.1.1 $  BY: Dayanand Jethwa     DATE: 02/24/05  ECO: *P27M* */
-/* $Revision: 1.57.1.23 $  BY: Bill Jia DATE: 05/24/06 ECO: *SS - 20060524.3* */
+/* $Revision: 1.82.1.1 $    BY: Dayanand Jethwa       DATE: 02/24/05 ECO: *P27M* */
+/* $Revision: 1.57.1.23 $   BY: Bill Jiang          DATE: 05/24/06  ECO: *SS - 20060524.3* */
 /* By: Neil Gao Date: 07/05/16 ECO: * ss 20070516.1 */
 
 /*-Revision end---------------------------------------------------------------*/
 
-/*ss-ivan $ BY: Ivan Yang Date:10/10/06 Patch:P3HZ  06101001*/
+/* 委托库存过账问题 */
 
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -74,7 +74,6 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
 
 /* SS - 20060524.3 - B */
 /*
@@ -87,7 +86,6 @@
    sssoivtrl2.i
 */
 /* SS - 20060524.3 - E */
-
 
 /*!
  * PARAMETERS:
@@ -126,16 +124,11 @@ define variable old_taxable_amt      as decimal
 define variable old_nontaxable_amt   like old_taxable_amt label "Non-Taxable".
 /* SS - 20060524.3 - E */
 
-
 {mfdeclre.i}
 {cxcustom.i "SOIVTRL2.I"}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
 {sotxidef.i}
-
-   /*SS-IVAN 06101001  B*/
-   {gprunpdf.i "sopl" "p"}
-   /*SS-IVAN 06101001  E*/
 
 {sotrhstb.i}   /* DEFINITION FOR TEMP-TABLE t_tr_hist1 */
 
@@ -209,12 +202,6 @@ define variable l_tax_amt2    like tax_amt         no-undo.
 define variable l_nontax_amt  like tx2d_nontax_amt no-undo.
 define variable auth_price    like sod_price format "->>>>,>>>,>>9.99"
                                                    no-undo.
- /*SS-IVAN 06101001  B*/                                                   
-define variable undo_flag         as   logical.     /* NOT no-undo */
-define variable invoice_domain    as   character.   /* NOT no-undo */
-define variable l_tmp_line_total  as   decimal      no-undo.  
- /*SS-IVAN 06101001  E*/                                              
-                                                   
 define variable auth_found    like mfc_logical     no-undo.
 
 define new shared temp-table t_absr_det            no-undo
@@ -261,48 +248,26 @@ for first txc_ctrl
    where txc_domain = global_domain
 no-lock: end.
 
-/*SS-IVAN 06101001  B*/ 
-/*
 empty temp-table t_store_ext_actual no-error.
-*/
-/*SS-IVAN 06101001  E*/ 
-/*SS-IVAN 06101001  B*/
-/* 
+
 do for so_mstr:     /*scope this trans */
-*/
-/*SS-IVAN 06101001  E*/ 
+
    if maint then
       find so_mstr where recid(so_mstr) = so_recno
       exclusive-lock no-error.
    else
       for first so_mstr
-      /*SS-IVAN 06101001  B*/ 
-      /*
          fields (so_domain so_ar_acct so_ar_cc so_cr_card so_cr_init so_curr
                  so_ar_sub so_cust so_disc_pct so_due_date so_ex_rate
                  so_ex_rate2 so_fob so_invoiced so_inv_nbr so_nbr
                  so_ord_date so_prepaid so_print_pl so_print_so
                  so_rev  so_ship so_ship_date so_stat so_tax_date
                  so_tax_env so_to_inv so_trl1_amt so_trl1_cd
-     */
-     fields(so_ar_acct so_ar_cc so_ar_sub so_cr_card so_cr_init so_curr
-               so_cust so_disc_pct so_due_date so_ex_rate so_ex_rate2
-               so_ex_ratetype so_fob so_fsm_type so_invoiced so_inv_nbr
-               so_nbr so_ord_date so_prepaid so_print_pl so_print_so
-               so_rev so_sched so_ship so_ship_date so_stat
-               so_tax_date so_tax_env so_to_inv so_trl1_amt so_trl1_cd
-     /*SS-IVAN 06101001  E*/ 
-               so_trl2_amt so_trl2_cd so_trl3_amt so_trl3_cd
-     /*SS-IVAN 06101001  B*/ 
-     /*
+                 so_trl2_amt so_trl2_cd so_trl3_amt so_trl3_cd
                  so__qadl01 so__qadc03)
          where recid(so_mstr) = so_recno
    no-lock: end.
-		*/
-		 so__qadc03 so__qadl01)
-         where recid(so_mstr) = so_recno no-lock:
-      end. /* FOR FIRST so_mstr */
-		/*SS-IVAN 06101001  E*/ 
+
    /* CREATE TEMP-TABLE TO STORE tr_hist RECORDS AND RETRIEVE THE SAME IN */
    /* soauthbl.p TO IMPROVE THE PERFORMANCE WHILE PRINTING AUTHORIZATION  */
    /* NUMBERS FOR SCHEDULE ORDERS.                                         */
@@ -350,8 +315,6 @@ do for so_mstr:     /*scope this trans */
 
    taxloop:
    do on endkey undo, leave:
-   /*SS-IVAN 06101001  B*/ 
-   /*
       /* WHERE THE INVOICES HAVE NOT BEEN CONSOLIDATED */
       if not maint
          and not consolidate
@@ -387,7 +350,7 @@ do for so_mstr:     /*scope this trans */
       if not p_consolidate
       then
          assign
-      /* SS - 20060524.3 - B */         
+      /* SS - 20060524.3 - B */
          OLD_taxable_amt = 0
          OLD_nontaxable_amt = 0
       /* SS - 20060524.3 - e */
@@ -501,10 +464,7 @@ do for so_mstr:     /*scope this trans */
                                 + ext_actual * sod_comm_pct[4] / 100.
 
       end.   /* FOR EACH SOD_DET */
-      */
-      /*SS-IVAN 06101001  E*/
-			/*SS-IVAN 06101001  B*/
-			/*
+
       {&SOIVTRL2-I-TAG3}
 
       /* SKIPPING SALES VOLUME DISCOUNT CALCULATION    */
@@ -512,18 +472,8 @@ do for so_mstr:     /*scope this trans */
       if maint
          and not so__qadl01
          and not l_retrobill
-      */
-      if can-find (first tx2d_det
-                   where tx2d_domain  = global_domain
-                   and   tx2d_ref     = ref
-                   and   tx2d_nbr     = nbr
-                   and   tx2d_tr_type = tax_tr_type
-                   no-lock)
-
-      /*SS-IVAN 06101001  E*/
       then do:
-			/*SS-IVAN 06101001  B*/
-			/*
+
          for first cm_mstr
             fields (cm_domain cm_addr cm_disc_pct)
             where   cm_domain = global_domain
@@ -571,27 +521,16 @@ do for so_mstr:     /*scope this trans */
       end.
 
       nontaxable_amt = nontaxable_amt - tmp_amt.
-       */
-       run p_calc.
-         if undo_txdetrp = true then
-            undo, leave.
-		/*SS-IVAN 06101001  E*/
-	/*SS-IVAN 06101001  B*/
-	/*
+
       /* ADD TRAILER AMOUNTS */
       {txtrltrl.i so_trl1_cd so_trl1_amt user_desc[1]}
       {txtrltrl.i so_trl2_cd so_trl2_amt user_desc[2]}
       {txtrltrl.i so_trl3_cd so_trl3_amt user_desc[3]}
-  */
-  end. /* CAN-FIND (first tx2d_det ... */
-  /*SS-IVAN 06101001  E*/
 
       /* UNTIL AN INVOICE IS PRINTED REF IS so_nbr AND */
       /* NBR IS BLANK.  ONCE AN INVOICE IS PRINTED REF */
       /* IS so_inv_nbr AND NBR IS so_nbr               */
       /* CALCULATE TAX AMOUNTS ONLY IF MAINT                */
-      /*SS-IVAN 06101001  B*/
-      /*
       if maint then do:
 
          /* CALULATE THE TAX AMOUNT BEFORE TXCALC.P CALCULATES THE NEW */
@@ -600,12 +539,12 @@ do for so_mstr:     /*scope this trans */
          /* CALCULATE TOTALS */
          if addtax
          then do:
-            {gprun.i ""txtotal.p""
-                     "(input  tax_tr_type,
-                       input  ref,
-                       input  nbr,
-                       input  tax_lines,   /* ALL LINES */
-                       output l_tax_amt1)"}
+              {gprun.i ""txtotal.p""
+                       "(input  tax_tr_type,
+                         input  ref,
+                         input  nbr,
+                         input  tax_lines,   /* ALL LINES */
+                         output l_tax_amt1)"}
 
             /* OBTAINING TOTAL INCLUDED TAX FOR THE TRANSACTION */
             {gprun.i ""txtotal1.p""
@@ -619,31 +558,15 @@ do for so_mstr:     /*scope this trans */
             assign
                l_tax_amt1 = 0
                l_tax_amt2 = 0.
-               */
-               /*SS-IVAN 06101001  E*/
-				/*SS-IVAN 06101001  B*/
-				/*
+
          l_tax_amt1 = l_tax_amt1 + l_tax_amt2.
-         */
-         if maint then
-      do:
-         /*SS-IVAN 06101001  E*/
 
          /* SEE IF ANY TAX DETAIL EXISTS */
          for first tx2d_det
-         /*SS-IVAN 06101001  B*/
-         /*
             fields (tx2d_domain  tx2d_cur_nontax_amt tx2d_edited     tx2d_line
                     tx2d_nbr     tx2d_nontax_amt     tx2d_ref        tx2d_taxc
                     tx2d_tax_env tx2d_tax_usage      tx2d_tottax tx2d_trl
                     tx2d_tr_type)
-          */
-           fields (tx2d_cur_abs_ret_amt tx2d_cur_nontax_amt tx2d_cur_tax_amt
-                    tx2d_domain tx2d_edited tx2d_line tx2d_nbr tx2d_nontax_amt
-                    tx2d_ref tx2d_taxc tx2d_tax_amt tx2d_tax_code
-                    tx2d_tax_env tx2d_tax_in tx2d_tax_usage tx2d_tottax
-                    tx2d_trl tx2d_tr_type)
-          /*SS-IVAN 06101001  E*/
              where tx2d_domain = global_domain
              and   tx2d_ref = so_nbr
              and   tx2d_nbr = nbr
@@ -652,45 +575,23 @@ do for so_mstr:     /*scope this trans */
 
          if available tx2d_det then do:
             /* CHECK PREVIOUS DETAIL FOR EDITED VALUES */
-             /*SS-IVAN 06101001  B*/
-             /*
             for first tx2d_det
                fields (tx2d_domain tx2d_cur_nontax_amt tx2d_edited
                        tx2d_line   tx2d_nbr
                        tx2d_nontax_amt     tx2d_ref        tx2d_taxc
                        tx2d_tax_env        tx2d_tax_usage  tx2d_tottax tx2d_trl
                        tx2d_tr_type)
-                       */
-              if can-find (first tx2d_det
-              /*SS-IVAN 06101001  E*/
                where    tx2d_domain = global_domain
                and      tx2d_ref = so_nbr
                and      tx2d_nbr = nbr
                and      tx2d_tr_type = tax_tr_type
                and      tx2d_edited
-             /*SS-IVAN 06101001  B*/  
-             /* 
             no-lock:
                /* Previous tax values edited. Recalculate? */
-               */
-                  no-lock) then
-            do:
-
-              /* PREVIOUS TAX VALUES EDITED. RECALCULATE? */
-                /*SS-IVAN 06101001  E*/
                {pxmsg.i &MSGNUM=917 &ERRORLEVEL=2 &CONFIRM=recalc}
-               /*SS-IVAN 06101001  B*/
-               /*
             end.
          end.
          else do:
-         */
-         end. /* CAN-FIND (first tx2d_det */
-
-         end. /* IF available tx2d_det */
-         else
-         do:
-         /*SS-IVAN 06101001  E*/
             tax-edited = no.
 
             {gprun.i ""txedtchk.p""
@@ -703,39 +604,19 @@ do for so_mstr:     /*scope this trans */
             if tax-edited then do:
                /* Copy edited tax values? */
                {pxmsg.i &MSGNUM=935 &ERRORLEVEL=2 &CONFIRM=tax-edited}
-         /*SS-IVAN 06101001  B*/
-         /*
             end.
          end.
-         */
-				/*SS-IVAN 06101001  E*/
-				/*SS-IVAN 06101001  B*/
-				/*
-         if recalc then do:
-				*/
-				  end. /* IF tax-edited */
-         end. /* else if available tx2d_det */
 
-         if recalc then
-         do:
-				/*SS-IVAN 06101001  E*/
+         if recalc then do:
+
             l_nontax_amt  = 0.
 
             for first tx2d_det
-            /*SS-IVAN 06101001  B*/
-            /*
                fields (tx2d_domain tx2d_cur_nontax_amt tx2d_edited
                        tx2d_line   tx2d_nbr
                        tx2d_nontax_amt     tx2d_ref        tx2d_taxc
                        tx2d_tax_env        tx2d_tax_usage  tx2d_tottax tx2d_trl
                        tx2d_tr_type)
-            */
-              fields (tx2d_cur_abs_ret_amt tx2d_cur_nontax_amt tx2d_cur_tax_amt
-                    tx2d_domain tx2d_edited tx2d_line tx2d_nbr tx2d_nontax_amt
-                    tx2d_ref tx2d_taxc tx2d_tax_amt tx2d_tax_code
-                    tx2d_tax_env tx2d_tax_in tx2d_tax_usage tx2d_tottax
-                    tx2d_trl tx2d_tr_type)
-            /*SS-IVAN 06101001  E*/
                where   tx2d_domain = global_domain
                and     tx2d_ref = so_nbr
                and     tx2d_tr_type    = tax_tr_type
@@ -768,26 +649,16 @@ do for so_mstr:     /*scope this trans */
             end. /* IF NOT so_sched */
 
          end. /* IF recalc */
-			/*SS-IVAN 06101001  B*/
-			/*
+
       end. /* IF maint */
-      */
-      run p_calc.
-      /*SS-IVAN 06101001  E*/
-			/*SS-IVAN 06101001  B*/
-			/*
+
       {gprun.i ""txabsrb.p""
                "(input so_nbr,
                  input ' ',
                  input '13',
                  input-output line_total,
                  input-output taxable_amt)"}
-      */
-      if undo_txdetrp = true then
-            undo, leave.
-      /*SS-IVAN 06101001  E*/
-			/*SS-IVAN 06101001  B*/
-			/*
+
       /* COPY EDITED RECORDS IF SPECIFIED BY USER */
       if tax-edited then do:
          {gprun.i ""txedtcpy.p""
@@ -803,12 +674,12 @@ do for so_mstr:     /*scope this trans */
       /* TOTAL TAX TOTALS */
       if addtax
       then do:
-         {gprun.i ""txtotal.p""
-                  "(input  tax_tr_type,
-                    input  ref,
-                    input  nbr,
-                    input  tax_lines, /* ALL LINES */
-                    output tax_amt)"}
+           {gprun.i ""txtotal.p""
+                    "(input  tax_tr_type,
+                      input  ref,
+                      input  nbr,
+                      input  tax_lines, /* ALL LINES */
+                      output tax_amt)"}
 
          /* OBTAINING TOTAL INCLUDED TAX FOR THE TRANSACTION */
          {gprun.i ""txtotal1.p""
@@ -846,7 +717,6 @@ do for so_mstr:     /*scope this trans */
                      input        tax_tr_type,
                      output       line_total,
                      output       disc_amt)"}
-
          /* DISCOUNT AMOUNT IS ADJUSTED TO AVOID ROUNDING ERROR */
          /* IN CALCULATION OF ORDER AMOUNT                      */
             /* SS - 20060524.3 - B */
@@ -870,7 +740,6 @@ do for so_mstr:     /*scope this trans */
                  input-output disc_amt)"}
                /* SS - 20060524.3 - E */
 
-
       end. /* IF l_tax_in <> 0 ... */
 
       /* ADJUSTING LINE TOTALS AND TOTAL TAX BY INCLUDED TAX */
@@ -884,9 +753,6 @@ do for so_mstr:     /*scope this trans */
          invcrdt = "**" + getTermLabel("C_R_E_D_I_T",11) + "**".
       else
          invcrdt = "".
-         */
-         end. /* IF maint */
-         /*SS-IVAN 06101001  E*/
 
       if maint then do on endkey undo taxloop, leave:
 
@@ -976,14 +842,8 @@ do for so_mstr:     /*scope this trans */
                   if retval <> 0 then do:
                      next-prompt so_trl1_amt with frame sotot.
                      undo trlloop, retry.
-                /*SS-IVAN 06101001  B*/
-                /*
                   end.
                end.
-               */
-               end. /* IF retval <> 0 */
-               end. /* IF (so_trl1_amt <> 0) */
-               /*SS-IVAN 06101001  E*/
 
                {txedttrl.i &code  = "so_trl2_cd"
                            &amt   = "so_trl2_amt"
@@ -1000,14 +860,8 @@ do for so_mstr:     /*scope this trans */
                   if retval <> 0 then do:
                      next-prompt so_trl2_amt with frame sotot.
                      undo trlloop, retry.
-                 /*SS-IVAN 06101001  B*/ 
-                 /*   
                   end.
                end.
-               */
-                 end. /* IF  retval <> 0 */
-               end. /* IF (so_trl2_amt <> 0) */
-               /*SS-IVAN 06101001  E*/
 
                {txedttrl.i &code  = "so_trl3_cd"
                            &amt   = "so_trl3_amt"
@@ -1024,8 +878,6 @@ do for so_mstr:     /*scope this trans */
                   if retval <> 0 then do:
                      next-prompt so_trl3_amt with frame sotot.
                      undo trlloop, retry.
-                   /*SS-IVAN 06101001  B*/  
-                   /*
                   end.
                end.
 
@@ -1089,7 +941,7 @@ do for so_mstr:     /*scope this trans */
             end. /* IF using_cust_consignment */
 						*/
 						/* ss 20070516.1 - e */
-						
+
             /* RE-ASSIGN THE FLAG SO THAT WE CAN USE EXISTING */
             /* LOGIC TO CALCULATE ORDER TOTAL AND DISCOUNT    */
             l_ord_contains_tax_in_lines = no.
@@ -1105,35 +957,19 @@ do for so_mstr:     /*scope this trans */
          end.   /* FOR EACH sod_det */
 
          disc_amt = (- line_total * (so_disc_pct / 100)).
-         */
-         /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+
          {gprunp.i "mcpl" "p" "mc-curr-rnd"
                    "(input-output disc_amt,
                      input rndmthd,
                      output mc-error-number)"}
-          */
-          end. /* IF retval <> 0 */
-          /*SS-IVAN 06101001  E*/
-          /*SS-IVAN 06101001  B*/
-          /*
          if mc-error-number <> 0 then do:
             {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
          end.
-         */
-         end. /* (so_trl3_amt <> 0) */
-         /*SS-IVAN 06101001  E*/
-				 /*SS-IVAN 06101001  B*/
-				 /*
+
          /* ADD TRAILER AMOUNTS */
          {txtrltrl.i so_trl1_cd so_trl1_amt user_desc[1]}
          {txtrltrl.i so_trl2_cd so_trl2_amt user_desc[2]}
          {txtrltrl.i so_trl3_cd so_trl3_amt user_desc[3]}
-         */
-          end. /* TRLLOOP */
-         end. /* IF not lgData */
-          /*SS-IVAN 06101001  E*/
 
          /****** CALCULATE TAXES ************/
 
@@ -1163,12 +999,7 @@ do for so_mstr:     /*scope this trans */
                           output result-status)"}
 
             end. /* IF NOT so_sched */
-             /*SS-IVAN 06101001  B*/
-             /*
          end.
-         */
-         end. /* IF recalc and not tax-edited */
-          /*SS-IVAN 06101001  E*/
 
          {gprun.i ""txabsrb.p""
                   "(input so_nbr,
@@ -1195,34 +1026,18 @@ do for so_mstr:     /*scope this trans */
                        input  so_ex_rate2,
                        input  tax_date,
                        output tax_amt)"}
-						 /*SS-IVAN 06101001  B*/
-						 /*
             view frame sotot.
             view frame d.
-             */
-              run p_calc .
-             /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-						 /*
+
          end.
-             */
-               if undo_txdetrp = true then
-                undo, leave.
-             /*SS-IVAN 06101001  E*/
-				/*SS-IVAN 06101001  B*/
-				/*	
+
          /* CALCULATE TOTALS */
-         {gprun.i ""txtotal.p""
-                  "(input  tax_tr_type,
-                    input  ref,
-                    input  nbr,
-                    input  tax_lines,    /* ALL LINES */
-                    output tax_amt)"}
-         */
-         end. /* TAX EDIT */
-         /*SS-IVAN 06101001  E*/
-				 /*SS-IVAN 06101001  B*/
-				 /*
+           {gprun.i ""txtotal.p""
+                    "(input  tax_tr_type,
+                      input  ref,
+                      input  nbr,
+                      input  tax_lines,    /* ALL LINES */
+                      output tax_amt)"}
          /* OBTAINING TOTAL INCLUDED TAX FOR THE TRANSACTION */
          {gprun.i ""txtotal1.p""
                   "(input  tax_tr_type,
@@ -1230,24 +1045,18 @@ do for so_mstr:     /*scope this trans */
                     input  nbr,
                     input  tax_lines,      /* ALL LINES */
                     output l_tax_in)"}
-          */
-          end.    /* END IF maint block */
-           /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+
          /* ADJUSTING LINE TOTALS AND TOTAL TAX BY INCLUDED TAX */
          assign
             taxable_amt = taxable_amt - l_tax_in
             tax_amt     = tax_amt + l_tax_in.
-            */
-            {etdcrc.i so_curr so_mstr.so}
-            /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+
          /* DISCOUNT AMOUNT IS ADJUSTED TO AVOID ROUNDING ERROR */
          /* IN CALCULATION OF ORDER AMOUNT                      */
          if l_tax_in <> 0
          then do:
+/* SS - 20060524.3 - B */
+            /*
             {gprunp.i "sopl" "p" "adjustDiscountAmount"
                       "(input        taxable_amt,
                         input        nontaxable_amt,
@@ -1256,44 +1065,31 @@ do for so_mstr:     /*scope this trans */
                         input        so_trl3_amt,
                         input        line_total,
                         input-output disc_amt)"}
-          */
-          run p_calc .
-          /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+   */
+            {gprunp.i "sopl" "p" "adjustDiscountAmount"
+               "(input        taxable_amt - old_taxable_amt,
+                 input        nontaxable_amt - OLD_nontaxable_amt,
+                 input        so_trl1_amt,
+                 input        so_trl2_amt,
+                 input        so_trl3_amt,
+                 input        line_total,
+                 input-output disc_amt)"}
+               /* SS - 20060524.3 - E */
+
          end. /* IF l_tax_in <> 0 */
-					*/
-					 if undo_txdetrp = true then
-         undo, leave.
-					/*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+
          ord_amt = line_total + disc_amt + so_trl1_amt
                  + so_trl2_amt + so_trl3_amt + tax_amt.
-           */
-            if maint then
-      do:
-           /*SS-IVAN 06101001  E*/
-					/*SS-IVAN 06101001  B*/
-					/*
+
          if ord_amt < 0 then
             invcrdt = "**" + getTermLabel("C_R_E_D_I_T",11) + "**".
          else
             invcrdt = "".
-            */
-             view frame sotot.
-          view frame d.
 
-      end. /* IF maint */
-
-            /*SS-IVAN 06101001  E*/
-/*SS-IVAN 06101001  B*/
-/*
       end.    /* end if maint block */
 
       {etdcrc.i so_curr so_mstr.so}
-*/
-/*SS-IVAN 06101001  E*/
+
       /* DISPLAY TRAILER ONLY IF INVOICES ARE NOT CONSOLIDATED */
       if not consolidate then do:
 
@@ -1315,41 +1111,27 @@ do for so_mstr:     /*scope this trans */
                   with frame sotot.
 
             display
-            /*SS-IVAN 06101001  B*/
-            /*
                so_curr line_total
                so_disc_pct disc_amt tax_date user_desc[1] so_trl1_cd
                so_trl1_amt user_desc[2] so_trl2_cd so_trl2_amt
                user_desc[3] so_trl3_cd so_trl3_amt tax_amt ord_amt
                container_charge_total line_charge_total
                invcrdt
-               */
-                so_curr      line_total     so_disc_pct
-               disc_amt     tax_date       user_desc[1]
-               so_trl1_cd   so_trl1_amt    user_desc[2]
-               so_trl2_cd   so_trl2_amt    user_desc[3]
-               so_trl3_cd   so_trl3_amt    tax_amt
-               ord_amt      container_charge_total
-               line_charge_total           invcrdt
-               /*SS-IVAN 06101001  E*/
             with frame sotot.
 
          end. /* IF NOT et_dc_print */
          else
             run ip_dispeuro.
-      /*SS-IVAN 06101001  B*/     
-      end.       /* IF NOT consolidate */
-     /*SS-IVAN 06101001  E*/
+      end.
+
       undo_trl2 = false.
 
    end. /* TAXLOOP */
 
    empty temp-table t_tr_hist1.
-/*SS-IVAN 06101001  B*/
-/*  
+
 end. /*end do for transaction scope */
-*/
-/*SS-IVAN 06101001  E*/  
+
 
 PROCEDURE ip_dispeuro:
 
@@ -1506,15 +1288,8 @@ PROCEDURE ip_calc_amt:
    end. /* IF mc-error-number <> 0 */
 
    for first t_store_ext_actual
-   /*SS-IVAN 06101001  B*/
-   /*
       where t_line = sod_line
    no-lock:
-   */
-   where t_line = sod_line no-lock:
-     end. /* FOR FIRST t_store_ext_actual ... */
-
-   /*SS-IVAN 06101001  E*/
 
       /* CALL THE PROCEDURE TO GET LINE TOTAL ONLY WHEN TAX IS INCLUDED */
       /* AND THE TAX HAS BEEN ALREADY CALCULATED WHICH IS INDICATED BY  */
@@ -1522,8 +1297,6 @@ PROCEDURE ip_calc_amt:
       /*                                                                */
       /* AFTER WE GET THE LINE TOTAL WE CAN USE THE EXISTING LOGIC TO   */
       /* CALCULATE ORDER TOTAL AND DISCOUNT                             */
-      /*SS-IVAN 06101001  B*/
-      /*
       if soddet.sod_tax_in then do:
          {gprunp.i "sopl" "p" "getExtendedAmount"
                    "(input        rndmthd,
@@ -1532,60 +1305,21 @@ PROCEDURE ip_calc_amt:
                      input        somstr.so_inv_nbr,
                      input        tax_tr_type,
                      input-output p_ext_actual)"}
-      */
-      /*SS-IVAN 06101001  E*/
-      /*SS-IVAN 06101001  B*/
-      /*
       end. /* if soddet.sod_tax_in */
    end. /* FOR FIRST t_store_ext_actual ... */
-			*/
-			 if not available t_store_ext_actual then
-   do:
-			/*SS-IVAN 06101001  E*/
-			/*SS-IVAN 06101001  B*/
-			/*
+
    if not available t_store_ext_actual
    then do:
-   */
-   /*SS-IVAN 06101001  E*/
       create t_store_ext_actual.
       assign
          t_line       = sod_line
-         /*SS-IVAN 06101001  B*/
-         /*
          t_ext_actual = p_ext_actual.
-         */
-         t_ext_actual = l_ext_actual.
-         /*SS-IVAN 06101001  E*/
    end. /* IF NOT AVAILABLE t_store_ext_actual ... */
-		/*SS-IVAN 06101001  B*/
-		/*
+
    /* USE THE EXISTING LOGIC TO CALCULATE ORDER TOTAL */
    if l_ord_contains_tax_in_lines = no
    then
-   */
-   if available t_store_ext_actual then
-   do:
-
-      if soddet.sod_tax_in then
-      do:
-
-         run getExtendedAmount
-             (input        rndmthd,
-              input        soddet.sod_line,
-              input        somstr.so_nbr,
-              input        somstr.so_inv_nbr,
-              input        tax_tr_type,
-              input-output l_ext_actual).
-
-         p_ext_actual = l_ext_actual .
-
-      end. /* IF soddet.sod_tax_in */
-
- 
       p_line_total = p_line_total + p_ext_actual.
-      end. /* IF AVAILABLE t_store_ext_actual ... */
-  /*SS-IVAN 06101001  E*/
 
    /* FOR CALL INVOICES, SFB_TAXABLE (IN 86E) OF SFB_DET DETERMINES */
    /* TAXABILITY AND THERE COULD BE MULTIPLE SFB_DET FOR A SOD_DET. */
@@ -1593,11 +1327,6 @@ PROCEDURE ip_calc_amt:
       and soddet.sod_taxable
    then do:
       for each sfb_det
-      /*SS-IVAN 06101001  B*/
-      field(sfb_covered_amt sfb_domain sfb_exchange sfb_exg_price
-               sfb_nbr sfb_price sfb_qty_req sfb_qty_ret sfb_so_line
-               sfb_taxable)
-		/*SS-IVAN 06101001  E*/
          where sfb_domain = global_domain
          and   sfb_nbr = soddet.sod_nbr
          and   sfb_so_line = soddet.sod_line
@@ -1639,22 +1368,13 @@ PROCEDURE ip_calc_amt:
       end. /* FOR EACH SFB_DET */
    end. /* IF SOD_FSM_TYPE = FSM-RO ... */
    else
-    /*SS-IVAN 06101001  B*/
-   do:
-    /*SS-IVAN 06101001  E*/
       if soddet.sod_taxable then
          p_taxable_amt    = p_taxable_amt    + l_ext_actual.
       else
          p_nontaxable_amt = p_nontaxable_amt + l_ext_actual.
-		/*SS-IVAN 06101001  B*/
-		/*
-   if using_line_charges then do:
-		*/
-		end. /* ELSE SOD_FSM_TYPE = FSM-RO ... */
 
-   if using_line_charges then
-   do:
-		/*SS-IVAN 06101001  E*/
+   if using_line_charges then do:
+
       if can-find(first absl_det
          where absl_domain    = global_domain
          and   absl_order     = sod_nbr
@@ -1672,12 +1392,7 @@ PROCEDURE ip_calc_amt:
             and     absl_inv_post = no
          no-lock:
             for first trl_mstr
-            /*SS-IVAN 06101001  B*/
-            /*
                fields (trl_code trl_taxable trl_domain)
-            */
-            fields (trl_code trl_taxable trl_domain trl_desc)
-            /*SS-IVAN 06101001  E*/
                where   trl_domain = global_domain
                and     trl_code   = absl_trl_code
             no-lock:
@@ -1709,12 +1424,7 @@ PROCEDURE ip_calc_amt:
                next.
 
             for first trl_mstr
-            /*SS-IVAN 06101001  B*/
-            /*
                fields (trl_code trl_taxable trl_domain)
-              */
-              fields (trl_code trl_taxable trl_domain trl_desc)
-               /*SS-IVAN 06101001  E*/
                where   trl_domain  = global_domain
                and     trl_code    = sodlc_trl_code
             no-lock:
@@ -1731,16 +1441,9 @@ PROCEDURE ip_calc_amt:
    then do:
 
       for each abscc_det
-      /*SS-IVAN 06101001  B*/
-            /*
          fields (abscc_container abscc_inv_nbr abscc_order
                  abscc_ord_line abscc_taxable abscc_cont_price
                  abscc_domain)
-                 */
-                  fields (abscc_confirmed abscc_container abscc_cont_price
-                 abscc_domain abscc_inv_nbr abscc_inv_post abscc_order
-                 abscc_ord_line abscc_taxable)
-        /*SS-IVAN 06101001  E*/         
          where   abscc_domain      = global_domain
          and     abscc_order       = sod_nbr
          and     abscc_ord_line    = sod_line
@@ -1756,406 +1459,3 @@ PROCEDURE ip_calc_amt:
    end. /* IF using_container_charges */
 
 END PROCEDURE. /* ip_calc_amt */
-
-/*SS-IVAN 06101001  B*/
-PROCEDURE p_calc :
-define buffer b_si_mstr for si_mstr.
-
-/*SS-IVAN 06101001 B*/
-define var return_status as char.
-define variable invoice_domain    as   character.   /* NOT no-undo */
-/*SS-IVAN 06101001 E*/
-
-   l_tmp_line_total  = 0 .
-
-   if available so_mstr
-   then .
-
-   if available soc_ctrl
-   then .
-
-   empty temp-table t_store_ext_actual no-error.
-
-   /* WHERE THE INVOICES HAVE NOT BEEN CONSOLIDATED */
-   if not maint
-      and not consolidate then
-   do:
-
-      undo_txdetrp = true.
-
-      /* ADDED SIXTH INPUT PARAMETER '' AND SEVENTH INPUT     */
-      /* PARAMETER yes TO ACCOMMODATE THE LOGIC INTRODUCED IN */
-      /* txdetrpa.i FOR DISPLAYING THE APPROPRIATE CURRENCY   */
-      /* AMOUNT.                                              */
-
-      {gprun.i  ""txdetrp.p""
-                "(input tax_tr_type,
-                  input ref,
-                  input nbr,
-                  input col-80,
-                  input page_break,
-                  input '',
-                  input yes)"}
-
-      if undo_txdetrp = true
-      then
-         return .
-
-   end. /* if not maint */
-
-   /*** GET TOTALS FOR LINES ***/
-
-   assign
-      ext_actual             = 0
-      tax_amt                = 0
-      l_tax_in               = 0
-      disc_amt               = 0
-      line_total             = 0
-      tot_line_comm[1]       = 0
-      tot_line_comm[2]       = 0
-      tot_line_comm[3]       = 0
-      tot_line_comm[4]       = 0
-      tax_date               = so_due_date
-      taxable_amt            = 0
-      nontaxable_amt         = 0 /*              when not p_consolidate */
-      container_charge_total = tot_cont_charge when (using_container_charges or
-                                                     using_line_charges )
-      line_charge_total      = tot_line_charge when (using_container_charges or
-                                                     using_line_charges )
-      ord_amt                = 0               when (using_container_charges or
-                                                     using_line_charges )
-      l_ord_contains_tax_in_lines = can-find (first sod_det
-                                              where sod_domain = global_domain
-                                              and   sod_nbr = so_nbr
-                                              and   sod_taxable
-                                              and   sod_tax_in) .
-
-   if so_tax_date <> ?
-   then
-      tax_date = so_tax_date.
-   else
-      if so_ship_date <> ?
-      then
-         tax_date = so_ship_date.
-
-   if using_container_charges
-   then
-      line_total = line_total + tot_cont_charge.
-
-   if using_line_charges
-   then
-      line_total = line_total + tot_line_charge.
-
-   sod_detloop:
-
-   for each sod_det
-      where sod_domain  = global_domain
-        and  sod_nbr = so_nbr
-   no-lock:
-
-      /* IF THE ORDER LINE IS A CONSIGNMENT ORDER LINE  */
-      /* THEN WE DON'T WANT THE DOLLAR AMOUNT INCLUDED  */
-      /* ON THE INVOICE WHEN THE LINE HAS BEEN SHIPPED, */
-      /* BUT WHEN THE SHIPMENT HAS BEEN USED.           */
-         /* ss 20070516.1 - b */
-         /*
-      if using_cust_consignment
-         and sod_consignment
-      then do:
-
-            for first b_si_mstr
-               where b_si_mstr.si_domain = global_domain
-                and  b_si_mstr.si_site = sod_site
-            no-lock:
-
-               if b_si_mstr.si_db <> global_domain then do:
-                  /* SWITCH TO INVENTORY DOMAIN */
-                  run switchDomain
-                     (input  b_si_mstr.si_db,
-                      output undo_flag).
-
-                  if undo_flag then
-                     undo.
-               end.
-            end.   /* FOR FIRST b_si_mstr */
-
-            /* IF NON-INVOICED CONSIGNMENT USAGE RECORDS EXIST, INVOICE THEM */
-            {gprun.i ""soivtr2a.p""
-                     "(input  so_tax_date,
-                       input  so_nbr,
-                       input  sod_line,
-                       output consign_flag,
-                       output consign_loc,
-                       output intrans_loc,
-                       output max_aging_days,
-                       output auto_replenish,
-                       output return_status,
-                       input-output tax_date)"}
-
-            if invoice_domain <> global_domain then do:
-               /* SWITCH TO INVOICE DOMAIN */
-               run switchDomain
-                  (input  invoice_domain,
-                   output undo_flag).
-
-               if undo_flag then
-                  undo.
-            end.
-
-            if return_status <> ""
-               and sod_qty_inv >= 0
-            then
-               next.
-
-      end. /* IF using_cust_consignment */
-*/
-/* ss 20070516.1 - e */
-         
-      run ip_calc_amt
-         (input-output ext_actual,
-          input-output line_total,
-          input-output taxable_amt,
-          input-output nontaxable_amt,
-          buffer       so_mstr,
-          buffer       sod_det).
-
-      ext_margin = ext_actual - round(sod_std_cost * (sod_qty_inv),2).
-
-      /* COMMISSIONS BASED ON MARGIN */
-      if soc_margin = yes
-      then
-         assign
-            tot_line_comm[1] = tot_line_comm[1]
-                             + ext_margin * sod_comm_pct[1] / 100
-            tot_line_comm[2] = tot_line_comm[2]
-                             + ext_margin * sod_comm_pct[2] / 100
-            tot_line_comm[3] = tot_line_comm[3]
-                             + ext_margin * sod_comm_pct[3] / 100
-            tot_line_comm[4] = tot_line_comm[4]
-                             + ext_margin * sod_comm_pct[4] / 100.
-      else        /* Commissions based on sales  */
-         assign
-            tot_line_comm[1] = tot_line_comm[1]
-                             + ext_actual * sod_comm_pct[1] / 100
-            tot_line_comm[2] = tot_line_comm[2]
-                             + ext_actual * sod_comm_pct[2] / 100
-            tot_line_comm[3] = tot_line_comm[3]
-                             + ext_actual * sod_comm_pct[3] / 100
-            tot_line_comm[4] = tot_line_comm[4]
-                             + ext_actual * sod_comm_pct[4] / 100.
-
-   end.   /* FOR EACH SOD_DET */
-
-   {&SOIVTRL2-I-TAG3}
-
-   /* SKIPPING SALES VOLUME DISCOUNT CALCULATION    */
-   /* FOR RETROBILLED ITEMS                         */
-   if maint
-      and not so__qadl01
-      and not l_retrobill
-   then do:
-
-      for first cm_mstr
-         fields (cm_addr cm_disc_pct)
-         where cm_domain = global_domain
-          and  cm_addr = so_cust
-      no-lock:
-      end. /* FOR FIRST cm_mstr */
-
-      if so_cust <> so_ship
-         and can-find (cm_mstr
-                       where cm_mstr.cm_domain = global_domain
-                        and  cm_mstr.cm_addr = so_ship)
-      then
-         for first cm_mstr
-            fields (cm_addr cm_disc_pct cm_domain)
-            where cm_mstr.cm_domain = global_domain
-             and  cm_mstr.cm_addr = so_ship
-         no-lock:
-         end. /* FOR FIRST cm_mstr */
-
-      {gprun.i ""sosd.p""
-               "(input so_ord_date,
-                 input so_ex_rate,
-                 input so_ex_rate2,
-                 input so_cust,
-                 input so_curr,
-                 input line_total,
-                 output disc_pct)"}
-
-      if disc_pct      > cm_disc_pct
-         and disc_pct <> 0
-      then
-         so_disc_pct = disc_pct.
-      else
-         so_disc_pct = cm_disc_pct.
-
-   end. /* IF maint */
-
-   /* USE THE EXISTING LOGIC TO CALCULATE DISCOUNT ONLY WHEN */
-   /* SALES ORDER DOES NOT HAVE TAX INCLUDED LINES           */
-   if l_ord_contains_tax_in_lines = no
-   then
-      disc_amt = (- line_total * (so_disc_pct / 100)).
-
-   {gprunp.i "mcpl" "p" "mc-curr-rnd"
-      "(input-output disc_amt,
-        input rndmthd,
-        output mc-error-number)"}
-
-   if mc-error-number <> 0
-   then do:
-      {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
-   end.
-
-   nontaxable_amt = nontaxable_amt - tmp_amt.
-
-   if addtax
-   then do:
-      {gprun.i ""txtotal.p""
-         "(input  tax_tr_type,
-           input  ref,
-           input  nbr,
-           input  tax_lines, /* ALL LINES */
-           output tax_amt)"}
-
-      /* OBTAINING TOTAL INCLUDED TAX FOR THE TRANSACTION */
-      {gprun.i ""txtotal1.p""
-         "(input  tax_tr_type,
-           input  ref,
-           input  nbr,
-           input  tax_lines,      /* ALL LINES */
-           output l_tax_in)"}
-   end. /* IF addtax */
-   else
-      assign
-         tax_amt    = 0
-         l_tax_in   = 0.
-
-   /* WHEN TAX DETAIL RECORDS ARE NOT AVAILABLE AND SO IS */
-   /* TAXABLE THEN USE THE PROCEDURE TO CALCULATE ORDER   */
-   /* TOTAL AND DISCOUNT                                  */
-   /*                                                     */
-   /* WHEN TAX INCLUDED IS YES, ORDER DISCOUNT SHOULD BE */
-   /* CALCULATED ON THE ORDER TOTAL AFTER REDUCING THE   */
-   /* ORDER TOTAL BY THE INCLUDED TAX                    */
-
-   if (l_tax_in <> 0
-      or (l_ord_contains_tax_in_lines
-          and (not can-find (tx2d_det
-                                where tx2d_domain = global_domain
-                                and   tx2d_ref = so_nbr
-                                and   tx2d_nbr = so_inv_nbr))))
-   then do:
-
-      {gprun.i ""txabsrb.p""
-         "(input so_nbr,
-           input ' ',
-           input '13',
-           input-output line_total,
-           input-output taxable_amt)"}
-
-      l_tmp_line_total = taxable_amt + nontaxable_amt .
-      line_total = l_tmp_line_total * (100 / (100 - so_disc_pct)) .
-      disc_amt   = ( - line_total * (so_disc_pct / 100)) .
-
-      {gprunp.i "mcpl" "p" "mc-curr-rnd"
-            "(input-output disc_amt,
-              input  rndmthd,
-              output mc-error-number)"}
-
-      if mc-error-number <> 0
-      then do:
-         {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
-      end.
-   end. /* IF l_tax_in <> 0 ... */
-
-   /* ADD TRAILER AMOUNTS */
-   {txtrltrl.i so_trl1_cd so_trl1_amt user_desc[1]}
-   {txtrltrl.i so_trl2_cd so_trl2_amt user_desc[2]}
-   {txtrltrl.i so_trl3_cd so_trl3_amt user_desc[3]}
-
-   assign
-      tax_amt     = tax_amt + l_tax_in
-      ord_amt     = line_total + disc_amt + so_trl1_amt
-                  + so_trl2_amt + so_trl3_amt + tax_amt.
-
-   if ord_amt < 0
-   then
-      invcrdt = "**" + getTermLabel("C_R_E_D_I_T",11) + "**".
-   else
-      invcrdt = "".
-
-END PROCEDURE. /* p_calc */
-
-PROCEDURE getExtendedAmount:
-
-   /* THIS PROCEDURE RETURNS LINE TOTAL, LINE TOTAL IS RE-CALCULATED  */
-   /* AFTER SUBTRACTING INCLUDED TAX                                  */
-
-   /* INPUT PARAMETERS                                                */
-   /* p_rndmthd      - CURRENCY ROUNDING METHOD                       */
-   /* p_line         - ORDER LINE FOR SALES ORDER, SALES QUOTE ETC.   */
-   /* p_tx2d_ref     - SALES ORDER NUMBER IF IT IS CALLED BY SALES    */
-   /*                  ORDER FUNCTIONS                                */
-   /*                  SALES QUOTE NUMBER IF IT IS CALLED BY SALES    */
-   /*                  QUOTE FUNCTIONS                                */
-   /*                  INVOICE NUMBER IF IT IS CALLED BY INVOICE      */
-   /*                  FUNCTIONS                                      */
-   /* p_tx2d_nbr     - SALES QUOTE NUMBER OR INVOICE NUMBER IF        */
-   /*                  IT IS CALLED BY SALES ORDER FUNCTIONS          */
-   /*                  BLANK IF IT IS CALLED BY SALES QUOTE FUNCTIONS */
-   /*                  SALES ORDER NUMBER IF IT IS CALLED BY INVOICE  */
-   /*                  FUNCTIONS                                      */
-   /* p_tax_tr_type  - TAX TRANSACTION TYPE                           */
-   /*                                                                 */
-   /* INPUT-OUTPUT PARAMETER                                          */
-   /* p_ext_actual   - LINE TOTAL                                     */
-
-   define input        parameter p_rndmthd          like rnd_rnd_mthd  no-undo.
-   define input        parameter p_line             like sod_line      no-undo.
-   define input        parameter p_tx2d_ref         like so_nbr        no-undo.
-   define input        parameter p_tx2d_nbr         like so_inv_nbr    no-undo.
-   define input        parameter p_tax_tr_type      like tx2d_tr_type  no-undo.
-   define input-output parameter p_ext_actual       like sod_price     no-undo.
-
-   define variable mc-error-number like msg_nbr no-undo.
-
-   define variable l_ext_actual  like sod_price initial 0 no-undo.
-   define variable l_ext_actual1 like sod_price initial 0 no-undo.
-
-   l_ext_actual = p_ext_actual.
-
-   for each tx2d_det
-      fields (tx2d_cur_abs_ret_amt tx2d_cur_nontax_amt tx2d_cur_tax_amt
-                    tx2d_domain tx2d_edited tx2d_line tx2d_nbr tx2d_nontax_amt
-                    tx2d_ref tx2d_taxc tx2d_tax_amt tx2d_tax_code
-                    tx2d_tax_env tx2d_tax_in tx2d_tax_usage tx2d_tottax
-                    tx2d_trl tx2d_tr_type)
-      where tx2d_domain   = global_domain
-        and (tx2d_ref     = p_tx2d_ref
-             or tx2d_ref  = p_tx2d_nbr)
-        and (tx2d_nbr     = ""
-             or tx2d_nbr  = p_tx2d_ref
-             or tx2d_nbr  = p_tx2d_nbr)
-        and  tx2d_line    = p_line
-        and  tx2d_tr_type = p_tax_tr_type
-        and  tx2d_tax_in  = yes
-   no-lock :
-      l_ext_actual1 = l_ext_actual1 +
-                      (tx2d_cur_tax_amt + tx2d_cur_abs_ret_amt)  .
-   end. /* FOR FIRST tx2d_det ... */
-   p_ext_actual = l_ext_actual - l_ext_actual1.
-
-   {gprunp.i "mcpl" "p" "mc-curr-rnd"
-    "(input-output p_ext_actual,
-      input        p_rndmthd,
-      output       mc-error-number)"}
-
-   if mc-error-number <> 0
-   then do:
-      {mfmsg.i mc-error-number 2}
-   end. /* IF mc-error-number <> 0 */
-END PROCEDURE. /* getExtendedAmount */
-
-/*SS-IVAN 06101001  E*/

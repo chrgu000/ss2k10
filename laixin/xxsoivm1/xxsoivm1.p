@@ -55,8 +55,8 @@
 2. 改变为集中处理已选择的金额
 */
 /* ss 20120106.1 - B */
-/*	
-  放开发票金额可以调整   
+/*
+  放开发票金额可以调整
 */
 /* ss 20120106.1 - E */
 define variable trans_conv like sod_um_conv no-undo.
@@ -71,6 +71,7 @@ DEFINE VARIABLE s1 AS CHAR.
 /* ss 20070728.1 - b */
 DEF VAR v_qty AS DECIMAL.
 DEF VAR v_end_date AS DATE .
+define variable fname as character.
 define buffer bxxrqm_mstr for xxrqm_mstr.
 /* ss 20070728.1 - e */
 
@@ -359,12 +360,19 @@ repeat on error undo, retry:
          xxrqm_nbr = xxrqmnbr
 /* ss 20070227.1 */ xxrqm_domain = global_domain
          .
-
       if recid(xxrqm_mstr) = ? THEN DO:
          release xxrqm_mstr.
       END.
    end. /*if not available xxrqm_mstr*/
-
+   find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+         and usrw_key1 = "xxsoivm1.p.xxrqm_nbr" no-error.
+   if not available usrw_wkfl then do:
+     create usrw_wkfl.
+     assign usrw_domain = global_domain
+            usrw_key1 = "xxsoivm1.p.xxrqm_nbr".
+   end.
+   assign usrw_key2 = xxrqmnbr.
+   release usrw_wkfl.
    display
       xxrqmnbr
       xxrqmsite
@@ -1210,10 +1218,56 @@ repeat on error undo, retry:
                 and sod_nbr = tt1_order and sod_line = integer(tt1_line)
          no-error.
          if available sod_det and sod_price <> tt1_price then do:
-            assign sod_price = tt1_price
-            			 sod_list_pr = tt1_price
-            		   sod_qty_chg = tt1_qty_inv. 
+          assign sod_price = tt1_price
+                 sod_list_pr = tt1_price
+                 sod_qty_chg = tt1_qty_inv.
          end.
+            assign fname = "sod.txt" + string(time).
+            output to value(fname  + ".bpi").
+            put unformat tt1_order skip.
+            put unformat "-" skip.
+            put unformat "-" skip.
+            put unformat "-" skip.
+            put unformat "-" skip.    /*订货日期*/
+            put unformat "-" skip.    /*税*/
+            put unformat "-" skip.    /*推销员*/
+            put unformat tt1_line skip.
+            put unformat "-" skip. /*site*/
+            put unformat "-" skip.
+            put unformat "YES" skip.
+            put unformat tt1_price skip.
+            put unformat "-" skip.
+            put unformat "-" skip.
+            put unformat "-" skip. /*税*/
+            put unformat "." skip.
+            put unformat "." skip.
+            put unformat "-" skip.
+            put unformat "-" skip.
+            output close.
+            input from value(fname + ".bpi").
+            output to value(fname + ".bpo") keep-messages.
+            hide message no-pause.
+            batchrun  = yes.
+            {gprun.i ""soivmt.p""}
+            batchrun  = no.
+            hide message no-pause.
+            output close.
+            input close.
+
+            os-delete value(fname + ".bpi").
+            os-delete value(fname + ".bpo").
+
+/*    for each tx2d_det                                                      */
+/*/*         fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type   */ */
+/*/*                tx2d_line tx2d_tax_code)                              */ */
+/*         where tx2d_domain  = global_domain                                */
+/*         and   tx2d_ref     = sod_nbr                                      */
+/*         and  (tx2d_tr_type = '13')                                        */
+/*         AND   tx2d_line = sod_line:                                       */
+/*                                                                           */
+/*          DELETE tx2d_det .                                                */
+/*      end.                                                                 */
+
 /* ss 20120106.1 - E */
 /* ss 20070728 - b */
          run xxmj (input tt1_item ).

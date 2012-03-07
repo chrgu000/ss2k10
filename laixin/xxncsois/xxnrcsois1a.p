@@ -1771,7 +1771,8 @@ do on error undo, leave:
 
             /* TO ACCUMULATE TAX AMOUNTS OF SHIPPED SO ONLY ('13'/ '14' type) */
             for each tx2d_det
-               fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type)
+/*               fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type   */
+/*               				 tx2d_tax_code)                                       */
                where   tx2d_domain  = global_domain
                and    (tx2d_ref     = so_nbr
                and    (tx2d_tr_type = '13'
@@ -1985,7 +1986,8 @@ do on error undo, leave:
 
          /* ss - 111117.1 -b */
          for each tx2d_det
-              fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type tx2d_line)
+ /*             fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type    */
+ /*             				tx2d_line tx2d_tax_code)                              */
               where   tx2d_domain  = global_domain
               and    tx2d_ref     = sod_nbr
               and    (tx2d_tr_type = '13')
