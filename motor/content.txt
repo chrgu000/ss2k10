@@ -1,0 +1,7 @@
+³ÂÎ°:
+0769-87721921-253 
+Motor(China)-William Chan [WilliamC@motorelectric.com.cn]
+
+IP:61.142.17.139::2323
+Unix:weid/33AACC su/321654
+./client.Test:mfg/mfgpro
