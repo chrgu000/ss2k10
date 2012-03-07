@@ -1,12 +1,16 @@
-/*Gui */
-/*by Ken chen 111031.1*/
-/*by Ken chen 111220.1*/
-/*by Ken chen 111228.1*/
-/*by Ken chen 120113.1*/
-/*by Ken chen 120119.1*/
-/*120119.1 导入失败则给出失败的栏位*/
-/*120130.1 fixbug 已收货采购单项次修改失败*/
-{mfdtitle.i "120130.1"}
+/* xxpopoim.p - pod_due_date,pod_per_date,pod_need,pod_stat cim modify       */
+/*by Ken chen 111031.1                                                       */
+/*by Ken chen 111220.1                                                       */
+/*by Ken chen 111228.1                                                       */
+/*by Ken chen 120113.1                                                       */
+/*by Ken chen 120119.1                                                       */
+/*120119.1 导入失败则给出失败的栏位                                          */
+/*120130.1 fixbug 已收货采购单项次修改失败                                   */
+/*120203.1 fixbug 有寄售的采购单项次修改失败                                 */
+/*V8:ConvertMode=Report                                                      */
+/*V8:RunMode=Character,Windows                                               */
+/*-Revision end--------------------------------------------------------------*/
+{mfdtitle.i "120206.1"}
 
 DEFINE NEW SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE NEW SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
@@ -50,8 +54,7 @@ repeat on error undo, retry:
            readkey.
            apply lastkey.
        end.
-       {wbrp06.i &command = update &fields = "file_name"
-          &frm = "a"}
+       {wbrp06.i &command = update &fields = "file_name" &frm = "a"}
 
        IF SEARCH(FILE_name) = ? THEN DO:
            MESSAGE "文件不存在,请重新输入" VIEW-AS ALERT-BOX.
@@ -97,13 +100,13 @@ repeat on error undo, retry:
 
      IF v_flag = "2" THEN DO:
          FOR EACH xxpod_det WHERE xxpod_error <> "" NO-LOCK:
-             DISP xxpod_det WITH WIDTH 200 STREAM-IO.
+             DISP xxpod_det WITH WIDTH 200.
          END.
      END.
 
      IF v_flag = "3" THEN DO:
          FOR EACH xxpod_det  NO-LOCK:
-             DISP xxpod_det WITH WIDTH 200 STREAM-IO.
+             DISP xxpod_det WITH WIDTH 200.
          END.
      END.
 

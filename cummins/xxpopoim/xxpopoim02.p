@@ -1,18 +1,26 @@
-/* SS - 111020.1 BY KEN */
-/******************************************************************************/
-/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM */
-/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO */
-/*by Ken chen 111220.1*/
-/*by Ken chen 120113.1*/
-/*by ZY 120119.1*/
+/* xxpopoim02.p - pod_due_date,pod_per_date,pod_need,pod_stat cim modify     */
+/* SS - 111020.1 BY KEN                                                      */
+/*****************************************************************************/
+/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM                                    */
+/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO                             */
+/*by Ken chen 111220.1                                                       */
+/*by Ken chen 120113.1                                                       */
+/*V8:ConvertMode=Maintenance                                                 */
+/*V8:RunMode=Character,Windows                                               */
+/*-Revision end--------------------------------------------------------------*/
 
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
+{pxpgmmgr.i}
 
 DEFINE SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
 DEFINE SHARED VARIABLE fn_i AS CHARACTER.
 DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
+define variable poc_pt_req1 like mfc_logical.
+
+define variable vprice-list-failed like mfc_logical initial false no-undo.
+define variable vprice-list-msg as integer no-undo.
 
 DEFINE SHARED TEMP-TABLE xxpod_det
    FIELD xxpod_nbr LIKE po_nbr
@@ -24,14 +32,14 @@ DEFINE SHARED TEMP-TABLE xxpod_det
    FIELD xxpod_error AS CHARACTER FORMAT "x(48)"
    INDEX index1 xxpod_nbr xxpod_line.
 
-define variable v-use-log-acctg   as logical    no-undo.
+define variable v-use-log-acctg as logical no-undo.
   /*cimload */
 {gprun.i ""lactrl.p"" "(output v-use-log-acctg)"}
 
   FOR EACH xxpod_det:
-      FIND FIRST po_mstr NO-LOCK WHERE po_domain = GLOBAL_domain AND
+      FIND FIRST po_mstr NO-LOCK WHERE po_domain = global_domain AND
                  po_nbr = xxpod_nbr NO-ERROR.
-      FIND FIRST pod_det NO-LOCK  WHERE pod_domain = GLOBAL_domain AND
+      FIND FIRST pod_det NO-LOCK  WHERE pod_domain = global_domain AND
                  pod_nbr = xxpod_nbr AND pod_line = xxpod_line NO-ERROR.
       if (pod_status = "c" or pod_status = "x") then do:
          assign xxpod_error = "ERROR:PO Line is closed or canceled".
@@ -48,14 +56,19 @@ define variable v-use-log-acctg   as logical    no-undo.
       PUT UNFORMATTED "-" SKIP. /*订货日期*/
 
       /*ss - 120113.1 b*/
-      FIND FIRST gl_ctrl WHERE gl_domain = GLOBAL_domain NO-LOCK NO-ERROR.
+      FIND FIRST gl_ctrl WHERE gl_domain = global_domain NO-LOCK NO-ERROR.
       IF AVAIL gl_ctrl THEN DO:
           IF po_curr <> gl_base_curr THEN DO:
              PUT UNFORMATTED "-" SKIP.
           END.
       END.
-      /*ss - 120113.1 e*/
-
+      /* check po_pr_list2 */
+      {xxadprclst.i
+         &price-list     = "po_pr_list2"
+         &curr           = "po_curr"
+         &price-list-req = "no"
+         &disp-msg       = "yes"
+         &warning        = "no"}
       PUT UNFORMATTED "-" SKIP. /*税*/
       if v-use-log-acctg then do:
            PUT UNFORMATTED "-" SKIP. /*贸易条款*/
@@ -66,18 +79,15 @@ define variable v-use-log-acctg   as logical    no-undo.
              PUT UNFORMATTED "-" SKIP.
          END.
       END.
-/*120119.1 B*/
       IF po_cmtindx <> 0 then DO:      /*说明 = YES*/
          PUT UNFORMATTED "." SKIP.
-      end.
-/*120119.1 E*/
+      END.
       PUT UNFORMATTED xxpod_line SKIP.
-/*120130.1*/ if not pod_sched and (pod_type = "B" or pod_qty_rcvd = 0) then do:
-            		PUT UNFORMATTED "-" SKIP. /*地点*/
-/*120130.1*/ END.
+      IF NOT pod_sched AND (pod_type = "B" or pod_qty_rcvd = 0) THEN DO:
+         PUT UNFORMATTED "-" SKIP. /*地点*/
+      END.
       PUT UNFORMATTED "-" SKIP. /*已订购量*/
       PUT UNFORMATTED "-" SKIP. /*单位成本 折扣*/
-
       PUT UNFORMATTED "- - " .
       if pod_qty_rcvd = 0 and
          can-find(pt_mstr where pt_mstr.pt_domain = global_domain and
@@ -114,15 +124,14 @@ define variable v-use-log-acctg   as logical    no-undo.
          PUT UNFORMATTED "-" SKIP.
       END.
 
-      FIND FIRST cns_ctrl WHERE cns_domain = global_domain NO-LOCK NO-ERROR.
-      IF AVAIL cns_ctrl AND cns_active = YES THEN DO:
-          PUT UNFORMATTED "-" SKIP.
+      IF pod_consignment = YES THEN DO:  /*寄存*/
+         PUT UNFORMATTED "-" SKIP.
+         PUT UNFORMATTED "-" SKIP.
       END.
-/*120119.1 B*/
-      if pod_cmtindx <> 0 then do: /*说明 = YES*/
+
+      if pod_cmtindx <> 0 then do:        /*说明 = YES*/
          PUT UNFORMATTED "." skip.
       end.
-/*120119.1 E*/
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "-" SKIP.
@@ -138,7 +147,7 @@ define variable v-use-log-acctg   as logical    no-undo.
       batchrun = NO.
 
 /*120119.1 B*/
-      FIND FIRST pod_det no-lock WHERE pod_domain = GLOBAL_domain
+      FIND FIRST pod_det no-lock WHERE pod_domain = global_domain
              AND pod_nbr = xxpod_nbr AND pod_line = xxpod_line no-error.
       IF AVAIL pod_det THEN DO:
           assign xxpod_error = "".
@@ -172,4 +181,3 @@ define variable v-use-log-acctg   as logical    no-undo.
       END.
 /*120119.1 E*/
   END.
-

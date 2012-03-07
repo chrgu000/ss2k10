@@ -1,25 +1,23 @@
-/* SS - 111020.1 BY KEN */
-/******************************************************************************/
-/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM */
-/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO */
+/* xxpopoim01.p - pod_due_date,pod_per_date,pod_need,pod_stat cim modify     */
+/* SS - 111020.1 BY KEN                                                      */
+/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM                                    */
+/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO                             */
+/*V8:ConvertMode=Maintenance                                                 */
+/*V8:RunMode=Character,Windows                                               */
+/*-Revision end--------------------------------------------------------------*/
 
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
-
-
 
 DEFINE SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
 DEFINE SHARED VARIABLE fn_i AS CHARACTER.
 DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
 DEFINE SHARED VARIABLE v_flag AS CHARACTER.
-
 DEFINE VARIABLE xpath AS CHARACTER.
 DEFINE VARIABLE v_i AS INTEGER.
 DEFINE VARIABLE v_j AS INTEGER.
-
 DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
-
 
 DEFINE SHARED TEMP-TABLE xxpod_det
    FIELD xxpod_nbr LIKE po_nbr
@@ -31,9 +29,8 @@ DEFINE SHARED TEMP-TABLE xxpod_det
    FIELD xxpod_error AS CHARACTER FORMAT "x(48)"
    INDEX index1 xxpod_nbr xxpod_line.
 
-
 DEFINE TEMP-TABLE tt1
-    FIELD tt1_field1 AS CHARACTER.
+       FIELD tt1_field1 AS CHARACTER.
 
    /*¼ì²éÊý¾Ý&cimload*/
    FOR EACH xxpod_det:
@@ -88,25 +85,25 @@ DEFINE TEMP-TABLE tt1
 
           ASSIGN xxpod_line = INTEGER(trim(ENTRY(2,tt1_field1))) NO-ERROR.
           IF ERROR-STATUS:ERROR THEN DO:
-             ASSIGN xxpod_error = "PO Line Format is error".
+             ASSIGN xxpod_error = "PO Line Format error".
           END.
 
           IF ENTRY(3,tt1_field1) <> "" THEN
               ASSIGN xxpod_due_date = str2Date(ENTRY(3,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Due Date Format is error".
+                 ASSIGN xxpod_error = "PO Line Due Date Format error".
               END.
 
           IF ENTRY(4,tt1_field1) <> "" THEN
               ASSIGN xxpod_per_date = str2Date(ENTRY(4,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Performance Date Format is error".
+                 ASSIGN xxpod_error = "PO Line Performance Date Format error".
               END.
 
           IF ENTRY(5,tt1_field1) <> "" THEN
               ASSIGN xxpod_need = str2Date(ENTRY(5,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Need Date Format is error".
+                 ASSIGN xxpod_error = "PO Line Need Date Format error".
               END.
 
           IF xxpod_status <> "C" AND xxpod_status <> "" THEN DO:
