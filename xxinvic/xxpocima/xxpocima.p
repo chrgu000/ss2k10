@@ -11,10 +11,10 @@
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "120209.1"}
-   
+{mfdtitle.i "120308.2"}
+
 /*定义变量*/
-Define variable Eoutputstatment AS CHARACTER FORMAT "x(200)". 
+Define variable Eoutputstatment AS CHARACTER FORMAT "x(200)".
 Define variable Eonetime        AS CHARACTER FORMAT "x(1)" init "N".
 Define variable outputstatment AS CHARACTER FORMAT "x(200)".
 Define variable woutputstatment AS CHARACTER .
@@ -65,7 +65,7 @@ define var v_qty_rct like tr_qty_loc .
 define variable vtrrecid as recid .
 
 /* 取得xxinv_mstr 和 xxship_det中的原始资料 */
-DEF TEMP-TABLE pott 
+DEF TEMP-TABLE pott
     FIELD pott_shipno LIKE xxship_nbr
     FIELD pott_site LIKE xxinv_site
     FIELD pott_vend LIKE xxinv_vend
@@ -117,7 +117,7 @@ DEF TEMP-TABLE  tt2
     field   tt2_nbr like po_nbr.
 
 /* 存放错误信息的资料 */
-DEF TEMP-TABLE tte 
+DEF TEMP-TABLE tte
     FIELD tte_type1 AS CHAR
     FIELD tte_type AS CHAR
     FIELD tte_vend LIKE po_vend
@@ -125,35 +125,35 @@ DEF TEMP-TABLE tte
     FIELD tte_desc AS CHAR FORMAT "x(120)".
 
 define temp-table shippo_ref
-		fields spr_ship_nbr  like xxship_nbr
-		fields spr_ship_vend like xxship_vend
-		fields spr_ship_line like xxship_line
-		fields spr_pod_nbr   like pod_nbr
-		fields spr_pod_line  like pod_line
-		fields spr_qty       like pod_qty_ord.
+    fields spr_ship_nbr  like xxship_nbr
+    fields spr_ship_vend like xxship_vend
+    fields spr_ship_line like xxship_line
+    fields spr_pod_nbr   like pod_nbr
+    fields spr_pod_line  like pod_line
+    fields spr_qty       like pod_qty_ord.
 
 /*定义过程*/
-{xxpocimdatain_out.i}  
+{xxpocimdatain_out.i}
 
 FORM
     SKIP(1)
-    site      colon 20    label "地点" 
-    site1     colon 50    label   {t001.i}  
-    
-    vend      colon 20    label "供应商" 
-    vend1     colon 50    label   {t001.i}  
+    site      colon 20    label "地点"
+    site1     colon 50    label   {t001.i}
 
-    shipno    colon 20    label "发票号" 
-    shipno1   colon 50    label   {t001.i}  
+    vend      colon 20    label "供应商"
+    vend1     colon 50    label   {t001.i}
 
-    shipline  colon 20    label "项次" 
-    shipline1 colon 50    label   {t001.i} 
+    shipno    colon 20    label "发票号"
+    shipno1   colon 50    label   {t001.i}
+
+    shipline  colon 20    label "项次"
+    shipline1 colon 50    label   {t001.i}
 
     v_rctdate colon 20    label "到货日期"
     rcvddate  colon 20    label "收货生效日期"
     fn_me     colon 20    label "导入出错的信息文件"
 
-    skip(1)                      
+    skip(1)
     v_flagpo  colon 20    label "是否创建新的PO"
     v_flagyn  colon 20    label "是否进行批量收货"
     SKIP(1)
@@ -170,7 +170,7 @@ repeat :
     IF vend1 = hi_char THEN vend1 = "".
     IF shipno1 = hi_char THEN shipno1 = "".
 
-    update 
+    update
       site
       site1
       vend
@@ -185,18 +185,18 @@ repeat :
       v_flagpo
       v_flagyn
       with frame a.
-  
+
     IF site1 = "" THEN site1 = hi_char.
     IF vend1 = "" THEN vend1 = hi_char.
     IF shipno1 = "" THEN shipno1 = hi_char.
 
 if v_rctdate = ? then do:
-    message "错误:到货日期不可为空,请重新输入.". 
+    message "错误:到货日期不可为空,请重新输入.".
     next-prompt v_rctdate with frame a.
     undo,retry.
 end.
 if rcvddate = ? then do:
-    message "错误:收货生效日期不可为空,请重新输入.". 
+    message "错误:收货生效日期不可为空,请重新输入.".
     next-prompt rcvddate with frame a.
     undo,retry.
 end.
@@ -214,9 +214,9 @@ end.
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-               
+
     {mfphead.i}
-    
+
     /* 清空临时表 */
     FOR EACH pott:
       DELETE pott.
@@ -230,7 +230,7 @@ end.
 
 
     /* 检测数据,并执行cimload */
-    {xxpocimcheck.i}  
+    {xxpocimcheck.i}
    /* find first tte no-lock no-error.          */
    /* if avail tte then do:                     */
    /*     output to value (fn_me) .             */

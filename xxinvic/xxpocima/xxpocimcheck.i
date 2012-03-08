@@ -50,11 +50,11 @@
 
            /* 生成批号 */
             if v_rctdate <> ? then do:
-                datestr = substring(string(year(v_rctdate),"9999"),3,2) 
-                			  + string(month(v_rctdate),"99") 
-                			  + string(day(v_rctdate),"99").
+                datestr = substring(string(year(v_rctdate),"9999"),3,2)
+                        + string(month(v_rctdate),"99")
+                        + string(day(v_rctdate),"99").
             end.
-            assign pott_lot = datestr + substring(xxinv_con,6). /*取合同号vt32/后面的字符*/  /* SS - 110307.1 */ .
+            assign pott_lot = datestr + "/" + substring(xxinv_con,6). /*取合同号vt32/后面的字符*/  /* SS - 110307.1 */ .
 
            /* 取得生成PO的单价 */
            /* showa 要求:不用发票上的价格,直接用1.10.2.1价格表的价格 */
@@ -118,7 +118,7 @@
                 AND pott_rcvddate <= exr_end_date NO-LOCK NO-ERROR.
             IF NOT AVAIL exr_rate THEN DO:
                 FIND FIRST tte WHERE tte_type1 = "兑换率" AND tte_type = "错误"
-                       AND tte_vend = pott_vend 
+                       AND tte_vend = pott_vend
                        AND tte_part = vd_curr NO-LOCK NO-ERROR.
                 IF NOT AVAIL tte THEN DO:
                     CREATE tte.
@@ -228,9 +228,9 @@ for each xxinv_mstr
                    + string(month(v_rctdate),"99")
                    + string(day(v_rctdate),"99").
        end.
-       tmp_lot = datestr
+       tmp_lot = datestr + "/"
                + substring(xxinv_con,6) /*取合同号vt32/后面的字符*/
-               + string(xxship_case2,"99")    /*托号*/
+              /* + string(xxship_case2,"99")    托号*/
                .  /* SS - 110307.1 */
        assign xxship__chr01 = tmp_lot.
        tmp_order_qty = xxship_qty - xxship_rcvd_qty.
@@ -238,8 +238,8 @@ for each xxinv_mstr
                   tt1a_qty > 0 by tt1a_nbr by tt1a_line:
               create usrw_wkfl.
               assign usrw_key1 = ukkey1
-              			 usrw_key2 = string(recid(xxship_det)) + "-"
-              			 					 + string(recid(tt1a))
+                     usrw_key2 = string(recid(xxship_det)) + "-"
+                               + string(recid(tt1a))
                      usrw_key3 = xxship_vend
                      usrw_key4 = xxship_nbr
                      usrw_intfld[1] = xxship_line
@@ -259,11 +259,11 @@ for each xxinv_mstr
  end.
 
  for each usrw_wkfl where usrw_key1 = ukkey1 with frame fshippo_ref
- 		      by usrw_key4 by usrw_intfld[1] by usrw_charfld[1] by usrw_intfld[2]:
+          by usrw_key4 by usrw_intfld[1] by usrw_charfld[1] by usrw_intfld[2]:
          /* SET EXTERNAL LABELS */
          setFrameLabels(frame fshippo_ref:handle).
  display usrw_key3       column-label "SUPPLIER"
-         usrw_key4       column-label "INVOICE_NUMBER"
+         usrw_key4       column-label "INVOICE_NUMBER" format "x(24)"
          usrw_intfld[1]  column-label "LINE_NUMBER"
          usrw_charfld[1] column-label "PO_NUMBER"
          usrw_intfld[2]  column-label "LINE_NUMBER"
@@ -281,10 +281,10 @@ for each xxinv_mstr
                     END.
                     IF AVAIL vd_mstr THEN curr = vd_curr.
                     usection = "pomt" + TRIM ( string(year(rcvddate))
-                    								  + string(MONTH(rcvddate))
-                    								  + string(DAY(rcvddate)))
-                    								  + trim(STRING(TIME))
-                    								  + trim(string(RANDOM(1,100))).
+                                      + string(MONTH(rcvddate))
+                                      + string(DAY(rcvddate)))
+                                      + trim(STRING(TIME))
+                                      + trim(string(RANDOM(1,100))).
                     output to value(trim(usection) + ".bpi") .
                     PUT UNFORMATTED tt1a_nbr skip.
                     PUT UNFORMATTED tt1a_vend skip.
@@ -310,7 +310,7 @@ for each xxinv_mstr
                 put UNFORMATTED "-" skip.
                 put UNFORMATTED "-" skip.
                 FIND FIRST ad_mstr WHERE ad_addr = tt1a_vend AND
-                					 ad_taxable = YES NO-LOCK NO-ERROR.
+                           ad_taxable = YES NO-LOCK NO-ERROR.
                 IF AVAIL ad_mstr THEN PUT UNFORMATTED "-" SKIP.
                 IF LAST-OF(tt1a_nbr) THEN DO:
                     put "." skip.
@@ -333,8 +333,8 @@ for each xxinv_mstr
                     {xserrlg5.i}
 
                     if can-find(first pod_det where pod_nbr = tt1a_nbr
-                    							and pod_line = tt1a_line
-                    							and pod_part = tt1a_part) then do:
+                                  and pod_line = tt1a_line
+                                  and pod_part = tt1a_part) then do:
                         os-delete value(Trim(usection) + ".bpi") no-error.
                         os-delete value(Trim(usection) + ".bpo") no-error.
                     end.
