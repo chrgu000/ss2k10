@@ -10,15 +10,16 @@
 
 define variable iCnt as integer.
 define variable yn1  like mfc_logical initial no.
-
+define variable mfgver as character.
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
-
+{gprun.i ""gpgetver.p"" "(input '1', output mfgver)"}
+assign mfgver = entry(2,mfgver," ").
 repeat with frame frame-a:
    prompt-for cdref editing:
-      {mfnp05.i usrw_wkfl usrw_index1 " usrw_wkfl.usrw_domain = ""xxmemt1.p""
-      and usrw_key1 = global_userid " usrw_key2 "input cdref"}
+     {mfnp05.i usrw_wkfl usrw_index1 " usrw_wkfl.usrw_domain = ""xxmemt1.p""
+           and usrw_key1 = global_userid " usrw_key2 "input cdref"}
       if recno <> ? then do:
          assign cdref = usrw_key2
                 cLoadFile = usrw_logfld[1] no-error.
@@ -149,6 +150,7 @@ repeat with frame frame-a:
                         put unformat sortkey[iCnt] ' '.
                      put unformat '"' exec[iCnt] '"' skip.
                      put "." skip.
+                     if mfgver = "eB2.1" then put "." skip.
                   end.
                end.
            output close.
