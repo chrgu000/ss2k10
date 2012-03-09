@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "22YR"}
+{mfdtitle.i "23Y9"}
 {xxmemt1.i}
 
 define variable iCnt as integer.
@@ -18,8 +18,8 @@ view frame frame-a.
 assign mfgver = entry(2,mfgver," ").
 repeat with frame frame-a:
    prompt-for cdref editing:
-     {mfnp05.i usrw_wkfl usrw_index1 " usrw_wkfl.usrw_domain = ""xxmemt1.p""
-           and usrw_key1 = global_userid " usrw_key2 "input cdref"}
+     {mfnp05.i usrw_wkfl usrw_index1 " {xxmemdom.i} {xxand.i}
+               usrw_key1 = global_userid " usrw_key2 "input cdref"}
       if recno <> ? then do:
          assign cdref = usrw_key2
                 cLoadFile = usrw_logfld[1] no-error.
@@ -93,9 +93,9 @@ repeat with frame frame-a:
           del-yn = yes.
          {mfmsg01.i 11 1 del-yn}
          if not del-yn then undo, retry.
-         find first usrw_wkfl exclusive-lock where usrw_domain = "xxmemt1.p"
-                and usrw_key1 = global_userid
-                and usrw_key2 = cdref no-error.
+         find first usrw_wkfl exclusive-lock where {xxmemdom.i} {xxand.i}
+                usrw_key1 = global_userid and
+                usrw_key2 = cdref no-error.
          if available usrw_wkfl then do:
             delete usrw_wkfl.
          end.
@@ -104,11 +104,11 @@ repeat with frame frame-a:
       end.
     end.
     if yn then do:
-        for first usrw_wkfl exclusive-lock where usrw_domain = "xxmemt1.p" and
+        for first usrw_wkfl exclusive-lock where {xxmemdom.i} {xxand.i}
                   usrw_key1 = global_userid and usrw_key2 = cdref: end.
         if not available usrw_wkfl then do:
            create usrw_wkfl.
-           assign usrw_domain = "xxmemt1.p"
+           assign {xxmemdom.i}
                   usrw_key1 = global_userid
                   usrw_key2 = cdref.
         end.
@@ -150,7 +150,7 @@ repeat with frame frame-a:
                         put unformat sortkey[iCnt] ' '.
                      put unformat '"' exec[iCnt] '"' skip.
                      put "." skip.
-                     if mfgver = "eB2.1" then put "." skip.
+                     if mfgver = "eB2" then put "." skip.
                   end.
                end.
            output close.
