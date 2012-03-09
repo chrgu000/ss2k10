@@ -37,6 +37,14 @@ repeat with frame frame-a:
             end.
             if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
             then do:
+                 if sortkey[iCnt] <> "" and
+                    can-find(mnd_det use-index mnd_name no-lock where
+                             mnd_name = sortkey[iCnt] and
+                             mnd_exec <> exec[iCnt]
+                             ) then do:
+                    color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                               sortkey[iCnt] dsc[iCnt].
+                 end.
                  find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt]
                           and mnd_select = sel[iCnt] no-error.
                   if available mnd_det then do:
@@ -165,6 +173,7 @@ repeat with frame frame-a:
            output close.
            input close.
 
+           display cdref mndnbr exec sortkey dsc cLoadFile.
            do iCnt = 1 to 10:
               if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
                  then do:
@@ -187,8 +196,15 @@ repeat with frame frame-a:
                               sortkey[iCnt] dsc[iCnt].
                  end.
               end.
-           end.
-           display cdref mndnbr exec sortkey dsc cLoadFile.
+              if sortkey[iCnt] <> "" and
+                    can-find(mnd_det use-index mnd_name no-lock where
+                             mnd_name = sortkey[iCnt] and
+                             mnd_exec <> exec[iCnt]
+                             ) then do:
+                    color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
+                                          sortkey[iCnt] dsc[iCnt].
+              end.
+           end.  /* do iCnt = 1 to 10: */
            if yn1 then do:
               os-delete "xxmemt1.22yp.bpi" no-error.
               os-delete "xxmemt1.22yp.bpo" no-error.
