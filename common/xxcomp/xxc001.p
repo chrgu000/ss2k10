@@ -197,13 +197,13 @@ end.
    if kbc_display_pause > 0 and err = 0 then pause kbc_display_pause.
    assign yn = no.
    if err > 0 or kbc_display_pause >= 10 then do:
-          find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+          find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
                      usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
           if available usrw_wkfl then do:
              assign yn = usrw_logfld[1].
           end.
       {pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
-       find first usrw_wkfl exclusive-lock where {xxcdom.i} {xxand.i}
+       find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
                   usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           assign usrw_logfld[1] = yn.
@@ -219,13 +219,13 @@ end.
    end.
    else do:
       if incmf then do:
-          find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+          find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
                      usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
           if available usrw_wkfl then do:
              assign yn = usrw_logfld[2].
           end.
          {pxmsg.i &MSGNUM=36 &ERRORLEVEL=1 &CONFIRM=yn}
-       find first usrw_wkfl exclusive-lock where {xxcdom.i} {xxand.i}
+       find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           assign usrw_logfld[2] = yn.

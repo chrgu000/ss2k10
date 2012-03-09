@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "23Y!"}
+{mfdtitle.i "23YA"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -94,7 +94,7 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
       assign destDir.
    end.
    else do:
-       find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+       find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
                   usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           if opsys = "unix" then do:
@@ -118,7 +118,7 @@ ON "CTRL-D" OF destDir IN FRAME z DO:
    assign yn = no.
    {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=yn}
    if yn then do:
-       find first usrw_wkfl where {xxcdom.i} {xxand.i}
+       find first usrw_wkfl where {xxusrwdom.i} {xxand.i}
                   usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           assign usrw_charfld[1] = ""
@@ -204,12 +204,12 @@ do on error undo, retry:
    end.
    assign xrcDir = lower(trim(xrcDir)).
    if xrcdir <> "" and destdir <> "" then do:
-   find first usrw_wkfl where {xxcdom.i} {xxand.i}
+   find first usrw_wkfl where {xxusrwdom.i} {xxand.i}
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
         if not available usrw_wkfl then do:
            create usrw_wkfl.
            assign
-              {xxcdom.i}
+              {xxusrwdom.i}
               usrw_key1 = qadkey1
               usrw_key2 = global_userid.
         end.
@@ -262,7 +262,7 @@ end. /*mainLoop*/
 
 PROCEDURE iniForm:
 /*read form variabls from usrw_WKFL*/
-find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
            usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
     assign xrcdir  = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""

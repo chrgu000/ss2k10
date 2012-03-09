@@ -18,7 +18,7 @@ view frame frame-a.
 assign mfgver = entry(2,mfgver," ").
 repeat with frame frame-a:
    prompt-for cdref editing:
-     {mfnp05.i usrw_wkfl usrw_index1 " {xxmemdom.i} {xxand.i}
+     {mfnp05.i usrw_wkfl usrw_index1 " {xxusrwdom0.i} {xxand.i}
                usrw_key1 = global_userid " usrw_key2 "input cdref"}
       if recno <> ? then do:
          assign cdref = usrw_key2
@@ -93,7 +93,7 @@ repeat with frame frame-a:
           del-yn = yes.
          {mfmsg01.i 11 1 del-yn}
          if not del-yn then undo, retry.
-         find first usrw_wkfl exclusive-lock where {xxmemdom.i} {xxand.i}
+         find first usrw_wkfl exclusive-lock where {xxusrwdom0.i} {xxand.i}
                 usrw_key1 = global_userid and
                 usrw_key2 = cdref no-error.
          if available usrw_wkfl then do:
@@ -104,11 +104,11 @@ repeat with frame frame-a:
       end.
     end.
     if yn then do:
-        for first usrw_wkfl exclusive-lock where {xxmemdom.i} {xxand.i}
+        for first usrw_wkfl exclusive-lock where {xxusrwdom0.i} {xxand.i}
                   usrw_key1 = global_userid and usrw_key2 = cdref: end.
         if not available usrw_wkfl then do:
            create usrw_wkfl.
-           assign {xxmemdom.i}
+           assign {xxusrwdom0.i}
                   usrw_key1 = global_userid
                   usrw_key2 = cdref.
         end.
