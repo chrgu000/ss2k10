@@ -23,8 +23,8 @@ form
   qad_key5 colon 12 format "x(62)"
   qad_key6 colon 12 format "x(62)" skip(2)
   qad_user1 colon 12 format "x(62)"
-  qad_user2 colon 12 format "x(62)" 
-  qad__qadc01 colon 12 format "x(62)" 
+  qad_user2 colon 12 format "x(62)"
+  qad__qadc01 colon 12 format "x(62)"
 with frame k side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame k:handle).
@@ -78,10 +78,10 @@ setFrameLabels(frame c1:handle).
 form
   skip(.1)
   "sn" "qad_decfld" colon 4 "qad_intfld" colon 20 "qad_logfld" colon 40 "qad_datefld" colon 54 "sn" colon 70 skip
-  " 1" qad_decfld[1] colon 4 no-label qad_intfld[1] colon 20 no-label qad_logfld[1] colon 40 no-label qad_datefld[1] colon 54 no-label " 1" colon 70 skip 
-  " 2" qad_decfld[2] colon 4 no-label qad_intfld[2] colon 20 no-label qad_logfld[2] colon 40 no-label qad_datefld[2] colon 54 no-label " 2" colon 70 skip 
-  " 3" qad_decfld[3] colon 4 no-label qad_intfld[3] colon 20 no-label qad_logfld[3] colon 40 no-label qad_datefld[3] colon 54 no-label " 3" colon 70 skip   
-  " 4" qad_decfld[4] colon 4 no-label qad_intfld[4] colon 20 no-label qad_logfld[4] colon 40 no-label qad_datefld[4] colon 54 no-label " 4" colon 70 skip 
+  " 1" qad_decfld[1] colon 4 no-label qad_intfld[1] colon 20 no-label qad_logfld[1] colon 40 no-label qad_datefld[1] colon 54 no-label " 1" colon 70 skip
+  " 2" qad_decfld[2] colon 4 no-label qad_intfld[2] colon 20 no-label qad_logfld[2] colon 40 no-label qad_datefld[2] colon 54 no-label " 2" colon 70 skip
+  " 3" qad_decfld[3] colon 4 no-label qad_intfld[3] colon 20 no-label qad_logfld[3] colon 40 no-label qad_datefld[3] colon 54 no-label " 3" colon 70 skip
+  " 4" qad_decfld[4] colon 4 no-label qad_intfld[4] colon 20 no-label qad_logfld[4] colon 40 no-label qad_datefld[4] colon 54 no-label " 4" colon 70 skip
   " 5" qad_decfld[5] colon 4 no-label qad_intfld[5] colon 20 no-label qad_logfld[5] colon 40 no-label    " 5" colon 70 skip
   " 6" qad_decfld[6] colon 4 no-label qad_intfld[6] colon 20 no-label qad_logfld[6] colon 40 no-label    " 6" colon 70  skip
   " 7" qad_decfld[7] colon 4 no-label qad_intfld[7] colon 20 no-label qad_logfld[7] colon 40 no-label    " 7" colon 70  skip
@@ -109,24 +109,22 @@ repeat with frame a:
    prompt-for qad_key1 qad_key2 editing:
 
       /* FIND NEXT/PREVIOUS RECORD */
-/*eb*   {mfnp.i qad_wkfl qad_key1  " qad_wkfl.qad_domain = global_domain and */
-/*eb*   qad_key1 "  qad_key2 qad_key2 qad_index1}                            */
-/*eb*/  {mfnp.i qad_wkfl qad_key1 qad_key1 qad_key2 qad_key2 qad_index1}  
+   {mfnp.i qad_wkfl qad_key1  " {xxqaddom.i} {xxand.i} qad_key1 "
+           qad_key2 qad_key2 qad_index1}
       if recno <> ? then do:
          display qad_key1 qad_key2.
-         display qad_key3 qad_key4 qad_key5 qad_key6 
-         				 qad_user1 qad_user2 qad__qadc01 with frame k.
+         display qad_key3 qad_key4 qad_key5 qad_key6
+                 qad_user1 qad_user2 qad__qadc01 with frame k.
       end.
    end.
 
    /* ADD/MOD/DELETE  */
-       find qad_wkfl where
-/*eb*   qad_wkfl.qad_domain = global_domain and                              */
+       find qad_wkfl where {xxqaddom.i} {xxand.i}
         qad_key1 = input qad_key1 and qad_key2 = input qad_key2 no-error.
    if not available qad_wkfl then do:
       {mfmsg.i 1 1}
-      create qad_wkfl. 
-/*eb* assign qad_wkfl.qad_domain = global_domain.                            */
+      create qad_wkfl.
+      {xxqaddom.i}.
       assign qad_key1 qad_key2.
    end.
    recno = recid(qad_wkfl).
@@ -136,14 +134,14 @@ repeat with frame a:
    ststatus = stline[2].
    status input ststatus.
    del-yn = no.
-   
+
 clearall:
 repeat:
    do on error undo, retry:
    repeat with frame k:
-      update qad_key3 qad_key4 qad_key5 qad_key6 
-      			 qad_user1 qad_user2 qad__qadc01
-				     go-on("F5" "CTRL-D" ).
+      update qad_key3 qad_key4 qad_key5 qad_key6
+             qad_user1 qad_user2 qad__qadc01
+             go-on("F5" "CTRL-D" ).
 
       /* DELETE */
       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
@@ -228,19 +226,19 @@ repeat:
              qad_decfld[7]  qad_decfld[8]  qad_decfld[9]
              qad_decfld[10] qad_decfld[11] qad_decfld[12]
              qad_decfld[13] qad_decfld[14] qad_decfld[15]
-             
-             qad_intfld[1]  qad_intfld[2]  qad_intfld[3]   
-             qad_intfld[4]  qad_intfld[5]  qad_intfld[6]   
-             qad_intfld[7]  qad_intfld[8]  qad_intfld[9]   
-             qad_intfld[10] qad_intfld[11] qad_intfld[12]  
-             qad_intfld[13] qad_intfld[14] qad_intfld[15]  
 
-             qad_logfld[1]  qad_logfld[2]  qad_logfld[3]   
-             qad_logfld[4]  qad_logfld[5]  qad_logfld[6]   
-             qad_logfld[7]  qad_logfld[8]  qad_logfld[9]   
-             qad_logfld[10] qad_logfld[11] qad_logfld[12]  
-             qad_logfld[13] qad_logfld[14] qad_logfld[15]    
-             
+             qad_intfld[1]  qad_intfld[2]  qad_intfld[3]
+             qad_intfld[4]  qad_intfld[5]  qad_intfld[6]
+             qad_intfld[7]  qad_intfld[8]  qad_intfld[9]
+             qad_intfld[10] qad_intfld[11] qad_intfld[12]
+             qad_intfld[13] qad_intfld[14] qad_intfld[15]
+
+             qad_logfld[1]  qad_logfld[2]  qad_logfld[3]
+             qad_logfld[4]  qad_logfld[5]  qad_logfld[6]
+             qad_logfld[7]  qad_logfld[8]  qad_logfld[9]
+             qad_logfld[10] qad_logfld[11] qad_logfld[12]
+             qad_logfld[13] qad_logfld[14] qad_logfld[15]
+
              qad_datefld[1] qad_datefld[2] qad_datefld[3] qad_datefld[4]
        go-on("F5" "CTRL-D" ).
 
@@ -261,7 +259,7 @@ repeat:
         leave.
       end.
      end.
-   end. 
+   end.
    leave clearall.
 end. /*clearall repeat*/
 end.
