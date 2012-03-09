@@ -134,22 +134,22 @@ if not avail tempcase then do: /* not avail tempcase */
         end.
     end.  /*过道库位*/
 
-     if v_loc_to = "" then do: 
+     if v_loc_to = "" then do:
        if substring(v_part,1,1) = "P" then do:
        		assign v_loc_to = "PT".
        end.
-       else do:                                         
-            if v_part_type = "PS" then do:                                   
-               assign v_loc_to = "P-4RPS".                                   
-            end.                                                             
-            else if v_part_type = "SA" then do:                              
-               assign v_loc_to = "P-4RSA".                                   
-             end.                                                            
-            else do:                                                         
-               assign v_loc_to = v_loc_error .                               
-            end. 
-       end.                                                            
-     end.                                                               
+       else do:
+            if v_part_type = "PS" then do:
+               assign v_loc_to = "P-4RPS".
+            end.
+            else if v_part_type = "SA" then do:
+               assign v_loc_to = "P-4RSA".
+             end.
+            else do:
+               assign v_loc_to = v_loc_error .
+            end.
+       end.
+     end.
 
     /*查找v_loc_to--------------------------------------end*/
 

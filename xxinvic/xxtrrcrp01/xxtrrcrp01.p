@@ -54,9 +54,9 @@ form
    loc1            colon 50 label {t001.i}
    vend            colon 20
    vend1           colon 50 label {t001.i}
-   article         colon 40
-   ponbr           colon 40
-   buyer           colon 40
+   article         colon 36
+   ponbr           colon 36
+   buyer           colon 36
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -145,9 +145,10 @@ repeat:
 
       {mfrpchk.i}
 
-      display  pt_vend ad_name pt_part pt_desc1 tr_um tr_loc pt_draw
-               tr_serial tr_lot tr_effdate tr_nbr pt_buyer prh_ps_nbr
-               prh_ship_date tr_line tr_qty_loc shipdate.
+      display  pt_vend ad_name pt_part pt_desc1 tr_qty_loc tr_um tr_loc pt_draw
+               tr_lot tr_serial tr_nbr tr_line tr_effdate  
+               substring(prh_ps_nbr,1,2) @ prh_ps_nbr pt_buyer
+               prh_ship_date shipdate.
 
    end.
 

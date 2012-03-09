@@ -8,7 +8,7 @@
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "110408.1"} 
+{mfdtitle.i "120308.1"} 
 define var wsection      as char . /*for barcode print*/
 define var ts9030        as char . /*for barcode print*/
 define var av9030        as char . /*for barcode print*/
