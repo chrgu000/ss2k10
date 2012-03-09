@@ -5,6 +5,8 @@
 /* REVISION END                                                              */
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
+define variable incmf as logical.
+define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable proc_name as character format "x(18)" label "File".
 define variable i         as integer   format ">>>9" label "PROCESSED".
 define variable err       as integer   format ">>>9" label "Errors".
@@ -72,6 +74,7 @@ display c-comp with frame m0.
 i = 0.
 err = 0.
 input from value(vWorkFile) no-echo no-map.
+assign incmf = no.
 repeat:
    hide message no-pause.
    pause 0 no-message.
@@ -82,6 +85,7 @@ repeat:
                  + substring(fill(".",20),1,i MODULO 20).
    hide frame m0.
    view frame m0.
+   if substring(proc_name,1,2) = "mf" then assign incmf = yes.
    display stream cmp c-comp with frame m0.
    display skip proc_name with frame m0.
    run getDestFileName(input destDir, input lng, input proc_name,
@@ -193,15 +197,43 @@ end.
    if kbc_display_pause > 0 and err = 0 then pause kbc_display_pause.
    assign yn = no.
    if err > 0 or kbc_display_pause >= 10 then do:
+          find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+                     usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+          if available usrw_wkfl then do:
+             assign yn = usrw_logfld[1].
+          end.
       {pxmsg.i &MSGNUM=1723 &ERRORLEVEL=1 &CONFIRM=yn}
-   end.
-   if yn then do:
-      if opsys = "unix" then do:
-         unix silent vi utcompile.log.
-      end.
-      if opsys = "msdos" or opsys = "win32" then do:
-          dos silent notepad.exe utcompile.log.
+       find first usrw_wkfl exclusive-lock where {xxcdom.i} {xxand.i}
+                  usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       if available usrw_wkfl then do:
+          assign usrw_logfld[1] = yn.
        end.
+       if yn then do:
+          if opsys = "unix" then do:
+             unix silent vi utcompile.log.
+          end.
+          if opsys = "msdos" or opsys = "win32" then do:
+              dos silent notepad.exe utcompile.log.
+           end.
+       end.
+   end.
+   else do:
+      if incmf then do:
+          find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+                     usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+          if available usrw_wkfl then do:
+             assign yn = usrw_logfld[2].
+          end.
+         {pxmsg.i &MSGNUM=36 &ERRORLEVEL=1 &CONFIRM=yn}
+       find first usrw_wkfl exclusive-lock where {xxcdom.i} {xxand.i}
+              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       if available usrw_wkfl then do:
+          assign usrw_logfld[2] = yn.
+       end.
+       if yn then do:
+         quit.
+       end.
+      end.
    end.
    hide all no-pause.
 os-delete utcompile.log no-error.

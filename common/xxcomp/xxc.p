@@ -8,7 +8,7 @@
 /* REVISION: 21YA LAST MODIFIED: 01/10/12 BY: zy save variable to usrw_wkfl  */
 /* REVISION END                                                              */
 
-{mfdtitle.i "23Y2"}
+{mfdtitle.i "23Y!"}
 
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -94,9 +94,8 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
       assign destDir.
    end.
    else do:
-       find first usrw_wkfl no-lock where
-/*EB          usrw_domain = global_domain and                                 */
-              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+                  usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           if opsys = "unix" then do:
             assign destDir:screen-value = trim(usrw_charfld[2]).
@@ -119,9 +118,8 @@ ON "CTRL-D" OF destDir IN FRAME z DO:
    assign yn = no.
    {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=yn}
    if yn then do:
-       find first usrw_wkfl where
-/*EB          usrw_domain = global_domain and                                 */
-              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+       find first usrw_wkfl where {xxcdom.i} {xxand.i}
+                  usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
        if available usrw_wkfl then do:
           assign usrw_charfld[1] = ""
                  usrw_charfld[2] = ""
@@ -206,13 +204,12 @@ do on error undo, retry:
    end.
    assign xrcDir = lower(trim(xrcDir)).
    if xrcdir <> "" and destdir <> "" then do:
-   find first usrw_wkfl where
-/*EB          usrw_domain = global_domain and                                 */
+   find first usrw_wkfl where {xxcdom.i} {xxand.i}
               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
         if not available usrw_wkfl then do:
            create usrw_wkfl.
            assign
-/*EB          usrw_domain = global_domain                                     */
+              {xxcdom.i}
               usrw_key1 = qadkey1
               usrw_key2 = global_userid.
         end.
@@ -260,15 +257,13 @@ output to value(vWorkFile).
   end.
 output close.
 {gprun.i ""xxc001.p""}
-
 leave.
 end. /*mainLoop*/
 
 PROCEDURE iniForm:
 /*read form variabls from usrw_WKFL*/
-find first usrw_wkfl no-lock where
-/*EB          usrw_domain = global_domain and                                 */
-              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+find first usrw_wkfl no-lock where {xxcdom.i} {xxand.i}
+           usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
     assign xrcdir  = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""
            destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
