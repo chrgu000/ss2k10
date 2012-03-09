@@ -60,8 +60,7 @@ define variable l_sudden_exit like mfc_logical no-undo.
 
 /*cn*/ do transaction:
 /*cn*/ /*initial variable*/
-/*cn*/ find first usrw_wkfl no-lock where
-/*EB*/            usrw_domain = global_domain and
+/*cn*/ find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
 /*cn*/            usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
 /*cn*/ if avail usrw_wkfl then do:
 /*cn*/   if opsys = "unix" then do:
@@ -90,8 +89,7 @@ start_time = string(time, "hh:MM:ss").
 
 do transaction:
    do i = 0 to 999:
-      find first qad_wkfl exclusive-lock where
-/*EB*/   qad_wkfl.qad_domain = global_domain and
+      find first qad_wkfl exclusive-lock where {xxqaddom.i} {xxand.i}
          qad_key1 = "CIM Load Session" and
          qad_key2 > string(i, "999")
          use-index qad_index1 no-error.
@@ -116,7 +114,7 @@ do transaction:
    if available qad_wkfl then release qad_wkfl.
 
    create qad_wkfl.
-/*EB*/    qad_wkfl.qad_domain = global_domain.
+          {xxqaddom.i}.
    assign
       qad_key1 = "CIM Load Session"
       qad_key2 = session_no
@@ -148,8 +146,7 @@ repeat on stop undo, retry:
    f_id = 0.
 
    do transaction:
-      find qad_wkfl exclusive-lock  where
-/*EB*/   qad_wkfl.qad_domain = global_domain and
+      find qad_wkfl exclusive-lock  where {xxqaddom.i} {xxand.i}
          qad_key1 = "CIM Load Session" and
          qad_key2 = session_no    no-error.
 
@@ -190,8 +187,7 @@ repeat on stop undo, retry:
       {pxmsg.i &MSGNUM=53 &ERRORLEVEL=3}
       undo, retry.
    end.
-   find first qad_wkfl where
-/*EB*/  qad_wkfl.qad_domain = global_domain and
+   find first qad_wkfl where {xxqaddom.i} {xxand.i}
       qad_key1 = "CIM Load Session" and
       qad_key2 <> session_no        and
       qad_charfld[3] = string(datasource)   and
@@ -207,8 +203,7 @@ repeat on stop undo, retry:
    end.
 
    do transaction:
-      find qad_wkfl exclusive-lock where
-/*EB*/       qad_wkfl.qad_domain = global_domain and
+      find qad_wkfl exclusive-lock where {xxqaddom.i} {xxand.i}
            qad_key1 = "CIM Load Session" and
            qad_key2 = session_no no-error.
       if not available qad_wkfl or
@@ -271,23 +266,22 @@ repeat on stop undo, retry:
             do transaction:
                assign_bdl_id:
                repeat on error undo:
-/*EB*/
+/*EB* */
                     {mfnxtsq1.i
-                                "bdl_mstr.bdl_domain = global_domain and
-                                 bdl_source = """" and"
+                                " {xxbdldom.i} {xxand.i} bdl_source = '' and"
                                  bdl_mstr
                                  bdl_id
                                  mf_sq04
                                  next_id}
-/*EB*/
-/*EB*
+ /*EB*/
+/*EB* 
                   {mfnxtsq1.i bdl_mstr
                               "bdl_source = """" and bdl_id"
                               mf_sq04
                               next_id}
-/*EB*/ */
+/*EB*/  */
                   create bdl_mstr.
-/*EB*/                     bdl_mstr.bdl_domain = global_domain.
+                  {xxbdldom.i}.
                   assign
                      bdl_mstr.bdl_source = ""
                      bdl_mstr.bdl_id = next_id
@@ -317,7 +311,7 @@ repeat on stop undo, retry:
                for each work_input no-lock:
                   i = i + 1.
                   create bdld_det.
-/*EB*/                   bdld_det.bdld_domain = global_domain.
+                  {xxbdlddom.i}.
                   assign
                      bdld_source = ""
                      bdld_id = next_id
@@ -331,8 +325,7 @@ repeat on stop undo, retry:
             release bdld_det.
 
             do transaction:
-               find qad_wkfl exclusive-lock where
-/*EB*/              qad_wkfl.qad_domain = global_domain and
+               find qad_wkfl exclusive-lock where {xxqaddom.i} {xxand.i}
                   qad_key1 = "CIM Load Session" and
                   qad_key2 = session_no    no-error.
 
@@ -381,16 +374,14 @@ repeat on stop undo, retry:
          readkey stream batchdata.
       end.
    end.
-/*cn*/ do transaction:
+/*cn*/ do:
 /*cn*/ /* 备份变量以便装入时使用. */
 /*cn*/ release usrw_wkfl.
-/*cn*/ find first usrw_wkfl exclusive-lock where
-/*EB*/            usrw_domain = global_domain and
+/*cn*/ find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
 /*cn*/            usrw_key1 = "mgbdpro" and usrw_key2 = global_userid no-error.
 /*cn*/ if not avail usrw_wkfl then do:
 /*cn*/   create usrw_wkfl.
-/*cn*/   assign
-/*EB*/          usrw_domain = global_domain
+/*cn*/   assign {xxqaddom.i}
 /*cn*/          usrw_key1 = "mgbdpro"
 /*cn*/          usrw_key2 = global_userid.
 /*cn*/ end.
@@ -421,8 +412,7 @@ PROCEDURE p-delete-qadwkfl:
    --------------------------------------------------------------------*/
 
    do transaction:
-      find first qad_wkfl where
-/*EB*/         qad_wkfl.qad_domain = global_domain and
+      find first qad_wkfl where {xxusrwdom.i} {xxand.i}
                qad_key1 = "CIM Load Session" and
                qad_key2 = session_no exclusive-lock no-error.
       if available qad_wkfl
