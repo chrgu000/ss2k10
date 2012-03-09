@@ -81,11 +81,18 @@ assign vtrrecid = current-value(tr_sq01).
              tr_qty_loc = usrw_decfld[1]
          no-error.
   if available tr_hist then do:
+/*        assign                                                            */
+/*            xxship_rcvd_qty     = xxship_rcvd_qty + usrw_decfld[1]        */
+/*            xxship_rcvd_effdate = rcvddate                                */
+/*            xxship_rcvd_date    = v_rctdate                               */
+/*            xxship_rcvd_loc     = ""  /*在条码打印时分配*/                */
+/*            .                                                             */
+
         assign
             xxship_rcvd_qty     = xxship_rcvd_qty + usrw_decfld[1]
-            xxship_rcvd_effdate = rcvddate
-            xxship_rcvd_date    = v_rctdate
-            xxship_rcvd_loc     = ""  /*在条码打印时分配*/
+            xxship_rcvd_effdate = tr_effdate
+            xxship_rcvd_date    = tr_date
+            xxship_rcvd_loc     = tr_loc  /*在条码打印时分配*/
             .
         /*xxship_status 可以等于:收货OK'RCT-PO',转仓OK'RCT-TR',未收货留空 */
         if xxship_rcvd_qty >= xxship_qty then xxship_status = 'RCT-PO'.

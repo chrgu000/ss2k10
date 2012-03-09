@@ -116,22 +116,27 @@ if not avail tempcase then do: /* not avail tempcase */
 /*ae  非保税的PS的零件就放在P-4RPS                                           */
 /*ae  非保税的SA的就放在P-4RSA （P-4RSA，P-4RPS分别代表通道）                */
     if v_loc_to = "" then do:  /*过道库位*/
-        for each xxloc_det
-            where xxloc_type = "4"
-            and   xxloc_part_type = v_part_type
-            no-lock
-            break by xxloc_type by xxloc_site by xxloc_loc :
-            v_loc_to = xxloc_loc .
-        end.
-
-        if v_loc_to = "" then do:
+       if substring(v_part,1,1) = "P" then do:
+       		assign v_loc_to = "PT".
+       end.
+       else do:
             for each xxloc_det
                 where xxloc_type = "4"
+                and   xxloc_part_type = v_part_type
                 no-lock
                 break by xxloc_type by xxloc_site by xxloc_loc :
-                v_loc_to = xxloc_loc.
+                v_loc_to = xxloc_loc .
             end.
-        end.
+            
+            if v_loc_to = "" then do:
+                for each xxloc_det
+                    where xxloc_type = "4"
+                    no-lock
+                    break by xxloc_type by xxloc_site by xxloc_loc :
+                    v_loc_to = xxloc_loc.
+                end.
+            end.
+      end.
     end.  /*过道库位*/
 
      if v_loc_to = "" then do:
