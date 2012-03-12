@@ -7,4 +7,4 @@
 /*  When you run for mfg/pro EB2.1 please not remark domain line             */
 /*  else remarkit                                                            */
 
-colon 18
+colon 48

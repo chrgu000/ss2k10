@@ -34,8 +34,8 @@ define variable batchdelete as character format "x(1)" no-undo.
 form
    cd_ref      colon 18
    cd_lang     colon 71
+   cd_type     colon 18
 /*17YF*/   {xxcddom.i} {xxcolon18.i}
-   cd_type     colon 48
    batchdelete colon 62
    cd_seq      colon 71
    skip(1)
@@ -81,9 +81,9 @@ repeat with frame a:
 
    display 1 @ cd_seq with frame a.
 
-   prompt-for cd_ref
+   prompt-for cd_ref cd_type
 /*17YF*/   {xxcddom.i}
-   cd_type cd_lang cd_seq
+    cd_lang cd_seq
    /* Prompt for the delete variable in the key frame at the
     * End of the key field/s only when batchrun is set to yes */
    batchdelete no-label when (batchrun)
