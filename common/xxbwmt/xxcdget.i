@@ -42,8 +42,7 @@ repeat xcnt = 0 to integer("{3}"):
       last-cmmt = 0.
 
 
-   for first cd_det no-lock where
-/*EB     cd_det.cd_domain = qad_rsrv and                                     */
+   for first cd_det no-lock where {xxcddom3.i}
          cd_ref  = "{1}" and
          cd_type = "{2}" and
          cd_lang = global_user_lang and
@@ -52,8 +51,7 @@ repeat xcnt = 0 to integer("{3}"):
 
    /* If not found in the Users Language then try US */
    if not available cd_det then
-      for first cd_det no-lock where
-/*EB     cd_det.cd_domain = qad_rsrv and                                     */
+      for first cd_det no-lock where {xxcddom3.i}
          cd_ref  = "{1}" and
          cd_type = "{2}" and
          cd_lang = "US" and
