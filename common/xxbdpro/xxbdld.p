@@ -54,7 +54,7 @@ define variable start_time    as   character.
 define variable end_file      as logical.
 define variable date_time     as character.
 define variable l_sudden_exit like mfc_logical no-undo.
-
+define variable mfgver as character.
 /* DELETING the qad_wkfl RECORD, WHEN THE USER EXITS BY */
 /* PRESSING THE EXIT/X BUTTON OR EXITING FROM USER MENU */
 
@@ -136,8 +136,10 @@ with frame a side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-main_loop:
+{gprun.i ""gpgetver.p"" "(input '1', output mfgver)"}
+assign mfgver = entry(2,mfgver," ").
 
+main_loop:
 repeat on stop undo, retry:
 
    l_sudden_exit = retry.
@@ -266,20 +268,24 @@ repeat on stop undo, retry:
             do transaction:
                assign_bdl_id:
                repeat on error undo:
-/*EB* */
+/*EB*  */
+if mfgver = "EB2.1" then do:
                     {mfnxtsq1.i
                                 " {xxbdldom.i} {xxand.i} bdl_source = '' and"
                                  bdl_mstr
                                  bdl_id
                                  mf_sq04
                                  next_id}
- /*EB*/
+end.                                 
+/*EB*/ 
 /*EB* 
+if mfgver = "EB2" then do: 
                   {mfnxtsq1.i bdl_mstr
                               "bdl_source = """" and bdl_id"
                               mf_sq04
                               next_id}
-/*EB*/  */
+end.                              
+/*EB*/ */
                   create bdl_mstr.
                   {xxbdldom.i}.
                   assign
@@ -412,7 +418,7 @@ PROCEDURE p-delete-qadwkfl:
    --------------------------------------------------------------------*/
 
    do transaction:
-      find first qad_wkfl where {xxusrwdom.i} {xxand.i}
+      find first qad_wkfl where {xxqaddom.i} {xxand.i}
                qad_key1 = "CIM Load Session" and
                qad_key2 = session_no exclusive-lock no-error.
       if available qad_wkfl
