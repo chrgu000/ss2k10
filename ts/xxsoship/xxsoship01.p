@@ -2,6 +2,7 @@
 /******************************************************************************/
 /* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM */
 /* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO */
+/*V8:ConvertMode=Maintenance                                                  */
 
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */

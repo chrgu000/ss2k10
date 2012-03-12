@@ -2,7 +2,8 @@
 /*by Ken chen 111031.1*/
 /*by Ken chen 111220.1*/
 /*by Ken chen 111228.1*/
-{mfdtitle.i "111228.1"}
+/*V8:ConvertMode=Report                                                       */
+{mfdtitle.i "111223.1"}
 
 
 DEFINE NEW SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
@@ -37,11 +38,12 @@ DEFINE NEW SHARED TEMP-TABLE xxso1
    FIELD xxso1_error AS CHARACTER FORMAT "x(24)"
    INDEX index1 xxso1_nbr.
 
+{gpcdget.i "UT"}
 
 FORM /*GUI*/ 
     SKIP(1)
    FILE_name COLON 20 
-with frame a side-labels width 80 ATTR-SPACE NO-BOX THREE-D.
+with frame a side-labels width 80 ATTR-SPACE.
 
 
 
@@ -94,14 +96,14 @@ repeat on error undo, retry:
      END.
     
      IF v_flag = "2" THEN DO:
-         FOR EACH xxso WHERE xxso_error <> "" NO-LOCK by xxso_nbr by xxso_line:           
-             DISP xxso WITH WIDTH 200 STREAM-IO.
+         FOR EACH xxso WHERE xxso_error <> "" NO-LOCK:           
+             DISP xxso WITH WIDTH 200.
          END.
      END.
 
      IF v_flag = "3" THEN DO:
-         FOR EACH xxso1 by xxso1_nbr by xxso1_line:
-             DISP xxso1 WITH WIDTH 200 STREAM-IO.
+         FOR EACH xxso1:
+             DISP xxso1 WITH WIDTH 200.
          END.
      END.
 

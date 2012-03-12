@@ -3,7 +3,7 @@
 /* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM */
 /* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO */
 /*by Ken chen 111220.1*/
-
+/*V8:ConvertMode=Maintenance                                                  */
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
