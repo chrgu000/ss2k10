@@ -24,11 +24,11 @@ end.
 for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     put unformat "File-Name: " _file-name "Desc: " at 30 _file._desc skip.
     put unformat "Tbl-Type: " at 2 _Tbl-Type "Forzen: " at 28 _Frozen.
-    put unformat "CRC: " at 50 _CRC.
-    if can-find(first _file-trig no-lock where _file-recid = RECID(_File)) then
-    do:
-       put  skip(1).
-       put Unformat "Trigger:" skip(.1).
+    put unformat "CRC: " at 50 _CRC skip.
+    if can-find(first _file-trig no-lock where _file-recid = RECID(_File))
+    then do:
+       put skip(1).
+       put unformat "Trigger:".
        for each _file-trig no-lock where _file-recid = RECID(_File):
           display _Event _proc-name _Override _Trig-Crc.
        end.
@@ -82,7 +82,6 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     put unformat fill("-",120) " ".
     put unformat fill("-",72) skip.
 
-
     FOR EACH _FIELD OF _FILE BY _ORDER:
         assign i = 1.
         put unformat _ORDER at i.
@@ -93,7 +92,7 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
         assign i = i + 9 + 1.
         put unformat _FORMAT at i.
         assign i = i + 40 + 1.
-        put unformat _EXTENT at i.
+        if _extent > 0 then put unformat _EXTENT at i.
         assign i = i + 6 + 1.
         put unformat _INITIAL at i.
         assign i = i + 10 + 1.

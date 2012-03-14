@@ -6,7 +6,6 @@
 /* REVISION END                                                              */
 
 {mfdtitle.i "23YE"}
-
 define variable db_name as character format "x(24)".
 define variable db_hold as character format "x(24)".
 define variable sfile   as character format "x(32)".
