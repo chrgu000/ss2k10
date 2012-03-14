@@ -12,11 +12,12 @@ define variable sfile   as character format "x(32)".
 define variable i       as integer.
 define new shared variable sdb as character.
 define new shared variable stb as character.
-
+assign sfile = global_program_rev.
 form
    sfile   colon 20 label "TABLE"
-   db_name colon 20 label "DATABASE"
+   db_name colon 20 label "DATABASE" skip(1)
 with frame a side-labels width 80 attr-space.
+setFrameLabels(frame a:handle).
 
 find first qaddb.flh_mstr NO-LOCK WHERE flh_field = "sfile" no-error.
 if not available qaddb.flh_mstr then do:
@@ -46,8 +47,6 @@ on leave of sfile in frame a do:
    assign sdb = db_name
           stb = sfile.
 end.
-setFrameLabels(frame a:handle).
-
 {wbrp01.i}
 assign
    db_name = sdbname("qaddb") when db_name = ""
@@ -59,9 +58,12 @@ if c-application-mode <> 'web' then.
       {pxmsg.i &MSGNUM=4463 &ERRORLEVEL=3}
       undo,retry.
    end.
-   assign db_name sfile.
-   assign sdb = db_name
-          stb = sfile.
+   else do:
+       assign global_program_rev = sfile.
+       assign db_name sfile.
+       assign sdb = db_name
+              stb = sfile.
+   end.
 {wbrp06.i &command = update &fields = " db_name sfile" &frm = "a"}
 
 if (c-application-mode <> 'web') or

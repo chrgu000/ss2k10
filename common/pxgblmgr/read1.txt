@@ -1,0 +1,8 @@
+说明：
+此程序用于增加global variable。
+
+steps:
+1.mfdeclre.i 中新增Define.
+2.pxgblmgr.p 中新增相关 get set 程序.
+3.将mfdeclre.i 复制到相关目录确认其他程序编译时可以调用到 /bbi,/xrc,/src.
+4.重新编译mf1.p以时新增变量生效.
