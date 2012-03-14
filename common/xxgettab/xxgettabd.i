@@ -14,19 +14,100 @@ e.g.
 RUN "d:\trunk\common\xxgettab.p" "pt_mstr" "CLIPBOARD".
 
 *****************************************************************************/
+
 if sdb = "" then do:
    create alias dictdb for database qaddb no-error.
 end.
 else do:
   create alias dictdb for database value(sdb) no-error.
 end.
-for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
-    display _file-name _file._desc _Tbl-Type _Frozen
-           with frame x side-labels width 254.
+for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
+    put unformat "File-Name: " _file-name "Desc: " at 30 _file._desc skip.
+    put unformat "Tbl-Type: " at 2 _Tbl-Type "Forzen: " at 28 _Frozen.
+    put unformat "CRC: " at 50 _CRC.
+    if can-find(first _file-trig no-lock where _file-recid = RECID(_File)) then
+    do:
+       put  skip(1).
+       put Unformat "Trigger:" skip(.1).
+       for each _file-trig no-lock where _file-recid = RECID(_File):
+          display _Event _proc-name _Override _Trig-Crc.
+       end.
+    end.
+    put skip(2).
+
+/*  Order 5                     */
+/*  Field-Name  32              */
+/*  Data-Type 9                 */
+/*  Format  40                  */
+/*  Extent  6                   */
+/*  Initial 10                  */
+/*  Label 30                    */
+/*  Col-label 30                */
+/*  Desc  200                   */
+/*  Valexp  120                 */
+/*  Valmsg  72                  */
+
+    assign i = 1.
+    put unformat "Order" at i.
+    assign i = i + 5 + 1.
+    put unformat "Field-Name" at i.
+    assign i = i + 32 + 1.
+    put unformat "Data-Type" at i.
+    assign i = i + 9 + 1.
+    put unformat "Format" at i.
+    assign i = i + 40 + 1.
+    put unformat "Extent" at i.
+    assign i = i + 6 + 1.
+    put unformat "Initial" at i.
+    assign i = i + 10 + 1.
+    put unformat "Label" at i.
+    assign i = i + 30 + 1.
+    put unformat "Col-label" at i.
+    assign i = i + 30 + 1.
+    put unformat "Desc" at i.
+    assign i = i + 200 + 1.
+    put unformat "Valexp" at i.
+    assign i = i + 120 + 1.
+    put unformat "Valmsg" at i skip.
+
+    put unformat fill("-",5) " ".
+    put unformat fill("-",32) " ".
+    put unformat fill("-",9) " ".
+    put unformat fill("-",40) " ".
+    put unformat fill("-",6) " ".
+    put unformat fill("-",10) " ".
+    put unformat fill("-",30) " ".
+    put unformat fill("-",30) " ".
+    put unformat fill("-",200) " ".
+    put unformat fill("-",120) " ".
+    put unformat fill("-",72) skip.
+
+
     FOR EACH _FIELD OF _FILE BY _ORDER:
-     DISPLAY _ORDER _FIELD-NAME _DATA-TYPE _FORMAT _EXTENT _INITIAL _LABEL
-             _COL-LABEL _field._desc WITH WIDTH 254.
+        assign i = 1.
+        put unformat _ORDER at i.
+        assign i = i + 5 + 1.
+        put unformat _FIELD-NAME at i.
+        assign i = i + 32 + 1.
+        put unformat _DATA-TYPE at i.
+        assign i = i + 9 + 1.
+        put unformat _FORMAT at i.
+        assign i = i + 40 + 1.
+        put unformat _EXTENT at i.
+        assign i = i + 6 + 1.
+        put unformat _INITIAL at i.
+        assign i = i + 10 + 1.
+        put unformat _LABEL at i.
+        assign i = i + 30 + 1.
+        put unformat _COL-LABEL at i.
+        assign i = i + 30 + 1.
+        put unformat replace(_field._desc,chr(10),"") at i.
+        assign i = i + 200 + 1.
+        put unformat _Valexp at i.
+        assign i = i + 120 + 1.
+        put unformat _FIELD._Valmsg at i skip.
     END.
+
     FOR EACH _index WHERE _index._file-recid = RECID(_file):
       FOR EACH _index-field NO-LOCK WHERE
                _index-field._index-recid = RECID(_index)
@@ -41,10 +122,5 @@ for each {1}._File no-lock where (_FILE-NAME = {2} or {2} = ""):
                  _index-field._Ascending
                  WITH WIDTH 254.
       END.
-    END.
-    FOR EACH _FIELD OF _FILE where
-       (_FIELD._Valexp <> "" and _FIELD._Valexp <> ?) BY _ORDER:
-        DISPLAY _ORDER _FIELD-NAME _FIELD._Valexp format "x(120)" _FIELD._Valmsg
-                WITH WIDTH 254.
-    END.
+    END. /* FOR EACH _index */
 end.

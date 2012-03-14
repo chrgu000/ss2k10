@@ -5,11 +5,12 @@
 /*V8:ConvertMode=Report                                                      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "15YP"}
+{mfdtitle.i "23YE"}
 
 define variable db_name as character format "x(24)".
 define variable db_hold as character format "x(24)".
 define variable sfile   as character format "x(32)".
+define variable i       as integer.
 define new shared variable sdb as character.
 define new shared variable stb as character.
 
@@ -56,8 +57,8 @@ repeat:
 if c-application-mode <> 'web' then.
    update sfile db_name with frame a.
    if sfile = "" then do:
-   	  {pxmsg.i &MSGNUM=4463 &ERRORLEVEL=3}
-   	  undo,retry.
+      {pxmsg.i &MSGNUM=4463 &ERRORLEVEL=3}
+      undo,retry.
    end.
    assign db_name sfile.
    assign sdb = db_name
