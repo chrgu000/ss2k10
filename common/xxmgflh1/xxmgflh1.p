@@ -51,8 +51,8 @@ repeat:
 
    view frame a.
 
-   find first qad_wkfl no-lock where qad_domain = global_domain
-        and qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
+   find first qad_wkfl no-lock where {xxqaddom.i} {xxand.i}
+              qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
      assign file_name = qad_charfld[1]
             l_delete = qad_logfld[1].
@@ -71,15 +71,15 @@ repeat:
       UNDO,RETRY.
    END.
 
-   find first qad_wkfl exclusive-lock where qad_domain = global_domain
-        and qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
+   find first qad_wkfl exclusive-lock where {xxqaddom.i} {xxand.i}
+              qad_key1 = EXECNAME and qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
       assign qad_charfld[1] = file_name
              qad_logfld[1] = l_delete.
    end.
    else do:
         create qad_wkfl.
-        assign qad_domain = global_domain
+        assign {xxqaddom.i}
                qad_key1 = execname
                qad_key2 = global_userid
                qad_charfld[1] = file_name
