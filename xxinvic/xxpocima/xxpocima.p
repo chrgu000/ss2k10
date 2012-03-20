@@ -7,11 +7,12 @@
 /* SS - 110321.1  By: Roger Xiao */  /*收货到指定库位temp */
 /* SS - 110326.1  By: Roger Xiao */  /*托号用流水号xxship_case,不用原发票托号xxship_case,以缩减条码长度 */
 /* SS - 110408.1  By: Roger Xiao */  /*xxinv_mstr,一个发票号可能对应多个供应商*/
-/* SS - 120112.1  BY: ZY         */  /*托号用流水号取消,以缩减条码长度 */
+/* SS - 120112.1  BY: ZY         */  /*托号用流水号取消,以缩减条码长度        */
+/* ss - 120319.1  BY: ZY 日供收货入库时入到PT/WT库,打条码显示定制库位         */
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "120308.2"}
+{mfdtitle.i "120319.2"}
 
 /*定义变量*/
 Define variable Eoutputstatment AS CHARACTER FORMAT "x(200)".

@@ -66,7 +66,7 @@ if not avail tempcase then do: /* not avail tempcase */
     /*图号是减震器SA还是转向器PS*/
     v_part_type = "" .
     find first pt_mstr
-        where pt_part = v_part
+         where pt_part = v_part
     no-lock no-error.
     if avail pt_mstr then do:
         if     pt_buyer = "4RPS"
