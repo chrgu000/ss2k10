@@ -1946,7 +1946,7 @@ repeat transaction:
       {pxmsg.i &MSGNUM=12 &ERRORLEVEL=1 &CONFIRM=yn}
        V8+*/
 
-      /*V8!
+      /*V8- !
       {mfgmsg10.i 12 1 yn}
       if yn = ? then
       undo loop0, leave loop0. */
