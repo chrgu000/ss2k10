@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "23Y9"}
+{mfdtitle.i "23YL"}
 {xxmemt1.i}
 
 define variable iCnt as integer.
@@ -14,8 +14,31 @@ define variable mfgver as character.
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
-{gprun.i ""gpgetver.p"" "(input '1', output mfgver)"}
-assign mfgver = entry(2,mfgver," ").
+
+ON "CTRL-]" OF cdref IN FRAME frame-a DO:
+   do iCnt = 1 to 10:
+      if mndnbr[iCnt] <> "" and sel[iCnt] <> 0 then do:
+         find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt] and
+                    mnd_select = sel[iCnt] no-error.
+         if available mnd_det then do:
+            assign exec[iCnt] = mnd_exec
+                   sortkey[iCnt] = mnd_name.
+            display exec[iCnt] sortkey[iCnt] with frame frame-a.
+         end.
+         find first mnt_det no-lock where mnt_nbr = mndnbr[iCnt] and
+                    mnt_select = sel[iCnt] and
+                    mnt_lang = global_user_lang no-error.
+         if available mnt_det and substring(dsc[icnt],1,1) <> "-" then do:
+            assign dsc[iCnt] = "-" + mnt_label.
+            display dsc[iCnt] with frame frame-a.
+         end.
+      end.
+   end.
+END.
+
+assign mfgver = "CTRL-] to get system menu data.".
+{pxmsg.i &MSGTEXT=mfgver &ERRORLEVEL=1}
+
 repeat with frame frame-a:
    prompt-for cdref editing:
      {mfnp05.i usrw_wkfl usrw_index1 " {xxusrwdom0.i} {xxand.i}
@@ -141,6 +164,8 @@ repeat with frame frame-a:
           end.
         end.
         if cLoadFile and yn1 then do:
+           {gprun.i ""gpgetver.p"" "(input '1', output mfgver)"}
+           assign mfgver = entry(2,mfgver," ").
            output to "xxmemt1.22yp.bpi".
                do iCnt = 1 to 10:
                   if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and
@@ -148,10 +173,15 @@ repeat with frame frame-a:
                      put '-' skip.
                      put unformat '"' mndnbr[iCnt] '"' skip.
                      put unformat sel[iCnt] skip.
-                     if index(trim(dsc[iCnt])," ") > 0 then
-                        put unformat '"' dsc[iCnt] '" '.
-                     else
-                        put unformat dsc[iCnt] ' '.
+                     if substring(dsc[iCnt] , 1 ,1) = "-" then do:
+                        put unformat '- '.
+                     end.
+                     else do:
+                          if index(trim(dsc[iCnt])," ") > 0 then
+                             put unformat '"' dsc[iCnt] '" '.
+                          else
+                             put unformat dsc[iCnt] ' '.
+                     end.
                      if sortkey[iCnt] = "" then
                         put unformat '"" '.
                      else
