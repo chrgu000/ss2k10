@@ -5,14 +5,14 @@
 /*V8:ConvertMode=Report                                                      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "23YE"}
+{mfdtitle.i "23YL"}
 define variable db_name as character format "x(24)".
 define variable db_hold as character format "x(24)".
 define variable sfile   as character format "x(32)".
 define variable i       as integer.
 define new shared variable sdb as character.
 define new shared variable stb as character.
-assign sfile = global_program_rev.
+if opsys = "unix" then assign sfile = global_program_rev.
 form
    sfile   colon 20 label "TABLE"
    db_name colon 20 label "DATABASE" skip(1)
@@ -59,7 +59,7 @@ if c-application-mode <> 'web' then.
       undo,retry.
    end.
    else do:
-       assign global_program_rev = sfile.
+       assign global_program_rev = sfile when opsys = "unix".
        assign db_name sfile.
        assign sdb = db_name
               stb = sfile.
