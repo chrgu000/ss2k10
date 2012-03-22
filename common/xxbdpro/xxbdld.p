@@ -268,24 +268,7 @@ repeat on stop undo, retry:
             do transaction:
                assign_bdl_id:
                repeat on error undo:
-/*EB*  */
-if mfgver = "EB2.1" then do:
-                    {mfnxtsq1.i
-                                " {xxbdldom.i} {xxand.i} bdl_source = '' and"
-                                 bdl_mstr
-                                 bdl_id
-                                 mf_sq04
-                                 next_id}
-end.                                 
-/*EB*/ 
-/*EB* 
-if mfgver = "EB2" then do: 
-                  {mfnxtsq1.i bdl_mstr
-                              "bdl_source = """" and bdl_id"
-                              mf_sq04
-                              next_id}
-end.                              
-/*EB*/ */
+                  {xxmfnsq.i}               
                   create bdl_mstr.
                   {xxbdldom.i}.
                   assign
