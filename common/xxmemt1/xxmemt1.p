@@ -46,7 +46,9 @@ repeat with frame frame-a:
                usrw_key1 = global_userid " usrw_key2 "input cdref"}
       if recno <> ? then do:
          assign cdref = usrw_key2
-                cLoadFile = usrw_logfld[1] no-error.
+                cLoadFile = usrw_logfld[1]
+                sngl_ln = usrw_logfld[2] no-error.
+         display sngl_ln.
          do iCnt = 1 to extent(mndnbr):
             assign mndnbr[iCnt] = entry(iCnt,usrw_key3,"#")
                    sel[iCnt] = usrw_intfld[iCnt]
@@ -159,7 +161,8 @@ end.
                usrw_key4 = exec[1]
                usrw_key5 = sortkey[1]
                usrw_key6 = dsc[1]
-               usrw_logfld[1] = cLoadFile.
+               usrw_logfld[1] = cLoadFile
+               usrw_logfld[2] = sngl_ln.
         do iCnt = 2 to extent(mndnbr):
         assign usrw_key3 = usrw_key3 + "#" + mndnbr[iCnt]
                usrw_intfld[iCnt] = sel[iCnt]
