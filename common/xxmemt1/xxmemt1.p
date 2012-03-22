@@ -11,12 +11,13 @@
 define variable iCnt as integer.
 define variable yn1  like mfc_logical initial no.
 define variable mfgver as character.
+
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
 
 ON "CTRL-]" OF cdref IN FRAME frame-a DO:
-   do iCnt = 1 to 10:
+   do iCnt = 1 to extent(mndnbr):
       if mndnbr[iCnt] <> "" and sel[iCnt] <> 0 then do:
          find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt] and
                     mnd_select = sel[iCnt] no-error.
@@ -46,7 +47,7 @@ repeat with frame frame-a:
       if recno <> ? then do:
          assign cdref = usrw_key2
                 cLoadFile = usrw_logfld[1] no-error.
-         do iCnt = 1 to 10:
+         do iCnt = 1 to extent(mndnbr):
             assign mndnbr[iCnt] = entry(iCnt,usrw_key3,"#")
                    sel[iCnt] = usrw_intfld[iCnt]
                    exec[iCnt] = entry(iCnt,usrw_key4,"#")
@@ -96,7 +97,7 @@ repeat with frame frame-a:
       clear frame frame-a.
       assign cdref:screen-value = global_userid + " " +
                    string(today) + " " + string(time,"hh:mm:ss").
-      do iCnt = 1 to 10:
+      do iCnt = 1 to extent(mndnbr):
       assign mndnbr[iCnt] = ""
              sel[iCnt] = 0
              exec[iCnt] = ""
@@ -106,17 +107,27 @@ repeat with frame frame-a:
       cLoadFile = NO.
    end.
    assign cdref.
-   update mndnbr[1] sel[1] exec[1]  sortkey[1] dsc[1]
-          mndnbr[2] sel[2] exec[2]  sortkey[2] dsc[2]
-          mndnbr[3] sel[3] exec[3]  sortkey[3] dsc[3]
-          mndnbr[4] sel[4] exec[4]  sortkey[4] dsc[4]
-          mndnbr[5] sel[5] exec[5]  sortkey[5] dsc[5]
-          mndnbr[6] sel[6] exec[6]  sortkey[6] dsc[6]
-          mndnbr[7] sel[7] exec[7]  sortkey[7] dsc[7]
-          mndnbr[8] sel[8] exec[8]  sortkey[8] dsc[8]
-          mndnbr[9] sel[9] exec[9]  sortkey[9] dsc[9]
-          mndnbr[10] sel[10] exec[10]  sortkey[10] dsc[10]
-          cLoadFile.
+display sngl_ln with frame frame-a.
+update sngl_ln with frame frame-a.
+if sngl_ln then do:
+   do iCnt = 1 to extent(mndnbr):
+      update mndnbr[iCnt] sel[iCnt] exec[iCnt]  sortkey[iCnt] dsc[iCnt].
+   end.
+   update cloadfile.
+end.
+else do:
+     update mndnbr[1] sel[1] exec[1]  sortkey[1] dsc[1]
+            mndnbr[2] sel[2] exec[2]  sortkey[2] dsc[2]
+            mndnbr[3] sel[3] exec[3]  sortkey[3] dsc[3]
+            mndnbr[4] sel[4] exec[4]  sortkey[4] dsc[4]
+            mndnbr[5] sel[5] exec[5]  sortkey[5] dsc[5]
+            mndnbr[6] sel[6] exec[6]  sortkey[6] dsc[6]
+            mndnbr[7] sel[7] exec[7]  sortkey[7] dsc[7]
+            mndnbr[8] sel[8] exec[8]  sortkey[8] dsc[8]
+            mndnbr[9] sel[9] exec[9]  sortkey[9] dsc[9]
+            mndnbr[10] sel[10] exec[10]  sortkey[10] dsc[10]
+            cLoadFile.
+end.
     do on error undo, retry:
       display yn.
       set yn go-on("F5" "CTRL-D" ).
@@ -149,7 +160,7 @@ repeat with frame frame-a:
                usrw_key5 = sortkey[1]
                usrw_key6 = dsc[1]
                usrw_logfld[1] = cLoadFile.
-        do iCnt = 2 to 10:
+        do iCnt = 2 to extent(mndnbr):
         assign usrw_key3 = usrw_key3 + "#" + mndnbr[iCnt]
                usrw_intfld[iCnt] = sel[iCnt]
                usrw_key4 = usrw_key4 + "#" + exec[iCnt]
@@ -158,7 +169,7 @@ repeat with frame frame-a:
         end.
         if recid(pin_mstr) = -1 then.
         assign yn1 = no.
-        do iCnt = 1 to 10:
+        do iCnt = 1 to extent(mndnbr):
           if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> "" then do:
              assign yn1 = yes.
           end.
@@ -167,7 +178,7 @@ repeat with frame frame-a:
            {gprun.i ""gpgetver.p"" "(input '1', output mfgver)"}
            assign mfgver = entry(2,mfgver," ").
            output to "xxmemt1.22yp.bpi".
-               do iCnt = 1 to 10:
+               do iCnt = 1 to extent(mndnbr):
                   if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and
                      exec[iCnt] <> "" then do:
                      put '-' skip.
@@ -204,7 +215,7 @@ repeat with frame frame-a:
            input close.
 
            display cdref mndnbr exec sortkey dsc cLoadFile.
-           do iCnt = 1 to 10:
+           do iCnt = 1 to extent(mndnbr):
               if mndnbr[iCnt] <> "" and sel[iCnt] > 0 and exec[iCnt] <> ""
                  then do:
                  find first mnd_det no-lock where mnd_nbr = mndnbr[iCnt] and
@@ -234,7 +245,7 @@ repeat with frame frame-a:
                     color display message mndnbr[iCnt] sel[iCnt] exec[iCnt]
                                           sortkey[iCnt] dsc[iCnt].
               end.
-           end.  /* do iCnt = 1 to 10: */
+           end.  /* do iCnt = 1 to extent(mndnbr): */
            if yn1 then do:
               os-delete "xxmemt1.22yp.bpi" no-error.
               os-delete "xxmemt1.22yp.bpo" no-error.

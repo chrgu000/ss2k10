@@ -11,11 +11,12 @@ define variable sel    like mnd_det.mnd_select extent 10 format ">>9" no-undo.
 define variable exec   as character extent 10 format "x(22)" no-undo.
 define variable sortkey as character extent 10 format "x(4)" no-undo.
 define variable dsc    as  character extent 10 format "x(18)" no-undo.
-define variable cdref  as character format "x(40)" no-undo.
+define variable cdref  as character format "x(30)" no-undo.
 define variable cLoadFile like itsd_loaded no-undo.
+define variable sngl_ln like soc_ln_fmt initial no.
 
 form
-   cdref  colon 16 skip(1)
+   cdref  colon 10  sngl_ln colon 66 skip(1)
 
    "MENU" colon 1
    "SELECT" colon 18

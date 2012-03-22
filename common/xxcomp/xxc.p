@@ -256,6 +256,7 @@ output to value(vWorkFile).
       export fn.
   end.
 output close.
+run setpropath.
 {gprun.i ""xxc001.p""}
 leave.
 end. /*mainLoop*/
