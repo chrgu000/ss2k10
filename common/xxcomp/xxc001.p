@@ -173,7 +173,8 @@ input close.
 
 for each t_log by tt_i descend:
     assign tt_j = tt_i.
-    if index(okprog,"compile:") > 0 and index(tt_log,"compile:") > 0 then do:
+    if (index(okprog,"compile:") > 0 or index(okprog,"END:") > 0) and
+        index(tt_log,"compile:") > 0 then do:
        assign tt_j = 0.
     end.
     assign okprog = tt_log.
