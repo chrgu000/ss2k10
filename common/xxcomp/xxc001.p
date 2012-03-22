@@ -15,7 +15,12 @@ define variable dirname   as character format "x(15)".
 define variable yn        as logical.
 define variable okProg    as character.
 define variable c-comp    as character format "x(12)" no-undo.
-define temp-table t_log   fields tt_log as character.
+define temp-table t_log
+       fields tt_i as integer
+       fields tt_j as integer
+       fields tt_log as character
+       index tt_i is primary tt_i
+       index tt_j tt_j.
 define stream crt.
 define stream cmp.
 define shared variable c-comp-pgms as character format "x(20)" no-undo.
@@ -53,7 +58,7 @@ view stream crt frame a.
 view stream crt frame b.
 view stream cmp frame m0.
 display c-comp-pgms with frame tt.
-assign okprog = "".
+
 /*create .r dir*/
 os-delete utcompile.log no-error.
 output to utcompile.log append.
@@ -142,7 +147,7 @@ hide message no-pause.
 pause 0 no-message.
 
 output to utcompile.log append.
-   put unformat dbname " END:" today " " string(time,"hh:mm:ss").
+   put unformat dbname " END:" today " " string(time,"hh:mm:ss") skip.
    if err = 0 then do:
       put unformat skip(2).
       put unformat "********************************************" skip.
@@ -157,12 +162,24 @@ output close.
 
 empty temp-table t_log no-error.
 input from utcompile.log.
+i = 1.
 repeat:
   create t_log.
   import delimiter "|" tt_log.
+  assign tt_i = i.
+  i = i + 1.
 end.
 input close.
 
+for each t_log by tt_i descend:
+    assign tt_j = tt_i.
+    if index(okprog,"compile:") > 0 and index(tt_log,"compile:") > 0 then do:
+       assign tt_j = 0.
+    end.
+    assign okprog = tt_log.
+end.
+
+assign okprog = "".
 hide frame m0.
 hide frame m.
 hide frame n.
@@ -176,13 +193,11 @@ else do:
    hide frame tt.
    hide frame a.
    hide frame b.
-   for each t_log where tt_log <> "" with overlay frame n column 1 title color
-       normal(getFrameTitle("COMPILE_LOG",25)) no-labels width 80:
-       if index(tt_log,"compile:") > 0 and
-          index(okProg,substring(tt_log,9)) > 0 then do:
-       next.
-       end.
-       if index(tt_log,"compile:") > 0 then do:
+   for each t_log where tt_log <> "" and tt_j > 0 with overlay
+       frame n column 1 title color
+       normal(getFrameTitle("COMPILE_LOG",25)) no-labels width 80
+       by tt_j:
+       if index(tt_log,"compile:") > 0 or index(tt_log,"END:") > 0 then do:
           display fill("-",78) @ tt_log.
           down with frame n.
        end.
