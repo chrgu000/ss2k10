@@ -161,6 +161,29 @@ on RETURN of xrcdir in frame z do:
    display bpropath with frame z.
 end.
 
+ON LEAVE OF xrcdir IN FRAME z /* Fill 1 */
+DO:
+  assign xrcdir.
+  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p":
+      delete usrw_wkfl.
+  end.
+  if xrcdir = "" then assign xrcdir:screen-value = ".".
+  assign xrcdir.
+  INPUT FROM OS-DIR(xrcdir).
+  REPEAT:
+      CREATE usrw_wkfl.
+      IMPORT usrw_key4 usrw_key2 usrw_key5.
+      assign usrw_key1 = "xxvifile.p"
+             usrw_key3 = global_userid.
+  END.
+  INPUT CLOSE.
+
+  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p"
+       and usrw_key5 <> "F":
+      delete usrw_wkfl.
+  end.
+END.
+
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
 display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause destdir

@@ -48,13 +48,6 @@ else
    dtitle = substring(dtitle,1,index(dtitle," ")) + "{1}" +
             substring(dtitle,index(dtitle," ") + length("{1}","raw") + 1,78).
 
-FIND FIRST mnd_det WHERE entry(1,mnd_exec,".") = entry(1,execname,".") NO-ERROR.
-IF AVAILABLE mnd_det and locked(mnd_det) THEN DO:
-   ASSIGN mnd__qadc01 = "{1}" + ";" + global_userid + ";" + string(today) + " " 
-   										+ string(time,"hh:mm:ss").
-END.
-release mnd_det.
-
 if c-application-mode <> 'WEB-ChUI' then
    display dtitle format "x(78)"
    with no-labels width 80 row 1 column 2
@@ -78,3 +71,5 @@ end.
 
 global_program_rev = "{1}". /*Track program rev for Help About */
 */
+
+{gprun.i ""xxgetver.p""}
