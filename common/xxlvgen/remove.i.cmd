@@ -1,0 +1,1 @@
+del D:\ss\trunk\common\xxlvgen\xxecdc.i /s/q/f/a 

@@ -161,13 +161,13 @@ on RETURN of xrcdir in frame z do:
    display bpropath with frame z.
 end.
 
-ON LEAVE OF xrcdir IN FRAME z /* Fill 1 */
+ON "CTRL-]" OF xrcdir IN FRAME z /* Fill 1 */
 DO:
   assign xrcdir.
   for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p":
       delete usrw_wkfl.
   end.
-  if xrcdir = "" then assign xrcdir:screen-value = ".".
+/*  if xrcdir = "" then assign xrcdir:screen-value = ".". */
   assign xrcdir.
   INPUT FROM OS-DIR(xrcdir).
   REPEAT:

@@ -17,7 +17,6 @@ else if opsys = "msdos" or opsys = "win32" then do:
              else version_nbr = substring(dtitle,150).
         end.
 end.
-
 find first usrw_wkfl exclusive-lock where {xxusrwdomver.i} {xxand.i}
            usrw_key1 = execname and usrw_key2 = opsys no-error.
 if not available usrw_wkfl then do:
@@ -29,4 +28,6 @@ end.
    assign usrw_key3 = version_nbr
           usrw_key4 = global_userid
           usrw_datefld[1] = today
-          usrw_intfld[1] = time.
+          usrw_intfld[1] = time
+          usrw_intfld[2] = usrw_intfld[2] + 1
+          usrw_charfld[1] = PROGRAM-NAME(3).
