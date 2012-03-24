@@ -24,11 +24,11 @@ FUNCTION getMAC RETURNS CHARACTER:
     Notes:
   -------------------------------------------------------------*/
   define variable txt as character  format "x(70)".
-  define variable rec as RECID.
-  find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
-  		       usrw_key1 = "MAC-ADDRESS-RECORD" and
-  		       usrw_key2 <> "" no-error.
-  if not available usrw_wkfl then do:
+/*  define variable rec as RECID.                                            */
+/*  find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}              */
+/*             usrw_key1 = "MAC-ADDRESS-RECORD" and                          */
+/*             usrw_key2 <> "" no-error.                                     */
+/*  if not available usrw_wkfl then do:                                      */
      if opsys = "UNIX" then do:
         UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".
         if search("ip.xxecdc.i.201020.cfg") <> ? then do:
@@ -60,28 +60,28 @@ FUNCTION getMAC RETURNS CHARACTER:
         end.
      end. /* else if opsys = "msdos" or opsys = "win32" then do: */
      if txt = "" then do:
-     		assign txt = "00-1E-65-B9-61-34".
+        assign txt = "00-1E-65-B9-61-34".
      end.
-     create usrw_wkfl.
-     assign {xxusrwdom1.i} 
-     				usrw_key1 = "MAC-ADDRESS-RECORD" 
-     				usrw_key2 = txt.
-  end.
-  else do:
-       if usrw_key2 <> "" then do:
-  		 		assign txt = usrw_key2.
-  		 end.
-  		 else do:
-  		    assign txt = "00-1E-65-B9-61-34".
-  		 		assign REC = recid(usrw_wkfl).
-					find first usrw_wkfl exclusive-lock where RECID(usrw_wkfl) = REC
-										 no-error.
-			    if available usrw_wkfl then do:
-			       assign usrw_key2 = txt.
-			    end.
-  	   end.
-  end.
-  release usrw_wkfl.
+/*     create usrw_wkfl.                                                     */
+/*     assign {xxusrwdom1.i}                                                 */
+/*            usrw_key1 = "MAC-ADDRESS-RECORD"                               */
+/*            usrw_key2 = txt.                                               */
+/*  end.                                                                     */
+/*  else do:                                                                 */
+/*       if usrw_key2 <> "" then do:                                         */
+/*          assign txt = usrw_key2.                                          */
+/*       end.                                                                */
+/*       else do:                                                            */
+/*          assign txt = "00-1E-65-B9-61-34".                                */
+/*          assign REC = recid(usrw_wkfl).                                   */
+/*          find first usrw_wkfl exclusive-lock where RECID(usrw_wkfl) = REC */
+/*                     no-error.                                             */
+/*          if available usrw_wkfl then do:                                  */
+/*             assign usrw_key2 = txt.                                       */
+/*          end.                                                             */
+/*       end.                                                                */
+/*  end.                                                                     */
+/*  release usrw_wkfl.                                                       */
   return trim(txt).
 END FUNCTION. /*FUNCTION getMAC*/
 
@@ -148,7 +148,7 @@ FUNCTION getEn RETURNS CHARACTER(input ci as CHARACTER):
           i2 = 7.
        END.
        c1 = c1 + STRING(GET-BYTE(mptr, cnt)
-       			   + (cnt MOD i2) * (cnt MOD i2)  + i1, "999").
+               + (cnt MOD i2) * (cnt MOD i2)  + i1, "999").
     END.
 
     co = "".
@@ -225,6 +225,6 @@ FUNCTION getEncode RETURNS CHARACTER
                 + ENCODE(key3) + "," + ENCODE(key4) + ","
                 + ENCODE(key5) + "," + ENCODE(key6) + ","
                 + ENCODE(key7).
-                  
+
   return retVal.
 END FUNCTION. /*FUNCTION getKey*/
