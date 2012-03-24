@@ -3,25 +3,25 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "23YO"}
+{mfdtitle.i "23YP"}
 {xxecdc.i}
 /* ********** Begin Translatable Strings Definitions ********* */
 &SCOPED-DEFINE xxlvgen_p_1 " Continue?"
 /* ********** End Translatable Strings Definitions ********* */
 
 define variable yn like mfc_logical initial yes.
-define variable l_prod as character format 'x(30)'.
-define variable uid    as character format "x(20)".
+define variable l_prod as character format 'x(30)' initial "xxt.p".
+define variable uid    as character format "x(56)".
 define variable loc_phys_addr as character format "x(20)".
 define variable daysto        as integer initial 30.
 define variable days          as integer.
 define variable datet         as date.
 define variable datestr       as character.
-define variable key1          as character format "x(20)".
-define variable key2          as character format "x(20)".
-define variable key3          as character format "x(20)".
-define variable cmmt          as character format "x(40)".
-define variable histfn        as character format "x(40)".
+define variable key1          as character format "x(24)".
+define variable key2          as character format "x(24)".
+define variable key3          as character format "x(24)".
+define variable cmmt          as character format "x(24)".
+define variable histfn        as character format "x(56)".
 define variable cLoadFile     as logical initial "NO".
 define variable md5           as character.
 define variable rev           as character.
@@ -47,45 +47,59 @@ with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-assign uid = global_userid
-       loc_phys_addr = getMAC().
+assign loc_phys_addr = getMAC().
 {gprun.i ""gpgetver.p"" "(input '4', output rev)"}
-display l_prod loc_phys_addr uid daysto key1 key2 key3 with frame a.
+display l_prod loc_phys_addr with frame a.
 
 repeat:
-   update l_prod loc_phys_addr uid daysto key1 key2 key3 with frame a.
+   update l_prod loc_phys_addr with frame a.
 
    if l_prod = "" then do:
      {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""l_prod""}
       undo,retry.
    end.
 
-   if loc_phys_addr = "" then do:
-     {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""loc_phys_addr""}
-     next-prompt loc_phys_addr with frame a.
-     undo,retry.
+/* if loc_phys_addr = "" then do:                                            */
+/*   {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""loc_phys_addr""}         */
+/*   next-prompt loc_phys_addr with frame a.                                 */
+/*   undo,retry.                                                             */
+/* end.                                                                      */
+/*                                                                           */
+/* if uid = "" then do:                                                      */
+/*   {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""uid""}                   */
+/*   next-prompt uid with frame a.                                           */
+/*    undo,retry.                                                            */
+/* end.                                                                      */
+
+   find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
+              usrw_key1 = l_prod and usrw_key2 = loc_phys_addr no-error.
+   if available usrw_wkfl then do:
+      assign uid = usrw_key3
+             daysto = usrw_datefld[1] - today
+             key1 = usrw_key4
+             key2 = usrw_key5
+             key3 = usrw_key6
+             cmmt = usrw_charfld[10].
+   end.
+   else do:
+      assign uid = global_userid
+             daysto = 30.
    end.
 
-   if uid = "" then do:
-     {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""uid""}
-     next-prompt uid with frame a.
-      undo,retry.
-   end.
-
-   if daysto <= 0 then do:
-     {pxmsg.i &MSGNUM=5904 &ERRORLEVEL=3}
-     next-prompt daysto with frame a.
-     undo,retry.
-   end.
    if index(l_prod,".") = 0 then
       assign histfn = "xx" + l_prod + "lv.p".
    else
        assign histfn = "xx" + substring(l_prod,3,index(l_prod,".") - 3)
                      + "lv.p".
-   display histfn with frame a.
+   display uid daysto key1 key2 key3 cmmt histfn with frame a.
    lab001:
    repeat:
-      update cmmt rev histfn cLoadFile with frame a.
+      update  uid daysto key1 key2 key3 cmmt rev histfn cLoadFile with frame a.
+      if daysto <= 0 then do:
+        {pxmsg.i &MSGNUM=5904 &ERRORLEVEL=3}
+        next-prompt daysto with frame a.
+        undo,retry.
+      end.
       if histfn = "" then do:
          {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""histfn""}
          next-prompt histfn with frame a.
@@ -95,13 +109,11 @@ repeat:
    end. /*lab001: repeat:*/
    update yn with frame a.
    if yn = no then leave.
-   run getDateInfo(input daysto,
-               input yes,
-               output days,
-               output datet,
-               output datestr).
-   assign md5 = getEncode(l_prod, loc_phys_addr ,uid,
-                          datestr, key1, key2 ,key3).
+
+   assign datet = today + daysto.
+   assign datestr = dts(datet).
+   assign md5 = getEncode(l_prod,loc_phys_addr,uid,
+                          datestr,key1, key2 ,key3).
 
    output to value(histfn).
    if cLoadFile then do:
@@ -127,11 +139,7 @@ repeat:
       end.
       put skip.
       put unformat fill(" ",11) 'usrw_key1 = "' l_prod '" and' skip.
-      put unformat fill(" ",11) 'usrw_key2 = "' loc_phys_addr '" and' skip.
-      put unformat fill(" ",11) 'usrw_key3 = "' uid '" and' skip.
-      put unformat fill(" ",11) 'usrw_key4 = "' key1 '" and' skip.
-      put unformat fill(" ",11) 'usrw_key5 = "' key2 '" and' skip.
-      put unformat fill(" ",11) 'usrw_key6 = "' key3 '" no-error.' skip.
+      put unformat fill(" ",11) 'usrw_key2 = "' loc_phys_addr '" no-error.' skip.
       put unformat 'if not available usrw_wkfl then do:' skip.
       put unformat fill(" ",10) 'create usrw_wkfl.' skip.
       put unformat fill(" ",10) 'assign '.
@@ -140,19 +148,20 @@ repeat:
       put unformat fill(" ",17).
       end.
       put unformat 'usrw_key1 = "' l_prod '"' skip.
-      put unformat fill(" ",17) 'usrw_key2 = "' loc_phys_addr '"' skip.
-      put unformat fill(" ",17) 'usrw_key3 = "' uid '"' skip.
+      put unformat fill(" ",17) 'usrw_key2 = "' loc_phys_addr '".' skip.
+      put unformat 'end. ~/* if not available usrw_wkfl then do: *~/' skip.
+      put unformat fill(" ",10) 'assign usrw_key3 = "' uid '"' skip.
       put unformat fill(" ",17) 'usrw_key4 = "' key1 '"' skip.
       put unformat fill(" ",17) 'usrw_key5 = "' key2 '"' skip.
-      put unformat fill(" ",17) 'usrw_key6 = "' key3 '".' skip.
-      put unformat 'end. ~/* if not available usrw_wkfl then do: *~/' skip.
-      put unformat fill(" ",10) 'assign usrw_charfld[1] = "'
-                   entry(1,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[2] = "' entry(2,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[3] = "' entry(3,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[4] = "' entry(4,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[5] = "' entry(5,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[6] = "' entry(6,md5,";") '"' skip.
+      put unformat fill(" ",17) 'usrw_key6 = "' key3 '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[1] = "'
+                   entry(1,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[2] = "' entry(2,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[3] = "' entry(3,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[4] = "' entry(4,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[5] = "' entry(5,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[6] = "' entry(6,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[7] = "' entry(7,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[10] = "' cmmt '"' skip.
       put unformat fill(" ",17) 'usrw_datefld[1] = '.
       put unformat 'date(' string(month(datet),"99") ","

@@ -1,7 +1,10 @@
-/* xxdtitle.i - md5 function setts                                            */
+/* xxecdc.i - md5 function setts                                              */
 /*V8:ConvertMode=Maintenance                                                  */
 /* Revision: 9.1     Last modified: 08/17/00    By: *N0LJ* Mark Brown         */
 /******************************************************************************/
+
+define variable inidte as date.
+assign inidte = date(2,27,2012).
 
 FUNCTION dts returns character(input idate as date):
  /* -----------------------------------------------------------
@@ -11,9 +14,10 @@ FUNCTION dts returns character(input idate as date):
   -------------------------------------------------------------*/
     return string(year(idate),"9999") + "-" +
            string(month(idate),"99") + "-" +
-           string(day(idate),"99").
+           string(day(idate),"99") + ",#*2012".
 end FUNCTION.
 
+/***************************
 Procedure getDateInfo:
  /* -----------------------------------------------------------
     Purpose: get md5 code.
@@ -26,19 +30,18 @@ Procedure getDateInfo:
    define output parameter dte2 as date.
    define output parameter dte2str as character.
 
-define variable inidte as date.
-assign inidte = date(2,27,2012).
-if reftoday then do:
-    assign dte2 = today + days.
-end.
-else do:
-    assign dte2 = inidte + days.
-end.
+   if reftoday then do:
+       assign dte2 = today + days.
+   end.
+   else do:
+       assign dte2 = inidte + days.
+   end.
 
-assign nbr2 = today - inidte + days.
-       dte2str = dts(dte2).
+   assign nbr2 = today - inidte + days.
+          dte2str = dts(dte2).
 
 END Procedure.
+***********************/
 
 FUNCTION getMAC RETURNS CHARACTER:
  /* -----------------------------------------------------------
@@ -88,12 +91,12 @@ FUNCTION getMd5 RETURNS CHARACTER(input keywords as CHARACTER):
     Notes:
   -------------------------------------------------------------*/
   define variable x as raw.
-  define variable y as char.
-  define variable d as char init "0123456789abcdef".
-  define variable i as int.
-  define variable b as int.
-  define variable d0 as int.
-  define variable d1 as int.
+  define variable y as character.
+  define variable d as character init "0123456789abcdef".
+  define variable i as integer.
+  define variable b as integer.
+  define variable d0 as integer.
+  define variable d1 as integer.
 
 x = md5-digest(keywords).
 y = "".
@@ -121,9 +124,9 @@ FUNCTION getEncode RETURNS CHARACTER
   define variable retVal as CHARACTER initial "".
 /*   DEFINE VARIABLE ini_date AS DATE NO-UNDO. */
 /*   ASSIGN ini_date = DATE(1,1,2012).         */
-  assign retVal = getMd5(key1) + ";" + getMd5(key2) + ";"
-                + getMd5(key3) + ";" + getMd5(key4) + ";"
-                + getMd5(key5) + ";" + getMd5(key6) + ";"
+  assign retVal = getMd5(key1) + "," + getMd5(key2) + ","
+                + getMd5(key3) + "," + getMd5(key4) + ","
+                + getMd5(key5) + "," + getMd5(key6) + ","
                 + getMd5(key7).
   return retVal.
 END FUNCTION. /*FUNCTION getKey*/
