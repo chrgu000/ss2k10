@@ -11,13 +11,16 @@
 
 define variable l_prod as character format 'x(30)'.
 define variable l_prod1 as character format 'x(30)'.
+define variable loc_phys_addr as character format "x(20)".
+define variable sub1          as character format "x(20)".
 define variable fg      as character format "x(76)".
 define variable del-yn  as logical.
 form
    skip(.1)
    l_prod  colon 20
    l_prod1 colon 20 label {t001.i}
-   skip(1)
+   loc_phys_addr colon 20  
+   sub1          colon 20 label {t001.i} skip(2)
    del-yn  colon 32
    skip(2)
 with frame a side-labels width 80 attr-space.
@@ -52,17 +55,20 @@ setFrameLabels(frame b:handle).
 repeat:
 
    if l_prod1 = hi_char then l_prod1 = "".
-
+   if sub1 = hi_char then sub1 = "".
    if c-application-mode <> 'web' then
-      update l_prod l_prod1 del-yn with frame a.
+      update l_prod l_prod1 loc_phys_addr sub1 del-yn with frame a.
 
-   {wbrp06.i &command = update &fields = "  l_prod l_prod1 del-yn" &frm = "a"}
+   {wbrp06.i &command = update 
+             &fields = " l_prod l_prod1 loc_phys_addr sub1 del-yn" 
+             &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
       (c-web-request begins 'data'))
    then do:
       if l_prod1 = "" then l_prod1 = hi_char.
+      if sub1 = "" then sub1 = hi_char.
    end.
 
    /* OUTPUT DESTINATION SELECTION */
@@ -83,7 +89,8 @@ repeat:
   {mfphead2.i}
   assign fg = fill("-",80).
    for each usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
-            usrw_key1 >= l_prod and usrw_key1 <= l_prod1:
+            usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
+            usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1:
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
@@ -106,7 +113,8 @@ repeat:
    {mftrl080.i}
    if del-yn then do:
     for each usrw_wkfl exclusive-lock where {xxusrwdom1.i} {xxand.i}
-            usrw_key1 >= l_prod and usrw_key1 <= l_prod1:
+            usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
+            usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1:
         delete usrw_wkfl.
     end.
     {mfmsg.i 22 1}

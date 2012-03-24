@@ -41,6 +41,8 @@ run iniForm.
 form c-comp-pgms at 28 with frame tx no-labels width 80.
 setFrameLabels(Frame tx:handle).
 
+{xxchklv.i execname 300}
+
 form
    skip(.1)
    xrcDir   colon 22 label {&xxcomp_p_1}

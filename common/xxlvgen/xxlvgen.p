@@ -10,7 +10,7 @@
 /* ********** End Translatable Strings Definitions ********* */
 
 define variable yn like mfc_logical initial yes.
-define variable l_prod as character format 'x(30)' initial "xxt.p".
+define variable l_prod as character format 'x(30)'.
 define variable uid    as character format "x(56)".
 define variable loc_phys_addr as character format "x(20)".
 define variable daysto        as integer initial 30.
@@ -20,8 +20,8 @@ define variable datestr       as character.
 define variable key1          as character format "x(24)".
 define variable key2          as character format "x(24)".
 define variable key3          as character format "x(24)".
-define variable cmmt          as character format "x(24)".
-define variable histfn        as character format "x(56)".
+define variable cmmt          as character format "x(56)".
+define variable histfn        as character format "x(24)".
 define variable cLoadFile     as logical initial "NO".
 define variable md5           as character.
 define variable rev           as character.
@@ -112,8 +112,13 @@ repeat:
 
    assign datet = today + daysto.
    assign datestr = dts(datet).
-   assign md5 = getEncode(l_prod,loc_phys_addr,uid,
-                          datestr,key1, key2 ,key3).
+   assign md5 = getEncode(l_prod + "year!",
+                          loc_phys_addr + "month@",
+                          uid + "week#",
+                          datestr + "day$",
+                          key1 + "hour%",
+                          key2 + "minutes^",
+                          key3 + "second&").
 
    output to value(histfn).
    if cLoadFile then do:
