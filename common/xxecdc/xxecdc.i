@@ -3,27 +3,49 @@
 /* Revision: 9.1     Last modified: 08/17/00    By: *N0LJ* Mark Brown         */
 /******************************************************************************/
 
-FUNCTION getDateStr RETURNS CHARACTER
-        (days as integer,
-         reftoday as logical):
+FUNCTION dts returns character(input idate as date):
+ /* -----------------------------------------------------------
+    Purpose: get md5 code.
+    Parameters:  <none>
+    Notes:
+  -------------------------------------------------------------*/
+    return string(year(idate),"9999") + "-" +
+           string(month(idate),"99") + "-" +
+           string(day(idate),"99").
+end FUNCTION.
+
+Procedure getDateInfo:
+ /* -----------------------------------------------------------
+    Purpose: get md5 code.
+    Parameters:
+    Notes:
+  -------------------------------------------------------------*/
+   define input parameter days as integer.
+   define input parameter reftoday as logical.
+   define output parameter nbr2 as integer.
+   define output parameter dte2 as date.
+   define output parameter dte2str as character.
 
 define variable inidte as date.
-define variable calcDate as date.
 assign inidte = date(2,27,2012).
 if reftoday then do:
-    assign calcDate = today + days.
+    assign dte2 = today + days.
 end.
 else do:
-    assign calcDate = inidte + days.
+    assign dte2 = inidte + days.
 end.
 
-  return string(year(calcDate),"9999") + "-" +
-         string(month(calcDate),"99") + "-" +
-         string(day(calcDate),"99").
+assign nbr2 = today - inidte + days.
+       dte2str = dts(dte2).
 
-END FUNCTION.
+END Procedure.
 
 FUNCTION getMAC RETURNS CHARACTER:
+ /* -----------------------------------------------------------
+    Purpose: get MAC ADDRESS.
+    Parameters:  <none>
+    Notes:
+  -------------------------------------------------------------*/
   define variable txt as character  format "x(70)".
   if opsys = "UNIX" then do:
      UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".
@@ -87,9 +109,10 @@ return y.
 END FUNCTION. /*FUNCTION getMd5*/
 
 FUNCTION getEncode RETURNS CHARACTER
-        (key1 as CHARACTER,key2 as CHARACTER,
-         key3 as CHARACTER,key4 as CHARACTER,
-         key5 as CHARACTER,key6 as CHARACTER):
+        (key1 as CHARACTER, key2 as CHARACTER,
+         key3 as CHARACTER, key4 as CHARACTER,
+         key5 as CHARACTER, key6 as CHARACTER,
+         key7 as CHARACTER):
  /* -----------------------------------------------------------
     Purpose:
     Parameters:  <none>
@@ -100,6 +123,7 @@ FUNCTION getEncode RETURNS CHARACTER
 /*   ASSIGN ini_date = DATE(1,1,2012).         */
   assign retVal = getMd5(key1) + ";" + getMd5(key2) + ";"
                 + getMd5(key3) + ";" + getMd5(key4) + ";"
-                + getMd5(key5) + ";" + getMd5(key6) .
+                + getMd5(key5) + ";" + getMd5(key6) + ";"
+                + getMd5(key7).
   return retVal.
 END FUNCTION. /*FUNCTION getKey*/

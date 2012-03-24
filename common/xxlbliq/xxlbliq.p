@@ -35,7 +35,7 @@ repeat:
 {wbrp06.i &command = update &fields = " lang lblterm cdref showdet" &frm = "a"}
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "terminal"
+   {gpselout.i &printType = "printer"
                &printWidth = 320
                &pagedFlag = " "
                &stream = " "

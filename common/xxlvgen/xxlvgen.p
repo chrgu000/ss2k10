@@ -1,4 +1,4 @@
-/* xxc.p - compile procedure                                                 */
+/* xxlvgen.p - license generate                                              */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
@@ -15,9 +15,12 @@ define variable uid    as character format "x(20)".
 define variable loc_phys_addr as character format "x(20)".
 define variable daysto        as integer initial 30.
 define variable days          as integer.
+define variable datet         as date.
 define variable datestr       as character.
 define variable key1          as character format "x(20)".
 define variable key2          as character format "x(20)".
+define variable key3          as character format "x(20)".
+define variable cmmt          as character format "x(40)".
 define variable histfn        as character format "x(40)".
 define variable cLoadFile     as logical initial "NO".
 define variable md5           as character.
@@ -32,7 +35,9 @@ form
    daysto colon 20
    key1   colon 20
    key2   colon 20
+   key3   colon 20
    skip(1)
+   cmmt   colon 20
    rev    colon 20
    histfn colon 20
    cLoadFile colon 20
@@ -45,10 +50,10 @@ setFrameLabels(frame a:handle).
 assign uid = global_userid
        loc_phys_addr = getMAC().
 {gprun.i ""gpgetver.p"" "(input '4', output rev)"}
-display l_prod loc_phys_addr uid daysto key1 key2 with frame a.
+display l_prod loc_phys_addr uid daysto key1 key2 key3 with frame a.
 
 repeat:
-   update l_prod loc_phys_addr uid daysto key1 key2 with frame a.
+   update l_prod loc_phys_addr uid daysto key1 key2 key3 with frame a.
 
    if l_prod = "" then do:
      {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""l_prod""}
@@ -72,7 +77,6 @@ repeat:
      next-prompt daysto with frame a.
      undo,retry.
    end.
-   assign days = today - date(2,27,2012) + daysto.
    if index(l_prod,".") = 0 then
       assign histfn = "xx" + l_prod + "lv.p".
    else
@@ -81,7 +85,7 @@ repeat:
    display histfn with frame a.
    lab001:
    repeat:
-      update rev histfn cLoadFile with frame a.
+      update cmmt rev histfn cLoadFile with frame a.
       if histfn = "" then do:
          {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""histfn""}
          next-prompt histfn with frame a.
@@ -91,9 +95,13 @@ repeat:
    end. /*lab001: repeat:*/
    update yn with frame a.
    if yn = no then leave.
-   assign datestr = getDateStr(daysto,yes).
+   run getDateInfo(input daysto,
+               input yes,
+               output days,
+               output datet,
+               output datestr).
    assign md5 = getEncode(l_prod, loc_phys_addr ,uid,
-                          datestr, key1, key2).
+                          datestr, key1, key2 ,key3).
 
    output to value(histfn).
    if cLoadFile then do:
@@ -121,9 +129,9 @@ repeat:
       put unformat fill(" ",11) 'usrw_key1 = "' l_prod '" and' skip.
       put unformat fill(" ",11) 'usrw_key2 = "' loc_phys_addr '" and' skip.
       put unformat fill(" ",11) 'usrw_key3 = "' uid '" and' skip.
-      put unformat fill(" ",11) 'usrw_key4 = "' string(days) '" and' skip.
-      put unformat fill(" ",11) 'usrw_key5 = "' key1 '" and' skip.
-      put unformat fill(" ",11) 'usrw_key6 = "' key2 '" no-error.' skip.
+      put unformat fill(" ",11) 'usrw_key4 = "' key1 '" and' skip.
+      put unformat fill(" ",11) 'usrw_key5 = "' key2 '" and' skip.
+      put unformat fill(" ",11) 'usrw_key6 = "' key3 '" no-error.' skip.
       put unformat 'if not available usrw_wkfl then do:' skip.
       put unformat fill(" ",10) 'create usrw_wkfl.' skip.
       put unformat fill(" ",10) 'assign '.
@@ -134,9 +142,9 @@ repeat:
       put unformat 'usrw_key1 = "' l_prod '"' skip.
       put unformat fill(" ",17) 'usrw_key2 = "' loc_phys_addr '"' skip.
       put unformat fill(" ",17) 'usrw_key3 = "' uid '"' skip.
-      put unformat fill(" ",17) 'usrw_key4 = "' string(days) '"' skip.
-      put unformat fill(" ",17) 'usrw_key5 = "' key1 '"' skip.
-      put unformat fill(" ",17) 'usrw_key6 = "' key2 '".' skip.
+      put unformat fill(" ",17) 'usrw_key4 = "' key1 '"' skip.
+      put unformat fill(" ",17) 'usrw_key5 = "' key2 '"' skip.
+      put unformat fill(" ",17) 'usrw_key6 = "' key3 '".' skip.
       put unformat 'end. ~/* if not available usrw_wkfl then do: *~/' skip.
       put unformat fill(" ",10) 'assign usrw_charfld[1] = "'
                    entry(1,md5,";") '"' skip.
@@ -145,9 +153,14 @@ repeat:
       put unformat fill(" ",17) 'usrw_charfld[4] = "' entry(4,md5,";") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[5] = "' entry(5,md5,";") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[6] = "' entry(6,md5,";") '"' skip.
-      put unformat fill(" ",17) 'usrw_charfld[7] = global_userid' skip.
-      put unformat fill(" ",17) 'usrw_datefld[1] = today' skip.
-      put unformat fill(" ",17) 'usrw_intfld[1] = time.' skip.
+      put unformat fill(" ",17) 'usrw_charfld[10] = "' cmmt '"' skip.
+      put unformat fill(" ",17) 'usrw_datefld[1] = '.
+      put unformat 'date(' string(month(datet),"99") ","
+                           string(day(datet),"99") ","
+                           string(year(datet),"9999") ')' skip.
+      put unformat fill(" ",17) 'usrw_intfld[1] = ' days skip.
+      put unformat fill(" ",17) 'usrw_datefld[2] = today' skip.
+      put unformat fill(" ",17) 'usrw_intfld[2] = time.' skip.
       put unformat "leave." skip.
    if not cLoadFile then do:
       put unformat skip 'end.  ~/* repeat with frame a: *~/' skip.
@@ -157,7 +170,7 @@ repeat:
    output close.
    if cLoadFile then do:
       run value(histfn).
-      os-delete value(histfn) no-error.
+       /* os-delete value(histfn) no-error. */
    end.
    else do:
         {pxmsg.i &MSGNUM=4804 &ERRORLEVEL=1 &MSGARG1=histfn}

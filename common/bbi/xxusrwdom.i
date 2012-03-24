@@ -1,4 +1,4 @@
-/* xxcdom.i - domain line for different EV                                   */
+/* usrw_domain.i - domain line for different EV                              */
 /* REVISION: 23Y9 LAST MODIFIED: 11/18/10   BY: zy                           */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
