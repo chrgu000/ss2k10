@@ -15,7 +15,9 @@ define variable mfgver as character.
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
-{xxchklv.i execname 30}
+if not batchrun then do:
+  {xxchklv.i execname 10}
+end.
 ON "CTRL-]" OF cdref IN FRAME frame-a DO:
    do iCnt = 1 to extent(mndnbr):
       if mndnbr[iCnt] <> "" and sel[iCnt] <> 0 then do:

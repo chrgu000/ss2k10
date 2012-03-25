@@ -19,7 +19,7 @@ form
    skip(.1)
    l_prod  colon 20
    l_prod1 colon 20 label {t001.i}
-   loc_phys_addr colon 20  
+   loc_phys_addr colon 20
    sub1          colon 20 label {t001.i} skip(2)
    del-yn  colon 32
    skip(2)
@@ -60,8 +60,8 @@ repeat:
    if c-application-mode <> 'web' then
       update l_prod l_prod1 loc_phys_addr sub1 del-yn with frame a.
 
-   {wbrp06.i &command = update 
-             &fields = " l_prod l_prod1 loc_phys_addr sub1 del-yn" 
+   {wbrp06.i &command = update
+             &fields = " l_prod l_prod1 loc_phys_addr sub1 del-yn"
              &frm = "a"}
 
    if (c-application-mode <> 'web') or

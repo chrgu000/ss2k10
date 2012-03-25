@@ -61,18 +61,6 @@ repeat:
       undo,retry.
    end.
 
-/* if loc_phys_addr = "" then do:                                            */
-/*   {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""loc_phys_addr""}         */
-/*   next-prompt loc_phys_addr with frame a.                                 */
-/*   undo,retry.                                                             */
-/* end.                                                                      */
-/*                                                                           */
-/* if uid = "" then do:                                                      */
-/*   {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""uid""}                   */
-/*   next-prompt uid with frame a.                                           */
-/*    undo,retry.                                                            */
-/* end.                                                                      */
-
    find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
               usrw_key1 = l_prod and usrw_key2 = loc_phys_addr no-error.
    if available usrw_wkfl then do:
