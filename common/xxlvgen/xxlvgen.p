@@ -13,6 +13,7 @@ define variable yn like mfc_logical initial yes.
 define variable l_prod as character format 'x(30)'.
 define variable uid    as character format "x(56)".
 define variable loc_phys_addr as character format "x(20)".
+define variable l_tot_usrs    as integer initial 1.
 define variable daysto        as integer initial 30.
 define variable days          as integer.
 define variable datet         as date.
@@ -33,6 +34,7 @@ form
    loc_phys_addr colon 20
    uid    colon 20
    daysto colon 20
+   l_tot_usrs colon 20
    key1   colon 20
    key2   colon 20
    key3   colon 20
@@ -76,6 +78,7 @@ repeat:
    if available usrw_wkfl then do:
       assign uid = usrw_key3
              daysto = usrw_datefld[1] - today
+             l_tot_usrs = usrw_intfld[1]
              key1 = usrw_key4
              key2 = usrw_key5
              key3 = usrw_key6
@@ -83,7 +86,8 @@ repeat:
    end.
    else do:
       assign uid = global_userid
-             daysto = 30.
+             daysto = 30
+             l_tot_usrs = 1.
    end.
 
    if index(l_prod,".") = 0 then
@@ -91,10 +95,11 @@ repeat:
    else
        assign histfn = "xx" + substring(l_prod,3,index(l_prod,".") - 3)
                      + "lv.p".
-   display uid daysto key1 key2 key3 cmmt histfn with frame a.
+   display uid daysto l_tot_usrs key1 key2 key3 cmmt histfn with frame a.
    lab001:
    repeat:
-      update  uid daysto key1 key2 key3 cmmt rev histfn cLoadFile with frame a.
+      update  uid daysto l_tot_usrs key1 key2 key3 cmmt rev
+              histfn cLoadFile with frame a.
       if daysto <= 0 then do:
         {pxmsg.i &MSGNUM=5904 &ERRORLEVEL=3}
         next-prompt daysto with frame a.
@@ -112,13 +117,11 @@ repeat:
 
    assign datet = today + daysto.
    assign datestr = dts(datet).
-   assign md5 = getEncode(l_prod + "year!",
-                          loc_phys_addr + "month@",
-                          uid + "week#",
-                          datestr + "day$",
-                          key1 + "hour%",
-                          key2 + "minutes^",
-                          key3 + "second&").
+   assign md5 = getEncode(l_prod + "year!", loc_phys_addr + "month@",
+                          uid + "week#", datestr + "day$",
+                          key1 + "hour%", key2 + "minutes^",
+                          key3 + "second&",
+                          trim(string(l_tot_usrs,">>>>>>>>>>>>9")) + "season*").
 
    output to value(histfn).
    if cLoadFile then do:
@@ -167,12 +170,13 @@ repeat:
       put unformat fill(" ",17) 'usrw_charfld[5] = "' entry(5,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[6] = "' entry(6,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[7] = "' entry(7,md5,",") '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[8] = "' entry(8,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[10] = "' cmmt '"' skip.
       put unformat fill(" ",17) 'usrw_datefld[1] = '.
       put unformat 'date(' string(month(datet),"99") ","
                            string(day(datet),"99") ","
                            string(year(datet),"9999") ')' skip.
-      put unformat fill(" ",17) 'usrw_intfld[1] = ' days skip.
+      put unformat fill(" ",17) 'usrw_intfld[1] = ' l_tot_usrs skip.
       put unformat fill(" ",17) 'usrw_datefld[2] = today' skip.
       put unformat fill(" ",17) 'usrw_intfld[2] = time.' skip.
       put unformat "leave." skip.

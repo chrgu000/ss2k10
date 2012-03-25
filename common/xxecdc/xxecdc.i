@@ -207,7 +207,7 @@ FUNCTION getEncode RETURNS CHARACTER
         (key1 as CHARACTER, key2 as CHARACTER,
          key3 as CHARACTER, key4 as CHARACTER,
          key5 as CHARACTER, key6 as CHARACTER,
-         key7 as CHARACTER):
+         key7 as CHARACTER, Key8 as CHARACTER):
  /* -----------------------------------------------------------
     Purpose:
     Parameters:  <none>
@@ -224,7 +224,7 @@ FUNCTION getEncode RETURNS CHARACTER
   assign retVal = ENCODE(key1) + "," + ENCODE(key2) + ","
                 + ENCODE(key3) + "," + ENCODE(key4) + ","
                 + ENCODE(key5) + "," + ENCODE(key6) + ","
-                + ENCODE(key7).
+                + ENCODE(key7) + "," + ENCODE(key8) .
 
   return retVal.
 END FUNCTION. /*FUNCTION getKey*/

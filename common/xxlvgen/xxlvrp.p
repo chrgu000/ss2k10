@@ -35,7 +35,8 @@ form
        usrw_key4  colon  54 format "x(20)"
        usrw_key5  colon  20 format "x(20)"
        usrw_key6  colon  54 format "x(20)"
-       usrw_datefld[1] colon 20
+       usrw_intfld[1] colon 20
+       usrw_datefld[1] colon 54
        usrw_charfld[10] colon 20 format "x(56)"
        usrw_datefld[2] colon 20
        usrw_intfld[2] colon 54
@@ -101,6 +102,7 @@ repeat:
               usrw_key4
               usrw_key5
               usrw_key6
+              usrw_intfld[1]
               usrw_datefld[1]
               usrw_datefld[2]
               usrw_charfld[10]
