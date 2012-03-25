@@ -176,7 +176,7 @@ repeat:
    output close.
    if cLoadFile then do:
       run value(histfn).
-       /* os-delete value(histfn) no-error. */
+      os-delete value(histfn) no-error.
    end.
    else do:
         {pxmsg.i &MSGNUM=4804 &ERRORLEVEL=1 &MSGARG1=histfn}
