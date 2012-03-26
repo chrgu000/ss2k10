@@ -114,7 +114,7 @@ assign vfind = no.
                     ld_loc = loc_loc and ld_qty_oh > 0:
         find first pt_mstr no-lock where pt_part = ld_part no-error.
         assign vptstat = "3".
-/*    筛选出的结果做检验标志，合格为1，不合格为2，空为未做检验               */
+/* 筛选出的结果做检验标志，(5.13.9,4~5)合格为1，不合格为0或2，空为未检验     */
         find first Xxmqp_det no-lock where xxmqp_part = ld_part and
                    xxmqp_serial = ld_lot no-error.
         if available xxmqp_det then do:
