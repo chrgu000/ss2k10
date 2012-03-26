@@ -59,7 +59,6 @@ define {1} shared temp-table trlt2
     field trt2_seq      as int
     field trt2_date     like xxwa_date
     field trt2_time     like xxwa_pstime
-    field trt2_line like  xxwa_line
     field trt2_loc      like loc_loc
     field trt2_part     like pt_part
     field trt2_lot      like ld_lot

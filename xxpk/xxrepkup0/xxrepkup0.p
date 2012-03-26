@@ -1,49 +1,49 @@
-/* GUI CONVERTED from repkup.p (converter v1.76) Wed Dec 18 20:55:26 2002     */
-/* repkup.p - REPETITIVE PICKLIST CALCULATION                                 */
-/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.6.1.9 $                                                       */
-/*V8:ConvertMode=Report                                                       */
-/* REVISION: 7.3      LAST MODIFIED: 09/06/92   BY: emb  *G071*               */
-/* REVISION: 7.3      LAST MODIFIED: 10/13/92   BY: emb  *G071*               */
-/* REVISION: 7.3      LAST MODIFIED: 10/26/92   BY: emb  *G071*               */
-/* REVISION: 7.3      LAST MODIFIED: 02/22/93   BY: emb  *G722*               */
-/* REVISION: 7.3      LAST MODIFIED: 09/27/93   BY: ram  *GF97*               */
-/* REVISION: 7.3      LAST MODIFIED: 11/01/94   by: ame  *GN86*               */
-/* REVISION: 7.3      LAST MODIFIED: 11/07/94   by: pxd  *GO32*               */
-/* REVISION: 8.5      LAST MODIFIED: 01/03/95   BY: mwd  *J034*               */
-/* REVISION: 7.3      LAST MODIFIED: 01/04/95   by: srk  *G0B8*               */
-/* REVISION: 7.3      LAST MODIFIED: 01/30/95   BY: qzl  *G0DD*               */
-/* REVISION: 7.3      LAST MODIFIED: 03/09/95   BY: pxe  *G0GW*               */
-/* REVISION: 7.3      LAST MODIFIED: 03/14/95   BY: ais  *G0HC*               */
-/* REVISION: 7.3      LAST MODIFIED: 06/09/95   BY: qzl  *G0PT*               */
-/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*               */
-/* REVISION: 8.5      LAST MODIFIED: 09/05/95   BY: srk  *J07G*               */
-/* REVISION: 7.3      LAST MODIFIED: 01/29/96   BY: jym  *G1LC*               */
-/* REVISION: 8.5      LAST MODIFIED: 06/20/96   BY: taf  *J0VG*               */
-                                                                              
-/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane          */
-/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan         */
-/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan         */
+/* GUI CONVERTED from repkup.p (converter v1.76) Wed Dec 18 20:55:26 2002 */
+/* repkup.p - REPETITIVE PICKLIST CALCULATION                           */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                  */
+/* All rights reserved worldwide.  This is an unpublished work.         */
+/* $Revision: 1.6.1.9 $                                                 */
+/*V8:ConvertMode=Report                                                 */
+/* REVISION: 7.3      LAST MODIFIED: 09/06/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 10/13/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 10/26/92   BY: emb  *G071*         */
+/* REVISION: 7.3      LAST MODIFIED: 02/22/93   BY: emb  *G722*         */
+/* REVISION: 7.3      LAST MODIFIED: 09/27/93   BY: ram  *GF97*         */
+/* REVISION: 7.3      LAST MODIFIED: 11/01/94   by: ame  *GN86*         */
+/* REVISION: 7.3      LAST MODIFIED: 11/07/94   by: pxd  *GO32*         */
+/* REVISION: 8.5      LAST MODIFIED: 01/03/95   BY: mwd  *J034*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/04/95   by: srk  *G0B8*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/30/95   BY: qzl  *G0DD*         */
+/* REVISION: 7.3      LAST MODIFIED: 03/09/95   BY: pxe  *G0GW*         */
+/* REVISION: 7.3      LAST MODIFIED: 03/14/95   BY: ais  *G0HC*         */
+/* REVISION: 7.3      LAST MODIFIED: 06/09/95   BY: qzl  *G0PT*         */
+/* REVISION: 7.3      LAST MODIFIED: 06/20/95   BY: str  *G0N9*         */
+/* REVISION: 8.5      LAST MODIFIED: 09/05/95   BY: srk  *J07G*         */
+/* REVISION: 7.3      LAST MODIFIED: 01/29/96   BY: jym  *G1LC*         */
+/* REVISION: 8.5      LAST MODIFIED: 06/20/96   BY: taf  *J0VG*         */
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane    */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan   */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan   */
 /* REVISION: 8.6E     LAST MODIFIED: 11/19/99   BY: *J3MK* Prashanth Narayan  */
 /* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
 /* REVISION: 9.1      LAST MODIFIED: 07/25/00   BY: *N0GD* Peggy Ng           */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Old ECO marker removed, but no ECO header exists *GOGW*                    */
 /* Revision: 1.6.1.8      BY: Katie Hilbert      DATE: 05/15/02  ECO: *P06H*  */
-/* $Revision: 1.6.1.9 $   BY: Nishit V           DATE: 12/10/02  ECO: *N21K*  */
+/* $Revision: 1.6.1.9 $           BY: Nishit V           DATE: 12/10/02  ECO: *N21K*  */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120201.1"}
+{mfdtitle.i "111217.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
-define new shared variable wkctr          like op_wkctr.
-define new shared variable wkctr1         like op_wkctr.
+define new shared variable wkctr          like op_wkctr initial "HPS".
+define new shared variable wkctr1         like op_wkctr initial "HPS".
 define new shared variable part           like ps_par
                                           label "父零件".
 define new shared variable part1          like ps_par.
@@ -80,36 +80,30 @@ define new shared variable isspol         like pt_iss_pol.
 
 nbr_replace = getTermLabel("TEMPORARY",10).
 
-find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
-           usrw_key2 = global_userid no-error.
-if available usrw_wkfl then do:
-assign wkctr = usrw_charfld[15]
-       wkctr1 = usrw_charfld[15]
-       issue = usrw_datefld[1]
-       issue1 = usrw_datefld[1]
-       reldate = usrw_datefld[1]
-       reldate1 = usrw_datefld[1].
-end.
+assign issue = today + 1
+       issue1 = today + 1
+       reldate = today + 1
+       reldate1 = today + 1.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
 FORM
-   site           label "地点" colon 18
+   site           label "地点" colon 22
    site1          label "到" colon 49 skip
-   part           label "父零件" colon 18
+   part           label "父零件" colon 22
    part1          label "到" colon 49 skip
-   comp1          label "子零件" colon 18
+   comp1          label "子零件" colon 22
    comp2          label "到" colon 49 skip
-   wkctr          label "工作中心" colon 18
+   wkctr          label "工作中心" colon 22
    wkctr1         label "到" colon 49 skip
-   issue          label "生产日期" colon 18
+   issue          label "生产日期" colon 22
    issue1         label "到" colon 49
-   reldate        label "发放日期" colon 18
+   reldate        label "发放日期" colon 22
    reldate1       label "到" colon 49 skip(1)
    netgr          label "使用工作中心库存" colon 30
    detail_display label "详细需求量" colon 30
    nbr            label "领料单号" colon 30
-   delete_pklst   label "完成删除" colon 30 skip
+   delete_pklst   label "完成删除" colon 30
 with frame a side-labels width 80 attr-space.
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
@@ -183,16 +177,6 @@ repeat:
       end.
    end.
 
-   find first usrw_wkfl where usrw_key1 = "xxrepkup0.p.param.ref" and
-              usrw_key2 = global_userid no-error.
-   if not available usrw_wkfl then do:
-      create usrw_wkfl.
-      assign usrw_key1 = "xxrepkup0.p.param.ref"
-             usrw_key2 = global_userid.
-   end.
-      assign usrw_datefld[1] = issue
-             usrw_charfld[15] = wkctr1.
-
    /* OUTPUT DESTINATION SELECTION */
    {xxgpselout.i &printType = "printer"
                &printWidth = 130
@@ -207,8 +191,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-
-
+ 
    {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
