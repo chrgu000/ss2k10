@@ -4,16 +4,18 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "120322.1"}
-&SCOPED-DEFINE sosoiq_p_1 "Qty Open"
+{mfdtitle.i "23YT.1"}
 
 define variable program  like po_vend no-undo.
 define variable program1 like po_vend no-undo.
+define variable del-yn   as   logical no-undo.
 
 form
    skip(.2)
    program  colon 15
    program1 colon 49 label {t001.i}
+   skip(1)
+   del-yn colon 22
 skip(1)
 with frame a  side-labels width 80 attr-space.
 setframelabels(frame a:handle).
@@ -22,7 +24,7 @@ setframelabels(frame a:handle).
 repeat:
 
     if program1 = hi_char then program1 = "".
-    update program program1 with frame a.
+    update program program1 del-yn with frame a.
     if program1 = "" then program1 = hi_char.
 
     {gpselout.i &printtype = "printer"
@@ -53,18 +55,28 @@ export delimiter "~t" getTermLabel("PROGRAM_NAME",20)
 											getTermLabel("ACCESS_CODE/PATH",20) skip.
 											
 FOR EACH usrw_wkfl NO-LOCK WHERE {xxusrwdomver.i} {xxand.i}
-		     usrw_key1 >= program and (usrw_key2 <= program1 or program1 = ""):
- 		 export delimiter "~t" usrw_key1 
- 		                       usrw_key2 
- 		                       usrw_key3 
- 		                       usrw_key4 
- 		                       usrw_datefld[1] 
- 		                       STRING(usrw_intfld[1],"hh:mm:ss") 
- 		                       usrw_intfld[2] 
- 		                       usrw_charfld[1].
+		     usrw_key1 >= program and (usrw_key2 <= program1 or program1 = "") and
+		     (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32"):
+  export delimiter "~t" usrw_key1 
+                        usrw_key2 
+                        usrw_key3 
+                        usrw_key4 
+                        usrw_datefld[1] 
+                        STRING(usrw_intfld[1],"hh:mm:ss") 
+                        usrw_intfld[2] 
+                        usrw_charfld[1].
 end.
 
 put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
+
+if del-yn then do:
+		 FOR EACH usrw_wkfl EXCLUSIVE-LOCK WHERE {xxusrwdomver.i} {xxand.i}
+		          usrw_key1 >= program and (usrw_key2 <= program1 or program1 = "")
+		     and (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32"):
+				 delete usrw_wkfl.
+     END.
+end.
+
 end. /* mainloop: */
 /* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}

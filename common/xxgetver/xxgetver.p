@@ -30,4 +30,4 @@ end.
           usrw_datefld[1] = today
           usrw_intfld[1] = time
           usrw_intfld[2] = usrw_intfld[2] + 1
-          usrw_charfld[1] = PROGRAM-NAME(3).
+          usrw_charfld[1] = PROGRAM-NAME(2).
