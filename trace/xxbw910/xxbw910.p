@@ -1,5 +1,5 @@
 /*V8:ConvertMode=Maintenance                                                  */
-{mfdtitle.i "120217.1"}
+{mfdtitle.i "120326.1"}
 define variable yn like mfc_logical no-undo.
 {gpcdget.i "UT"}
 
@@ -45,15 +45,16 @@ if not available brwf_det then do:
 end.
 assign brwf_det.brwf_field    = 'qad_key3'
        brwf_det.brwf_datatype = 'character'
-       brwf_det.brwf_format   = 'x(20)'
+       brwf_det.brwf_format   = 'x(40)'
        brwf_det.brwf_label    = 'TABLE'
        brwf_det.brwf_table    = 'qad_wkfl'
        brwf_det.brwf_select   = yes
        brwf_det.brwf_sort     = yes
        brwf_det.brwf_userid   = 'mfg'
        brwf_det.brwf_mod_date = today
-       brwf_det.brwf__qadc01  = '20'
+       brwf_det.brwf__qadc01  = '40'
        brwf_det.brwf_enable   = no.
+find first flh_mstr exclusive-lock where flh_mstr.flh_field = 'tbl' and flh_mstr.flh_call_pgm = 'xxtcrp.p' no-error.
       {mfmsg.i 4171 1}
        pause.
        return.

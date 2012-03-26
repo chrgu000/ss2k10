@@ -30,12 +30,18 @@
 /******************************************************************************/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "22YG"}
+{mfdtitle.i "23YL"}
 
 define variable tbl as character format "x(22)".
 define variable datefrom as date initial today.
 define variable uid like usr_userid.
 define variable uid1 like usr_userid.
+
+if opsys = "unix" and index(global_program_rev,",") > 0 then do:
+  assign tbl = entry(1,global_program_rev,",")
+         uid = entry(2,global_program_rev,",")
+         uid1 = entry(3,global_program_rev,",") no-error.
+end.
 
 form
    tbl      colon 20
@@ -57,6 +63,11 @@ repeat:
       update tbl datefrom uid uid1 with frame a.
 
    {wbrp06.i &command = update &fields = " tbl datefrom uid uid1 " &frm = "a"}
+   if opsys = "unix" and tbl <> "" then do:
+      assign global_program_rev = tbl + ","
+                                + uid + ","
+                                + uid1.
+   end.
    find first qad_wkfl no-lock where qad_domain = "xxtcgen.p-domain" and
               qad_key1 = "xxtcgen.p-tracegenrecord" and
         index(qad_key2,tbl) > 0 no-error.

@@ -361,7 +361,8 @@ repeat with frame a:
                 qad_key2 = tablename.
      end.
      recno = recid(qad_wkfl).
-     assign     qad_charfld[1]   = domain
+     assign     qad_key3 = entry(1,tablename,";")
+                qad_charfld[1]   = domain
                 qad_charfld[2]   = part
                 qad_charfld[3]   = site
                 qad_charfld[4]   = nbr
