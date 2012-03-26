@@ -22,9 +22,9 @@ define new shared variable vWorkFile   as character initial "utcompile.wrk".
 define new shared variable destDir     as character format "x(50)".
 define new shared variable lng         as character format "x(2)".
 define new shared variable kbc_display_pause as integer initial 1 format ">9".
+define new shared variable xrcDir     as character format "x(50)" no-undo.
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
-define variable xrcDir     as character format "x(50)" no-undo.
 define variable vpropath   as character.
 define variable bpropath   as character /*V8! bgcolor 15 */
                 view-as editor size 50 by 7.

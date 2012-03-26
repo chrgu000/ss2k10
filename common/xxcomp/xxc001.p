@@ -8,6 +8,7 @@
 define variable incmf as logical.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable proc_name as character format "x(18)" label "File".
+define variable proc_ver  as character format "x(10)".
 define variable i         as integer   format ">>>9" label "PROCESSED".
 define variable err       as integer   format ">>>9" label "Errors".
 define variable rfile     as character format "x(24)".
@@ -28,6 +29,7 @@ define shared variable vWorkFile as character.
 define shared variable destDir as character format "x(40)".
 define shared variable lng     as character format "x(2)".
 define shared variable kbc_display_pause as integer.
+define shared variable xrcDir     as character format "x(50)" no-undo.
 assign c-comp = trim(getTermLabel("COMPILING",12)) + " ".
 
 output stream crt to terminal.
@@ -92,7 +94,13 @@ repeat:
    view frame m0.
    if substring(proc_name,1,2) = "mf" then assign incmf = yes.
    display stream cmp c-comp with frame m0.
-   display skip proc_name with frame m0.
+   if opsys = "UNIX" then do:
+      run getVer(input xrcDir + "/" + proc_name,output proc_ver).
+   end.
+   else if opsys = "msdos" or opsys = "win32" then do:
+      run getVer(input xrcDir + "~\" + proc_name,output proc_ver).
+   end.
+   display skip trim(proc_name)  "..." proc_ver when proc_ver <> "" with frame m0.
    run getDestFileName(input destDir, input lng, input proc_name,
                        output dirname).
 
@@ -104,11 +112,11 @@ repeat:
    pause 0.
    down stream crt 1 with frame b.
    output to "utcompile.log" append.
-          put unformat "compile:" + proc_name.
+          put unformat "compile:" + proc_name + " Ver:" + proc_ver.
           if opsys = "unix" then do:
             put skip.
           end.
-          else  if opsys = "msdos" or opsys = "win32" then do:
+          else if opsys = "msdos" or opsys = "win32" then do:
             put " copy:".
           end.
           compile value(proc_name) no-attr-space save into value(".").
@@ -325,4 +333,27 @@ procedure getDestFileName:
        end.
      end.
   end.
+end procedure.
+
+procedure getVer:
+  define input parameter iProc as character.
+  define output parameter oVer as character.
+  define variable txt as character.
+  assign txt = "".
+  input from value(iProc).
+  repeat:
+      import unformat txt.
+      if index(txt,"mfdtitle.i") > 0 and index(txt,"/*") = 0 then do:
+         leave.
+      end.
+  end.
+  if index(txt,"mfdtitle.i") > 0 then do:
+     assign oVer = entry(2,substring(txt,index(txt,"mfdtitle.i"))," ").
+     assign oVer = substring(entry(1,over,"}"),2,LENGTH(entry(1,over,"}")) - 2 ).
+
+  end.
+  else do:
+     assign over = "".
+  end.
+  input close.
 end procedure.

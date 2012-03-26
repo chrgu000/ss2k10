@@ -4,7 +4,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "23YT.1"}
+{mfdtitle.i "23YT"}
 
 define variable program  like po_vend no-undo.
 define variable program1 like po_vend no-undo.
