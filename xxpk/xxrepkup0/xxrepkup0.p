@@ -205,7 +205,9 @@ repeat:
    {gprun.i ""repkupc.p""}
 
    /* REPORT TRAILER  */
+
    {mfrtrail.i}
+
    if temp_nbr = rpc_nbr_pre + string(rpc_nbr)
       and pick-used
       and not delete_pklst
