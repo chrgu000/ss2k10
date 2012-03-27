@@ -1,13 +1,11 @@
-/* SS - 111020.1 BY KEN */
+/* SS - 111020.1 BY KEN                                                       */
 /******************************************************************************/
-/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM */
-/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO */
+/* SCHEDULE MAINTENANCE DETAIL SUBPROGRAM                                     */
+/* DISPLAYS/MAINTAINS CUSTOMER LAST RECEIPT INFO                              */
 /*V8:ConvertMode=Maintenance                                                  */
 
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
-
-
 
 DEFINE SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
@@ -16,8 +14,7 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
 DEFINE SHARED VARIABLE v_flag AS CHARACTER.
 
 DEFINE TEMP-TABLE ttld_det LIKE ld_det.
-
-
+define variable vdata as character.
 
 DEFINE SHARED TEMP-TABLE xxso
    FIELD xxso_nbr LIKE so_nbr
@@ -44,10 +41,35 @@ DEFINE SHARED TEMP-TABLE xxso1
    FIELD xxso1_error AS CHARACTER FORMAT "x(24)"
    INDEX index1 xxso1_nbr.
 
+FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
+    DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE cfg  as CHARACTER NO-UNDO INITIAL "-".
+    DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE od   AS DATE      NO-UNDO.
+    if datestr = "" OR datestr = ? then do:
+        assign od = ?.
+    end.
+    else do:
+        ASSIGN sstr = datestr.
+        IF INDEX(sstr,"/") > 0 then assign cfg = "/".
+        ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+        ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,cfg) + 1).
+        ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+        ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,cfg) + 1)).
+        ASSIGN od = DATE(im,id,iy) NO-ERROR.
+    end.
+    RETURN od.
+END FUNCTION.
 
-DEFINE VARIABLE excelAppl AS COM-HANDLE.   
+/*V8+*/
+/******* New Import data from xls for gui application *************************/
+/*V8!
+DEFINE VARIABLE excelAppl AS COM-HANDLE.
 define variable xworkbook as com-handle.
 define variable xworksheet as com-handle.
+*/
 DEFINE VARIABLE xpath AS CHARACTER.
 DEFINE VARIABLE v_i AS INTEGER.
 DEFINE VARIABLE v_j AS INTEGER.
@@ -63,19 +85,33 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
    END.
 
    v_flag = "".
-
-
    xpath = FILE_name.
-   CREATE "Excel.Application" excelAppl.   
 
+   if opsys = "unix" then do:
+      input from value(xpath).
+      repeat:
+          import vdata.
+          if vdata < "ZZZZZZZZZZZZZZ" then do:
+             create xxso.
+             assign xxso_nbr = entry(1,vdata,",")
+                    xxso_effdate = str2Date(entry(2,vdata,","))
+                    xxso_site = entry(3,vdata,",")
+                    xxso_line = integer(entry(4,vdata,","))
+                    xxso_qty = dec(entry(5,vdata,","))
+                    xxso_loc = entry(6,vdata,",") no-error.
+          end.
+      end.
+      input close.
+   end. /* if opsys = "unix" then do: */
+
+/*V8+*/
+/******* New Import data from xls for gui application *************************/
+/*V8!
+elseif opsys = "msdos" or opsys = "win32" then do:
+   CREATE "Excel.Application" excelAppl.
    xworkbook = excelAppl:Workbooks:OPEN(xpath).
    xworksheet = excelAppl:sheets:item(1).
-   DO v_i = 2 TO 50000:
-      /*
-      MESSAGE v_i VIEW-AS ALERT-BOX.
-      MESSAGE xworksheet:cells(v_i,1):VALUE VIEW-AS ALERT-BOX.
-      */
-
+   DO v_i = 2 TO xworksheet:UsedRange:Columns:count:
       IF xworksheet:cells(v_i,1):VALUE <> ? THEN DO:
          CREATE xxso.
          ASSIGN xxso_nbr = string(xworksheet:cells(v_i,1):VALUE)
@@ -88,13 +124,19 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
       ELSE DO:
          LEAVE.
       END.
-
    END.
-
    excelAppl:quit.
    release object excelAppl.
    RELEASE OBJECT xworkbook.
    RELEASE OBJECT xworksheet.
+end. /* if opsys = "msdos" or opsys = "win32" then do:  */
+*/
+
+   for each xxso exclusive-lock:
+       if xxso_nbr = "" then do:
+          delete xxso.
+       end.
+   end.
 
    FIND FIRST xxso  NO-ERROR.
    IF NOT AVAIL xxso THEN DO:
@@ -109,21 +151,19 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
 
       FOR EACH xxso:
           FIND FIRST sod_det WHERE sod_domain = GLOBAL_domain
-             AND sod_nbr = xxso_nbr 
+             AND sod_nbr = xxso_nbr
              AND sod_line = xxso_line
              NO-LOCK NO-ERROR.
           IF NOT AVAIL sod_det THEN DO:
              xxso_error = "订单不存在,请重新输入".
           END.
-	      else do:
-	          xxso_part = sod_part.
-	      end. 
+        else do:
+            xxso_part = sod_part.
+        end.
       END.
 
 
-
       FOR EACH xxso BREAK BY xxso_loc BY xxso_part:
-
 
          IF xxso_qty <=0 THEN DO:
               xxso_error = "错误:数量必须大于0".
@@ -132,7 +172,7 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
          IF FIRST-OF(xxso_part) THEN DO:
             v_sum_part_qty = 0.
             v_qty_oh = 0.
-            FOR EACH ld_det 
+            FOR EACH ld_det
               WHERE ld_domain = GLOBAL_domain
               AND ld_site = xxso_site
               AND ld_loc = xxso_loc
@@ -147,14 +187,13 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
 
          IF v_qty_oh < v_sum_part_qty THEN DO:
             xxso_error = "错误:库存不足".
-            FIND FIRST loc_mstr WHERE loc_domain = GLOBAL_domain AND loc_loc = xxso_loc NO-LOCK NO-ERROR.
+            FIND FIRST loc_mstr WHERE loc_domain = GLOBAL_domain
+                   AND loc_loc = xxso_loc NO-LOCK NO-ERROR.
             IF NOT AVAIL loc_mstr THEN DO:
                xxso_error = "错误:库位不存在".
             END.
          END.
       END.
-
-
 
       FIND FIRST xxso WHERE xxso_error <> "" NO-LOCK NO-ERROR.
       IF AVAIL xxso THEN DO:
@@ -166,25 +205,30 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
          */
       END.
       ELSE DO:
-          /*分配批号,发货*/ 
+          /*分配批号,发货*/
 
           EMPTY TEMP-TABLE ttld_det.
           FOR EACH xxso NO-LOCK BREAK BY xxso_site BY xxso_loc BY xxso_part:
               IF FIRST-OF(xxso_part) THEN DO:
-                  FOR EACH ld_det WHERE ld_domain = GLOBAL_domain AND ld_site = xxso_site AND ld_loc = xxso_loc AND ld_part = xxso_part AND ld_qty_oh <> 0 NO-LOCK BY ld_lot:
+                  FOR EACH ld_det WHERE ld_domain = GLOBAL_domain
+                       AND ld_site = xxso_site AND ld_loc = xxso_loc
+                       AND ld_part = xxso_part AND ld_qty_oh <> 0
+                  NO-LOCK BY ld_lot:
                       CREATE ttld_det.
                       BUFFER-COPY ld_det TO ttld_det.
                   END.
               END.
           END.
 
- 
-
           FOR EACH xxso:
              v_qty_oh = xxso_qty.
              /*分配批号和库存*/
-             FOR EACH ttld_det WHERE ttld_det.ld_domain = GLOBAL_domain AND ttld_det.ld_site = xxso_site AND ttld_det.ld_loc = xxso_loc 
-                 AND ttld_det.ld_part = xxso_part AND ttld_det.ld_qty_oh <> 0 BY ttld_det.ld_lot:
+             FOR EACH ttld_det WHERE ttld_det.ld_domain = GLOBAL_domain
+                  AND ttld_det.ld_site = xxso_site
+                  AND ttld_det.ld_loc = xxso_loc
+                  AND ttld_det.ld_part = xxso_part
+                  AND ttld_det.ld_qty_oh <> 0
+             BY ttld_det.ld_lot:
                 IF v_qty_oh <> 0 THEN DO:
                     IF v_qty_oh >= ttld_det.ld_qty_oh THEN DO:
                         CREATE xxso1.
@@ -197,10 +241,8 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
                             xxso1_loc = xxso_loc
                             xxso1_lot = ttld_det.ld_lot
                             xxso1_lot_qty = ttld_det.ld_qty_oh.
-
-                        v_qty_oh = v_qty_oh - ttld_det.ld_qty_oh.
-                        ttld_det.ld_qty_oh = 0.
-
+                            v_qty_oh = v_qty_oh - ttld_det.ld_qty_oh.
+                            ttld_det.ld_qty_oh = 0.
                     END.
                     ELSE DO:
                         CREATE xxso1.
@@ -212,16 +254,13 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
                             xxso1_qty = xxso_qty
                             xxso1_loc = xxso_loc
                             xxso1_lot = ttld_det.ld_lot
-                            xxso1_lot_qty = v_qty_oh.                   
-                        
-                        ttld_det.ld_qty_oh = ttld_det.ld_qty_oh - v_qty_oh.
-                        v_qty_oh = 0.
+                            xxso1_lot_qty = v_qty_oh.
+                            ttld_det.ld_qty_oh = ttld_det.ld_qty_oh - v_qty_oh.
+                            v_qty_oh = 0.
                     END.
                 END.
-
              END.
-
-          END.
+          END. /* for each xxso */
 
           FIND FIRST xxso1 WHERE xxso1_lot_qty <= 0 NO-LOCK NO-ERROR.
           IF AVAIL xxso1 THEN DO:
@@ -234,8 +273,6 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
                   v_flag = "3".
               END.
           END.
-          
-          
 
           /*
           FOR EACH xxso1:

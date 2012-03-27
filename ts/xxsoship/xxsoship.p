@@ -1,17 +1,13 @@
-/*Gui */
-/*by Ken chen 111031.1*/
-/*by Ken chen 111220.1*/
-/*by Ken chen 111228.1*/
+/* xxsoship.p so ship with cim-load methed                                    */
+/*by Ken chen 111223.1                                                        */
 /*V8:ConvertMode=Report                                                       */
 {mfdtitle.i "111223.1"}
-
 
 DEFINE NEW SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE NEW SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
 DEFINE NEW SHARED VARIABLE fn_i AS CHARACTER.
 DEFINE NEW SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
 DEFINE NEW SHARED VARIABLE v_flag AS CHARACTER.
-
 
 DEFINE NEW SHARED TEMP-TABLE xxso
    FIELD xxso_nbr LIKE so_nbr
@@ -23,7 +19,6 @@ DEFINE NEW SHARED TEMP-TABLE xxso
    FIELD xxso_loc LIKE loc_loc
    FIELD xxso_error AS CHARACTER FORMAT "x(24)"
    INDEX index1 xxso_nbr.
-
 
 DEFINE NEW SHARED TEMP-TABLE xxso1
    FIELD xxso1_nbr LIKE so_nbr
@@ -40,12 +35,10 @@ DEFINE NEW SHARED TEMP-TABLE xxso1
 
 {gpcdget.i "UT"}
 
-FORM /*GUI*/ 
+FORM /*GUI*/
     SKIP(1)
-   FILE_name COLON 20 
+   FILE_name COLON 20
 with frame a side-labels width 80 ATTR-SPACE.
-
-
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -68,7 +61,6 @@ repeat on error undo, retry:
            undo, retry.
        END.
 
-
     MESSAGE "正在处理请等待......".
 
    /* OUTPUT DESTINATION SELECTION */
@@ -85,7 +77,6 @@ repeat on error undo, retry:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-               
 
     {mfphead.i}
 
@@ -94,9 +85,9 @@ repeat on error undo, retry:
      IF v_flag = "1" THEN DO:
         PUT "无数据,请重新输入".
      END.
-    
+
      IF v_flag = "2" THEN DO:
-         FOR EACH xxso WHERE xxso_error <> "" NO-LOCK:           
+         FOR EACH xxso WHERE xxso_error <> "" NO-LOCK:
              DISP xxso WITH WIDTH 200.
          END.
      END.
@@ -106,7 +97,6 @@ repeat on error undo, retry:
              DISP xxso1 WITH WIDTH 200.
          END.
      END.
-
 
      {mfrtrail.i}
 end.

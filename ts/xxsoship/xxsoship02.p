@@ -42,7 +42,7 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
 
 
    fn_i = "xxsoship-" + STRING(TIME).
-   OUTPUT TO VALUE(".\" + fn_i + ".bpi" ).
+   OUTPUT TO VALUE(fn_i + ".bpi" ).
    FOR EACH xxso1 no-lock break by xxso1_nbr by xxso1_line:
        if first-of(xxso1_nbr) then do:
           PUT UNFORMATTED xxso1_nbr " " xxso1_effdate " - - " xxso1_site SKIP.
@@ -61,8 +61,8 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
    OUTPUT CLOSE .
 
    batchrun = yes.
-   INPUT FROM VALUE(".\" + fn_i + ".bpi" ).
-   OUTPUT TO VALUE(".\" + fn_i + ".bpo" ).
+   INPUT FROM VALUE(fn_i + ".bpi").
+   OUTPUT TO VALUE(fn_i + ".bpo").
    {gprun.i ""xxsois1112.p""}
    INPUT CLOSE .
    OUTPUT CLOSE .
@@ -87,8 +87,6 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
          xxso1_error = "µº»Î ß∞‹".
       END.
 end.
-
-
 
 /**ken****************************
   /*cimload */
