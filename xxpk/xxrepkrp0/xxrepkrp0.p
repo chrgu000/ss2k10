@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "120118.1"}
+{mfdtitle.i "120327.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -28,7 +28,8 @@ define variable pnbr like xxwa_nbr.
 define variable vqty  as decimal no-undo.
 define variable tax_bonded as logical no-undo.
 define variable del-yn   as logical no-undo.
-
+define variable startTime as integer no-undo.
+define variable endTime as integer no-undo.
 find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
            usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
@@ -144,41 +145,89 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("STATUS",12)
          getTermLabel("Date",12)
          .
-  if cate = "A" or cate = "P" then do:
-     run printP.
-  end.
-  if cate = "A" or cate = "S" then do:
-     run printS.
-  end.
-  /*  REPORT TRAILER  */
-  if del-yn then do:
-     for each xxwa_det exclusive-lock where
-             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
-             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-             xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
-             xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
-           ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
-            (tax_bonded and substring(xxwa_part,1,1)= "P")):
-         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
-              and xxwd_recid = xxwa_recid:
-              delete xxwd_det.
-         end.
-         delete xxwa_det.
-      end.
-     for each qad_wkfl where qad_key1 = "xxrepkup0.p"
-          and qad_datefld[1] >= issue and qad_datefld[1] <= issue1
-          and qad_charfld[1] >= site and qad_charfld[1] <= site1
-          and qad_charfld[2] >= line and qad_charfld[2] <= line1:
-       delete qad_wkfl.
-    end.
-  end.
- end.
+
+ for each xxwd_det no-lock where
+          xxwd_site >= site and xxwd_site <= site1 and
+          xxwd_line >= line and xxwd_line <= line1 and
+          xxwd_part >= part and xxwd_part <= part1 and
+          xxwd_date >= issue and xxwd_date <= issue1 and
+          xxwd_nbr >= nbr and xxwd_nbr <= nbr1 and
+          ((substring(xxwd_part,1,1) = "P" and tax_bonded) or
+           (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
+          (xxwd_type = cate or cate = "A")
+
+          break by xxwd_type by xxwd_date by xxwd_time by xxwd_part:
+       find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
+       if available pt_mstr then do:
+          assign vMultiple = pt__qad19
+                 vtype = pt__chr10
+                 vdesc1 = pt_desc1.
+       end.
+       else do:
+          assign vMultiple = 0
+                 vtype = ""
+                 vdesc1 = "".
+       end.
+       if first-of(xxwd_time) then do:
+       run getSEtime(input xxwd_type,
+       							 input xxwd_site,
+       							 input xxwd_line,
+       							 input xxwd_time,
+       							 output startTime,
+       							 output endTime).
+       end.
+     export delimiter "~011"
+                  xxwd_type
+                  lower(xxwd_type) + xxwd_nbr
+                  xxwd_line
+                  string(xxwd_time,"hh:mm:ss")
+                  string(startTime,"hh:mm:ss")
+                  string(endTime,"hh:mm:ss")
+                  xxwd_sn
+                  substring(xxwd_ladnbr,9)
+                  xxwd_part
+                  vdesc1
+                  truncate(xxwd_qty_plan,0)
+                  vMultiple
+                  vtype
+                  truncate(xxwd_qty_plan,0)
+                  if xxwd_type = "S" then "P-ALL"  else xxwd_loc
+                  xxwd_lot
+                  if xxwd_type = "S" then xxwd_qty_siss else xxwd_qty_piss
+                  if xxwd_type = "s" then xxwd_sstat else xxwd_pstat
+                  xxwd_date.
+end.
+
+end.
+
  {mfreset.i}
 end.  /* repeat: */
 
 {wbrp04.i &frame-spec = a}
 
+procedure getSEtime:
+    define input parameter iType as character.
+    define input parameter iSite as character.
+    define input parameter iLine as character.
+    define input parameter iRuntime as integer.
+    define output parameter ostime as integer.
+    define output parameter oetime as integer.
+    find first xxlnw_det no-lock where xxlnw_site = isite and
+              (xxlnw_line = iLine or iLine = "") and
+               xxlnw_ptime = iRunTime no-error.
+    if available xxlnw_det then do:
+       if iType = "p" then do:
+          assign ostime = xxlnw_pstime
+                 oetime = xxlnw_petime.
+       end.
+       else do:
+          assign ostime = xxlnw_sstime
+                 oetime = xxlnw_setime.
+       end.
+    end.
+end procedure.
+
+/******************************************************************************
 procedure printP:
    for each xxwa_det no-lock where
              xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
@@ -280,3 +329,4 @@ procedure printS:
         end.
      end.
 end procedure.
+******************************************************************************/
