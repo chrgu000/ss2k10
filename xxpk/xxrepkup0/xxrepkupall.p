@@ -54,6 +54,7 @@ for each tsupp:
   	tsu_tqty = tsu_qty.
 end.
 /* 检查库存中已经分配的物料 */
+/*
 output to "/home/admin/testrepkall.txt".
 put "11111=" skip.
 for each tsupp:
@@ -64,6 +65,7 @@ for each tiss1:
   EXPORT DELIMITER ";" tiss1.
 end.
 output close.
+*/
 myseq = 0 .
 for each tt1swddet break by tt1swd_part by tt1swd_lot by tt1swd_ref by tt1swd_time :
   if first-of(tt1swd_ref) then do:

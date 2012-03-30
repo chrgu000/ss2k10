@@ -38,7 +38,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "111217.1"}
+{mfdtitle.i "120330.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -78,7 +78,7 @@ define new shared variable comp_max       like wod_qty_chg.
 define new shared variable pick-used      like mfc_logical.
 define new shared variable isspol         like pt_iss_pol.
 
-nbr_replace = getTermLabel("TEMPORARY",10).
+nbr_replace = "".
 
 assign issue = today + 1
        issue1 = today + 1

@@ -134,7 +134,7 @@ define temp-table xx_ld
   index xl_recid is primary xl_recid.
 
 assign
-   nbr_replace = getTermLabel("TEMPORARY",10)
+   nbr_replace = ""
    wc_qoh      = 0
    pick-used   = no
    temp_nbr    = nbr.
@@ -404,7 +404,7 @@ by wr_start by wr_part by wr_op
                   down 1.
 
                display
-                  getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
+                  "" @ lad_lot
                   qtyneed @ lad_qty_all WITH  /*GUI*/ .
 
             end.
@@ -485,7 +485,7 @@ by wr_start by wr_part by wr_op
                desc2 = "".
 
                display
-                  getTermLabelRtColon("QUANTITY_SHORT",18) @ lad_lot
+                  "" @ lad_lot
                   qtyneed @ lad_qty_all WITH  /*GUI*/ .
 
             end.
