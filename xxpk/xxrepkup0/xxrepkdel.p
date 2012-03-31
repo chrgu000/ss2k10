@@ -18,7 +18,7 @@
 /************************************************************************/
 /*J034*  ** MOVED MFDTITLE.I UP FROM BELOW */
          /* DISPLAY TITLE */
-         {mfdtitle.i "b+ "}
+         {mfdtitle.i "120331.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -38,6 +38,8 @@
          define variable wkctr1 like wkctr.
          define variable comp like ps_comp.
          define variable comp1 like ps_comp.
+         define variable dte   as date.
+         define variable dt1  as date.
          define variable site like lad_site.
          define variable site1 like lad_site.
          define variable desc1 like pt_desc1.
@@ -55,6 +57,8 @@
             seq1           label {t001.i} colon 49 skip
             comp           colon 20
             comp1          label {t001.i} colon 49 skip
+            dte            colon 20
+            dt1           label {t001.i} colon 49 skip
             wkctr          colon 20
             wkctr1         label {t001.i} colon 49 skip(1)
          with frame a side-labels width 80 attr-space.
@@ -72,6 +76,8 @@
             if comp1 = hi_char then comp1 = "".
             if wkctr1 = hi_char then wkctr1 = "".
             if site1 = hi_char then site1 = "".
+            if dte = low_date then dte = ?.
+            if dt1 = hi_date then dt1 = ?.
             if seq1 = 999 then seq1 = 0.
 
 /*GO59*/ global_recid = ?.
@@ -83,6 +89,8 @@
       seq1
       comp
       comp1
+      dte
+      dt1
       wkctr
       wkctr1
 /*GO59*   with frame a. */
@@ -125,6 +133,8 @@
 /*J034*/    if comp1 = "" then comp1 = hi_char.
 /*J034*/    if site1 = "" then site1 = hi_char.
 /*J034*/    if wkctr1  = "" then wkctr1 = hi_char.
+/*J034*/    if dte = ? then dte = low_date.
+/*J034*/    if dt1 = ? then dt1 = hi_date.
 /*J034*/    if seq1 = 0 then seq1 = 999.
 
 /*J034*/    if not batchrun then do:
@@ -251,22 +261,26 @@
                delete lad_det.
 
             end.
-      for each xxwa_det exclusive-lock where
-              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-              xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-              xxwa_part >= comp and (xxwa_part <= comp1 or comp1 = "") and
-              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = ""):
-          for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
-               and xxwd_recid = xxwa_recid:
-               delete xxwd_det.
-          end.
+       for each xxwa_det exclusive-lock where
+                xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+                xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+                xxwa_part >= comp and (xxwa_part <= comp1 or comp1 = "") and
+                xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
+                xxwa_date >= dte and xxwa_date <= dt1:
           delete xxwa_det.
-       end.		
-      for each qad_wkfl where qad_key1 = "xxrepkup0.p" 
+       end.
+       for each xxwd_det exclusive-lock where 
+                xxwd_nbr >= nbr and (xxwd_nbr <= nbr1 or nbr1 = "") and
+                xxwd_site >= site and (xxwd_site <= site1 or site1 = ?) and
+                xxwd_line >= wkctr and (xxwd_line <= wkctr1 or wkctr1 = "") and
+                xxwd_date >= dte and xxwd_date <= dt1:
+            delete xxwd_det.
+       end.
+       for each qad_wkfl where qad_key1 = "xxrepkup0.p"
            and qad_charfld[1] >= site and qad_charfld[1] <= site1
            and qad_charfld[2] >= wkctr and qad_charfld[2] <= wkctr1:
-        delete qad_wkfl.
-     end.
+           delete qad_wkfl.
+       end.
             /* REPORT TRAILER  */
             {mfrtrail.i}
 
