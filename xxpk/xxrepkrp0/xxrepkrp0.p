@@ -177,25 +177,25 @@ do on error undo, return error on endkey undo, return error:
        							 output endTime).
        end.
      export delimiter "~011"
-                  xxwd_type
-                  lower(xxwd_type) + xxwd_nbr
-                  xxwd_line
-                  string(xxwd_time,"hh:mm:ss")
-                  string(startTime,"hh:mm:ss")
-                  string(endTime,"hh:mm:ss")
-                  xxwd_sn
-                  substring(xxwd_ladnbr,9)
-                  xxwd_part
-                  vdesc1
-                  truncate(xxwd_qty_plan,0)
-                  vMultiple
-                  vtype
-                  truncate(xxwd_qty_plan,0)
-                  if xxwd_type = "S" then "P-ALL"  else xxwd_loc
-                  xxwd_lot
-                  if xxwd_type = "S" then xxwd_qty_siss else xxwd_qty_piss
-                  if xxwd_type = "s" then xxwd_sstat else xxwd_pstat
-                  xxwd_date.
+            xxwd_type
+            lower(xxwd_type) + xxwd_nbr
+            xxwd_line
+            string(xxwd_time,"hh:mm:ss")
+            string(startTime,"hh:mm:ss")
+            string(endTime,"hh:mm:ss")
+            xxwd_sn
+            substring(xxwd_ladnbr,9)
+            xxwd_part
+            vdesc1
+            truncate(xxwd_qty_plan,0)
+            vMultiple
+            vtype
+            truncate(xxwd_qty_plan,0)
+            if xxwd_type = "s" then "P-ALL" else xxwd_loc
+            xxwd_lot
+            if xxwd_type = "s" then xxwd_qty_siss else xxwd_qty_piss
+            if xxwd_type = "s" then xxwd_sstat else xxwd_pstat
+            xxwd_date.
 end.
 
 end.
