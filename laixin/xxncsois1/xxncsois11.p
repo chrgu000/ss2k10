@@ -1658,7 +1658,7 @@ repeat:
 
       else
       update
-         auto_inv    when (l_invprint = yes)
+ /*120215.1  auto_inv    when (l_invprint = yes)                  */
  /*120215.1  auto_post   when (not l_auto_noupdate                */
  /*120215.1                    and l_invprint = yes               */
  /*120215.1                    and l_invpost  = yes)              */

@@ -95,7 +95,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "sp9 "}
+{mfdtitle.i "120327.1"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -1218,6 +1218,8 @@ repeat on error undo, retry:
                 and sod_nbr = tt1_order and sod_line = integer(tt1_line)
          no-error.
          if available sod_det and sod_price <> tt1_price then do:
+         find so_mstr no-lock where so_domain = global_domain and
+              so_nbr = sod_nbr no-error.
           assign sod_price = tt1_price
                  sod_list_pr = tt1_price
                  sod_qty_chg = tt1_qty_inv.
@@ -1227,7 +1229,9 @@ repeat on error undo, retry:
             put unformat tt1_order skip.
             put unformat "-" skip.
             put unformat "-" skip.
-            put unformat "-" skip.
+            if not so_sched then do:
+               put unformat "-" skip.
+            end.
             put unformat "-" skip.    /*订货日期*/
             put unformat "-" skip.    /*税*/
             put unformat "-" skip.    /*推销员*/
@@ -1253,10 +1257,8 @@ repeat on error undo, retry:
             hide message no-pause.
             output close.
             input close.
-
             os-delete value(fname + ".bpi").
             os-delete value(fname + ".bpo").
-
 /*    for each tx2d_det                                                      */
 /*/*         fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type   */ */
 /*/*                tx2d_line tx2d_tax_code)                              */ */
