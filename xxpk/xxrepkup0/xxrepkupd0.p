@@ -853,9 +853,9 @@ for each xxwa_det no-lock where
           break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
                 by xxwa_part by xxwa_rtime:
     find first tiss1 where
-       tiss1_sdate    = xxwa_date     and
-       tiss1_rtime    = xxwa_rtime   and
-       tiss1_line     = xxwa_line     and
+       tiss1_sdate    = xxwa_date and
+       tiss1_rtime    = xxwa_rtime and
+       tiss1_line     = xxwa_line and
        tiss1_part     = xxwa_part
        no-error.
      if not avail tiss1 then do:

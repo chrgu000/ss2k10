@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "120328.1"}
+{mfdtitle.i "120405.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.

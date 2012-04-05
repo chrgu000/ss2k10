@@ -86,6 +86,7 @@ repeat:
        end.
        tiss1_qty = tiss1_qty + xxwa_qty_pln.
   end.
+
   
   for each tiss1 break by tiss1_part:
     if first-of(tiss1_part) then do:
