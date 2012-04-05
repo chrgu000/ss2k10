@@ -47,15 +47,15 @@ repeat:
   end.
   assign wmessage = "......".
 
-  find first xxwa_det no-lock where "p" + xxwa_nbr = tcnbr no-error.
-  if not available xxwa_det then do:
+  find first xxwd_det no-lock where "p" + xxwd_nbr = tcnbr no-error.
+  if not available xxwd_det then do:
     assign wmessage = "取料单未找到!".
     display  skip WMESSAGE NO-LABEL with fram framea1.
     undo,retry.
   end.
   else do:
-     find first xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-            and xxwd_recid = xxwa_recid and xxwd_pstat <> "C" no-error.
+     find first xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
+            and xxwd_stat <> "C" no-error.
      if not available xxwd_det then do:
         assign wmessage = "取料单已结清,请确认资料!".
          display  skip WMESSAGE NO-LABEL with fram framea1.
@@ -75,10 +75,9 @@ repeat:
   if procall then do:
      assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
      output to value(vcimfile + ".i").
-     for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
-         for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-             and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_pstat <> "C" and upper(xxwd_loc) <> "P-All":
+         for each xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
+              and xxwd_qty_plan > xxwd_qty_iss
+              and xxwd_stat <> "C" and upper(xxwd_loc) <> "P-All":
             run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
@@ -86,8 +85,8 @@ repeat:
                assign sstat = loc_stat.
             end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan - xxwd_qty_piss,0) " - ".
-            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn)) '"' skip.
+            put unformat truncate(xxwd_qty_plan - xxwd_qty_iss,0) " - ".
+            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn,">>>>>>>9")) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
             put unformat '- "' vtrloc '" -' skip.
@@ -97,13 +96,15 @@ repeat:
             put unformat "yes" skip.
             put unformat "." skip.
          end.
-     end.
      output close.
     batchrun  = yes.
     input from value(vcimfile + ".i").
     output to value(vcimfile + ".o") keep-messages.
     hide message no-pause.
-    {gprun.i ""iclotr04.p""}
+    aloop:
+    do on stop undo aloop,leave aloop:
+          {gprun.i ""iclotr04.p""}
+    end.
     hide message no-pause.
     output close.
     input close.
@@ -114,20 +115,17 @@ repeat:
 /*       os-delete value(vcimfile + ".o") no-error.                 */
 /*    end.                                                          */
 
-    for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
-         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
-             and xxwd_recid = xxwa_recid:
+         for each xxwd_det exclusive-lock where "p" + xxwd_nbr = tcnbr:
              for each tr_hist no-lock where
                       tr_nbr = 'p' + xxwd_nbr and
-                      tr_so_job = string(xxwd_sn) and
+                      tr_so_job = string(xxwd_sn,">>>>>>>9") and
                       tr_part = xxwd_part and
                       tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.
-             assign xxwd_qty_piss = accum total tr_qty_loc.
-             if xxwd_qty_plan - xxwd_qty_piss = 0 then assign xxwd_pstat = "C".
+             assign xxwd_qty_iss = accum total tr_qty_loc.
+             if xxwd_qty_plan - xxwd_qty_iss = 0 then assign xxwd_stat = "C".
          end.
-     end.
   end.
   else do: /* if procall then do:*/
       hide all.
@@ -161,7 +159,7 @@ repeat:
         display "计划量:" + string(truncate(xxwd_qty_plan , 0)) format "x(40)" skip with frame frameq no-box.
         display "数量:"  skip with frame frameq no-box.
         update qtyreq no-label with frame frameq no-box.
-        if qtyreq > xxwd_qty_plan - xxwd_qty_piss then do:
+        if qtyreq > xxwd_qty_plan - xxwd_qty_iss then do:
            assign ret-ok = no.
             hide frame frameq.
             display "[生产取料n]" + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(3) with fram framer no-box.
@@ -181,10 +179,9 @@ repeat:
 
      assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
      output to value(vcimfile + ".i").
-     for each xxwa_det no-lock where "p" + xxwa_nbr = tcnbr:
-         for each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-             and xxwd_recid = xxwa_recid and xxwd_qty_plan > xxwd_qty_piss
-             and xxwd_pstat <> "C" and xxwd_part = part and xxwd_loc <> "P-all":
+         for each xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
+              and xxwd_qty_plan > xxwd_qty_iss and xxwd_stat <> "C"
+              and xxwd_part = part and xxwd_loc <> "P-all":
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
@@ -192,7 +189,7 @@ repeat:
             end.
             put unformat '"' xxwd_part '"' skip.
             put unformat qtyreq " - ".
-            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn)) '"' skip.
+            put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn,">>>>>>>9")) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
             put unformat '- "' vtrloc '"' skip.
@@ -202,7 +199,6 @@ repeat:
             put unformat "yes" skip.
             put unformat "." skip.
          end.
-     end.
      output close.
 
     batchrun  = yes.
@@ -215,23 +211,19 @@ repeat:
     input close.
     batchrun  = no.
 
-    for each xxwa_det exclusive-lock where "p" + xxwa_nbr = tcnbr:
          assign qtytemp = 0.
-         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr
-             and xxwd_recid = xxwa_recid and xxwd_part = part:
+         for each xxwd_det exclusive-lock where "p" + xxwd_nbr = tcnbr:
              for each tr_hist no-lock where
                       tr_nbr = 'p' + xxwd_nbr and
-                      tr_so_job = string(xxwd_sn) and
+                      tr_so_job = string(xxwd_sn,">>>>>>>9") and
                       tr_part = xxwd_part and
                       tr_type = "rct-tr":
                   accum tr_qty_loc(total).
              end.
-             assign xxwd_qty_piss = accum total tr_qty_loc.
+             assign xxwd_qty_iss = accum total tr_qty_loc.
              assign qtytemp = accum total tr_qty_loc.
-             if xxwd_qty_plan - xxwd_qty_piss <= 0 then assign xxwd_pstat = "C".
+             if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
          end.
-         assign xxwa_qty_piss = qtytemp.
-     end.
       end. /* repeat:   料号/项次*/
   end. /*  if procall else do: */
   hide all.

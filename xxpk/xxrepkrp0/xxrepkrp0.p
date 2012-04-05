@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "120327.1"}
+{mfdtitle.i "120328.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -148,7 +148,7 @@ do on error undo, return error on endkey undo, return error:
 
  for each xxwd_det no-lock where
           xxwd_site >= site and xxwd_site <= site1 and
-          xxwd_line >= line and xxwd_line <= line1 and
+          (xxwd_line >= line and xxwd_line <= line1 or xxwd_type = "P") and
           xxwd_part >= part and xxwd_part <= part1 and
           xxwd_date >= issue and xxwd_date <= issue1 and
           xxwd_nbr >= nbr and xxwd_nbr <= nbr1 and
@@ -193,8 +193,8 @@ do on error undo, return error on endkey undo, return error:
             truncate(xxwd_qty_plan,0)
             if xxwd_type = "s" then "P-ALL" else xxwd_loc
             xxwd_lot
-            if xxwd_type = "s" then xxwd_qty_siss else xxwd_qty_piss
-            if xxwd_type = "s" then xxwd_sstat else xxwd_pstat
+            xxwd_qty_iss
+            xxwd_stat
             xxwd_date.
 end.
 

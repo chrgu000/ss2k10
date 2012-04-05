@@ -46,8 +46,8 @@ repeat:
   end.
   assign wmessage = "......".
 
-  find first xxwa_det no-lock where xxwa_nbr = substring(tcnbr,2) no-error.
-  if not available xxwa_det then do:
+  find first xxwd_det no-lock where xxwD_nbr = substring(tcnbr,2) no-error.
+  if not available xxwd_det then do:
     assign wmessage = "取/送料单未找到!".
     display  skip WMESSAGE NO-LABEL with fram framea1.
     undo,retry.
@@ -78,25 +78,12 @@ repeat:
       if not ret-ok then do:
          leave.
       end.
-
-     for each xxwa_det exclusive-lock where xxwa_nbr = substring(tcnbr,2):
-		     if substring(tcnbr,1,1) = "p" then do:
-		     	  assign xxwa_pstat = "C".
-		   	 end.
-		   	 else do:
-		   	 	  assign xxwa_sstat = "C".
-		   	 end.
-         for each xxwd_det exclusive-lock where xxwd_nbr = xxwa_nbr and
-                  xxwd_recid = xxwa_recid:
-              if substring(tcnbr,1,1) = "p" then do:
-                 assign xxwd_pstat = "C".
-              end.
-              else do:
-                  assign xxwd_sstat = "C".
-              end.
-         end.
-     end.
+ 
+      for each xxwd_det exclusive-lock where xxwd_nbr = substring(tcnbr,2):
+        assign xxwd_stat = "C".
+      end.
   end.
+ /*
   else do:
      for each xxwa_det no-lock where xxwa_nbr = substring(tcnbr,2):
          hide frame frameac.
@@ -153,6 +140,7 @@ repeat:
          end.
      end.
   end.
+  */
   hide all.
   hide frame framea1.
   hide frame framea2.

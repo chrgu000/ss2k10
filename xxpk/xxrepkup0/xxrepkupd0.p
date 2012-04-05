@@ -683,8 +683,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 xxwa_recid = recid(xxwa_det)
                 .
       end.
-
-/*
+ /*
     display t0_date t0_site t0_line t0_part
             t0_wktime
             t0_tttime
@@ -700,7 +699,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
             t0_tttime / t0_wktime * xx_qty_req @ t0_time
             t0_qty / t0_qtya * xx_qty_req @ xx_start
             with width 300 .
-*/
+ */
 end.
 
  /*计算取料,发料时间区间*/
@@ -919,7 +918,7 @@ else do:
        and  xxwd_line = trt1_line
        and  xxwd_lot  = trt1_lot
        and  xxwd_ref  = trt1_ref     no-error.
-    if not avail   xxwd_det then do:
+    if not avail xxwd_det then do:
       CREATE xxwd_det.
       assign xxwd_nbr = trt1_nbr
              /*
@@ -979,6 +978,7 @@ else do:
              i = i + 1.
   end.
 end.
+
 /*  empty temp-table xx_ld no-error.                                          */
 /*  assign errornum = 10.                                                     */
 /*  for each xxwa_det no-lock where                                           */
