@@ -106,7 +106,7 @@ repeat:
     do on error undo,retry :
 
     for each tempcase : delete tempcase . end.
-
+/*zytst*/    os-delete xxx.txt no-error.
 
     for each xxinv_mstr
             where  xxinv_vend = vend 
@@ -145,6 +145,7 @@ repeat:
 
         if v_part <> "" then 
        /* µº ¥Ú”°*/ 
+
         run print (input v_part ,input v_loc ,input v_lot ,input v_date , input v_nbr ,input v_qty ).            
 
         
