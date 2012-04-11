@@ -2,14 +2,15 @@
 /*SS - 111226.1 By Ken*/
 /*SS - 111229.1 By Ken*/
 /* SS - 120331.1 By: Kaine Zhang */
-
+/*ss - 120411.1 By:zhang Yun*/
+/*120411 查mpd_det时用无-05后缀的料号，其他情况用有-05后缀的料号*/
 /*
 history
 [20120331.1]
 verify location/status in accordance with DD.
 */
 
-{mfdtitle.i "120331.1"}
+{mfdtitle.i "120411.1"}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
 DEFINE NEW SHARED VARIABLE ovd_lot AS CHARACTER  FORMAT "x(18)".
@@ -1004,7 +1005,7 @@ REPEAT:
         END.
 
 
-        FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + x_part) NO-LOCK:
+        FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + v_part) NO-LOCK:
                 if mpd_type = "00014" then do:	
                    wj_length = decimal(mpd_tol) .
                 end.
@@ -1111,7 +1112,7 @@ REPEAT:
 
                 /*如果转换后的品名不允许有defect <1标识不允许有缺陷,则all_defect不允许选择all*/
                 IF ALL_defect = "all" THEN DO:
-                   FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + x_part) AND mpd_type = "00036"
+                   FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + v_part) AND mpd_type = "00036"
                        AND DECIMAL(mpd_tol) < 1 NO-LOCK NO-ERROR.
                    IF AVAILABLE mpd_det THEN DO:
                        {pxmsg.i &MSGNUM=32005 &ERRORLEVEL=3}.
@@ -1249,7 +1250,7 @@ REPEAT:
 
 
                             /*如果转换后的品名不允许有defect <1 标识不允许有缺陷,如果有缺陷则排除在外*/
-                            FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + x_part) AND mpd_type = "00036"
+                            FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + v_part) AND mpd_type = "00036"
                                AND DECIMAL(mpd_tol) < 1 NO-LOCK NO-ERROR.
                             IF AVAILABLE mpd_det THEN DO:
                                 IF ov_result <> "ok" THEN DO:
@@ -1325,7 +1326,7 @@ REPEAT:
                     /*计算系数a,b*/
                     
                     FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND 
-                        mpd_nbr = ("X7" + ld_part) AND mpd_type = "00037" AND mpd_tol <> "" NO-LOCK NO-ERROR.
+                        mpd_nbr = ("X7" + v_part1) AND mpd_type = "00037" AND mpd_tol <> "" NO-LOCK NO-ERROR.
                     IF AVAIL mpd_det THEN DO:
                         v_defect_code = mpd_tol.
                        FIND FIRST mpd_det WHERE mpd_domain = GLOBAL_domain AND 
@@ -1384,7 +1385,7 @@ REPEAT:
 
                     /*转用前余长*/
                     y_length = 0.
-                    FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + ld_part) AND (mpd_type = "00041" OR mpd_type = "00042") NO-LOCK:
+                    FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + v_part1) AND (mpd_type = "00041" OR mpd_type = "00042") NO-LOCK:
                        y_length = y_length + DECIMAL(mpd_tol).
                     END.
 
@@ -1412,7 +1413,7 @@ REPEAT:
 
                     /*转用后余长*/
                     y_length = 0.
-                    FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + ld_part) AND (mpd_type = "00041" OR mpd_type = "00042") NO-LOCK:
+                    FOR EACH mpd_det WHERE mpd_domain = GLOBAL_domain AND mpd_nbr = ("X7" + v_part1) AND (mpd_type = "00041" OR mpd_type = "00042") NO-LOCK:
                        y_length = y_length + DECIMAL(mpd_tol).
                     END.
 
