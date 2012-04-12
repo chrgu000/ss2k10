@@ -1156,10 +1156,7 @@ REPEAT:
                          ld_part = x_part1 AND ld_loc = vv_loc AND
                         (ld_lot = ovd_lot OR ovd_Lot = "") AND
                          ld_qty_oh > 0 NO-LOCK:
-                    /*
-                    MESSAGE v_select.
-                    */
-                    /*v_select = yes 表示只显示可出库的记录*/
+   /*v_select = yes 表示只显示可出库的记录*/
                     IF v_select = YES THEN DO:
                         FIND FIRST lot_mstr WHERE lot_domain = GLOBAL_domain AND
                                    lot_serial = ld_lot AND lot_part = "zzlot1"
@@ -1169,7 +1166,7 @@ REPEAT:
                             NEXT.
                         END.
                         ELSE DO:
-     /*批号状态为空,其他炉芯管Status、盐素Status、检查Status、OHStatus全为"1"*/
+ /*批号状态为空,其他炉芯管Status、盐素Status、检查Status、OHStatus全为"1"*/
                            IF lot__chr02 <> "" OR lot__chr03 <> "1" OR
                               lot__chr04 <> "1" OR lot__chr05 <> "1" OR
                               lot__chr06 <> "1" THEN DO:
@@ -1467,9 +1464,7 @@ REPEAT:
 
                     ttld_yxc = v_ttld_zpc - SUM_defect_length - y_length.
 
-
-
-                    /*计算重量 = 外径 * 外径 * 3.14 / 4 * 2.2 * 有效长度 / 1000 */
+  /*计算重量 = 外径 * 外径 * 3.14 / 4 * 2.2 * 有效长度 / 1000 */
                     ASSIGN
                        ttld_jszl =  v_insp_dia * v_insp_dia * 3.14 / 4
                                  * 2.2 * ttld_yxc / 1000.

@@ -87,8 +87,10 @@ do transaction on error undo, retry:
       PUT UNFORMATTED ttld_part1 SKIP.
       PUT UNFORMATTED ttld_qty_oh  " " TODAY " "  "-"  " " "- -"   SKIP.
       PUT UNFORMATTED "- - - -" SKIP.
-      PUT UNFORMATTED ttld_site " " ttld_loc " " """" + ttld_lot + """"  " " """" + ttld_ref + """" SKIP.
-      PUT UNFORMATTED ttld_site " " ttld_loc_to " " """" + ttld_lot + """"  " " """" + ttld_ref + """" SKIP.
+      PUT UNFORMATTED ttld_site " " ttld_loc " " """" + ttld_lot 
+                      + """"  " " """" + ttld_ref + """" SKIP.
+      PUT UNFORMATTED ttld_site " " ttld_loc_to " " """" + ttld_lot 
+                      + """"  " " """" + ttld_ref + """" SKIP.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "." SKIP.
       OUTPUT CLOSE .

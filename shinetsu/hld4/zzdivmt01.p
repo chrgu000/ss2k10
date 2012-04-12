@@ -135,6 +135,9 @@ yes
             AND tr_trnbr > v_tr_trnbr
             AND tr_type = "ISS-WO" NO-LOCK NO-ERROR.
       IF AVAIL tr_hist THEN DO:
+          os-delete value(fn_i + ".inp").
+          os-delete value(fn_i + ".cim").
+          
           /*
           UNIX SILENT VALUE("rm -rf " + TRIM(fn_i) + ".inp") .
           UNIX SILENT VALUE("rm -rf " + TRIM(fn_i) + ".cim") .
