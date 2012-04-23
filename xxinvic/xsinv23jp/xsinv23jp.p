@@ -511,29 +511,29 @@ If AVAILABLE ( pt_mstr ) then
          if sectionid > 1 then leave V1410L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[日供件-库存转移]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
+                display "[日供件-库存转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
 
                 /* LABEL 1 - START */ 
                   L14101 = "" . 
-                display L14101          format "x(40)" skip with fram F1410 no-box.
+                display L14101 format "x(40)" skip with fram F1410 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
                   L14102 = "" . 
-                display L14102          format "x(40)" skip with fram F1410 no-box.
+                display L14102 format "x(40)" skip with fram F1410 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
                   L14103 = "" . 
-                display L14103          format "x(40)" skip with fram F1410 no-box.
+                display L14103 format "x(40)" skip with fram F1410 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
                   L14104 = "" . 
-                display L14104          format "x(40)" skip with fram F1410 no-box.
+                display L14104 format "x(40)" skip with fram F1410 no-box.
                 /* LABEL 4 - END */ 
                 display "输入或按E退出"       format "x(40)" skip
         skip with fram F1410 no-box.
@@ -771,12 +771,10 @@ LD_SITE = V1002 AND LD_REF = "" AND
             end.
         end.
 
-
-
         find first xxship_det
             use-index xxship_case
-            where xxship_nbr     = v1100
-            and   xxship_case2  = integer(v_case_nbr)
+            where xxship_nbr    = v1100
+            and   xxship_case  = integer(v_case_nbr)
             and   xxship_part2  = v1300 
             and   xxship_status = "RCT-PO" 
         no-lock no-error.
@@ -790,10 +788,6 @@ LD_SITE = V1002 AND LD_REF = "" AND
             v_loc_to    = xxship_rcvd_loc   .
             v_qty_rct   = xxship_rcvd_qty   .
         end.
-
-
-
-
 
         /* PRESS e EXIST CYCLE */
         IF INPUT V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
@@ -2124,7 +2118,7 @@ If AVAILABLE ( pt_mstr )  then
    IF NOT (V9010 = "Y" AND V1700 = "Y"   ) OR V9110 = "E" OR V9120 = "E" OR V9130 = "E" 
        OR v1100 = "e" OR v1300 = "e" OR v1305 = "e" OR v1500 = "e" OR v1520 = "e" OR v1600 = "e"  THEN LEAVE V9140LMAINLOOP.
 
-  /*
+  /*****************************************************
    /*Logical Enter Cycle9140    */
    /*
    IF NOT (V9010 = "Y" AND ( decimal ( V9110 ) * decimal ( V9120 )  <> decimal ( V1600 ) ) ) THEN LEAVE V9140LMAINLOOP.
@@ -2329,13 +2323,8 @@ IF 1 = 1 THEN
      PV9150 = V9150.
      /* END    LINE :9150  条码个数[No Of Label] 余数  */
 
-
    wtm_num = V9150.
 
-
-
-
-     
      /* START  LINE :9160  打印机[Printer] 余数  */
      V9160L:
      REPEAT:
@@ -2369,11 +2358,11 @@ If AVAILABLE ( upd_det ) then
         IF 1 <> 1 THEN
         leave V9160L.
         /* LOGICAL SKIP END */
-                display "[日供件-库存转移]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9160 no-box.
+                display "[日供件-库存转移]" + "*" + TRIM ( V1002 ) format "x(40)" skip with fram F9160 no-box.
 
                 /* LABEL 1 - START */ 
                 L91601 = "打印机?" .
-                display L91601          format "x(40)" skip with fram F9160 no-box.
+                display L91601 format "x(40)" skip with fram F9160 no-box.
                 /* LABEL 1 - END */ 
 
 
@@ -2439,7 +2428,7 @@ If AVAILABLE ( upd_det ) then
                   end.
                   IF AVAILABLE PRD_DET then display skip 
             PRD_DEV @ V9160 PRD_DESC @ WMESSAGE NO-LABEL with fram F9160.
-                  else   display skip "" @ WMESSAGE with fram F9160.
+                  else display skip "" @ WMESSAGE with fram F9160.
             END.
             APPLY LASTKEY.
         END.
@@ -2471,7 +2460,7 @@ If AVAILABLE ( upd_det ) then
      PV9160 = V9160.
      /* END    LINE :9160  打印机[Printer] 余数  */
 
-*/
+************************************************************************/
      Define variable ts9160 AS CHARACTER FORMAT "x(100)".
      Define variable av9160 AS CHARACTER FORMAT "x(100)".
 
@@ -2584,8 +2573,6 @@ If AVAILABLE ( pt_mstr )  then
      OUTPUT CLOSE.
      unix silent value ("chmod 777  " + trim(wsection) + ".l").
      END PROCEDURE.
-
-
 
      PROCEDURE inv2391602.
         /* Define Labels Path  Start */
@@ -2720,10 +2707,6 @@ If AVAILABLE ( pt_mstr )  then
        END.
        END.
 
-
-
-
-
        IF decimal(V1600) <> 0 AND (vv_loc_oh - decimal(V1600)) <> 0 THEN DO:
         vvv_print_qty =  string(vv_loc_oh - decimal(V1600)) .
         run inv2391602.
@@ -2734,11 +2717,6 @@ If AVAILABLE ( pt_mstr )  then
           unix silent value ( "clear").
         end.
        END.
-
-
-
-
-
 
      END.
      /*

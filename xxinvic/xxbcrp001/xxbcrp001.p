@@ -19,8 +19,6 @@ define var v_date        as date .
 define var v_nbr         like pt_part.     
 define var v_qty         like wo_qty_ord.  
 
-
-
 define var vend           like xxinv_nbr no-undo.
 define var v_inv          like xxinv_nbr no-undo.
 define var v_inv1         like xxinv_nbr no-undo.
@@ -40,7 +38,6 @@ define new shared temp-table tempcase   /*记录每个托的收货库位*/
     field tc_case_nbr like xxship_case 
     field tc_loc      like pt_loc
     .
-
 
 FORM 
     skip(1)

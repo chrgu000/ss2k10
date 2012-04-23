@@ -97,8 +97,8 @@ assign vtrrecid = current-value(tr_sq01).
             .
         /*xxship_status 可以等于:收货OK'RCT-PO',转仓OK'RCT-TR',未收货留空 */
         if xxship_rcvd_qty >= xxship_qty then xxship_status = 'RCT-PO'.
-   os-delete value(Trim(usection) + ".bpi") no-error.
-   os-delete value(Trim(usection) + ".bpo") no-error.
+        os-delete value(Trim(usection) + ".bpi") no-error.
+        os-delete value(Trim(usection) + ".bpo") no-error.
   end.
 /*  errstr = "".                           */
 /*  ciminputfile = usection + ".bpi".      */
