@@ -1,4 +1,4 @@
-/* xslapjp.p 日供件打印条码,并修改收货库位                                    */
+/* xslapjp.p 日供标签重复列印                                                 */
 /*----rev history-------------------------------------------------------------*/
 /* ss - 110321.1  by: roger xiao                                              */
 /*-revision end---------------------------------------------------------------*/
@@ -54,7 +54,7 @@ repeat:
         if apass = "y" then
         leave v1002l.
         /* logical skip end */
-                display "[日供标签列印]"      + "*" + trim ( v1002 )  format "x(40)" skip with fram f1002 no-box.
+                display "[日供标签列印]" + "*" + trim ( v1002 )  format "x(40)" skip with fram f1002 no-box.
 
                 /* label 1 - start */
                 l10021 = "地点设定有误" .
@@ -371,15 +371,15 @@ repeat:
         /*            and   xxship_vend   = xxinv_vend                   */
         /*            and   xxship_case2  = integer(v_case_nbr)          */
                           xxship_part2  = v1300 and
-                          xxship__chr01 = v1500 and 
+                          xxship__chr01 = v1500 and
                           xxship_status = "RCT-PO"
                 no-lock no-error.
                 if avail xxship_det then do:
-                    v_recid     = recid(xxship_det) .
-                    v_loc_to    = xxship_rcvd_loc   .
-                    v_qty_rct   = xxship_rcvd_qty   .
-                    v_inv_nbr   = xxship_nbr         .
-                    v_japan     = yes .
+                    v_recid     = recid(xxship_det).
+                    v_loc_to    = xxship_rcvd_loc.
+                    v_qty_rct   = xxship_rcvd_qty .
+                    v_inv_nbr   = xxship_nbr.
+                    v_japan     = yes.
                     v_case_old  = string(xxship_case) .
                 end.
 
@@ -426,7 +426,7 @@ repeat:
 
         if sectionid > 1 then v1501 = pv1501 .
 
-        v1501  = "" .
+        v1501  = v_loc_to.
         l15011 = "库位?" .
         l15012 = "数量+原库位:" +  string(v_qty_rct) + "+" + v_loc_to .
         l15013 = "图号: "  + v1300 .
@@ -759,22 +759,22 @@ repeat:
 
         /* --define variable -- start */
         hide all.
-        define variable v9030           as char format "x(50)".
-        define variable pv9030          as char format "x(50)".
-        define variable l90301          as char format "x(40)".
-        define variable l90302          as char format "x(40)".
-        define variable l90303          as char format "x(40)".
-        define variable l90304          as char format "x(40)".
-        define variable l90305          as char format "x(40)".
-        define variable l90306          as char format "x(40)".
+        define variable v9030  as char format "x(50)".
+        define variable pv9030 as char format "x(50)".
+        define variable l90301 as char format "x(40)".
+        define variable l90302 as char format "x(40)".
+        define variable l90303 as char format "x(40)".
+        define variable l90304 as char format "x(40)".
+        define variable l90305 as char format "x(40)".
+        define variable l90306 as char format "x(40)".
         /* --define variable -- end */
 
 
         /* --first time default  value -- start  */
         find first upd_det where upd_nbr = "lapjp" and upd_select = 99 no-lock no-error.
-if available ( upd_det ) then
-        v9030 = upd_dev.
-        v9030 = entry(1,v9030,"@").
+        if available ( upd_det ) then
+           v9030 = upd_dev.
+           v9030 = entry(1,v9030,"@").
         /* --first time default  value -- end  */
 
 
