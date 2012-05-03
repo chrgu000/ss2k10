@@ -7,7 +7,7 @@
 
     /* "1,取符合条件的数据,请等待......" 按供应商，图号汇总. B*/
     for each xxinv_mstr where xxinv_nbr   >= shipno
-                           and xxinv_nbr   <= shipno1
+                           and xxinv_nbr  <= shipno1
                            and xxinv_vend >= vend
                            and xxinv_vend <= vend1
                            and xxinv_site >= site
