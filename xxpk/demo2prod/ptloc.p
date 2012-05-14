@@ -12,5 +12,6 @@ for each xxpl_ref no-lock:
 		put unformat '"-" "' xxpl_loc '"' skip.
 		put unformat '"' xxpl_type '" "' xxpl_rank '" ' xxpl_panel ' ' 
 							   xxpl_cap skip.
+		put unformat "@@end" skip.
 end.
 output close.

@@ -945,8 +945,8 @@ LD_SITE = V1002 AND LD_REF = "" AND
         /* LOGICAL SKIP END */
                 display "[日供件-库存转移]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1520 no-box.
 
-                /* LABEL 1 - START */ 
-                L15201 = "到库位?" .
+                /* LABEL 1 - START 显示库位*/ 
+                L15201 = "到库位:" + v_loc_to.
                 display L15201          format "x(40)" skip with fram F1520 no-box.
                 /* LABEL 1 - END */ 
 
@@ -980,7 +980,7 @@ LD_SITE = V1002 AND LD_REF = "" AND
         end.
            apply lastkey.
         end.
-
+        
         /* PRESS e EXIST CYCLE */
         IF V1520 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1520.
@@ -993,12 +993,12 @@ LD_SITE = V1002 AND LD_REF = "" AND
         /* CHECK FOR NUMBER VARIABLE  END */
         find first LOC_MSTR where LOC_LOC = V1520 AND V1520 <> V1510 AND LOC_SITE = V1002  no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
-                display skip "Error , Retry." @ WMESSAGE NO-LABEL with fram F1520.
+                display skip "Loc Error , Retry." @ WMESSAGE NO-LABEL with fram F1520.
                 pause 0 before-hide.
                 undo, retry.
         end.
 
-
+        /*提示异常*/
         if v1520 <> v_loc_to then do:
                 display skip "仅限转仓到自动收货库位" @ WMESSAGE NO-LABEL with fram F1520.
                 pause 0 before-hide.
