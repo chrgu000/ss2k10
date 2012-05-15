@@ -1,0 +1,232 @@
+ADD TABLE "xxbox_mst"
+    AREA "TRANSACTION"
+    Description ""
+    DUMP-NAME  "xxbox_mst"
+
+ADD FIELD "xxbox_domain" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "domain"
+
+ADD FIELD "xxbox_par" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(18)"
+    INITIAL  ""
+    LABEL  "box_code"
+
+ADD FIELD "xxbox_comp" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(28)"
+    INITIAL  ""
+    LABEL  "box_code vin"
+
+ADD FIELD "xxbox_sonbr" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "x(8)"
+    INITIAL  ""
+    LABEL  "so number"
+
+ADD FIELD "xxbox_soline" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  ">>9"
+    INITIAL  "0"
+    LABEL  "so Line"
+
+ADD FIELD "xxbox_qty_max" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  ">>9"
+    INITIAL  "0"
+    LABEL  "content"
+
+ADD FIELD "xxbox_cmtindx" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  ">>>>>>>9"
+    INITIAL  "0"
+    LABEL  "Comment Index"
+
+ADD FIELD "xxbox_comptype" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Comp type b/v"
+    Extent v
+    VALEXP "xxbox_comptype = 'b' or xxbox_comptype = 'v'"
+    VALMSG "Value must be 'b' or 'v'"
+
+ADD FIELD "xxbox_site" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Site"
+
+ADD FIELD "xxbox_loc" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Location"
+
+ADD FIELD "xxbox_mod_date" of "xxbox_mst" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "Last Modify When"
+
+ADD FIELD "xxbox_mod_time" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "Last Modify time"
+
+ADD FIELD "xxbox_mod_usrid" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Last Modify By"
+
+ADD FIELD "xxbox__chr01" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xxbox__chr02" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xxbox__chr03" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xxbox__chr04" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xxbox__chr05" of "xxbox_mst" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xxbox__int01" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xxbox__int02" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xxbox__int03" of "xxbox_mst" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xxbox__dte01" of "xxbox_mst" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xxbox__dte02" of "xxbox_mst" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xxbox__dte03" of "xxbox_mst" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xxbox__dec01" of "xxbox_mst" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xxbox__dec02" of "xxbox_mst" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xxbox__dec03" of "xxbox_mst" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xxbox__log01" of "xxbox_mst" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+ADD FIELD "xxbox__log02" of "xxbox_mst" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+
+ADD INDEX "xxbox_par_so" on "xxbox_mst"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xxbox_domain"  ASCENDING
+    INDEX-FIELD  "xxbox_par"  ASCENDING
+    INDEX-FIELD  "xxbox_sonbr"  ASCENDING
+    INDEX-FIELD  "xxbox_soline"  ASCENDING
+    INDEX-FIELD  "xxbox_comp"  ASCENDING
+
+ADD INDEX "xxbox_par_comp" on "xxbox_mst"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xxbox_domain"  ASCENDING
+    INDEX-FIELD  "xxbox_par"  ASCENDING
+    INDEX-FIELD  "xxbox_comp"  ASCENDING
+
+ADD INDEX "xxbox_comp_par" on "xxbox_mst"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xxbox_domain"  ASCENDING
+    INDEX-FIELD  "xxbox_comp"  ASCENDING
+    INDEX-FIELD  "xxbox_par"  ASCENDING
+
+ADD INDEX "xxbox_so" on "xxbox_mst"
+    AREA "TRANSACTION_IDX"
+    INDEX-FIELD  "xxbox_domain"  ASCENDING
+    INDEX-FIELD  "xxbox_sonbr"  ASCENDING
+    INDEX-FIELD  "xxbox_soline"  ASCENDING
+
+ADD INDEX "xxbox_so_par" on "xxbox_mst"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xxbox_domain"  ASCENDING
+    INDEX-FIELD  "xxbox_sonbr"  ASCENDING
+    INDEX-FIELD  "xxbox_soline"  ASCENDING
+    INDEX-FIELD  "xxbox_par"  ASCENDING
+    INDEX-FIELD  "xxbox_comp"  ASCENDING
+
+
+
+.
+PSC
+cpstream=GB2312
+.
+
