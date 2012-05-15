@@ -56,7 +56,8 @@ export delimiter "~t" getTermLabel("PROGRAM_NAME",20)
 											
 FOR EACH usrw_wkfl NO-LOCK WHERE {xxusrwdomver.i} {xxand.i}
 		     usrw_key1 >= program and (usrw_key2 <= program1 or program1 = "") and
-		     (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32"):
+		     (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32") and
+		     usrw_charfld[15] = 'version_number':
   export delimiter "~t" usrw_key1 
                         usrw_key2 
                         usrw_key3 
@@ -71,8 +72,9 @@ put unformatted skip(1) getTermLabel("END_OF_REPORT",20)  skip .
 
 if del-yn then do:
 		 FOR EACH usrw_wkfl EXCLUSIVE-LOCK WHERE {xxusrwdomver.i} {xxand.i}
-		          usrw_key1 >= program and (usrw_key2 <= program1 or program1 = "")
-		     and (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32"):
+		          usrw_key1 >= program and (usrw_key1 <= program1 or program1 = "")
+		     and (usrw_key2 = "UNIX" or usrw_key2 = "MSDOS" or usrw_key2 = "WIN32")
+		     and usrw_charfld[15] = 'version_number':
 				 delete usrw_wkfl.
      END.
 end.

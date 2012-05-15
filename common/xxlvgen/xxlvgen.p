@@ -2,6 +2,7 @@
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
+/* usrw_charfld[15] record key 'lvctrl' = usrw_domain for EB2                */
 
 {mfdtitle.i "23YP"}
 {xxecdc.i}
@@ -53,16 +54,63 @@ assign loc_phys_addr = getMAC().
 {gprun.i ""gpgetver.p"" "(input '4', output rev)"}
 display l_prod loc_phys_addr with frame a.
 
-repeat:
+mainloop:
+repeat with frame a:
+/*
    update l_prod loc_phys_addr with frame a.
-
+*/
+  do on error undo, retry:
+     prompt-for l_prod loc_phys_addr editing:
+       if frame-field = "l_prod" then do:
+      /* FIND NEXT/PREVIOUS RECORD */
+         {mfnp.i usrw_wkfl l_prod " {xxusrwdom1.i} {xxand.i} 
+         						                usrw_charfld[15] = 'lvctrl' and usrw_key1 "
+                 l_prod usrw_key1 usrw_index1}
+             if recno <> ? then do:
+                assign l_prod = usrw_key1
+                       loc_phys_addr = usrw_key2
+                       uid = usrw_key3
+                       daysto = usrw_datefld[1] - today
+                       l_tot_usrs = usrw_intfld[1]
+                       key1 = usrw_key4
+                       key2 = usrw_key5
+                       key3 = usrw_key6
+                       cmmt = usrw_charfld[10].
+                display l_prod loc_phys_addr uid daysto l_tot_usrs
+                        key1 key2 key3 cmmt with frame a.
+             end.
+        end.
+        else if frame-field = "loc_phys_addr" then do:
+          {mfnp05.i usrw_wkfl usrw_index1
+                  " {xxusrwdom1.i} {xxand.i} usrw_key1 = input l_prod and
+                    usrw_charfld[15] = 'lvctrl' "
+                  usrw_key2
+                " input loc_phys_addr"}
+           if recno <> ? then do:
+                assign l_prod = usrw_key1
+                       loc_phys_addr = usrw_key2
+                       uid = usrw_key3
+                       daysto = usrw_datefld[1] - today
+                       l_tot_usrs = usrw_intfld[1]
+                       key1 = usrw_key4
+                       key2 = usrw_key5
+                       key3 = usrw_key6
+                       cmmt = usrw_charfld[10].
+                display l_prod loc_phys_addr uid daysto l_tot_usrs
+                        key1 key2 key3 cmmt with frame a.
+           end.
+        end.
+     end.
+  end.
+   assign l_prod loc_phys_addr.
    if l_prod = "" then do:
      {pxmsg.i &MSGNUM=4452 &ERRORLEVEL=3 &MSGARG1=""l_prod""}
       undo,retry.
    end.
 
    find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
-              usrw_key1 = l_prod and usrw_key2 = loc_phys_addr no-error.
+              usrw_key1 = l_prod and usrw_key2 = loc_phys_addr and
+              usrw_charfld[15] = 'lvctrl' no-error.
    if available usrw_wkfl then do:
       assign uid = usrw_key3
              daysto = usrw_datefld[1] - today
@@ -109,7 +157,7 @@ repeat:
                           uid + "week#", datestr + "day$",
                           key1 + "hour%", key2 + "minutes^",
                           key3 + "second&",
-                          trim(string(l_tot_usrs,">>>>>>>>>>>>9")) + "season*").
+                          trim(string(l_tot_usrs,">>>>>>9")) + "season*").
 
    output to value(histfn).
    if cLoadFile then do:
@@ -160,6 +208,7 @@ repeat:
       put unformat fill(" ",17) 'usrw_charfld[7] = "' entry(7,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[8] = "' entry(8,md5,",") '"' skip.
       put unformat fill(" ",17) 'usrw_charfld[10] = "' cmmt '"' skip.
+      put unformat fill(" ",17) 'usrw_charfld[15] = "lvctrl"' skip.
       put unformat fill(" ",17) 'usrw_datefld[1] = '.
       put unformat 'date(' string(month(datet),"99") ","
                            string(day(datet),"99") ","

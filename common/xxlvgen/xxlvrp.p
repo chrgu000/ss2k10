@@ -91,7 +91,8 @@ repeat:
   assign fg = fill("-",80).
    for each usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
             usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
-            usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1:
+            usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1 and
+            usrw_charfld[15] = "lvctrl":
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).

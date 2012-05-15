@@ -5,7 +5,7 @@
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110712.1"}
+{mfdtitle.i "14Y9.1"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
@@ -26,21 +26,23 @@ setFrameLabels(frame a:handle).
 ON LEAVE OF lngdir IN FRAME a /* Fill 1 */
 DO:
   assign lngdir.
-  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p":
+  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
+           usrw_key1 = "xxvifile.p":
       delete usrw_wkfl.
   end.
   if lngdir = "" then assign lngdir:screen-value = ".".
   assign lngdir.
   INPUT FROM OS-DIR(lngdir).
   REPEAT:
-      CREATE usrw_wkfl.
+      CREATE usrw_wkfl. {xxusrwdom.i}.
       IMPORT usrw_key4 usrw_key2 usrw_key5.
       assign usrw_key1 = "xxvifile.p"
              usrw_key3 = global_userid.
   END.
   INPUT CLOSE.
 
-  for each usrw_wkfl exclusive-lock where usrw_key1 = "xxvifile.p"
+  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
+           usrw_key1 = "xxvifile.p"
        and usrw_key5 <> "F":
       delete usrw_wkfl.
   end.
@@ -67,6 +69,7 @@ END.
            output using_supplier_consignment)"}
 
 {wbrp01.i}
+{xxchklv.i 'MODEL-CAN-RUN' 10}
 repeat:
 
    if c-application-mode <> 'web' then

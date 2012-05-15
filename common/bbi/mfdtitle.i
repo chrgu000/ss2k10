@@ -72,4 +72,4 @@ end.
 global_program_rev = "{1}". /*Track program rev for Help About */
 */
 
-{gprun.i ""xxgetver.p""}
+{gprun.i ""xxgetver.p"" "(input '{1}')"}

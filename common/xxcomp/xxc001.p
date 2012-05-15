@@ -5,6 +5,7 @@
 /* REVISION END                                                              */
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
+{xxcompile.i}
 define variable incmf as logical.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
 define variable proc_name as character format "x(18)" label "File".
@@ -24,12 +25,7 @@ define temp-table t_log
        index tt_j tt_j.
 define stream crt.
 define stream cmp.
-define shared variable c-comp-pgms as character format "x(20)" no-undo.
-define shared variable vWorkFile as character.
-define shared variable destDir as character format "x(40)".
-define shared variable lng     as character format "x(2)".
-define shared variable kbc_display_pause as integer.
-define shared variable xrcDir     as character format "x(50)" no-undo.
+
 assign c-comp = trim(getTermLabel("COMPILING",12)) + " ".
 
 output stream crt to terminal.
@@ -119,7 +115,9 @@ repeat:
           else if opsys = "msdos" or opsys = "win32" then do:
             put " copy:".
           end.
+          assign propath = v_comppropath.
           compile value(proc_name) no-attr-space save into value(".").
+          assign propath = v_oldpropath.
    output close.
    if opsys = "unix" then do:
       assign rfile = "." + "/"
@@ -142,14 +140,16 @@ repeat:
    display stream crt i err with frame a.
    output to utcompile.log append.
      if opsys = "unix" then do:
-        unix silent value("mv " + rfile + " " + dirname).
+        unix silent value("cp " + rfile + " " + dirname).
+        os-delete value(rfile) no-error.
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
         dos silent value("copy " + rfile + " " + dirname).
-        dos silent value("del " + rfile).
+        os-delete value(rfile) no-error.
      end.
    output close.
 end.
+assign propath = v_incdestpropath.
 input close.
 hide message no-pause.
 pause 0 no-message.
@@ -213,6 +213,8 @@ else do:
        display tt_log format "x(78)".
    end.
 end.
+os-delete utcompile.log no-error.
+os-delete value(vworkfile) no-error.
 
 /* Compile complete */
    {pxmsg.i &MSGNUM=4853 &ERRORLEVEL=1}
@@ -260,8 +262,6 @@ end.
       end.
    end.
    hide all no-pause.
-os-delete utcompile.log no-error.
-os-delete value(vworkfile) no-error.
 
 procedure createDestDir:
   define input parameter iDestDir as character.
@@ -348,9 +348,11 @@ procedure getVer:
       end.
   end.
   if index(txt,"mfdtitle.i") > 0 then do:
-     assign oVer = entry(2,substring(txt,index(txt,"mfdtitle.i"))," ").
-     assign oVer = substring(entry(1,over,"}"),2,LENGTH(entry(1,over,"}")) - 2 ).
-
+     assign oVer = entry(2,txt," ").
+     if index(over,"}") > 0 then
+         assign oVer = trim(substring(over,2,LENGTH(over) - 3)).
+     else
+         assign over = substring(over,2).
   end.
   else do:
      assign over = "".

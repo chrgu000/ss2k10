@@ -4,4 +4,4 @@
 /* REVISION: 21YA LAST MODIFIED: 02/27/12 BY: zy                             */
 /* REVISION END                                                              */
 
-usrw_domain = "lvctrl"
+usrw_domain = 'lvctrl'

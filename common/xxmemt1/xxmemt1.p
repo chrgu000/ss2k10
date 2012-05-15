@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "23YL"}
+{mfdtitle.i "24YN"}
 {xxmemt1.i}
 
 define variable iCnt as integer.
@@ -15,9 +15,7 @@ define variable mfgver as character.
 ststatus = stline[3].
 status input ststatus.
 view frame frame-a.
-if not batchrun then do:
-  {xxchklv.i execname 10}
-end.
+
 ON "CTRL-]" OF cdref IN FRAME frame-a DO:
    do iCnt = 1 to extent(mndnbr):
       if mndnbr[iCnt] <> "" and sel[iCnt] <> 0 then do:
@@ -31,21 +29,26 @@ ON "CTRL-]" OF cdref IN FRAME frame-a DO:
          find first mnt_det no-lock where mnt_nbr = mndnbr[iCnt] and
                     mnt_select = sel[iCnt] and
                     mnt_lang = global_user_lang no-error.
-         if available mnt_det and substring(dsc[icnt],1,1) <> "-" then do:
-            assign dsc[iCnt] = "-" + mnt_label.
+         if available mnt_det /* and substring(dsc[icnt],1,1) <> "-" */ then do:
+            assign dsc[iCnt] = /* "-" + */ mnt_label.
             display dsc[iCnt] with frame frame-a.
          end.
       end.
    end.
 END.
-
+if not batchrun then do:
+   {xxchklv.i 'MODEL-CAN-RUN' 10}
+end.
 assign mfgver = "CTRL-] to get system menu data.".
 {pxmsg.i &MSGTEXT=mfgver &ERRORLEVEL=1}
 
 repeat with frame frame-a:
    prompt-for cdref editing:
-     {mfnp05.i usrw_wkfl usrw_index1 " {xxusrwdom0.i} {xxand.i}
-               usrw_key1 = global_userid " usrw_key2 "input cdref"}
+     {mfnp05.i usrw_wkfl usrw_index1
+               " {xxusrwdom0.i} {xxand.i}
+                  usrw_key1 = global_userid and
+                  usrw_charfld[15] = 'xxmemt1.p' "
+               usrw_key2 "input cdref"}
       if recno <> ? then do:
          assign cdref = usrw_key2
                 cLoadFile = usrw_logfld[1]
@@ -164,7 +167,8 @@ end.
                usrw_key5 = sortkey[1]
                usrw_key6 = dsc[1]
                usrw_logfld[1] = cLoadFile
-               usrw_logfld[2] = sngl_ln.
+               usrw_logfld[2] = sngl_ln
+               usrw_charfld[15] = 'xxmemt1.p'.
         do iCnt = 2 to extent(mndnbr):
         assign usrw_key3 = usrw_key3 + "#" + mndnbr[iCnt]
                usrw_intfld[iCnt] = sel[iCnt]
@@ -188,21 +192,26 @@ end.
                      exec[iCnt] <> "" then do:
                      put '-' skip.
                      put unformat '"' mndnbr[iCnt] '"' skip.
-                     put unformat sel[iCnt] skip.
-                     if substring(dsc[iCnt] , 1 ,1) = "-" then do:
-                        put unformat '- '.
-                     end.
-                     else do:
+                     put unformat sel[iCnt].
+                     if (lower(exec[iCnt]) = "x" and  mfgver = "eB21") then
+                     put unformat ' x'.
+                     put skip.
+                    /* if substring(dsc[iCnt] , 1 ,1) = "-" then do:      */
+                    /*    put unformat '- '.                              */
+                    /* end.                                               */
+                    /* else do:                                           */
                           if index(trim(dsc[iCnt])," ") > 0 then
                              put unformat '"' dsc[iCnt] '" '.
                           else
                              put unformat dsc[iCnt] ' '.
-                     end.
+                     /* end. */
                      if sortkey[iCnt] = "" then
                         put unformat '"" '.
                      else
                         put unformat sortkey[iCnt] ' '.
                      put unformat '"' exec[iCnt] '"' skip.
+                     if (lower(exec[iCnt]) = "x" and mfgver = "eB21" ) then
+                         put unformat 'yes' skip.
                      put "." skip.
                      if mfgver = "eB2" then put "." skip.
                   end.
@@ -213,7 +222,10 @@ end.
            output to value("xxmemt1.22yp.bpo") keep-messages.
            hide message no-pause.
            batchrun  = yes.
-           {gprun.i ""mgmemt.p""}
+           if mfgver = "eB21" then
+              {gprun.i ""xxmemt.p""}
+           else
+              {gprun.i ""mgmemt.p""}
            batchrun  = no.
            hide message no-pause.
            output close.

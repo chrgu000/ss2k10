@@ -4,7 +4,7 @@
 /******************************************************************************/
 /*-----------------------------------------------------------------------------
  *  API:
- *   {xxchklv.i application promptDays}
+ *   {xxchklv.i 'application' promptDays}
  *   application
  *   promptDays: remaining days prompt.
  *
@@ -18,10 +18,13 @@ define variable usrCnt as integer.
 assign mac = getMAC().
 
 find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
-           usrw_key1 = {1} and usrw_key2 = mac no-error.
+           usrw_key1 = {1} and usrw_key2 = mac and
+           usrw_charfld[15] = "lvctrl"
+           no-error.
 if not available usrw_wkfl then do:
       find first usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
-                 usrw_key1 = {1} and usrw_key2 = "" no-error.
+                 usrw_key1 = {1} and usrw_key2 = "" and
+                 usrw_charfld[15] = "lvctrl" no-error.
 end.
 if not available usrw_wkfl then do:
    {pxmsg.i &MSGNUM=5349 &ERRORLEVEL=3 &MSGARG1={1}}
@@ -73,7 +76,7 @@ else do: /* else not can-find(first usrw_wkfl */
                   {pxmsg.i &MSGNUM=2697 &ERRORLEVEL=2
                            &MSGARG1=remainingdays}
           end.
-          else if usrw_datefld[1] - today < 0 then do:
+          else if usrw_datefld[1] - today <= 0 then do:
              {pxmsg.i &MSGNUM=2696 &ERRORLEVEL=3}
              pause 5.
              return.
