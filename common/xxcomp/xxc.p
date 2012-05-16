@@ -9,14 +9,14 @@ define variable srcDir as character.
 define variable destDir as character.
 define variable src as character.
 assign src = "/home/qadfiy/zzdivmt.p".
-assign srcDir = "/home/qadfiy,".
+assign srcDir = "/home/qadfiy".
 assign destDir = "/home/qadfiy/p4shinetsu/us/zz".
-propath = srcDir + propath.
+propath = srcDir + "," + propath.
 compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "25YA"}
+{mfdtitle.i "25YG"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -27,8 +27,6 @@ propath = substring(propath,length(srcDir) + 1).
 
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
-define variable bpropath   as character /*V8! bgcolor 15 */
-                view-as editor size 50 by 7.
 define variable filef      as character format "x(60)".
 define variable filet      as character format "x(60)".
 define variable del-yn     as logical.
@@ -125,7 +123,7 @@ end.
 ON RETURN of xrcdir in frame z DO:
    assign xrcdir.
    assign xrcdir = lower(trim(xrcDir)).
-   run setcomppropath.
+   run setbpropath.
    display bpropath with frame z.
 end.
 */
@@ -150,6 +148,11 @@ ON "CTRL-]" OF fileF IN FRAME z DO:
       delete usrw_wkfl.
   end.
 END.
+
+on "CTRL-]" of bPropath in frame z do:
+run setbpropath.
+display bpropath with frame z.
+end.
 
 ON "CTRL-]" of fileT in frame z do:
    APPLY "CTRL-]":u TO xrcDir.
@@ -198,15 +201,14 @@ do on error undo, retry:
  /*  end.                                                                     */
    assign xrcDir = lower(trim(xrcDir)).
    assign xrcdir destdir.
-   run setcomppropath.
    display bpropath with frame z.
    if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
       del-yn = yes.
       {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=del-yn}
       if del-yn then do:
           clear frame z.
-          os-delete utcompile.log no-error.
-          os-delete utcompile.wrk no-error.
+          os-delete value(vWorkLog) no-error.
+          os-delete value(vWorkFile) no-error.
           for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
                    usrw_key1 = qadkey1 and usrw_key2 = global_userid:
             delete usrw_wkfl.
@@ -230,19 +232,21 @@ do on error undo, retry:
               usrw_key2 = global_userid.
         end.
         if not locked(usrw_wkfl) then do:
-           assign usrw_charfld[3] = filef
-                  usrw_charfld[4] = trim(filet)
+           assign usrw_charfld[6] = filef
+                  usrw_charfld[7] = trim(filet)
                   usrw_intfld[1] = kbc_display_pause.
            if opsys = "msdos" or opsys = "win32" then do:
               assign usrw_charfld[11] = xrcdir
                      usrw_charfld[12] = trim(destDir) when destDir <> ""
                                        and destDir <> vClientDir
+                     usrw_charfld[13]  = bpropath
                      usrw_charfld[15] = trim(destDir).
            end.
            else if opsys = "unix" then do:
               assign usrw_charfld[1] = xrcdir
                      usrw_charfld[2] = trim(destDir)
                                 when destDir <> "" and destDir <> vClientDir
+                     usrw_charfld[3] = bpropath
                      usrw_charfld[5] = trim(destDir).
            end.
         end.
@@ -271,57 +275,59 @@ output to value(vWorkFile).
       export fn.
   end.
 output close.
-run setcomppropath.
+assign bpropath.
 {gprun.i ""xxc001.p""}
-os-delete utcompile.log no-error.
+os-delete value(vWorkLog) no-error.
 os-delete value(vworkfile) no-error.
 leave.
 end. /*mainLoop*/
 
 PROCEDURE iniForm:
-define variable vDir as character.
-define variable vpropath as character.
-/*read form variabls from usrw_wkfl*/
-find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
-if available usrw_wkfl then do with frame z:
-    assign xrcdir = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""
-           destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
-           filef = trim(usrw_charfld[3])
-           filet = substring(usrw_charfld[4],1,length(usrw_charfld[4]) - 1)
-           kbc_display_pause = usrw_intfld[1].
-    if opsys = "msdos" or opsys = "win32" then do:
-       assign xrcdir = usrw_charfld[11]
-              destDir = trim(usrw_charfld[15]).
+    define variable vDir as character.
+    define variable vpropath as character.
+    /*read form variabls from usrw_wkfl*/
+    find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
+               usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+    if available usrw_wkfl then do with frame z:
+        assign xrcdir = trim(usrw_charfld[1]) when usrw_charfld[1] <> ""
+               bpropath = usrw_charfld[3] when usrw_charfld[3] <> ""
+               destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
+               filef = trim(usrw_charfld[6])
+               filet = substring(usrw_charfld[7],1,length(usrw_charfld[7]) - 1)
+               kbc_display_pause = usrw_intfld[1].
+        if opsys = "msdos" or opsys = "win32" then do:
+           assign xrcdir = usrw_charfld[11]
+                  bpropath = usrw_charfld[13]
+                  destDir = trim(usrw_charfld[15]).
+        end.
     end.
-end.
-
-assign xrcDir DestDir fileF filet kbc_display_pause.
-assign lng = lower(global_user_lang).
-run setcomppropath.
-
+    assign xrcDir DestDir fileF filet kbc_display_pause.
+    assign lng = lower(global_user_lang).
+    if bpropath = "" then do:
+       assign bpropath = replace(v_oldpropath,",",chr(10)).
+    end.
+    run setbpropath.
 END PROCEDURE.  /* PROCEDURE iniForm: */
 
-procedure setcomppropath:
-   define variable vpropath as character.
-   assign xrcdir = lower(trim(xrcDir)).
-   assign destdir = lower(trim(destdir)).
-   assign vpropath = replace(v_oldpropath,".,","").
-   if index(vpropath,xrcdir) <> 0 and xrcdir <> "" then do:
-      assign vpropath = trim(replace(vpropath,xrcdir + ",","")).
-   end.
-   if index(vpropath,destdir) <> 0 and destdir <> "" then do:
-      assign vpropath = trim(replace(vpropath,destdir + ",","")).
-   end.
-   if xrcdir <> "" and destdir <> "" then do:
-        assign bpropath = xrcdir + "," + destdir + ",.," + vpropath.
-        if destDir = "." then
-           assign v_incdestpropath = ".," + vpropath.
-        else
-           assign v_incdestpropath = destDir + ",.," + vpropath.
-   end.
-   assign v_comppropath = bpropath.
-   assign bProPath = replace(trim(propath),",",chr(10)).
+procedure setbpropath:
+    define variable vpropath as character.
+    assign xrcdir = lower(trim(xrcDir)).
+    assign destdir = lower(trim(destdir)).
+    assign vpropath = replace(replace(bpropath,chr(10),","),".,","").
+    if index(vpropath,xrcdir) <> 0 and xrcdir <> "" then do:
+       assign vpropath = trim(replace(vpropath,xrcdir + ",","")).
+    end.
+    if index(vpropath,destdir) <> 0 and destdir <> "" then do:
+       assign vpropath = trim(replace(vpropath,destdir + ",","")).
+    end.
+    if xrcdir <> "" and destdir <> "" then do:
+         assign bpropath = xrcdir + "," + destdir + ",.," + vpropath.
+         if destDir = "." then
+            assign v_incdestpropath = ".," + vpropath.
+         else
+            assign v_incdestpropath = destDir + ",.," + vpropath.
+    end.
+    assign bProPath = replace(trim(bpropath),",",chr(10)).
 end procedure.
 
 PROCEDURE iniVar:

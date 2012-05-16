@@ -7,7 +7,7 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {xxcompile.i}
 define variable incmf as logical.
-define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
+define variable qadkey1   as character initial "xxcomp.p.parameter" no-undo.
 define variable proc_name as character format "x(18)" label "File".
 define variable proc_ver  as character format "x(10)".
 define variable i         as integer   format ">>>9" label "PROCESSED".
@@ -17,6 +17,7 @@ define variable dirname   as character format "x(15)".
 define variable yn        as logical.
 define variable okProg    as character.
 define variable c-comp    as character format "x(12)" no-undo.
+define variable m0-comp   as character format "x(40)" no-undo.
 define temp-table t_log
        fields tt_i as integer
        fields tt_j as integer
@@ -44,9 +45,9 @@ form
 with frame b down no-labels width 34.
 
 form
-   c-comp format "x(40)"
-with overlay frame m0 column 35 24 down
-       title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 46.
+   m0-comp no-label
+with overlay frame m0 column 35 down no-labels
+     title color normal (getFrameTitle("CAPS_COMPILE_PROGRAMS",25)) width 46.
 
 hide all no-pause.
 hide stream crt all no-pause.
@@ -58,8 +59,8 @@ view stream cmp frame m0.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
-os-delete utcompile.log no-error.
-output to utcompile.log append.
+os-delete value(vWorkLog) no-error.
+output to value(vWorkLog) append.
 input from value(vWorkFile) no-echo no-map.
 repeat:
   set proc_name.
@@ -68,11 +69,11 @@ end.
 input close.
 output close.
 
-output to "utcompile.log" append.
+output to value(vWorkLog) append.
 put unformat dbname " START:" today " " string(time,"hh:mm:ss") skip.
 output close.
-
-display c-comp with frame m0.
+/* assign m0-comp = c-comp.          */
+/* display m0-comp with frame m0.    */
 
 i = 0.
 err = 0.
@@ -89,25 +90,31 @@ repeat:
    hide frame m0.
    view frame m0.
    if substring(proc_name,1,2) = "mf" then assign incmf = yes.
-   display stream cmp c-comp with frame m0.
+/*   display stream cmp m0-comp with frame m0. */
    if opsys = "UNIX" then do:
       run getVer(input xrcDir + "/" + proc_name,output proc_ver).
    end.
    else if opsys = "msdos" or opsys = "win32" then do:
       run getVer(input xrcDir + "~\" + proc_name,output proc_ver).
    end.
-   display skip trim(proc_name)  "..." proc_ver when proc_ver <> "" with frame m0.
+   assign m0-comp = trim(proc_name) + " [v:" + proc_ver + "] ... ".
+   if i <> 1 then do:
+      down with frame m0.
+      pause 0.
+   end.
+   display m0-comp + trim(getTermLabel("COMPILING",12)) @ m0-comp with frame m0.
+   pause 0.
    run getDestFileName(input destDir, input lng, input proc_name,
                        output dirname).
 
    /* COMPILE PROCEDURE */
    {pxmsg.i &MSGNUM=4852 &ERRORLEVEL=1 &MSGARG1=proc_name}
 
-   display stream crt  trim(getTermLabel("COMPILING",12)) + "...." @ c-comp
-                       proc_name with frame b.
+   display stream crt trim(getTermLabel("COMPILING",12)) + "...." @ c-comp
+                      proc_name with frame b.
    pause 0.
    down stream crt 1 with frame b.
-   output to "utcompile.log" append.
+   output to value(vWorkLog) append.
           put unformat "compile:" + proc_name + " Ver:" + proc_ver.
           if opsys = "unix" then do:
             put skip.
@@ -115,7 +122,7 @@ repeat:
           else if opsys = "msdos" or opsys = "win32" then do:
             put " copy:".
           end.
-          assign propath = v_comppropath.
+          assign propath =xrcDir + "," + replace(bpropath,chr(10),",") when bpropath <> "".
           compile value(proc_name) no-attr-space save into value(".").
           assign propath = v_oldpropath.
    output close.
@@ -127,34 +134,36 @@ repeat:
       assign rfile = "." + "~\"
                    + substring(proc_name , 1 ,index(proc_name,".")) + "r".
    end.
-
    if search(rfile) = ? then do:
-      if search(proc_name) <> ? then err = err + 1.
-      display trim(getTermLabel("COMPILE_ERROR",20)) @ c-comp with frame m0.
+      if proc_name <> "" then err = err + 1.
+      assign m0-comp = m0-comp + trim(getTermLabel("COMPILE_ERROR",20)).
+      display m0-comp with frame m0.
+      pause 0.
    end.
    else do:
       if okprog = "" then assign okProg = proc_name.
                      else assign okProg = okProg + ";" + proc_name.
-      display trim(getTermLabel("COMPLETED",20)) @ c-comp with frame m0.
+      assign m0-comp = m0-comp + trim(getTermLabel("COMPLETED",20)).
+      display m0-comp with frame m0.
+      pause 0.
    end.
    display stream crt i err with frame a.
-   output to utcompile.log append.
+   output to value(vWorkLog) append.
      if opsys = "unix" then do:
         unix silent value("cp " + rfile + " " + dirname).
-        os-delete value(rfile) no-error.
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
         dos silent value("copy " + rfile + " " + dirname).
-        os-delete value(rfile) no-error.
      end.
+     os-delete value(rfile) no-error.
    output close.
 end.
-assign propath = v_incdestpropath.
+assign propath = v_oldpropath.
 input close.
 hide message no-pause.
 pause 0 no-message.
 
-output to utcompile.log append.
+output to value(vWorkLog) append.
    put unformat dbname " END:" today " " string(time,"hh:mm:ss") skip.
    if err = 0 then do:
       put unformat skip(2).
@@ -169,7 +178,7 @@ output to utcompile.log append.
 output close.
 
 empty temp-table t_log no-error.
-input from utcompile.log.
+input from value(vWorkLog).
 i = 1.
 repeat:
   create t_log.
@@ -194,7 +203,8 @@ hide frame m.
 hide frame n.
 if err = 0 and kbc_display_pause <= 9 then do:
    for each t_log where tt_log <> "" with overlay frame m column 35
-       title color normal (getFrameTitle("COMPILE_LOG",25)) no-labels width 46:
+       title color normal (getFrameTitle("CAPS_COMPILE_PROGRAMS",25))
+       no-labels width 46:
        display tt_log format "x(44)".
    end.
 end.
@@ -204,7 +214,7 @@ else do:
    hide frame b.
    for each t_log where tt_log <> "" and tt_j > 0 with overlay
        frame n column 1 title color
-       normal(getFrameTitle("COMPILE_LOG",25)) no-labels width 80
+       normal(getFrameTitle("CAPS_COMPILE_PROGRAMS",25)) no-labels width 80
        by tt_j:
        if index(tt_log,"compile:") > 0 or index(tt_log,"END:") > 0 then do:
           display fill("-",78) @ tt_log.
@@ -213,7 +223,7 @@ else do:
        display tt_log format "x(78)".
    end.
 end.
-os-delete utcompile.log no-error.
+os-delete value(vWorkLog) no-error.
 os-delete value(vworkfile) no-error.
 
 /* Compile complete */
@@ -236,10 +246,10 @@ os-delete value(vworkfile) no-error.
        end.
        if yn then do:
           if opsys = "unix" then do:
-             unix silent vi utcompile.log.
+             unix silent vi value(vWorkLog).
           end.
           if opsys = "msdos" or opsys = "win32" then do:
-              dos silent notepad.exe utcompile.log.
+              dos silent notepad.exe value(vWorkLog).
            end.
        end.
    end.
