@@ -84,6 +84,8 @@ define shared variable comp_max like wod_qty_chg.
 define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
 
+define variable wk_rate as decimal no-undo.
+ 
 define variable ladqtyall like lad_qty_all no-undo.
 define variable aviqty as decimal no-undo.
 define variable vqty as decimal no-undo.
@@ -141,6 +143,7 @@ assign
 run gett0(input reldate, input reldate1,
           input site, input site1,
           input wkctr, input wkctr1).
+{xxrepkdis1.i}          
 /* FIND AND DISPLAY */
 /* rps_mstr 重复生产排程表 */
 
@@ -683,6 +686,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 xxwa_recid = recid(xxwa_det)
                 .
       end.
+      {xxrepkdis2.i}
  /*
     display t0_date t0_site t0_line t0_part
             t0_wktime
@@ -1412,7 +1416,14 @@ for each rps_mstr no-lock where rps_rel_date >= idate
            END.
 
        END.
-       ASSIGN vtime = (rps_qty_req - rps_qty_comp) / lnd_rate.
+       assign wk_rate = 1.
+       find first shft_det no-lock where shft_site = rps_site and
+       			      shft_wkctr = rps_line and weekday(rps_rel_date) = shft_day
+       			      no-error.
+       if available shft_det then do:
+       		assign wk_rate = shft_load1 / 100.
+       end.
+       ASSIGN vtime = (rps_qty_req - rps_qty_comp) / (lnd_rate * wk_rate).
        FOR EACH tmp_file1 EXCLUSIVE-LOCK WHERE
                 t1_avli > 0 AND vtime > 0 BY t1_sn:
           IF t1_avli >= vtime THEN DO:
@@ -1476,6 +1487,6 @@ for each tmp_file0 no-lock:
            qad_decfld[2] = t0_qty
            qad_decfld[3] = t0_qtya
            .
-    assign errornum = errornum + 1.
+    assign errornum = errornum + 1. 
 end.
 END PROCEDURE.

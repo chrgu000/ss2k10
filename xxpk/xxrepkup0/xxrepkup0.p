@@ -31,14 +31,14 @@
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Old ECO marker removed, but no ECO header exists *GOGW*                    */
 /* Revision: 1.6.1.8      BY: Katie Hilbert      DATE: 05/15/02  ECO: *P06H*  */
-/* $Revision: 1.6.1.9 $           BY: Nishit V           DATE: 12/10/02  ECO: *N21K*  */
+/* $Revision: 1.6.1.9 $           BY: Nishit V   DATE: 12/10/02  ECO: *N21K*  */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120330.1"}
+{mfdtitle.i "120521.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -67,7 +67,7 @@ define new shared variable qtyneed        like wod_qty_chg
                                           label "Qty Required".
 define new shared variable netgr          like mfc_logical initial yes
                                           label "Use Work Center Inventory".
-define new shared variable detail_display like mfc_logical initial  no
+define new shared variable detail_display like mfc_logical initial no
                                           label "Detail Requirements".
 define new shared variable um             like pt_um.
 define new shared variable wc_qoh         like ld_qty_oh.
@@ -191,7 +191,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
- 
+
    {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
