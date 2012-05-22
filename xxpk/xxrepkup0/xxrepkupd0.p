@@ -883,6 +883,13 @@ for each tiss1 break by tiss1_part:
   if first-of(tiss1_part) then do:
     for each ld_det no-lock where ld_site = "gsa01" and
              ld_part = tiss1_part and ld_qty_oh > 0 :
+      if netgr = no and ld_loc = "p-all" then do:
+      	 next.
+      end.
+      if netgr = no and can-find(first xxwa_det no-lock where xxwa_line = ld_loc)
+      then do:
+      		 next.
+    	end.
       create tsupp.
       assign
         tsu_loc       =  ld_loc
@@ -901,20 +908,6 @@ for each tiss1 break by tiss1_part:
       .
     end.
   end.
-end.
-
-/* 不使用工作中心库存 */
-if netgr = no then do:
-	 for each tsupp exclusive-lock where tsu_loc = "p-all":
-	 		 delete tsupp.
-	 end.
-	 for each xxwa_det no-lock break by xxwa_line:
-	 		 if first-of(xxwa_line) then do:
-				  for each tsupp exclusive-lock where tsu_loc = xxwa_line:
-			 		  delete tsupp.
-			    end. 		 		
-	 	   end.
-	 end.
 end.
 
 thmsg = "" .
