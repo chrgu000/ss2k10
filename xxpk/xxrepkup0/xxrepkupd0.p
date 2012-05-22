@@ -902,6 +902,21 @@ for each tiss1 break by tiss1_part:
     end.
   end.
 end.
+
+/* 不使用工作中心库存 */
+if netgr = no then do:
+	 for each tsupp exclusive-lock where tsu_loc = "p-all":
+	 		 delete tsupp.
+	 end.
+	 for each xxwa_det no-lock break by xxwa_line:
+	 		 if first-of(xxwa_line) then do:
+				  for each tsupp exclusive-lock where tsu_loc = xxwa_line:
+			 		  delete tsupp.
+			    end. 		 		
+	 	   end.
+	 end.
+end.
+
 thmsg = "" .
 {gprun.i ""xxrepkupall.p""}
 if length(thmsg) > 0 then do:
