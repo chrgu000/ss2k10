@@ -18,7 +18,7 @@
 /************************************************************************/
 /*J034*  ** MOVED MFDTITLE.I UP FROM BELOW */
          /* DISPLAY TITLE */
-         {mfdtitle.i "120331.1"}
+{mfdtitle.i "120331.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 

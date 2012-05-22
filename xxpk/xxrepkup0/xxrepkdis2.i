@@ -15,7 +15,7 @@
             xx_qty_req
             xx_nbr
             xx_op
-            xx_start
             t0_tttime / t0_wktime * xx_qty_req @ t0_time
             t0_qty / t0_qtya * xx_qty_req @ xx_start
-            with width 300 .
+            with frame detail001 width 300 .
+     down with frame detail001.

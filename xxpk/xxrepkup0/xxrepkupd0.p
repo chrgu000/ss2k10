@@ -13,6 +13,8 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {xxrepkup0.i "new"}
 {xxrepkup1.i "new"}
+
+
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE repkupd_p_1 "Production Date"
@@ -85,7 +87,7 @@ define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
 
 define variable wk_rate as decimal no-undo.
- 
+
 define variable ladqtyall like lad_qty_all no-undo.
 define variable aviqty as decimal no-undo.
 define variable vqty as decimal no-undo.
@@ -114,22 +116,6 @@ define temp-table net_comp no-undo
    field net_qty  like wod_qty_chg
    index net net_part.
 
-/*临时表用于记录成品对应物料领料关系*/
-define temp-table xx_pklst no-undo
-  fields xx_site like si_site
-  fields xx_line like op_wkctr
-  fields xx_nbr  as character format "x(10)"
-  fields xx_comp like wod_part
-  fields xx_qty_req like wod_qty_req
-  fields xx_qty_need like wod_qty_req
-  fields xx_qty_iss  like wod_qty_iss
-  fields xx_um like pt_um
-  fields xx_par  like wo_part
-  fields xx_due_date like wo_due_date
-  fields xx_op  like wr_op
-  fields xx_mch like wr_mch
-  fields xx_start like wr_start.
-
 define temp-table xx_ld
   fields xl_recid as integer
   fields xl_qty   as decimal
@@ -140,13 +126,15 @@ assign
    wc_qoh      = 0
    pick-used   = no
    temp_nbr    = nbr.
+
 run gett0(input reldate, input reldate1,
           input site, input site1,
           input wkctr, input wkctr1).
-{xxrepkdis1.i}          
+  {xxrepkdis1.i}
+
 /* FIND AND DISPLAY                                                         */
 /* rps_mstr 重复生产排程表                                                  */
-                                                                           
+
 /* for each qad_wkfl no-lock where qad_key1 = "xxpsref":                    */
 /*    delete qad_wkfl.                                                      */
 /* end.                                                                     */
@@ -155,6 +143,7 @@ run gett0(input reldate, input reldate1,
 for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
 delete usrw_wkfl.
 end.
+
 assign i = 1.
 
 for each rps_mstr no-lock
@@ -324,6 +313,7 @@ by wr_start by wr_part by wr_op
                     wod_qty_pick - wod_qty_iss,0))).
 
          /* netgr = yes  考虑工作中心在库 */
+
    if netgr then do:
             /* Added wo_lot as input parameter */
             {gprun.i ""repkupb.p"" "(wo_site,
@@ -333,7 +323,7 @@ by wr_start by wr_part by wr_op
                                      qtyneed,
                                      wo_lot,
                                      input-output wc_qoh)"}
-         end.
+    end.   /* if netgr then do: */
 
          temp_qty = 0.
          if netgr then
@@ -686,7 +676,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 xxwa_recid = recid(xxwa_det)
                 .
       end.
-      {xxrepkdis2.i}
+    {xxrepkdis2.i}
  /*
     display t0_date t0_site t0_line t0_part
             t0_wktime
@@ -883,28 +873,31 @@ for each tiss1 break by tiss1_part:
   if first-of(tiss1_part) then do:
     for each ld_det no-lock where ld_site = "gsa01" and
              ld_part = tiss1_part and ld_qty_oh > 0 :
-      if netgr = no and ld_loc = "p-all" then do:
-      	 next.
-      end.
-      if netgr = no and can-find(first xxwa_det no-lock where xxwa_line = ld_loc)
-      then do:
-      		 next.
-    	end.
+         if netgr = no and ld_loc = "p-all" then do:
+            next.
+         end.
+         if netgr = no then do:
+            find first xxwa_det no-lock where xxwa_date = tiss1_sdate and
+                                         xxwa_site = ld_site and xxwa_line = ld_loc no-error.
+                if available xxwa_det then do:
+                next.
+            end.
+         end.
       create tsupp.
       assign
-        tsu_loc       =  ld_loc
-        tsu_part      =  ld_part
-        tsu_lot       =  ld_lot
-        tsu_ref       =  ld_ref
-        tsu_qty       =  ld_qty_oh
-        tsu_flg       =  ""
-        tsu_abc       =  ""
-        tsu_lpacks    =  0
-        tsu_ltrail    =  0
-        tsu_bpacks    =  0
-        tsu_btrail    =  0
-        tsu_lit       =  0
-        tsu_big       =  0
+        tsu_loc    =  ld_loc
+        tsu_part   =  ld_part
+        tsu_lot    =  ld_lot
+        tsu_ref    =  ld_ref
+        tsu_qty    =  ld_qty_oh
+        tsu_flg    =  ""
+        tsu_abc    =  ""
+        tsu_lpacks =  0
+        tsu_ltrail =  0
+        tsu_bpacks =  0
+        tsu_btrail =  0
+        tsu_lit    =  0
+        tsu_big    =  0
       .
     end.
   end.
@@ -913,9 +906,9 @@ end.
 thmsg = "" .
 {gprun.i ""xxrepkupall.p""}
 if length(thmsg) > 0 then do:
-  message "存在不能执行的单据".
-  for each ttmsg:
-    message tmsg.
+  display "存在不能执行的单据" with frame errmsg.
+  for each ttmsg with frame errmsg:
+    display tmsg.
   end.
 end.
 else do:
@@ -1396,12 +1389,14 @@ define variable vtime   as decimal.
 DEFINE VARIABLE recno   AS RECID.
 define variable key2    as character.
 EMPTY TEMP-TABLE tmp_file0 NO-ERROR.
+/***********
 for each qad_wkfl where qad_key1 = "xxrepkup0.p" and qad_datefld[1] >= idate
                     and qad_datefld[1] <= idate1
                     and qad_charfld[1] >= isite and qad_charfld[1] <= isite1
                     and qad_charfld[2] >= iline and qad_charfld[2] <= iline1:
      delete qad_wkfl.
 end.
+*************/
 for each rps_mstr no-lock where rps_rel_date >= idate
      and rps_rel_date <= idate1
      and rps_line >= iLine
@@ -1473,6 +1468,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
            END.
        END.
 end.
+/***********************
 assign errornum = 1.
 for each tmp_file0 no-lock:
     assign key2 = string(errornum) + string(today,"99-99-99") + string(time)
@@ -1495,6 +1491,7 @@ for each tmp_file0 no-lock:
            qad_decfld[2] = t0_qty
            qad_decfld[3] = t0_qtya
            .
-    assign errornum = errornum + 1. 
+    assign errornum = errornum + 1.
 end.
+*********************************/
 END PROCEDURE.

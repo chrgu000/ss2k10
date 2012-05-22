@@ -38,7 +38,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120521.1"}
+{mfdtitle.i "120523.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -196,7 +196,6 @@ repeat:
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
    /* APPLY TO THE REPETITVE MODULE.  THEREFORE, DO NOT CALL REPKUPA.P  */
-
    {gprun.i ""xxrepkupd0.p""}
 
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS

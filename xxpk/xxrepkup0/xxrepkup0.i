@@ -39,23 +39,71 @@ DEFINE {1} SHARED TEMP-TABLE tmp_file1 no-undo
     fields t1_pick  like xxlnw_ptime
     FIELDS t1_avli AS DECIMAL.
 
+
+/*临时表用于记录成品对应物料领料关系*/
+define {1} SHARED temp-table xx_pklst no-undo
+  fields xx_site like si_site
+  fields xx_line like op_wkctr
+  fields xx_nbr  as character format "x(10)"
+  fields xx_comp like wod_part
+  fields xx_qty_req like wod_qty_req
+  fields xx_qty_need like wod_qty_req
+  fields xx_qty_iss  like wod_qty_iss
+  fields xx_um like pt_um
+  fields xx_par  like wo_part
+  fields xx_due_date like wo_due_date
+  fields xx_op  like wr_op
+  fields xx_mch like wr_mch
+  fields xx_start like wr_start.
+
+
+FORM  t0_date
+      t0_record
+      t0_site
+      t0_line
+      t0_sn
+      t0_part
+      t0_wktime
+      t0_tttime
+      t0_start
+      t0_end
+      t0_qtyA
+      t0_qty
+      t0_user1
+with frame tmpfile0 width 300 down attr-space.
+
+FORM  t0_date t0_site t0_line t0_part
+      t0_wktime
+      t0_tttime
+      t0_start
+      t0_end
+      t0_qtya
+      t0_qty
+      xx_comp
+      xx_qty_req
+      xx_nbr
+      xx_op
+      xx_start
+      t0_time
+with frame detail001 width 300 down attr-space.
+
 FUNCTION getMult RETURNS DECIMAL (qty as decimal, mult as decimal) :
 /*------------------------------------------------------------------------------
   Purpose:  以倍数圆整.
-    Notes:  
+    Notes:
 ------------------------------------------------------------------------------*/
 
   if mult <> 0 AND qty / mult <> truncate(qty / mult,0)
   then
-      RETURN  MAX(qty,(truncate (qty / mult,0) + 1) * mult).    
-  ELSE 
+      RETURN  MAX(qty,(truncate (qty / mult,0) + 1) * mult).
+  ELSE
       RETURN qty.
 END FUNCTION.
 
 procedure getld:
 		define input parameter iLine as character.
 		define input parameter iPart as character.
-		
+
 end procedure.
 
 /* run gett0(input today - 2 ,input today  ,           */
