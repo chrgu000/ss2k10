@@ -144,13 +144,13 @@ run gett0(input reldate, input reldate1,
           input site, input site1,
           input wkctr, input wkctr1).
 {xxrepkdis1.i}          
-/* FIND AND DISPLAY */
-/* rps_mstr 重复生产排程表 */
-
-/* for each qad_wkfl no-lock where qad_key1 = "xxpsref":               */
-/*    delete qad_wkfl.                                                 */
-/* end.                                                                */
-/* assign errornum = 1.                                                */
+/* FIND AND DISPLAY                                                         */
+/* rps_mstr 重复生产排程表                                                  */
+                                                                           
+/* for each qad_wkfl no-lock where qad_key1 = "xxpsref":                    */
+/*    delete qad_wkfl.                                                      */
+/* end.                                                                     */
+/* assign errornum = 1.                                                     */
 
 for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
 delete usrw_wkfl.
