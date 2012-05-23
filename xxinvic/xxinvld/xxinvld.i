@@ -6,9 +6,9 @@
 
 define {1} shared variable flhload as character format "x(70)".
 define {1} shared temp-table tmpinv
-       fields tiv_vend like vd_addr
        fields tiv_ivnbr as character
        fields tiv_tax as character
+       fields tiv_vend like vd_addr
        fields tiv_ctrnbr as character
        fields tiv_line like pod_line
        fields tiv_draw like pt_draw
