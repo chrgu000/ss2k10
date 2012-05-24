@@ -1388,6 +1388,7 @@ define input parameter iline1 like ln_line.
 define variable vtime   as decimal.
 DEFINE VARIABLE recno   AS RECID.
 define variable key2    as character.
+define variable qty     as decimal.
 EMPTY TEMP-TABLE tmp_file0 NO-ERROR.
 /***********
 for each qad_wkfl where qad_key1 = "xxrepkup0.p" and qad_datefld[1] >= idate
@@ -1440,9 +1441,9 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                    t0_sn = t1_sn
                    t0_start = t1_pick   /*生产时间*/
                    t0_end   = t1_end
-                   t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate
+                   t0_wktime = (rps_qty_req - rps_qty_comp) / (lnd_rate * wk_rate)
                    t0_qtya = rps_qty_req - rps_qty_comp
-                   t0_qty =truncate(t0_qtya * (vtime / t0_wktime),0)
+                   t0_qty = truncate(t0_qtya * (vtime / t0_wktime) + 1,0)
                    t0_tttime = vtime.
                ASSIGN t1_avli = t1_avli - vtime.
                LEAVE.
@@ -1459,7 +1460,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                   t0_start = t1_pick
                   t0_end   = t1_end
                   t0_qtya = rps_qty_req - rps_qty_comp
-                  t0_wktime = (rps_qty_req - rps_qty_comp) / lnd_rate
+                  t0_wktime = (rps_qty_req - rps_qty_comp) / (lnd_rate * wk_rate)
                   t0_tttime = t1_avli
                   t0_qty = truncate(t0_qtya * (t1_avli / t0_wktime) + 1,0)
                   .
@@ -1467,6 +1468,16 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                ASSIGN t1_avli = 0.
            END.
        END.
+       for each tmp_file0 exclusive-lock break by t0_date by t0_part by t0_sn:
+       		 if first-of(t0_part) then do:
+       		 		assign qty = t0_qtyA.
+       		 end.
+       		 if not last-of(t0_part) then
+       		 		assign qty = qty - t0_qty.
+       		 if last-of(t0_part) then do:
+       		 		assign t0_qty = qty.
+       		 end.
+	     end.
 end.
 /***********************
 assign errornum = 1.
