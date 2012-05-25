@@ -346,19 +346,19 @@ repeat:
         if not ( if index(v1500,"@" ) <> 0 then entry(2,v1500,"@") else v1500 ) <> "" then do:
         end.
 
-        v_case_nbr = trim(substring(v1500,11)).
-        v_contract_nbr = trim(substring(v1500,7,4)).
-
-        if v_case_nbr <> "" then do:
-            do i = 1 to length(v_case_nbr).
-                if index("0987654321", substring(v_case_nbr,i,1)) = 0 then do:
-                    display skip "托号有误,请重新输入." @ wmessage no-label with fram f1500.
-                    pause 0 before-hide.
-                    undo, retry.
-                end.
-            end.
-        end.
-
+    /*    v_case_nbr = trim(substring(v1500,11)).                                                 */
+    /*    v_contract_nbr = trim(substring(v1500,7,4)).                                            */
+    /*                                                                                            */
+    /*    if v_case_nbr <> "" then do:                                                            */
+    /*        do i = 1 to length(v_case_nbr).                                                     */
+    /*            if index("0987654321", substring(v_case_nbr,i,1)) = 0 then do:                  */
+    /*                display skip "托号有误,请重新输入." @ wmessage no-label with fram f1500.    */
+    /*                pause 0 before-hide.                                                        */
+    /*                undo, retry.                                                                */
+    /*            end.                                                                            */
+    /*        end.                                                                                */
+    /*    end.                                                                                    */
+    /*                                                                                            */
     /*        for each  xxinv_mstr                                      */
     /*            use-index xxinv_con                                   */
     /*            where substring(xxinv_con,6) = v_contract_nbr         */
@@ -535,14 +535,6 @@ repeat:
      end.
      pv1520 = v1520.
      /* end    line :1520  受检章  */
-
-
-
-
-
-
-
-
 
 /*----printloop start-----------------------------------------------------------------------------------------------------------------------------*/
    /* internal cycle input :9010    */
