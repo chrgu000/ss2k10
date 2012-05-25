@@ -1192,13 +1192,15 @@ If NOT AVAILABLE ld_det THEN
                 end.
         end.
         /* CHECK FOR NUMBER VARIABLE  END */
+        /****
         find first LD_DET where ( ld_part  = V1300 AND ld_lot = V1500 AND ld_site = V1002 AND ld_ref = "") AND ( ( decimal(V1600) < 0  AND ( ld_loc = V1520 AND  LD_SITE = V1002 and ld_ref = "" and ld_QTY_oh >= - DECIMAL ( V1600 ) ) ) OR ( decimal(V1600) > 0 AND  ld_loc = V1510 AND  LD_SITE = V1002 and ld_ref = "" and  ld_QTY_oh >= DECIMAL ( V1600 ) ) )  no-lock no-error.
         IF NOT AVAILABLE LD_DET then do:
                 display skip "在库数 <:" + string( V1600 ) @ WMESSAGE NO-LABEL with fram F1600.
                 pause 0 before-hide.
                 undo, retry.
         end.
-
+				*/
+				
         if V1600 <> string(v_qty_rct) then do:
                 display skip "请按条码数量转仓:" + string(v_qty_rct) @ WMESSAGE NO-LABEL with fram F1600.
                 pause 0 before-hide.
