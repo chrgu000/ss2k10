@@ -27,16 +27,23 @@ for each tmpinv exclusive-lock break by tiv_vend by tiv_draw:
        if not can-find(first vd_mstr no-lock where vd_addr = tiv_vend) then do:
           assign verr = "供应商未找到".
        end.
-       if tiv_tax = "Y" then do:
+       if tiv_tax = yes then do:
           assign vtax = "P".
        end.
        else do:
           assign vtax = "M".
        end.
-       if not can-find(first pt_mstr where pt_part begins vtax and
-                             pt_draw = tiv_draw) then do:
-          assign verr = "料号/图号未维护".
-       end.
+       find first vp_mstr 
+                use-index vp_vend_part
+                where vp_vend = tiv_vend 
+                and   vp_vend_part = tiv_draw 
+                and  (( vp_part begins "M" and tiv_tax = no )
+                      or
+                      ( vp_part begins "P" and tiv_tax = yes ))
+            no-lock no-error.
+            if not available vp_mstr then do:
+                assign verr = "错误:零件图号不正确."  . 
+            end.
     end.
     if verr <> "" then assign tiv_chk = verr.
 end.

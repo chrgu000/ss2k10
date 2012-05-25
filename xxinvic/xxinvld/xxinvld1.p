@@ -11,7 +11,9 @@ assign vfile = "xxinvld.p." + string(today,"99999999") + '.' + string(time).
 output to value(vfile + ".bpi").
 for each tmpinv no-lock:
     put unformat '"' + tiv_vend + '" "' + tiv_ivnbr + '"' skip.
-    put unformat tiv_tax + ' "' + tiv_ctrnbr + '"' skip.
+    if tiv_tax  then put "Y".
+    						else put "N".
+    put unformat ' "' + tiv_ctrnbr + '"' skip.
     put unformat tiv_line skip.
     put unformat tiv_draw skip.
     put unformat tiv_tray ' ' tiv_qty ' ' tiv_type skip.

@@ -6,7 +6,7 @@
 
 
 /* DISPLAY TITLE */
-{mfdtitle.i "111117.1"}
+{mfdtitle.i "120525.1"}
 {xxinvld.i "new"}
 {gpcdget.i "UT"}
 
@@ -78,6 +78,8 @@ repeat:
                &defineVariables = "yes"}
    {mfmsg.i 832 1}
    {mfphead.i}
+   empty temp-table tmpinv no-error.
+   for each tmpinv exclusive-lock: delete tmpinv. end.
    {gprun.i ""xxinvld0.p""}
 
      if not can-find(first tmpinv) then do:
