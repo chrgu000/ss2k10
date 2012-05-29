@@ -3,7 +3,6 @@
 /* ss - 110321.1  by: roger xiao                                              */
 /*-revision end---------------------------------------------------------------*/
 
-
 define variable sectionid as integer init 0 .
 define variable wmessage as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
