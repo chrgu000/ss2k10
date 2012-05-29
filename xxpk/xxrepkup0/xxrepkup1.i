@@ -13,8 +13,8 @@ define {1} shared temp-table tsupp
     field tsu_bpacks  like ld_qty_oh            /* 本批次多少个托盘 */        
     field tsu_btrail  like ld_qty_oh            /* 本批次托盘尾数 */          
     field tsu_lit     like ld_qty_oh            /* 包装数量 */                
-    field tsu_big     like ld_qty_oh            /* 托盘数量 */                
-    .
+    field tsu_big     like ld_qty_oh            /* 托盘数量 */   
+		.
     
 /* 生产线需求表 */    
 define {1} shared temp-table tiss1

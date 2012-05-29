@@ -85,7 +85,7 @@ define shared variable ord_max like pt_ord_max.
 define shared variable comp_max like wod_qty_chg.
 define shared variable pick-used like mfc_logical.
 define shared variable isspol like pt_iss_pol.
-
+define variable vwkline as character.
 define variable wk_rate as decimal no-undo.
 
 define variable ladqtyall like lad_qty_all no-undo.
@@ -145,7 +145,6 @@ delete usrw_wkfl.
 end.
 
 assign i = 1.
-
 for each rps_mstr no-lock
 where rps_part >= part and rps_part <= part1
   and rps_site >= site and rps_site <= site1
@@ -428,19 +427,19 @@ by wr_start by wr_part by wr_op
               and lad_user1 = wod_deliver
             break by lad_dataset by lad_nbr by lad_line
             by lad_part by lad_site with frame d:
-               create usrw_wkfl.
-               assign usrw_key1 = "xxrepkup0.p"
-                      usrw_key2 = string(i)
-                      usrw_key3 = wod_part
-                      usrw_key4 = nbr
-                      usrw_key5 = wo_site
-                      usrw_key6 = wr_wkctr
-                      usrw_charfld[1] = lad_lot
-                      usrw_charfld[2] = lad_lot
-                      usrw_decfld[1] = max(wod_qty_req - wod_qty_all -
-                                       wod_qty_pick - wod_qty_iss,0)
-                      usrw_decfld[2] = lad_qty_all.
-               assign i = i + 1.
+                create usrw_wkfl.
+                assign usrw_key1 = "xxrepkup0.p"
+                       usrw_key2 = string(i)
+                       usrw_key3 = wod_part
+                       usrw_key4 = nbr
+                       usrw_key5 = wo_site
+                       usrw_key6 = wr_wkctr
+                       usrw_charfld[1] = lad_lot
+                       usrw_charfld[2] = lad_lot
+                       usrw_decfld[1] = max(wod_qty_req - wod_qty_all -
+                                        wod_qty_pick - wod_qty_iss,0)
+                       usrw_decfld[2] = lad_qty_all.
+                assign i = i + 1.
                display
                   lad_loc
                   lad_lot
@@ -869,38 +868,64 @@ for each xxwa_det no-lock where
      tiss1_qty = tiss1_qty + xxwa_qty_pln.
 end.
 
-for each tiss1 break by tiss1_part:
-  if first-of(tiss1_part) then do:
-    for each ld_det no-lock where ld_site = "gsa01" and
-             ld_part = tiss1_part and ld_qty_oh > 0 :
-         if netgr = no and ld_loc = "p-all" then do:
-            next.
-         end.
-         if netgr = no then do:
-            find first xxwa_det no-lock where xxwa_date = tiss1_sdate and
-                                         xxwa_site = ld_site and xxwa_line = ld_loc no-error.
-                if available xxwa_det then do:
-                next.
-            end.
-         end.
-      create tsupp.
-      assign
-        tsu_loc    =  ld_loc
-        tsu_part   =  ld_part
-        tsu_lot    =  ld_lot
-        tsu_ref    =  ld_ref
-        tsu_qty    =  ld_qty_oh
-        tsu_flg    =  ""
-        tsu_abc    =  ""
-        tsu_lpacks =  0
-        tsu_ltrail =  0
-        tsu_bpacks =  0
-        tsu_btrail =  0
-        tsu_lit    =  0
-        tsu_big    =  0
-      .
-    end.
-  end.
+if netgr then do:
+   for each tiss1 break by tiss1_part:
+     if first-of(tiss1_part) then do:
+       for each ld_det no-lock where ld_site = "gsa01" and
+                ld_part = tiss1_part and ld_qty_oh > 0 :
+         create tsupp.
+         assign
+           tsu_loc    =  ld_loc
+           tsu_part   =  ld_part
+           tsu_lot    =  ld_lot
+           tsu_ref    =  ld_ref
+           tsu_qty    =  ld_qty_oh
+           tsu_flg    =  ""
+           tsu_abc    =  ""
+           tsu_lpacks =  0
+           tsu_ltrail =  0
+           tsu_bpacks =  0
+           tsu_btrail =  0
+           tsu_lit    =  0
+           tsu_big    =  0
+         .
+       end.
+     end.
+   end.
+end.
+else do:  /*²»¿¼ÂÇ³µ¼ä¿â´æ*/
+	 assign  vwkline = "".
+	 for each ln_mstr no-lock where ln_site = "gsa01" break by ln_site by ln_line:
+	 		 if first-of(ln_line) then do:
+	 		 		assign  vwkline = vwkLine + ln_line + ",".
+	 		 end.
+	 end.
+
+   for each tiss1 break by tiss1_part:
+     if first-of(tiss1_part) then do:
+       for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part 
+       				  and ld_site = "gsa01"  and ld_loc <> "P-all"
+                and index(vwkline,ld_loc + ",") = 0
+                and ld_qty_oh > 0:
+           create tsupp.
+           assign
+             tsu_loc    =  ld_loc
+             tsu_part   =  ld_part
+             tsu_lot    =  ld_lot
+             tsu_ref    =  ld_ref
+             tsu_qty    =  ld_qty_oh
+             tsu_flg    =  ""
+             tsu_abc    =  ""
+             tsu_lpacks =  0
+             tsu_ltrail =  0
+             tsu_bpacks =  0
+             tsu_btrail =  0
+             tsu_lit    =  0
+             tsu_big    =  0
+         .
+       end.
+     end.
+   end.
 end.
 
 thmsg = "" .
@@ -922,7 +947,7 @@ else do:
        and  xxwd_site = "GSA01"
        and  xxwd_line = trt1_line
        and  xxwd_lot  = trt1_lot
-       and  xxwd_ref  = trt1_ref     no-error.
+       and  xxwd_ref  = trt1_ref no-error.
     if not avail xxwd_det then do:
       CREATE xxwd_det.
       assign xxwd_nbr = trt1_nbr
@@ -942,7 +967,6 @@ else do:
              xxwd_ref = trt1_ref
              xxwd_qty_plan = 0
              .
-
     end.
     xxwd_qty_plan  =  xxwd_qty_plan + trt1_qty.
              i = i + 1.
@@ -958,7 +982,7 @@ else do:
       and xxwd_line = ""
       and xxwd_loc = trt2_loc
       and xxwd_lot = trt2_lot
-      and xxwd_ref = trt2_ref       no-error.
+      and xxwd_ref = trt2_ref no-error.
     if not avail xxwd_det then do:
       CREATE xxwd_det.
       assign xxwd_nbr = trt2_nbr
@@ -983,6 +1007,19 @@ else do:
              i = i + 1.
   end.
 end.
+
+for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date desc :
+		if first-of(xxwd_line) then do:
+			 find first xxlnw_det no-lock where xxlnw_site = xxwd_site and xxlnw_line = xxwd_line and xxlnw_on no-error.
+			 if available xxlnw_det then do:
+			 		assign i = xxlnw_stime.
+			 end.
+	  end.
+    if xxwd_time >= 0 and xxwd_time < i then do:
+    	 assign xxwd_date = xxwd_date + 1.
+    end.
+end.
+
 
 /*  empty temp-table xx_ld no-error.                                          */
 /*  assign errornum = 10.                                                     */
@@ -1422,10 +1459,10 @@ for each rps_mstr no-lock where rps_rel_date >= idate
        END.
        assign wk_rate = 1.
        find first shft_det no-lock where shft_site = rps_site and
-       			      shft_wkctr = rps_line and weekday(rps_rel_date) = shft_day
-       			      no-error.
+                  shft_wkctr = rps_line and weekday(rps_rel_date) = shft_day
+                  no-error.
        if available shft_det then do:
-       		assign wk_rate = shft_load1 / 100.
+          assign wk_rate = shft_load1 / 100.
        end.
        ASSIGN vtime = (rps_qty_req - rps_qty_comp) / (lnd_rate * wk_rate).
        FOR EACH tmp_file1 EXCLUSIVE-LOCK WHERE
@@ -1469,15 +1506,15 @@ for each rps_mstr no-lock where rps_rel_date >= idate
            END.
        END.
        for each tmp_file0 exclusive-lock break by t0_date by t0_part by t0_sn:
-       		 if first-of(t0_part) then do:
-       		 		assign qty = t0_qtyA.
-       		 end.
-       		 if not last-of(t0_part) then
-       		 		assign qty = qty - t0_qty.
-       		 if last-of(t0_part) then do:
-       		 		assign t0_qty = qty.
-       		 end.
-	     end.
+           if first-of(t0_part) then do:
+              assign qty = t0_qtyA.
+           end.
+           if not last-of(t0_part) then
+              assign qty = qty - t0_qty.
+           if last-of(t0_part) then do:
+              assign t0_qty = qty.
+           end.
+       end.
 end.
 /***********************
 assign errornum = 1.
