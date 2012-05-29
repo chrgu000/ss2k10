@@ -1,8 +1,8 @@
-/* xslapjp.p 日供标签重复列印                                                 */
+/* xslapjp.p 日供件打印条码,并修改收货库位 Barcode  -  68                     */
 /*----rev history-------------------------------------------------------------*/
 /* ss - 110321.1  by: roger xiao                                              */
 /*-revision end---------------------------------------------------------------*/
-/* Barcode 68                                                                 */
+
 
 define variable sectionid as integer init 0 .
 define variable wmessage as char format "x(80)" init "".
@@ -54,7 +54,7 @@ repeat:
         if apass = "y" then
         leave v1002l.
         /* logical skip end */
-                display "[日供标签列印]" + "*" + trim ( v1002 )  format "x(40)" skip with fram f1002 no-box.
+                display "[日供标签列印]"      + "*" + trim ( v1002 )  format "x(40)" skip with fram f1002 no-box.
 
                 /* label 1 - start */
                 l10021 = "地点设定有误" .
@@ -346,44 +346,60 @@ repeat:
         if not ( if index(v1500,"@" ) <> 0 then entry(2,v1500,"@") else v1500 ) <> "" then do:
         end.
 
-    /*    v_case_nbr = trim(substring(v1500,11)).                                                 */
-    /*    v_contract_nbr = trim(substring(v1500,7,4)).                                            */
-    /*                                                                                            */
-    /*    if v_case_nbr <> "" then do:                                                            */
-    /*        do i = 1 to length(v_case_nbr).                                                     */
-    /*            if index("0987654321", substring(v_case_nbr,i,1)) = 0 then do:                  */
-    /*                display skip "托号有误,请重新输入." @ wmessage no-label with fram f1500.    */
-    /*                pause 0 before-hide.                                                        */
-    /*                undo, retry.                                                                */
-    /*            end.                                                                            */
-    /*        end.                                                                                */
-    /*    end.                                                                                    */
-    /*                                                                                            */
-    /*        for each  xxinv_mstr                                      */
-    /*            use-index xxinv_con                                   */
-    /*            where substring(xxinv_con,6) = v_contract_nbr         */
-    /*        no-lock :                                                 */
-    /*            if v_japan = yes then leave .                         */
+v1800:
+repeat:
+  hide all.
+  define variable v1800 as character format "x(40)".
+  l15001 = "批号:" + v1500.
+  l15002 = "图号:" + trim( v1300 ) .
+  display "[日供标签列印]" + "*" + trim ( v1002 )  format "x(40)" skip with fram f1800 no-box.
+  display  l15002 skip with fram f1800 no-box.
+  display  l15001 skip(2) with fram f1800 no-box.
+  display "发票号+托号?" skip with frame f1800 no-box.
+  display "输入或按e退出"       format "x(40)" skip skip with fram f1800 no-box.
+  update v1800 with  fram f1800 no-label.
+  if v1800 = "E" then leave mainloop.
+  leave.
+end.
+    /*    v_case_nbr = trim(substring(v1500,11)).         托号               */
+    /*    v_contract_nbr = trim(substring(v1500,7,4)).  发票号               */
 
-                find first xxship_det where
-        /*            use-index xxship_case                              */
-        /*            where xxship_nbr    = xxinv_nbr                    */
-        /*            and   xxship_vend   = xxinv_vend                   */
-        /*            and   xxship_case2  = integer(v_case_nbr)          */
-                          xxship_part2  = v1300 and
-                          xxship__chr01 = v1500 and
-                          xxship_status = "RCT-PO"
+        v_contract_nbr = trim(entry(1,v1800,"+")).
+        v_case_nbr = entry(2,v1800,"+").
+        if v_case_nbr <> "" then do:
+            do i = 1 to length(v_case_nbr).
+                if index("0987654321", substring(v_case_nbr,i,1)) = 0 then do:
+                    display skip "托号有误,请重新输入." @ wmessage no-label with fram f1500.
+                    pause 0 before-hide.
+                    undo, retry.
+                end.
+            end.
+        end.
+
+/*            for each  xxinv_mstr                                           */
+/*                use-index xxinv_con                                        */
+/*                where substring(xxinv_con,6) = v_contract_nbr              */
+/*            no-lock :                                                      */
+/*                if v_japan = yes then leave .                              */
+                v_japan = no.
+                find first xxship_det
+                    use-index xxship_case
+                    where xxship_nbr = v_contract_nbr
+                    and   xxship_case  = integer(v_case_nbr)
+                    and   xxship_part2  = v1300
+                    and   xxship_status = "RCT-PO"
                 no-lock no-error.
                 if avail xxship_det then do:
-                    v_recid     = recid(xxship_det).
-                    v_loc_to    = xxship_rcvd_loc.
-                    v_qty_rct   = xxship_rcvd_qty .
-                    v_inv_nbr   = xxship_nbr.
                     v_japan     = yes.
+                    v_recid     = recid(xxship_det) .
+                    v_loc_to    = xxship_rcvd_loc.
+                    v_qty_rct   = xxship_rcvd_qty.
+                    v_inv_nbr   = xxship_nbr.
+                    v_japan     = yes .
                     v_case_old  = string(xxship_case) .
                 end.
 
-     /*       end.  /* for each  xxinv_mstr */   */
+/*             end.  /* for each  xxinv_mstr */                              */
 
         if v_japan = yes then do:
             if v_recid = ? then do:
@@ -426,8 +442,8 @@ repeat:
 
         if sectionid > 1 then v1501 = pv1501 .
 
-        v1501  = v_loc_to.
-        l15011 = "库位?" .
+        v1501  = "" .
+        l15011 = "库位:" + v_loc_to.
         l15012 = "数量+原库位:" +  string(v_qty_rct) + "+" + v_loc_to .
         l15013 = "图号: "  + v1300 .
         l15014 = "发票+托号: " + v_inv_nbr + "+" + v_case_old  .
@@ -451,7 +467,10 @@ repeat:
             end.
            apply lastkey.
         end.
-
+        if v1501 <> v_loc_to then do:
+           display  skip "刷入库位与默认库位不同" no-label with fram f1501.
+           undo,retry.
+        end.
         if v1501 = "e" then  leave mainloop.
         display  skip wmessage no-label with fram f1501.
 
@@ -535,6 +554,14 @@ repeat:
      end.
      pv1520 = v1520.
      /* end    line :1520  受检章  */
+
+
+
+
+
+
+
+
 
 /*----printloop start-----------------------------------------------------------------------------------------------------------------------------*/
    /* internal cycle input :9010    */
@@ -751,22 +778,22 @@ repeat:
 
         /* --define variable -- start */
         hide all.
-        define variable v9030  as char format "x(50)".
-        define variable pv9030 as char format "x(50)".
-        define variable l90301 as char format "x(40)".
-        define variable l90302 as char format "x(40)".
-        define variable l90303 as char format "x(40)".
-        define variable l90304 as char format "x(40)".
-        define variable l90305 as char format "x(40)".
-        define variable l90306 as char format "x(40)".
+        define variable v9030           as char format "x(50)".
+        define variable pv9030          as char format "x(50)".
+        define variable l90301          as char format "x(40)".
+        define variable l90302          as char format "x(40)".
+        define variable l90303          as char format "x(40)".
+        define variable l90304          as char format "x(40)".
+        define variable l90305          as char format "x(40)".
+        define variable l90306          as char format "x(40)".
         /* --define variable -- end */
 
 
         /* --first time default  value -- start  */
         find first upd_det where upd_nbr = "lapjp" and upd_select = 99 no-lock no-error.
-        if available ( upd_det ) then
-           v9030 = upd_dev.
-           v9030 = entry(1,v9030,"@").
+if available ( upd_det ) then
+        v9030 = upd_dev.
+        v9030 = entry(1,v9030,"@").
         /* --first time default  value -- end  */
 
 
