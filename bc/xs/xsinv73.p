@@ -1,6 +1,13 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
 /* Rep Backflush with label */
 /* Generate date / time  2007-1-18 9:39:27 */
+/* ss - 110929.1 by: jack */   /* 修改选择生产线 ,通用代码中 生产线用"/" ,第一个为主线分隔 */
+/* ss - 111008.1 by: jack  */  /* 修改回冲库位 */
+/* ss - 120328.1 by: jack */  /* 限制完工数量不能大于未完成数量 */
+
+/* ss - 120330.1 by: jack */  /* add 限制*/
+
+/* ss - 120417.1 by: jack */  /* 提示数量*/
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -129,6 +136,113 @@ REPEAT:
      /* END    LINE :1002  地点[SITE]  */
 
 
+     /* ss - 110929.1 -b */
+      /* START  LINE :1005  生产线选择[Production Line]  */
+     V1005L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1005           as char format "x(50)".
+        define variable PV1005          as char format "x(50)".
+        define variable L10051          as char format "x(40)".
+        define variable L10052          as char format "x(40)".
+        define variable L10053          as char format "x(40)".
+        define variable L10054          as char format "x(40)".
+        define variable L10055          as char format "x(40)".
+        define variable L10056          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+        DEFINE VAR v_line AS CHAR .
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+      
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+        find first code_mstr where code_fldname = "BARCODEDEFLINE" and code_value = userid(sdbname('qaddb'))  no-lock no-error.
+          If AVAILABLE ( code_mstr ) then
+         v_line = ENTRY( 1 , trim(code_cmmt) , "/" ).
+         ELSE
+             v_line = "" .
+       
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+         If sectionid > 1 Then 
+        V1005 = PV1005 .
+        V1005 = ENTRY(1,V1005,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+
+        /* --CYCLE TIME SKIP -- START  */
+         if sectionid > 1 then leave V1005L .
+        /* --CYCLE TIME SKIP -- END  */
+
+                display "[ASSY回冲-有标签]"  + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1005 no-box.
+
+                /* LABEL 1 - START */ 
+                L10051 = "生产线1/2/3/4..." .
+                display L10051          format "x(40)" skip with fram F1005 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                L10052 = userid(sdbname('qaddb')) .
+                display L10052          format "x(40)" skip with fram F1005 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L10053 = "当选择默认生产线时直接为空" . 
+                display L10053          format "x(40)" skip with fram F1005 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L10054 = "" . 
+                display L10054          format "x(40)" skip with fram F1005 no-box.
+                /* LABEL 4 - END */ 
+                display "输入或按E退出"       format "x(40)" skip
+        skip with fram F1005 no-box.
+        Update V1005
+        WITH  fram F1005 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V1005 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1005.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1005.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+
+        find first code_mstr where code_fldname = "BARCODEDEFLINE" and code_value = userid(sdbname('qaddb'))   no-lock no-error.
+        IF NOT ( AVAILABLE code_mstr AND INDEX(CODE_cmmt, v_line + v1005 ) <> 0 ) then do:
+                display skip "生产线设定有误!" @ WMESSAGE NO-LABEL with fram F1005.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1005.
+        pause 0.
+        leave V1005L.
+     END.
+     PV1005 = V1005.
+     /* END    LINE :1005  生产线[Production Line]  */
+     /* ss - 110929.1 -e */
+
+
      /* START  LINE :1100  生产线[Production Line]  */
      V1100L:
      REPEAT:
@@ -145,11 +259,16 @@ REPEAT:
         define variable L11006          as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
-
+     /* ss - 110929.1 -b
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         find first code_mstr where code_fldname = "BARCODEDEFLINE" and code_value = userid(sdbname('qaddb'))  no-lock no-error.
 If AVAILABLE ( code_mstr ) then
         V1100 = trim ( code_cmmt ).
+        ss - 110929.1 -e */
+        /* ss - 110929.1 -b */
+        V1100 = v_line + v1005.
+        /* ss - 110929.1 -e */
+
         V1100 = ENTRY(1,V1100,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 
@@ -215,12 +334,23 @@ If AVAILABLE ( code_mstr ) then
         pause 0.
         /* CHECK FOR NUMBER VARIABLE START  */
         /* CHECK FOR NUMBER VARIABLE  END */
+        /* ss - 110929. 1-b
         find first code_mstr where code_fldname = "BARCODEDEFLINE" and code_value = userid(sdbname('qaddb')) and code_cmmt = V1100  no-lock no-error.
         IF NOT AVAILABLE code_mstr then do:
                 display skip "生产线设定有误!" @ WMESSAGE NO-LABEL with fram F1100.
                 pause 0 before-hide.
                 undo, retry.
         end.
+        ss - 110929.1 -e */
+
+        /* ss - 110929.1 -b */
+         find first code_mstr where code_fldname = "BARCODEDEFLINE" and code_value = userid(sdbname('qaddb'))   no-lock no-error.
+        IF NOT ( AVAILABLE code_mstr AND INDEX(CODE_cmmt, V1100 ) <> 0 ) then do:
+                display skip "生产线设定有误!" @ WMESSAGE NO-LABEL with fram F1100.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        /* ss - 110929.1 -e */
          /*  ---- Valid Check ---- END */
 
         display  "" @ WMESSAGE NO-LABEL with fram F1100.
@@ -1100,6 +1230,43 @@ If available (tr_hist) then do:
                 undo, retry.
                 end.
         end.
+
+         /* ss - 120330.1 -b */
+
+          define VAR v_rps_ctrl as logical.             
+           v_rps_ctrl = yes.
+    	 for each code_mstr where code_fldname = "rps_fld_ctrl" no-lock: 
+    	     if      code_value = "pt_status" and pt_status = code_cmmt then v_rps_ctrl = no.
+    	     else if code_value = "pt_group"  and pt_group  = code_cmmt then v_rps_ctrl = no.
+    	 end.
+
+         IF v_rps_ctrl  THEN  DO:
+        /* ss - 120328.1 -b */
+        DEFINE VAR v_acc_qty_open LIKE rps_qty_req .
+        v_acc_qty_open = 0 .
+        for each rps_mstr exclusive-lock where  rps_part = V1300 
+         and rps_site = V1002 and rps_line = V1100 and rps_qty_req > rps_qty_comp :
+         v_acc_qty_open = v_acc_qty_open + (rps_qty_req - rps_qty_comp).
+         end.
+        
+
+         IF v_acc_qty_open < decimal(V1600) THEN DO:
+              /* ss - 120417.1 -b
+              display skip "完工数不能大于未完结数量: " + v1600   @ WMESSAGE NO-LABEL with fram F1600.
+              ss - 120417.1 -e */
+             /* ss - 120417.1 -b */
+             display skip "完工数:" + v1600 +  "不能大于未完结数量: " + STRING(v_acc_qty_open)   @ WMESSAGE NO-LABEL with fram F1600.
+
+             /* ss - 120417.1 -e */
+                pause 0 before-hide.
+                undo, retry.
+
+         END.
+        /* ss - 120328.1 -e */
+        /* ss - 120330.1 -b */
+          END.
+         /* ss - 120330.1 -e */
+
         /* CHECK FOR NUMBER VARIABLE  END */
         find first LD_DET where ( decimal(V1600) > 0 ) OR ( decimal(V1600) < 0 AND (ld_part  = V1300 AND ld_loc = V1510 and ld_site = V1002 AND ld_ref = "" AND  ld_lot = V1500 and
 ld_site = V1002 and ld_ref = "" and  ld_QTY_oh + DECIMAL ( V1600 ) >= 0 ) )  no-lock no-error.

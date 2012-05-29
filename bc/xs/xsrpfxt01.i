@@ -1,6 +1,13 @@
 {xxrpfx01var.i "new"}
-
+    /* ss - 110923.1 by: jack */  /* empty */
+/* ss - 110923.1 - b
 EMPTY TEMP-TABLE ttsod_det.
+ss - 110923.1 -e */
+    /* ss - 110923.1 -b */
+    FOR EACH ttsod_det :
+        DELETE ttsod_det .
+    END.
+    /* ss - 110923.1 -e */
 SET-SIZE(v_mem) = 10.
 {xsrpfxt.i}
 
@@ -28,8 +35,14 @@ SET-SIZE(v_mem) = 10.
             vv_filename = "/app/bc/temp/" + "labelfxt" + STRING(TIME) + string(vv_i) + ".l".
 
 
-
+           /* ss - 110923.1 -b 
             EMPTY TEMP-TABLE ttlbfxt.
+            ss - 110923.1 -e */
+            /* ss - 110923.1 -b */
+            FOR EACH ttlbfxt :
+                DELETE ttlbfxt .
+            END.
+            /* ss - 110923.1 -e */
             INPUT FROM VALUE("/app/bc/labels/labelfxt01") .
             REPEAT:
 

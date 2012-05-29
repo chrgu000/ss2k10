@@ -1,4 +1,5 @@
 /* Create MFG/PRO Execte File Path  START */
+/* ss - 111008.1 by: jack */
 define variable ciminputfile   as char .
 define variable cimoutputfile  as char .
 run pxgblmgr.p persistent set global_gblmgr_handle.
@@ -19,7 +20,12 @@ define SHARED variable usection as char format "x(16)".
 usection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) + "rep08" .
 output to value( trim(usection) + ".i") .
         display 
-trim(V1100)  format "x(50)" skip
+/* ss - 111008.1 -b
+    trim(V1100)  format "x(50)" skip
+    ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+         trim(v_line)  format "x(50)" skip
+        /* ss - 111008.1 -e */
 trim(V1203) + " - " + trim ( V1002 )  format "x(50)" skip
 """" + trim(V1300) + """" + " " + trim ( V1310 ) + " " + trim ( V1100 ) format "x(50)" skip
 "-" skip

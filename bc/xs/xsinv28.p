@@ -92,6 +92,7 @@
   Parameters: NONE
   Memo: Add new table xxtc_hst record it.
 ------------------------------------------------------------------------------*/
+/* ss - 110923.1 by: jack */
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -115,8 +116,12 @@ DEF BUFFER codemstr FOR CODE_mstr.
     /*
     {mfdtitle.i "110402.1"}
     */
+    /*
  {mfdtitle.i "110720.1"}
-  assign vernbr = "*110720.1".
+	*/
+    {mfdtitle.i "110923.1"}
+
+    assign vernbr = "*110720.1".
 
 
 /*
@@ -737,28 +742,28 @@ End.
 
 /*17YJ*/ pv10006loop:   /*17YJ*/ /*台车号:记录在 v10006*/
 /*17YJ*/ repeat:
-/*17YJ*/  hide all.
-/*17YJ*/  display "[销售订单发货n]"     + "*" + TRIM ( V1002 ) + vernbr  format "x(40)" skip with fram F10006 no-box.
-/*17YJ*/  /* LABEL 1 - START  */
-/*17YJ*/  L10051 = "台车号" .
-/*17YJ*/  display L10051          format "x(40)" skip with fram F10006 no-box.
+/*17YJ*/ 	hide all.
+/*17YJ*/ 	display "[销售订单发货n]"     + "*" + TRIM ( V1002 ) + vernbr  format "x(40)" skip with fram F10006 no-box.
+/*17YJ*/ 	/* LABEL 1 - START 	*/
+/*17YJ*/ 	L10051 = "台车号" .
+/*17YJ*/ 	display L10051          format "x(40)" skip with fram F10006 no-box.
 /*17YJ*/
-/*17YJ*/  /* LABEL 2 - START */
-/*17YJ*/  L10052 = "客户:" + V1003 .
-/*17YJ*/  display L10052          format "x(40)" skip with fram F10006 no-box.
-/*17YJ*/  /* LABEL 2 - END */
-/*17YJ*/  /* LABEL 3 - START */
-/*17YJ*/  L10053 = "日期:" + V1004 .
-/*17YJ*/  display L10053          format "x(40)" skip with fram F10006 no-box.
-/*17YJ*/  /* LABEL 3 - END */
-/*17YJ*/  /* LABEL 4 - START */
-/*17YJ*/    L10054 = "" .
-/*17YJ*/  display L10054          format "x(40)" skip with fram F10006 no-box.
-/*17YJ*/  /* LABEL 4 - END */
-/*17YJ*/  display "输入台车号或按E退出"       format "x(40)" skip
-/*17YJ*/  skip with fram F10006 no-box.
-/*17YJ*/  define variable v10006 as character format "x(50)".
-/*17YJ*/  UPDATE v10006 WITH  fram F10006 NO-LABEL EDITING:
+/*17YJ*/ 	/* LABEL 2 - START */
+/*17YJ*/ 	L10052 = "客户:" + V1003 .
+/*17YJ*/ 	display L10052          format "x(40)" skip with fram F10006 no-box.
+/*17YJ*/ 	/* LABEL 2 - END */
+/*17YJ*/ 	/* LABEL 3 - START */
+/*17YJ*/ 	L10053 = "日期:" + V1004 .
+/*17YJ*/ 	display L10053          format "x(40)" skip with fram F10006 no-box.
+/*17YJ*/ 	/* LABEL 3 - END */
+/*17YJ*/ 	/* LABEL 4 - START */
+/*17YJ*/ 	  L10054 = "" .
+/*17YJ*/ 	display L10054          format "x(40)" skip with fram F10006 no-box.
+/*17YJ*/ 	/* LABEL 4 - END */
+/*17YJ*/ 	display "输入台车号或按E退出"       format "x(40)" skip
+/*17YJ*/ 	skip with fram F10006 no-box.
+/*17YJ*/ 	define variable v10006 as character format "x(50)".
+/*17YJ*/ 	UPDATE v10006 WITH  fram F10006 NO-LABEL EDITING:
 /*17YJ*/  readkey pause wtimeout.
 /*17YJ*/  if lastkey = -1 then quit.
 /*17YJ*/  if LASTKEY = 404 Then Do: /* DISABLE F4 */
@@ -768,27 +773,27 @@ End.
 /*17YJ*/       apply lastkey.
 /*17YJ*/  end.
 /*17YJ*/  IF V10006 = "e" THEN  LEAVE  pv10006loop /*ching pv10006loop */.
-/*17YJ*/  if v10006 = "" then do:
-/*17YJ*/      assign wmessage = "台车号不可为空!".
-/*17YJ*/      display  skip WMESSAGE NO-LABEL with fram F10006.
-/*17YJ*/      undo ,retry.
+/*17YJ*/	if v10006 = "" then do:
+/*17YJ*/  		assign wmessage = "台车号不可为空!".
+/*17YJ*/  		display  skip WMESSAGE NO-LABEL with fram F10006.
+/*17YJ*/  		undo ,retry.
 /*17YJ*/  end.
-/*17YJ*/             assign wmessage = "......".
+/*17YJ*/  					 assign wmessage = "......".
 /*17YJ*/  display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/  find first xxtc_hst no-lock where xxtc_nbr = v10006 no-error.
 /*17YJ*/  if availabl xxtc_hst then do:
-/*17YJ*/     if xxtc_stat = "C" then do:
-/*17YJ*/        assign wmessage = "台车:[" + v10006 + "]在客户:[" + xxtc_cust + "]处！请确认资料.".
+/*17YJ*/	   if xxtc_stat = "C" then do:
+/*17YJ*/  		  assign wmessage = "台车:[" + v10006 + "]在客户:[" + xxtc_cust + "]处！请确认资料.".
 /*17YJ*/        display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/        assign v10006 = "".
-/*17YJ*/        undo , retry.
-/*17YJ*/     end.
-/*17YJ*/     else if xxtc_stat = "X" then do:
-/*17YJ*/        assign wmessage = "台车:[" + v10006 + "]状态:[取消]！请确认资料.".
+/*17YJ*/		    undo , retry.
+/*17YJ*/	   end.
+/*17YJ*/		 else if xxtc_stat = "X" then do:
+/*17YJ*/  		  assign wmessage = "台车:[" + v10006 + "]状态:[取消]！请确认资料.".
 /*17YJ*/        display  skip WMESSAGE NO-LABEL with fram F10006.
 /*17YJ*/        assign v10006 = "".
-/*17YJ*/        undo , retry.
-/*17YJ*/     end.
+/*17YJ*/		    undo , retry.
+/*17YJ*/		 end.
 /*17YJ*/  end .   /*if availabl xxtc_hst then do:*/
 
 /* ching */
@@ -1035,7 +1040,14 @@ DISPLAY SKIP "1." + TRIM(v1003) + " " + tmppart @ WMESSAGE NO-LABEL with fram F1
 pause 10.
   */
 
+/* ss - 110923.1 -b 
 EMPTY TEMP-TABLE ttcp .
+ss - 110923.1 -e */
+/* ss - 110923.1 -b */
+FOR EACH ttcp:
+    DELETE ttcp .
+END.
+/* ss - 110923.1 -e */
 FOR EACH cp_mstr WHERE trim(cp_cust) = TRIM(v1003) AND trim(tmppart) = trim(cp_part) NO-LOCK :
     FIND FIRST ttcp WHERE ttcp_cust = cp_cust AND ttcp_part = cp_part AND ttcp_cust_part = cp_cust_part NO-ERROR.
     IF NOT AVAIL ttcp THEN DO:
@@ -2841,20 +2853,20 @@ If AVAILABLE ( tr_hist ) then
           /* record tc status to xxtc_hst */
 /*17YJ*/  find first xxtc_hst exclusive-lock where xxtc_nbr = v10006 no-error.
 /*17YJ*/  if available xxtc_hst then do:
-/*17YJ*/    assign  xxtc_cust = V1003
-/*17YJ*/            xxtc_stat = "C"
-/*17YJ*/            xxtc_date = today
-/*17YJ*/            xxtc_mod_date = today
-/*17YJ*/            xxtc_mod_usr = global_userid .
+/*17YJ*/  	assign  xxtc_cust = V1003
+/*17YJ*/		        xxtc_stat = "C"
+/*17YJ*/		        xxtc_date = today
+/*17YJ*/		        xxtc_mod_date = today
+/*17YJ*/		        xxtc_mod_usr = global_userid .
 /*17YJ*/  end. /*if available xxtc_hst then do:*/
 /*17YJ*/  else do:
-/*17YJ*/     create xxtc_hst.
-/*17YJ*/     assign xxtc_nbr = v10006
-/*17YJ*/            xxtc_cust = V1003
-/*17YJ*/            xxtc_stat = "C"
-/*17YJ*/            xxtc_date = today
-/*17YJ*/            xxtc_mod_date = today
-/*17YJ*/            xxtc_mod_usr = global_userid .
+/*17YJ*/  	 create xxtc_hst.
+/*17YJ*/  	 assign xxtc_nbr = v10006
+/*17YJ*/		        xxtc_cust = V1003
+/*17YJ*/		        xxtc_stat = "C"
+/*17YJ*/		        xxtc_date = today
+/*17YJ*/		        xxtc_mod_date = today
+/*17YJ*/		        xxtc_mod_usr = global_userid .
 /*17YJ*/  end.  /*if available xxtc_hst else do:*/
 
 /* SS 090912.1 - E */

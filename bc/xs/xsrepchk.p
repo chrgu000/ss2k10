@@ -1,3 +1,4 @@
+/* ss - 111008.1 by: jack */ /* ÐÞ¸Ä»Ø³å¿âÎ» */
 /*
 Function : Check Stock Balance for rep backflush
 Design By: Micho / Sam Song
@@ -59,7 +60,12 @@ v_qty = 0.
 FOR EACH tta6bmpkiq :
     v_qty = tta6bmpkiq_qty .
     FOR EACH ld_det WHERE ld_site = V1002 
+        /* ss - 111008.1 -b 
                       AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                       AND ld_part = tta6bmpkiq_part 
                       NO-LOCK BY ld_lot :
         v_qty = v_qty - ld_qty_oh .
@@ -87,7 +93,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "L" then do:  /* L control , Inventory > 0  , Lot = "" */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                        /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0 and ld_lot = "" 
 			 no-lock no-error.
@@ -97,7 +108,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "L" then do: /* L control , Inventory = 0 and ld_lot <> "" */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                         /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0 and ld_lot <> "" 
 			 no-lock no-error.
@@ -107,7 +123,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "" then do: /* Not L control , Inventoy = 0 */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                        /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0  
 			 no-lock no-error.

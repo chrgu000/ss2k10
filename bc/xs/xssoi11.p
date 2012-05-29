@@ -66,6 +66,7 @@
 1. 允许直通条码
 */                                                                          
 /* SS - 20081030.1 - E */
+/* ss - 111109.1 by: jack */  /* 放开控制 */
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -90,7 +91,11 @@ DEF BUFFER codemstr FOR CODE_mstr.
     /*
     {mfdtitle.i "110402.1"}
     */
+    /*
     {mfdtitle.i "110621.1"}
+    */
+    {mfdtitle.i "111109.1"}
+
 
 
 
@@ -2407,7 +2412,10 @@ If AVAILABLE ( ld_det ) then
             tmpqq1 = tmpqq1 + xxsod_qty_ord.
         end.
         if tmpqq + dec(V1600) > tmpqq1 then do:
+          
         	display skip "发货量大于订单量" + string(dec(V1600) + tmpqq - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
+            
+            
         	pause 0 before-hide.
         	Undo, retry.
         end.
@@ -2421,7 +2429,10 @@ If AVAILABLE ( ld_det ) then
 				find first sod_det where sod_nbr = trim(V1551) and string ( sod_line ) = trim(V1555) no-lock no-error.
 				if avail sod_det then tmpqq1 = sod_qty_ord - sod_qty_ship.
 				if tmpqq1 - dec(V1600) < 0 then do:
+                    
 					display skip "发货量大于订单量" + string(dec(V1600) - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
+                    
+                    
         	pause 0 before-hide.
         	Undo, retry.
 				end.
@@ -2440,19 +2451,21 @@ If AVAILABLE ( ld_det ) then
 /*
         If (tmpqq + dec(V1600)) > tmpqq1 and   DECIMAL ( V1600 ) >0 and tmpqq1>0 then do:
 */
+               /* ss - 111109.1 -b
         If (tmpqq + dec(V1600)) > tmpqq1 and   DECIMAL ( V1600 ) >= 0 and tmpqq1 >= 0  then do:
 /* SS 090911.1 - E */
-        	display skip "发货量大于订单量" + string(tmpqq + dec(V1600) - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
+        	display skip "发货量大于订单量"  + string(tmpqq + dec(V1600) - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
         	pause 0 before-hide.
         	Undo, retry.
         End.
         
         If   abs(DECIMAL ( V1600 ) + tmpqq) >abs(tmpqq1) and DECIMAL ( V1600 )<0  and   tmpqq1<0 then do:
-        	display skip "发货量大于订单量" + string(tmpqq + dec(V1600) - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
+        	display skip "发货量大于订单量"  + string(tmpqq + dec(V1600) - tmpqq1) @ WMESSAGE NO-LABEL with fram F1600.
         	pause 0 before-hide.
         	Undo, retry.
         End. 
         /* ss - ching E */
+        ss - 111109.1 -e */
 
 /*if   abs(tmpqq) < abs(DECIMAL ( V1600 ))  and DECIMAL ( V1600 ) < 0 and    tmpqq1>0  then do:
  display skip "冲数不能大于订货量" + string(tmpqq) @ WMESSAGE NO-LABEL with  fram F1600.

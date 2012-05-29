@@ -1,6 +1,7 @@
 /* Create MFG/PRO Execte File Path  START */
 /* define variable global_user_lang_dir as char format "x(40)" init "/app/mfgpro/eb2/ch/". */
 /* define shared variable global_gblmgr_handle as handle no-undo. */
+/* ss - 111008.1 by: jack */
 define variable ciminputfile   as char .
 define variable cimoutputfile  as char .
 run pxgblmgr.p persistent set global_gblmgr_handle.
@@ -22,7 +23,12 @@ IF DEC(v1600) = DEC(v1601) AND v1600 = string(0) THEN DO:
     usection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) + "rep09" .
     output to value( trim(usection) + ".i") .
     display 
+        /* ss - 111008.1 -b
     trim(V1100)  format "x(50)" skip
+    ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+         trim(v_line)  format "x(50)" skip
+        /* ss - 111008.1 -e */
     trim(V1203) + " - " + trim ( V1002 )  format "x(50)" skip
     """" + trim(V1300) + """" + " " + trim ( V1310 ) + " " + trim ( V1100 ) format "x(50)" skip
     "-" skip
@@ -45,7 +51,12 @@ ELSE IF DEC(v1600) = DEC(v1601) THEN DO:
     usection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) + "rep09" .
     output to value( trim(usection) + ".i") .
     display 
+   /* ss - 111008.1 -b
     trim(V1100)  format "x(50)" skip
+    ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+         trim(v_line)  format "x(50)" skip
+        /* ss - 111008.1 -e */
     trim(V1203) + " - " + trim ( V1002 )  format "x(50)" skip
     """" + trim(V1300) + """" + " " + trim ( V1310 ) + " " + trim ( V1100 ) format "x(50)" skip
     "-" skip
@@ -71,7 +82,12 @@ ELSE DO:
     usection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) + "rep09" .
     output to value( trim(usection) + ".i") .
             display 
+    /* ss - 111008.1 -b
     trim(V1100)  format "x(50)" skip
+    ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+         trim(v_line)  format "x(50)" skip
+        /* ss - 111008.1 -e */
     trim(V1203) + " - " + trim ( V1002 )  format "x(50)" skip
     """" + trim(V1300) + """" + " " + trim ( V1310 ) + " " + trim ( V1100 ) format "x(50)" skip
     "-" skip

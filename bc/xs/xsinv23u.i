@@ -21,7 +21,7 @@ output to value( trim(usection) + ".i") .
         display 
 """" + trim ( V1300) + """" format "x(50)" skip
 trim ( V1600 ) + " - " + """" + trim ( V1100 ) + """"  + " - " + """" + trim ( V1305 ) + """"   format "x(50)" skip
-"Y T " "{1}" format "x(50)" skip
+"Y T Y" format "x(50)" skip
 trim(V1002) + " " +  trim( V1510 ) format "X(50)"  if trim( V1500 ) = "" then " - " else """" + trim(V1500) + """"  format "X(50)" skip
 trim(V1002) + " "  + trim( V1520 ) format "x(50)" skip
 "Y" skip

@@ -1,8 +1,11 @@
 /*modify by ken chen 080908 ECO:080908.1 */
+/* ss - 111008.1 by: jack */ /* 修改回冲库位 */
+
 /*
 080908.1 修改内容:
    当短缺时，显示所以短缺零件和相关库位   
 */
+/* ss - 110923.1 by: jack */
 /*SS - 080908.1 B*/
 DEFINE TEMP-TABLE ttdqpt_mstr
        FIELD      ttdqpt_cmmt AS CHARACTER.
@@ -39,22 +42,30 @@ Output Paramter :
 
 /* SS - 20081010.1 - B */
 for each ld_det where ld_site = v1002 
-   AND ld_loc = v1100
+   /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
    AND ld_status = 'N-Y-N' :
    assign ld_status = "Y-Y-N" .
 end.
 /* SS - 20081010.1 - B */
 
+ 
 
 If substring ( V1600,1,1) = "Q" then V1600 = substring( V1600 , 2,15 ). 
 If V1600 = "" OR V1600 = "-" OR V1600 = "." OR V1600 = ".-" OR V1600 = "-." then do:
 	display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F1600.
+    
 	pause 0 before-hide.
 	undo, retry.
 end.
 DO i = 1 to length(V1600).
 	If index("0987654321.-", substring(V1600,i,1)) = 0 then do:
 	display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F1600.
+   
 	pause 0 before-hide.
 	undo, retry.
 	end.
@@ -67,6 +78,8 @@ define shared variable global_gblmgr_handle as handle no-undo.
 */
 run pxgblmgr.p persistent set global_gblmgr_handle.
 
+
+
 /******************** SS - 20061018.1 - B ********************/
 {xxbmpkiq.i "new"}
 DEF VAR v_qty AS DECIMAL.
@@ -76,9 +89,19 @@ for each tta6bmpkiq :
 end.
 
 
-
+     
+      
+/* ss - 110923.1 -b
 /*SS - 080908.1 B*/
+        /*
 EMPTY TEMP-TABLE ttdqpt_mstr.
+*/
+ss - 110923.1 -e */
+/* ss - 110923.1 -b */
+        FOR EACH  ttdqpt_mstr:
+            DELETE ttdqpt_mstr .
+        END.
+          /* ss - 110923.1 -e */
 /*SS - 080908.1 E*/
 
 
@@ -89,12 +112,18 @@ EMPTY TEMP-TABLE ttdqpt_mstr.
            INPUT dec(V1600) ,          /* 数量 "V1600" */
            INPUT int(V1310)            /* 工序 "V1310" */
            )"  }
+         
 
 v_qty = 0.
 FOR EACH tta6bmpkiq :
     v_qty = tta6bmpkiq_qty .
     FOR EACH ld_det WHERE ld_site = V1002 
+                    /* ss - 111008.1 -b 
                       AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                       AND ld_part = tta6bmpkiq_part 
                       NO-LOCK BY ld_lot :
         v_qty = v_qty - ld_qty_oh .
@@ -110,6 +139,7 @@ FOR EACH tta6bmpkiq :
     */
     IF v_qty > 0 AND NOT (tta6bmpkiq_part BEGINS "N") THEN DO:
 
+       
         ErrorMsg = tta6bmpkiq_part + " 短缺 " + STRING(v_qty) + 
                            " 个 " .
 
@@ -141,7 +171,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "L" then do:  /* L control , Inventory > 0  , Lot = "" */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                         /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0 and ld_lot = "" 
 			 no-lock no-error.
@@ -151,7 +186,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "L" then do: /* L control , Inventory = 0 and ld_lot <> "" */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                         /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0 and ld_lot <> "" 
 			 no-lock no-error.
@@ -161,7 +201,12 @@ FOR EACH tta6bmpkiq :
        if pt_lot_ser = "" then do: /* Not L control , Inventoy = 0 */
 
        find first ld_det WHERE ld_site = V1002 
-                         AND ld_loc  = V1100      /* "V1100" */
+                         /* ss - 111008.1 -b 
+                      AND ld_loc  = V1100      /* "V1100" */
+                      ss - 111008.1 -e */
+        /* ss - 111008.1 -b */
+          AND ld_loc  = v_line      /* "V1100" */
+        /* ss - 111008.1 -e */
                          AND ld_part = tta6bmpkiq_part 
 			 AND ld_qty_oh <> 0  
 			 no-lock no-error.
@@ -183,6 +228,7 @@ if ErrorMsg <> "" then do:
                 undo, retry.
    */
     FOR EACH ttdqpt_mstr:
+     
         display skip ttdqpt_cmmt @ WMESSAGE NO-LABEL with fram F1600.
                      pause 0 before-hide.
         PAUSE.

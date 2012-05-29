@@ -56,6 +56,7 @@
 1. 允许直通条码
 */                                                                          
 /* SS - 20081030.1 - E */
+/* ss - 110923.1 by: jack */
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -70,8 +71,11 @@ DEF VAR v_L15002 AS CHAR.
 DEF BUFFER codemstr FOR CODE_mstr.
  
 /*SS - 080905.1 B*/
-
+/*
  {mfdtitle.i "090804.1"}
+ */
+    {mfdtitle.i "110923.1"}
+
 
 /* 
  {mfdecweb.i}
@@ -940,8 +944,14 @@ DEF TEMP-TABLE ttcp
 DISPLAY SKIP "1." + TRIM(v1003) + " " + tmppart @ WMESSAGE NO-LABEL with fram F1300.
 pause 10.
   */
-
+/* ss - 110923.1 -b
 EMPTY TEMP-TABLE ttcp .
+ss - 110923.1 -e */
+/* ss - 110923.1 -b */
+FOR EACH ttcp :
+    DELETE ttcp .
+END.
+/* ss - 110923.1 -e */
 FOR EACH cp_mstr WHERE trim(cp_cust) = TRIM(v1003) AND trim(tmppart) = trim(cp_part) NO-LOCK :
     FIND FIRST ttcp WHERE ttcp_cust = cp_cust AND ttcp_part = cp_part AND ttcp_cust_part = cp_cust_part NO-ERROR.
     IF NOT AVAIL ttcp THEN DO:
