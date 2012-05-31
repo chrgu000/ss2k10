@@ -22,7 +22,7 @@
 /* REVISION: 9.1     LAST MODIFIED: 10/25/00    BY: *N0T7* Jean Miller      */
 
          /* DISPLAY TITLE */
-         {mfdtitle.i "b+ "}
+{mfdtitle.i "120520.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
