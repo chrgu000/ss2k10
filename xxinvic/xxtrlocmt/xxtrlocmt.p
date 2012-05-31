@@ -8,8 +8,9 @@
 /* DISPLAY TITLE */
 {mfdtitle.i "120530.1"}
 define variable vkey1 like usrw_key1 no-undo
-                  initial "TRANSLATION_LOCATION".
-
+                  initial "TRANSLATE-LOCATION".
+define variable site like si_site initial "GSA01".
+define variable v_locdesc as character format "x(20)".
 define variable del-yn like mfc_logical initial no.
 define variable fieldlen as integer initial 0 no-undo.
 
@@ -23,9 +24,11 @@ define variable batchdelete as character format "x(1)" no-undo.
 
 /* DISPLAY SELECTION FORM */
 form
-   usrw_key1 colon 25 format "x(20)" skip(1)
+   usrw_key1 colon 25 format "x(20)"
+   usrw_key6 colon 25 format "x(8)" skip(1)
    usrw_key2 colon 25 format "x(30)"
-   usrw_key3 colon 25 format "x(30)"
+   usrw_key3 colon 25 format "x(10)" v_locdesc no-label
+   usrw_key4 colon 25 format "x(30)"
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -39,7 +42,7 @@ repeat with frame a:
 
    /* Initialize delete flag before each display of frame */
    batchdelete = "".
-   display vkey1 @ usrw_key1.
+   display vkey1 @ usrw_key1 site @ usrw_key6.
    /* Determine length of field as defined in db schema */
    {gpfldlen.i}
 
@@ -57,17 +60,24 @@ repeat with frame a:
             " usrw_key1  = input usrw_key1 "
              usrw_key2
             " input usrw_key2 "}
-
-         if recno <> ? then
-            display usrw_key1 usrw_key2 usrw_key3.
-
+         if recno <> ? then do:
+					  assign v_locdesc = "".
+         		find first code_mstr no-lock
+         		     where code_fldname = "TRANSLATE-LOCATION-TYPE"
+         					 and code_value = usrw_key3 no-error.
+         		if available code_mstr then do:
+         			 assign v_locdesc = code_cmmt.
+         	  end.
+            display usrw_key1 usrw_key6 usrw_key2 usrw_key3 v_locdesc usrw_key4.
+				 end.
       end. /* editing: */
-      if not can-find(first loc_mstr no-lock where loc_site = "GSA01"
-                        and loc_loc = input usrw_key2) then do:
+      if not can-find(first loc_mstr no-lock where loc_site = site
+                        and loc_loc = input usrw_key2)
+            or length(input usrw_key2) = 0 then do:
          {pxmsg.i &MSGNUM=709 &ERRORLEVEL=4}
          undo,retry.
       end.
-      if length(input usrw_key2) > fieldlen then do:
+      if length(input usrw_key2) < fieldlen then do:
 
          /* Length of code value cannot be longer than definition */
          {pxmsg.i &MSGNUM=480 &ERRORLEVEL=4}
@@ -97,16 +107,31 @@ repeat with frame a:
       {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
       create usrw_wkfl.
       assign
-         usrw_key1 usrw_key2.
+         usrw_key1 usrw_key2 usrw_key6.
    end. /* if not available usrw_wkfl then do: */
 
    ststatus = stline[2].
    status input ststatus.
 
-   update
-      usrw_key3
-   go-on(F5 CTRL-D).
-
+	repeat with frame a:
+         update usrw_key3 usrw_key4
+         go-on(F5 CTRL-D).
+            assign v_locdesc = "".
+         		find first code_mstr no-lock
+         		     where code_fldname = "TRANSLATE-LOCATION-TYPE"
+         					 and code_value = usrw_key3 no-error.
+         		if available code_mstr then do:
+         			 assign v_locdesc = code_cmmt.
+         	  end.
+         	  else do:
+         	  		{pxmsg.i &MSGNUM=4766
+         	  		         &ERRORLEVEL=3
+         	  		         &MSGARG1=""TRANSLATE-LOCATION-TYPE""}
+         	  		undo,retry.
+         	  end.
+         	  display v_locdesc with frame a.
+         	  leave.
+  end.
    /* Delete to be executed if batchdelete is set or
     * F5 or CTRL-D pressed */
    if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
