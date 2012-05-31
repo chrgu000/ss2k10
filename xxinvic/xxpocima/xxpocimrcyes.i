@@ -93,6 +93,7 @@ assign vtrrecid = current-value(tr_sq01).
             xxship_rcvd_qty     = xxship_rcvd_qty + usrw_decfld[1]
             xxship_rcvd_effdate = tr_effdate
             xxship_rcvd_date    = tr_date
+            xxship__chr02       = tr_loc
             xxship_rcvd_loc     = ""  /*在条码打印时分配*/
             .
         /*xxship_status 可以等于:收货OK'RCT-PO',转仓OK'RCT-TR',未收货留空 */
