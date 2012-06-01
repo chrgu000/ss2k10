@@ -158,29 +158,29 @@ REPEAT:
          if sectionid > 1 then leave V1100L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[库存转移]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
+                display "[库存转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */
                 L11001 = "单据号码?" .
-                display L11001          format "x(40)" skip with fram F1100 no-box.
+                display L11001 format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 1 - END */
 
 
                 /* LABEL 2 - START */
                   L11002 = "" .
-                display L11002          format "x(40)" skip with fram F1100 no-box.
+                display L11002 format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 2 - END */
 
 
                 /* LABEL 3 - START */
                   L11003 = "" .
-                display L11003          format "x(40)" skip with fram F1100 no-box.
+                display L11003 format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 3 - END */
 
 
                 /* LABEL 4 - START */
                   L11004 = "" .
-                display L11004          format "x(40)" skip with fram F1100 no-box.
+                display L11004 format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 4 - END */
                 display "输入或按E退出"       format "x(40)" skip
         skip with fram F1100 no-box.
@@ -344,7 +344,7 @@ REPEAT:
         If NOT AVAILABLE pt_mstr then do:
            find first pt_mstr where pt_draw =  V1300 and pt_draw <> "" no-lock  no-error.
            If AVAILABLE pt_mstr then V1300 = pt_part.
-	End.
+  End.
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1300.
         pause 0.
 
@@ -722,7 +722,7 @@ LD_SITE = V1002 AND LD_REF = "" AND
         /* ROLL BAR END */
 
         vv_loc_oh = ld_qty_oh.
-				vv_loc_from = ld_loc.
+        vv_loc_from = ld_loc.
 
         /* PRESS e EXIST CYCLE */
         IF INPUT V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
@@ -730,7 +730,7 @@ LD_SITE = V1002 AND LD_REF = "" AND
 
          /*  ---- Valid Check ---- START */
          /* Sam Song 20100319 Start */
-	 if substring ( V1500 ,1,1 ) = "S" then V1500 = substring (V1500,2,18).
+   if substring ( V1500 ,1,1 ) = "S" then V1500 = substring (V1500,2,18).
         /*  Sam Song 20100319 End */
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1500.
@@ -783,7 +783,7 @@ If AVAILABLE ( poc_ctrl ) then
         V1510 = PV1510 .
         V1510 = ENTRY(1,V1510,"@").
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
-				V1510 = "".
+        V1510 = "".
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
                 display "[库存转移]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
@@ -796,38 +796,38 @@ If AVAILABLE ( poc_ctrl ) then
 
                 /* LABEL 2 - START */
 /*                find first poc_ctrl  no-lock no-error.         */
-/*								If AVAILABLE ( poc_ctrl ) then                 */
+/*                If AVAILABLE ( poc_ctrl ) then                 */
 /*                L15102 = poc_insp_loc.                         */
 /*                else L15102 = vv_loc_from.                     */
-								assign i = 0.
-								      L15102 = "" .
-								      L15103 = "" .
+                assign i = 0.
+                      L15102 = "" .
+                      L15103 = "" .
                       L15104 = "" .
-								for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_lot = V1500 and ld_qty_oh > 0:
-										if i < 3 then do:
-										   if L15102 = "" then
-										    	 assign L15102 = ld_loc + "/" + string(ld_qty_oh).
-										   else
-										    	 assign L15102 = L15102 + ";" + ld_loc + "/" + string(ld_qty_oh).
-										end.
-										else if i < 6 then do:
-											 if L15103 = "" then
-					              	 assign L15103 = ld_loc + "/" + string(ld_qty_oh).
-					             else
-					              	 assign L15103 = L15103 + ";" + ld_loc + "/" + string(ld_qty_oh).
-									  end.
-									  else if i < 9 then do:
-											 if L15104 = "" then
-					              	 assign L15104 = ld_loc + "/" + string(ld_qty_oh).
-					             else
-					              	 assign L15104 = L15104 + ";" + ld_loc + "/" + string(ld_qty_oh).
-									  end.
-									  else do:
-									    leave.
-									  end.
-									  i = I + 1.
-									  assign V1510 = ld_loc.
-							  end.
+                for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_lot = V1500 and ld_qty_oh > 0:
+                    if i < 3 then do:
+                       if L15102 = "" then
+                           assign L15102 = ld_loc + "/" + string(ld_qty_oh).
+                       else
+                           assign L15102 = L15102 + ";" + ld_loc + "/" + string(ld_qty_oh).
+                    end.
+                    else if i < 6 then do:
+                       if L15103 = "" then
+                           assign L15103 = ld_loc + "/" + string(ld_qty_oh).
+                       else
+                           assign L15103 = L15103 + ";" + ld_loc + "/" + string(ld_qty_oh).
+                    end.
+                    else if i < 9 then do:
+                       if L15104 = "" then
+                           assign L15104 = ld_loc + "/" + string(ld_qty_oh).
+                       else
+                           assign L15104 = L15104 + ";" + ld_loc + "/" + string(ld_qty_oh).
+                    end.
+                    else do:
+                      leave.
+                    end.
+                    i = I + 1.
+                    assign V1510 = ld_loc.
+                end.
                 display L15102          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 2 - END */
 
@@ -859,13 +859,13 @@ If AVAILABLE ( poc_ctrl ) then
         /* PRESS e EXIST CYCLE */
         IF V1510 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1510.
-				assign vv_qty = 0.
-				assign vv_ld_stat = "".
-				for each ld_det no-lock where ld_site = V1002 and ld_loc = V1510
-						 and ld_part = V1300 and ld_lot = V1500:
-						 assign vv_qty = vv_qty + ld_qty_oh.
-						 assign vv_ld_stat = ld_stat.
-				end.
+        assign vv_qty = 0.
+        assign vv_ld_stat = "".
+        for each ld_det no-lock where ld_site = V1002 and ld_loc = V1510
+             and ld_part = V1300 and ld_lot = V1500:
+             assign vv_qty = vv_qty + ld_qty_oh.
+             assign vv_ld_stat = ld_stat.
+        end.
          /*  ---- Valid Check ---- START */
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1510.
@@ -1069,28 +1069,28 @@ If AVAILABLE ( pt_mstr ) then
         end.
         IF V1520 = "e" THEN  LEAVE V1300LMAINLOOP.
 
-				find first LOC_MSTR where LOC_LOC = V1520 AND LOC_SITE = V1002  no-lock no-error.
+        find first LOC_MSTR where LOC_LOC = V1520 AND LOC_SITE = V1002  no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
                display skip "Error:库位不存在 , Retry." @ WMESSAGE NO-LABEL with fram F1520.
                pause 0 before-hide.
                undo, retry.
         end.
         if can-find(first usrw_wkfl no-lock where usrw_key1 = "TRANSLATE-LOCATION" and usrw_key2 = v1520 and usrw_key3 = "50") then do:
-        	    display skip "Error:不允许调入生产库位, Retry." @ WMESSAGE NO-LABEL with fram F1520.
+              display skip "Error:不允许调入生产库位, Retry." @ WMESSAGE NO-LABEL with fram F1520.
               pause 0 before-hide.
               undo, retry.
         end.
- 				
+
 /**确认目的库位是否允许调拨***********************/
-			  if lookup(V1520,VV_Loclist,";") = 0 then do:
-			  	 yn = no.
- 					 message "库位不在定制范围.Y/N" update yn.
- 					 if not yn then do:
- 					 		pause 0 before-hide.
+        if lookup(V1520,VV_Loclist,";") = 0 then do:
+           yn = no.
+           message "库位不在定制范围.Y/N" update yn.
+           if not yn then do:
+              pause 0 before-hide.
               undo, retry.
- 					 end.      
-			  end.
- 				
+           end.
+        end.
+
         /* PRESS e EXIST CYCLE */
 
         display  skip WMESSAGE NO-LABEL with fram F1520.

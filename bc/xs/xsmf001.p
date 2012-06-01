@@ -4578,8 +4578,8 @@ repeat:
         v1167 = " ".
         v1167 = entry(1,v1167,"@").
         v1160 = "".
-        run checksecurity (input "xsinv23jp.p" , input global_userid , output oktorun , output execname ).
-        if oktorun = yes then  run    xsinv23jp.p.
+        run checksecurity (input "xsictr67.p" , input global_userid , output oktorun , output execname ).
+        if oktorun = yes then  run xsictr67.p.
 
         leave v1167l.
 
@@ -4654,8 +4654,8 @@ repeat:
         v1168 = " ".
         v1168 = entry(1,v1168,"@").
         v1160 = "".
-        run checksecurity (input "xslapjp.p" , input global_userid , output oktorun , output execname ).
-        if oktorun = yes then  run    xslapjp.p.
+        run checksecurity (input "xsictr68.p" , input global_userid , output oktorun , output execname ).
+        if oktorun = yes then  run xsictr68.p.
 
         leave v1168l.
 
@@ -4730,8 +4730,8 @@ repeat:
         v1169 = " ".
         v1169 = entry(1,v1169,"@").
         v1160 = "".
-        run checksecurity (input "xsinv69.p" , input global_userid , output oktorun , output execname ).
-        if oktorun = yes then  run xsinv69.p.
+        run checksecurity (input "xsictr69.p" , input global_userid , output oktorun , output execname ).
+        if oktorun = yes then  run xsictr69.p.
 
         leave v1169l.
 
