@@ -1,6 +1,7 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
 /* INV TRANSFER */
 /* Generate date / time  2007-6-8 10:29:06 */
+/* ------- Barcode 67       */
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -799,7 +800,7 @@ If AVAILABLE ( poc_ctrl ) then
 								      L15102 = "" . 
 								      L15103 = "" . 
                       L15104 = "" . 
-								for each ld_det use-index ld_part_lot  no-lock where ld_part = V1300 and ld_lot = V1500:
+								for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_lot = V1500 and ld_qty_oh > 0:
 										if i < 3 then do:
 										   if L15102 = "" then 
 										    	 assign L15102 = ld_loc + "/" + string(ld_qty_oh). 
@@ -912,6 +913,7 @@ If AVAILABLE ( pt_mstr ) then
 
         /* --CYCLE TIME DEFAULT  VALUE -- START  */
         V1520 = ENTRY(1,V1520,"@").
+        v1520 = "".
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
 
         /* LOGICAL SKIP START */
@@ -988,6 +990,12 @@ If AVAILABLE ( pt_mstr ) then
            apply lastkey.
         end.
         IF V1520 = "e" THEN  LEAVE V1300LMAINLOOP.
+        /*目的库位不允许与原库位相同*/
+        if v1520 = V1510 then do:
+              display skip "Error:目的库位不能与原库位相同 , Retry." @ WMESSAGE NO-LABEL with fram F1520.
+               pause 0 before-hide.
+               undo, retry.
+        end.
 				/*如果不是调拨到生产库位不允许操作*/
 				find first LOC_MSTR where LOC_LOC = V1520 AND LOC_SITE = V1002  no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
@@ -1283,7 +1291,7 @@ If NOT AVAILABLE ld_det THEN
                 /* LABEL 3 - END */ 
 
                 /* LABEL 4 - START */ 
-                L17004 = "从:" + trim( V1510 ) + "/" + string(vv_qty) + "到:" + trim( V1520 ) .
+                L17004 = "从:" + trim( V1510 ) + "转" + string(V1600) + "到:" + trim( V1520 ) .
                 display L17004          format "x(40)" skip with fram F1700 no-box.
                 /* LABEL 4 - END */ 
                 display "确认过帐[Y],E退出"   format "x(40)" skip
