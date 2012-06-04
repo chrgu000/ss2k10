@@ -1069,7 +1069,7 @@ If AVAILABLE ( pt_mstr ) then
         end.
         IF V1520 = "e" THEN  LEAVE V1300LMAINLOOP.
 
-        find first LOC_MSTR where LOC_LOC = V1520 AND LOC_SITE = V1002  no-lock no-error.
+        find first LOC_MSTR where LOC_SITE = V1002 and LOC_LOC = V1520 no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
                display skip "Error:ø‚Œª≤ª¥Ê‘⁄ , Retry." @ WMESSAGE NO-LABEL with fram F1520.
                pause 0 before-hide.
