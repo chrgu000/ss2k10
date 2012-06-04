@@ -14,7 +14,7 @@
 
    define variable vcimFile as character.
    assign vcimfile = "xsictr69.p." + string(today,"99999999") + "-" + string(time).
-   assign vv_key1 = vcimfile + ".cimproc"
+   assign vv_key1 = vcimfile + ".cimproc".
    for each usrw_wkfl exclusive-lock where usrw_key1 begins vcimfile:
        delete usrw_wkfl.
    end.
@@ -49,7 +49,7 @@
           put "." skip.
       end.
    output close.
-
+   transit:
    do transaction on stop undo,leave:
       assign vtrrecid = current-value(tr_sq01).
       batchrun = yes.
@@ -67,24 +67,24 @@
           find first tr_hist no-lock use-index tr_nbr_eff where tr_trnbr > int(vtrrecid)
                 and tr_effdate = today and tr_nbr = usrw_key3 and tr_so_job = usrw_key4
                 and tr_part = usrw_key5 and tr_type = "iss-tr" and tr_site = usrw_charfld[2]
-                and tr_loc = usrw_charfld[3] and tr_lot = usrw_key6 no-error.
+                and tr_loc = usrw_charfld[3] and tr_serial = usrw_key6 no-error.
           if not available tr_hist then do:
              assign yn = no.
-             undo,leave.
+             undo transit,leave.
           end.
-          find first tr_hist no-lock use-index tr_nbr_eff where tr_trnbr > int(vtrrecid)
+          find last tr_hist no-lock use-index tr_nbr_eff where tr_trnbr > int(vtrrecid)
                 and tr_effdate = today and tr_nbr = usrw_key3 and tr_so_job = usrw_key4
                 and tr_part = usrw_key5 and tr_type = "rct-tr" and tr_site = usrw_charfld[2]
-                and tr_loc = usrw_charfld[4] and tr_lot = usrw_key6 no-error.
+                and tr_loc = usrw_charfld[4] and tr_serial = usrw_key6 no-error.
           if not available tr_hist then do:
              assign yn = no.
-             undo,leave.
+             undo transit,leave.
           end.
       end.
    end.     /* do transaction undo, leave:  */
 
    for each usrw_wkfl exclusive-lock where usrw_key1 = vv_key1:
-       delete usrw_wkfl.
+     /*  delete usrw_wkfl.*/
    end.
    os-delete value(vcimfile + ".bpi") no-error.
    os-delete value(vcimfile + ".bpo") no-error.

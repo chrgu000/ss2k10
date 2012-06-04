@@ -218,7 +218,7 @@ repeat:
          	  end.
          	  if i = 0 then do:
          	     find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-         	  	  		 and xxship_case = integer(trim(entry(2,V1100,"@"))) 
+         	  	  		 and xxship_case = integer(trim(entry(2,V1100,"@")))
          	  	  		 and xxship__chr03 = "" no-error.
          	     if not available xxship_det then do:
          	        display skip "仅限日供件,请重新输入1." @ wmessage no-label with fram F1100.
@@ -365,10 +365,15 @@ repeat:
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         /* --FIRST TIME DEFAULT  VALUE -- END  */
+				find first xxship_det no-lock where xxship_nbr =  trim(entry(1,pv1100,"@"))
+							 and xxship_case = int(trim(PV1110)).
+			 if available xxship_det then do:
+			 		V1120 = xxship__chr01.
+			 end.
+			 else do:
+					V1120 = "".
+			end.
 
-
-        /* --CYCLE TIME DEFAULT  VALUE -- START  */
-        V1120 = "".
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
 
         /* LOGICAL SKIP START */
@@ -420,12 +425,12 @@ repeat:
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1120.
         pause 0.
-        /* CHECK FOR NUMBER VARIABLE START  */   
-        IF trim (V1120) = "" THEN DO:                                          
-           display skip "批号不可为空!" @ WMESSAGE NO-LABEL with fram F1120.            
-           pause 0 before-hide.                                                            
-           undo, retry.                                                                    
-        end.         
+        /* CHECK FOR NUMBER VARIABLE START  */
+        IF trim (V1120) = "" THEN DO:
+           display skip "批号不可为空!" @ WMESSAGE NO-LABEL with fram F1120.
+           pause 0 before-hide.
+           undo, retry.
+        end.
         find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
         			 and xxship_case = integer(trim(V1110)) and xxship__chr03 = "" no-error.
         if available xxship_det then do:
@@ -458,7 +463,7 @@ repeat:
      END.
      PV1120 = V1120.
 /* END  LINE :1120  批号[Lot]  */
-    
+
 
      /* START  LINE :1130  from_location[从库位]  */
      V1130L:
@@ -475,7 +480,7 @@ repeat:
         define variable L11305          as char format "x(40)".
         define variable L11306          as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
- 				
+
 
                 display "[拆分前转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1130 no-box.
 
@@ -545,7 +550,7 @@ repeat:
         display  "" @ WMESSAGE NO-LABEL with fram F1130.
         pause 0.
         leave V1130L.
-     END. 
+     END.
 /* END    LINE :1130  from_location[从库位]   */
 
 
@@ -564,7 +569,7 @@ repeat:
         define variable L11405          as char format "x(40)".
         define variable L11406          as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
- 				
+
 
                 display "[拆分前转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1140 no-box.
 
@@ -574,7 +579,7 @@ repeat:
                 /* LABEL 1 - END */
                 assign VV_Loclist = "".
 								run getInvTrLoc(input trim(entry(1,V1100,"@")),input integer(trim(V1110)),output VV_Loclist).
-								
+
                 /* LABEL 2 - START */
                 L11402 = VV_Loclist.
                 display L11402 format "x(40)" skip with fram F1140 no-box.
@@ -613,7 +618,7 @@ repeat:
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1140.
         pause 0.
-       
+
         find first LOC_MSTR where LOC_SITE = V1002 and LOC_LOC = V1140 and V1140 <> V1130 no-lock no-error.
         IF NOT AVAILABLE LOC_MSTR then do:
                display skip "Error:库位不可用 , Retry." @ WMESSAGE NO-LABEL with fram F1140.
@@ -635,7 +640,7 @@ repeat:
         display  "" @ WMESSAGE NO-LABEL with fram F1140.
         pause 0.
         leave V1140L.
-     END. 
+     END.
 /* END    LINE :1140  from_location[到库位]   */
 
      /* START  LINE :1150  确认[CONFIRM]  */
@@ -658,7 +663,7 @@ repeat:
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         V1150 = "Y".
         /* --FIRST TIME DEFAULT  VALUE -- END  */
- 
+
                display "[拆分前转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1150 no-box.
 
                 /* LABEL 1 - START */
@@ -699,23 +704,23 @@ repeat:
         /* PRESS e EXIST CYCLE */
         IF V1150 = "e" or v1150 = "n" THEN  LEAVE xsictr69loop.
         display  skip WMESSAGE NO-LABEL with fram F1150.
-       
+
          /*  ---- Valid Check ---- START */
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1150.
         pause 0.
         /* CHECK FOR NUMBER VARIABLE START  */
         /* CHECK FOR NUMBER VARIABLE  END */
- 
+
         display  "" @ WMESSAGE NO-LABEL with fram F1150.
         pause 0.
         leave V1150L.
      END.
      PV1150 = V1150.
      /* END    LINE :1150  确认[CONFIRM]  */
-    
+
     {xstrshipall.i}
-    
+
 		if yn then do:
 		   	WMESSAGE = "调拨成功".
 	  end.
@@ -742,7 +747,7 @@ repeat:
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         V1160 = "Y".
         /* --FIRST TIME DEFAULT  VALUE -- END  */
- 
+
                display "[拆分前转移]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1160 no-box.
 
                 /* LABEL 1 - START */
@@ -758,15 +763,17 @@ repeat:
 
 
                 /* LABEL 3 - START */
-                L11603 = WMESSAGE.
+                L11603 = "".
                 display L11603          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 3 - END */
 
                 /* LABEL 4 - START */
                 L11604 = "".
                 display L11604          format "x(40)" skip with fram F1160 no-box.
+                display  skip WMESSAGE NO-LABEL with fram F1160.
                 /* LABEL 4 - END */
                 display "继续[Y],E退出"   format "x(40)" skip
+
         skip with fram F1160 no-box.
         Update V1160
         WITH  fram F1160 NO-LABEL
@@ -783,22 +790,19 @@ repeat:
         /* PRESS e EXIST CYCLE */
         IF V1160 = "e" THEN  LEAVE xsictr69loop.
         display  skip WMESSAGE NO-LABEL with fram F1160.
-       
+
          /*  ---- Valid Check ---- START */
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1160.
         pause 0.
         /* CHECK FOR NUMBER VARIABLE START  */
         /* CHECK FOR NUMBER VARIABLE  END */
- 
+
         display  "" @ WMESSAGE NO-LABEL with fram F1160.
         pause 0.
         leave V1160L.
      END.
- 
 end.
-
-
  		leave mainloop.
    END.
    pause 0 before-hide.
