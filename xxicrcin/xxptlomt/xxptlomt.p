@@ -23,13 +23,13 @@ with frame a side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
 
 form xxpl_site colon 25 sidesc no-label
-     xxpl_loc  colon 25 locdesc no-label skip(1)     
+     xxpl_loc  colon 25 locdesc no-label skip(1)
      xxpl_type colon 25
      xxpl_rank colon 25
      xxpl_panel colon 25
      xxpl_cap  colon 25
-with frame bb title color 
-		 normal(getFrameTitle("PREVENTIVE_MAINTENANCE_DETAIL",30))
+with frame bb title color
+     normal(getFrameTitle("PREVENTIVE_MAINTENANCE_DETAIL",30))
      side-labels width 80.
 setFrameLabels(frame bb:handle).
 /* DISPLAY */
@@ -47,20 +47,20 @@ repeat with frame a:
         find first xxpl_ref no-lock where xxpl_part = pt_part
              no-error.
         if available xxpl_ref then do:
-           display xxpl_site xxpl_loc xxpl_type 
-           			   xxpl_rank xxpl_panel xxpl_cap with frame bb.
+           display xxpl_site xxpl_loc xxpl_type
+                   xxpl_rank xxpl_panel xxpl_cap with frame bb.
            run disploc(input xxpl_site,input xxpl_loc).
         end.
      end.
   end.
-      
+
   repeat with frame bb:
-  		if input xxpl_site = "" then do:
-  			find first si_mstr no-lock where si_site <> "".
-  			if available si_mstr then do:
-  				 display si_site @ xxpl_site si_desc @ sidesc with frame bb.
-  		  end.
-  	  end.
+      if input xxpl_site = "" then do:
+        find first si_mstr no-lock where si_site <> "".
+        if available si_mstr then do:
+           display si_site @ xxpl_site si_desc @ sidesc with frame bb.
+        end.
+      end.
       prompt-for
          xxpl_site xxpl_loc
       editing:
@@ -70,7 +70,7 @@ repeat with frame a:
 
             if recno <> ? then do:
                display xxpl_site xxpl_loc xxpl_type
-               				 xxpl_rank xxpl_panel xxpl_cap with frame bb.
+                       xxpl_rank xxpl_panel xxpl_cap with frame bb.
                run disploc(input xxpl_site,input xxpl_loc).
             end. /* if recno */
          end. /* frame-field */
@@ -83,23 +83,23 @@ repeat with frame a:
                    "input xxpl_loc"}
          if recno <> ? then do:
             /* FIND NEXT/PREVIOUS RECORD */
-            display 
+            display
                loc_loc @ xxpl_loc
-            with frame bb. 
+            with frame bb.
             run disploc(loc_site,loc_loc).
-            find first xxpl_ref no-lock where xxpl_part = pt_part 
+            find first xxpl_ref no-lock where xxpl_part = pt_part
                    and xxpl_site = input xxpl_site
-            		   and xxpl_loc = input xxpl_loc no-error.
+                   and xxpl_loc = input xxpl_loc no-error.
             if available xxpl_ref then do:
-            	 display xxpl_type xxpl_rank xxpl_panel xxpl_cap with frame bb.
-            	 run disploc(input xxpl_site,input xxpl_loc).
+               display xxpl_type xxpl_rank xxpl_panel xxpl_cap with frame bb.
+               run disploc(input xxpl_site,input xxpl_loc).
             end.
             else do:
-            	 display "" @ xxpl_type 
-            	 				 "" @ xxpl_rank
-            	 				 "" @ xxpl_panel 
-            	 				 "" @ xxpl_cap
-            	  with frame bb.
+               display "" @ xxpl_type
+                       "" @ xxpl_rank
+                       "" @ xxpl_panel
+                       "" @ xxpl_cap
+                with frame bb.
             end.
          end.  /* if recno <> ? */
       end.  /* if frame-field = "xxpl_loc" */
@@ -114,9 +114,9 @@ repeat with frame a:
          undo,retry.
       end.
       else do:
-      	if not can-find(si_mstr no-lock where si_site = input xxpl_site)
-      	then do:
-      		  {pxmsg.i &MSGNUM=708 &ERRORLEVEL=3}
+        if not can-find(si_mstr no-lock where si_site = input xxpl_site)
+        then do:
+            {pxmsg.i &MSGNUM=708 &ERRORLEVEL=3}
             undo,retry.
         end.
       end.
@@ -125,14 +125,14 @@ repeat with frame a:
          undo,retry.
       end.
       else do:
-      	if not can-find(first loc_mstr no-lock where
-      			 (loc_site = input xxpl_site) and loc_loc = input xxpl_loc) and 
-      			 input xxpl_site <> ""
-      	then do:
-      		  {pxmsg.i &MSGNUM=8292 &ERRORLEVEL=3}
+        if not can-find(first loc_mstr no-lock where
+             (loc_site = input xxpl_site) and loc_loc = input xxpl_loc) and
+             input xxpl_site <> ""
+        then do:
+            {pxmsg.i &MSGNUM=8292 &ERRORLEVEL=3}
             undo,retry.
         end.
-    	end.
+      end.
 
       find xxpl_ref
          where xxpl_part = input pt_part
@@ -146,7 +146,7 @@ repeat with frame a:
                 xxpl_loc.
       end.
             display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_panel xxpl_cap
-      							with frame bb.
+                    with frame bb.
 
       set2:
       do on error undo, retry:
@@ -158,7 +158,7 @@ repeat with frame a:
          set xxpl_type xxpl_rank xxpl_panel xxpl_cap
          go-on (F5 CTRL-D) with frame bb.
          display xxpl_site xxpl_loc xxpl_type xxpl_rank xxpl_panel
-         				 xxpl_cap with frame bb.
+                 xxpl_cap with frame bb.
          if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
             del-yn = no.
             /*CHECK FOR EXISTENCE OF REPETITIVE SCHEDULE FOR AN ITEM BEFORE  */
@@ -182,26 +182,26 @@ end.
    status input ststatus.
 
 procedure disploc:
-	define input parameter isite like pt_site.
-	define input parameter iloc  like loc_loc.
-	find first loc_mstr where loc_site = isite and loc_loc = iloc 
-			 no-lock no-error.
-	if available loc_mstr then do:
-		 display loc_desc @ locdesc with frame bb.
-	end.
-	else do:
-		 display "" @ locdesc with frame bb.
-	end.
-	run dispsite(input isite).
+  define input parameter isite like pt_site.
+  define input parameter iloc  like loc_loc.
+  find first loc_mstr where loc_site = isite and loc_loc = iloc
+       no-lock no-error.
+  if available loc_mstr then do:
+     display loc_desc @ locdesc with frame bb.
+  end.
+  else do:
+     display "" @ locdesc with frame bb.
+  end.
+  run dispsite(input isite).
 end procedure.
 
 procedure dispsite:
-	define input parameter isite like pt_site.
-	find first si_mstr where si_site = isite no-lock no-error.
-	if available si_mstr then do:
-		 display si_desc @ sidesc with frame bb.
-	end.
-	else do:
-		 display "" @ sidesc with frame bb.
-	end.
+  define input parameter isite like pt_site.
+  find first si_mstr where si_site = isite no-lock no-error.
+  if available si_mstr then do:
+     display si_desc @ sidesc with frame bb.
+  end.
+  else do:
+     display "" @ sidesc with frame bb.
+  end.
 end procedure.
