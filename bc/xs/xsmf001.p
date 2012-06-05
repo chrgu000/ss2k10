@@ -814,7 +814,7 @@ IF OkToRun = yes then RUN    xspor03.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-   
+
    /**********14*************/
       V1114LMAINLOOP:
    REPEAT:
@@ -936,11 +936,11 @@ IF OkToRun = yes then RUN xsinv23n.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-   
-   
+
+
    /**********14*************/
-   
-   
+
+
    /* Internal Cycle Input :1115    */
    V1115LMAINLOOP:
    REPEAT:
