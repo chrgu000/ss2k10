@@ -209,23 +209,23 @@ repeat:
          if index(v1100,"@") = 0 then  assign v1100 = v1100 + "@".
         /* CHECK FOR NUMBER VARIABLE START  */
          if index(V1100,"@") > 0 then do:
-         	  assign i = 0.
-         		run isNumber(input trim(entry(2,V1100,"@")),output i).
-         		if i > 1 then do:
+            assign i = 0.
+            run isNumber(input trim(entry(2,V1100,"@")),output i).
+            if i > 1 then do:
                display skip "托号有误,请重新输入." @ wmessage no-label with fram F1100.
                pause 0 before-hide.
                undo, retry.
-         	  end.
-         	  if i = 0 then do:
-         	     find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-         	  	  		 and xxship_case = integer(trim(entry(2,V1100,"@")))
-         	  	  		 and xxship__chr03 = "" no-error.
-         	     if not available xxship_det then do:
-         	        display skip "仅限日供件,请重新输入1." @ wmessage no-label with fram F1100.
+            end.
+            if i = 0 then do:
+               find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
+                     and xxship_case = integer(trim(entry(2,V1100,"@")))
+                     and xxship__chr03 = "" no-error.
+               if not available xxship_det then do:
+                  display skip "仅限日供件,请重新输入1." @ wmessage no-label with fram F1100.
                   pause 0 before-hide.
                   undo, retry.
-         	     end.
-         	  end.
+               end.
+            end.
          end. /* if index(V1100,"@") > 0 then do: */
         /* CHECK FOR NUMBER VARIABLE  END */
 /*   IF not length( trim ( V1100 ) ) <= 18 THEN DO:                                     */
@@ -326,24 +326,24 @@ repeat:
            undo, retry.
         end.
         run isNumber(input V1110,output i).
-         		if i >= 1 then do:
+            if i >= 1 then do:
                display skip "托号有误,请重新输入." @ wmessage no-label with fram F1110.
                pause 0 before-hide.
                undo, retry.
-         	  end.
-         	  find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-         	  			 and xxship_case = integer(trim(V1110)) no-error.
-         	  if not available xxship_det then do:
-         	      display skip "仅限日供件,请重新输入3." @ wmessage no-label with fram F1110.
+            end.
+            find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
+                   and xxship_case = integer(trim(V1110)) no-error.
+            if not available xxship_det then do:
+                display skip "仅限日供件,请重新输入3." @ wmessage no-label with fram F1110.
                 pause 0 before-hide.
                 undo, retry.
-         	   end.
+             end.
 
         display  "" @ WMESSAGE NO-LABEL with fram F1110.
         pause 0.
         leave V1110L.
      END.
-     		PV1110 = V1110.
+        PV1110 = V1110.
 /* END  LINE :1110  托号[panel]  */
 
 /* START  LINE :1120  批号[Lot]  */
@@ -365,14 +365,14 @@ repeat:
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
         /* --FIRST TIME DEFAULT  VALUE -- END  */
-				find first xxship_det no-lock where xxship_nbr =  trim(entry(1,pv1100,"@"))
-							 and xxship_case = int(trim(PV1110)).
-			 if available xxship_det then do:
-			 		V1120 = xxship__chr01.
-			 end.
-			 else do:
-					V1120 = "".
-			end.
+        find first xxship_det no-lock where xxship_nbr =  trim(entry(1,pv1100,"@"))
+               and xxship_case = int(trim(PV1110)).
+       if available xxship_det then do:
+          V1120 = xxship__chr01.
+       end.
+       else do:
+          V1120 = "".
+      end.
 
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
 
@@ -432,7 +432,7 @@ repeat:
            undo, retry.
         end.
         find first xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-        			 and xxship_case = integer(trim(V1110)) and xxship__chr03 = "" no-error.
+               and xxship_case = integer(trim(V1110)) and xxship__chr03 = "" no-error.
         if available xxship_det then do:
            if xxship__chr01 <> V1120 then do:
               display skip "批号错误,请重新输入." @ wmessage no-label with fram F1120.
@@ -440,17 +440,17 @@ repeat:
               undo, retry.
            end.
         end.
-        yn = no.
+        assign vv_loc_from = "".
         for each xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-        			 and xxship_case = integer(trim(V1110)) and xxship__chr03 = "":
+               and xxship_case = integer(trim(V1110)) and xxship__chr03 = "":
             find first ld_det no-lock use-index ld_part_lot where ld_part = xxship_part2
-            		   and ld_lot = xxship__chr01 and ld_qty_oh > 0 no-error.
+                   and ld_lot = xxship__chr01 and ld_qty_oh > 0 no-error.
             if available ld_det then do:
-            	 assign yn = yes
-            	 				vv_loc_from = ld_loc.
+               assign vv_loc_from = ld_loc.
+               leave.
             end.
          end.
-         if not yn then do:
+         if vv_loc_from = "" then do:
             display skip "无可用库存,请重新输入." @ wmessage no-label with fram F1120.
             pause 0 before-hide.
             undo, retry.
@@ -530,18 +530,19 @@ repeat:
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1130.
         pause 0.
          /*  ---- Valid Check ----  START  */
-        assign yn = yes.
+        assign yn = no.
         for each xxship_det no-lock where xxship_nbr = trim(entry(1,V1100,"@"))
-        			 and xxship_case = integer(trim(V1110)) and xxship__chr03 = "":
+               and xxship_case = integer(trim(V1110)) and xxship__chr03 = "":
            find first ld_det no-lock use-index ld_part_lot where ld_part = xxship_part2
-           				   and ld_lot = xxship__chr01 and ld_site = V1002
-           				   and ld_loc = trim(v1130) and ld_qty_oh > 0 no-error.
-           if not available ld_det then do:
-           	  assign yn = no.
+                     and ld_lot = xxship__chr01 and ld_site = V1002
+                     and ld_loc = trim(v1130) and ld_qty_oh > 0 no-error.
+           if available ld_det then do:
+              assign yn = yes.
+              leave.
            end.
         end.
         if not yn then do:
-        	    display skip "此库位无可用库存,请重新输入." @ wmessage no-label with fram F1130.
+              display skip "此库位无可用库存,请重新输入." @ wmessage no-label with fram F1130.
               pause 0 before-hide.
               undo, retry.
         end.
@@ -578,7 +579,7 @@ repeat:
                 display L11401 format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 1 - END */
                 assign VV_Loclist = "".
-								run getInvTrLoc(input trim(entry(1,V1100,"@")),input integer(trim(V1110)),output VV_Loclist).
+                run getInvTrLoc(input trim(entry(1,V1100,"@")),input integer(trim(V1110)),output VV_Loclist).
 
                 /* LABEL 2 - START */
                 L11402 = VV_Loclist.
@@ -626,6 +627,12 @@ repeat:
                undo, retry.
         end.
 
+        if can-find(first usrw_wkfl no-lock where usrw_key1 = "TRANSLATE-LOCATION" and usrw_key2 = V1140 and usrw_key3 = "50") then do:
+              display skip "Error:不允许调入生产库位, Retry." @ WMESSAGE NO-LABEL with fram F1140.
+              pause 0 before-hide.
+              undo, retry.
+        end.
+
 /**确认目的库位是否允许调拨***********************/
         if lookup(V1140,VV_Loclist,";") = 0 then do:
            yn = no.
@@ -635,7 +642,6 @@ repeat:
               undo, retry.
            end.
         end.
-
 
         display  "" @ WMESSAGE NO-LABEL with fram F1140.
         pause 0.
@@ -721,11 +727,11 @@ repeat:
 
     {xstrshipall.i}
 
-		if yn then do:
-		   	WMESSAGE = "调拨成功".
-	  end.
-	  else do:
-				WMESSAGE = "调拨失败，请查询资料".
+    if yn then do:
+        WMESSAGE = "调拨成功".
+    end.
+    else do:
+        WMESSAGE = "调拨失败，请查询资料".
     end.
         /* START  LINE :1160  确认[CONFIRM]  */
      V1160L:
@@ -803,7 +809,7 @@ repeat:
         leave V1160L.
      END.
 end.
- 		leave mainloop.
+    leave mainloop.
    END.
    pause 0 before-hide.
 
@@ -820,14 +826,14 @@ define output parameter oChkRet as integer.
 
 assign oChkRet = 0.
 define variable i as integer.
-	if iChkvalue <> "" then do:
+  if iChkvalue <> "" then do:
       do i = 1 to length(iChkvalue).
           if index("0987654321", substring(iChkvalue,i,1)) = 0 then do:
-          	 assign oChkRet = 2.
+             assign oChkRet = 2.
           end.
       end.
   end.
   else do:
-  		assign oChkRet = 1.
+      assign oChkRet = 1.
   end.
 end procedure.

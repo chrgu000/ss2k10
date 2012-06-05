@@ -1225,7 +1225,8 @@ If NOT AVAILABLE ld_det THEN
                 end.
         end.
         /* CHECK FOR NUMBER VARIABLE  END */
-        find first LD_DET where ( ld_part  = V1300 AND ld_lot = V1500 AND ld_site = V1002 AND ld_ref = "") AND ( ( decimal(V1600) < 0  AND ( ld_loc = V1520 AND  LD_SITE = V1002 and ld_ref = "" and ld_QTY_oh >= - DECIMAL ( V1600 ) ) ) OR ( decimal(V1600) > 0 AND  ld_loc = V1510 AND  LD_SITE = V1002 and ld_ref = "" and  ld_QTY_oh >= DECIMAL ( V1600 ) ) )  no-lock no-error.
+/*        find first LD_DET where ( ld_part  = V1300 AND ld_lot = V1500 AND ld_site = V1002 AND ld_ref = "") AND ( ( decimal(V1600) < 0  AND ( ld_loc = V1520 AND  LD_SITE = V1002 and ld_ref = "" and ld_QTY_oh >= - DECIMAL ( V1600 ) ) ) OR ( decimal(V1600) > 0 AND  ld_loc = V1510 AND  LD_SITE = V1002 and ld_ref = "" and  ld_QTY_oh >= DECIMAL ( V1600 ) ) )  no-lock no-error. */
+				find first ld_det use-index where ld_site = v1002 and ld_loc = V1510 and ld_part = V1300 and ld_lot = V1500 and ld_qty_oh >= decimal(V1600) no-error.
         IF NOT AVAILABLE LD_DET then do:
                 display skip "ÔÚ¿âÊý <:" + string( V1600 ) @ WMESSAGE NO-LABEL with fram F1600.
                 pause 0 before-hide.
