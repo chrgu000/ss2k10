@@ -4,12 +4,12 @@
 /* ss - 101012.1 by:SamSong */
 /* ss - 110104.1 by: jack */  /* 排序修改  */
 /* ss - 111024 by: yun */ /* 检验过后调整库存状态 */
-
+/* ss - 111024 by: yun */ /* 取消检验过后调整库存状态 转到barcode 68做*/
 /******************************************************************************/
 /*
 {mfdtitle.i "110104.1"}
 */
-{mfdtitle.i "111024.1"}
+{mfdtitle.i "120605.1"}
 
 {cxcustom.i "xxmqc001.P"}
 
@@ -393,7 +393,7 @@ FOR EACH tt WHERE t1_status <> ""  NO-LOCK:
    ss - 100922.1 -e */
 
 END.
-
+/******************************************************************************
 ASSIGN v_file = "xxmqc004.cim." + string(today,"99999999") + string(time).
 output to value(v_file + ".in").
 FOR EACH tt NO-LOCK:
@@ -428,7 +428,7 @@ output close.
 
     os-delete value(v_file + ".in").
     os-delete value(v_file + ".ou").
-
+*******************************************************************************/
 /* 更新*/
  CLEAR frame zzz1 all no-pause .
  HIDE  FRAME zzz1 no-pause .
