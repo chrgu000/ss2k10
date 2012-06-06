@@ -717,7 +717,6 @@ LD_SITE = V1002 AND LD_REF = "" AND
 
             APPLY LASTKEY.
 
-
         END.
         /* ROLL BAR END */
 

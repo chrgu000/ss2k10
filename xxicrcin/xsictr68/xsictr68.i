@@ -18,20 +18,22 @@ define variable usection as char format "x(16)".
 /* Create Section Variable END */
 /* 不可用库存如果检验合格的话库存调拨时修改为可用状态。 */
 assign vv_loc_status = 'Y - N '.
-find first ld_det no-lock where ld_site = V1002 and ld_loc = V1510 and ld_part = V1300 and ld_lot = V1500 no-error.
+find first ld_det no-lock where ld_site = V1002 and ld_loc = V1510 
+       and ld_part = V1300 and ld_lot = V1500 no-error.
 if availabl ld_det then do:
    find first is_mstr no-lock where is_status = ld_status no-error.
    if available is_mstr and is_avail = no then do:
-      find first xxmqc_det no-lock where xxmqc_part = ld_part and xxmqc_serial = ld_lot and xxmqc_status = "1" no-error.
+      find first xxmqc_det no-lock where xxmqc_part = ld_part 
+             and xxmqc_serial = ld_lot and xxmqc_status = "1" no-error.
       if available xxmqc_det then do:
-         assign vv_loc_status = "Y-Y-N".
+         assign vv_loc_status = vv_loc_status + "Y-Y-N".
       end.
       else do:
-         assign vv_loc_status = ld_status.
+         assign vv_loc_status = vv_loc_status + ld_status.
       end.
    end.
    else do:
-         assign vv_loc_status = ld_status.
+         assign vv_loc_status = vv_loc_status + ld_status.
    end.
 end. /* if availabl ld_det then do: */
 usection ="xsictr68." + TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))).
