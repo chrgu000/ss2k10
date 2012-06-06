@@ -35,14 +35,14 @@ REPEAT:
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1002           as char format "x(50)".
-        define variable PV1002          as char format "x(50)".
-        define variable L10021          as char format "x(40)".
-        define variable L10022          as char format "x(40)".
-        define variable L10023          as char format "x(40)".
-        define variable L10024          as char format "x(40)".
-        define variable L10025          as char format "x(40)".
-        define variable L10026          as char format "x(40)".
+        define variable V1002  as char format "x(50)".
+        define variable PV1002 as char format "x(50)".
+        define variable L10021 as char format "x(40)".
+        define variable L10022 as char format "x(40)".
+        define variable L10023 as char format "x(40)".
+        define variable L10024 as char format "x(40)".
+        define variable L10025 as char format "x(40)".
+        define variable L10026 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -130,14 +130,14 @@ REPEAT:
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1100           as char format "x(50)".
-        define variable PV1100          as char format "x(50)".
-        define variable L11001          as char format "x(40)".
-        define variable L11002          as char format "x(40)".
-        define variable L11003          as char format "x(40)".
-        define variable L11004          as char format "x(40)".
-        define variable L11005          as char format "x(40)".
-        define variable L11006          as char format "x(40)".
+        define variable V1100  as char format "x(50)".
+        define variable PV1100 as char format "x(50)".
+        define variable L11001 as char format "x(40)".
+        define variable L11002 as char format "x(40)".
+        define variable L11003 as char format "x(40)".
+        define variable L11004 as char format "x(40)".
+        define variable L11005 as char format "x(40)".
+        define variable L11006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -230,14 +230,14 @@ REPEAT:
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1300           as char format "x(50)".
-        define variable PV1300          as char format "x(50)".
-        define variable L13001          as char format "x(40)".
-        define variable L13002          as char format "x(40)".
-        define variable L13003          as char format "x(40)".
-        define variable L13004          as char format "x(40)".
-        define variable L13005          as char format "x(40)".
-        define variable L13006          as char format "x(40)".
+        define variable V1300  as char format "x(50)".
+        define variable PV1300 as char format "x(50)".
+        define variable L13001 as char format "x(40)".
+        define variable L13002 as char format "x(40)".
+        define variable L13003 as char format "x(40)".
+        define variable L13004 as char format "x(40)".
+        define variable L13005 as char format "x(40)".
+        define variable L13006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -376,14 +376,14 @@ REPEAT:
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1305           as char format "x(50)".
-        define variable PV1305          as char format "x(50)".
-        define variable L13051          as char format "x(40)".
-        define variable L13052          as char format "x(40)".
-        define variable L13053          as char format "x(40)".
-        define variable L13054          as char format "x(40)".
-        define variable L13055          as char format "x(40)".
-        define variable L13056          as char format "x(40)".
+        define variable V1305  as char format "x(50)".
+        define variable PV1305 as char format "x(50)".
+        define variable L13051 as char format "x(40)".
+        define variable L13052 as char format "x(40)".
+        define variable L13053 as char format "x(40)".
+        define variable L13054 as char format "x(40)".
+        define variable L13055 as char format "x(40)".
+        define variable L13056 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -470,14 +470,14 @@ REPEAT:
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1410           as char format "x(50)".
-        define variable PV1410          as char format "x(50)".
-        define variable L14101          as char format "x(40)".
-        define variable L14102          as char format "x(40)".
-        define variable L14103          as char format "x(40)".
-        define variable L14104          as char format "x(40)".
-        define variable L14105          as char format "x(40)".
-        define variable L14106          as char format "x(40)".
+        define variable V1410  as char format "x(50)".
+        define variable PV1410 as char format "x(50)".
+        define variable L14101 as char format "x(40)".
+        define variable L14102 as char format "x(40)".
+        define variable L14103 as char format "x(40)".
+        define variable L14104 as char format "x(40)".
+        define variable L14105 as char format "x(40)".
+        define variable L14106 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -578,14 +578,14 @@ If AVAILABLE ( pt_mstr ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1500           as char format "x(50)".
-        define variable PV1500          as char format "x(50)".
-        define variable L15001          as char format "x(40)".
-        define variable L15002          as char format "x(40)".
-        define variable L15003          as char format "x(40)".
-        define variable L15004          as char format "x(40)".
-        define variable L15005          as char format "x(40)".
-        define variable L15006          as char format "x(40)".
+        define variable V1500  as char format "x(50)".
+        define variable PV1500 as char format "x(50)".
+        define variable L15001 as char format "x(40)".
+        define variable L15002 as char format "x(40)".
+        define variable L15003 as char format "x(40)".
+        define variable L15004 as char format "x(40)".
+        define variable L15005 as char format "x(40)".
+        define variable L15006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -759,14 +759,14 @@ LD_SITE = V1002 AND LD_REF = "" AND
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1510           as char format "x(50)".
-        define variable PV1510          as char format "x(50)".
-        define variable L15101          as char format "x(40)".
-        define variable L15102          as char format "x(40)".
-        define variable L15103          as char format "x(40)".
-        define variable L15104          as char format "x(40)".
-        define variable L15105          as char format "x(40)".
-        define variable L15106          as char format "x(40)".
+        define variable V1510  as char format "x(50)".
+        define variable PV1510 as char format "x(50)".
+        define variable L15101 as char format "x(40)".
+        define variable L15102 as char format "x(40)".
+        define variable L15103 as char format "x(40)".
+        define variable L15104 as char format "x(40)".
+        define variable L15105 as char format "x(40)".
+        define variable L15106 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -895,14 +895,14 @@ If AVAILABLE ( poc_ctrl ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1600           as char format "x(50)".
-        define variable PV1600          as char format "x(50)".
-        define variable L16001          as char format "x(40)".
-        define variable L16002          as char format "x(40)".
-        define variable L16003          as char format "x(40)".
-        define variable L16004          as char format "x(40)".
-        define variable L16005          as char format "x(40)".
-        define variable L16006          as char format "x(40)".
+        define variable V1600  as char format "x(50)".
+        define variable PV1600 as char format "x(50)".
+        define variable L16001 as char format "x(40)".
+        define variable L16002 as char format "x(40)".
+        define variable L16003 as char format "x(40)".
+        define variable L16004 as char format "x(40)".
+        define variable L16005 as char format "x(40)".
+        define variable L16006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1002,14 +1002,14 @@ If AVAILABLE ( poc_ctrl ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1520           as char format "x(50)".
-        define variable PV1520          as char format "x(50)".
-        define variable L15201          as char format "x(40)".
-        define variable L15202          as char format "x(40)".
-        define variable L15203          as char format "x(40)".
-        define variable L15204          as char format "x(40)".
-        define variable L15205          as char format "x(40)".
-        define variable L15206          as char format "x(40)".
+        define variable V1520  as char format "x(50)".
+        define variable PV1520 as char format "x(50)".
+        define variable L15201 as char format "x(40)".
+        define variable L15202 as char format "x(40)".
+        define variable L15203 as char format "x(40)".
+        define variable L15204 as char format "x(40)".
+        define variable L15205 as char format "x(40)".
+        define variable L15206 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1125,14 +1125,14 @@ If AVAILABLE ( pt_mstr ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1525           as char format "x(50)".
-        define variable PV1525          as char format "x(50)".
-        define variable L15251          as char format "x(40)".
-        define variable L15252          as char format "x(40)".
-        define variable L15253          as char format "x(40)".
-        define variable L15254          as char format "x(40)".
-        define variable L15255          as char format "x(40)".
-        define variable L15256          as char format "x(40)".
+        define variable V1525  as char format "x(50)".
+        define variable PV1525 as char format "x(50)".
+        define variable L15251 as char format "x(40)".
+        define variable L15252 as char format "x(40)".
+        define variable L15253 as char format "x(40)".
+        define variable L15254 as char format "x(40)".
+        define variable L15255 as char format "x(40)".
+        define variable L15256 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1216,14 +1216,14 @@ If NOT AVAILABLE ld_det THEN
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V1700           as char format "x(50)".
-        define variable PV1700          as char format "x(50)".
-        define variable L17001          as char format "x(40)".
-        define variable L17002          as char format "x(40)".
-        define variable L17003          as char format "x(40)".
-        define variable L17004          as char format "x(40)".
-        define variable L17005          as char format "x(40)".
-        define variable L17006          as char format "x(40)".
+        define variable V1700  as char format "x(50)".
+        define variable PV1700 as char format "x(50)".
+        define variable L17001 as char format "x(40)".
+        define variable L17002 as char format "x(40)".
+        define variable L17003 as char format "x(40)".
+        define variable L17004 as char format "x(40)".
+        define variable L17005 as char format "x(40)".
+        define variable L17006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1311,14 +1311,14 @@ ld_ref  = ""    and ld_lot = V1500   AND
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9000           as char format "x(50)".
-        define variable PV9000          as char format "x(50)".
-        define variable L90001          as char format "x(40)".
-        define variable L90002          as char format "x(40)".
-        define variable L90003          as char format "x(40)".
-        define variable L90004          as char format "x(40)".
-        define variable L90005          as char format "x(40)".
-        define variable L90006          as char format "x(40)".
+        define variable V9000  as char format "x(50)".
+        define variable PV9000 as char format "x(50)".
+        define variable L90001 as char format "x(40)".
+        define variable L90002 as char format "x(40)".
+        define variable L90003 as char format "x(40)".
+        define variable L90004 as char format "x(40)".
+        define variable L90005 as char format "x(40)".
+        define variable L90006 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1426,14 +1426,14 @@ If AVAILABLE ( tr_hist ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9010           as char format "x(50)".
-        define variable PV9010          as char format "x(50)".
-        define variable L90101          as char format "x(40)".
-        define variable L90102          as char format "x(40)".
-        define variable L90103          as char format "x(40)".
-        define variable L90104          as char format "x(40)".
-        define variable L90105          as char format "x(40)".
-        define variable L90106          as char format "x(40)".
+        define variable V9010  as char format "x(50)".
+        define variable PV9010 as char format "x(50)".
+        define variable L90101 as char format "x(40)".
+        define variable L90102 as char format "x(40)".
+        define variable L90103 as char format "x(40)".
+        define variable L90104 as char format "x(40)".
+        define variable L90105 as char format "x(40)".
+        define variable L90106 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1555,14 +1555,14 @@ If NOT AVAILABLE ( tr_hist ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9015           as char format "x(50)".
-        define variable PV9015          as char format "x(50)".
-        define variable L90151          as char format "x(40)".
-        define variable L90152          as char format "x(40)".
-        define variable L90153          as char format "x(40)".
-        define variable L90154          as char format "x(40)".
-        define variable L90155          as char format "x(40)".
-        define variable L90156          as char format "x(40)".
+        define variable V9015  as char format "x(50)".
+        define variable PV9015 as char format "x(50)".
+        define variable L90151 as char format "x(40)".
+        define variable L90152 as char format "x(40)".
+        define variable L90153 as char format "x(40)".
+        define variable L90154 as char format "x(40)".
+        define variable L90155 as char format "x(40)".
+        define variable L90156 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1647,14 +1647,14 @@ If NOT AVAILABLE ( tr_hist ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9110           as char format "x(50)".
-        define variable PV9110          as char format "x(50)".
-        define variable L91101          as char format "x(40)".
-        define variable L91102          as char format "x(40)".
-        define variable L91103          as char format "x(40)".
-        define variable L91104          as char format "x(40)".
-        define variable L91105          as char format "x(40)".
-        define variable L91106          as char format "x(40)".
+        define variable V9110  as char format "x(50)".
+        define variable PV9110 as char format "x(50)".
+        define variable L91101 as char format "x(40)".
+        define variable L91102 as char format "x(40)".
+        define variable L91103 as char format "x(40)".
+        define variable L91104 as char format "x(40)".
+        define variable L91105 as char format "x(40)".
+        define variable L91106 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1748,14 +1748,14 @@ If AVAILABLE ( pt_mstr ) then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9120           as char format "x(50)".
-        define variable PV9120          as char format "x(50)".
-        define variable L91201          as char format "x(40)".
-        define variable L91202          as char format "x(40)".
-        define variable L91203          as char format "x(40)".
-        define variable L91204          as char format "x(40)".
-        define variable L91205          as char format "x(40)".
-        define variable L91206          as char format "x(40)".
+        define variable V9120  as char format "x(50)".
+        define variable PV9120 as char format "x(50)".
+        define variable L91201 as char format "x(40)".
+        define variable L91202 as char format "x(40)".
+        define variable L91203 as char format "x(40)".
+        define variable L91204 as char format "x(40)".
+        define variable L91205 as char format "x(40)".
+        define variable L91206 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -1854,14 +1854,14 @@ if V9120 = ? THEN
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9130           as char format "x(50)".
-        define variable PV9130          as char format "x(50)".
-        define variable L91301          as char format "x(40)".
-        define variable L91302          as char format "x(40)".
-        define variable L91303          as char format "x(40)".
-        define variable L91304          as char format "x(40)".
-        define variable L91305          as char format "x(40)".
-        define variable L91306          as char format "x(40)".
+        define variable V9130  as char format "x(50)".
+        define variable PV9130 as char format "x(50)".
+        define variable L91301 as char format "x(40)".
+        define variable L91302 as char format "x(40)".
+        define variable L91303 as char format "x(40)".
+        define variable L91304 as char format "x(40)".
+        define variable L91305 as char format "x(40)".
+        define variable L91306 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -2108,14 +2108,14 @@ If AVAILABLE ( pt_mstr )  then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9140           as char format "x(50)".
-        define variable PV9140          as char format "x(50)".
-        define variable L91401          as char format "x(40)".
-        define variable L91402          as char format "x(40)".
-        define variable L91403          as char format "x(40)".
-        define variable L91404          as char format "x(40)".
-        define variable L91405          as char format "x(40)".
-        define variable L91406          as char format "x(40)".
+        define variable V9140  as char format "x(50)".
+        define variable PV9140 as char format "x(50)".
+        define variable L91401 as char format "x(40)".
+        define variable L91402 as char format "x(40)".
+        define variable L91403 as char format "x(40)".
+        define variable L91404 as char format "x(40)".
+        define variable L91405 as char format "x(40)".
+        define variable L91406 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -2207,14 +2207,14 @@ If AVAILABLE ( pt_mstr )  then
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9150           as char format "x(50)".
-        define variable PV9150          as char format "x(50)".
-        define variable L91501          as char format "x(40)".
-        define variable L91502          as char format "x(40)".
-        define variable L91503          as char format "x(40)".
-        define variable L91504          as char format "x(40)".
-        define variable L91505          as char format "x(40)".
-        define variable L91506          as char format "x(40)".
+        define variable V9150  as char format "x(50)".
+        define variable PV9150 as char format "x(50)".
+        define variable L91501 as char format "x(40)".
+        define variable L91502 as char format "x(40)".
+        define variable L91503 as char format "x(40)".
+        define variable L91504 as char format "x(40)".
+        define variable L91505 as char format "x(40)".
+        define variable L91506 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 
@@ -2315,14 +2315,14 @@ IF 1 = 1 THEN
 
         /* --DEFINE VARIABLE -- START */
         hide all.
-        define variable V9160           as char format "x(50)".
-        define variable PV9160          as char format "x(50)".
-        define variable L91601          as char format "x(40)".
-        define variable L91602          as char format "x(40)".
-        define variable L91603          as char format "x(40)".
-        define variable L91604          as char format "x(40)".
-        define variable L91605          as char format "x(40)".
-        define variable L91606          as char format "x(40)".
+        define variable V9160  as char format "x(50)".
+        define variable PV9160 as char format "x(50)".
+        define variable L91601 as char format "x(40)".
+        define variable L91602 as char format "x(40)".
+        define variable L91603 as char format "x(40)".
+        define variable L91604 as char format "x(40)".
+        define variable L91605 as char format "x(40)".
+        define variable L91606 as char format "x(40)".
         /* --DEFINE VARIABLE -- END */
 
 

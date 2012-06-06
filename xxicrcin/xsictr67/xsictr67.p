@@ -932,13 +932,13 @@ If AVAILABLE ( poc_ctrl ) then
 
 
                 /* LABEL 3 - START */
-                L16003 = "库位/批号:" + trim(V1510) + "/" + Trim(V1500) .
+                L16003 = "库位/状态:" + trim(V1510) + "/" + Trim(vv_ld_stat) .
                 display L16003  format "x(40)" skip with fram F1600 no-box.
                 /* LABEL 3 - END */
 
 
                 /* LABEL 4 - START */
-                L16004 = "库存数量:" + string(vv_qty) .
+                L16004 = "批号/数量:" + trim(V1500) + "/" + trim(string(vv_qty)).
                 display L16004  format "x(40)" skip with fram F1600 no-box.
                 /* LABEL 4 - END */
                 display "输入或按E退出"       format "x(40)" skip

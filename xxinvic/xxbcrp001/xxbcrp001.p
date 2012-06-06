@@ -143,7 +143,7 @@ repeat:
         if v_part <> "" then 
        /*实际打印*/ 
 
-        run print (input v_part ,input v_loc ,input v_lot ,input v_date , input v_nbr ,input v_qty ).            
+        run print (input v_part ,input v_loc ,input v_lot ,input v_date , input xxinv_nbr ,input xxship_case).            
 
         
         {mfrpexit.i}
@@ -213,7 +213,7 @@ procedure print:
 
           /*库位*/
           if index(ts9030, "$C") <> 0 then do:
-             av9030 = string(vv_loc).
+             av9030 = string(vv_nbr).
              ts9030 = substring(ts9030, 1, index(ts9030 , "$C") - 1) + av9030 
                     + substring( ts9030 , index(ts9030 ,"$C") 
                     + length("$C"), length(ts9030) - ( index(ts9030 , "$C") + length("$C") - 1 ) ).
