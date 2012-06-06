@@ -4,12 +4,9 @@
 /* ss - 101012.1 by:SamSong */
 /* ss - 110104.1 by: jack */  /* 排序修改  */
 /* ss - 111024 by: yun */ /* 检验过后调整库存状态 */
-/* ss - 111024 by: yun */ /* 取消检验过后调整库存状态 转到barcode 68做*/
 /******************************************************************************/
-/*
-{mfdtitle.i "110104.1"}
-*/
-{mfdtitle.i "120605.1"}
+
+{mfdtitle.i "120606.1"}
 
 {cxcustom.i "xxmqc001.P"}
 
@@ -393,21 +390,19 @@ FOR EACH tt WHERE t1_status <> ""  NO-LOCK:
    ss - 100922.1 -e */
 
 END.
-/******************************************************************************
 ASSIGN v_file = "xxmqc004.cim." + string(today,"99999999") + string(time).
 output to value(v_file + ".in").
 FOR EACH tt NO-LOCK:
-    find first ld_det no-lock where ld_site = t1_site and
+    for each ld_det no-lock where ld_site = t1_site and
                ld_loc = t1_loc and ld_part = t1_part and
-               ld_lot = t1_serial no-error.
-    if available ld_det then do:
+               ld_lot = t1_serial:
        put unformat '"' ld_site '" "' ld_loc '" "' ld_part '" "' ld_lot '"'
                     skip.
        if t1_status = "1" then do:
           put unformat '- - - "Y-Y-N"' skip.
        end.
        else if t1_status = "2" then do:
-       		put unformat '- - - "N-N-N"' skip.
+          put unformat '- - - "N-N-N"' skip.
        end.
        else do:
           put unformat '- - - "N-Y-N"' skip.
@@ -428,7 +423,6 @@ output close.
 
     os-delete value(v_file + ".in").
     os-delete value(v_file + ".ou").
-*******************************************************************************/
 /* 更新*/
  CLEAR frame zzz1 all no-pause .
  HIDE  FRAME zzz1 no-pause .

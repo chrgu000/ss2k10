@@ -459,7 +459,6 @@ REPEAT:
      PV1305 = V1305.
      /* END    LINE :1305  备注  */
 
-
      /* START  LINE :1410  L Control  */
      V1410L:
      REPEAT:
@@ -855,13 +854,16 @@ If AVAILABLE ( poc_ctrl ) then
         /* PRESS e EXIST CYCLE */
         IF V1510 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1510.
-        assign vv_qty = 0.
-        assign vv_ld_stat = "".
-        for each ld_det no-lock where ld_site = V1002 and ld_loc = V1510
-             and ld_part = V1300 and ld_lot = V1500:
-             assign vv_qty = vv_qty + ld_qty_oh.
-             assign vv_ld_stat = ld_stat.
+
+        assign vv_qty = 0
+               vv_ld_stat = "".
+        find first ld_det no-lock where ld_site = trim(V1002) and ld_loc = trim(V1510)
+               and ld_part =  trim(V1300) and ld_lot = Trim(V1500) no-error.
+        if available ld_det then do:
+           assign vv_qty = ld_qty_oh
+                  vv_ld_stat = ld_stat.
         end.
+
          /*  ---- Valid Check ---- START */
 
         display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1510.
@@ -883,6 +885,117 @@ If AVAILABLE ( poc_ctrl ) then
      IF INDEX(V1510,"@" ) <> 0 then V1510 = ENTRY(2,V1510,"@").
      PV1510 = V1510.
      /* END    LINE :1510  从库位[From LOC]  */
+
+
+     /* START  LINE :1600  数量[QTY]  */
+     V1600L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1600  as char format "x(50)".
+        define variable PV1600 as char format "x(50)".
+        define variable L16001 as char format "x(40)".
+        define variable L16002 as char format "x(40)".
+        define variable L16003 as char format "x(40)".
+        define variable L16004 as char format "x(40)".
+        define variable L16005 as char format "x(40)".
+        define variable L16006 as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        V1600 = "0".
+        V1600 = ENTRY(1,V1600,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1600 = " ".
+        V1600 = ENTRY(1,V1600,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+                display "[库存发料]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
+
+                /* LABEL 1 - START */
+                L16001 = "转移数量?" .
+                display L16001  format "x(40)" skip with fram F1600 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                L16002 = "图号:" + trim( V1300 ) .
+                display L16002  format "x(40)" skip with fram F1600 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                L16003 = "库位/批号:" + trim(V1510) + "/" + Trim(V1500) .
+                display L16003  format "x(40)" skip with fram F1600 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                L16004 = "库存数量:" + string(vv_qty) .
+                display L16004  format "x(40)" skip with fram F1600 no-box.
+                /* LABEL 4 - END */
+                display "输入或按E退出"       format "x(40)" skip
+        skip with fram F1600 no-box.
+        Update V1600
+        WITH  fram F1600 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V1600 = "e" THEN  LEAVE V1300LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1600.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1600.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        If V1600 = "" OR V1600 = "-" OR V1600 = "." OR V1600 = ".-" OR V1600 = "-." then do:
+                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F1600.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        DO i = 1 to length(V1600).
+                If index("0987654321.-", substring(V1600,i,1)) = 0 then do:
+                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F1600.
+                pause 0 before-hide.
+                undo, retry.
+                end.
+        end.
+        /* CHECK FOR NUMBER VARIABLE  END */
+
+        find first ld_det where ld_site = trim(v1002) and
+                   ld_loc = trim(V1510) and
+                   ld_part = trim(V1300) and
+                   ld_lot = trim(V1500) and
+                   ld_qty_oh >= decimal(trim(V1600)) no-error.
+        IF NOT AVAILABLE LD_DET then do:
+                display skip "在库数 <:" + string(trim(V1600)) @ WMESSAGE NO-LABEL with fram F1600.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1600.
+        pause 0.
+        leave V1600L.
+     END.
+     PV1600 = V1600.
+     /* END    LINE :1600  数量[QTY]  */
 
 
      /* START  LINE :1520  到库位[To   LOC]  */
@@ -1092,7 +1205,7 @@ If NOT AVAILABLE ld_det THEN
 
 
                 /* LABEL 3 - START */
-                L15253 = "数量:" + string (ld_qty_oh) .
+                L15253 = "从:" + trim( V1510 ) + "/数量" + string(vv_qty) + "到:" + trim( V1520 ).
                 display L15253  format "x(40)" skip with fram F1525 no-box.
                 /* LABEL 3 - END */
 
@@ -1133,113 +1246,6 @@ If NOT AVAILABLE ld_det THEN
      END.
      PV1525 = V1525.
      /* END    LINE :1525  提示该架位已有库存  */
-
-
-     /* START  LINE :1600  数量[QTY]  */
-     V1600L:
-     REPEAT:
-
-        /* --DEFINE VARIABLE -- START */
-        hide all.
-        define variable V1600  as char format "x(50)".
-        define variable PV1600 as char format "x(50)".
-        define variable L16001 as char format "x(40)".
-        define variable L16002 as char format "x(40)".
-        define variable L16003 as char format "x(40)".
-        define variable L16004 as char format "x(40)".
-        define variable L16005 as char format "x(40)".
-        define variable L16006 as char format "x(40)".
-        /* --DEFINE VARIABLE -- END */
-
-
-        /* --FIRST TIME DEFAULT  VALUE -- START  */
-        V1600 = "0".
-        V1600 = ENTRY(1,V1600,"@").
-        /* --FIRST TIME DEFAULT  VALUE -- END  */
-
-
-        /* --CYCLE TIME DEFAULT  VALUE -- START  */
-        V1600 = " ".
-        V1600 = ENTRY(1,V1600,"@").
-        /* --CYCLE TIME DEFAULT  VALUE -- END  */
-
-        /* LOGICAL SKIP START */
-        /* LOGICAL SKIP END */
-                display "[库存发料]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
-
-                /* LABEL 1 - START */
-                L16001 = "转移数量?" .
-                display L16001  format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 1 - END */
-
-
-                /* LABEL 2 - START */
-                L16002 = "图号:" + trim( V1300 ) .
-                display L16002  format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 2 - END */
-
-
-                /* LABEL 3 - START */
-                L16003 = "批号:" + Trim(V1500) .
-                display L16003  format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 3 - END */
-
-
-                /* LABEL 4 - START */
-                L16004 = "从:" + trim( V1510 ) + "/" + string(vv_qty) + "到:" + trim( V1520 ) .
-                display L16004  format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 4 - END */
-                display "输入或按E退出"       format "x(40)" skip
-        skip with fram F1600 no-box.
-        Update V1600
-        WITH  fram F1600 NO-LABEL
-        EDITING:
-          readkey pause wtimeout.
-          if lastkey = -1 Then quit.
-        if LASTKEY = 404 Then Do: /* DISABLE F4 */
-           pause 0 before-hide.
-           undo, retry.
-        end.
-           apply lastkey.
-        end.
-
-        /* PRESS e EXIST CYCLE */
-        IF V1600 = "e" THEN  LEAVE V1300LMAINLOOP.
-        display  skip WMESSAGE NO-LABEL with fram F1600.
-
-         /*  ---- Valid Check ---- START */
-
-        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1600.
-        pause 0.
-        /* CHECK FOR NUMBER VARIABLE START  */
-        If V1600 = "" OR V1600 = "-" OR V1600 = "." OR V1600 = ".-" OR V1600 = "-." then do:
-                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F1600.
-                pause 0 before-hide.
-                undo, retry.
-        end.
-        DO i = 1 to length(V1600).
-                If index("0987654321.-", substring(V1600,i,1)) = 0 then do:
-                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F1600.
-                pause 0 before-hide.
-                undo, retry.
-                end.
-        end.
-        /* CHECK FOR NUMBER VARIABLE  END */
-/*        find first LD_DET where ( ld_part  = V1300 AND ld_lot = V1500 AND ld_site = V1002 AND ld_ref = "") AND ( ( decimal(V1600) < 0  AND ( ld_loc = V1520 AND  LD_SITE = V1002 and ld_ref = "" and ld_QTY_oh >= - DECIMAL ( V1600 ) ) ) OR ( decimal(V1600) > 0 AND  ld_loc = V1510 AND  LD_SITE = V1002 and ld_ref = "" and  ld_QTY_oh >= DECIMAL ( V1600 ) ) )  no-lock no-error. */
-        find first ld_det use-index where ld_site = v1002 and ld_loc = V1510 and ld_part = V1300 and ld_lot = V1500 and ld_qty_oh >= decimal(V1600) no-error.
-        IF NOT AVAILABLE LD_DET then do:
-                display skip "在库数 <:" + string( V1600 ) @ WMESSAGE NO-LABEL with fram F1600.
-                pause 0 before-hide.
-                undo, retry.
-        end.
-         /*  ---- Valid Check ---- END */
-
-        display  "" @ WMESSAGE NO-LABEL with fram F1600.
-        pause 0.
-        leave V1600L.
-     END.
-     PV1600 = V1600.
-     /* END    LINE :1600  数量[QTY]  */
 
 
      /* START  LINE :1700  确认[CONFIRM]  */
