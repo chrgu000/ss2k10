@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120608.1"}
+{mfdtitle.i "120608.2"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -138,7 +138,8 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
   /* {mfphead.i} */
-
+	 empty temp-table tmp_po no-error.
+	 for each tmp_po exclusive-lock: delete tmp_po. end.
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
