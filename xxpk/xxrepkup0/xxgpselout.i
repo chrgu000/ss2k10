@@ -266,9 +266,9 @@ PROCEDURE displayOutputDestinationSelectionFields:
          /* DISPLAY OUTPUT AND BATCH FIELDS (GUI)*/
               
          &IF {&displayStatementType} = 1 &THEN
-             display dev to 78.5 batch_id to 78.5 space(.5) skip(.4) with frame a.
+             display dev to 72.5 batch_id to 72.5 space(.5) skip(.4) with frame a.
          &ELSEIF {&displayStatementType} = 2 &THEN
-             display dev to 77 batch_id to 77 with frame a.
+             display dev to 72.5 batch_id to 72.5 with frame a.
          &ENDIF
            
 
@@ -280,7 +280,7 @@ PROCEDURE displayOutputDestinationSelectionFields:
          /* DISPLAY OUTPUT FIELD ONLY (GUI)*/
               
          &IF {&displayStatementType} = 1 &THEN
-             display dev to 78.5 space(.5) skip(.4) with frame a.
+             display dev to 72.5 space(.5) skip(.4) with frame a.
          &ELSEIF {&displayStatementType} = 2 &THEN
              display dev with frame a.
          &ENDIF

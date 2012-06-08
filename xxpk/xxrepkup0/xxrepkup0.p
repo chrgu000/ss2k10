@@ -38,7 +38,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120523.1"}
+{mfdtitle.i "120608.1"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -87,6 +87,26 @@ assign issue = today + 1
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
+find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.parameter"
+       and usrw_key2 = global_userid no-error.
+if available usrw_wkfl then do:
+   assign site  = usrw_charfld[1]
+          site1 = usrw_charfld[2]
+          part  = usrw_charfld[3]
+          part1 = usrw_charfld[4]
+          comp1 = usrw_charfld[5]
+          comp2 = usrw_charfld[6]
+          wkctr = usrw_charfld[7]
+          wkctr1 = usrw_charfld[8]
+          issue = usrw_datefld[1]
+          issue1 = usrw_datefld[2]
+          reldate = usrw_datefld[3]
+          reldate1 = usrw_datefld[4]
+          netgr = usrw_logfld[1]
+          detail_display = usrw_logfld[2]
+          delete_pklst = usrw_logfld[3].
+end.
+
 FORM
    site           label "地点" colon 22
    site1          label "到" colon 49 skip
@@ -94,10 +114,10 @@ FORM
    part1          label "到" colon 49 skip
    comp1          label "子零件" colon 22
    comp2          label "到" colon 49 skip
-   wkctr          label "工作中心" colon 22
+   wkctr          label "生产线" colon 22
    wkctr1         label "到" colon 49 skip
-   issue          label "生产日期" colon 22
-   issue1         label "到" colon 49
+/*   issue          label "生产日期" colon 22                  */
+/*   issue1         label "到" colon 49                        */
    reldate        label "发放日期" colon 22
    reldate1       label "到" colon 49 skip(1)
    netgr          label "使用工作中心库存" colon 30
@@ -128,9 +148,9 @@ repeat:
    if site1    = hi_char  then site1    = "".
    if part1    = hi_char  then part1    = "".
    if comp2    = hi_char  then comp2    = "".
-   if issue    = low_date then issue    = ?.
    if wkctr1   = hi_char  then wkctr1   = "".
-   if issue1   = hi_date  then issue1   = ?.
+/*   if issue    = low_date then issue    = ?. */
+/*   if issue1   = hi_date  then issue1   = ?. */
    if reldate  = low_date then reldate  = ?.
    if reldate1 = hi_date  then reldate1 = ?.
 
@@ -141,7 +161,7 @@ repeat:
       part  part1
       comp1 comp2
       wkctr wkctr1
-      issue issue1
+/*      issue issue1 */
       reldate reldate1
       netgr
       detail_display
@@ -155,18 +175,46 @@ repeat:
 
    {gprun.i ""gpquote.p"" "(input-output bcdparm,16,
         site,site1,part,part1,comp1,comp2,wkctr,wkctr1,
-        string(issue),string(issue1),string(reldate),string(reldate1),
+        string(reldate),string(reldate1),
         string(netgr),string(detail_display),nbr,string(delete_pklst),
-        null_char,null_char,null_char,null_char)"}
+        null_char,null_char,null_char,null_char,null_char,null_char)"}
 
    if site1    = "" then site1    = hi_char.
    if part1    = "" then part1    = hi_char.
    if comp2    = "" then comp2    = hi_char.
    if wkctr1   = "" then wkctr1   = hi_char.
-   if issue    = ?  then issue    = low_date.
-   if issue1   = ?  then issue1   = hi_date.
+/*   if issue    = ?  then issue    = low_date.    */
+/*   if issue1   = ?  then issue1   = hi_date.     */
    if reldate  = ?  then reldate  = low_date.
    if reldate1 = ?  then reldate1 = hi_date.
+   assign issue = reldate
+          issue1 = reldate1.
+
+find first usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p.parameter"
+       and usrw_key2 = global_userid no-error.
+if not available usrw_wkfl then do:
+   create usrw_wkfl.
+   assign usrw_key1 = "xxrepkup0.p.parameter"
+          usrw_key2 = global_userid.
+end.
+if available usrw_wkfl and locked(usrw_wkfl) then do:
+   assign  usrw_charfld[1] = site
+           usrw_charfld[2] = site1
+           usrw_charfld[3] = part
+           usrw_charfld[4] = part1
+           usrw_charfld[5] = comp1
+           usrw_charfld[6] = comp2
+           usrw_charfld[7] = wkctr
+           usrw_charfld[8] = wkctr1
+           usrw_datefld[1] = issue
+           usrw_datefld[2] = issue1
+           usrw_datefld[3] = reldate
+           usrw_datefld[4] = reldate1
+           usrw_logfld[1]  = netgr
+           usrw_logfld[2]  = detail_display
+           usrw_logfld[3]  = delete_pklst no-error.
+end.           
+		release usrw_wkfl.
 
    if not batchrun then do:
       {gprun.i ""gpsirvr.p""
@@ -195,7 +243,7 @@ repeat:
    {mfphead.i}
 
    /* REPKUPA.P ATTEMPS TO APPLY PHANTOM USE-UP LOGIC WHICH DOES NOT    */
-   /* APPLY TO THE REPETITVE MODULE.  THEREFORE, DO NOT CALL REPKUPA.P  */    
+   /* APPLY TO THE REPETITVE MODULE.  THEREFORE, DO NOT CALL REPKUPA.P  */
    {gprun.i ""xxrepkupd0.p""}
 
    /* ADDED SECTION TO DELETE 'FLAG' lad_det, AS WELL AS PICKLISTS

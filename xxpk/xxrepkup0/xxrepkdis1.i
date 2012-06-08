@@ -4,9 +4,10 @@
 /* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
 /* REVISION END                                                              */
 
-       for each tmp_file0 no-lock by t0_date by t0_sn by t0_wktime:
+       for each tmp_file0 no-lock by t0_date by t0_site by t0_line 
+       			 by t0_sn by t0_user1:
        display t0_date
-               t0_record
+          /*   t0_record */
                t0_site
                t0_line
                t0_sn

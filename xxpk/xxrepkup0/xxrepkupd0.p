@@ -1440,10 +1440,10 @@ for each rps_mstr no-lock where rps_rel_date >= idate
      and rps_line >= iLine
      and rps_line <= iline1
      AND rps_qty_req - rps_qty_comp > 0,
-    each lnd_det no-lock where lnd_line = rps_line
+    last lnd_det no-lock where lnd_line = rps_line
      and lnd_site = rps_site and
-        lnd_part = rps_part
- BREAK BY rps_rel_date BY rps_site BY rps_line by rps_user1 BY rps_part:
+        lnd_part = rps_part and lnd_start <= idate
+ BREAK  BY rps_rel_date BY rps_site BY rps_line by integer(rps_user1):
        IF FIRST-OF(rps_line) THEN DO:
            EMPTY TEMP-TABLE tmp_file1.
            FOR EACH xxlnw_det NO-LOCK WHERE xxlnw_site = rps_site
@@ -1474,7 +1474,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                    t0_site = rps_site
                    t0_line = rps_line
                    t0_part  = rps_part
-                   t0_user1 = rps_user1
+                   t0_user1 = substring("000000",1,6 - length(trim(rps_user1))) + trim(rps_user1)
                    t0_sn = t1_sn
                    t0_start = t1_pick   /*生产时间*/
                    t0_end   = t1_end
@@ -1493,7 +1493,7 @@ for each rps_mstr no-lock where rps_rel_date >= idate
                   t0_line = rps_line
                   t0_sn = t1_sn
                   t0_part  = rps_part
-                  t0_user1 = rps_user1
+                  t0_user1 = substring("000000",1,6 - length(trim(rps_user1))) + trim(rps_user1)
                   t0_start = t1_pick
                   t0_end   = t1_end
                   t0_qtya = rps_qty_req - rps_qty_comp
