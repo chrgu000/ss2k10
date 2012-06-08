@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "110921.1"}
+{mfdtitle.i "120608.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -18,6 +18,9 @@ define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
+define variable grp like pt_group.
+define variable grp1 like pt_group.
+define variable pm like pt_pm_code initial "P".
 define variable vend like vd_addr.
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
@@ -30,6 +33,8 @@ define variable qtytemp1 as decimal.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
+define variable T as character format "x(1)" initial "T".
+define variable vT as character.
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
     fields tpo_vend like vd_addr
@@ -50,12 +55,17 @@ form
    site  colon 15
    site1 label {t001.i} colon 49 skip
    part  colon 15
-   part1 label {t001.i} colon 49 skip(1)
+   part1 label {t001.i} colon 49
+   grp   colon 25
+   grp1  colon 49
    due   colon 25
    due1  colon 49
    vend  colon 25
    area  colon 25 areaDesc no-label
-   buyer colon 25 skip(1)
+   buyer colon 25
+   pm    colon 25
+   t     colon 25
+   skip(1)
 
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
@@ -76,14 +86,15 @@ repeat:
 
    if site1 = hi_char then site1 = "".
    if part1 = hi_char then part1 = "".
+   if grp1 = hi_char then grp1 = "".
    if due = low_date then due = ?.
    if due1 = hi_date then due1 = ?.
 
    if c-application-mode <> 'web' then
-      update site site1 part part1 due due1 vend area buyer with frame a.
+      update site site1 part part1 grp grp1 due due1 vend area buyer pm t with frame a.
 
    {wbrp06.i &command = update
-      &fields = " site site1 part part1 due due1 vend area buyer "
+      &fields = " site site1 part part1 grp grp1 due due1 vend area buyer pm t"
       &frm = "a"}
 
    if (c-application-mode <> 'web') or
@@ -95,13 +106,18 @@ repeat:
       {mfquoter.i site1}
       {mfquoter.i part }
       {mfquoter.i part1}
+      {mfquoter.i grp}
+      {mfquoter.i grp1}
       {mfquoter.i due  }
       {mfquoter.i due1 }
       {mfquoter.i vend }
       {mfquoter.i buyer}
+      {mfquoter.i pm}
+      {mfquoter.i t}
 
       if site1 = "" then site1 = hi_char.
       if part1 = "" then part1 = hi_char.
+      if grp1 = "" then grp1 = hi_char.
       if due = ? then due = low_date.
       if due1 = ? then due1 = hi_date.
 
@@ -127,31 +143,38 @@ repeat:
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
             and (pt_buyer = buyer or buyer = "")
+            and pt_group >= grp and (pt_group <= grp1 or grp1 = "")
             and pt_site >= site and (pt_site <= site1 or site1 = "")
+            and pt_pm_code = pm
             and (pt_vend = vend or vend = "")
-            and (pt_vend <> "")
             and (substring(pt_vend,1,1) = area or area = ""),
-       EACH mrp_det WHERE mrp_det.mrp_part = pt_part and
+       EACH mrp_det no-lock WHERE mrp_det.mrp_part = pt_part and
             mrp_det.mrp_detail = "计划单" and
-            mrp_det.mrp_due_date >= due and 
+            mrp_det.mrp_due_date >= due and
            (mrp_det.mrp_due_date <= due1 or due1 = ?)
-            USE-INDEX mrp_part,
-       EACH xvp_ctrl where xvp_part = pt_part no-lock:  
-       find first tmp_po no-lock where tpo_vend = pt_vend
-              and tpo_part = pt_part no-error.
-       if not available tmp_po then do:
+            USE-INDEX mrp_part:
+       assign vt = "".
+       find first xvp_ctrl no-lock where xvp_part = pt_part
+              and xvp_vend = pt_vend no-error.
+       if available xvp_ctrl then do:
+          assign vt = xvp__chr01.
+       end.
           create tmp_po.
           assign tpo_vend = pt_vend
                  tpo_part = pt_part
                  tpo_due = mrp_due
-                 tpo_qty = mrp_qty.
-       end.
+                 tpo_qty = mrp_qty
+                 tpo_type = vt.
    END.
+
+for each tmp_po exclusive-lock where tpo_type <> t:
+    delete tmp_po.
+end.
 
 /*产生单号*/
 assign areaDesc = "".
 for each tmp_po exclusive-lock where tpo_vend <> ""
-    break by tpo_vend :
+    break by tpo_vend:
     if first-of(tpo_vend) then do:
        run getPoNumber(input today,input tpo_vend,output areaDesc).
     end.
@@ -163,8 +186,8 @@ export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
                         getTermLabel("RECEIVED_QTY",12)
-                        getTermLabel("DUE_DATE",12)
-                        getTermLabel("TYPE",12).
+                        getTermLabel("DUE_DATE",12).
+/*                      getTermLabel("TYPE",12).                             */
 /*                        getTermLabel("WEEK",12)                            */
 /*                        getTermLabel("SHIP_TERMS",12)                      */
 /*                        getTermLabel("COMMENT",12).                        */
@@ -178,7 +201,7 @@ for each tmp_po no-lock where:
     if available code_mstr then do:
        assign areaDesc = code_cmmt.
     end.
-    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due tpo_type.
+    export delimiter "~011" tpo_nbr tpo_vend tpo_part tpo_qty tpo_due.
 /*                          weekday(tpo_due) - 1 tpo_rule areaDesc.          */
 /*                          tpo_start tpo_end tpo_mrp_date.                  */
 end.
