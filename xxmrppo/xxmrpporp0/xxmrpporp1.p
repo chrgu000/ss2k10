@@ -33,7 +33,7 @@ define variable qtytemp1 as decimal.
 define variable xRule AS CHARACTER.
 define variable xCyc as INTEGER.
 define variable xType AS CHARACTER.
-define variable T as character format "x(1)" initial "T".
+define variable T as logical.
 define variable vT as character.
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -138,8 +138,8 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
   /* {mfphead.i} */
-	 empty temp-table tmp_po no-error.
-	 for each tmp_po exclusive-lock: delete tmp_po. end.
+   empty temp-table tmp_po no-error.
+   for each tmp_po exclusive-lock: delete tmp_po. end.
    FOR EACH pt_mstr no-lock where
             pt_part >= part and pt_part <= part1 and
             substring(pt_part,1,1) <> "X"
@@ -167,8 +167,8 @@ repeat:
                  tpo_qty = mrp_qty
                  tpo_type = vt.
    END.
-
-for each tmp_po exclusive-lock where tpo_type <> t:
+if t then vt = "T". else vt = "".
+for each tmp_po exclusive-lock where tpo_type <> vt:
     delete tmp_po.
 end.
 
@@ -186,7 +186,7 @@ assign areaDesc = "".
 export delimiter "~011" getTermLabel("PO_NUMBER",12)
                         getTermLabel("SUPPLIER",12)
                         getTermLabel("ITEM_NUMBER",12)
-                        getTermLabel("RECEIVED_QTY",12)
+                        getTermLabel("QUANTITY_ON_ORDER",12)
                         getTermLabel("DUE_DATE",12).
 /*                      getTermLabel("TYPE",12).                             */
 /*                        getTermLabel("WEEK",12)                            */

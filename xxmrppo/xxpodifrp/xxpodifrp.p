@@ -16,7 +16,8 @@ define variable ptdesc like pt_desc1 no-undo.
 define variable vdsort like vd_sort no-undo.
 define variable codecmmt like code_cmmt no-undo.
 define variable posdiff as decimal no-undo.
-define variable qty   as decimal  no-undo.
+define variable qty   as decimal no-undo.
+define variable tqty  as decimal no-undo.
 
 define temp-table tmp_pod
     fields tpd_vend like vd_addr
@@ -108,9 +109,9 @@ do on error undo, return error on endkey undo, return error:
    for each tmp_pod exclusive-lock:
        assign qty = 0.
        for EACH mrp_det no-lock WHERE mrp_det.mrp_part = tpd_part and
-                mrp_det.mrp_detail = "计划单" and 
-                mrp_site = "gsa01" and 
-                mrp_due_date >= due and (mrp_due_date <= due1 or due1 = ?) 
+                mrp_det.mrp_detail = "计划单" and
+                mrp_site = "gsa01" and
+                mrp_due_date >= due and (mrp_due_date <= due1 or due1 = ?)
                 USE-INDEX mrp_part.
                 assign qty = qty + mrp_qty.
        end.
@@ -123,7 +124,8 @@ do on error undo, return error on endkey undo, return error:
        find first vd_mstr no-lock where vd_addr = tpd_vend no-error.
        if available vd_mstr then do:
           display tpd_vend vd_sort format "x(24)" tpd_part tpd_tqty
-                  tpd_qty tpd_tqty - tpd_qty @ posdiff tpd_mqty.
+                  tpd_qty tpd_tqty - tpd_qty @ posdiff tpd_mqty
+                  tpd_mqty - (tpd_tqty - tpd_qty) @ tqty.
        end.
        {mfrpchk.i}
    end.
