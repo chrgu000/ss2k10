@@ -903,7 +903,7 @@ else do:  /*不考虑车间库存*/
 
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
-       for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part 
+       for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
        				  and ld_site = "gsa01"  and ld_loc <> "P-all"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
@@ -1411,6 +1411,7 @@ PROCEDURE adjust_demand:
    end. /* FOR EACH shortages */
 
 END PROCEDURE. /* adjust_demand */
+
 
 /** 分割时间段 **/
 PROCEDURE gett0:

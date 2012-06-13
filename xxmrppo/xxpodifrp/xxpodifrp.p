@@ -1,5 +1,5 @@
-/*xxpodifrp.p                                                                  */
-/* revision: 110831.1   created on: 20110831   by: zhang yun                 */
+/*xxpodifrp.p                                                                */
+/*revision: 120612.1   created on: 20110831   by: zhang yun                  */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
@@ -17,14 +17,14 @@ define variable vdsort like vd_sort no-undo.
 define variable codecmmt like code_cmmt no-undo.
 define variable posdiff as decimal no-undo.
 define variable qty   as decimal no-undo.
-define variable tqty  as decimal no-undo.
+define variable tqty  as decimal no-undo format "->,>>,>>>,>>9.9<".
 
 define temp-table tmp_pod
-    fields tpd_vend like vd_addr
+    fields tpd_vend like vd_addr format "x(12)"
     fields tpd_part like pt_part
     fields tpd_tqty like pod_qty_ord
-    fields tpd_qty  like pod_qty_ord
-    fields tpd_mqty like pod_qty_ord
+    fields tpd_qty  like pod_qty_ord format "->,>>,>>>,>>9.9<"
+    fields tpd_mqty like pod_qty_ord format "->,>>,>>>,>>9.9<"
     index tpd_part tpd_part.
 
 form
@@ -123,9 +123,9 @@ do on error undo, return error on endkey undo, return error:
        setframelabels(frame x:handle).
        find first vd_mstr no-lock where vd_addr = tpd_vend no-error.
        if available vd_mstr then do:
-          display tpd_vend vd_sort format "x(24)" tpd_part tpd_tqty
-                  tpd_qty tpd_tqty - tpd_qty @ posdiff tpd_mqty
-                  tpd_mqty - (tpd_tqty - tpd_qty) @ tqty.
+            display tpd_vend vd_sort format "x(24)" tpd_part tpd_tqty
+                    tpd_qty tpd_qty - tpd_tqty @ posdiff tpd_mqty
+                    tpd_mqty - (tpd_tqty - tpd_qty) @ tqty.
        end.
        {mfrpchk.i}
    end.
@@ -135,3 +135,4 @@ end. /* mainloop: */
 {pxmsg.i &MSGNUM=9 &ERRORLEVEL=1}
 end.  /* repeat */
 {wbrp04.i &frame-spec = a}
+

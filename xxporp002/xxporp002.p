@@ -135,7 +135,6 @@ for each xxcn_det no-lock:
 end.
 put unformatted skip(1) "±¨±í½áÊø" skip.
 end. /* mainloop: */
-/* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}
 {pxmsg.i &MSGNUM=9 &ERRORLEVEL=1}
 end.  /* repeat */
