@@ -4,7 +4,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "120611.1"}
+{mfdtitle.i "120612.1"}
 
 define variable vend  like po_vend no-undo.
 define variable vend1 like po_vend no-undo.
