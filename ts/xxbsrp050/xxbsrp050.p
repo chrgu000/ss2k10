@@ -1,8 +1,7 @@
-/* GUI CONVERTED from bmpsrp05.p (converter v1.78) Tue Jun 14 00:11:49 2005 */
 /* bmpsrp05.p - SUMMARIZED BILL OF MATERIAL COST REPORT                      */
 /* Copyright 1986-2005 QAD Inc., Carpinteria, CA, USA.                       */
 /* All rights reserved worldwide.  This is an unpublished work.              */
-/* $Revision: 1.6.1.12 $                                                              */
+/* $Revision: 1.6.1.12 $                                                     */
 /*V8:ConvertMode=FullGUIReport                                               */
 /* REVISION: 5.0      LAST MODIFIED: 01/09/90   BY: MLB  *B494*              */
 /* REVISION: 5.0      LAST MODIFIED: 03/27/90   BY: RAM  *B635*              */
@@ -44,20 +43,7 @@
 /******************************************************************************/
 
 /* DISPLAY TITLE */
-
-/*GUI global preprocessor directive settings */
-&GLOBAL-DEFINE PP_PGM_RP TRUE
-&GLOBAL-DEFINE PP_ENV_GUI TRUE
-
-
-/*GUI preprocessor directive settings */
-&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-
-/*
-{mfdtitle.i "081125.1"}
-*/
-{mfdtitle.i "111222.1"}
-
+{mfdtitle.i "120611.1"}
 
 define new shared variable comp         like ps_comp.
 define new shared variable pline        like pt_prod_line.
@@ -115,19 +101,13 @@ DEFINE VARIABLE vv_mtl AS DECIMAL.
    field  tmp_comp  like ps_comp
    field  tmp_qty   like ps_qty_per
    field  tmp_mtl   like  sct_mtl_tl
-   field  tmp_sub   like sct_sub_tl 
+   field  tmp_sub   like sct_sub_tl
    field  tmp_tot   like sct_sub_tl
    INDEX index1 tmp_par tmp_comp .
 
 
-/*GUI preprocessor Frame A define */
-&SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/      
- RECT-FRAME       AT ROW 1.4 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
- SKIP(.1)  /*GUI*/
-skip(1)
+FORM    skip(1)
    part         colon 20     part1 label {t001.i} colon 45
    pline        colon 20    pline1 label {t001.i} colon 45
    buyer        colon 20    buyer1 label {t001.i} colon 45
@@ -140,30 +120,7 @@ skip(1)
    cs_desc      colon 30
    cs_method    colon 30
    cs_type      colon 30
- SKIP(.4)  /*GUI*/
-with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
-
- DEFINE VARIABLE F-a-title AS CHARACTER.
- F-a-title = &IF DEFINED(GPLABEL_I)=0 &THEN
-   &IF (DEFINED(SELECTION_CRITERIA) = 0)
-   &THEN " Selection Criteria "
-   &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
-   getTermLabel("SELECTION_CRITERIA", 25).
-&ENDIF.
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
-  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
-  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
-
-/*GUI preprocessor Frame A undefine */
-&UNDEFINE PP_FRAME_NAME
-
-
+ with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -186,12 +143,7 @@ end. /* FOR FIRST icc_ctrl */
 {wbrp01.i}
 
 
-/*GUI*/ {mfguirpa.i true "printer" 132 " " " " " "  }
-
-/*GUI repeat : */
-/*GUI*/ 
-procedure p-enable-ui:
-
+repeat:
 
    if pline1 = hi_char then pline1 = "".
    if part1  = hi_char then part1  = "".
@@ -201,14 +153,74 @@ procedure p-enable-ui:
 
    if c-application-mode <> 'web'
    then
-      
-    run p-action-fields (input "display").
-    run p-action-fields (input "enable").
-end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+      update
+         part
+         part1
+         pline
+         pline1
+         buyer
+         buyer1
+         eff_date
+         maxlevel
+         newpage
+         site
+         csset
+      with frame a
+      editing:
 
-/*GUI*/ 
-procedure p-report-quote:
- /* EDITING */
+         if frame-field = "site"
+         then do:
+
+            /* FIND NEXT/PREVIOUS RECORD */
+            {mfnp.i si_mstr site  " si_mstr.si_domain = global_domain and
+            si_site "  site si_site si_site}
+
+            if recno <> ?
+            then do:
+
+               site = si_site.
+               display
+                  site
+               with frame a.
+               recno = ?.
+            end. /* IF recno <> ? */
+         end. /* IF frame-field = "site" */
+         else
+         if frame-field = "csset"
+         then do:
+
+            /* FIND NEXT/PREVIOUS RECORD */
+            {mfnp.i cs_mstr csset  " cs_mstr.cs_domain = global_domain and
+            cs_set "  csset cs_set cs_set}
+
+            if recno <> ?
+            then do:
+
+               csset = cs_set.
+               display
+                  csset
+               with frame a.
+               find cs_mstr
+                   where cs_mstr.cs_domain = global_domain and  cs_set = csset
+                  no-lock no-error.
+               if available cs_mstr
+               then
+                  display
+                     cs_desc
+                     cs_method
+                     cs_type
+                  with frame a.
+
+               recno = ?.
+            end. /* IF recno <> ? */
+         end. /* IF frame-field = "csset" */
+         else do:
+
+            status input.
+            readkey.
+            apply lastkey.
+         end. /* ELSE DO , IF recno <> ? */
+      end. /* EDITING */
 
       {wbrp06.i &command = update &fields = "  part part1 pline pline1  buyer
          buyer1 eff_date maxlevel newpage site csset" &frm = "a"}
@@ -254,8 +266,8 @@ procedure p-report-quote:
                then
                   return.
                else
-                  /*GUI NEXT-PROMPT removed */
-               /*GUI UNDO removed */ RETURN ERROR.
+                  next-prompt site with frame a.
+               undo, retry.
             end. /* IF NOT AVAILABLE si_mstr */
 
             if si_db <> global_db
@@ -267,8 +279,8 @@ procedure p-report-quote:
                then
                   return.
                else
-                  /*GUI NEXT-PROMPT removed */
-               /*GUI UNDO removed */ RETURN ERROR.
+                  next-prompt site with frame a.
+               undo, retry.
             end. /* IF si_db <> global_db */
 
             if csset = ""
@@ -280,8 +292,8 @@ procedure p-report-quote:
                then
                   return.
                else
-                  /*GUI NEXT-PROMPT removed */
-               /*GUI UNDO removed */ RETURN ERROR.
+                  next-prompt csset with frame a.
+               undo, retry.
             end. /* IF csset = "" */
 
             find cs_mstr
@@ -297,8 +309,8 @@ procedure p-report-quote:
                then
                   return.
                else
-                  /*GUI NEXT-PROMPT removed */
-               /*GUI UNDO removed */ RETURN ERROR.
+                  next-prompt csset with frame a.
+               undo, retry.
             end. /* IF NOT AVAILABLE cs_mstr */
 
             display
@@ -312,33 +324,37 @@ procedure p-report-quote:
       end. /* IF  (c-application-mode <> 'web') ... */
 
       /* OUTPUT DESTINATION SELECTION */
-      
-/*GUI*/ end procedure. /* p-report-quote */
-/*GUI - Field Trigger Section */
-
-/*GUI MFSELxxx removed*/
-/*GUI*/ procedure p-report:
-/*GUI*/   {gpprtrpa.i "printer" 132 " " " " " " " " }
-/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+      {gpselout.i &printType                = "printer"
+                  &printWidth               = 132
+                  &pagedFlag                = " "
+                  &stream                   = " "
+                  &appendToFile             = " "
+                  &streamedOutputToTerminal = " "
+                  &withBatchOption          = "yes"
+                  &displayStatementType     = 1
+                  &withCancelMessage        = "yes"
+                  &pageBottomMargin         = 6
+                  &withEmail                = "yes"
+                  &withWinprint             = "yes"
+                  &defineVariables          = "yes"}
 
       find cs_mstr where cs_mstr.cs_domain = global_domain and  cs_set = csset no-lock no-error.
-      define buffer ptmstr for pt_mstr.
 
       /* CREATE PAGE TITLE BLOCK */
       {mfphead.i}
 
-      FORM /*GUI*/ 
+      FORM
          site
          csset
          skip(1)
-      with STREAM-IO /*GUI*/  frame pgtop /* page-top */ side-labels width 132.
+      with frame pgtop page-top side-labels width 132.
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame pgtop:handle).
       display
          site
          csset
-      with frame pgtop STREAM-IO /*GUI*/ .
+      with frame pgtop.
 
       for first bom_mstr
          fields( bom_domain bom_desc bom_parent)
@@ -356,12 +372,11 @@ procedure p-report-quote:
          no-lock:
       end. /* FOR FIRST pt_mstr */
 
-      
-/*GUI mainloop removed */
 
+ mainloop:
       repeat with frame b:
 
- /* SS - del        FORM /*GUI*/ 
+ /* SS - del        FORM /*GUI*/
             pk_part format "x(27)"
             pmcode
             sum_usage
@@ -372,23 +387,23 @@ procedure p-report-quote:
             ovh     column-label "Unit Overhead!Ext Overhead"
             sub     column-label "Unit Sub!Ext Sub"
             unittot column-label "Unit Total!Ext Total"
-         with STREAM-IO /*GUI*/  frame b width 132 no-box down. */
-/* SS - add*/        
-          
-          FORM /*GUI*/ 
+         with frame b width 132 no-box down. */
+/* SS - add*/
+
+          FORM /*GUI*/
               v_vend                  COLUMN-LABEL "零件供应商"
-              pk_part format "x(27)"  column-label "产品/物料"  
-            desc1 		    column-label "说明1"
-	        desc2 		    column-label "说明2"
+              pk_part format "x(27)"  column-label "产品/物料"
+            desc1         column-label "说明1"
+          desc2         column-label "说明2"
             pmcode              column-label "P/M"
-            sum_usage 		    column-label "用量"    
-            um                      column-label "单位"  
+            sum_usage         column-label "用量"
+            um                      column-label "单位"
             mtl           column-label "采购成本"
-            sub           column-label "转包成本"  
+            sub           column-label "转包成本"
             unittot       column-label "单个成本"
             exttot        column-label  "金额"
-	    rmks          column-label "备注"
-         with STREAM-IO /*GUI*/  frame b width 240 no-box down. 
+      rmks          column-label "备注"
+         with  frame b width 240 no-box down.
 
          /* SET EXTERNAL LABELS */
       /*   setFrameLabels(frame b:handle). */
@@ -621,13 +636,13 @@ procedure p-report-quote:
                display
                   string(item-code,"x(19)")
                   + "("
-                  + caps(getTermLabel("PARENT",6)) + ")" @ pk_part WITH STREAM-IO /*GUI*/ .
+                  + caps(getTermLabel("PARENT",6)) + ")" @ pk_part.
 
             else
                display
                   string(item-code,"x(19)")
                   + "("
-                  + getTermLabel("BOM",6) + ")" @ pk_part WITH STREAM-IO /*GUI*/ .
+                  + getTermLabel("BOM",6) + ")" @ pk_part.
 
             down 1.
 
@@ -641,7 +656,7 @@ procedure p-report-quote:
                sct_ovh_tl                                          @ ovh
                sct_sub_tl                                          @ sub
                (sct_mtl_tl + sct_lbr_tl + sct_bdn_tl + sct_ovh_tl +
-               sct_sub_tl)                                         @ unittot WITH STREAM-IO /*GUI*/ .
+               sct_sub_tl)                                         @ unittot.
             down 1 with frame b.
 
             display
@@ -656,7 +671,7 @@ procedure p-report-quote:
                sct_ovh_ll                                     @ ovh
                sct_sub_ll                                     @ sub
                (sct_mtl_ll + sct_lbr_ll + sct_bdn_ll + sct_ovh_ll +
-               sct_sub_ll)                                    @ unittot WITH STREAM-IO /*GUI*/ .
+               sct_sub_ll)                                    @ unittot.
             down 1 with frame b.
 
             display
@@ -673,7 +688,7 @@ procedure p-report-quote:
                (sct_sub_ll + sct_sub_tl)                 @ sub
                ( sct_mtl_ll + sct_lbr_ll + sct_bdn_ll + sct_ovh_ll
                + sct_sub_ll + sct_mtl_tl + sct_lbr_tl + sct_bdn_tl
-               + sct_ovh_tl + sct_sub_tl)                @ unittot WITH STREAM-IO /*GUI*/ .
+               + sct_ovh_tl + sct_sub_tl)                @ unittot.
             down 2 with frame b.
 
  * SS - del********************************************************************/
@@ -686,30 +701,30 @@ procedure p-report-quote:
 
           /*SS - 111222.1 B*/
           /*
-          display 
-                  v_vend 
-                  pt_part @ pk_part 
-	                      trim(pt_desc1) @ desc1
-		                  trim(pt_desc2) @ desc2 
+          display
+                  v_vend
+                  pt_part @ pk_part
+                        trim(pt_desc1) @ desc1
+                      trim(pt_desc2) @ desc2
                   (sct_mtl_ll + sct_mtl_tl)                 @ mtl
                   (sct_sub_ll + sct_sub_tl)                 @ sub
-	              (sct_mtl_ll + sct_sub_ll   
-                  + sct_mtl_tl   + sct_sub_tl)              @ unittot WITH FRAME b.  
+                (sct_mtl_ll + sct_sub_ll
+                  + sct_mtl_tl   + sct_sub_tl)              @ unittot WITH FRAME b.
           */
 
 
            vv_mtl = 0.
            {gprun.i ""xxbsrp5b.p""  ("input-output vv_mtl")}
 
-            display 
-                    v_vend 
-                    pt_part @ pk_part 
+            display
+                    v_vend
+                    pt_part @ pk_part
                             trim(pt_desc1) @ desc1
-                            trim(pt_desc2) @ desc2 
+                            trim(pt_desc2) @ desc2
                     ( sct_mtl_tl )                 @ mtl
                     (sct_sub_tl )                 @ sub
-                    (vv_mtl + sct_mtl_tl + sct_sub_tl   
-                    )              @ unittot WITH FRAME b.  
+                    (vv_mtl + sct_mtl_tl + sct_sub_tl
+                    )              @ unittot WITH FRAME b.
 
 
 
@@ -725,7 +740,7 @@ procedure p-report-quote:
 /* SS - * add *************************************************************/
            for each tmp_det :
 
-	             l_linked = false.
+               l_linked = false.
                      if l_gl_std
                      then
                         for first in_mstr
@@ -740,13 +755,13 @@ procedure p-report-quote:
                                  l_linked = true .
                         end. /* FOR FIRST in_mstr */
 
-                      
+
 
                      /* CHECK IF COST SIMULATION TOTAL DETAILS EXIST     */
                      /* AND IF THEY DO NOT EXIST THEN CREATE THE DETAILS */
                      if l_linked
                      then do:
-                        
+
                            for first sct_det
                               fields(sct_domain   sct_bdn_ll sct_bdn_tl
                                      sct_cst_date sct_lbr_ll sct_lbr_tl
@@ -759,10 +774,10 @@ procedure p-report-quote:
                               and   sct_site           = in_gl_cost_site
                            no-lock:
                            end. /* FOR FIRST sct_det */
-                        
+
                      end. /* IF l_linked */
                      else do:
-                        
+
                            for first sct_det
                               fields(sct_domain   sct_bdn_ll sct_bdn_tl
                                      sct_cst_date sct_lbr_ll sct_lbr_tl
@@ -775,7 +790,7 @@ procedure p-report-quote:
                               and   sct_site           = site
                            no-lock:
                            end. /* FOR FIRST sct_det */
-                        
+
                      end. /* ELSE DO */
 
                      if available sct_det
@@ -784,11 +799,11 @@ procedure p-report-quote:
                            tmp_mtl   = sct_mtl_tl + sct_mtl_ll
                            tmp_sub   = sct_sub_tl + sct_sub_ll
                            tmp_tot   = tmp_mtl    + tmp_sub .
-                           
+
                      end. /* IF AVAILABLE sct_det */
-/* SS -  display tmp_par tmp_comp tmp_qty tmp_tot  .*/ 
-                     
-	   end.
+/* SS -  display tmp_par tmp_comp tmp_qty tmp_tot  .*/
+
+     end.
 /* SS - * add **************************************************************/
 
 
@@ -920,22 +935,22 @@ procedure p-report-quote:
                            exttot    = sum_usage * unittot.  ****/
 /* SS - add*/              assign
                            sum_usage = accum total by pk_part pk_qty
-                           mtl       = sct_mtl_tl 
-                           lbr       = sct_lbr_tl 
-                           bdn       = sct_bdn_tl 
-                           ovh       = sct_ovh_tl 
-                           sub       = sct_sub_tl 
+                           mtl       = sct_mtl_tl
+                           lbr       = sct_lbr_tl
+                           bdn       = sct_bdn_tl
+                           ovh       = sct_ovh_tl
+                           sub       = sct_sub_tl
                            unittot   = mtl + sub
                            extmtl    = sum_usage * mtl
                            extlbr    = sum_usage * lbr
                            extbdn    = sum_usage * bdn
                            extovh    = sum_usage * ovh
                            extsub    = sum_usage * sub
-                           exttot    = sum_usage * unittot.   
+                           exttot    = sum_usage * unittot.
 
                          /*SS - 111222.1 B*/
                          IF csset = "pur-std" AND NOT can-find(FIRST ps_mstr WHERE ps_domain = GLOBAL_domain AND ps_par = ptmstr.pt_part) THEN DO:
-                            FOR LAST pi_mstr WHERE pi_domain = GLOBAL_domain AND pi_part_code = ptmstr.pt_part 
+                            FOR LAST pi_mstr WHERE pi_domain = GLOBAL_domain AND pi_part_code = ptmstr.pt_part
                                and   (pi_start    <= eff_date or pi_start = ?)
                                and   (pi_expire   >= eff_date or pi_expire = ?)
                                NO-LOCK:
@@ -943,22 +958,22 @@ procedure p-report-quote:
                             IF AVAIL pi_mstr THEN DO:
                               assign
                                sum_usage = accum total by pk_part pk_qty
-                               mtl       = pi_list_price 
-                               lbr       = sct_lbr_tl 
-                               bdn       = sct_bdn_tl 
-                               ovh       = sct_ovh_tl 
-                               sub       = sct_sub_tl 
+                               mtl       = pi_list_price
+                               lbr       = sct_lbr_tl
+                               bdn       = sct_bdn_tl
+                               ovh       = sct_ovh_tl
+                               sub       = sct_sub_tl
                                unittot   = mtl + sub
                                extmtl    = sum_usage * mtl
                                extlbr    = sum_usage * lbr
                                extbdn    = sum_usage * bdn
                                extovh    = sum_usage * ovh
                                extsub    = sum_usage * sub
-                               exttot    = sum_usage * unittot.   
-    
+                               exttot    = sum_usage * unittot.
+
                             END.
                             ELSE DO:
-                                FOR LAST pc_mstr WHERE pc_domain = GLOBAL_domain AND pc_part = ptmstr.pt_part 
+                                FOR LAST pc_mstr WHERE pc_domain = GLOBAL_domain AND pc_part = ptmstr.pt_part
                                    and   (pc_start    <= eff_date or pc_start = ?)
                                    and   (pc_expire   >= eff_date or pc_expire = ?)
                                    NO-LOCK:
@@ -966,19 +981,19 @@ procedure p-report-quote:
                                 IF AVAIL pc_mstr THEN DO:
                                   assign
                                    sum_usage = accum total by pk_part pk_qty
-                                   mtl       = pc_amt[1] 
-                                   lbr       = sct_lbr_tl 
-                                   bdn       = sct_bdn_tl 
-                                   ovh       = sct_ovh_tl 
-                                   sub       = sct_sub_tl 
+                                   mtl       = pc_amt[1]
+                                   lbr       = sct_lbr_tl
+                                   bdn       = sct_bdn_tl
+                                   ovh       = sct_ovh_tl
+                                   sub       = sct_sub_tl
                                    unittot   = mtl + sub
                                    extmtl    = sum_usage * mtl
                                    extlbr    = sum_usage * lbr
                                    extbdn    = sum_usage * bdn
                                    extovh    = sum_usage * ovh
                                    extsub    = sum_usage * sub
-                                   exttot    = sum_usage * unittot.   
-    
+                                   exttot    = sum_usage * unittot.
+
                                 END.
                             END.
                          END.
@@ -1003,7 +1018,7 @@ procedure p-report-quote:
                         end. /* IF sct_part = l_part */
 
                      end. /* IF AVAILABLE sct_det */
-                     else DO:                     
+                     else DO:
                         assign
                            sum_usage = 0
                            mtl       = 0
@@ -1021,7 +1036,7 @@ procedure p-report-quote:
 
                         /*SS - 111222.1 B*/
                         IF csset = "pur-std" AND NOT can-find(FIRST ps_mstr WHERE ps_domain = GLOBAL_domain AND ps_par = ptmstr.pt_part) THEN DO:
-                           FOR LAST pi_mstr WHERE pi_domain = GLOBAL_domain AND pi_part_code = ptmstr.pt_part 
+                           FOR LAST pi_mstr WHERE pi_domain = GLOBAL_domain AND pi_part_code = ptmstr.pt_part
                               and   (pi_start    <= eff_date or pi_start = ?)
                               and   (pi_expire   >= eff_date or pi_expire = ?)
                               NO-LOCK:
@@ -1029,22 +1044,22 @@ procedure p-report-quote:
                            IF AVAIL pi_mstr THEN DO:
                              assign
                               sum_usage = accum total by pk_part pk_qty
-                              mtl       = pi_list_price 
-                              lbr       = 0 
-                              bdn       = 0 
-                              ovh       = 0 
-                              sub       = 0 
+                              mtl       = pi_list_price
+                              lbr       = 0
+                              bdn       = 0
+                              ovh       = 0
+                              sub       = 0
                               unittot   = mtl + sub
                               extmtl    = sum_usage * mtl
                               extlbr    = sum_usage * lbr
                               extbdn    = sum_usage * bdn
                               extovh    = sum_usage * ovh
                               extsub    = sum_usage * sub
-                              exttot    = sum_usage * unittot.   
+                              exttot    = sum_usage * unittot.
 
                            END.
                            ELSE DO:
-                               FOR LAST pc_mstr WHERE pc_domain = GLOBAL_domain AND pc_part = ptmstr.pt_part 
+                               FOR LAST pc_mstr WHERE pc_domain = GLOBAL_domain AND pc_part = ptmstr.pt_part
                                   and   (pc_start    <= eff_date or pc_start = ?)
                                   and   (pc_expire   >= eff_date or pc_expire = ?)
                                   NO-LOCK:
@@ -1052,18 +1067,18 @@ procedure p-report-quote:
                                IF AVAIL pc_mstr THEN DO:
                                  assign
                                   sum_usage = accum total by pk_part pk_qty
-                                  mtl       = pc_amt[1] 
-                                  lbr       = 0 
-                                  bdn       = 0 
-                                  ovh       = 0 
-                                  sub       = 0 
+                                  mtl       = pc_amt[1]
+                                  lbr       = 0
+                                  bdn       = 0
+                                  ovh       = 0
+                                  sub       = 0
                                   unittot   = mtl + sub
                                   extmtl    = sum_usage * mtl
                                   extlbr    = sum_usage * lbr
                                   extbdn    = sum_usage * bdn
                                   extovh    = sum_usage * ovh
                                   extsub    = sum_usage * sub
-                                  exttot    = sum_usage * unittot.   
+                                  exttot    = sum_usage * unittot.
 
                                END.
                            END.
@@ -1091,20 +1106,20 @@ procedure p-report-quote:
                      end. /* FOR FIRST ptp_det */
 /* SS - add ***********************************************************************
                      deltot = 0.
-                     if  available ptp_det and ptp_pm_code = "P" 
+                     if  available ptp_det and ptp_pm_code = "P"
                          or ptmstr.pt_pm_code = "P" and not available ptp_det then do:
-    		 for each tmp_det  no-lock where tmp_par = ptmstr.pt_part:
-			     deltot = deltot +  tmp_qty *  tmp_tot .
-			     /*ts  display tmp_par tmp_comp tmp_qty tmp_tot  .*/ 
+         for each tmp_det  no-lock where tmp_par = ptmstr.pt_part:
+           deltot = deltot +  tmp_qty *  tmp_tot .
+           /*ts  display tmp_par tmp_comp tmp_qty tmp_tot  .*/
 
-			 end. 
+       end.
                      end.
                      if deltot <> 0 then do:
-		                   mtl       = mtl - deltot .
+                       mtl       = mtl - deltot .
                            unittot   = unittot - deltot.
                            extmtl    = sum_usage * mtl .
                            exttot    = sum_usage * unittot.
-		     end.
+         end.
 * SS - add ************************************************************************/
 
 /* SS - del *************************************************************************
@@ -1119,7 +1134,7 @@ procedure p-report-quote:
                         bdn
                         ovh
                         sub
-                        unittot WITH STREAM-IO /*GUI*/ .
+                        unittot.
 
                      down 1 with frame b.
 
@@ -1130,7 +1145,7 @@ procedure p-report-quote:
                         extbdn @ bdn
                         extovh @ ovh
                         extsub @ sub
-                        exttot @ unittot WITH STREAM-IO /*GUI*/ .
+                        exttot @ unittot.
 
                      down 1 with frame b.
 
@@ -1138,13 +1153,13 @@ procedure p-report-quote:
                      and ptmstr.pt_desc2 <> ""
                      then
                         display
-                           "  " + ptmstr.pt_desc2 format "x(26)" @ pk_part WITH STREAM-IO /*GUI*/ .
+                           "  " + ptmstr.pt_desc2 format "x(26)" @ pk_part.
 
                      if l_linked
                      then do:
 
                         display
-                           des format "x(27)" @ pk_part WITH STREAM-IO /*GUI*/ .
+                           des format "x(27)" @ pk_part.
                         down 1 with frame b.
                      end. /* IF l_linked */
 
@@ -1159,19 +1174,19 @@ procedure p-report-quote:
 /* SS - add*/        if unittot <> 0   AND NOT (available ptp_det AND ptp_phantom    OR
                             not available ptp_det AND  ptmstr.pt_phantom )    then do:
                      display
-                           v_vend 
-                           ptmstr.pt_part  @ pk_part 
-	                         substring(ptmstr.pt_desc1,1, LENGTH(ptmstr.pt_desc1)) @ desc1
+                           v_vend
+                           ptmstr.pt_part  @ pk_part
+                           substring(ptmstr.pt_desc1,1, LENGTH(ptmstr.pt_desc1)) @ desc1
                              substring(ptmstr.pt_desc2,1, LENGTH(ptmstr.pt_desc2)) @ desc2
-			                 ptmstr.pt_um @ um
+                       ptmstr.pt_um @ um
                              ptp_pm_code when (available ptp_det) @ pmcode
                              ptmstr.pt_pm_code when (not available ptp_det) @ pmcode
                              sum_usage
-			                 mtl
+                       mtl
                              sub
-	                        unittot
-				exttot
-				rmks with frame b. 
+                          unittot
+        exttot
+        rmks with frame b.
                         DOWN 1 .
 
 
@@ -1179,9 +1194,8 @@ procedure p-report-quote:
 
                   end. /* IF LAST-OF(pk_part) */
 
-                  
-/*GUI*/ {mfguirex.i  "false"} /*Replace mfrpexit*/
 
+     {mfrpexit.i  "false"}
 
                end. /* FOR EACH pk_det */
 
@@ -1196,9 +1210,8 @@ procedure p-report-quote:
                   page.
               */
             /* SS - 20080728.1 - B */
-         
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
+     {mfrpchk.i }
          end. /* AVAILABLE sct_det */
 
          /* GET THE NEXT bom_mstr AND pt_mstr */
@@ -1257,16 +1270,8 @@ procedure p-report-quote:
 
 {mfdel.i pk_det " where pk_det.pk_domain = global_domain and  pk_user =
 mfguser"}
-
       hide frame pgtop.
-      
-/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
-
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
+      {mfrtrail.i}
 end. /* REPEAT */
 
 {wbrp04.i &frame-spec = a}
-
-/*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" part part1 pline pline1 buyer buyer1 eff_date maxlevel newpage site csset "} /*Drive the Report*/

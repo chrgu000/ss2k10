@@ -1,17 +1,16 @@
-/* GUI CONVERTED from bmpsrp5a.p (converter v1.78) Fri Oct 29 14:36:06 2004 */
-/* bmpsrp5a.p - BOM SUMMARY SUB-ROUTINE                                 */
-/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                  */
-/* All rights reserved worldwide.  This is an unpublished work.         */
-/* $Revision: 1.4.1.9 $                                                         */
-/*V8:ConvertMode=Report                                        */
-/*  REVISION: 5.0       LAST EDIT: 01/09/90      MODIFIED BY: MLB *B494*/
-/*  REVISION: 6.0       LAST EDIT: 10/26/90      MODIFIED BY: emb *D145*/
-/*  REVISION: 7.3       LAST EDIT: 10/19/93      MODIFIED BY: ais *GG43*/
-/*  REVISION: 8.6       LAST EDIT: 10/14/97      MODIFIED BY: gyk *K0ZF* */
-/*  REVISION: 9.1       LAST EDIT: 08/11/00      BY: *N0KK* jyn          */
+/* bmpsrp5a.p - BOM SUMMARY SUB-ROUTINE                                       */
+/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/* $Revision: 1.4.1.9 $                                                       */
+/*V8:ConvertMode=Report                                                       */
+/*  REVISION: 5.0       LAST EDIT: 01/09/90      MODIFIED BY: MLB        *B494*/
+/*  REVISION: 6.0       LAST EDIT: 10/26/90      MODIFIED BY: emb        *D145*/
+/*  REVISION: 7.3       LAST EDIT: 10/19/93      MODIFIED BY: ais        *GG43*/
+/*  REVISION: 8.6       LAST EDIT: 10/14/97      MODIFIED BY: gyk      *K0ZF* */
+/*  REVISION: 9.1       LAST EDIT: 08/11/00      BY: *N0KK* jyn               */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
-/* Revision: 1.4.1.7  BY: Samir Bavkar DATE: 04/15/02 ECO: *P000* */
-/* $Revision: 1.4.1.9 $ BY: Paul Donnelly (SB) DATE: 06/26/03 ECO: *Q00B* */
+/* Revision: 1.4.1.7  BY: Samir Bavkar DATE: 04/15/02 ECO: *P000*             */
+/* $Revision: 1.4.1.9 $ BY: Paul Donnelly (SB) DATE: 06/26/03 ECO: *Q00B*     */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -55,7 +54,7 @@ mfguser"}
    field  tmp_comp  like ps_comp
    field  tmp_qty   like ps_qty_per
    field  tmp_mtl   like  sct_mtl_tl
-   field  tmp_sub   like sct_sub_tl 
+   field  tmp_sub   like sct_sub_tl
    field  tmp_tot   like sct_sub_tl
    INDEX index1 tmp_par tmp_comp .
 
@@ -99,7 +98,7 @@ repeat:
          if available ps_mstr then leave.
       end.
    end.
-   if level < 1 then leave.     
+   if level < 1 then leave.
 
    par = ps_par.
    if ps_ps_code = "" and ps_qty_per <> 0 then do:
@@ -133,22 +132,22 @@ repeat:
  /*ts add************************************/
          FOR first ptmstr where ptmstr.pt_domain = global_domain and ptmstr.pt_part = ps_par no-lock :
          END.
-         if available ptmstr then do: 
-	         FOR first ptp_det where ptp_domain = global_domain and ptp_part = ps_par no-lock :
+         if available ptmstr then do:
+           FOR first ptp_det where ptp_domain = global_domain and ptp_part = ps_par no-lock :
             END.
-	         if available ptp_det and ptp_pm_code = "P" or 
+           if available ptp_det and ptp_pm_code = "P" or
                not available ptp_det and ptmstr.pt_pm_code = "P"  then do:
-	            FIND FIRST tmp_det where tmp_par = ps_par and tmp_comp = ps_comp no-error .
-	            if not available  tmp_det then do:
-	               create tmp_det .
-		            assign tmp_par = ps_par 
-		                   tmp_comp = ps_comp .
-	            end.
+              FIND FIRST tmp_det where tmp_par = ps_par and tmp_comp = ps_comp no-error .
+              if not available  tmp_det then do:
+                 create tmp_det .
+                assign tmp_par = ps_par
+                       tmp_comp = ps_comp .
+              end.
  /*          tmp_qty = tmp_qty + ps_qty_per * (100 / (100 - ps_scrp_pct)) . */
 
-               tmp_qty =   ps_qty_per * (100 / (100 - ps_scrp_pct)) .  
+               tmp_qty =   ps_qty_per * (100 / (100 - ps_scrp_pct)) .
             END.
-	      end.
+        end.
 /*ts add************************************/
 
       end.
