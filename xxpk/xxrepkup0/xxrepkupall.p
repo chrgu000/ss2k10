@@ -1,60 +1,19 @@
 
 { xxrepkup1.i }    
-/*
-for each xxwa_det no-lock
-break by xxwa_site
-      by xxwa_line
-      by xxwa_part
-      by xxwa_date
-      by xxwa_rtime:
-   /*
-   display xxwa_date xxwa_site xxwa_line xxwa_part 
-   xxwa_pstime  /* 货架拿到备料区的时间  */
-   xxwa_sstime  /* 从备料区发出的时间    */
-   string(xxwa_rtime,"hh:mm:ss") label "time" xxwa_ord_mult.
-   */
-   find first tiss1 where 
-     tiss1_sdate    = xxwa_date     and
-     tiss1_stime    = xxwa_sstime   and
-     tiss1_line     = xxwa_line     and
-     tiss1_part     = xxwa_part   
-     no-error.
-   if not avail tiss1 then do:
-   	 create tiss1.
-     assign
-       tiss1_sdate    = xxwa_date     
-       tiss1_pdate    = xxwa_date     
-       tiss1_ptime    = xxwa_pstime   
-       tiss1_stime    = xxwa_sstime   
-       tiss1_rtime    = xxwa_rtime   
-       tiss1_line     = xxwa_line     
-       tiss1_part     = xxwa_part     
-   	   tiss1_qty      = 0 
-   	 .
-   end.
-   tiss1_qty = tiss1_qty + xxwa_ord_mult.
-end.
-*/
+
+define var prevtrail like ld_qty_oh.
+define var prevdate  like tiss1_sdate.
+define var prevtime  like tiss1_stime.
+define var tempqtytl like ld_qty_oh.
 define var myqty  like ld_qty_oh.
 define var mylot  like tsu_lot.
 define var myref  like tsu_ref.
 define var myseq as int.
 define buffer mysup for tsupp.
 for each tsupp:  /* 处理库存记录，计算每个库位的大、小包装数量和大、小包装对应的尾数 */
-  	find first pt_mstr no-lock where pt_part = tsu_part .  
-  	tsu_abc     = pt__chr10.
-  	if pt__qad19 <= 0 then tsu_lit = 1 .
-  	else tsu_lit     = pt__qad19.
-  	if pt__qad20 <= 0 then tsu_big = 1 .
-  	else tsu_big     = pt__qad20.
-  	  tsu_lpacks  = truncate( tsu_qty / tsu_lit ,0).
-  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
-  	  tsu_bpacks  = truncate(tsu_qty / tsu_big , 0).
-  	  tsu_btrail  = tsu_qty - tsu_big * tsu_bpacks.
-  	.
-  	find first loc_mstr where loc_site = "gsa01" and loc_loc = tsu_loc.
-  	if substring(loc_user2,1,1) = "Y" then tsu_flg = "Y" .  /* 货架库位和生产线库位的标志 */
-  	tsu_tqty = tsu_qty.
+  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+  output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+  output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
 end.
 /* 检查库存中已经分配的物料 */
 myseq = 0 .
@@ -109,10 +68,9 @@ end.
         .
       end.
       tsu_qty = tsu_qty - tt1swd_qty.      
-  	  tsu_lpacks  = truncate( tsu_qty / tsu_lit ,0).
-  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
-  	  tsu_bpacks  = truncate(tsu_qty / tsu_big , 0).
-  	  tsu_btrail  = tsu_qty - tsu_big * tsu_bpacks.
+  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
     end.
 /* 进行第一次消耗模拟，根据备料单(货架库位)扣减发出库位库存 */
     for each tt1pwddet : 
@@ -128,10 +86,9 @@ end.
         .
       end.
       tsu_qty = tsu_qty - tt1pwd_qty.            
-  	  tsu_lpacks  = truncate( tsu_qty / tsu_lit ,0).
-  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
-  	  tsu_bpacks  = truncate(tsu_qty / tsu_big , 0).
-  	  tsu_btrail  = tsu_qty - tsu_big * tsu_bpacks.
+  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
     end.    
 
 /* 计算增加的发料到生产线的队列 */
@@ -154,6 +111,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
         .
       end.
       tsu_qty = tsu_qty + tt1swd_qty.
+      run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
     end.
     /* 根据备料单增加备料区供应 */    
     for each tt1pwddet where tt1pwd_part = tiss1_part and tt1pwd_line = tiss1_line and tt1pwd_date <= tiss1_sdate and tt1pwd_time <= tiss1_rtime: 
@@ -170,10 +130,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
         .
       end.
       tsu_qty = tsu_qty + tt1pwd_qty.          
-  	  tsu_lpacks  = truncate( tsu_qty / tsu_lit ,0).
-  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
-  	  tsu_bpacks  = truncate(tsu_qty / tsu_big , 0).
-  	  tsu_btrail  = tsu_qty - tsu_big * tsu_bpacks.
+  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
     end.
   end.
 	/* 消耗生产线物料 */
@@ -188,52 +147,145 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
 	    tsu_qty = 0 .
 	  end.
 	end.
-	if tiss1_qty = 0 then next.
+	if tiss1_qty <= 0 then next.
 	/* 消耗备料区物料 */
+	if first-of(tiss1_part) then prevtrail = 0 .
 	for each tsupp where tsu_part = tiss1_part and tsu_loc = "P-ALL" and (tsu_lpacks > 0 or tsu_ltrail > 0)
 		break by tsu_lot by tsu_ref  :
 		mylot = tsu_lot.
 		myref = tsu_ref.
-		if tsu_ltrail  > 0 then do:   /*先发送料规格尾数 */
-			myseq = myseq + 1.
-			create trlt1.   
-			assign 
-			  trt1_seq    = myseq
-			  trt1_nbr    = tiss1_nbr
-			  trt1_loc    = tsu_loc
-			  trt1_line   = tiss1_line
-			  trt1_part   = tsu_part
-			  trt1_lot    = tsu_lot
-			  trt1_ref    = tsu_ref
-			  trt1_qty    = tsu_ltrail
-			  trt1_stime  = tiss1_rtime
-			  trt1_sdate  = tiss1_sdate
-			.			
-      tsu_qty = tsu_qty - tsu_ltrail.
-      tsu_ltrail = 0 .
-      tiss1_qty = tiss1_qty - tsu_ltrail .
-		end.
-		if tiss1_qty <= 0 then leave.
-		do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 发送料规格整包装 */
-			  tiss1_qty = tiss1_qty - tsu_lit.
-			  tsu_lpacks = tsu_lpacks - 1.
-			  tsu_qty = tsu_qty - tsu_lit.
+		if tsu_abc = "a" then do:  /* A类物料 */   
+		  if prevtrail > 0 then do:
+		    if tsu_qty >= prevtrail then do:  /* 可把发料包装装满 */
+		      tiss1_qty = tiss1_qty - prevtrail.
+		  	  tsu_qty = tsu_qty - prevtrail.
+		  	  tsu_lpacks = truncate( tsu_qty / tsu_lit ,0).
+		  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
+		    	myseq = myseq + 1.
+		      create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = prevtrail
+		        trt1_stime   = prevtime  /* 日期和时间都是取的上次尾数的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = prevdate
+		      .	
+		    end.
+		    else do:  /* 不可把发料包装装满 */
+		      tempqtytl = tsu_qty.
+		      tiss1_qty = tiss1_qty - tsu_qty.
+		      prevtrail = prevtrail - tsu_qty.
+		  	  tsu_qty = 0.
+		  	  tsu_lpacks = truncate( tsu_qty / tsu_lit ,0).
+		  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
+		    	myseq = myseq + 1.
+		      create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = tempqtytl
+		        trt1_stime   = prevtime  /* 日期和时间都是取的上次尾数的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = prevdate
+		      .	
+		    end.
+		  end.
+		  if tiss1_qty <= 0 then leave.
+		  do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 发送料规格整包装 */
+		  	  tiss1_qty = tiss1_qty - tsu_lit.
+		  	  tsu_lpacks = tsu_lpacks - 1.
+		  	  tsu_qty = tsu_qty - tsu_lit.
+		    	myseq = myseq + 1.
+		  	  create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = tsu_lit
+		        trt1_stime   = tiss1_rtime  /* 日期和时间都是取的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = tiss1_sdate
+		      .	
+		  end.
+		  if tiss1_qty <= 0 then leave.
+		  if tsu_ltrail  > 0 then do:   /* 发送料规格尾数 */
 		  	myseq = myseq + 1.
-			  create trlt1.   
-	  		assign 
-  			  trt1_seq    = myseq
-  			  trt1_nbr    = tiss1_nbr
-		      trt1_line   = tiss1_line
-		      trt1_loc    = tsu_loc
-		      trt1_part   = tsu_part
-		      trt1_lot    = tsu_lot
-		      trt1_ref    = tsu_ref
-		      trt1_qty    = tsu_lit
-		      trt1_stime   = tiss1_rtime  /* 日期和时间都是取的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
-		      trt1_sdate   = tiss1_sdate
-		    .	
+		  	create trlt1.   
+		  	assign 
+		  	  trt1_seq    = myseq
+		  	  trt1_nbr    = tiss1_nbr
+		  	  trt1_loc    = tsu_loc
+		  	  trt1_line   = tiss1_line
+		  	  trt1_part   = tsu_part
+		  	  trt1_lot    = tsu_lot
+		  	  trt1_ref    = tsu_ref
+		  	  trt1_qty    = tsu_ltrail
+		  	  trt1_stime  = tiss1_rtime
+		  	  trt1_sdate  = tiss1_sdate
+		  	.			
+        prevtrail = tsu_lit - tsu_ltrail.
+        prevdate  = tiss1_sdate.
+        prevtime  = tiss1_rtime.
+        tsu_qty = tsu_qty - tsu_ltrail.
+        tiss1_qty = tiss1_qty - tsu_ltrail .
+        tsu_ltrail = 0 .
+		  end.
+		  if tiss1_qty <= 0 then leave.
 		end.
-		if tiss1_qty <= 0 then leave.
+		else do:  /* B,C类物料 */
+		  if tsu_ltrail  > 0 then do:   /*先发送料规格尾数 */
+		  	myseq = myseq + 1.
+		  	create trlt1.   
+		  	assign 
+		  	  trt1_seq    = myseq
+		  	  trt1_nbr    = tiss1_nbr
+		  	  trt1_loc    = tsu_loc
+		  	  trt1_line   = tiss1_line
+		  	  trt1_part   = tsu_part
+		  	  trt1_lot    = tsu_lot
+		  	  trt1_ref    = tsu_ref
+		  	  trt1_qty    = tsu_ltrail
+		  	  trt1_stime  = tiss1_rtime
+		  	  trt1_sdate  = tiss1_sdate
+		  	.			
+        tsu_qty = tsu_qty - tsu_ltrail.
+        tsu_ltrail = 0 .
+        tiss1_qty = tiss1_qty - tsu_ltrail .
+		  end.
+		  if tiss1_qty <= 0 then leave.
+		  do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 发送料规格整包装 */
+		  	  tiss1_qty = tiss1_qty - tsu_lit.
+		  	  tsu_lpacks = tsu_lpacks - 1.
+		  	  tsu_qty = tsu_qty - tsu_lit.
+		    	myseq = myseq + 1.
+		  	  create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = tsu_lit
+		        trt1_stime   = tiss1_rtime  /* 日期和时间都是取的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = tiss1_sdate
+		      .	
+		  end.
+		  if tiss1_qty <= 0 then leave.
+	  end.
 	end.
 	if tiss1_qty < 0 then do:  /* 有超过的数量保存在生产线 */
 	    find first tsupp where tsu_part = tiss1_part and tsu_loc = tiss1_line 
@@ -250,6 +302,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
       end.
 		  tsu_qty = tsu_qty - tiss1_qty.
 		  tiss1_qty = 0 .
+		  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
 	end.
 	if tiss1_qty <= 0 then next.
 	/* 消耗货架物料 */
@@ -257,46 +312,134 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
 		break by tsu_lot by tsu_ref by tsu_loc:
 		mylot = tsu_lot.
 		myref = tsu_ref.
-		if tsu_ltrail  > 0 then do:  /* 消耗备料规格的尾数 */
-			myseq = myseq + 1.
-			create trlt1.   
-			assign 
-			  trt1_seq    = myseq
-			  trt1_nbr    = tiss1_nbr
-			  trt1_line   = tiss1_line
-			  trt1_loc    = tsu_loc
-			  trt1_part   = tsu_part
-			  trt1_lot    = tsu_lot
-			  trt1_ref    = tsu_ref
-			  trt1_qty    = tsu_ltrail
-	      trt1_stime  = tiss1_rtime
-	      trt1_sdate  = tiss1_sdate
-			.			
-			tiss1_qty = tiss1_qty - tsu_ltrail.
-			tsu_qty = tsu_qty - tsu_ltrail.
-			tsu_ltrail = 0.
+		if tsu_abc = "A" then do:  /* A类物料 */
+		  if prevtrail > 0 then do:
+		    if tsu_qty >= prevtrail then do:  /* 可把发料包装装满 */
+		      tiss1_qty = tiss1_qty - prevtrail.
+		  	  tsu_qty = tsu_qty - prevtrail.
+		  	  tsu_lpacks = truncate( tsu_qty / tsu_lit ,0).
+		  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
+		    	myseq = myseq + 1.
+		      create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = prevtrail
+		        trt1_stime   = prevtime  /* 日期和时间都是取的上次尾数的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = prevdate
+		      .	
+		    end.
+		    else do:  /* 不可把发料包装装满 */
+		      tempqtytl = tsu_qty.
+		      tiss1_qty = tiss1_qty - tsu_qty.
+		      prevtrail = prevtrail - tsu_qty.
+		  	  tsu_qty = 0.
+		  	  tsu_lpacks = truncate( tsu_qty / tsu_lit ,0).
+		  	  tsu_ltrail  = tsu_qty - tsu_lit * tsu_lpacks.
+		    	myseq = myseq + 1.
+		      create trlt1.   
+	    		assign 
+  	  		  trt1_seq    = myseq
+  	  		  trt1_nbr    = tiss1_nbr
+		        trt1_line   = tiss1_line
+		        trt1_loc    = tsu_loc
+		        trt1_part   = tsu_part
+		        trt1_lot    = tsu_lot
+		        trt1_ref    = tsu_ref
+		        trt1_qty    = tempqtytl
+		        trt1_stime   = prevtime  /* 日期和时间都是取的上次尾数的需求日期、时间由打印的时候根据规则转换为备料、发料日期时间 */
+		        trt1_sdate   = prevdate
+		      .	
+		    end.
+		  end.
+		  do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 消耗备料规格的整包装 */
+		    tiss1_qty = tiss1_qty - tsu_lit.
+		    tsu_qty = tsu_qty - tsu_lit.
+		    tsu_lpacks = tsu_lpacks - 1.
+		  	myseq = myseq + 1.
+		    create trlt1.   
+	    	assign 
+  	  	  trt1_seq    = myseq
+  	  	  trt1_nbr    = tiss1_nbr
+		      trt1_loc    = tsu_loc
+		      trt1_line   = tiss1_line
+		      trt1_part   = tsu_part
+		      trt1_lot    = tsu_lot
+		      trt1_ref    = tsu_ref
+		      trt1_qty    = tsu_lit
+		      trt1_stime  = tiss1_rtime
+		      trt1_sdate  = tiss1_sdate
+		    .			
+		  end.
+		  if tiss1_qty <= 0 then leave.
+		  if tsu_ltrail  > 0 then do:  /* 消耗备料规格的尾数 */
+		  	myseq = myseq + 1.
+		  	create trlt1.   
+		  	assign 
+		  	  trt1_seq    = myseq
+		  	  trt1_nbr    = tiss1_nbr
+		  	  trt1_line   = tiss1_line
+		  	  trt1_loc    = tsu_loc
+		  	  trt1_part   = tsu_part
+		  	  trt1_lot    = tsu_lot
+		  	  trt1_ref    = tsu_ref
+		  	  trt1_qty    = tsu_ltrail
+	        trt1_stime  = tiss1_rtime
+	        trt1_sdate  = tiss1_sdate
+		  	.			
+		  	tiss1_qty = tiss1_qty - tsu_ltrail.
+		  	tsu_qty = tsu_qty - tsu_ltrail.
+		  	tsu_ltrail = 0.
+		  end.
+		  if tiss1_qty <= 0 then leave.		
 		end.
-		if tiss1_qty <= 0 then leave.		
-		do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 消耗备料规格的整包装 */
-		  tiss1_qty = tiss1_qty - tsu_lit.
-		  tsu_qty = tsu_qty - tsu_lit.
-		  tsu_lpacks = tsu_lpacks - 1.
-			myseq = myseq + 1.
-		  create trlt1.   
-	  	assign 
-  		  trt1_seq    = myseq
-  		  trt1_nbr    = tiss1_nbr
-		    trt1_loc    = tsu_loc
-		    trt1_line   = tiss1_line
-		    trt1_part   = tsu_part
-		    trt1_lot    = tsu_lot
-		    trt1_ref    = tsu_ref
-		    trt1_qty    = tsu_lit
-		    trt1_stime  = tiss1_rtime
-		    trt1_sdate  = tiss1_sdate
-		  .			
-		end.
-		if tiss1_qty <= 0 then leave.
+		else do: /* 非A类物料 */
+		  if tsu_ltrail  > 0 then do:  /* 消耗备料规格的尾数 */
+		  	myseq = myseq + 1.
+		  	create trlt1.   
+		  	assign 
+		  	  trt1_seq    = myseq
+		  	  trt1_nbr    = tiss1_nbr
+		  	  trt1_line   = tiss1_line
+		  	  trt1_loc    = tsu_loc
+		  	  trt1_part   = tsu_part
+		  	  trt1_lot    = tsu_lot
+		  	  trt1_ref    = tsu_ref
+		  	  trt1_qty    = tsu_ltrail
+	        trt1_stime  = tiss1_rtime
+	        trt1_sdate  = tiss1_sdate
+		  	.			
+		  	tiss1_qty = tiss1_qty - tsu_ltrail.
+		  	tsu_qty = tsu_qty - tsu_ltrail.
+		  	tsu_ltrail = 0.
+		  end.
+		  if tiss1_qty <= 0 then leave.		
+		  do while tsu_lpacks > 0 and  tiss1_qty > 0 :		/* 消耗备料规格的整包装 */
+		    tiss1_qty = tiss1_qty - tsu_lit.
+		    tsu_qty = tsu_qty - tsu_lit.
+		    tsu_lpacks = tsu_lpacks - 1.
+		  	myseq = myseq + 1.
+		    create trlt1.   
+	    	assign 
+  	  	  trt1_seq    = myseq
+  	  	  trt1_nbr    = tiss1_nbr
+		      trt1_loc    = tsu_loc
+		      trt1_line   = tiss1_line
+		      trt1_part   = tsu_part
+		      trt1_lot    = tsu_lot
+		      trt1_ref    = tsu_ref
+		      trt1_qty    = tsu_lit
+		      trt1_stime  = tiss1_rtime
+		      trt1_sdate  = tiss1_sdate
+		    .			
+		  end.
+		  if tiss1_qty <= 0 then leave.
+	  end.
 	end.
 	if tiss1_qty < 0 then do:  /* 有超过的数量保存在生产线 */
 	    find first tsupp where tsu_part = tiss1_part and tsu_loc = tiss1_line 
@@ -313,6 +456,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
        end.
 		  tsu_qty = tsu_qty - tiss1_qty.
 		  tiss1_qty = 0 .
+		  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
+      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
+      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
 	end.
 	/*
 	if tiss1_qty <= 0 then next.	
@@ -371,3 +517,37 @@ for each trlt1 where trt1_loc <> "p-all"
 	end.
 	trt1_loc = "p-all".
 end.
+
+
+procedure inittsupp:
+    DEF INPUT PARAMETER myttpart like tsup_part .
+    DEF INPUT PARAMETER myttqty  like tsu_qty   .
+    DEF INPUT PARAMETER myttloc  like tsu_loc   .
+    DEF INPUT PARAMETER myttpart like tsup_part .
+    DEF INPUT PARAMETER myttpart like tsup_part .
+    
+    DEF OUTPUT PARAMETER myttabc     like tsu_abc    .
+    DEF OUTPUT PARAMETER myttlit     like tsu_lit    .
+    DEF OUTPUT PARAMETER myttbig     like tsu_big    .
+    DEF OUTPUT PARAMETER myttflg     like tsu_flg    .
+    DEF OUTPUT PARAMETER myttlpacks  like tsu_lpacks .
+    DEF OUTPUT PARAMETER myttbpacks  like tsu_bpacks .
+    DEF OUTPUT PARAMETER myttltrail  like tsu_ltrail .
+    DEF OUTPUT PARAMETER myttbtrail  like tsu_btrail .
+    DEF OUTPUT PARAMETER mytttqty    like tsu_tqty   .
+    
+  	find first pt_mstr no-lock where pt_part = myttpart .  
+  	myttabc     = pt__chr10.
+  	if pt__qad19 <= 0 then myttlit = 1 .
+  	else myttlit     = pt__qad19.
+  	if pt__qad20 <= 0 then myttbig = 1 .
+  	else myttbig     = pt__qad20.
+  	  myttlpacks  = truncate( myttqty / myttlit ,0).
+  	  myttltrail  = myttqty - myttlit * myttlpacks.
+  	  myttbpacks  = truncate(myttqty / myttbig , 0).
+  	  myttbtrail  = myttqty - myttbig * myttbpacks.
+  	.
+  	find first loc_mstr where loc_site = "gsa01" and loc_loc = myttloc.
+  	if substring(loc_user2,1,1) = "Y" then myttflg = "Y" .  /* 货架库位和生产线库位的标志 */
+  	mytttqty = myttqty.  
+end procedure.
