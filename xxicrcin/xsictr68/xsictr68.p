@@ -721,7 +721,6 @@ LD_SITE = V1002 AND LD_REF = "" AND
         /* ROLL BAR END */
 
         vv_loc_oh = ld_qty_oh.
-        vv_loc_from = ld_loc.
 
         /* PRESS e EXIST CYCLE */
         IF INPUT V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
@@ -799,9 +798,10 @@ If AVAILABLE ( poc_ctrl ) then
 /*                L15102 = poc_insp_loc.                         */
 /*                else L15102 = vv_loc_from.                     */
                 assign i = 0.
-                      L15102 = "" .
-                      L15103 = "" .
-                      L15104 = "" .
+                       L15102 = "" .
+                       L15103 = "" .
+                       L15104 = "" .
+                       vv_loc_from = "".
                 for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_lot = V1500 and ld_qty_oh > 0:
                     if i < 3 then do:
                        if L15102 = "" then
@@ -825,7 +825,21 @@ If AVAILABLE ( poc_ctrl ) then
                       leave.
                     end.
                     i = I + 1.
-                    assign V1510 = ld_loc.
+                    /*库存调拨时从库位默认值从这里取*/
+                    find first code_mstr no-lock where
+                               code_fldname = "BC_TRANS_DEFAULT_FROM_LOCATION"
+                               no-error.
+                    if available code_mstr then do:
+                       if lookup(ld_loc,code_value,",") > 0 then do:
+                          assign vv_loc_from = ld_loc.
+                       end.
+                    end.
+                    if vv_loc_from = "" then do:
+                        assign V1510 = ld_loc.
+                    end.
+                    else do:
+                        assign V1510 = vv_loc_from.
+                    end.
                 end.
                 display L15102          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 2 - END */
