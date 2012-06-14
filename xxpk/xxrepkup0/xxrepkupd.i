@@ -21,17 +21,18 @@ for each rps_mstr no-lock where rps_rel_date >= idate
       and shft_day = weekday(rps_rel_date)
  BREAK  BY rps_rel_date BY rps_site BY rps_line by integer(rps_user1):
    assign v_rstmin = 0.    
-   for each xxlr_det no-lock where xxlr_site = rps_site and
-            xxlr_line = rps_line:
-       assign v_rstMin = v_rstMin + xxlr_minutes.
-   end.
+/*   for each xxlr_det no-lock where xxlr_site = rps_site and                 */
+/*            xxlr_line = rps_line:                                           */
+/*       assign v_rstMin = v_rstMin + xxlr_minutes.                           */
+/*   end.                                                                     */
    display rps_part rps_rel_date rps_qty_req  
            integer(shft_start1 * 3600) column-label "startTime"
            shft_load1 
            integer(shft_start2 * 3600) column-label "startTime2"
            shft_load2 
-           lnd_rate (lnd_rate * shft_load1 / 100 ) / 60 column-label "rate/Min"
-           truncate(rps_qty_req * 60 / ((lnd_rate * shft_load1 / 100) / 60)  ,0) 
+           lnd_rate 
+           (lnd_rate * shft_load1 / 100 ) / 60 column-label "rate/Min"
+           truncate(rps_qty_req * 60 / ((lnd_rate * shft_load1 / 100) / 60) ,0) 
            .
 end. 
 

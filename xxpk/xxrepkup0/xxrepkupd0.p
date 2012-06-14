@@ -107,6 +107,8 @@ define temp-table shortages no-undo
    field short-date  like wr_start
    index shortages short-part short-date short-assy.
 
+define variable v_lead_minus as integer no-undo.
+
 /* TEMP-TABLE TO STORE NET AVAILABLE QUANTITY FOR EACH COMPONENT */
 /* TO PRINT SHORTAGE LIST                                        */
 /* 临时表用于存放净可用量，并打印短缺列表                        */
@@ -732,6 +734,28 @@ end.
         end.
   end. /* for each xxwa_det exclusive-lock where  */
 
+
+  /* D类(线外做的)物料在做个提前时间需要提前发料 */
+  assign v_lead_minus = 0.
+  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
+             code_value = "DEFAULT-MINUTS" no-error.
+  if available code_mstr then do:
+     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
+  end.
+  for each xxwa_det exclusive-lock where
+           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+      each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
+           usrw_key2 = xxwa_part
+  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
+        assign xxwa_pstime = xxwa_pstime - v_lead_minus
+               xxwa_petime = xxwa_petime - v_lead_minus
+               xxwa_sstime = xxwa_sstime - v_lead_minus
+               xxwa_setime = xxwa_setime - v_lead_minus.
+  end.
+
+
   /* 按最小包装量计算需求到 xxwa_ord_mult*/
   for each xxwa_det exclusive-lock:
     assign xxwa_ord_mult = xxwa_qty_pln.
@@ -894,17 +918,17 @@ if netgr then do:
    end.
 end.
 else do:  /*不考虑车间库存*/
-	 assign  vwkline = "".
-	 for each ln_mstr no-lock where ln_site = "gsa01" break by ln_site by ln_line:
-	 		 if first-of(ln_line) then do:
-	 		 		assign  vwkline = vwkLine + ln_line + ",".
-	 		 end.
-	 end.
+   assign  vwkline = "".
+   for each ln_mstr no-lock where ln_site = "gsa01" break by ln_site by ln_line:
+       if first-of(ln_line) then do:
+          assign  vwkline = vwkLine + ln_line + ",".
+       end.
+   end.
 
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
-       				  and ld_site = "gsa01"  and ld_loc <> "P-all"
+                and ld_site = "gsa01"  and ld_loc <> "P-all"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
            create tsupp.
@@ -1009,14 +1033,14 @@ else do:
 end.
 
 for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date desc :
-		if first-of(xxwd_line) then do:
-			 find first xxlnw_det no-lock where xxlnw_site = xxwd_site and xxlnw_line = xxwd_line and xxlnw_on no-error.
-			 if available xxlnw_det then do:
-			 		assign i = xxlnw_stime.
-			 end.
-	  end.
+    if first-of(xxwd_line) then do:
+       find first xxlnw_det no-lock where xxlnw_site = xxwd_site and xxlnw_line = xxwd_line and xxlnw_on no-error.
+       if available xxlnw_det then do:
+          assign i = xxlnw_stime.
+       end.
+    end.
     if xxwd_time >= 0 and xxwd_time < i then do:
-    	 assign xxwd_date = xxwd_date + 1.
+       assign xxwd_date = xxwd_date + 1.
     end.
 end.
 
