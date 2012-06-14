@@ -697,6 +697,24 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
  */
 end.
 
+/* D类(线外做的)物料在做个提前时间需要提前做 */
+  assign v_lead_minus = 0.
+  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
+             code_value = "DEFAULT-MINUTS" no-error.
+  if available code_mstr then do:
+     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
+  end.
+  for each xxwa_det exclusive-lock where
+           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+      each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
+           usrw_key2 = xxwa_part
+  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
+        assign xxwa_rtime = xxwa_rtime - v_lead_minus.
+  end.
+
+
  /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
            xxwa_date >= issue and xxwa_date <= issue1 and
@@ -733,27 +751,6 @@ end.
             assign xxwa_pstime = -1.
         end.
   end. /* for each xxwa_det exclusive-lock where  */
-
-
-  /* D类(线外做的)物料在做个提前时间需要提前发料 */
-  assign v_lead_minus = 0.
-  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
-             code_value = "DEFAULT-MINUTS" no-error.
-  if available code_mstr then do:
-     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
-  end.
-  for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-      each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
-           usrw_key2 = xxwa_part
-  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
-        assign xxwa_pstime = xxwa_pstime - v_lead_minus
-               xxwa_petime = xxwa_petime - v_lead_minus
-               xxwa_sstime = xxwa_sstime - v_lead_minus
-               xxwa_setime = xxwa_setime - v_lead_minus.
-  end.
 
 
   /* 按最小包装量计算需求到 xxwa_ord_mult*/
