@@ -1,6 +1,5 @@
-/* xxtricmt.p - TRANSLATION_LOCATION Maintenance                             */
+/* xxpkditem.p - Pakge D type item list maintenance                          */
 /* revision: 120614.1   created on: 20120614   by: zhang yun                 */
-
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
 /*-Revision end--------------------------------------------------------------*/
