@@ -721,6 +721,23 @@ end.
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
+        find first xxlnw_det no-lock where xxlnw_site = xxwa_site 
+        			 and xxlnw_line = xxwa_line and xxlnw_ptime = xxwa_rtime no-error.
+        if available xxlnw_det then do:
+        	 assign xxwa_pstime = xxlnw_pstime
+        	 				xxwa_petime = xxlnw_petime
+        	 				xxwa_sstime = xxlnw_sstime
+        	 				xxwa_setime = xxlnw_setime.
+        end.
+        else do:
+        	 assign xxwa_pstime = xxwa_rtime - 16200
+        	 				xxwa_petime = xxwa_rtime - 14400
+        	 				xxwa_sstime = xxwa_rtime - 9000
+        	 				xxwa_setime = xxwa_rtime - 7200.
+        end.
+        			 
+        
+        /********************************************************************
         assign vtype = "*".
         if first-of(xxwa_part) then do:
            find first pt_mstr where pt_mstr.pt_part = xxwa_part
@@ -750,6 +767,7 @@ end.
         else do:
             assign xxwa_pstime = -1.
         end.
+        **********************************************************************/
   end. /* for each xxwa_det exclusive-lock where  */
 
 

@@ -11,9 +11,9 @@ define var myref  like tsu_ref.
 define var myseq as int.
 define buffer mysup for tsupp.
 for each tsupp:  /* 处理库存记录，计算每个库位的大、小包装数量和大、小包装对应的尾数 */
-  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-  output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-  output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+  run inittsupp(input tsu_part ,input tsu_qty  ,input tsu_loc  ,
+  output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+  output tsu_ltrail ,output tsu_btrail ,output tsu_tqty).
 end.
 /* 检查库存中已经分配的物料 */
 myseq = 0 .
@@ -68,9 +68,9 @@ end.
         .
       end.
       tsu_qty = tsu_qty - tt1swd_qty.      
-  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+  	  run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc ,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
     end.
 /* 进行第一次消耗模拟，根据备料单(货架库位)扣减发出库位库存 */
     for each tt1pwddet : 
@@ -86,9 +86,9 @@ end.
         .
       end.
       tsu_qty = tsu_qty - tt1pwd_qty.            
-  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+  	  run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc     ,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
     end.    
 
 /* 计算增加的发料到生产线的队列 */
@@ -111,9 +111,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
         .
       end.
       tsu_qty = tsu_qty + tt1swd_qty.
-      run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+      run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
     end.
     /* 根据备料单增加备料区供应 */    
     for each tt1pwddet where tt1pwd_part = tiss1_part and tt1pwd_line = tiss1_line and tt1pwd_date <= tiss1_sdate and tt1pwd_time <= tiss1_rtime: 
@@ -130,9 +130,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
         .
       end.
       tsu_qty = tsu_qty + tt1pwd_qty.          
-  	  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+  	  run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc   ,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
     end.
   end.
 	/* 消耗生产线物料 */
@@ -302,9 +302,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
       end.
 		  tsu_qty = tsu_qty - tiss1_qty.
 		  tiss1_qty = 0 .
-		  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+		  run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc ,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
 	end.
 	if tiss1_qty <= 0 then next.
 	/* 消耗货架物料 */
@@ -456,9 +456,9 @@ for each tiss1 break by tiss1_part by tiss1_sdate by tiss1_rtime  by tiss1_line 
        end.
 		  tsu_qty = tsu_qty - tiss1_qty.
 		  tiss1_qty = 0 .
-		  run inittsupp(input tsup_part      ,input tsu_qty        ,input tsu_loc        ,input tsup_part      ,input tsup_part      ,
-      output tsu_abc       ,output tsu_lit       ,output tsu_big       ,output tsu_flg       ,output tsu_lpacks    ,output tsu_bpacks    ,
-      output tsu_ltrail    ,output tsu_btrail    ,output tsu_tqty   ).
+		  run inittsupp(input tsu_part,input tsu_qty  ,input tsu_loc,
+      output tsu_abc ,output tsu_lit ,output tsu_big ,output tsu_flg ,output tsu_lpacks ,output tsu_bpacks ,
+      output tsu_ltrail ,output tsu_btrail ,output tsu_tqty   ).
 	end.
 	/*
 	if tiss1_qty <= 0 then next.	
@@ -520,11 +520,11 @@ end.
 
 
 procedure inittsupp:
-    DEF INPUT PARAMETER myttpart like tsup_part .
+    DEF INPUT PARAMETER myttpart like tsu_part .
     DEF INPUT PARAMETER myttqty  like tsu_qty   .
     DEF INPUT PARAMETER myttloc  like tsu_loc   .
-    DEF INPUT PARAMETER myttpart like tsup_part .
-    DEF INPUT PARAMETER myttpart like tsup_part .
+/*    DEF INPUT PARAMETER myttpart like tsu_part .                     */
+/*    DEF INPUT PARAMETER myttpart like tsu_part .                     */
     
     DEF OUTPUT PARAMETER myttabc     like tsu_abc    .
     DEF OUTPUT PARAMETER myttlit     like tsu_lit    .
