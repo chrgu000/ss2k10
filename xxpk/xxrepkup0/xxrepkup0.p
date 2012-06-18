@@ -38,7 +38,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-{mfdtitle.i "120608.1"}
+{mfdtitle.i "120618.0"}
 
 define new shared variable site           like si_site.
 define new shared variable site1          like si_site.
@@ -197,7 +197,7 @@ if not available usrw_wkfl then do:
    assign usrw_key1 = "xxrepkup0.p.parameter"
           usrw_key2 = global_userid.
 end.
-if available usrw_wkfl and locked(usrw_wkfl) then do:
+if available usrw_wkfl and not locked(usrw_wkfl) then do:
    assign  usrw_charfld[1] = site
            usrw_charfld[2] = site1
            usrw_charfld[3] = part

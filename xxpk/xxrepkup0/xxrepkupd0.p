@@ -1064,22 +1064,31 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
     end.
 end.
 
-for each xxwd_det exclusive-lock:
-     run getSEtime(input xxwd_type,
-                     input xxwd_site,
-                     input xxwd_line,
-                     input xxwd_time,
-                     output startTime,
-                     output endTime).
+for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line
+		  by xxwd_time by xxwd_part:
+		  if first-of(xxwd_time) then do:
+		     assign startTime = 0
+			          endtime = 0.
+         run getSEtime(input xxwd_type,
+                      input xxwd_site,
+                      input xxwd_line,
+                      input xxwd_time,
+                      output startTime,
+                      output endTime).
+     end.
      find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
                 usrw_key2 = xxwd_part no-error.
      if available usrw_wkfl then do:
-     		assign xxwd__int01 = startTime - v_lead_minus.
+     		assign xxwd__int01 = startTime - v_lead_minus
+     					 xxwd__int02 = endTime - v_lead_minus.
+     end.
+     else do:
+     		assign xxwd__int01 = startTime
+     		       xxwd__int02 = endTime.
      end.
 end.
 
-
-for each xxwd_det exclusive-lock break by xxwd_date by xxwd_line by xxwd__int01:
+for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line by xxwd__int01:
 	  if first-of(xxwd__int01) then do:
 	  	 assign vtype = xxwd_nbr.
 	  end.		
