@@ -4,7 +4,7 @@
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
 
-{mfdtitle.i "120612.1"}
+{mfdtitle.i "120618.1"}
 
 define variable vend  like po_vend no-undo.
 define variable vend1 like po_vend no-undo.
@@ -15,14 +15,16 @@ define variable due1  as   date    no-undo.
 define variable ptdesc like pt_desc1 no-undo.
 define variable vdsort like vd_sort no-undo.
 define variable codecmmt like code_cmmt no-undo.
-define variable posdiff as decimal no-undo.
+define variable posdiff as decimal no-undo format "->,>>,>>>,>>9.9<".
 define variable qty   as decimal no-undo.
 define variable tqty  as decimal no-undo format "->,>>,>>>,>>9.9<".
+define variable tdate as date no-undo.
 
 define temp-table tmp_pod
     fields tpd_vend like vd_addr format "x(12)"
     fields tpd_part like pt_part
-    fields tpd_tqty like pod_qty_ord
+    fields tpd_tdate as date
+    fields tpd_tqty like pod_qty_ord format "->,>>,>>>,>>9.9<"
     fields tpd_qty  like pod_qty_ord format "->,>>,>>>,>>9.9<"
     fields tpd_mqty like pod_qty_ord format "->,>>,>>>,>>9.9<"
     index tpd_part tpd_part.
@@ -56,7 +58,7 @@ repeat:
     if due1 = ? then due1 = hi_date.
 
     {gpselout.i &printtype = "printer"
-                &printwidth = 132
+                &printwidth = 152
                 &pagedflag = "nopage"
                 &stream = " "
                 &appendtofile = " "
@@ -71,39 +73,48 @@ repeat:
 mainloop:
 do on error undo, return error on endkey undo, return error:
    empty temp-table tmp_pod no-error.
-   for each pod_det no-lock where pod_part >= part and
+   assign tdate = ?.
+   for each pod_det no-lock use-index pod_partdue where pod_part >= part and
            (pod_part <= part1 or part1 = "") and
             pod_due_date >= due and
            (pod_due_date <= due1 or due1 = ?) and
            pod_type = "T",
        each po_mstr no-lock where po_nbr = pod_nbr and
             po_vend >= vend and
-           (po_vend <= vend1 or vend1 = ""):
+           (po_vend <= vend1 or vend1 = "") break by pod_part
+           by pod_due_date:
+        if first-of(pod_due_date) then do:
+        	 assign tdate = pod_due_date.
+        end.
         find first tmp_pod where tpd_part = pod_part no-error.
         if not available tmp_pod then do:
            create tmp_pod.
            assign tpd_part = pod_part
-                  tpd_vend = po_vend.
+                  tpd_vend = po_vend
+                  tpd_tdate = tdate.
         end.
         assign tpd_tqty = tpd_tqty + pod_qty_ord.
    end.
 
-   for each pod_det no-lock where pod_part >= part and
-           (pod_part <= part1 or part1 = "") and
-            pod_due_date >= due and
-           (pod_due_date <= due1 or due1 = ?) and
-           pod_type <> "T",
-       each xvp_ctrl no-lock where xvp_part = pod_part,
-       each po_mstr no-lock where po_nbr = pod_nbr and
-            po_vend >= vend and
-           (po_vend <= vend1 or vend1 = ""):
-       find first tmp_pod where tpd_part = pod_part no-error.
-       if not available tmp_pod then do:
-           create tmp_pod.
-           assign tpd_part = pod_part
-                  tpd_vend = po_vend.
-        end.
-        assign tpd_qty = tpd_qty + pod_qty_ord.
+   for each tmp_pod exclusive-lock:
+   		 assign qty = 0.
+   		 if due = ? then do:
+   	   		assign tdate = tpd_tdate.
+   	   end.
+   	   else do:
+   	   		assign tdate = due.
+   	   end.
+       for each pod_det no-lock where pod_part = tpd_part and
+                pod_due_date >= tpd_tdate and
+                pod_due_date >= tdate and
+               (pod_due_date <= due1 or due1 = ?) and
+                pod_type = "",
+          each po_mstr no-lock where po_nbr = pod_nbr and
+               po_vend >= vend and
+              (po_vend <= vend1 or vend1 = ""):
+           assign qty = qty + pod_qty_ord.
+       end.  		 
+       assign tpd_qty = qty.
    end.
 
    for each tmp_pod exclusive-lock:
@@ -119,11 +130,11 @@ do on error undo, return error on endkey undo, return error:
    end.
 
   {mfphead.i}
-   for each tmp_pod no-lock with frame x with width 132:
+   for each tmp_pod no-lock with frame x with width 152:
        setframelabels(frame x:handle).
        find first vd_mstr no-lock where vd_addr = tpd_vend no-error.
        if available vd_mstr then do:
-            display tpd_vend vd_sort format "x(24)" tpd_part tpd_tqty
+            display tpd_vend vd_sort format "x(24)" tpd_part tpd_tdate tpd_tqty
                     tpd_qty tpd_qty - tpd_tqty @ posdiff tpd_mqty
                     tpd_mqty - (tpd_tqty - tpd_qty) @ tqty.
        end.
