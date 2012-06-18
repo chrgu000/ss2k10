@@ -28,10 +28,10 @@ define variable pnbr like xxwa_nbr.
 define variable vqty  as decimal no-undo.
 define variable tax_bonded as logical no-undo.
 define variable del-yn   as logical no-undo.
-define variable startTime as integer no-undo.
-define variable endTime as integer no-undo.
-define variable st1 as integer no-undo.
-define variable et1 as integer no-undo.
+/* define variable startTime as integer no-undo.      */
+/* define variable endTime as integer no-undo.        */
+/* define variable st1 as integer no-undo.            */
+/* define variable et1 as integer no-undo.            */
 define variable v_lead_minus as integer no-undo.
 find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
            usrw_key2 = global_userid no-error.
@@ -164,7 +164,7 @@ do on error undo, return error on endkey undo, return error:
            (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
           (xxwd_type = cate or cate = "A")
 
-          break by xxwd_type by xxwd_date by xxwd_time by xxwd_part:
+          break by xxwd_type by xxwd_date by xxwd__int01 by xxwd_part:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
        if available pt_mstr then do:
           assign vMultiple = pt__qad19
@@ -176,30 +176,30 @@ do on error undo, return error on endkey undo, return error:
                  vtype = ""
                  vdesc1 = "".
        end.
-       if first-of(xxwd_time) then do:
-       run getSEtime(input xxwd_type,
-                     input xxwd_site,
-                     input xxwd_line,
-                     input xxwd_time,
-                     output startTime,
-                     output endTime).
-       end.
-
-     /* D类(线外做的)物料在做个提前时间需要提前做 */
-     find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
-                usrw_key2 = xxwd_part no-error.
-     if available xxwd_det then do:
-        assign st1 = startTime - v_lead_minus
-               et1 = endTime - v_lead_minus.
-     end.
+    /*  if first-of(xxwd_time) then do:                                         */
+    /*  run getSEtime(input xxwd_type,                                          */
+    /*                input xxwd_site,                                          */
+    /*                input xxwd_line,                                          */
+    /*                input xxwd_time,                                          */
+    /*                output startTime,                                         */
+    /*                output endTime).                                          */
+    /*  end.                                                                    */
+    /*                                                                          */
+    /* /* D类(线外做的)物料在做个提前时间需要提前做 */                          */
+    /* find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and */
+    /*            usrw_key2 = xxwd_part no-error.                               */
+    /* if available xxwd_det then do:                                           */
+    /*    assign st1 = startTime - v_lead_minus                                 */
+    /*           et1 = endTime - v_lead_minus.                                  */
+    /* end.                                                                     */
 
      export delimiter "~011"
             xxwd_type
             lower(xxwd_type) + xxwd_nbr
             xxwd_line
             string(xxwd_time,"hh:mm:ss")
-            string(st1,"hh:mm:ss")
-            string(et1,"hh:mm:ss")
+            string(xxwd__int01,"hh:mm:ss")
+            string(xxwd__int02,"hh:mm:ss")
             xxwd_sn
             substring(xxwd_ladnbr,9)
             xxwd_part

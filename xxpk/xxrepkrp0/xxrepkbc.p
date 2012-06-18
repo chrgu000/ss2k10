@@ -180,7 +180,7 @@ do on error undo, return error on endkey undo, return error:
        run print (input xxwd_part,
        						input xxwd_loc,
        						input xxwd_lot,
-       						input string(xxwd_date,"9999-99-99") + " " + string(xxwd_time,"HH:MM:SS") ,
+       						input string(xxwd_date,"9999-99-99") + " " + string(startTime,"HH:MM:SS") ,
        						input xxwd_type + xxwd_nbr,
        						input xxwd_qty_plan).
        						
@@ -247,8 +247,9 @@ procedure print:
     define input parameter vv_nbr  as character.
     define input parameter vv_qty   like wo_qty_ord.
 
-    define variable v_invnbr as character.
-
+    define variable wsection as character.
+		define variable ts9030 as character.
+		define variable av9030 as character.
     define variable labelspath as character format "x(100)" init "/app/bc/labels/".
 
     find first code_mstr where code_fldname = "barcode" and code_value ="labelspath" no-lock no-error.
@@ -257,7 +258,6 @@ procedure print:
 
     wsection    = "lap03" + trim ( string(year(today)) + string(month(today),'99') + string(day(today),'99'))  + trim(string(time)) + trim(string(random(1,100))) .
 
-    assign v_invnbr = trim(substring(vv_nbr,1,index(vv_nbr,"No.") - 1)).
     input from value(labelspath + "lap03" ).
     output to value(trim(wsection) + ".l") .
        repeat:
@@ -294,16 +294,10 @@ procedure print:
                     + substring( ts9030 , index(ts9030 ,"$L")
                     + length("$L"), length(ts9030) - ( index(ts9030 , "$L") + length("$L") - 1 )).
           end.
-          /*库位-实际条码打印发票号*/
-          if index(ts9030, "库位") <> 0 then do:
-             av9030 = "发票".
-             ts9030 = substring(ts9030, 1, index(ts9030 , "库位") - 1) + av9030
-                    + substring( ts9030 , index(ts9030 ,"库位")
-                    + length("库位"), length(ts9030) - ( index(ts9030 , "库位") + length("库位") - 1 )).
-          end.
-
+					
+					/*库位*/
           if index(ts9030, "$C") <> 0 then do:
-             av9030 = string(v_invnbr).
+             av9030 = string(vv_loc).
              ts9030 = substring(ts9030, 1, index(ts9030 , "$C") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"$C")
                     + length("$C"), length(ts9030) - ( index(ts9030 , "$C") + length("$C") - 1 )).
@@ -356,7 +350,7 @@ procedure print:
           /*检验OK*/
           if index(ts9030, "&R") <> 0 then do:
              /*av9030 = /*if trim ( V1520 ) = "Y" then "受检章" else*/ "检验OK" . */
-             av9030 = if xxwd_type = "P" then "取料" else "送料".
+             av9030 = if substring(vv_nbr,1,1) = "P" then "取料" else "送料".
              ts9030 = substring(ts9030, 1, index(ts9030 , "&R") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"&R")
                     + length("&R"), length(ts9030) - ( index(ts9030 , "&R") + length("&R") - 1 )).
