@@ -13,7 +13,7 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {xxrepkup0.i "new"}
 {xxrepkup1.i "new"}
-
+{xxrepkrp0.i}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -96,6 +96,9 @@ define variable multqty as decimal no-undo.
 define variable errorst as character no-undo.
 define variable errornum as integer  no-undo.
 define variable i        as integer  no-undo.
+define variable startTime as integer no-undo.
+define variable endTime as integer no-undo.
+
 /* USE TEMP-TABLE IN PLACE OF WORKFILE TO IMPROVE PERFORMANCE     */
 /* 使用临时表代替工作文件提高性能                                 */
 define var  iii as int no-undo.
@@ -697,23 +700,6 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
  */
 end.
 
-/* D类(线外做的)物料在做个提前时间需要提前做 */
-  assign v_lead_minus = 0.
-  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
-             code_value = "DEFAULT-MINUTS" no-error.
-  if available code_mstr then do:
-     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
-  end.
-  for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
-      each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
-           usrw_key2 = xxwa_part
-  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
-        assign xxwa_rtime = xxwa_rtime - v_lead_minus.
-  end.
-
 
  /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
@@ -736,7 +722,7 @@ end.
         	 				xxwa_setime = xxwa_rtime - 7200.
         end.
         			 
-        
+
         /********************************************************************
         assign vtype = "*".
         if first-of(xxwa_part) then do:
@@ -769,7 +755,26 @@ end.
         end.
         **********************************************************************/
   end. /* for each xxwa_det exclusive-lock where  */
-
+  
+  /* D类(线外做的)物料在做个提前时间需要提前做 */
+  assign v_lead_minus = 0.
+  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
+             code_value = "DEFAULT-MINUTS" no-error.
+  if available code_mstr then do:
+     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
+  end.
+  for each xxwa_det exclusive-lock where
+           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
+      each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
+           usrw_key2 = xxwa_part
+  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
+  			assign xxwa_pstime = xxwa_pstime - v_lead_minus
+        	 	   xxwa_petime = xxwa_petime - v_lead_minus
+        	 	   xxwa_sstime = xxwa_sstime - v_lead_minus
+        	 	   xxwa_setime = xxwa_setime - v_lead_minus.
+  end.      
 
   /* 按最小包装量计算需求到 xxwa_ord_mult*/
   for each xxwa_det exclusive-lock:
@@ -867,8 +872,8 @@ end.
            xxwa_date >= issue and xxwa_date <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_rtime by xxwa_part:
-      if first-of(xxwa_rtime) then do:
+  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_pstime by xxwa_part:
+      if first-of(xxwa_pstime) then do:
         assign vtype = "".
         {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
                                  ,output errorst,output errornum)" }
@@ -1059,6 +1064,29 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
     end.
 end.
 
+for each xxwd_det exclusive-lock:
+     run getSEtime(input xxwd_type,
+                     input xxwd_site,
+                     input xxwd_line,
+                     input xxwd_time,
+                     output startTime,
+                     output endTime).
+     find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
+                usrw_key2 = xxwd_part no-error.
+     if available usrw_wkfl then do:
+     		assign xxwd__int01 = startTime - v_lead_minus.
+     end.
+end.
+
+
+for each xxwd_det exclusive-lock break by xxwd_date by xxwd_line by xxwd__int01:
+	  if first-of(xxwd__int01) then do:
+	  	 assign vtype = xxwd_nbr.
+	  end.		
+		if xxwd_nbr <> vtype then do:
+			 assign xxwd_nbr = vtype.
+	  end.
+end.
 
 /*  empty temp-table xx_ld no-error.                                          */
 /*  assign errornum = 10.                                                     */

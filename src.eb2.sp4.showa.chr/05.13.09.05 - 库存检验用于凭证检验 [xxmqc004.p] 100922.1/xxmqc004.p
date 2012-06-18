@@ -393,9 +393,8 @@ END.
 ASSIGN v_file = "xxmqc004.cim." + string(today,"99999999") + string(time).
 output to value(v_file + ".in").
 FOR EACH tt NO-LOCK:
-    for each ld_det no-lock where ld_site = t1_site and
-               ld_loc = t1_loc and ld_part = t1_part and
-               ld_lot = t1_serial:
+    for each ld_det no-lock use-index ld_part_lot where ld_part = t1_part and
+             ld_lot = t1_serial:
        put unformat '"' ld_site '" "' ld_loc '" "' ld_part '" "' ld_lot '"'
                     skip.
        if t1_status = "1" then do:

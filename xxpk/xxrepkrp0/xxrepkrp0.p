@@ -8,7 +8,7 @@
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
 {mfdtitle.i "120405.1"}
-
+{xxrepkrp0.i}
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
@@ -30,6 +30,9 @@ define variable tax_bonded as logical no-undo.
 define variable del-yn   as logical no-undo.
 define variable startTime as integer no-undo.
 define variable endTime as integer no-undo.
+define variable st1 as integer no-undo.
+define variable et1 as integer no-undo.
+define variable v_lead_minus as integer no-undo.
 find first usrw_wkfl no-lock where usrw_key1 = "xxrepkup0.p.param.ref" and
            usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
@@ -145,7 +148,12 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("STATUS",12)
          getTermLabel("Date",12)
          .
-
+  assign v_lead_minus = 0.
+  find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
+             code_value = "DEFAULT-MINUTS" no-error.
+  if available code_mstr then do:
+     assign v_lead_minus = integer(code_cmmt) * 60 no-error.
+  end.
  for each xxwd_det no-lock where
           xxwd_site >= site and xxwd_site <= site1 and
           (xxwd_line >= line and xxwd_line <= line1 or xxwd_type = "P") and
@@ -170,19 +178,28 @@ do on error undo, return error on endkey undo, return error:
        end.
        if first-of(xxwd_time) then do:
        run getSEtime(input xxwd_type,
-       							 input xxwd_site,
-       							 input xxwd_line,
-       							 input xxwd_time,
-       							 output startTime,
-       							 output endTime).
+                     input xxwd_site,
+                     input xxwd_line,
+                     input xxwd_time,
+                     output startTime,
+                     output endTime).
        end.
+
+     /* D类(线外做的)物料在做个提前时间需要提前做 */
+     find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
+                usrw_key2 = xxwd_part no-error.
+     if available xxwd_det then do:
+        assign st1 = startTime - v_lead_minus
+               et1 = endTime - v_lead_minus.
+     end.
+
      export delimiter "~011"
             xxwd_type
             lower(xxwd_type) + xxwd_nbr
             xxwd_line
             string(xxwd_time,"hh:mm:ss")
-            string(startTime,"hh:mm:ss")
-            string(endTime,"hh:mm:ss")
+            string(st1,"hh:mm:ss")
+            string(et1,"hh:mm:ss")
             xxwd_sn
             substring(xxwd_ladnbr,9)
             xxwd_part
@@ -204,28 +221,6 @@ end.
 end.  /* repeat: */
 
 {wbrp04.i &frame-spec = a}
-
-procedure getSEtime:
-    define input parameter iType as character.
-    define input parameter iSite as character.
-    define input parameter iLine as character.
-    define input parameter iRuntime as integer.
-    define output parameter ostime as integer.
-    define output parameter oetime as integer.
-    find first xxlnw_det no-lock where xxlnw_site = isite and
-              (xxlnw_line = iLine or iLine = "") and
-               xxlnw_ptime = iRunTime no-error.
-    if available xxlnw_det then do:
-       if iType = "p" then do:
-          assign ostime = xxlnw_pstime
-                 oetime = xxlnw_petime.
-       end.
-       else do:
-          assign ostime = xxlnw_sstime
-                 oetime = xxlnw_setime.
-       end.
-    end.
-end procedure.
 
 /******************************************************************************
 procedure printP:
