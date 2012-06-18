@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120118.1"}
+{mfdtitle.i "120118.0"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -38,7 +38,14 @@ define variable tpoqtys like mrp_qty.
 define variable tpopo   like mrp_qty.
 define variable tpotpo  like mrp_qty.
 define variable T       as   logical.
-
+define variable tpo1date as date.
+define variable aqty as decimal.
+define temp-table tmp_po1
+       fields tp1_part like pt_part
+       fields tp1_po as decimal format "->>>,>>>,>>>,>>>,9.9<"
+       fields tp1_tpo as decimal format "->>>,>>>,>>>,>>>,9.9<"
+       fields tp1_apo as decimal format "->>>,>>>,>>>,>>>,9.9<"
+       index tp1_part tp1_part.
 
 define temp-table tmp_po
     fields tpo_nbr like po_nbr
@@ -279,7 +286,7 @@ repeat:
 
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
             code_value <> "" and substring(code_value,1,2) <> "M4" and
-            code_value <> "P": 
+            code_value <> "P":
             assign duek = ?
                    duee = ?.
             find first tmp_datearea where td_rule = code_value
@@ -294,7 +301,7 @@ repeat:
             create tmp_rule_date.
             assign trd_rule = code_value
                    trd_datef = duek
-                   trd_datet = duee - 1. 
+                   trd_datet = duee - 1.
    end.
 
    FOR EACH pt_mstr no-lock where pt_part >= part and pt_part <= part1
@@ -452,7 +459,7 @@ repeat:
    for each tmp_datearea no-lock:
        display tmp_datearea with width 200.
    end.
-   
+
    put unformat skip(2) "tmp_rule_date" skip.
    for each tmp_rule_date no-lock:
        display tmp_rule_date with width 300.
@@ -557,32 +564,65 @@ repeat:
          end.
     end.
 
-    for each tmp_po exclusive-lock where tpo_type = "T" and tpo_qty > 0:
-        find first tmp_datearea where td_rule = tpo_rule and
-                   td_date > tpo_due no-error.
-        if available tmp_datearea then do:
-           assign tpo_end = td_date - 1.
-        end.
-        else do:
-           assign tpo_end = hi_date.
-        end.
-        assign qty_tpod = 0
-               qty_pod = 0.
-        for each pod_det no-lock use-index pod_partdue where
-                 pod_part = tpo_part and pod_due_date >= tpo_due and
-                 pod_due_date <= tpo_end:
-            if pod_type = "T" then do:
-               assign qty_tpod = qty_tpod + pod_qty_ord.
-            end.
-            else do:
-               assign qty_pod = qty_pod + pod_qty_ord.
-            end.
-        end.
-        assign tpo_po = qty_pod
-               tpo_tpo = qty_tpod
-               tpo_qty = tpo_qty - qty_tpod.
+    empty temp-table tmp_po1 no-error.
+    for each tmp_po1 exclusive-lock: delete tmp_po1. end.
+    for each tmp_po no-lock where tpo_type = "T" break by tpo_part:
+        if first-of(tpo_part) then do:
+           assign tpo1date = ?.
+           for each pod_det no-lock use-index pod_partdue where
+                 pod_part = tpo_part break by pod_part by pod_due_date:
+               if pod_type = "T" then do:
+                  assign tpo1date = pod_due_date.
+               end.
+               if pod_due_date >= tpo1date then do:
+                  find first tmp_po1 no-lock where tp1_part = pod_part no-error.
+                  if not available tmp_po1 then do:
+                     create tmp_po1.
+                     assign tp1_part = pod_part.
+                  end.
+                  if pod_type = "T" then do:
+                     assign tp1_tpo = tp1_tpo + pod_qty_ord.
+                  end.
+                  if pod_type = "" then do:
+                     assign tp1_po = tp1_po + pod_qty_ord.
+                  end.
+               end. /* if pod_due_date >= tpo1date then do: */
+           end. /* for each pod_det no-lock  */
+        end. /* if first-of(tmp_part) then do: */
     end.
 
+    for each tmp_po exclusive-lock where tpo_type = "T" and tpo_qty > 0:
+        /* find first tmp_datearea where td_rule = tpo_rule and           */
+        /*            td_date > tpo_due no-error.                         */
+        /* if available tmp_datearea then do:                             */
+        /*    assign tpo_end = td_date - 1.                               */
+        /* end.                                                           */
+        /* else do:                                                       */
+        /*    assign tpo_end = hi_date.                                   */
+        /* end.                                                           */
+        /* assign qty_tpod = 0                                            */
+        /*        qty_pod = 0.                                            */
+        /* for each pod_det no-lock use-index pod_partdue where           */
+        /*          pod_part = tpo_part and pod_due_date >= tpo_due and   */
+        /*          pod_due_date <= tpo_end:                              */
+        /*     if pod_type = "T" then do:                                 */
+        /*        assign qty_tpod = qty_tpod + pod_qty_ord.               */
+        /*     end.                                                       */
+        /*     else do:                                                   */
+        /*        assign qty_pod = qty_pod + pod_qty_ord.                 */
+        /*     end.                                                       */
+        /* end.                                                           */
+        find first tmp_po1 where tp1_part = tpo_part no-error.
+        if available tmp_po1 then do:
+        assign tpo_po = tp1_po
+               tpo_tpo = tp1_tpo
+               tpo_qty = tpo_qty - qty_tpod.
+        end.
+    end.
+    for each tmp_po1 exclusive-lock:
+        if tp1_tpo - tp1_po >= 0 then assign tp1_apo = tp1_tpo - tp1_po.
+                                 else assign tp1_apo = 0.
+    end.
     for each tmp_po exclusive-lock:
         assign tpo_qty0 = tpo_qty.
     end.
@@ -702,10 +742,25 @@ repeat:
                  if available code_mstr then do:
                     assign areaDesc = code_cmmt.
                  end.
-                 export delimiter "~011" tpo_nbr tpo_vend tpo_part tpoqty
-                        tpo_due tpo_type tpoqtys tpopo tpotpo
-                        weekday(tpo_due) - 1
-                        tpo_rule0 areaDesc.
+                 find first tmp_po1 no-lock where tp1_part = tpo_part no-error.
+                 if available tmp_po1 then do:
+                    assign aqty = tp1_apo.
+                 end.
+                 if aqty <= tpoqty
+                    then assign tpoqty = tpoqty - aqty.
+                    else assign tpoqty = 0.
+                 export delimiter "~011"
+                       tpo_nbr tpo_vend tpo_part tpoqty
+                       tpo_due tpo_type tpoqtys tpopo tpotpo
+                       weekday(tpo_due) - 1
+                       tpo_rule0 areaDesc.
+                 find first tmp_po1 exclusive-lock where tp1_part = tpo_part
+                            no-error.
+                 if available tmp_po1 then do:
+                    if tp1_apo >= tpoqtys
+                    then assign tp1_apo = tp1_apo - tpoqtys.
+                    else assign tp1_apo = 0.
+                 end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.
          end.
