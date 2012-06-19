@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "120405.1"}
+{mfdtitle.i "120620.1"}
 
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -148,14 +148,13 @@ do on error undo, return error on endkey undo, return error:
 
  for each xxwd_det no-lock where
           xxwd_site >= site and xxwd_site <= site1 and
-          (xxwd_line >= line and xxwd_line <= line1 or xxwd_type = "P") and
+          (xxwd_line >= line and xxwd_line <= line1) and
           xxwd_part >= part and xxwd_part <= part1 and
           xxwd_date >= issue and xxwd_date <= issue1 and
           xxwd_nbr >= nbr and xxwd_nbr <= nbr1 and
           ((substring(xxwd_part,1,1) = "P" and tax_bonded) or
            (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
           (xxwd_type = cate or cate = "A")
-
           break by xxwd_type by xxwd_date by xxwd_time by xxwd_part:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
        if available pt_mstr then do:
@@ -168,30 +167,20 @@ do on error undo, return error on endkey undo, return error:
                  vtype = ""
                  vdesc1 = "".
        end.
-       if first-of(xxwd_time) then do:
-       run getSEtime(input xxwd_type,
-       							 input xxwd_site,
-       							 input xxwd_line,
-       							 input xxwd_time,
-       							 output startTime,
-       							 output endTime).
-       end.
-       
+
        run print (input xxwd_part,
-       						input xxwd_loc,
-       						input xxwd_lot,
-       						input string(xxwd_date,"9999-99-99") + " " + string(startTime,"HH:MM:SS") ,
-       						input xxwd_type + xxwd_nbr,
-       						input xxwd_qty_plan).
-       						
-/***       
+                  input (if xxwd_type = "s" then "P-ALL" else xxwd_loc),
+                  input xxwd_lot,
+                  input string(xxwd_date,"9999-99-99") + " " + string(xxwd__int02,"HH:MM:SS"),
+                  input xxwd_type + xxwd_nbr,
+                  input xxwd_qty_plan).
      export delimiter "~011"
             xxwd_type
             lower(xxwd_type) + xxwd_nbr
             xxwd_line
             string(xxwd_time,"hh:mm:ss")
-            string(startTime,"hh:mm:ss")
-            string(endTime,"hh:mm:ss")
+            string(xxwd__int01,"hh:mm:ss")
+            string(xxwd__int02,"hh:mm:ss")
             xxwd_sn
             substring(xxwd_ladnbr,9)
             xxwd_part
@@ -205,7 +194,6 @@ do on error undo, return error on endkey undo, return error:
             xxwd_qty_iss
             xxwd_stat
             xxwd_date.
-            ***/
 end.
 
 end.
@@ -237,8 +225,6 @@ procedure getSEtime:
     end.
 end procedure.
 
-
-
 procedure print:
     define input parameter vv_part  like pt_part.
     define input parameter vv_loc   like ld_loc.
@@ -248,8 +234,8 @@ procedure print:
     define input parameter vv_qty   like wo_qty_ord.
 
     define variable wsection as character.
-		define variable ts9030 as character.
-		define variable av9030 as character.
+    define variable ts9030 as character.
+    define variable av9030 as character.
     define variable labelspath as character format "x(100)" init "/app/bc/labels/".
 
     find first code_mstr where code_fldname = "barcode" and code_value ="labelspath" no-lock no-error.
@@ -265,7 +251,7 @@ procedure print:
 
           /*条码和条码下文字*/
           if index(ts9030, "&B") <> 0 then do:
-             av9030 = trim(vv_part) + "@" + trim(vv_lot) .
+             av9030 = trim(vv_part).
              ts9030 = substring(ts9030, 1, index(ts9030 , "&B") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"&B")
                     + length("&B"), length(ts9030) - ( index(ts9030 , "&B") + length("&B") - 1 )).
@@ -294,8 +280,8 @@ procedure print:
                     + substring( ts9030 , index(ts9030 ,"$L")
                     + length("$L"), length(ts9030) - ( index(ts9030 , "$L") + length("$L") - 1 )).
           end.
-					
-					/*库位*/
+
+          /*库位*/
           if index(ts9030, "$C") <> 0 then do:
              av9030 = string(vv_loc).
              ts9030 = substring(ts9030, 1, index(ts9030 , "$C") - 1) + av9030
@@ -350,7 +336,7 @@ procedure print:
           /*检验OK*/
           if index(ts9030, "&R") <> 0 then do:
              /*av9030 = /*if trim ( V1520 ) = "Y" then "受检章" else*/ "检验OK" . */
-             av9030 = if substring(vv_nbr,1,1) = "P" then "取料" else "送料".
+             av9030 = if substring(vv_nbr,1,1) = "P" then "取料" else "配送".
              ts9030 = substring(ts9030, 1, index(ts9030 , "&R") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"&R")
                     + length("&R"), length(ts9030) - ( index(ts9030 , "&R") + length("&R") - 1 )).
@@ -370,109 +356,3 @@ procedure print:
         unix silent value ("rm " + trim(wsection) + ".l").
     end.
 end. /*procedure*/
-
-
-
-/******************************************************************************
-procedure printP:
-   for each xxwa_det no-lock where
-             xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
-             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-             xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-             xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
-             xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
-           ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
-            (tax_bonded and substring(xxwa_part,1,1)= "P")),
-         each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid and xxwd_loc <> "P-ALL"
-        break by xxwd_nbr by xxwd_sn:
-       find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
-       if available pt_mstr then do:
-          assign vMultiple = pt__qad19
-                 vtype = pt__chr10
-                 vdesc1 = pt_desc1.
-       end.
-       else do:
-          assign vMultiple = 0
-                 vtype = ""
-                 vdesc1 = "".
-       end.
-              if (vtype = "A" or vtype = "C")
-                        then assign vqty = xxwd_qty_plan.
-                        else assign vqty = xxwa_qty_need.
-              if vqty > 0 then do:
-                 export delimiter "~011"
-                        "P"
-                        "p" + xxwa_nbr
-                        xxwd_line
-                        string(xxwa_rtime,"hh:mm:ss")
-                        string(xxwa_pstime,"hh:mm:ss")
-                        string(xxwa_petime,"hh:mm:ss")
-                        xxwd_sn
-                        substring(xxwd_ladnbr,9)
-                        xxwa_part
-                        vdesc1
-                        truncate(xxwa_qty_need,0)
-                        vMultiple
-                        vtype
-                        max(truncate(vqty,0),0)
-                        xxwd_loc
-                        xxwd_lot
-                        truncate(xxwd_qty_piss,0)
-                        xxwd_pstat
-                        xxwa_date.
-             end.
-       end.
-end procedure.
-
-
-procedure printS:
- for each xxwa_det no-lock where
-              xxwa_date >= issue and (xxwa_date <= issue1 or issue1 = ?) and
-              xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-              xxwa_line >= line and (xxwa_line <= line1 or line1 = "") and
-              xxwa_part >= part and (xxwa_part <= part1 or part1 = "") and
-              xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "")and
-            ((tax_bonded = no and substring(xxwa_part,1,1)<> "P") or
-             (tax_bonded and substring(xxwa_part,1,1)= "P")),
-         each xxwd_det no-lock where xxwd_nbr = xxwa_nbr
-          and xxwd_recid = xxwa_recid break by xxwd_nbr by xxwd_sn:
-       find first pt_mstr no-lock where pt_mstr.pt_part = xxwa_part no-error.
-       if available pt_mstr then do:
-          assign vMultiple = pt__qad19
-                 vtype = pt__chr10
-                 vdesc1 = pt_desc1.
-       end.
-       else do:
-          assign vMultiple = 0
-                 vtype = ""
-                 vdesc1 = "".
-       end.
-       if (vtype = "A" or vtype = "C")
-                      then assign vqty = xxwd_qty_plan.
-                      else assign vqty = xxwa_qty_need.
-       if vqty > 0 then do:
-           export delimiter "~011"
-                  "S"
-                  "s" + xxwa_nbr
-                  xxwd_line
-                  string(xxwa_rtime,"hh:mm:ss")
-                  string(xxwa_sstime,"hh:mm:ss")
-                  string(xxwa_setime,"hh:mm:ss")
-                  xxwd_sn
-                  substring(xxwd_ladnbr,9)
-                  xxwa_part
-                  vdesc1
-                  truncate(xxwa_qty_need,0)
-                  vMultiple
-                  vtype
-                  truncate(vqty,0)
-                  "P-ALL"
-                  xxwd_lot
-                  truncate(xxwd_qty_siss,0)
-                  xxwd_sstat
-                  xxwa_date.
-        end.
-     end.
-end procedure.
-******************************************************************************/
