@@ -814,7 +814,7 @@ IF OkToRun = yes then RUN    xspor03.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-
+   
    /**********14*************/
       V1114LMAINLOOP:
    REPEAT:
@@ -936,11 +936,11 @@ IF OkToRun = yes then RUN xsinv23n.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-
-
+   
+   
    /**********14*************/
-
-
+   
+   
    /* Internal Cycle Input :1115    */
    V1115LMAINLOOP:
    REPEAT:
@@ -3763,7 +3763,7 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
 
 
                 /* LABEL 3 - START */
-                L11603 = "¿â´æ×ªÒÆ. . . .63" .
+                L11603 = ". . . . . . . .63" .
                 display L11603          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 3 - END */
 
@@ -4106,8 +4106,10 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
 
         /* LOGICAL SKIP START */
         V1160 = "".
+/*        
 RUN CheckSecurity (INPUT "xsinv23.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
 IF OkToRun = yes THEN  RUN    xsinv23.p.
+*/
         leave V1163L.
         /* LOGICAL SKIP END */
                 display "#ÌõÂë# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )

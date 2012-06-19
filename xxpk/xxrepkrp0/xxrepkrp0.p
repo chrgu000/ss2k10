@@ -7,7 +7,7 @@
 
 /*注:产生取料单,配送单的excle宏文件在..\..\showa\xxicstrp\xxicstrp.xla       */
 
-{mfdtitle.i "120405.1"}
+{mfdtitle.i "120618.1"}
 {xxrepkrp0.i}
 /* {xxtimestr.i}  */
 define variable site   like si_site no-undo.
@@ -164,7 +164,7 @@ do on error undo, return error on endkey undo, return error:
            (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
           (xxwd_type = cate or cate = "A")
 
-          break by xxwd_type by xxwd_date by xxwd__int01 by xxwd_part:
+          break by xxwd_type by xxwd_date by xxwd_line by xxwd__int01 by xxwd_part:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
        if available pt_mstr then do:
           assign vMultiple = pt__qad19

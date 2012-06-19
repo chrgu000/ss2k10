@@ -654,7 +654,7 @@ end.
 /* SS lambert 20120311 end */
 
  for each xxwa_det exclusive-lock where
-          xxwa_date >= issue and xxwa_date <= issue1 and
+          xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and xxwa_site <= site1 and
           xxwa_line >= wkctr and xxwa_line <= wkctr1
      break by xxwa_nbr:
@@ -673,7 +673,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
       and xx_line = t0_line
       and xx_site = t0_site
       and xx_par = t0_part break by t0_date by t0_site by t0_line
-                                 by t0_start by xx_comp :
+                                 by t0_start by xx_comp:
       if first-of(xx_comp) then do:
          assign aviqty = 0
                 vqty = 0.
@@ -683,6 +683,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
       if last-of(xx_comp) then do:
          create xxwa_det.
          assign xxwa_date = t0_date
+         				xxwa__dte01 = t0_date
                 xxwa_site = t0_site
                 xxwa_line = t0_line
                 xxwa_par  = t0_par
@@ -696,7 +697,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 xxwa_recid = recid(xxwa_det)
                 .
       end.
-    {xxrepkdis2.i}
+ /*   {xxrepkdis2.i}   */
  /*
     display t0_date t0_site t0_line t0_part
             t0_wktime
@@ -716,10 +717,13 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
  */
 end.
 
+  for each xxwa_det exclusive-lock where xxwa_rtime >= 0 and xxwa_rtime < 32399:
+  		assign xxwa_date = xxwa__dte01 + 1. 
+  end.
 
  /*计算取料,发料时间区间*/
   for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
@@ -780,7 +784,7 @@ end.
      assign v_lead_minus = integer(code_cmmt) * 60 no-error.
   end.
   for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = ""),
       each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
@@ -792,7 +796,21 @@ end.
         	 	   xxwa_setime = xxwa_setime - v_lead_minus.
   end.      
 
-  /* 按最小包装量计算需求到 xxwa_ord_mult*/
+  for each xxwa_det exclusive-lock where
+           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
+           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+  break by xxwa_date by xxwa_site by xxwa_line by xxwa_rtime by xxwa_part:
+  		display xxwa_date xxwa_site xxwa_line xxwa_part xxwa_qty_pln
+  						string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
+  						string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
+  						string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
+  						string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
+  						string(xxwa_setime,"hh:mm:ss") @ xxwa_setime with width 300.
+  end.
+
+
+  /* 按最小包装量计算需求到 xxwa_ord_mult
   for each xxwa_det exclusive-lock:
     assign xxwa_ord_mult = xxwa_qty_pln.
   end.
@@ -827,7 +845,7 @@ end.
     assign xxwa_ord_mult = xxwa_qty_pln.
   end.
   for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
            xxwa_qty_pln > 0,
@@ -858,7 +876,7 @@ end.
     assign xxwa_pka_mult = xxwa_qty_pln.
   end.
   for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa_date >= issue and xxwa_date <= issue1 and
+           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
            xxwa_qty_pln > 0,
@@ -882,28 +900,27 @@ end.
           END.
       END.
   END.
-
-  /*计算单号,序号*/
-  for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-  break by xxwa_date by xxwa_site by xxwa_line  by xxwa_pstime by xxwa_part:
-      if first-of(xxwa_pstime) then do:
-        assign vtype = "".
-        {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
-                                 ,output errorst,output errornum)" }
-      end.
-      assign xxwa_nbr = vtype .
-  end.
-
+*/
+/*计算单号,序号*/
+for each xxwa_det exclusive-lock where
+         xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
+         xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+         xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+break by xxwa_date by xxwa_site by xxwa_line by xxwa_pstime by xxwa_part:
+    if first-of(xxwa_pstime) then do:
+      assign vtype = "".
+      {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
+                               ,output errorst,output errornum)" }
+    end.
+    assign xxwa_nbr = vtype .
+end.
 
 for each xxwa_det no-lock where
-          xxwa_date >= issue and xxwa_date <= issue1 and
+          xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
           xxwa_qty_pln > 0
-          break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
+          break by xxwa_date by xxwa_site by xxwa_line
                 by xxwa_part by xxwa_rtime:
     find first tiss1 where
        tiss1_sdate    = xxwa_date and
