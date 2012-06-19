@@ -574,6 +574,22 @@ by wr_start by wr_part by wr_op
                pt_um when (available pt_mstr)
                short-assy @ ps_par
             with frame short  /*GUI*/ .
+            
+            create xx_pklst.
+            assign xx_site = wo_site
+                   xx_line = wr_wkctr
+                   xx_nbr = string(nbr,"x(10)") when (not delete_pklst)
+                   xx_comp = short-part
+/*                 xx_qty_req = max(wod_qty_req - wod_qty_iss,0)                */
+                   xx_qty_req = short-qty       /* 总需求量 */
+                   xx_qty_need = short-qty  /* 缺料量 */
+                   xx_qty_iss = 0
+                   xx_um = pt_um when (available pt_mstr)
+                   xx_par = short-assy
+                   xx_due_date = wo_due_date
+                   xx_op = wr_op
+                   xx_mch = wr_mch
+                   xx_start =wr_start.
 
             if first-of(short-part) then do:
                down 1.
@@ -1002,6 +1018,7 @@ else do:
              xxwd_type = "S"
              xxwd_date = trt1_sdate
              xxwd_time = trt1_stime
+             xxwd__int03 = trt1_stime
              xxwd_part = trt1_part
              xxwd_site = "GSA01"
              xxwd_line = trt1_line
@@ -1036,6 +1053,7 @@ else do:
              */
              xxwd_type = "P"
              xxwd_time = trt2_time
+             xxwd__int03 = trt2_time 
              xxwd_date = trt2_date
              xxwd_part = trt2_part
              xxwd_site = "GSA01"
@@ -1059,7 +1077,7 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
           assign i = xxlnw_stime.
        end.
     end.
-    if xxwd_time >= 0 and xxwd_time < i then do:
+    if xxwd__int03 >= 0 and xxwd__int03 < i then do:
        assign xxwd_date = xxwd_date + 1.
     end.
 end.
