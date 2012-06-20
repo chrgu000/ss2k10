@@ -3,7 +3,7 @@ define variable tcnbr as character format "x(30)".
 define variable WMESSAGE as character format "x(40)".
 define variable ret-ok as logical initial yes.
 define variable procall as logical initial yes.
-define variable vtrloc as character.
+define variable vtrloc as character initial "P-ALL".
 define variable vtrstat as character.
 define variable sstat as character no-undo.
 define variable vcimfile as character.
@@ -71,7 +71,6 @@ repeat:
   display "取料单:" + trim(tcnbr) format "x(40)"  skip with frame framea2 no-box.
   /* LABEL 4 - END */
   display "调拨全部?" format "x(40)" skip skip with fram framea2 no-box.
-
   update procall no-label with frame framea2 no-box.
   if procall then do:
      assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
@@ -79,7 +78,7 @@ repeat:
          for each xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
               and xxwd_qty_plan - xxwd_qty_iss > 0
               and xxwd_stat <> "C" and upper(xxwd_loc) <> "P-All":
-            run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
+            
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
@@ -132,7 +131,7 @@ repeat:
              assign xxwd_qty_iss = xxwd_qty_iss + accum total tr_qty_loc.
              if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
          end.
-         assign WMESSAGE = "调拨完成"。
+         assign WMESSAGE = "调拨完成".
   end.
   else do: /* if procall then do:*/
       hide all.

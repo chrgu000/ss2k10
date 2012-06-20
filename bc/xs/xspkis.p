@@ -3,7 +3,7 @@ define variable tcnbr as character format "x(30)".
 define variable WMESSAGE as character format "x(40)".
 define variable ret-ok as logical initial yes.
 define variable procall as logical initial yes.
-define variable vtrloc as character.
+define variable vtrloc as character initial "P-ALL".
 define variable vtrstat as character.
 define variable sstat as character.
 define variable vcimfile as character.
@@ -81,7 +81,6 @@ repeat:
 /*       and min((xxwd_qty_plan - xxwd_qty_iss) , xxwd_qty_piss) > 0   */
          and xxwd_stat <> "C" and max(xxwd_qty_plan - xxwd_qty_iss,0) > 0:
          assign xxwd__dec03 = max(xxwd_qty_plan - xxwd_qty_iss,0).
-        run getTrLoc(input xxwd_part,output vtrloc,output vtrstat).
         find first loc_mstr no-lock where loc_site = wdefsite and
                    loc_loc = xxwd_loc no-error.
         if available loc_mstr then do:

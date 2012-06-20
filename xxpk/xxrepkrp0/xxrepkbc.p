@@ -177,7 +177,7 @@ do on error undo, return error on endkey undo, return error:
                   input (if xxwd_type = "S" then "P-ALL" else xxwd_loc),
                   input xxwd_lot,
                   input string(xxwd_date,"9999-99-99") + " " + string(xxwd__int02,"HH:MM:SS"),
-                  input xxwd_type + xxwd_nbr,
+                  input xxwd_type + xxwd_nbr + ";" + trim(string(xxwd_sn,">>>>>>>>>9")),
                   input xxwd_qty_plan).
      export delimiter "~011"
             xxwd_type
