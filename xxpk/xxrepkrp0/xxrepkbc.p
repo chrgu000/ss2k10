@@ -14,6 +14,8 @@ define variable site   like si_site no-undo.
 define variable site1  like si_site no-undo.
 define variable line   like ln_line no-undo.
 define variable line1  like ln_line no-undo.
+define variable ln     as   integer no-undo.
+define variable ln1    as   integer no-undo.
 define variable part   like pt_part no-undo. /* initial "MHTA03-N60-0-CK". */
 define variable part1  like pt_part no-undo. /* initial "MHTA03-N60-0-CK". */
 define variable issue   as date no-undo initial today.
@@ -43,6 +45,8 @@ form
    site1  label {t001.i} colon 50 skip
    line   colon 20
    line1  label {t001.i} colon 50 skip
+   ln     colon 20
+   ln1    label {t001.i} colon 50 skip
    part   colon 20
    part1  label {t001.i} colon 50 skip
    issue  colon 20
@@ -64,11 +68,12 @@ repeat:
     if line1 = hi_char then line1 = "".
     if nbr1 = hi_char then nbr1 = "".
     if part1 = hi_char then part1 = "".
+    if ln1   = 999999 then ln1 = 0.
     if issue = low_date then issue = ?.
     if issue1 = hi_date then issue1 = ?.
 
 if c-application-mode <> 'web' then
-update site site1 line line1 part part1 issue issue1 nbr nbr1
+update site site1 line line1 ln ln1 part part1 issue issue1 nbr nbr1
        cate tax_bonded del-yn
        with frame a.
 if index("APS",cate) = 0 then do:
@@ -76,7 +81,7 @@ if index("APS",cate) = 0 then do:
     undo,retry.
 end.
 {wbrp06.i &command = update
-          &fields = " site site1 line line1 part part1 issue issue1
+          &fields = " site site1 line line1 ln ln1 part part1 issue issue1
                       nbr nbr1 cate tax_bonded del-yn"
           &frm = "a"}
 
@@ -89,6 +94,7 @@ if (c-application-mode <> 'web') or
    {mfquoter.i site1}
    {mfquoter.i line}
    {mfquoter.i line1}
+   {mfquoter.i ln1}
    {mfquoter.i part}
    {mfquoter.i part1}
    {mfquoter.i nbr}
@@ -102,6 +108,7 @@ if (c-application-mode <> 'web') or
    nbr1 = nbr1 + hi_char.
    if issue = ? then issue = low_date.
    if issue1 = ? then issue1 = hi_date.
+   if ln1 = 0 then ln1 = 999999.
 
 end.
         /* SELECT PRINTER  */
@@ -149,12 +156,10 @@ do on error undo, return error on endkey undo, return error:
  for each xxwd_det no-lock where
           xxwd_site >= site and xxwd_site <= site1 and
           (xxwd_line >= line and xxwd_line <= line1) and
+          (xxwd_sn >= ln and xxwd_sn <= ln1) and
           xxwd_part >= part and xxwd_part <= part1 and
           xxwd_date >= issue and xxwd_date <= issue1 and
-          xxwd_nbr >= nbr and xxwd_nbr <= nbr1 and
-          ((substring(xxwd_part,1,1) = "P" and tax_bonded) or
-           (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
-          (xxwd_type = cate or cate = "A")
+          xxwd_nbr >= substring(nbr,2) and xxwd_nbr <= nbr1
           break by xxwd_type by xxwd_date by xxwd_time by xxwd_part:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
        if available pt_mstr then do:
@@ -259,7 +264,7 @@ procedure print:
 
           /*ÈÕÆÚ*/
           if index(ts9030, "$D") <> 0 then do:
-             av9030 = vv_date .
+             av9030 = vv_date.
              ts9030 = substring(ts9030, 1, index(ts9030 , "$D") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"$D")
                     + length("$D"), length(ts9030) - ( index(ts9030 , "$D") + length("$D") - 1 )).
