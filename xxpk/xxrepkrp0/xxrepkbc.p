@@ -169,7 +169,7 @@ do on error undo, return error on endkey undo, return error:
        end.
 
        run print (input xxwd_part,
-                  input (if xxwd_type = "s" then "P-ALL" else xxwd_loc),
+                  input (if xxwd_type = "S" then "P-ALL" else xxwd_loc),
                   input xxwd_lot,
                   input string(xxwd_date,"9999-99-99") + " " + string(xxwd__int02,"HH:MM:SS"),
                   input xxwd_type + xxwd_nbr,
@@ -275,7 +275,7 @@ procedure print:
 
           /*ÅúÐòºÅ*/
           if index(ts9030, "$L") <> 0 then do:
-             av9030 = substring(vv_lot,1,6) + "/" + substring(vv_lot,7,4).
+             av9030 = trim(vv_lot).
              ts9030 = substring(ts9030, 1, index(ts9030 , "$L") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"$L")
                     + length("$L"), length(ts9030) - ( index(ts9030 , "$L") + length("$L") - 1 )).
