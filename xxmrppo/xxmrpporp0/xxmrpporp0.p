@@ -5,11 +5,13 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120118.0"}
+{mfdtitle.i "120620.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
+define variable vkey1 like usrw_key1 no-undo
+                  initial "XXMRPPORP0.P-ITEM-ORDER-POLICY".
 define variable part like pt_part. /* INITIAL "M72059-215-1".  */
 define variable part1 like pt_part.
 define variable due as date.
@@ -329,15 +331,24 @@ repeat:
 
    /*料号有rule以料号设定的rule为准  计算P之Rule */
    for each tmp_tmd use-index tm_pm exclusive-lock:
-       find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""
-              and pt_rev <> "1"
-            no-error.
-       if available pt_mstr and
-            can-find(first code_mstr where code_fldname = "pt_rev"
-                      and code_value = pt_rev) then do:
-          assign tm_rule0 = pt_rev
-                 tm_rule = pt_rev.
+       find first usrw_wkfl no-lock where usrw_key1 = vkey1 and 
+       						usrw_key2 = tm_part and usrw_key3 <> "" and usrw_key3 <> "1"
+       						no-error.
+       if available usrw_wkfl and
+            can-find(first code_mstr where code_fldname = "vd__chr03"
+                       and code_value = usrw_key2) then do:
+          assign tm_rule0 = usrw_key3
+                 tm_rule = usrw_key3.
        end.
+/*       find first pt_mstr no-lock where pt_part = tm_part and pt_rev <> ""  */
+/*              and pt_rev <> "1"                                             */
+/*            no-error.                                                       */
+/*       if available pt_mstr and                                             */
+/*            can-find(first code_mstr where code_fldname = "pt_rev"          */
+/*                      and code_value = pt_rev) then do:                     */
+/*          assign tm_rule0 = pt_rev                                          */
+/*                 tm_rule = pt_rev.                                          */
+/*       end.                                                                 */
    end.
 
 /*  计算P之Rule
@@ -511,14 +522,17 @@ repeat:
 */
    /*    合并非第一笔日期到第一笔日期.   */
    for each tmp_po exclusive-lock,
-       each pt_mstr no-lock where pt_part = tpo_part
-        and pt_rev = "1" break by tpo_part by tpo_due:
-        if first-of(tpo_part) then do:
-            assign duef = tpo_due.
-        end.
-        else do:
-             assign tpo_due = duef.
-        end.
+   		 each usrw_wkfl no-lock where usrw_key1 = vkey1 and 
+   		 			usrw_key2 = tpo_part and usrw_key3 = "1" 
+/*       each pt_mstr no-lock where pt_part = tpo_part              */
+/*        and pt_rev = "1"                                          */
+            break by tpo_part by tpo_due:                              
+          if first-of(tpo_part) then do:                              
+              assign duef = tpo_due.                                  
+          end.                                                        
+          else do:                                                    
+               assign tpo_due = duef.                                 
+          end.                                                        
    end.
 
    /*如下2月有计划则产生数量为0的记录*/
