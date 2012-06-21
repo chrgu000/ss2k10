@@ -582,26 +582,30 @@ repeat:
     for each tmp_po1 exclusive-lock: delete tmp_po1. end.
     for each tmp_po no-lock where tpo_type = "T" break by tpo_part:
         if first-of(tpo_part) then do:
-           assign tpo1date = ?.
+           assign tpo1date = ?
+           				tpoqty = 0
+           				tpoqtys = 0.
            for each pod_det no-lock use-index pod_partdue where
                  pod_part = tpo_part break by pod_part by pod_due_date:
                if pod_type = "T" then do:
                   assign tpo1date = pod_due_date.
                end.
                if pod_due_date >= tpo1date then do:
-                  find first tmp_po1 no-lock where tp1_part = pod_part no-error.
-                  if not available tmp_po1 then do:
-                     create tmp_po1.
-                     assign tp1_part = pod_part.
-                  end.
                   if pod_type = "T" then do:
-                     assign tp1_tpo = tp1_tpo + pod_qty_ord.
+                     assign tpoqtys = tpoqtys + pod_qty_ord.
                   end.
                   if pod_type = "" then do:
-                     assign tp1_po = tp1_po + pod_qty_ord.
+                     assign tpoqty = tpoqty + pod_qty_ord.
                   end.
                end. /* if pod_due_date >= tpo1date then do: */
            end. /* for each pod_det no-lock  */
+           find first tmp_po1 no-lock where tp1_part = pod_part no-error.
+           if not available tmp_po1 then do:
+              create tmp_po1.
+              assign tp1_part = pod_part.
+           end.
+           assign tp1_tpo = tpoqtys
+                  tp1_po = tpoqty.
         end. /* if first-of(tmp_part) then do: */
     end.
 
