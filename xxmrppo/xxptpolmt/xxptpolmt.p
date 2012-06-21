@@ -11,6 +11,7 @@ define variable vkey1 like usrw_key1 no-undo
 define variable del-yn like mfc_logical initial no.
 define variable fieldlen as integer initial 0 no-undo.
 define variable v_ptdesc1 like pt_desc1 no-undo.
+define variable v_poldesc as character format "x(30)".
 
 
 /* Variable added to perform delete during CIM.
@@ -26,6 +27,7 @@ form
    usrw_key2 colon 25 format "x(18)"
    v_ptdesc1 no-label
    usrw_key3 colon 25 format "x(12)"
+   v_poldesc colon 45 no-label
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -58,13 +60,18 @@ repeat with frame a:
              usrw_key2
             " input usrw_key2 "}
          if recno <> ? then do:
-            assign v_ptdesc1 = "".
+            assign v_ptdesc1 = "" v_poldesc = "".
             find first pt_mstr no-lock
                  where pt_part = usrw_key2 no-error.
             if available pt_mstr then do:
                assign v_ptdesc1 = pt_desc1.
             end.
-            display usrw_key1 usrw_key2 v_ptdesc1.
+            find first code_mstr no-lock where code_fldname = "vd__chr03"
+            			 and code_value = usrw_key3 no-error.
+            if available code_mstr then do:
+            	 assign v_poldesc = code_cmmt.
+            end.
+            display usrw_key1 usrw_key2 v_ptdesc1 usrw_key3 v_poldesc.
          end.
       end. /* editing: */
       if not can-find(first pt_mstr no-lock where pt_part = input usrw_key2)
@@ -111,21 +118,24 @@ repeat with frame a:
   repeat with frame a:
          update usrw_key3
          go-on(F5 CTRL-D).
+         assign v_ptdesc1 = ""
+                v_poldesc = "".
          find first code_mstr no-lock where code_fldname = "vd__chr03" and
                  code_value = input usrw_key3 no-error.
          if not available code_mstr then do:
             {pxmsg.i &ERRORLEVEL=3 &MSGTEXT=""到货方式错误""}
             undo,retry.
          end.
-            assign v_ptdesc1 = "".
-                    assign v_ptdesc1 = "".
-            find first pt_mstr no-lock
-                 where pt_part = usrw_key2 no-error.
-            if available pt_mstr then do:
-               assign v_ptdesc1 = pt_desc1.
-            end.
-            display v_ptdesc1 with frame a.
-            leave.
+         else do:
+             assign v_poldesc = code_cmmt.
+         end.
+         find first pt_mstr no-lock
+              where pt_part = usrw_key2 no-error.
+         if available pt_mstr then do:
+            assign v_ptdesc1 = pt_desc1.
+         end.
+         display v_ptdesc1 v_poldesc with frame a.
+         leave.
   end.
    /* Delete to be executed if batchdelete is set or
     * F5 or CTRL-D pressed */
