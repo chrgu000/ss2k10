@@ -6,7 +6,7 @@
 /* ss - 111024 by: yun */ /* 检验过后调整库存状态 */
 /******************************************************************************/
 
-{mfdtitle.i "120606.1"}
+{mfdtitle.i "120621.1"}
 
 {cxcustom.i "xxmqc001.P"}
 
@@ -392,7 +392,7 @@ FOR EACH tt WHERE t1_status <> ""  NO-LOCK:
 END.
 ASSIGN v_file = "xxmqc004.cim." + string(today,"99999999") + string(time).
 output to value(v_file + ".in").
-FOR EACH tt NO-LOCK:
+FOR EACH tt NO-LOCK where t1_status = "1":
     for each ld_det no-lock use-index ld_part_lot where ld_part = t1_part and
              ld_lot = t1_serial:
        put unformat '"' ld_site '" "' ld_loc '" "' ld_part '" "' ld_lot '"'

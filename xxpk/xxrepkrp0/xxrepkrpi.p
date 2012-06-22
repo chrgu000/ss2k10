@@ -139,10 +139,11 @@ do on error undo, return error on endkey undo, return error:
          getTermLabel("DESCRIPTION",12)
          getTermLabel("PLAN_CUM_QTY",12)
          getTermLabel("ISSUED",12)
+         getTermLabel("FROM",12)
+         getTermLabel("TO",12)
+         getTermLabel("LOT/SERIAL",12)
          getTermLabel("Order_Multiple",12)
          getTermLabel("ABC_CLASS",12)
-         getTermLabel("LOCATION",12)
-         getTermLabel("LOT/SERIAL",12)
          getTermLabel("STATUS",12)
          getTermLabel("Date",12)
          .
@@ -182,10 +183,11 @@ do on error undo, return error on endkey undo, return error:
             vdesc1
             xxwd_qty_plan
             xxwd_qty_iss
+            if xxwd_type = "s" then "P-ALL" else xxwd_loc
+            if xxwd_qty_iss > 0  then  (if xxwd_type = "P" then "P-ALL" else xxwd_line ) else ""
+            xxwd_lot
             vMultiple
             vtype
-            if xxwd_type = "s" then "P-ALL" else xxwd_loc
-            xxwd_lot
             xxwd_stat
             xxwd_date.
 end.

@@ -5,7 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120620.1"}
+{mfdtitle.i "120620.3"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -95,8 +95,6 @@ define temp-table tmp_tmd
    index tm_vpa tm_vend tm_part tm_adate
    index tm_pm tm_part tm_month.
 
-define buffer md for mrp_det.
-
 /* SELECT FORM */
 form
    site   colon 15
@@ -180,6 +178,7 @@ repeat:
   /* {mfphead.i} */
   empty temp-table tmp_datearea no-error.
   empty temp-table tmp_po no-error.
+  empty temp-table tmp_po1 no-error.
   empty temp-table tmp_tmd no-error.
   empty temp-table tmp_rule_date no-error.
 
@@ -187,7 +186,7 @@ repeat:
    assign sendDate = today - 3.
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
             index(code_value,"M4") = 0 and code_value <> "" and
-            code_value <> "P":
+            code_value <> "P" and code_value <> "1":
       run getParams(input "GSA01", input sendDate, input code_value,
                 output xRule,output xCyc,output xType,
                 output duef, output duet).
@@ -305,7 +304,6 @@ repeat:
                    trd_datef = duek
                    trd_datet = duee - 1.
    end.
-
    FOR EACH pt_mstr no-lock where pt_part >= part and pt_part <= part1
          and substring(pt_part,1,1) <> "X"
          and pt_site >= site and pt_site <= site1
@@ -331,9 +329,9 @@ repeat:
 
    /*料号有rule以料号设定的rule为准  计算P之Rule */
    for each tmp_tmd use-index tm_pm exclusive-lock:
-       find first usrw_wkfl no-lock where usrw_key1 = vkey1 and 
-       						usrw_key2 = tm_part and usrw_key3 <> "" and usrw_key3 <> "1"
-       						no-error.
+       find first usrw_wkfl no-lock where usrw_key1 = vkey1 and
+                  usrw_key2 = tm_part and usrw_key3 <> "" and usrw_key3 <> "1"
+                  no-error.
        if available usrw_wkfl and
             can-find(first code_mstr where code_fldname = "vd__chr03"
                        and code_value = usrw_key2) then do:
@@ -522,17 +520,17 @@ repeat:
 */
    /*    合并非第一笔日期到第一笔日期.   */
    for each tmp_po exclusive-lock,
-   		 each usrw_wkfl no-lock where usrw_key1 = vkey1 and 
-   		 			usrw_key2 = tpo_part and usrw_key3 = "1" 
+       each usrw_wkfl no-lock where usrw_key1 = vkey1 and
+            usrw_key2 = tpo_part and usrw_key3 = "1"
 /*       each pt_mstr no-lock where pt_part = tpo_part              */
 /*        and pt_rev = "1"                                          */
-            break by tpo_part by tpo_due:                              
-          if first-of(tpo_part) then do:                              
-              assign duef = tpo_due.                                  
-          end.                                                        
-          else do:                                                    
-               assign tpo_due = duef.                                 
-          end.                                                        
+            break by tpo_part by tpo_due:
+          if first-of(tpo_part) then do:
+              assign duef = tpo_due.
+          end.
+          else do:
+               assign tpo_due = duef.
+          end.
    end.
 
    /*如下2月有计划则产生数量为0的记录*/
@@ -578,13 +576,11 @@ repeat:
          end.
     end.
 
-    empty temp-table tmp_po1 no-error.
-    for each tmp_po1 exclusive-lock: delete tmp_po1. end.
     for each tmp_po no-lock where tpo_type = "T" break by tpo_part:
         if first-of(tpo_part) then do:
            assign tpo1date = ?
-           				tpoqty = 0
-           				tpoqtys = 0.
+                  tpoqty = 0
+                  tpoqtys = 0.
            for each pod_det no-lock use-index pod_partdue where
                  pod_part = tpo_part break by pod_part by pod_due_date:
                if pod_type = "T" then do:
@@ -769,7 +765,9 @@ repeat:
                     else assign tpoqty = 0.
                  export delimiter "~011"
                        tpo_nbr tpo_vend tpo_part tpoqty
-                       tpo_due tpo_type tpoqtys tpopo tpotpo
+                       tpo_due tpo_type tpoqtys
+                       if first-of(tpo_part) then tpopo else 0
+                       if first-of(tpo_part) then tpotpo else 0
                        weekday(tpo_due) - 1
                        tpo_rule0 areaDesc.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part

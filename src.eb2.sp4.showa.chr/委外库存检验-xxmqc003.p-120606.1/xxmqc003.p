@@ -2,10 +2,10 @@
 /* ss - 091029.1 by: jack */
 /* ss - 091102.1 by:jack */
 /* ss - 120328.1 by: jack */ /* tr_qty_chg tr_qty_loc */
-/* ss - 120606.1 by: zy */ /* ¼ìÑéºóÐÞ¸Ä¿â´æ×´Ì¬ */
+/* ss - 120621.1 by: zy */ /* ¼ìÑéºóÐÞ¸Ä¿â´æ×´Ì¬ */
 
 /******************************************************************************/
-{mfdtitle.i "120606.1 "}
+{mfdtitle.i "120621.1 "}
 
 {cxcustom.i "xxmqc001.P"}
 
@@ -408,7 +408,7 @@ END.
 /*ss 120606.1 ¼ìÑéºóÐÞ¸Ä¿â´æ×´Ì¬*/
 assign v_file = "xxmqc003.p." + string(today,"99999999") + "-" + string(time).
 output to value(v_file + ".bpi").
-FOR EACH tt NO-LOCK:
+FOR EACH tt NO-LOCK where t1_status = "1":
     for each ld_det no-lock use-index ld_part_lot where ld_part = t1_part and
                ld_lot = t1_serial:
        put unformat '"' ld_site '" "' ld_loc '" "' ld_part '" "' ld_lot '"'
