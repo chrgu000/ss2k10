@@ -18,7 +18,7 @@
 /************************************************************************/
 /*J034*  ** MOVED MFDTITLE.I UP FROM BELOW */
          /* DISPLAY TITLE */
-{mfdtitle.i "120331.1"}
+{mfdtitle.i "120625.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -276,11 +276,26 @@
                 xxwd_date >= dte and xxwd_date <= dt1:
             delete xxwd_det.
        end.
+       
+for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
+delete usrw_wkfl.
+end.
+
+/*删除缺料明细资料*/
+for each usrw_wkfl exclusive-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+		 and usrw_key4 >= wkctr and usrw_key4 <= wkctr1
+		 and usrw_datefld[1] >= dte and usrw_datefld[1] <= dt1:
+		 delete usrw_wkfl.
+end.
+
+       
+/*       
        for each qad_wkfl where qad_key1 = "xxrepkup0.p"
            and qad_charfld[1] >= site and qad_charfld[1] <= site1
            and qad_charfld[2] >= wkctr and qad_charfld[2] <= wkctr1:
            delete qad_wkfl.
        end.
+*/
             /* REPORT TRAILER  */
             {mfrtrail.i}
 

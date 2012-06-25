@@ -54,7 +54,8 @@ define {1} SHARED temp-table xx_pklst no-undo
   fields xx_due_date like wo_due_date
   fields xx_op  like wr_op
   fields xx_mch like wr_mch
-  fields xx_start like wr_start.
+  fields xx_start like wr_start
+  fields xx_short as logical initial no.
 
 FORM  t0_date
 /*    t0_record   */

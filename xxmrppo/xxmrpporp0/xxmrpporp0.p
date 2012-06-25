@@ -39,7 +39,7 @@ define variable tpoqty  like mrp_qty.
 define variable tpoqtys like mrp_qty.
 define variable tpopo   like mrp_qty.
 define variable tpotpo  like mrp_qty.
-define variable T       as   logical.
+define variable T       as   logical initial "YES".
 define variable tpo1date as date.
 define variable aqty as decimal.
 define temp-table tmp_po1

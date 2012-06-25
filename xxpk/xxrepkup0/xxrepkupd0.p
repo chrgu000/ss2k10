@@ -96,6 +96,7 @@ define variable multqty as decimal no-undo.
 define variable errorst as character no-undo.
 define variable errornum as integer  no-undo.
 define variable i        as integer  no-undo.
+define variable j        as integer  no-undo.
 define variable startTime as integer no-undo.
 define variable endTime as integer no-undo.
 
@@ -149,7 +150,14 @@ for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
 delete usrw_wkfl.
 end.
 
-assign i = 1.
+/*删除缺料明细资料*/
+for each usrw_wkfl exclusive-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+     and usrw_datefld[1] >= issue and usrw_datefld[1] <= issue1:
+     delete usrw_wkfl.
+end.
+
+assign i = 1
+       j = 1.
 for each rps_mstr no-lock
 where rps_part >= part and rps_part <= part1
   and rps_site >= site and rps_site <= site1
@@ -276,7 +284,7 @@ by wr_start by wr_part by wr_op
              xx_due_date = wo_due_date
              xx_op = wr_op
              xx_mch = wr_mch
-             xx_start =wr_start.
+             xx_start = wr_start.
 /*      create qad_wkfl.                                          */
 /*      assign qad_key1 = "xxpsref"                               */
 /*             qad_key2 = string(errnumber)                       */
@@ -400,7 +408,7 @@ by wr_start by wr_part by wr_op
 
                display
                   "" @ lad_lot
-                  qtyneed @ lad_qty_all WITH  /*GUI*/ .
+                  qtyneed @ lad_qty_all /* WITH  GUI*/ .
 
             end.
 
@@ -522,7 +530,6 @@ by wr_start by wr_part by wr_op
 
          page.
 
-
          /* 打印物料短缺清单 */
          FORM /*GUI*/
             skip(1) space(19)
@@ -574,13 +581,13 @@ by wr_start by wr_part by wr_op
                pt_um when (available pt_mstr)
                short-assy @ ps_par
             with frame short  /*GUI*/ .
-            
+
             create xx_pklst.
             assign xx_site = wo_site
                    xx_line = wr_wkctr
                    xx_nbr = string(nbr,"x(10)") when (not delete_pklst)
                    xx_comp = short-part
-/*                 xx_qty_req = max(wod_qty_req - wod_qty_iss,0)                */
+/*                 xx_qty_req = max(wod_qty_req - wod_qty_iss,0)             */
                    xx_qty_req = short-qty       /* 总需求量 */
                    xx_qty_need = short-qty  /* 缺料量 */
                    xx_qty_iss = 0
@@ -589,8 +596,24 @@ by wr_start by wr_part by wr_op
                    xx_due_date = wo_due_date
                    xx_op = wr_op
                    xx_mch = wr_mch
-                   xx_start =wr_start.
-
+                   xx_start =wr_start
+                   xx_short = yes.
+/*6.25*/
+            create usrw_wkfl.
+            assign usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+                   usrw_key2 = string(today) + string(time) + string(j)
+                   usrw_key3 = wo_site
+                   usrw_key4 = wr_wkctr
+                   usrw_key5 = string(nbr,"x(10)") when (not delete_pklst)
+                   usrw_key6 = short-part
+                   usrw_decfld[1] = short-qty
+                   usrw_charfld[1] = pt_um when (available pt_mstr)
+                   usrw_charfld[2] = short-assy
+                   usrw_charfld[3] = wr_mch
+                   usrw_intfld[1] = wr_op
+                   usrw_datefld[1] = wo_due_date
+                   usrw_datefld[2] = wr_start.
+            assign j = j + 1.
             if first-of(short-part) then do:
                down 1.
                if available pt_mstr and pt_desc2 <> "" then
@@ -683,7 +706,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
       if last-of(xx_comp) then do:
          create xxwa_det.
          assign xxwa_date = t0_date
-         				xxwa__dte01 = t0_date
+                xxwa__dte01 = t0_date
                 xxwa_site = t0_site
                 xxwa_line = t0_line
                 xxwa_par  = t0_par
@@ -718,7 +741,7 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
 end.
 
   for each xxwa_det exclusive-lock where xxwa_rtime >= 0 and xxwa_rtime < 32399:
-  		assign xxwa_date = xxwa__dte01 + 1. 
+      assign xxwa_date = xxwa__dte01 + 1.
   end.
 
  /*计算取料,发料时间区间*/
@@ -727,21 +750,21 @@ end.
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
-        find first xxlnw_det no-lock where xxlnw_site = xxwa_site 
-        			 and xxlnw_line = xxwa_line and xxlnw_ptime = xxwa_rtime no-error.
+        find first xxlnw_det no-lock where xxlnw_site = xxwa_site
+               and xxlnw_line = xxwa_line and xxlnw_ptime = xxwa_rtime no-error.
         if available xxlnw_det then do:
-        	 assign xxwa_pstime = xxlnw_pstime
-        	 				xxwa_petime = xxlnw_petime
-        	 				xxwa_sstime = xxlnw_sstime
-        	 				xxwa_setime = xxlnw_setime.
+           assign xxwa_pstime = xxlnw_pstime
+                  xxwa_petime = xxlnw_petime
+                  xxwa_sstime = xxlnw_sstime
+                  xxwa_setime = xxlnw_setime.
         end.
         else do:
-        	 assign xxwa_pstime = xxwa_rtime - 16200
-        	 				xxwa_petime = xxwa_rtime - 14400
-        	 				xxwa_sstime = xxwa_rtime - 9000
-        	 				xxwa_setime = xxwa_rtime - 7200.
+           assign xxwa_pstime = xxwa_rtime - 16200
+                  xxwa_petime = xxwa_rtime - 14400
+                  xxwa_sstime = xxwa_rtime - 9000
+                  xxwa_setime = xxwa_rtime - 7200.
         end.
-        			 
+
 
         /********************************************************************
         assign vtype = "*".
@@ -775,7 +798,7 @@ end.
         end.
         **********************************************************************/
   end. /* for each xxwa_det exclusive-lock where  */
-  
+
   /* D类(线外做的)物料在做个提前时间需要提前做 */
   assign v_lead_minus = 0.
   find first code_mstr no-lock where code_fldname = "PACK-ITEM-LEAD-MINS" and
@@ -790,23 +813,24 @@ end.
       each usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
            usrw_key2 = xxwa_part
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_part by xxwa_rtime:
-  			assign xxwa_pstime = xxwa_pstime - v_lead_minus
-        	 	   xxwa_petime = xxwa_petime - v_lead_minus
-        	 	   xxwa_sstime = xxwa_sstime - v_lead_minus
-        	 	   xxwa_setime = xxwa_setime - v_lead_minus.
-  end.      
+        assign xxwa_pstime = xxwa_pstime - v_lead_minus
+               xxwa_petime = xxwa_petime - v_lead_minus
+               xxwa_sstime = xxwa_sstime - v_lead_minus
+               xxwa_setime = xxwa_setime - v_lead_minus.
+  end.
 
   for each xxwa_det exclusive-lock where
            xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
   break by xxwa_date by xxwa_site by xxwa_line by xxwa_rtime by xxwa_part:
-  		display xxwa_date xxwa_site xxwa_line xxwa_part xxwa_qty_pln
-  						string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
-  						string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
-  						string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
-  						string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
-  						string(xxwa_setime,"hh:mm:ss") @ xxwa_setime with width 300.
+      display xxwa_date xxwa_site xxwa_line xxwa_part xxwa_qty_pln
+              string(xxwa_rtime,"hh:mm:ss") @ xxwa_rtime
+              string(xxwa_pstime,"hh:mm:ss") @ xxwa_pstime
+              string(xxwa_petime,"hh:mm:ss") @ xxwa_petime
+              string(xxwa_sstime,"hh:mm:ss") @ xxwa_sstime
+              string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
+              xxwa__log01 with width 300.
   end.
 
 
@@ -1070,7 +1094,7 @@ else do:
              */
              xxwd_type = "P"
              xxwd_time = trt2_time
-             xxwd__int03 = trt2_time 
+             xxwd__int03 = trt2_time
              xxwd_date = trt2_date
              xxwd_part = trt2_part
              xxwd_site = "GSA01"
@@ -1089,7 +1113,8 @@ end.
 
 for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date desc :
     if first-of(xxwd_line) then do:
-       find first xxlnw_det no-lock where xxlnw_site = xxwd_site and xxlnw_line = xxwd_line and xxlnw_on no-error.
+       find first xxlnw_det no-lock where xxlnw_site = xxwd_site
+              and xxlnw_line = xxwd_line and xxlnw_on no-error.
        if available xxlnw_det then do:
           assign i = xxlnw_stime.
        end.
@@ -1100,10 +1125,10 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
 end.
 
 for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line
-		  by xxwd_time by xxwd_part:
-		  if first-of(xxwd_time) then do:
-		     assign startTime = 0
-			          endtime = 0.
+      by xxwd_time by xxwd_part:
+      if first-of(xxwd_time) then do:
+         assign startTime = 0
+                endtime = 0.
          run getSEtime(input xxwd_type,
                       input xxwd_site,
                       input xxwd_line,
@@ -1114,23 +1139,149 @@ for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line
      find first usrw_wkfl no-lock where usrw_key1 = "PACK-ITEM-LEAD-LIST" and
                 usrw_key2 = xxwd_part no-error.
      if available usrw_wkfl then do:
-     		assign xxwd__int01 = startTime - v_lead_minus
-     					 xxwd__int02 = endTime - v_lead_minus.
+        assign xxwd__int01 = startTime - v_lead_minus
+               xxwd__int02 = endTime - v_lead_minus.
      end.
      else do:
-     		assign xxwd__int01 = startTime
-     		       xxwd__int02 = endTime.
+        assign xxwd__int01 = startTime
+               xxwd__int02 = endTime.
      end.
 end.
 
-for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line by xxwd__int01:
-	  if first-of(xxwd__int01) then do:
-	  	 assign vtype = xxwd_nbr.
-	  end.		
-		if xxwd_nbr <> vtype then do:
-			 assign xxwd_nbr = vtype.
-	  end.
+/*处理没有生成xxwd_det的取料记录*/
+find last xxwd_det no-lock use-index xxwd_nbr_recid no-error.
+if available xxwd_det then do:
+   assign j = xxwd_sn + 1.
 end.
+for each xxwa_det no-lock where
+          xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
+          xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+    break by xxwa_site by xxwa_part by xxwa__dte01 by xxwa_rtime:
+    if first-of(xxwa_part) then do:
+       assign vqty = 0
+              aviqty = 0
+              .
+    end.
+    assign vqty = vqty + xxwa_qty_pln.
+    if last-of(xxwa_part) then do:
+       find first xxwd_det no-lock where xxwd_type = "P" and xxwd_date = xxwa_date
+              and xxwd_part = xxwa_part no-error.
+       if not available xxwd_det then do:
+          assign aviqty = 0
+                 i = xxwa_rtime
+                 startTime = xxwa_pstime
+                 endTime = xxwa_petime.
+       end.
+       else do:
+            assign aviqty = 0.
+            for each xxwd_det no-lock where xxwd_type = "P" and xxwd_date = xxwa_date
+                 and xxwd_part = xxwa_part:
+                 assign aviqty = aviqty + xxwd_qty_plan
+                        i = xxwd_time
+                        startTime = xxwd__int01
+                        endTime = xxwd__int02.
+            end.
+       end.
+       if vqty > aviqty then do:
+          create xxwd_det.
+          assign xxwd_type = "P"
+                 xxwd_nbr = xxwa_nbr
+                 xxwd_recid = xxwa_recid
+                 xxwd_date = xxwa_date
+                 xxwd_time = i
+                 xxwd__int03 = i
+                 xxwd_part = xxwa_part
+                 xxwd_site = "GSA01"
+                 xxwd_line = ""
+                 xxwd_loc = ""
+                 xxwd_sn =  j
+                 xxwd_lot = ""
+                 xxwd_ref = ""
+                 xxwd_qty_plan = vqty - aviqty
+                 xxwd__int01 = startTime
+                 xxwd__int02 = endTime.
+           assign j = j + 1.
+        end. /*  if vqty > qviqty then do: */
+    end.
+end.
+assign temp_nbr = "".
+for each xxwa_det no-lock where
+          xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
+          xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+    break by xxwa_site by xxwa_line by xxwa_part by xxwa__dte01 by xxwa_rtime:
+    if first-of(xxwa_part) then do:
+       assign vqty = 0
+              aviqty = 0
+              .
+    end.
+    assign vqty = vqty + xxwa_qty_pln.
+    if last-of(xxwa_part) then do:
+       find first xxwd_det no-lock where xxwd_type = "S" and xxwd_date = xxwa_date
+              and xxwd_part = xxwa_part and xxwd_line = xxwa_line no-error.
+       if not available xxwd_det then do:
+          assign temp_nbr = xxwa_nbr
+                 aviqty = 0
+                 i = xxwa_rtime
+                 startTime = xxwa_pstime
+                 endTime = xxwa_petime.
+       end.
+       else do:
+            assign aviqty = 0.
+            for each xxwd_det no-lock where xxwd_type = "P" and xxwd_date = xxwa_date
+                 and xxwd_part = xxwa_part and xxwd_line = xxwa_line:
+                 assign temp_nbr = xxwd_nbr
+                        aviqty = aviqty + xxwd_qty_plan
+                        i = xxwd_time
+                        startTime = xxwd__int01
+                        endTime = xxwd__int02.
+            end.
+       end.
+       if vqty > aviqty then do:
+          create xxwd_det.
+          assign xxwd_type = "S"
+                 xxwd_nbr = xxwa_nbr
+                 xxwd_recid = xxwa_recid
+                 xxwd_date = xxwa_date
+                 xxwd_time = i
+                 xxwd__int03 = i
+                 xxwd_part = xxwa_part
+                 xxwd_site = "GSA01"
+                 xxwd_line = xxwa_line
+                 xxwd_loc = ""
+                 xxwd_sn =  j
+                 xxwd_lot = ""
+                 xxwd_ref = ""
+                 xxwd_qty_plan = vqty - aviqty
+                 xxwd__int01 = startTime
+                 xxwd__int02 = endTime.
+           assign j = j + 1.
+        end. /*  if vqty > qviqty then do: */
+    end.
+end.
+
+for each xxwd_det exclusive-lock break by xxwd_type by xxwd_date
+                                       by xxwd_line by xxwd__int01:
+    if first-of(xxwd__int01) then do:
+       assign temp_nbr = xxwd_nbr.
+    end.
+    if xxwd_nbr <> vtype then do:
+       assign xxwd_nbr = temp_nbr.
+    end.
+end.
+
+/*********
+for each xxwd_det exclusive-lock where xxwd_type = "S"
+    break by xxwd_type by xxwd_date by xxwd_line by xxwd__int01:
+    if first-of(xxwd_line) then do:
+       assign temp_nbr = xxwd_nbr.
+    end.
+    if xxwd_nbr <> temp_nbr then do:
+       assign xxwd_nbr = temp_nbr.
+    end.
+end.
+************/
 
 /*  empty temp-table xx_ld no-error.                                          */
 /*  assign errornum = 10.                                                     */
