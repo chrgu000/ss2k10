@@ -766,37 +766,37 @@ end.
         end.
 
 
-        /********************************************************************
-        assign vtype = "*".
-        if first-of(xxwa_part) then do:
-           find first pt_mstr where pt_mstr.pt_part = xxwa_part
-                no-lock no-error.
-           if available pt_mstr then do:
-              assign vtype = pt_mstr.pt__chr10.
-           end.
-        end.
-        find last xxlnm_det where xxlnm_line = xxwa_line
-               and xxlnm_site = xxwa_site
-               and (xxlnm_type = vtype or xxlnm_type = "*")
-               no-lock no-error.
-        if not available xxlnm_det then do:
-           find first xxlnm_det no-lock no-error.
-        end.
-        if available xxlnm_det then do:
-           find first xxlnw_det where xxlnw_site = xxwa_site
-                  and xxlnw_line = xxwa_line
-                  and xxlnw_sn = xxwa_sn no-lock no-error.
-           if available xxlnw_det then do:
-           assign xxwa_pstime = xxwa_rtime - xxlnm_pkstart * 60
-                  xxwa_petime = xxwa_rtime - xxlnm_pkend * 60
-                  xxwa_sstime = xxwa_rtime - xxlnm_sdstart * 60
-                  xxwa_setime = xxwa_rtime - xxlnm_sdend * 60.
-           end.
-        end.
-        else do:
-            assign xxwa_pstime = -1.
-        end.
-        **********************************************************************/
+/********************************************************************
+/*         assign vtype = "*".                                     */
+/*         if first-of(xxwa_part) then do:                         */
+/*            find first pt_mstr where pt_mstr.pt_part = xxwa_part */
+/*                 no-lock no-error.                               */
+/*            if available pt_mstr then do:                        */
+/*               assign vtype = pt_mstr.pt__chr10.                 */
+/*            end.                                                 */
+/*         end.                                                    */
+/*         find last xxlnm_det where xxlnm_line = xxwa_line        */
+/*                and xxlnm_site = xxwa_site                       */
+/*                and (xxlnm_type = vtype or xxlnm_type = "*")     */
+/*                no-lock no-error.                                */
+/*         if not available xxlnm_det then do:                     */
+/*            find first xxlnm_det no-lock no-error.               */
+/*         end.                                                    */
+/*         if available xxlnm_det then do:                         */
+/*            find first xxlnw_det where xxlnw_site = xxwa_site    */
+/*                   and xxlnw_line = xxwa_line                    */
+/*                   and xxlnw_sn = xxwa_sn no-lock no-error.      */
+/*            if available xxlnw_det then do:                      */
+/*            assign xxwa_pstime = xxwa_rtime - xxlnm_pkstart * 60 */
+/*                   xxwa_petime = xxwa_rtime - xxlnm_pkend * 60   */
+/*                   xxwa_sstime = xxwa_rtime - xxlnm_sdstart * 60 */
+/*                   xxwa_setime = xxwa_rtime - xxlnm_sdend * 60.  */
+/*            end.                                                 */
+/*         end.                                                    */
+/*         else do:                                                */
+/*             assign xxwa_pstime = -1.                            */
+/*         end.                                                    */
+********************************************************************/
   end. /* for each xxwa_det exclusive-lock where  */
 
   /* D类(线外做的)物料在做个提前时间需要提前做 */
@@ -835,95 +835,95 @@ end.
 
 
   /* 按最小包装量计算需求到 xxwa_ord_mult
-  for each xxwa_det exclusive-lock:
-    assign xxwa_ord_mult = xxwa_qty_pln.
-  end.
-  for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-           xxwa_qty_pln > 0,
-      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND
-          (pt__chr10 = "A" OR pt__chr10 = "C") AND
-           pt__qad19 <> 0
-           break by xxwa_date by xxwa_site by xxwa_line
-                 by xxwa_part by xxwa_rtime:
-      IF FIRST-OF(xxwa_part) THEN DO:
-           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__qad19).
-           aviqty = xxwa_ord_mult - xxwa_qty_pln.
-      END.
-      ELSE DO:
-          IF aviqty >= xxwa_qty_pln THEN DO:
-              ASSIGN xxwa_ord_mult = 0.
-              ASSIGN aviqty = aviqty - xxwa_qty_pln.
-          END.
-          ELSE DO:
-              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).
-              aviqty = xxwa_ord_mult - xxwa_qty_pln.
-          END.
-      END.
-  END.
-
- /* 按最小包装量计算需求到 xxwa_ord_mult*/
-  for each xxwa_det exclusive-lock:
-    assign xxwa_ord_mult = xxwa_qty_pln.
-  end.
-  for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-           xxwa_qty_pln > 0,
-      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND
-          (pt__chr10 = "A" OR pt__chr10 = "C") AND
-           pt__qad19 <> 0
-           break by xxwa_date by xxwa_site by xxwa_line
-                 by xxwa_part by xxwa_rtime:
-      IF FIRST-OF(xxwa_part) THEN DO:
-           assign aviqty = 0.
-           ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln - aviqty,pt__qad19).
-           aviqty = xxwa_ord_mult - xxwa_qty_pln.
-      END.
-      ELSE DO:
-          IF aviqty >= xxwa_qty_pln THEN DO:
-              ASSIGN xxwa_ord_mult = 0.
-              ASSIGN aviqty = aviqty - xxwa_qty_pln.
-          END.
-          ELSE DO:
-              ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).
-              aviqty = xxwa_ord_mult - xxwa_qty_pln.
-          END.
-      END.
-  END.
-
- /* 按托数计算需求到 xxwa_pka_mult*/
-  for each xxwa_det exclusive-lock:
-    assign xxwa_pka_mult = xxwa_qty_pln.
-  end.
-  for each xxwa_det EXCLUSIVE-LOCK where
-           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-           xxwa_qty_pln > 0,
-      EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND
-           (pt__chr10 = "A" OR pt__chr10 = "C") and pt__qad20 <> 0
-           break by xxwa_date by xxwa_site by xxwa_line
-                 by xxwa_part by xxwa_rtime:
-      IF FIRST-OF(xxwa_part) THEN DO:
-           assign aviqty = 0.
-           ASSIGN xxwa_pka_mult = getmult(xxwa_qty_pln - aviqty,pt__qad20).
-           aviqty = xxwa_pka_mult - xxwa_qty_pln.
-      END.
-      ELSE DO:
-          IF aviqty >= xxwa_qty_pln THEN DO:
-              ASSIGN xxwa_pka_mult = 0.
-              ASSIGN aviqty = aviqty - xxwa_qty_pln.
-          END.
-          ELSE DO:
-              ASSIGN xxwa_pka_mult = getmult((xxwa_qty_pln - aviqty),pt__qad20).
-              aviqty = xxwa_pka_mult - xxwa_qty_pln.
-          END.
-      END.
-  END.
+/*   for each xxwa_det exclusive-lock:                                               */
+/*     assign xxwa_ord_mult = xxwa_qty_pln.                                          */
+/*   end.                                                                            */
+/*   for each xxwa_det EXCLUSIVE-LOCK where                                          */
+/*            xxwa_date >= issue and xxwa_date <= issue1 and                         */
+/*            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and            */
+/*            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and        */
+/*            xxwa_qty_pln > 0,                                                      */
+/*       EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND                          */
+/*           (pt__chr10 = "A" OR pt__chr10 = "C") AND                                */
+/*            pt__qad19 <> 0                                                         */
+/*            break by xxwa_date by xxwa_site by xxwa_line                           */
+/*                  by xxwa_part by xxwa_rtime:                                      */
+/*       IF FIRST-OF(xxwa_part) THEN DO:                                             */
+/*            ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln,pt__qad19).                */
+/*            aviqty = xxwa_ord_mult - xxwa_qty_pln.                                 */
+/*       END.                                                                        */
+/*       ELSE DO:                                                                    */
+/*           IF aviqty >= xxwa_qty_pln THEN DO:                                      */
+/*               ASSIGN xxwa_ord_mult = 0.                                           */
+/*               ASSIGN aviqty = aviqty - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*           ELSE DO:                                                                */
+/*               ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).  */
+/*               aviqty = xxwa_ord_mult - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*       END.                                                                        */
+/*   END.                                                                            */
+/*                                                                                   */
+/*  /* 按最小包装量计算需求到 xxwa_ord_mult*/                                          */
+/*   for each xxwa_det exclusive-lock:                                               */
+/*     assign xxwa_ord_mult = xxwa_qty_pln.                                          */
+/*   end.                                                                            */
+/*   for each xxwa_det EXCLUSIVE-LOCK where                                          */
+/*            xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and                     */
+/*            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and            */
+/*            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and        */
+/*            xxwa_qty_pln > 0,                                                      */
+/*       EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND                          */
+/*           (pt__chr10 = "A" OR pt__chr10 = "C") AND                                */
+/*            pt__qad19 <> 0                                                         */
+/*            break by xxwa_date by xxwa_site by xxwa_line                           */
+/*                  by xxwa_part by xxwa_rtime:                                      */
+/*       IF FIRST-OF(xxwa_part) THEN DO:                                             */
+/*            assign aviqty = 0.                                                     */
+/*            ASSIGN xxwa_ord_mult = getmult(xxwa_qty_pln - aviqty,pt__qad19).       */
+/*            aviqty = xxwa_ord_mult - xxwa_qty_pln.                                 */
+/*       END.                                                                        */
+/*       ELSE DO:                                                                    */
+/*           IF aviqty >= xxwa_qty_pln THEN DO:                                      */
+/*               ASSIGN xxwa_ord_mult = 0.                                           */
+/*               ASSIGN aviqty = aviqty - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*           ELSE DO:                                                                */
+/*               ASSIGN xxwa_ord_mult = getmult((xxwa_qty_pln - aviqty),pt__qad19).  */
+/*               aviqty = xxwa_ord_mult - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*       END.                                                                        */
+/*   END.                                                                            */
+/*                                                                                   */
+/*  /* 按托数计算需求到 xxwa_pka_mult*/                                               */
+/*   for each xxwa_det exclusive-lock:                                               */
+/*     assign xxwa_pka_mult = xxwa_qty_pln.                                          */
+/*   end.                                                                            */
+/*   for each xxwa_det EXCLUSIVE-LOCK where                                          */
+/*            xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and                     */
+/*            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and            */
+/*            xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and        */
+/*            xxwa_qty_pln > 0,                                                      */
+/*       EACH pt_mstr NO-LOCK WHERE pt_part = xxwa_part AND                          */
+/*            (pt__chr10 = "A" OR pt__chr10 = "C") and pt__qad20 <> 0                */
+/*            break by xxwa_date by xxwa_site by xxwa_line                           */
+/*                  by xxwa_part by xxwa_rtime:                                      */
+/*       IF FIRST-OF(xxwa_part) THEN DO:                                             */
+/*            assign aviqty = 0.                                                     */
+/*            ASSIGN xxwa_pka_mult = getmult(xxwa_qty_pln - aviqty,pt__qad20).       */
+/*            aviqty = xxwa_pka_mult - xxwa_qty_pln.                                 */
+/*       END.                                                                        */
+/*       ELSE DO:                                                                    */
+/*           IF aviqty >= xxwa_qty_pln THEN DO:                                      */
+/*               ASSIGN xxwa_pka_mult = 0.                                           */
+/*               ASSIGN aviqty = aviqty - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*           ELSE DO:                                                                */
+/*               ASSIGN xxwa_pka_mult = getmult((xxwa_qty_pln - aviqty),pt__qad20).  */
+/*               aviqty = xxwa_pka_mult - xxwa_qty_pln.                              */
+/*           END.                                                                    */
+/*       END.                                                                        */
+/*   END.                                                                            */
 */
 /*计算单号,序号*/
 for each xxwa_det exclusive-lock where
@@ -1271,17 +1271,15 @@ for each xxwd_det exclusive-lock break by xxwd_type by xxwd_date
     end.
 end.
 
-/*********
-for each xxwd_det exclusive-lock where xxwd_type = "S"
-    break by xxwd_type by xxwd_date by xxwd_line by xxwd__int01:
-    if first-of(xxwd_line) then do:
-       assign temp_nbr = xxwd_nbr.
-    end.
-    if xxwd_nbr <> temp_nbr then do:
-       assign xxwd_nbr = temp_nbr.
-    end.
-end.
-************/
+/* for each xxwd_det exclusive-lock where xxwd_type = "S"           */
+/*     break by xxwd_type by xxwd_date by xxwd_line by xxwd__int01: */
+/*     if first-of(xxwd_line) then do:                              */
+/*        assign temp_nbr = xxwd_nbr.                               */
+/*     end.                                                         */
+/*     if xxwd_nbr <> temp_nbr then do:                             */
+/*        assign xxwd_nbr = temp_nbr.                               */
+/*     end.                                                         */
+/* end.                                                             */
 
 /*  empty temp-table xx_ld no-error.                                          */
 /*  assign errornum = 10.                                                     */
@@ -1359,200 +1357,197 @@ end.
 /*    end.                                                                    */
 /*  end.                                                                      */
 
-/**********************************************************************
-   for each xxwa_det no-lock where
-             xxwa_date >= issue and xxwa_date <= issue1 and
-             xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-             xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-             xxwa_qty_pln > 0
-             break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
-                   by xxwa_part by xxwa_rtime:
-     if first-of(xxwa_part) then do:
-        assign vqty = xxwa_ord_mult.
-     end.
-      FOR EACH ld_det use-index ld_part_loc WHERE ld_part = xxwa_part
-           and ld_site = xxwa_site
-           AND can-find(first loc_mstr no-lock where loc_site = ld_site
-                          and loc_loc = ld_loc and loc_user2 = "Y")
-           and vqty > 0
-                   NO-LOCK BY ld_lot :
-          find first xx_ld where
-                     xl_recid = integer(recid(ld_det)) no-error.
-          if available xx_ld then do:
-             assign aviqty = ld_qty_oh - ld_qty_all - xl_qty.
-          end.
-          else do:
-             assign aviqty = ld_qty_oh - ld_qty_all.
-          end.
-          if aviqty <= 0 then next.
-          IF vqty > 0 THEN DO:
-            IF vqty >= aviqty THEN DO:
-                CREATE xxwd_det.
-                assign xxwd_nbr = xxwa_nbr
-                       xxwd_ladnbr = ""
-                       xxwd_recid = xxwa_recid
-                       xxwd_part = ld_part
-                       xxwd_site = ld_site
-                       xxwd_line = xxwa_line
-                       xxwd_loc = ld_loc
-                       xxwd_sn =  errornum
-                       xxwd_lot = ld_lot
-                       xxwd_ref = ld_ref
-                       xxwd_qty_plan  = aviqty.
-                       vqty = vqty - aviqty.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(ld_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(ld_det)).
-                 end.
-                    assign xl_qty = xl_qty + aviqty.
-                 if aviqty > xxwa_qty_pln then leave.
-            END.
-            ELSE DO:
-                CREATE xxwd_det.
-                assign xxwd_nbr = xxwa_nbr
-                       xxwd_ladnbr = ""
-                       xxwd_recid = xxwa_recid
-                       xxwd_part = ld_part
-                       xxwd_site = ld_site
-                       xxwd_line = xxwa_line
-                       xxwd_loc = ld_loc
-                       xxwd_sn =  errornum
-                       xxwd_lot = ld_lot
-                       xxwd_ref = ld_ref
-                       xxwd_qty_plan = vqty.
-                       vqty = 0.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(ld_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(ld_det)).
-                 end.
-                    xl_qty = xl_qty + vqty.
-            END.
-        END.
-      end.   /* FOR EACH ld_det */
-      if vqty = 0 then next.
-    end.
-**********************************************************************/
-/*********
-    empty temp-table xx_ld no-error.
-    assign errornum = 10.
-
-    for each xxwa_det no-lock where
-         xxwa_date >= issue and xxwa_date <= issue1 and
-         xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-         xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-         xxwa_qty_pln > 0
-         break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr
-               by xxwa_part by xxwa_rtime:
-    if first-of(xxwa_part) then do:
-       assign vqty = xxwa_qty_pln.
-    end.
-    for each lad_det exclusive-lock where lad_dataset = "rps_det"
-             and lad_site = xxwa_site
-             and lad_line = xxwa_line
-             and lad_part = xxwa_part
-             and index(lad_nbr,xxwa_ladnbr) > 0
-        AND can-find(first loc_mstr no-lock where loc_site = lad_site
-                       and loc_loc = lad_loc and loc_user2 = "Y")
-        by lad_lot:
-        find first xx_ld where
-                   xl_recid = integer(recid(lad_det)) no-error.
-        if available xx_ld then do:
-           assign aviqty = lad_qty_all - xl_qty.
-        end.
-        else do:
-           assign aviqty = lad_qty_all.
-        end.
-     if aviqty <= 0 then next.
-          IF vqty > 0 THEN DO:
-            IF vqty >= aviqty THEN DO:
-                CREATE xxwd_det.
-                assign xxwd_nbr = xxwa_nbr
-                       xxwd_ladnbr = lad_nbr
-                       xxwd_recid = xxwa_recid
-                       xxwd_part = lad_part
-                       xxwd_site = lad_site
-                       xxwd_line = xxwa_line
-                       xxwd_loc = lad_loc
-                       xxwd_sn =  errornum
-                       xxwd_lot = lad_lot
-                       xxwd_ref = lad_ref
-                       xxwd_qty_plan  = aviqty.
-                       vqty = vqty - aviqty.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(lad_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(lad_det)).
-                 end.
-                    assign xl_qty = xl_qty + aviqty.
-            END.
-            ELSE DO:
-                CREATE xxwd_det.
-                assign xxwd_nbr = xxwa_nbr
-                       xxwd_ladnbr = lad_nbr
-                       xxwd_recid = xxwa_recid
-                       xxwd_part = lad_part
-                       xxwd_site = lad_site
-                       xxwd_line = xxwa_line
-                       xxwd_loc = lad_loc
-                       xxwd_sn =  errornum
-                       xxwd_lot = lad_lot
-                       xxwd_ref = lad_ref
-                       xxwd_qty_plan = vqty.
-                       vqty = 0.
-                 errornum = errornum + 1.
-                 find first xx_ld where
-                            xl_recid = integer(recid(lad_det)) no-error.
-                 if not available xx_ld then do:
-                    create xx_ld.
-                    assign xl_recid = integer(recid(lad_det)).
-                 end.
-                    xl_qty = xl_qty + vqty.
-            END.
-        END.    /* IF vqty > 0 THEN DO: */
-    end.  /*for each lad_det*/
-    end.
-***************/
+/* for each xxwa_det no-lock where                                            */
+/*           xxwa_date >= issue and xxwa_date <= issue1 and                   */
+/*           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and      */
+/*           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and  */
+/*           xxwa_qty_pln > 0                                                 */
+/*           break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr         */
+/*                 by xxwa_part by xxwa_rtime:                                */
+/*   if first-of(xxwa_part) then do:                                          */
+/*      assign vqty = xxwa_ord_mult.                                          */
+/*   end.                                                                     */
+/*    FOR EACH ld_det use-index ld_part_loc WHERE ld_part = xxwa_part         */
+/*         and ld_site = xxwa_site                                            */
+/*         AND can-find(first loc_mstr no-lock where loc_site = ld_site       */
+/*                        and loc_loc = ld_loc and loc_user2 = "Y")           */
+/*         and vqty > 0                                                       */
+/*                 NO-LOCK BY ld_lot :                                        */
+/*        find first xx_ld where                                              */
+/*                   xl_recid = integer(recid(ld_det)) no-error.              */
+/*        if available xx_ld then do:                                         */
+/*           assign aviqty = ld_qty_oh - ld_qty_all - xl_qty.                 */
+/*        end.                                                                */
+/*        else do:                                                            */
+/*           assign aviqty = ld_qty_oh - ld_qty_all.                          */
+/*        end.                                                                */
+/*        if aviqty <= 0 then next.                                           */
+/*        IF vqty > 0 THEN DO:                                                */
+/*          IF vqty >= aviqty THEN DO:                                        */
+/*              CREATE xxwd_det.                                              */
+/*              assign xxwd_nbr = xxwa_nbr                                    */
+/*                     xxwd_ladnbr = ""                                       */
+/*                     xxwd_recid = xxwa_recid                                */
+/*                     xxwd_part = ld_part                                    */
+/*                     xxwd_site = ld_site                                    */
+/*                     xxwd_line = xxwa_line                                  */
+/*                     xxwd_loc = ld_loc                                      */
+/*                     xxwd_sn =  errornum                                    */
+/*                     xxwd_lot = ld_lot                                      */
+/*                     xxwd_ref = ld_ref                                      */
+/*                     xxwd_qty_plan  = aviqty.                               */
+/*                     vqty = vqty - aviqty.                                  */
+/*               errornum = errornum + 1.                                     */
+/*               find first xx_ld where                                       */
+/*                          xl_recid = integer(recid(ld_det)) no-error.       */
+/*               if not available xx_ld then do:                              */
+/*                  create xx_ld.                                             */
+/*                  assign xl_recid = integer(recid(ld_det)).                 */
+/*               end.                                                         */
+/*                  assign xl_qty = xl_qty + aviqty.                          */
+/*               if aviqty > xxwa_qty_pln then leave.                         */
+/*          END.                                                              */
+/*          ELSE DO:                                                          */
+/*              CREATE xxwd_det.                                              */
+/*              assign xxwd_nbr = xxwa_nbr                                    */
+/*                     xxwd_ladnbr = ""                                       */
+/*                     xxwd_recid = xxwa_recid                                */
+/*                     xxwd_part = ld_part                                    */
+/*                     xxwd_site = ld_site                                    */
+/*                     xxwd_line = xxwa_line                                  */
+/*                     xxwd_loc = ld_loc                                      */
+/*                     xxwd_sn =  errornum                                    */
+/*                     xxwd_lot = ld_lot                                      */
+/*                     xxwd_ref = ld_ref                                      */
+/*                     xxwd_qty_plan = vqty.                                  */
+/*                     vqty = 0.                                              */
+/*               errornum = errornum + 1.                                     */
+/*               find first xx_ld where                                       */
+/*                          xl_recid = integer(recid(ld_det)) no-error.       */
+/*               if not available xx_ld then do:                              */
+/*                  create xx_ld.                                             */
+/*                  assign xl_recid = integer(recid(ld_det)).                 */
+/*               end.                                                         */
+/*                  xl_qty = xl_qty + vqty.                                   */
+/*          END.                                                              */
+/*      END.                                                                  */
+/*    end.   /* FOR EACH ld_det */                                            */
+/*    if vqty = 0 then next.                                                  */
+/*  end.                                                                      */
 
 
-  /*计算需要物料的项次,时间点 ------- 扣减在线库存
-  for each xxwa_det exclusive-lock where
-           xxwa_date >= issue and xxwa_date <= issue1 and
-           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-           xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
-  break by xxwa_date by xxwa_site by xxwa_line by xxwa_part  by xxwa_rtime:
-        if first-of (xxwa_part) then do:
-           assign aviqty = 0.
-          /*****  考虑在线库存
-            for each ld_det no-lock where ld_site = xxwa_site and
-                    ld_loc = xxwa_line and ld_part = xxwa_part:
-                    aviqty = aviqty + ld_qty_oh.
-            end.
-           *******/
-        end.
-        if aviqty > xxwa_qty_pln then do:
-           assign xxwa_qty_loc = aviqty
-                  xxwa_ord_mult = aviqty - xxwa_qty_pln
-                  xxwa_qty_need = 0
-                  xxwa__dec01 = 0.
-           assign aviqty = aviqty - xxwa_qty_pln.
-        end.
-        else do:
-            assign xxwa_qty_loc = aviqty
-                   xxwa_ord_mult = 0
-                   xxwa_qty_need =  xxwa_qty_pln - aviqty
-                   xxwa__dec01 = xxwa_qty_pln - aviqty.
-                   aviqty = 0.
-        end.
-  end.
-  */
+/*     empty temp-table xx_ld no-error.                                      */
+/*     assign errornum = 10.                                                 */
+/*                                                                           */
+/*     for each xxwa_det no-lock where                                       */
+/*          xxwa_date >= issue and xxwa_date <= issue1 and                   */
+/*          xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and      */
+/*          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and  */
+/*          xxwa_qty_pln > 0                                                 */
+/*          break by xxwa_date by xxwa_site by xxwa_line by xxwa_nbr         */
+/*                by xxwa_part by xxwa_rtime:                                */
+/*     if first-of(xxwa_part) then do:                                       */
+/*        assign vqty = xxwa_qty_pln.                                        */
+/*     end.                                                                  */
+/*     for each lad_det exclusive-lock where lad_dataset = "rps_det"         */
+/*              and lad_site = xxwa_site                                     */
+/*              and lad_line = xxwa_line                                     */
+/*              and lad_part = xxwa_part                                     */
+/*              and index(lad_nbr,xxwa_ladnbr) > 0                           */
+/*         AND can-find(first loc_mstr no-lock where loc_site = lad_site     */
+/*                        and loc_loc = lad_loc and loc_user2 = "Y")         */
+/*         by lad_lot:                                                       */
+/*         find first xx_ld where                                            */
+/*                    xl_recid = integer(recid(lad_det)) no-error.           */
+/*         if available xx_ld then do:                                       */
+/*            assign aviqty = lad_qty_all - xl_qty.                          */
+/*         end.                                                              */
+/*         else do:                                                          */
+/*            assign aviqty = lad_qty_all.                                   */
+/*         end.                                                              */
+/*      if aviqty <= 0 then next.                                            */
+/*           IF vqty > 0 THEN DO:                                            */
+/*             IF vqty >= aviqty THEN DO:                                    */
+/*                 CREATE xxwd_det.                                          */
+/*                 assign xxwd_nbr = xxwa_nbr                                */
+/*                        xxwd_ladnbr = lad_nbr                              */
+/*                        xxwd_recid = xxwa_recid                            */
+/*                        xxwd_part = lad_part                               */
+/*                        xxwd_site = lad_site                               */
+/*                        xxwd_line = xxwa_line                              */
+/*                        xxwd_loc = lad_loc                                 */
+/*                        xxwd_sn =  errornum                                */
+/*                        xxwd_lot = lad_lot                                 */
+/*                        xxwd_ref = lad_ref                                 */
+/*                        xxwd_qty_plan  = aviqty.                           */
+/*                        vqty = vqty - aviqty.                              */
+/*                  errornum = errornum + 1.                                 */
+/*                  find first xx_ld where                                   */
+/*                             xl_recid = integer(recid(lad_det)) no-error.  */
+/*                  if not available xx_ld then do:                          */
+/*                     create xx_ld.                                         */
+/*                     assign xl_recid = integer(recid(lad_det)).            */
+/*                  end.                                                     */
+/*                     assign xl_qty = xl_qty + aviqty.                      */
+/*             END.                                                          */
+/*             ELSE DO:                                                      */
+/*                 CREATE xxwd_det.                                          */
+/*                 assign xxwd_nbr = xxwa_nbr                                */
+/*                        xxwd_ladnbr = lad_nbr                              */
+/*                        xxwd_recid = xxwa_recid                            */
+/*                        xxwd_part = lad_part                               */
+/*                        xxwd_site = lad_site                               */
+/*                        xxwd_line = xxwa_line                              */
+/*                        xxwd_loc = lad_loc                                 */
+/*                        xxwd_sn =  errornum                                */
+/*                        xxwd_lot = lad_lot                                 */
+/*                        xxwd_ref = lad_ref                                 */
+/*                        xxwd_qty_plan = vqty.                              */
+/*                        vqty = 0.                                          */
+/*                  errornum = errornum + 1.                                 */
+/*                  find first xx_ld where                                   */
+/*                             xl_recid = integer(recid(lad_det)) no-error.  */
+/*                  if not available xx_ld then do:                          */
+/*                     create xx_ld.                                         */
+/*                     assign xl_recid = integer(recid(lad_det)).            */
+/*                  end.                                                     */
+/*                     xl_qty = xl_qty + vqty.                               */
+/*             END.                                                          */
+/*         END.    /* IF vqty > 0 THEN DO: */                                */
+/*     end.  /*for each lad_det*/                                            */
+/*     end.                                                                  */
+
+
+/*计算需要物料的项次,时间点 ------- 扣减在线库存                              */
+/* for each xxwa_det exclusive-lock where                                     */
+/*          xxwa_date >= issue and xxwa_date <= issue1 and                    */
+/*          xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and       */
+/*          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")       */
+/* break by xxwa_date by xxwa_site by xxwa_line by xxwa_part  by xxwa_rtime:  */
+/*       if first-of (xxwa_part) then do:                                     */
+/*          assign aviqty = 0.                                                */
+/*         /*****  考虑在线库存                                               */
+/*           for each ld_det no-lock where ld_site = xxwa_site and            */
+/*                   ld_loc = xxwa_line and ld_part = xxwa_part:              */
+/*                   aviqty = aviqty + ld_qty_oh.                             */
+/*           end.                                                             */
+/*          *******/                                                          */
+/*       end.                                                                 */
+/*       if aviqty > xxwa_qty_pln then do:                                    */
+/*          assign xxwa_qty_loc = aviqty                                      */
+/*                 xxwa_ord_mult = aviqty - xxwa_qty_pln                      */
+/*                 xxwa_qty_need = 0                                          */
+/*                 xxwa__dec01 = 0.                                           */
+/*          assign aviqty = aviqty - xxwa_qty_pln.                            */
+/*       end.                                                                 */
+/*       else do:                                                             */
+/*           assign xxwa_qty_loc = aviqty                                     */
+/*                  xxwa_ord_mult = 0                                         */
+/*                  xxwa_qty_need =  xxwa_qty_pln - aviqty                    */
+/*                  xxwa__dec01 = xxwa_qty_pln - aviqty.                      */
+/*                  aviqty = 0.                                               */
+/*       end.                                                                 */
+/* end.                                                                       */
 
 
 /* ========================================================= */
@@ -1780,29 +1775,29 @@ for each rps_mstr no-lock where rps_rel_date >= idate
        end.
 end.
 /***********************
-assign errornum = 1.
-for each tmp_file0 no-lock:
-    assign key2 = string(errornum) + string(today,"99-99-99") + string(time)
-                + string(t0_date,"99-99-99")
-                + string(t0_start,"HH:MM:SS") + t0_part + string(t0_qty).
-    find first qad_wkfl exclusive-lock where qad_key1 = "xxrepkup0.p"
-           and qad_key2 = key2 no-error.
-    if not available qad_wkfl then do:
-        create qad_wkfl.
-        assign qad_key1 = "xxrepkup0.p"
-               qad_key2 = key2.
-    end.
-    assign qad_key3 = t0_part
-           qad_datefld[1] = t0_date
-           qad_charfld[1] = t0_site
-           qad_charfld[2] = t0_line
-           qad_intfld[2] = t0_end
-           qad_intfld[1] = t0_start
-           qad_decfld[1] = t0_tttime / t0_wktime
-           qad_decfld[2] = t0_qty
-           qad_decfld[3] = t0_qtya
-           .
-    assign errornum = errornum + 1.
-end.
+/* assign errornum = 1.                                                         */
+/* for each tmp_file0 no-lock:                                                  */
+/*     assign key2 = string(errornum) + string(today,"99-99-99") + string(time) */
+/*                 + string(t0_date,"99-99-99")                                 */
+/*                 + string(t0_start,"HH:MM:SS") + t0_part + string(t0_qty).    */
+/*     find first qad_wkfl exclusive-lock where qad_key1 = "xxrepkup0.p"        */
+/*            and qad_key2 = key2 no-error.                                     */
+/*     if not available qad_wkfl then do:                                       */
+/*         create qad_wkfl.                                                     */
+/*         assign qad_key1 = "xxrepkup0.p"                                      */
+/*                qad_key2 = key2.                                              */
+/*     end.                                                                     */
+/*     assign qad_key3 = t0_part                                                */
+/*            qad_datefld[1] = t0_date                                          */
+/*            qad_charfld[1] = t0_site                                          */
+/*            qad_charfld[2] = t0_line                                          */
+/*            qad_intfld[2] = t0_end                                            */
+/*            qad_intfld[1] = t0_start                                          */
+/*            qad_decfld[1] = t0_tttime / t0_wktime                             */
+/*            qad_decfld[2] = t0_qty                                            */
+/*            qad_decfld[3] = t0_qtya                                           */
+/*            .                                                                 */
+/*     assign errornum = errornum + 1.                                          */
+/* end.                                                                         */
 *********************************/
 END PROCEDURE.
