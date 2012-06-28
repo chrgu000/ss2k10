@@ -612,7 +612,15 @@ by wr_start by wr_part by wr_op
                    usrw_charfld[3] = wr_mch
                    usrw_intfld[1] = wr_op
                    usrw_datefld[1] = wo_due_date
-                   usrw_datefld[2] = wr_start.
+                   usrw_datefld[2] = wr_start
+                   usrw_charfld[10] = "NUMBER".
+					  find first tmp_file0 where t0_date = wo_due_date and
+                                       t0_site = wo_site and
+                                       t0_line = wr_wkctr and 
+                                       t0_part  = short-assy no-error.
+            if available tmp_file0 then do:
+            	assign usrw_intfld[2] = t0_start.
+            end.
             assign j = j + 1.
             if first-of(short-part) then do:
                down 1.
@@ -634,6 +642,7 @@ by wr_start by wr_part by wr_op
    end.
 
 end.
+
 /* ×ÊÁÏÐ´Èëxxwa_det. */
 /* SS lambert 20120311 begin */
        for each xxwd_det exclusive-lock where xxwd_date >= issue :
@@ -939,6 +948,17 @@ break by xxwa_date by xxwa_site by xxwa_line by xxwa_pstime by xxwa_part:
     assign xxwa_nbr = vtype .
 end.
 
+for each usrw_wkfl exclusive-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+    and usrw_charfld[10] = "NUMBER"
+    break by usrw_key3 by usrw_key4 by usrw_intfld[2]:
+ if first-of(usrw_key4) then do:
+   assign vtype = "".
+   {gprun.i ""gpnrmgv.p"" "(""xxwa_det"",input-output vtype
+                            ,output errorst,output errornum)" }
+ end.
+ assign usrw_charfld[10] = "N" + vtype . 
+end.
+
 for each xxwa_det no-lock where
           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -1154,7 +1174,6 @@ if available xxwd_det then do:
    assign j = xxwd_sn + 1.
 end.
 
-
 for each usrw_wkfl no-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
 				 and usrw_datefld[1] >= issue and usrw_datefld[1] <= issue1,
 		each xxwa_det no-lock where
@@ -1205,7 +1224,10 @@ for each usrw_wkfl no-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
                  xxwd_ref = ""
                  xxwd_qty_plan = vqty - aviqty
                  xxwd__int01 = startTime
-                 xxwd__int02 = endTime.
+                 xxwd__int02 = endTime
+                 xxwd_stat = "C"
+                 xxwd_pstat = "C"
+                 xxwd_pstat = "C".
            assign j = j + 1.
         end. /*  if vqty > qviqty then do: */
     end.
@@ -1263,7 +1285,10 @@ for each usrw_wkfl no-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
                  xxwd_ref = ""
                  xxwd_qty_plan = vqty - aviqty
                  xxwd__int01 = startTime
-                 xxwd__int02 = endTime.
+                 xxwd__int02 = endTime
+                 xxwd_stat = "C"
+                 xxwd_pstat = "C"
+                 xxwd_pstat = "C".
            assign j = j + 1.
         end. /*  if vqty > qviqty then do: */
     end.
