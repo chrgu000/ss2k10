@@ -76,7 +76,7 @@ repeat:
   update procall no-label with frame framea2 no-box.
   if procall then do:
      assign vcimfile = "xspkis.p" + string(today,"999999") + string(time).
-     output to value(vcimfile + ".i").
+     output to value(vcimfile + ".bpi").
      for each xxwd_det exclusive-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr
 /*       and min((xxwd_qty_plan - xxwd_qty_iss) , xxwd_qty_piss) > 0   */
          and xxwd_stat <> "C" and max(xxwd_qty_plan - xxwd_qty_iss,0) > 0:
@@ -87,9 +87,9 @@ repeat:
            assign sstat = loc_stat.
         end.
         find first ld_det no-lock where ld_site = "gsa01" and ld_loc = vtrloc
-        		 and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
+             and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
         if available ld_det then do:
-        	 xxwd__dec03 = min(xxwd__dec03,ld_qty_oh).
+           xxwd__dec03 = min(xxwd__dec03,ld_qty_oh).
            put unformat '"' xxwd_part '"' skip.
            put unformat xxwd__dec03 " - ".
            put unformat '"s' + xxwd_nbr + '" "' trim(string(xxwd_sn,">>>>>>>9")) '"' skip.
@@ -107,8 +107,8 @@ repeat:
 
       assign trrecid = current-value(tr_sq01).
       batchrun  = yes.
-      input from value(vcimfile + ".i").
-      output to value(vcimfile + ".o") keep-messages.
+      input from value(vcimfile + ".bpi").
+      output to value(vcimfile + ".bpo") keep-messages.
       hide message no-pause.
       {gprun.i ""iclotr04.p""}
       hide message no-pause.
@@ -117,15 +117,15 @@ repeat:
       batchrun  = no.
 
 /*    if not getsaveLogstat() then do:                              */
-/*       os-delete value(vcimfile + ".i") no-error.                 */
-/*       os-delete value(vcimfile + ".o") no-error.                 */
+         os-delete value(vcimfile + ".bpi") no-error.
+         os-delete value(vcimfile + ".bpo") no-error.
 /*    end.                                                          */
 
        for each xxwd_det exclusive-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr
 /*       and min((xxwd_qty_plan - xxwd_qty_iss) , xxwd_qty_piss) > 0   */
          and xxwd_stat <> "C" and max(xxwd_qty_plan - xxwd_qty_iss,0) > 0:
           for each tr_hist no-lock use-index tr_part_trn where
-          				 tr_part = xxwd_part and
+                   tr_part = xxwd_part and
                    tr_trnbr > integer(trrecid) and
                    tr_nbr = 's' + xxwd_nbr and
                    tr_so_job = trim(string(xxwd_sn,">>>>>>>9")) and
@@ -165,9 +165,9 @@ repeat:
         hide frame framea2.
         hide frame framep.
         find first ld_det no-lock where ld_site = "gsa01" and ld_loc = vtrloc
-        		 and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
+             and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
         if available ld_det then do:
-        	 assign qtytmp = min(qtytmp,ld_qty_oh).
+           assign qtytmp = min(qtytmp,ld_qty_oh).
         end.
         display "[生产送料n]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(4) with fram frameq no-box.
         display "送料单:" + trim(tcnbr) format "x(40)"  skip with frame frameq no-box.
@@ -194,7 +194,7 @@ repeat:
       end.  /* repeate 数量*/
 
      assign vcimfile = "xspkis.p" + string(today,"999999") + string(time).
-     output to value(vcimfile + ".i").
+     output to value(vcimfile + ".bpi").
      for each xxwd_det no-lock where recid(xxwd_det) = recno:
         find first loc_mstr no-lock where loc_site = wdefsite and
                    loc_loc = xxwd_loc no-error.
@@ -214,11 +214,11 @@ repeat:
         put unformat "." skip.
      end.
      output close.
-      
+
       assign trrecid = current-value(tr_sq01).
       batchrun  = yes.
-      input from value(vcimfile + ".i").
-      output to value(vcimfile + ".o") keep-messages.
+      input from value(vcimfile + ".bpi").
+      output to value(vcimfile + ".bpo") keep-messages.
       hide message no-pause.
       aloop:
       do on stop undo aloop,leave aloop:
@@ -228,11 +228,12 @@ repeat:
       output close.
       input close.
       batchrun  = no.
-
+      os-delete value(vcimfile + ".bpi") no-error.
+      os-delete value(vcimfile + ".bpo") no-error.
          assign qtytmp = 0.
          for each xxwd_det exclusive-lock where recid(xxwd_det) = recno:
              find first tr_hist no-lock use-index tr_part_trn where
-          				    tr_part = xxwd_part and
+                      tr_part = xxwd_part and
                       tr_trnbr > integer(trrecid) and
                       tr_nbr = 's' + xxwd_nbr and
                       tr_so_job = trim(string(xxwd_sn,">>>>>>>9")) and
@@ -245,7 +246,7 @@ repeat:
                 if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
                 message "调拨成功" view-as alert-box.
                 assign part = ""
-                			 qtyreq = 0.
+                       qtyreq = 0.
              end.
            end.
       end. /* repeat:   料号/项次*/
