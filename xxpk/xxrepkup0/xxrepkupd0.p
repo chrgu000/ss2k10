@@ -1153,10 +1153,15 @@ find last xxwd_det no-lock use-index xxwd_nbr_recid no-error.
 if available xxwd_det then do:
    assign j = xxwd_sn + 1.
 end.
-for each xxwa_det no-lock where
+
+
+for each usrw_wkfl no-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+				 and usrw_datefld[1] >= issue and usrw_datefld[1] <= issue1,
+		each xxwa_det no-lock where
           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+          xxwa_site = usrw_key3 and xxwa_line = usrw_key4 and xxwa_part = usrw_key6
     break by xxwa_site by xxwa_part by xxwa__dte01 by xxwa_rtime:
     if first-of(xxwa_part) then do:
        assign vqty = 0
@@ -1206,10 +1211,13 @@ for each xxwa_det no-lock where
     end.
 end.
 assign temp_nbr = "".
-for each xxwa_det no-lock where
+for each usrw_wkfl no-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
+				 and usrw_datefld[1] >= issue and usrw_datefld[1] <= issue1,
+		each xxwa_det no-lock where
           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "")
+          xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+          xxwa_site = usrw_key3 and xxwa_line = usrw_key4 and xxwa_part = usrw_key6
     break by xxwa_site by xxwa_line by xxwa_part by xxwa__dte01 by xxwa_rtime:
     if first-of(xxwa_part) then do:
        assign vqty = 0
