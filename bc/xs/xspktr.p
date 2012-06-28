@@ -48,14 +48,14 @@ repeat:
   end.
   assign wmessage = "......".
 
-  find first xxwd_det no-lock where "p" + xxwd_nbr = tcnbr no-error.
+  find first xxwd_det no-lock where xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr no-error.
   if not available xxwd_det then do:
     assign wmessage = "取料单未找到!".
     display  skip WMESSAGE NO-LABEL with fram framea1.
     undo,retry.
   end.
   else do:
-     find first xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
+     find first xxwd_det no-lock where  xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
             and xxwd_stat <> "C" no-error.
      if not available xxwd_det then do:
         assign wmessage = "取料单已结清,请确认资料!".
@@ -75,17 +75,24 @@ repeat:
   if procall then do:
      assign vcimfile = "xspktr.p" + string(today,"999999") + string(time).
      output to value(vcimfile + ".i").
-         for each xxwd_det no-lock where "p" + xxwd_nbr = tcnbr
+         for each xxwd_det no-lock where xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
               and xxwd_qty_plan - xxwd_qty_iss > 0
               and xxwd_stat <> "C" and upper(xxwd_loc) <> "P-All":
-            
             find first loc_mstr no-lock where loc_site = wdefsite and
                        loc_loc = xxwd_loc no-error.
             if available loc_mstr then do:
                assign sstat = loc_stat.
             end.
+            find first ld_det no-lock where ld_site = wdefsite and ld_loc = xxwd_loc 
+            		 and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
+            if available ld_det then do:
+            	 assign qtytemp = min(ld_qty_oh, truncate(xxwd_qty_plan - xxwd_qty_iss,0)).
+            end.
+            else do:
+            	 next.
+            end.
             put unformat '"' xxwd_part '"' skip.
-            put unformat truncate(xxwd_qty_plan - xxwd_qty_iss,0) " - ".
+            put unformat qtytemp " - ".
             put unformat '"p' xxwd_nbr '" "' trim(string(xxwd_sn,">>>>>>>>>>9")) '"' skip.
             put unformat '"-" "-" "-" "-"' skip.
             put unformat '- "' xxwd_loc '" "' xxwd_lot '"' skip.
@@ -116,19 +123,20 @@ repeat:
 /*       os-delete value(vcimfile + ".o") no-error.                 */
 /*    end.                                                          */
 				 sstat = "".
-         for each xxwd_det exclusive-lock where "p" + xxwd_nbr = tcnbr
+         for each xxwd_det exclusive-lock where  xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
               and xxwd_qty_plan - xxwd_qty_iss > 0
               and xxwd_stat <> "C" and upper(xxwd_loc) <> "P-All":
+              qtytemp = 0.
              for each tr_hist use-index tr_part_trn no-lock where
                       tr_part = xxwd_part and
                       tr_trnbr > integer(trrecid) and
-                      tr_type = "rct-tr" and
+                      tr_type = "iss-tr" and
                       tr_nbr = 'p' + xxwd_nbr and
                       tr_serial = xxwd_lot and
                       tr_so_job = trim(string(xxwd_sn,">>>>>>>>>>9")):
-                  accum tr_qty_loc(total).
+                  qtytemp = qtytemp + tr_qty_loc * -1.
              end.
-             assign xxwd_qty_iss = xxwd_qty_iss + accum total tr_qty_loc.
+             assign xxwd_qty_iss = xxwd_qty_iss + qtytemp.
              if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
          end.
          assign WMESSAGE = "调拨完成".
@@ -144,7 +152,7 @@ repeat:
       display "料号/项次或E退出" format "x(40)" skip with frame framep no-box.
       update part no-label with frame framep no-box.
       if part = "E" then leave.
-      find first xxwd_det no-lock where "p" + xxwd_nbr = trim(tcnbr) and
+      find first xxwd_det no-lock where  xxwd_type = "P" and xxwd_type + xxwd_nbr = trim(tcnbr) and
                 (xxwd_part = part or trim(string(xxwd_sn)) = part) no-error.
       if available xxwd_det then do:
          assign recno = recid(xxwd_det).

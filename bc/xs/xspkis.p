@@ -48,14 +48,14 @@ repeat:
   end.
   assign wmessage = "......".
 
-  find first xxwd_det no-lock where "s" + xxwd_nbr = tcnbr no-error.
+  find first xxwd_det no-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr no-error.
   if not available xxwd_det then do:
     assign wmessage = "送料单未找到!".
     display  skip WMESSAGE NO-LABEL with fram framea1.
     undo,retry.
   end.
   else do:
-     find first xxwd_det no-lock where "s" + xxwd_nbr = tcnbr and
+     find first xxwd_det no-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr and
                 xxwd_stat <> "C" no-error.
      if not available xxwd_det then do:
          assign wmessage = "送料单已结清,请确认资料!".
@@ -77,7 +77,7 @@ repeat:
   if procall then do:
      assign vcimfile = "xspkis.p" + string(today,"999999") + string(time).
      output to value(vcimfile + ".i").
-     for each xxwd_det exclusive-lock where "s" + xxwd_nbr = tcnbr
+     for each xxwd_det exclusive-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr
 /*       and min((xxwd_qty_plan - xxwd_qty_iss) , xxwd_qty_piss) > 0   */
          and xxwd_stat <> "C" and max(xxwd_qty_plan - xxwd_qty_iss,0) > 0:
          assign xxwd__dec03 = max(xxwd_qty_plan - xxwd_qty_iss,0).
@@ -121,7 +121,7 @@ repeat:
 /*       os-delete value(vcimfile + ".o") no-error.                 */
 /*    end.                                                          */
 
-       for each xxwd_det exclusive-lock where "s" + xxwd_nbr = tcnbr
+       for each xxwd_det exclusive-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = tcnbr
 /*       and min((xxwd_qty_plan - xxwd_qty_iss) , xxwd_qty_piss) > 0   */
          and xxwd_stat <> "C" and max(xxwd_qty_plan - xxwd_qty_iss,0) > 0:
           for each tr_hist no-lock use-index tr_part_trn where
@@ -147,7 +147,7 @@ repeat:
       display "料号/项次或E退出" format "x(40)" skip with frame framep no-box.
       update part no-label with frame framep no-box.
       if part = "E" then leave.
-      find first xxwd_det no-lock where "s" + xxwd_nbr = trim(tcnbr) and
+      find first xxwd_det no-lock where xxwd_type = "s" and xxwd_type + xxwd_nbr = trim(tcnbr) and
                 (xxwd_part = part or trim(string(xxwd_sn)) = part) no-error.
       if available xxwd_det then do:
          assign qtytmp = max(xxwd_qty_plan - xxwd_qty_iss,0).
