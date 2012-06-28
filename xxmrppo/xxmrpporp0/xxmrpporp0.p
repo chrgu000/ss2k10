@@ -3,9 +3,9 @@
 /* V8:ConvertMode=Report                                                     */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
-
+/* T类型PO增加一个调整量用于平衡。                               /*628*/     */
 /* DISPLAY TITLE */
-{mfdtitle.i "120620.3"}
+{mfdtitle.i "120628.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -42,6 +42,7 @@ define variable tpotpo  like mrp_qty.
 define variable T       as   logical initial "YES".
 define variable tpo1date as date.
 define variable aqty as decimal.
+define variable adjqty as decimal.
 define temp-table tmp_po1
        fields tp1_part like pt_part
        fields tp1_po as decimal format "->>>,>>>,>>>,>>>,9.9<"
@@ -595,12 +596,19 @@ repeat:
                   end.
                end. /* if pod_due_date >= tpo1date then do: */
            end. /* for each pod_det no-lock  */
-           find first tmp_po1 no-lock where tp1_part = pod_part no-error.
+/*628*/    assign adjqty = 0.
+/*628*/    find first usrw_wkfl no-lock where
+/*628*/               usrw_key1 = "XXMRPPORP0.P-ITEM-TTYPEPO-QTYADJ" and
+/*628*/               usrw_key2 = tpo_part no-error.
+/*628*/    if available usrw_wkfl then do:
+/*628*/       assign adjqty = usrw_decfld[1].
+/*628*/    end.
+           find first tmp_po1 no-lock where tp1_part = tpo_part no-error.
            if not available tmp_po1 then do:
               create tmp_po1.
-              assign tp1_part = pod_part.
+              assign tp1_part = tpo_part.
            end.
-           assign tp1_tpo = tpoqtys
+/*628*/    assign tp1_tpo = tpoqtys - adjqty
                   tp1_po = tpoqty.
         end. /* if first-of(tmp_part) then do: */
     end.
@@ -697,6 +705,7 @@ repeat:
                                  getTermLabel("DEMAND_QTY",12)
                                  getTermLabel("PO_QTY",12)
                                  getTermLabel("TEMP_PO_QTY",12)
+                                 getTermLabel("ADJUSTMENT_QUANTITY",12)
                                  getTermLabel("WEEK",12)
                                  getTermLabel("SHIP_TERMS",12)
                                  getTermLabel("COMMENT",12).
@@ -739,6 +748,15 @@ repeat:
          for each tmp_po no-lock
              where (tpo_qty > 0 or tpo_fut) or not act
              break by tpo_nbr by tpo_vend by tpo_part by tpo_due:
+/*628*/      if first-of(tpo_part) then do:
+/*628*/         assign adjqty = 0.
+/*628*/         find first usrw_wkfl no-lock where
+/*628*/                    usrw_key1 = "XXMRPPORP0.P-ITEM-TTYPEPO-QTYADJ" and
+/*628*/                    usrw_key2 = tpo_part no-error.
+/*628*/         if available usrw_wkfl then do:
+/*628*/            assign adjqty = usrw_decfld[1].
+/*628*/         end.
+/*628*/      end.
              if first-of(tpo_due) then do:
                 assign tpoqty = 0
                        tpoqtys = 0
@@ -768,6 +786,7 @@ repeat:
                        tpo_due tpo_type tpoqtys
                        if first-of(tpo_part) then tpopo else 0
                        if first-of(tpo_part) then tpotpo else 0
+                       if first-of(tpo_part) then adjqty else 0
                        weekday(tpo_due) - 1
                        tpo_rule0 areaDesc.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
