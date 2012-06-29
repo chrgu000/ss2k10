@@ -158,12 +158,11 @@ do on error undo, return error on endkey undo, return error:
           xxwd_site >= site and xxwd_site <= site1 and
           (xxwd_line >= line and xxwd_line <= line1 or xxwd_type = "P") and
           xxwd_part >= part and xxwd_part <= part1 and
-          xxwd_date >= issue and xxwd_date <= issue1 and
+          xxwd__dte01 >= issue and xxwd__dte01 <= issue1 and
           xxwd_nbr >= nbr and xxwd_nbr <= nbr1 and
           ((substring(xxwd_part,1,1) = "P" and tax_bonded) or
            (tax_bonded = no and substring(xxwd_part,1,1)<> "P")) and
           (xxwd_type = cate or cate = "A")
-
           break by xxwd_type by xxwd_date by xxwd_line by xxwd__int01 by xxwd_part:
        find first pt_mstr no-lock where pt_mstr.pt_part = xxwd_part no-error.
        if available pt_mstr then do:
@@ -212,7 +211,7 @@ do on error undo, return error on endkey undo, return error:
             xxwd_lot
             xxwd_qty_iss
             xxwd_stat
-            xxwd_date.
+            xxwd__dte01.
 end.
 
 end.

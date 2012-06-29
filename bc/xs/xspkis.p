@@ -131,6 +131,7 @@ repeat:
                    tr_so_job = trim(string(xxwd_sn,">>>>>>>9")) and
                    tr_type = "rct-tr":
                accum tr_qty_loc(total).
+               assign xxwd__int03 = tr_time.
           end.
           assign xxwd_qty_iss = xxwd_qty_iss + accum total tr_qty_loc.
           if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
@@ -151,6 +152,11 @@ repeat:
                 (xxwd_part = part or trim(string(xxwd_sn)) = part) no-error.
       if available xxwd_det then do:
          assign qtytmp = max(xxwd_qty_plan - xxwd_qty_iss,0).
+         if qtytmp = 0 or xxwd_stat = "C" then do:
+            assign wmessage = "错误!此项次已完成!".
+            display  skip WMESSAGE NO-LABEL with fram framep no-box.
+            undo,retry.
+         end.
          assign recno = recid(xxwd_det).
          assign part = xxwd_part.
       end.
@@ -242,7 +248,8 @@ repeat:
                       tr_serial = xxwd_lot and
                       tr_type = "rct-tr" no-error.
              if available tr_hist then do:
-                assign xxwd_qty_iss = xxwd_qty_iss + tr_qty_loc.
+                assign xxwd__int03 = tr_time
+                			 xxwd_qty_iss = xxwd_qty_iss + tr_qty_loc.
                 if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
                 message "调拨成功" view-as alert-box.
                 assign part = ""

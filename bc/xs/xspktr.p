@@ -135,6 +135,7 @@ repeat:
                       tr_serial = xxwd_lot and
                       tr_so_job = trim(string(xxwd_sn,">>>>>>>>>>9")):
                   qtytemp = qtytemp + tr_qty_loc * -1.
+                  assign xxwd__int03 = tr_time.
              end.
              assign xxwd_qty_iss = xxwd_qty_iss + qtytemp.
              if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
@@ -155,6 +156,11 @@ repeat:
       find first xxwd_det no-lock where  xxwd_type = "P" and xxwd_type + xxwd_nbr = trim(tcnbr) and
                 (xxwd_part = part or trim(string(xxwd_sn)) = part) no-error.
       if available xxwd_det then do:
+         if xxwd_stat = "C" then do:
+         	  assign wmessage = "错误!此项次已完成.".
+            display  skip WMESSAGE NO-LABEL with fram framep no-box.
+            undo,retry. 
+         end.
          assign recno = recid(xxwd_det).
          assign part = xxwd_part.
       end.
@@ -242,7 +248,8 @@ repeat:
                       tr_serial = xxwd_lot and
                       tr_so_job = trim(string(xxwd_sn,">>>>>>>>>>9")) no-error.
              if available tr_hist then do:
-                assign xxwd_qty_iss = xxwd_qty_iss + tr_qty_loc.
+                assign xxwd__int03 = tr_time
+                			 xxwd_qty_iss = xxwd_qty_iss + tr_qty_loc.
                 assign sstat = "OK".
                 if xxwd_qty_plan - xxwd_qty_iss <= 0 then assign xxwd_stat = "C".
              end.
