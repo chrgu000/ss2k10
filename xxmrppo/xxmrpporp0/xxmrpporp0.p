@@ -3,23 +3,24 @@
 /* V8:ConvertMode=Report                                                     */
 /* Environment: Progress:9.1D   QAD:eb2sp4    Interface:Character            */
 /*-revision end--------------------------------------------------------------*/
-/* T类型PO增加一个调整量用于平衡。                               /*628*/     */
+/* T类型PO增加一个调整量用于平衡。                                  /*628*/  */
+/* T类型PO增加一个调整量不显示在报表上                              /*629*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "120628.1"}
+{mfdtitle.i "120629.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
 define variable vkey1 like usrw_key1 no-undo
                   initial "XXMRPPORP0.P-ITEM-ORDER-POLICY".
-define variable part like pt_part. /* INITIAL "M72059-215-1".  */
+define variable part like pt_part.
 define variable part1 like pt_part.
 define variable due as date.
 define variable duek as date.
 define variable duee as date.
 define variable duef as date.
 define variable duet as date.
-define variable vend like vd_addr. /* INITIAL "C02C016".         */
+define variable vend like vd_addr.
 define variable buyer like pt_buyer INITIAL "4RSA".
 define variable area as character format "x(1)".
 define variable areaDesc as character format "x(40)".
@@ -87,9 +88,9 @@ define temp-table tmp_tmd
    fields tm_rule0 as character
    fields tm_rule as character
    fields tm_month as character
-   fields tm_sdate as date  /* mrp_due_date */
+   fields tm_sdate as date  /* mrp_due_date              */
    fields tm_adate as date  /* first available send date */
-   fields tm_edate as date  /* end send date*/
+   fields tm_edate as date  /* end send date             */
    fields tm_mrp_qty like mrp_qty
    fields tm_qty like mrp_qty
    index tm_rule is primary tm_rule
@@ -705,7 +706,7 @@ repeat:
                                  getTermLabel("DEMAND_QTY",12)
                                  getTermLabel("PO_QTY",12)
                                  getTermLabel("TEMP_PO_QTY",12)
-                                 getTermLabel("ADJUSTMENT_QUANTITY",12)
+/*629*                           getTermLabel("ADJUSTMENT_QUANTITY",12)      */
                                  getTermLabel("WEEK",12)
                                  getTermLabel("SHIP_TERMS",12)
                                  getTermLabel("COMMENT",12).
@@ -786,7 +787,7 @@ repeat:
                        tpo_due tpo_type tpoqtys
                        if first-of(tpo_part) then tpopo else 0
                        if first-of(tpo_part) then tpotpo else 0
-                       if first-of(tpo_part) then adjqty else 0
+/*629*                 if first-of(tpo_part) then adjqty else 0               */
                        weekday(tpo_due) - 1
                        tpo_rule0 areaDesc.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
