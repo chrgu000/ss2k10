@@ -37,7 +37,7 @@ FOR EACH ttld_det WHERE ttld_sel:
       OUTPUT CLOSE .
 
       FIND LAST tr_hist WHERE tr_domain = global_domain NO-LOCK NO-ERROR.
-      v_tr_trnbr = tr_trnbr .
+      v_tr_trnbr = tr_trnbr.
 
       batchrun = yes.
       INPUT FROM VALUE(fn_i + ".bpi" ) .
@@ -53,12 +53,18 @@ FOR EACH ttld_det WHERE ttld_sel:
             AND tr_loc = ttld_loc
             AND tr_serial = ttld_lot
             AND tr_ref = ttld_ref
-            AND tr_qty_loc = ttld_qty_oh
+            AND tr_qty_loc = - ttld_qty_oh
             AND tr_trnbr > v_tr_trnbr
-            AND tr_type = "ISS-TR" NO-LOCK NO-ERROR.
+            AND tr_type = "ISS-WO" NO-LOCK NO-ERROR.
       IF AVAIL tr_hist THEN DO:
-          os-delete value(fn_i + ".bpi").
-          os-delete value(fn_i + ".bpo").
+         find first lot_mstr where lot_domain = global_domain and
+                    lot_serial = ttld_lot and
+                    lot_part = "zzlot2" exclusive-lock no-error.
+         if avail lot_mstr then do:
+            assign lot__chr02 = "160".
+         end.
+         os-delete value(fn_i + ".bpi").
+         os-delete value(fn_i + ".bpo").
 /****************
           FIND FIRST zzsellot_mstr WHERE zzsellot_domain = global_domain
                  AND zzsellot_lotno = ttld_lot
