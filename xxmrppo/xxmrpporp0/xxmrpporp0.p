@@ -5,6 +5,7 @@
 /*-revision end--------------------------------------------------------------*/
 /* T类型PO增加一个调整量用于平衡。                                  /*628*/  */
 /* T类型PO增加一个调整量不显示在报表上                              /*629*/  */
+/* 订货量圆整成订单倍数                                             /*630*/  */
 /* DISPLAY TITLE */
 {mfdtitle.i "120629.1"}
 
@@ -596,7 +597,7 @@ repeat:
                      assign tpoqty = tpoqty + pod_qty_ord.
                   end.
                end. /* if pod_due_date >= tpo1date then do: */
-           end. /* for each pod_det no-lock  */
+           end. /* for each pod_det no-lock  */          
 /*628*/    assign adjqty = 0.
 /*628*/    find first usrw_wkfl no-lock where
 /*628*/               usrw_key1 = "XXMRPPORP0.P-ITEM-TTYPEPO-QTYADJ" and
@@ -782,6 +783,13 @@ repeat:
                  if aqty <= tpoqty
                     then assign tpoqty = tpoqty - aqty.
                     else assign tpoqty = 0.
+/*630*/	         if tpoqty <> 0 then do:
+/*630*/	            find first pt_mstr no-lock where pt_part = tpo_part 
+/*630*/					     			and pt_ord_mult <> 0 no-error.
+/*630*/	            if available pt_mstr then do:
+/*630*/	            		assign tpoqty = tpoqty + pt_ord_mult - tpoqty mod pt_ord_mult .
+/*630*/	            end. 
+/*630*/				   end.
                  export delimiter "~011"
                        tpo_nbr tpo_vend tpo_part tpoqty
                        tpo_due tpo_type tpoqtys

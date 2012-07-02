@@ -13,7 +13,7 @@
 /* SS - 090911.1 By: Neil Gao */
 /* SS 090911.1 - B */
 /* SS 010513.1 - By: SamSOng */
-
+/* ss 629 - by zy 不可以滚动防止操作错误 */
 /*
 解决销售订单过量发放问题
 */
@@ -549,7 +549,6 @@ If V1004<>"" then
             APPLY LASTKEY.
         END.
         /* ROLL BAR END */
-
 
         /* PRESS e EXIST CYCLE */
         IF V1004 = "e" THEN  LEAVE iimainloop /* ching MAINLOOP */.
@@ -1746,6 +1745,8 @@ If AVAILABLE ( ld_det ) then
         recid(LD_DET) = ?.
         Update V1500
         WITH  fram F1500 NO-LABEL
+/*629*/       .
+/*629*
         EDITING:
         readkey pause wtimeout.
         if lastkey = -1 then quit.
@@ -1797,6 +1798,7 @@ If AVAILABLE ( ld_det ) then
             APPLY LASTKEY.
         END.
         /* ROLL BAR END */
+*629*/        
         /* PRESS e EXIST CYCLE */
         IF V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1500.
