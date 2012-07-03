@@ -6,7 +6,7 @@
 
 
 /* DISPLAY TITLE */
-{mfdtitle.i "1207.2.1"}
+{mfdtitle.i "12072.1"}
 {xxbmld.i "new"}
 {gpcdget.i "UT"}
 
@@ -21,14 +21,14 @@ setFrameLabels(frame a:handle).
 
 {wbrp01.i}
 repeat:
-   find first code_mstr where
-              code_fldname = "xxbmld.p_filename" and
-              code_value = global_userid no-error.
-   if available code_mstr then do:
-      if code_cmmt <> "" then do:
-         assign flhload =  code_cmmt.
-      end.
-   end.
+/*   find first usrw_wkfl where                                          */
+/*              usrw_key1 = "xxbmld.p_filename" and                      */
+/*              usrw_key2 = global_userid no-error.                      */
+/*   if available usrw_wkfl then do:                                     */
+/*      if usrw_key3 <> "" then do:                                      */
+/*         assign flhload =  usrw_key3.                                  */
+/*      end.                                                             */
+/*   end.                                                                */
    if c-application-mode <> 'web' then
    update flhload cloadfile with frame a.
 
@@ -40,20 +40,20 @@ repeat:
          next-prompt flhload.
          undo, retry.
      END.
-     else do:
-          find first code_mstr where
-                      code_fldname = "xxbmld.p_filename" and
-                      code_value = global_userid no-error.
-          if available code_mstr then do:
-                 assign code_cmmt = flhload.
-          end.
-          else do:
-              create code_mstr.
-              assign code_fldname = "xxbmld.p_filename"
-                     code_value = global_userid
-                     code_cmmt = flhload.
-          end.
-     end.
+/*     else do:                                                          */
+/*          find first usrw_wkfl where                                   */
+/*                     usrw_key1 = "xxbmld.p_filename" and               */
+/*                     usrw_key2 = global_userid no-error.               */
+/*          if available usrw_wkfl then do:                              */
+/*                 assign usrw_key3 = flhload.                           */
+/*          end.                                                         */
+/*          else do:                                                     */
+/*              create usrw_wkfl.                                        */
+/*              assign usrw_key1 = "xxbmld.p_filename"                   */
+/*                     usrw_key2 = global_userid                         */
+/*                     usrw_key3 = flhload.                              */
+/*          end.                                                         */
+/*     end.                                                              */
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -88,7 +88,7 @@ repeat:
      end.
      else do:
           if not can-find(first tmpbom no-lock where tbm_chk <> "")
-          	 and cloadfile then do:
+             and cloadfile then do:
              {gprun.i ""xxbmld1.p""}
           end.
      end.
