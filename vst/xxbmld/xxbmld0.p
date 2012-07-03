@@ -1,7 +1,7 @@
 /* xxbmld.p - BOM LOAD                                                       */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120702.1 LAST MODIFIED: 07/02/12 BY: zy                         */
+/* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
 /* REVISION END                                                              */
 
 {xxbmld.i}
@@ -11,7 +11,7 @@ empty temp-table tmpbom no-error.
 input from value(flhload).
 repeat:
   create tmpbom.
-  import delimiter "," tbm_par tbm_old tbm_new tbm_qty_per no-error.
+  import delimiter "," tbm_par tbm_old tbm_new tbm_qty_per tbm_scrp no-error.
 end.
 input close.
 
@@ -23,7 +23,12 @@ for each tmpbom exclusive-lock:
        not can-find(first bom_mstr no-lock where bom_parent = tbm_par) then do:
        assign tbm_chk = "231-0".
     end.
-    if not can-find(first pt_mstr no-lock where pt_part = tbm_old) and
+    find first pt_mstr no-lock where pt_part = tbm_par and pt_status = "AC" no-error.
+    if available pt_mstr then do:
+    	 assign tbm_chk = "AC".
+    end.
+    if tbm_old <> "" and 
+       not can-find(first pt_mstr no-lock where pt_part = tbm_old) and
        not can-find(first bom_mstr no-lock where bom_parent = tbm_old) then do:
        assign tbm_chk = "231-1".
     end.

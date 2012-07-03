@@ -1,7 +1,7 @@
-/* xxbmld.p - BOM LOAD                                                      */
+/* xxbmld.p - BOM LOAD                                                       */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
+/* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
 /* REVISION END                                                              */
 
 

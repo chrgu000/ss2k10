@@ -1,7 +1,7 @@
 /* xxinvld.p - bom load                                                      */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
+/* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
 /* REVISION END                                                              */
 
 {mfdeclre.i}
@@ -12,14 +12,14 @@ assign vfile = "xxbmld.p." + string(today,"99999999") + '.' + string(time).
 
 output to value(vfile + ".bpi").
 
-for each tmpbom exclusive-lock where tbm_chk = "":
+for each tmpbom no-lock where tbm_chk = "":
     put unformat '"' tbm_par '"' skip.
     put unformat '"' tbm_old '" "" ' tbm_ostart skip.
-    put unformat '- - ' tbm_ostart ' ' tbm_oend skip.
+    put unformat '- - ' tbm_ostart ' ' tbm_oend ' - - - - - - - - N' skip.
     put "." skip.
     put unformat '"' tbm_par '"' skip.
     put unformat '"' tbm_new '" "" ' tbm_nstart skip.
-    put unformat tbm_qty_per ' - ' tbm_nstart ' ' tbm_nend skip.
+    put unformat tbm_qty_per ' - ' tbm_nstart ' ' tbm_nend ' ' tbm_scrp ' - - - - - - N' skip.
     put "." skip.
 end.
 output close.
