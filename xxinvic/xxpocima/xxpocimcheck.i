@@ -453,7 +453,7 @@ for each xxinv_mstr
                                    and pod_site = xxinv_site
                                    and pod_qty_ord > pod_qty_rcvd
                                    AND (( SUBSTRING(pod_nbr,1,1) = "P" AND substring(xxship_type,1,1) = "Z") OR
-                                        ( SUBSTRING(pod_nbr,1,1) = "N" AND substring(xxship_type,1,1) = "R") OR
+                                        ( SUBSTRING(pod_nbr,1,1) = "PN" AND substring(xxship_type,1,1) = "R") OR
                                         ( SUBSTRING(pod_nbr,1,1) = "Z" AND substring(xxship_type,1,1) = "Z") OR
                                         ( SUBSTRING(pod_nbr,1,1) = "R" AND substring(xxship_type,1,1) = "R") ) NO-LOCK BY po_nbr :
                         tmp_flagt = "1" .
