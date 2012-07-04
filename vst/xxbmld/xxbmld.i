@@ -15,5 +15,14 @@ define {1} shared temp-table tmpbom
 			 fields tbm_nstart as date
 			 fields tbm_nend as date
 			 fields tbm_qty_per like ps_qty_per
-			 fields tbm_scrp like ps_scrp_pct
+			 fields tbm_scrp as decimal
 			 fields tbm_chk as character format "x(40)".
+
+define {1} shared temp-table tmpbomn
+		   fields tbmn_par like ps_par
+		   fields tbmn_comp like ps_comp
+		   fields tbmn_start like ps_start
+		   fields tbmn_end like ps_end
+		   fields tbmn_qty_per like ps_qty_per
+		   fields tbmn_scrp as decimal
+		   fields tbmn_chk as character format "x(40)".

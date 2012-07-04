@@ -87,15 +87,12 @@ repeat:
           {mfmsg.i 5935 1}
      end.
      else do:
-          if not can-find(first tmpbom no-lock where tbm_chk <> "")
-             and cloadfile then do:
              {gprun.i ""xxbmld1.p""}
-          end.
      end.
-     for each tmpbom no-lock with width 320 frame c:
+     for each tmpbomn exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display tmpbom.
+         display tmpbomn.
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
