@@ -23,16 +23,16 @@ if not available xxship_det then do:
 end.
 /*  如果是保税的(P开头的物料)收到PT非保税的收到WT.  */
 assign tmp_loc = "WT".
-if pod_det.pod_part begins "P" then do:                                    
-    assign tmp_loc = "PT".                                                  
-end.                                                                       
-else do:                                                                   
+if pod_det.pod_part begins "P" then do:
+    assign tmp_loc = "PT".
+end.
+else do:
      find first code_mstr no-lock where code_fldname = "xxpocima.p"
             and code_value = "DefRcLoc" no-error.
      if available code_mstr then do:
         assign tmp_loc = code_cmmt.
      end.
-end.                                                                       
+end.
 usection = "porc" + TRIM (string(year(TODAY)) +
                           string(MONTH(TODAY)) +
                           string(DAY(TODAY))) +

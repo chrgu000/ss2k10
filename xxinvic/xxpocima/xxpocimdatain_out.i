@@ -9,7 +9,7 @@ put  unformatted today " " string (time,"hh:mm:ss") " " userid(sdbname('qaddb'))
     Do While True:
           IMPORT UNFORMATTED outputstatment.
             put unformatted outputstatment "@" .
-	    Eoutputstatment =  Eoutputstatment + "@"  +  trim ( outputstatment ).
+      Eoutputstatment =  Eoutputstatment + "@"  +  trim ( outputstatment ).
 
     End.
             put unformatted skip .
@@ -25,22 +25,22 @@ input from value ( cimoutputfile) .
     Do While True:
           IMPORT UNFORMATTED woutputstatment.
 
-	  IF index (woutputstatment,"ERROR:")   <> 0 OR    /* for us langx */
-	     index (woutputstatment,"WARNING:") <> 0 OR    
-	     index (woutputstatment,"´íÎó:")	<> 0 OR    /* for ch langx */
-	     index (woutputstatment,"¾¯¸æ:")	<> 0 OR
-    	     index (woutputstatment,"Äµ§i")	<> 0 OR    /* for tw langx */
-	     index (woutputstatment,"¿ù»~:")	<> 0 OR
-      	     index (woutputstatment,"(87)")	<> 0 OR      
-	     index (woutputstatment,"(557)")	<> 0 OR      
-      	     index (woutputstatment,"(143)")	<> 0       
-	     
-	     then do:
+    IF index (woutputstatment,"ERROR:")   <> 0 OR    /* for us langx */
+       index (woutputstatment,"WARNING:") <> 0 OR
+       index (woutputstatment,"´íÎó:")  <> 0 OR    /* for ch langx */
+       index (woutputstatment,"¾¯¸æ:")  <> 0 OR
+           index (woutputstatment,"Äµ§i") <> 0 OR    /* for tw langx */
+       index (woutputstatment,"¿ù»~:")  <> 0 OR
+             index (woutputstatment,"(87)") <> 0 OR
+       index (woutputstatment,"(557)")  <> 0 OR
+             index (woutputstatment,"(143)")  <> 0
+
+       then do:
 
 
-            IF  index (woutputstatment,"ERROR:")   <> 0 OR    /* for us langx */			     
-                index (woutputstatment,"´íÎó:")	<> 0 OR    /* for ch langx */			    			    
-                index (woutputstatment,"¿ù»~:")	<> 0 
+            IF  index (woutputstatment,"ERROR:")   <> 0 OR    /* for us langx */
+                index (woutputstatment,"´íÎó:") <> 0 OR    /* for ch langx */
+                index (woutputstatment,"¿ù»~:") <> 0
             then errstr = woutputstatment.
 
 
@@ -58,7 +58,7 @@ input from value ( cimoutputfile) .
                 put  unformatted today " " string (time,"hh:mm:ss") " " userid(sdbname('qaddb')) " " cimoutputfile " " woutputstatment  skip.
             output close.
 
-	     end.
+       end.
 
 
     End.
