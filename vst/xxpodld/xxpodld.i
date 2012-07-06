@@ -1,4 +1,4 @@
-/* xxptld.p - ppptmt.p cim load                                                */
+/* xxpodld.p - popomt.p cim load                                             */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
@@ -6,18 +6,20 @@
 
 define {1} shared variable flhload as character format "x(70)".
 define {1} shared variable cloadfile as logical initial "no".
-define {1} shared temp-table xxtmppt
-       fields xxpt_part like pt_part
-       fields xxpt_osite like pt_site
-       fields xxpt_site like pt_site
-       fields xxpt_oloc like pt_loc
-       fields xxpt_loc like pt_loc
-       fields xxpt_oabc like pt_abc
-       fields xxpt_abc like pt_abc
-       fields xxpt_ostat like pt_status
-       fields xxpt_stat like pt_status
-       fields xxpt_chk as character format "x(40)"
-       index xxpt_part xxpt_part.
+DEFINE {1} SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
+DEFINE {1} SHARED VARIABLE fn_i AS CHARACTER.
+DEFINE {1} SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
+DEFINE {1} SHARED VARIABLE v_flag AS CHARACTER.
+
+DEFINE {1} SHARED TEMP-TABLE xxpod_det
+   FIELD xxpod_nbr LIKE po_nbr
+   FIELD xxpod_line LIKE pod_line
+   FIELD xxpod_due_date LIKE pod_due_date
+   FIELD xxpod_per_date LIKE pod_per_date
+   FIELD xxpod_need LIKE pod_need
+   FIELD xxpod_status LIKE pod_status
+   FIELD xxpod_error AS CHARACTER FORMAT "x(48)"
+   INDEX index1 xxpod_nbr xxpod_line.
 
 FUNCTION getMsg RETURNS character(inbr as integer):
  /* -----------------------------------------------------------
