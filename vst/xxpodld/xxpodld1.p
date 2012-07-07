@@ -1,4 +1,4 @@
-/* xxpodld.p - popomt.p cim load                                             */
+/* xxpodld1.p - popomt.p cim load                                            */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
@@ -7,6 +7,7 @@
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {pxpgmmgr.i}
+{xxpodld.i}
 
 define variable poc_pt_req1 like mfc_logical.
 
@@ -22,18 +23,19 @@ define variable v-use-log-acctg as logical no-undo.
       FIND FIRST pod_det NO-LOCK  WHERE 
                  pod_nbr = xxpod_nbr AND pod_line = xxpod_line NO-ERROR.
       if (pod_status = "c" or pod_status = "x") then do:
-         assign xxpod_error = "ERROR:PO Line is closed or canceled".
+      	 /* errnbr 2395*/
+         assign xxpod_error = getMsg(2395).
          next.
       end.
       fn_i = "".
-      fn_i = "xxpopoim-" + pod_nbr + "-" + string(pod_line) + "-"
+      fn_i = "xxpodld-" + pod_nbr + "-" + string(pod_line) + "-"
            + replace(STRING(TIME,"HH:MM:SS"),":","-").
 
       OUTPUT TO VALUE(fn_i + ".bpi" ).
       PUT UNFORMATTED xxpod_nbr SKIP.
-      PUT UNFORMATTED "-" SKIP. /*供应商*/
-      PUT UNFORMATTED "-" SKIP. /*发货至*/
-      PUT UNFORMATTED "-" SKIP. /*订货日期*/
+      PUT UNFORMATTED "-" SKIP. /*Supplier*/
+      PUT UNFORMATTED "-" SKIP. /*Ship-To*/
+      PUT UNFORMATTED "-" SKIP. /*Order date*/
 
       /*ss - 120113.1 b*/
       FIND FIRST gl_ctrl NO-LOCK NO-ERROR.
@@ -49,29 +51,29 @@ define variable v-use-log-acctg as logical no-undo.
          &price-list-req = "no"
          &disp-msg       = "yes"
          &warning        = "no"}
-      PUT UNFORMATTED "-" SKIP. /*税*/
+      PUT UNFORMATTED "-" SKIP. /*TAX*/
       if v-use-log-acctg then do:
-           PUT UNFORMATTED "-" SKIP. /*贸易条款*/
+           PUT UNFORMATTED "-" SKIP. /*Terms of Trade*/
       end.
-      IF po_consignment = YES THEN DO:  /*寄存*/
+      IF po_consignment = YES THEN DO:  /*Consignment*/
          FIND FIRST cns_ctrl NO-LOCK NO-ERROR.
          IF AVAIL cns_ctrl AND cns_active = YES THEN DO:
              PUT UNFORMATTED "-" SKIP.
          END.
       END.
-      IF po_cmtindx <> 0 then DO:      /*说明 = YES*/
+      IF po_cmtindx <> 0 then DO:      /*comm = YES*/
          PUT UNFORMATTED "." SKIP.
       END.
       PUT UNFORMATTED xxpod_line SKIP.
       IF NOT pod_sched AND (pod_type = "B" or pod_qty_rcvd = 0) THEN DO:
-         PUT UNFORMATTED "-" SKIP. /*地点*/
+         PUT UNFORMATTED "-" SKIP. /*site*/
       END.
-      PUT UNFORMATTED "-" SKIP. /*已订购量*/
-      PUT UNFORMATTED "-" SKIP. /*单位成本 折扣*/
+      PUT UNFORMATTED "-" SKIP. /*qty_ord*/
+      PUT UNFORMATTED "-" SKIP. /*Unit Cost   Disc%*/
       PUT UNFORMATTED "- - " .
       if pod_qty_rcvd = 0 and
          can-find(pt_mstr where pt_part = pod_part and pt_lot_ser <> "s") then do:
-         put UNFORMATTED "- ". /*单批*/
+         put UNFORMATTED "- ". /*S/M*/
       end.
       IF xxpod_status <> "" THEN
          PUT UNFORMATTED xxpod_status.
@@ -103,12 +105,12 @@ define variable v-use-log-acctg as logical no-undo.
          PUT UNFORMATTED "-" SKIP.
       END.
 
-      IF pod_consignment = YES THEN DO:  /*寄存*/
+      IF pod_consignment = YES THEN DO:  /*Consignment*/
          PUT UNFORMATTED "-" SKIP.
          PUT UNFORMATTED "-" SKIP.
       END.
 
-      if pod_cmtindx <> 0 then do:        /*说明 = YES*/
+      if pod_cmtindx <> 0 then do:        /*CMMT = YES*/
          PUT UNFORMATTED "." skip.
       end.
       PUT UNFORMATTED "." SKIP.

@@ -35,3 +35,27 @@ FUNCTION getMsg RETURNS character(inbr as integer):
       return "ERROR.".
   end.
 END FUNCTION. /*FUNCTION getMsg*/
+
+/* convert YYYY-MM-DD format date to QAD format */
+FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
+    DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE cfg  as CHARACTER NO-UNDO INITIAL "-".
+    DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE od   AS DATE      NO-UNDO.
+    if datestr = "" OR datestr = ? then do:
+        assign od = ?.
+    end.
+    else do:
+        ASSIGN sstr = datestr.
+        IF INDEX(sstr,"/") > 0 then assign cfg = "/".
+        ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+        ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,cfg) + 1).
+        ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
+        ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,cfg) + 1)).
+        ASSIGN od = DATE(im,id,iy) NO-ERROR.
+    end.
+    RETURN od.
+END FUNCTION.
+    

@@ -17,7 +17,7 @@ with frame a side-labels width 80.
 find first usrw_wkfl no-lock where 
            usrw_key1 = "xxpopoim.p" and usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
-   assign file_name = usrw_key3.
+   assign flhload = usrw_key3.
 end.
 */
 /* SET EXTERNAL LABELS */
@@ -26,13 +26,13 @@ setFrameLabels(frame a:handle).
 
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
-          update FILE_name with frame a
+          update flhload with frame a
        editing:
            status input.
            readkey.
            apply lastkey.
        end.
-       {wbrp06.i &command = update &fields = "file_name" &frm = "a"}
+       {wbrp06.i &command = update &fields = "flhload" &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:
          {mfmsg.i 4839 3}
@@ -60,8 +60,10 @@ repeat on error undo, retry:
 
     {gprun.i ""xxpodld0.p""}
 
-     IF v_flag = "1" THEN DO:
-        PUT "无数据,请重新输入".
+     IF v_flag = "1" THEN DO: 
+     	  {pxmsg.i &MSGNUM=2482 
+     	           &ERRORLEVEL=3
+     	           &MSGARG1=""flhload""}
      END.
 
      IF v_flag = "2" THEN DO:

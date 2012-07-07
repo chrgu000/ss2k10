@@ -16,7 +16,7 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
 DEFINE TEMP-TABLE tt1
        FIELD tt1_field1 AS CHARACTER.
 
-   /*检查数据&cimload*/
+   /*check data & cimload*/
    FOR EACH xxpod_det:
        DELETE xxpod_det.
    END.
@@ -36,29 +36,6 @@ DEFINE TEMP-TABLE tt1
    END.
    INPUT CLOSE.
 
-    /* 日期YYYY-MM-DD转换为QAD日期格式 */
-    FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
-        DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
-        DEFINE VARIABLE cfg  as CHARACTER NO-UNDO INITIAL "-".
-        DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
-        DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
-        DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
-        DEFINE VARIABLE od   AS DATE      NO-UNDO.
-        if datestr = "" OR datestr = ? then do:
-            assign od = ?.
-        end.
-        else do:
-            ASSIGN sstr = datestr.
-            IF INDEX(sstr,"/") > 0 then assign cfg = "/".
-            ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
-            ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,cfg) + 1).
-            ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,cfg) - 1)).
-            ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,cfg) + 1)).
-            ASSIGN od = DATE(im,id,iy) NO-ERROR.
-        end.
-        RETURN od.
-    END FUNCTION.
-
    v_i = 0.
    FOR EACH tt1 WHERE tt1_field1 <> "":
        v_i = v_i + 1.
@@ -69,15 +46,15 @@ DEFINE TEMP-TABLE tt1
 
           ASSIGN xxpod_line = INTEGER(trim(ENTRY(2,tt1_field1))) NO-ERROR.
           IF ERROR-STATUS:ERROR THEN DO:
-             ASSIGN xxpod_error = "PO Line Format error".
+             ASSIGN xxpod_error = getTermLabel(PURCHASE_ORDER_LIN,12).
           END.
 
-          IF ENTRY(3,tt1_field1) <> "" THEN
+          IF ENTRY(3,tt1_field1) <> "" and ENTRY(3,tt1_field1) <> "-" THEN
               ASSIGN xxpod_due_date = str2Date(ENTRY(3,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Due Date Format error".
+                 ASSIGN xxpod_error =getMsg(1494) + getTermLabel(DUE_DATE,12).
               END.
-
+/*
           IF ENTRY(4,tt1_field1) <> "" THEN
               ASSIGN xxpod_per_date = str2Date(ENTRY(4,tt1_field1)) NO-ERROR.
               IF ERROR-STATUS:ERROR THEN DO:
@@ -89,15 +66,15 @@ DEFINE TEMP-TABLE tt1
               IF ERROR-STATUS:ERROR THEN DO:
                  ASSIGN xxpod_error = "PO Line Need Date Format error".
               END.
-
+*/
           IF xxpod_status <> "C" AND xxpod_status <> "" THEN DO:
-             ASSIGN xxpod_error = "PO Line status Format is error".
+             ASSIGN xxpod_error = getMsg(2495).
           END.
 
           FIND FIRST pod_det WHERE pod_nbr = xxpod_nbr AND pod_line = xxpod_line
           NO-LOCK NO-ERROR.
           IF NOT AVAIL pod_det THEN DO:
-             ASSIGN xxpod_error = "ERROR:PO Line not available".
+             ASSIGN xxpod_error = gemsg(2329).
           END.
        END.
    END.
