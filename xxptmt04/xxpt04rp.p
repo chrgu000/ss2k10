@@ -42,9 +42,12 @@ mainloop:
 do on error undo, return error on endkey undo, return error:
 
    for each pt_mstr no-lock where pt_part >= part and pt_part <= part1
+   		  and pt_part >= "B" and pt_part <="X"
        with frame b width 240:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
+      if can-find(first ld_det no-lock where ld_part = pt_part and 
+      								  ld_loc <> "p-2r" and ld_loc <> "NG" and ld_qty_oh > 0) then 
             display  pt_part
                      pt_desc1
                      pt__chr10
