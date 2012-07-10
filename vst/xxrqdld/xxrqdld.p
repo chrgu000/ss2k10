@@ -1,4 +1,4 @@
-/* xxwold.p - wowomt.p cim load                                                */
+/* xxrqdld.i - rqrqmt.p cim load                                             */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
@@ -6,7 +6,7 @@
 
 /* DISPLAY TITLE */
 {mfdtitle.i "120706.1"}
-{xxwold.i "new"}
+{xxrqdld.i "new"}
 {gpcdget.i "UT"}
 
 form
@@ -83,20 +83,20 @@ repeat:
               qad_key3 = flhload.
    end.
    */
-   empty temp-table xxwoload no-error.
-   for each xxwoload exclusive-lock: delete xxwoload. end.
-   {gprun.i ""xxwold0.p""}
+   empty temp-table xxrqd no-error.
+   for each xxrqd exclusive-lock: delete xxrqd. end.
+   {gprun.i ""xxrqdld0.p""}
 
-     if not can-find(first xxwoload) then do:
+     if not can-find(first xxrqd) then do:
           {mfmsg.i 5935 1}
      end.
      else do:
-             {gprun.i ""xxwold1.p""}
+             {gprun.i ""xxrqdld1.p""}
      end.
-     for each xxwoload exclusive-lock with width 320 frame c:
+     for each xxrqd exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxwoload.
+         display xxrqd.
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}

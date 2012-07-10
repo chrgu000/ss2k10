@@ -1,4 +1,4 @@
-/* xxwold1.p - wowomt.p cim load                                             */
+/* xxrqdld.i - rqrqmt.p cim load                                             */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
@@ -19,7 +19,7 @@ for each xxwoload no-lock where xxwo_chk = "".
     put unformat '-' skip.
 end.
 output close.
- 
+
 if cloadfile then do:
    batchrun = yes.
    input from value(vfile + ".bpi").
@@ -36,15 +36,15 @@ if cloadfile then do:
 
    for each xxwoload exclusive-lock where xxwo_chk = "":
        find first wo_mstr no-lock where wo_lot = xxwo_lot no-error.
-       if available wo_mstr and wo_rel_date = xxwo_rel_date and 
-       						  wo_due_date = xxwo_due_date
+       if available wo_mstr and wo_rel_date = xxwo_rel_date and
+                    wo_due_date = xxwo_due_date
        then do:
           assign xxwo_chk = "OK".
        end.
        else do:
           assign xxwo_chk = "FAIL".
        end.
-   end. 
+   end.
    os-delete value(vfile + ".bpi").
    os-delete value(vfile + ".bpo").
 end.
