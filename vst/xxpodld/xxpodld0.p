@@ -8,15 +8,16 @@
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {xxpodld.i}
 
-DEFINE VARIABLE xpath AS CHARACTER.
 DEFINE VARIABLE v_i AS INTEGER.
-DEFINE VARIABLE v_j AS INTEGER.
-DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
+define variable vnbr like pod_nbr.
+define variable vline like pod_line.
+define variable vdue as character format "x(10)".
+define variable vstat like pod_status.
 
 DEFINE TEMP-TABLE tt1
        FIELD tt1_field1 AS CHARACTER.
 
-   /*check data & cimload*/
+   /* check data & cimload */
    FOR EACH xxpod_det:
        DELETE xxpod_det.
    END.
@@ -27,8 +28,6 @@ DEFINE TEMP-TABLE tt1
 
    v_flag = "1".
 
-   xpath = flhload.
-
    INPUT FROM VALUE(flhload) .
    REPEAT:
       CREATE tt1 .
@@ -37,65 +36,55 @@ DEFINE TEMP-TABLE tt1
    INPUT CLOSE.
 
    v_i = 0.
-   FOR EACH tt1 WHERE tt1_field1 <> "":
+   for each tt1 where tt1_field1 > "":
        v_i = v_i + 1.
        IF v_i > 1 THEN DO:
-          CREATE xxpod_det.
-          ASSIGN xxpod_nbr = ENTRY(1,tt1_field1).
-          assign xxpod_status = trim(ENTRY(6,tt1_field1)) no-error.
-
-          ASSIGN xxpod_line = INTEGER(trim(ENTRY(2,tt1_field1))) NO-ERROR.
-          IF ERROR-STATUS:ERROR THEN DO:
-             ASSIGN xxpod_error = getTermLabel(PURCHASE_ORDER_LIN,12).
-          END.
-
-          IF ENTRY(3,tt1_field1) <> "" and ENTRY(3,tt1_field1) <> "-" THEN
-              ASSIGN xxpod_due_date = str2Date(ENTRY(3,tt1_field1)) NO-ERROR.
-              IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error =getMsg(1494) + getTermLabel(DUE_DATE,12).
-              END.
-/*
-          IF ENTRY(4,tt1_field1) <> "" THEN
-              ASSIGN xxpod_per_date = str2Date(ENTRY(4,tt1_field1)) NO-ERROR.
-              IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Performance Date Format error".
-              END.
-
-          IF ENTRY(5,tt1_field1) <> "" THEN
-              ASSIGN xxpod_need = str2Date(ENTRY(5,tt1_field1)) NO-ERROR.
-              IF ERROR-STATUS:ERROR THEN DO:
-                 ASSIGN xxpod_error = "PO Line Need Date Format error".
-              END.
-*/
-          IF xxpod_status <> "C" AND xxpod_status <> "" THEN DO:
-             ASSIGN xxpod_error = getMsg(2495).
-          END.
-
-          FIND FIRST pod_det WHERE pod_nbr = xxpod_nbr AND pod_line = xxpod_line
-          NO-LOCK NO-ERROR.
-          IF NOT AVAIL pod_det THEN DO:
-             ASSIGN xxpod_error = gemsg(2329).
-          END.
-       END.
-   END.
-
-   FIND FIRST xxpod_det  NO-ERROR.
-   IF NOT AVAIL xxpod_det THEN DO:
-      DISP  "无数据,请重新输入" .
-      v_flag = "1".
-   END.
-   ELSE DO:
-
-      FIND FIRST xxpod_det WHERE xxpod_error <> "" NO-LOCK NO-ERROR.
-      IF AVAIL xxpod_det THEN DO:
-         v_flag = "2".
-      END.
-      ELSE DO:
-              do transaction on error undo, retry:
-                  /*cimload */
-                  {gprun.i ""xxpodld1.p""}
-                  v_flag = "3".
-              END.
-      END.
-   END.
-
+       		assign vnbr = trim(ENTRY(1,tt1_field1))
+       					 vline = INTEGER(trim(ENTRY(2,tt1_field1)))
+       					 vdue = trim(entry(3,tt1_field1))
+       					 vstat = trim(entry(4,tt1_field1)) NO-ERROR.
+       	  find first xxpod_det exclusive-lock where xxpod_nbr = vnbr and xxpod_line = vline no-error.
+       	  if not available xxpod_det then do:
+					   CREATE xxpod_det.
+					   assign xxpod_nbr = vnbr
+					   			 xxpod_line = vline.
+					end.
+					if vnbr <> "" and vline <> 0 then do:
+				  	 find first pod_det no-lock where pod_nbr = vnbr and pod_line = vline no-error.
+				     if available pod_det then do:
+				     	  assign xxpod_odue = pod_due_date
+				     	 	 			 xxpod_ostat = pod_status.
+				     	  if vdue = "-" then do:
+				     	  		assign xxpod_due_date = pod_due_date.
+				     	  end.
+				     	  else if vdue = "" then do:
+				     	  		assign xxpod_due_date = ?.
+				        end.
+				     	  else do:
+				     	  		assign xxpod_due_date = date(integer(substring(vdue,1,2)),
+				     	  																 integer(substring(vdue,4,2)),
+				     	  													2000 + integer(substring(vdue,7,2))) no-error.
+				     	  		 IF ERROR-STATUS:ERROR THEN DO:
+                      /* Invalid date format */
+                       ASSIGN xxpod_chk =getMsg(1494) + getTermLabel("DUE_DATE",12).
+                    END.
+				        end.
+				     	  if vstat = "-" then do:
+				     	  		assign xxpod_stat = pod_stat.
+				     	  end.
+				     	  else do:
+				        		assign xxpod_stat = vstat.
+				        end.
+				        if (pod_status = "c" or pod_status = "x") then do:
+				           assign xxpod_chk = getMsg(2395).
+				        end.
+				     end.
+				     else do:
+				     		  assign xxpod_chk = getmsg(2329).
+				     end.
+				  end.
+				  else do:
+				  		 assign xxpod_chk = getmsg(2329).
+				  end.
+       end.
+   end.

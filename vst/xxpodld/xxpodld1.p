@@ -13,25 +13,24 @@ define variable poc_pt_req1 like mfc_logical.
 
 define variable vprice-list-failed like mfc_logical initial false no-undo.
 define variable vprice-list-msg as integer no-undo.
- 
-define variable v-use-log-acctg as logical no-undo.
-  /*cimload */
-{gprun.i ""lactrl.p"" "(output v-use-log-acctg)"}
 
-  FOR EACH xxpod_det:
+/*define variable v-use-log-acctg as logical no-undo. */
+/* {gprun.i ""lactrl.p"" "(output v-use-log-acctg)"} */
+  fn_i = "xxpodld-" + string(today,"99999999") + "-" + string(time).
+
+  OUTPUT TO VALUE(fn_i + ".bpi" ).
+  FOR EACH xxpod_det no-lock where xxpod_chk = "":
       FIND FIRST po_mstr NO-LOCK WHERE po_nbr = xxpod_nbr NO-ERROR.
-      FIND FIRST pod_det NO-LOCK  WHERE 
-                 pod_nbr = xxpod_nbr AND pod_line = xxpod_line NO-ERROR.
-      if (pod_status = "c" or pod_status = "x") then do:
-      	 /* errnbr 2395*/
-         assign xxpod_error = getMsg(2395).
+      find first pod_det no-lock where pod_nbr = po_nbr AND pod_line = xxpod_line NO-ERROR.
+      if not available pod_det then do:
          next.
       end.
-      fn_i = "".
-      fn_i = "xxpodld-" + pod_nbr + "-" + string(pod_line) + "-"
-           + replace(STRING(TIME,"HH:MM:SS"),":","-").
+      /* if (pod_status = "c" or pod_status = "x") then do:   */
+      /*   /* errnbr 2395*/                                   */
+      /*    assign xxpod_chk = getMsg(2395).                  */
+      /*    next.                                             */
+      /* end.                                                 */
 
-      OUTPUT TO VALUE(fn_i + ".bpi" ).
       PUT UNFORMATTED xxpod_nbr SKIP.
       PUT UNFORMATTED "-" SKIP. /*Supplier*/
       PUT UNFORMATTED "-" SKIP. /*Ship-To*/
@@ -52,22 +51,22 @@ define variable v-use-log-acctg as logical no-undo.
          &disp-msg       = "yes"
          &warning        = "no"}
       PUT UNFORMATTED "-" SKIP. /*TAX*/
-      if v-use-log-acctg then do:
-           PUT UNFORMATTED "-" SKIP. /*Terms of Trade*/
-      end.
-      IF po_consignment = YES THEN DO:  /*Consignment*/
-         FIND FIRST cns_ctrl NO-LOCK NO-ERROR.
-         IF AVAIL cns_ctrl AND cns_active = YES THEN DO:
-             PUT UNFORMATTED "-" SKIP.
-         END.
-      END.
+/*      if v-use-log-acctg then do:                                   */
+/*           PUT UNFORMATTED "-" SKIP. /*Terms of Trade*/             */
+/*      end                                                           */
+/*       IF po_consignment = YES THEN DO:  /*Consignment*/            */
+/*          FIND FIRST cns_ctrl NO-LOCK NO-ERROR.                     */
+/*          IF AVAIL cns_ctrl AND cns_active = YES THEN DO:           */
+/*              PUT UNFORMATTED "-" SKIP.                             */
+/*          END.                                                      */
+/*       END.                                                         */
       IF po_cmtindx <> 0 then DO:      /*comm = YES*/
          PUT UNFORMATTED "." SKIP.
       END.
       PUT UNFORMATTED xxpod_line SKIP.
-      IF NOT pod_sched AND (pod_type = "B" or pod_qty_rcvd = 0) THEN DO:
-         PUT UNFORMATTED "-" SKIP. /*site*/
-      END.
+/*    IF NOT pod_sched AND (pod_type = "B" or pod_qty_rcvd = 0) THEN DO:     */
+/*       PUT UNFORMATTED "-" SKIP. /*site*/                                  */
+/*    END.                                                                   */
       PUT UNFORMATTED "-" SKIP. /*qty_ord*/
       PUT UNFORMATTED "-" SKIP. /*Unit Cost   Disc%*/
       PUT UNFORMATTED "- - " .
@@ -75,8 +74,8 @@ define variable v-use-log-acctg as logical no-undo.
          can-find(pt_mstr where pt_part = pod_part and pt_lot_ser <> "s") then do:
          put UNFORMATTED "- ". /*S/M*/
       end.
-      IF xxpod_status <> "" THEN
-         PUT UNFORMATTED xxpod_status.
+      IF xxpod_stat <> "" THEN
+         PUT UNFORMATTED xxpod_stat.
       ELSE
          PUT UNFORMATTED "-".
 
@@ -89,15 +88,15 @@ define variable v-use-log-acctg as logical no-undo.
 
       PUT UNFORMATTED " ".
 
-      IF xxpod_per_date <> ? THEN
-         PUT UNFORMATTED xxpod_per_date.
-      ELSE
+ /*     IF xxpod_per_date <> ? THEN                  */
+ /*        PUT UNFORMATTED xxpod_per_date.           */
+ /*     ELSE                                         */
          PUT UNFORMATTED "-".
 
       PUT UNFORMATTED " ".
-      IF xxpod_need <> ? THEN
-         PUT UNFORMATTED xxpod_need.
-      ELSE
+/*     IF xxpod_need <> ? THEN           */
+/*        PUT UNFORMATTED xxpod_need.    */
+/*     ELSE                              */
          PUT UNFORMATTED "-".
       PUT UNFORMATTED " -" SKIP.
 
@@ -105,10 +104,10 @@ define variable v-use-log-acctg as logical no-undo.
          PUT UNFORMATTED "-" SKIP.
       END.
 
-      IF pod_consignment = YES THEN DO:  /*Consignment*/
-         PUT UNFORMATTED "-" SKIP.
-         PUT UNFORMATTED "-" SKIP.
-      END.
+ /*      IF pod_consignment = YES THEN DO:  /*Consignment*/      */
+ /*         PUT UNFORMATTED "-" SKIP.                            */
+ /*         PUT UNFORMATTED "-" SKIP.                            */
+ /*      END.                                                    */
 
       if pod_cmtindx <> 0 then do:        /*CMMT = YES*/
          PUT UNFORMATTED "." skip.
@@ -117,8 +116,10 @@ define variable v-use-log-acctg as logical no-undo.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "-" SKIP.
       PUT UNFORMATTED "-" SKIP.
-      OUTPUT CLOSE .
+  END.
+  OUTPUT CLOSE .
 
+  do transaction on endkey undo, leave:
       batchrun = yes.
       INPUT FROM VALUE( fn_i + ".bpi" ) .
       OUTPUT TO VALUE( fn_i + ".bpo" ) .
@@ -127,38 +128,29 @@ define variable v-use-log-acctg as logical no-undo.
       OUTPUT CLOSE .
       batchrun = NO.
 
-/*120119.1 B*/
+  FOR EACH xxpod_det where xxpod_chk = "":
       FIND FIRST pod_det no-lock WHERE
                  pod_nbr = xxpod_nbr AND pod_line = xxpod_line no-error.
       IF AVAIL pod_det THEN DO:
-          assign xxpod_error = "".
           if (pod_due_date <> xxpod_due_date and xxpod_due_date <> ?) then do:
-             assign xxpod_error = "ERROR:POD_DUE_DATE".
+             assign xxpod_chk = "ERROR:POD_DUE_DATE".
           end.
-          if (pod_per_date <> xxpod_per_date and xxpod_per_date <> ?) then do:
-             if xxpod_error = ""
-                then assign xxpod_error = "ERROR:POD_PER_DATE".
-                else assign xxpod_error = xxpod_error + ";POD_PER_DATE".
-          end.
-          if (pod_need <> xxpod_need and xxpod_need <> ?) then do:
-             if xxpod_error = ""
-                then assign xxpod_error = "ERROR:POD_NEED".
-                else assign xxpod_error = xxpod_error + ";POD_NEED".
-          end.
-          if (pod_status <> xxpod_status) then do:
-             if xxpod_error = ""
-                then assign xxpod_error = "ERROR:POD_STATUS".
-                else assign xxpod_error = xxpod_error + ";POD_STATUS".
+          if (pod_status <> xxpod_stat) then do:
+             if xxpod_chk = ""
+                then assign xxpod_chk = "ERROR:POD_STATUS".
+                else assign xxpod_chk = xxpod_chk + ";POD_STATUS".
           end.
 
-         if xxpod_error = "" then do:
-            assign xxpod_error = "OK".
-            OS-DELETE VALUE(fn_i + ".bpi").
-            OS-DELETE VALUE(fn_i + ".bpo").
+         if xxpod_chk = "" then do:
+            assign xxpod_chk = "OK".
          end.
       END.
-      ELSE DO:
-          assign xxpod_error = "ERROR:PO Line not available".
-      END.
-/*120119.1 E*/
-  END.
+  end.   /*  FOR EACH xxpod_det where xxpod_chk = "":*/
+  if cloadfile = no then do:
+     undo.
+  end.
+  else do:
+        OS-DELETE VALUE(fn_i + ".bpi").
+        OS-DELETE VALUE(fn_i + ".bpo").
+  end.
+end. /*do transaction on endkey undo, leave:*/

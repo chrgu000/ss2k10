@@ -23,16 +23,17 @@ end.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 {wbrp01.i}
-
+assign flhload = OS-GETENV("HOME") + "/xrc/po.csv".
+display flhload with frame a.
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
-          update flhload with frame a
+          update flhload cloadfile with frame a
        editing:
            status input.
            readkey.
            apply lastkey.
        end.
-       {wbrp06.i &command = update &fields = "flhload" &frm = "a"}
+       {wbrp06.i &command = update &fields = "flhload cloadfile " &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:
          {mfmsg.i 4839 3}
@@ -59,25 +60,22 @@ repeat on error undo, retry:
     {mfphead.i}
 
     {gprun.i ""xxpodld0.p""}
-
+    assign v_flag = "0".
+     FIND FIRST xxpod_det  NO-ERROR.
+     IF NOT AVAIL xxpod_det THEN DO:
+        v_flag = "1".
+     END. 
      IF v_flag = "1" THEN DO: 
      	  {pxmsg.i &MSGNUM=2482 
      	           &ERRORLEVEL=3
      	           &MSGARG1=""flhload""}
+     END.	
+     ELSE DO:
+          {gprun.i ""xxpodld1.p""}
+          for each xxpod_det no-lock with frame x width 130:
+          	  display xxpod_det.
+          end.
      END.
-
-     IF v_flag = "2" THEN DO:
-         FOR EACH xxpod_det WHERE xxpod_error <> "" NO-LOCK:
-             DISP xxpod_det WITH WIDTH 200.
-         END.
-     END.
-
-     IF v_flag = "3" THEN DO:
-         FOR EACH xxpod_det  NO-LOCK:
-             DISP xxpod_det WITH WIDTH 200.
-         END.
-     END.
-
 
      {mfrtrail.i}
 end.
