@@ -6,7 +6,7 @@
 
 
 /* DISPLAY TITLE */
-{mfdtitle.i "12072.1"}
+{mfdtitle.i "120710.1"}
 {xxbmld.i "new"}
 {gpcdget.i "UT"}
 
@@ -18,7 +18,8 @@ with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-
+assign flhload = OS-GETENV("HOME").
+display flhload with frame a.
 {wbrp01.i}
 repeat:
 /*   find first usrw_wkfl where                                          */

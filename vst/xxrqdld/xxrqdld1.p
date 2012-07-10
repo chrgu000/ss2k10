@@ -24,7 +24,7 @@ for each xxrqd no-lock where xxrqd_chk = "".
     put unformat "-" skip.
     put unformat "-" skip.
     put unformat "-" skip.
-    put unformat xxrqd_due_date ' - - - - - - - - - "' xxrqd_stat '" N' skip.
+    put unformat xxrqd_due_date ' - - - - - - - - "' xxrqd_stat '" N' skip.
     put unformat "." skip.
     put unformat "y" skip.
     output close.
@@ -58,6 +58,6 @@ if cloadfile then do:
           assign xxrqd_chk = "FAIL".
        end.
    end.
-   os-delete value(vfile + ".bpi").
-   os-delete value(vfile + ".bpo").
+/* os-delete value(vfile + ".bpi").     */
+/* os-delete value(vfile + ".bpo").     */
 end.

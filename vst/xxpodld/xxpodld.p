@@ -23,7 +23,7 @@ end.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 {wbrp01.i}
-assign flhload = OS-GETENV("HOME") + "/xrc/po.csv".
+assign flhload = OS-GETENV("HOME").
 display flhload with frame a.
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
