@@ -8,7 +8,7 @@
 {mfdtitle.i "120706.1"}
 {xxrqdld.i "new"}
 {gpcdget.i "UT"}
-
+define variable oldId like global_userid.
 form
    skip(1)
    flhload colon 14  view-as fill-in size 40 by 1 skip(1)
@@ -91,12 +91,14 @@ repeat:
           {mfmsg.i 5935 1}
      end.
      else do:
-             {gprun.i ""xxrqdld1.p""}
+     			assign oldId = global_userid.
+          {gprun.i ""xxrqdld1.p""}
+          assign global_userid = oldID.
      end.
      for each xxrqd exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxrqd.
+         display xxrqd except xxrqd_rqby.
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}

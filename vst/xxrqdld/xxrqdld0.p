@@ -19,11 +19,13 @@ repeat:
        assign xxrqd_nbr = trim(entry(1,txt,",")) 
               xxrqd_line = integer(trim(entry(2,txt,","))) no-error.
     end.
+    find first rqm_mstr no-lock where rqm_nbr = xxrqd_nbr no-error.
     find first rqd_det no-lock where rqd_nbr = xxrqd_nbr 
            and rqd_line = xxrqd_line no-error.
     if available rqd_det then do:
        assign xxrqd_odue_date = rqd_due_date
-              xxrqd_ostat = rqd_status.
+              xxrqd_ostat = rqd_status
+              xxrqd_rqby = rqm_rqby_userid.
     end.
     assign vdte = trim(entry(3,txt,",")).
     if vdte = "" or vdte = "-" then do:
@@ -36,7 +38,7 @@ repeat:
     end.
     assign vdte = trim(entry(4,txt,",")).
     if vdte = "-" then do:
-       assign xxrqd_stat = rqd_status when  available rqd_det.
+       assign xxrqd_stat = rqd_status when available rqd_det.
     end. 
     else do:
        assign xxrqd_stat = vdte.

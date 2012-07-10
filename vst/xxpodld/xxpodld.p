@@ -40,7 +40,6 @@ repeat on error undo, retry:
          next-prompt flhload.
          undo, retry.
      END.
-    
 
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "window"

@@ -13,7 +13,8 @@ define {1} shared temp-table xxrqd no-undo
        fields xxrqd_due_date like rqd_due_date
        fields xxrqd_ostat like rqd_status
        fields xxrqd_stat like rqd_status
-       fields xxrqd_stat as character format "x(40)"
+       fields xxrqd_rqby like rqm_rqby_userid 
+       fields xxrqd_chk as character format "x(40)"
        index xxrqd_nbr xxrqd_nbr xxrqd_line.
 
 FUNCTION getMsg RETURNS character(inbr as integer):

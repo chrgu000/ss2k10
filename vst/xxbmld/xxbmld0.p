@@ -20,6 +20,7 @@ find first msg_mstr no-lock where msg_nbr = 231 and msg_lang = global_user_lang 
 for each tmpbom exclusive-lock:
     if tbm_par = "" then do:
        delete tmpbom.
+       next.
     end.
     if not can-find(first pt_mstr no-lock where pt_part = tbm_par) and
        not can-find(first bom_mstr no-lock where bom_parent = tbm_par) then do:

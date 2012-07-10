@@ -5,44 +5,57 @@
 /* REVISION END                                                              */
 
 {mfdeclre.i}
-{xxwold.i}
+{xxrqdld.i}
 define variable vfile as character.
 
-assign vfile = "xxwold.p." + string(today,"99999999") + '.' + string(time).
+assign vfile = "xxrqdld.p." + string(today,"99999999") + '.' + string(time).
 
-output to value(vfile + ".bpi").
-for each xxwoload no-lock where xxwo_chk = "".
-    put unformat '"" ' xxwo_lot skip.
-    put unformat '- - ' xxwo_rel_date ' ' xxwo_due_date ' - - - - - - - - n' skip.
-    put unformat '-' skip.
-    put unformat '-' skip.
-    put unformat '-' skip.
+for each xxrqd no-lock where xxrqd_chk = "".
+    output to value(vfile + ".bpi").
+    put unformat '"' xxrqd_nbr '"' skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat xxrqd_line skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat "-" skip.
+    put unformat xxrqd_due_date ' - - - - - - - - - "' xxrqd_stat '" N' skip.
+    put unformat "." skip.
+    put unformat "y" skip.
+    output close.
+    if cloadfile then do:
+    	 assign global_userid = xxrqd_rqby.
+       batchrun = yes.
+       input from value(vfile + ".bpi").
+       output to value(vfile + ".bpo") keep-messages.
+       hide message no-pause.
+       cimrunprogramloop:
+       do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+          {gprun.i ""rqrqmt.p""}
+       end.
+       hide message no-pause.
+       output close.
+       input close.
+       batchrun = no.
+		 end.
 end.
-output close.
 
-if cloadfile then do:
-   batchrun = yes.
-   input from value(vfile + ".bpi").
-   output to value(vfile + ".bpo") keep-messages.
-   hide message no-pause.
-   cimrunprogramloop:
-   do on stop undo cimrunprogramloop,leave cimrunprogramloop:
-      {gprun.i ""wowomt.p""}
-   end.
-   hide message no-pause.
-   output close.
-   input close.
-   batchrun = no.
-
-   for each xxwoload exclusive-lock where xxwo_chk = "":
-       find first wo_mstr no-lock where wo_lot = xxwo_lot no-error.
-       if available wo_mstr and wo_rel_date = xxwo_rel_date and
-                    wo_due_date = xxwo_due_date
+if cloadfile then do:		 
+   for each xxrqd exclusive-lock where xxrqd_chk = "":
+       find first rqd_det no-lock where rqd_nbr = xxrqd_nbr 
+       				and rqd_line = xxrqd_line no-error.
+       if available rqd_det and rqd_due_date = xxrqd_due_date and
+                    rqd_status = xxrqd_stat
        then do:
-          assign xxwo_chk = "OK".
+          assign xxrqd_chk = "OK".
        end.
        else do:
-          assign xxwo_chk = "FAIL".
+          assign xxrqd_chk = "FAIL".
        end.
    end.
    os-delete value(vfile + ".bpi").
