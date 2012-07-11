@@ -5,8 +5,13 @@
 /* REVISION END                                                              */
 {mfdeclre.i}
 {xxbmdld.i}
+{xxquottrs.i "new"}
 define variable vfile as character.
 assign vfile = "xxbmld.p." + string(today,"99999999") + '.' + string(time).
+
+if cloadfile then do:
+   run enableQuot.
+end.
 
 for each tmpbomn no-lock :
     output to value(vfile + ".bpi").
@@ -27,19 +32,20 @@ for each tmpbomn no-lock :
        batchrun = no.
     end.
 end.
-output close.
-  if cloadfile then do:
+
+if cloadfile then do:
        for each tmpbomn exclusive-lock:
-       		 find first ps_mstr no-lock where ps_par = tbmn_par 
-       		 				and ps_comp = tbmn_comp and ps_ref = "" 
-       		 				and ps_start = tbmn_start and ps_end = tbmn_end no-error.
-       		 if available ps_mstr then do:
-       		 		assign tbmn_chk = "OK".
-       		 end.
-       		 else do:
-       		 		assign tbmn_chk = "Fail".
-       		 end.
+           find first ps_mstr no-lock where ps_par = tbmn_par
+                  and ps_comp = tbmn_comp and ps_ref = ""
+                  and ps_start = tbmn_start and ps_end = tbmn_end no-error.
+           if available ps_mstr then do:
+              assign tbmn_chk = "OK".
+           end.
+           else do:
+              assign tbmn_chk = "Fail".
+           end.
        end.
+       run disableQuot.
        os-delete value(vfile + ".bpi").
-       os-delete value(vfile + ".bpo").       
+       os-delete value(vfile + ".bpo").
 end.  /*if cloadfile then do:*/
