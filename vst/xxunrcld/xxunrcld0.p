@@ -19,7 +19,7 @@ repeat:
            tic_qty = dec(entry(5,txt,","))
            tic_acct  = entry(6,txt,",")
            tic_sub  = entry(7,txt,",")
-           tic_cc  = entry(8,txt,",").
+           tic_cc  = entry(8,txt,",") no-error.
     assign tic_proj  = entry(9,txt,",") no-error.
 end.
 input close.
