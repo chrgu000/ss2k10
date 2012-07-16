@@ -968,8 +968,9 @@ end.
 if netgr then do:
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
-       for each ld_det no-lock where ld_site = "gsa01" and
-                ld_part = tiss1_part and ld_qty_oh > 0 :
+       for each ld_det no-lock use-index ld_part_lot where ld_part = tiss1_part 
+            and substring(ld_lot,length(ld_lot) - 2) <> "WSA" 
+            and ld_site = "gsa01" and ld_qty_oh > 0 :
          create tsupp.
          assign
            tsu_loc    =  ld_loc
@@ -1001,6 +1002,7 @@ else do:  /*²»¿¼ÂÇ³µ¼ä¿â´æ*/
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
+                and substring(ld_lot,length(ld_lot) - 2) <> "WSA" 
                 and ld_site = "gsa01"  and ld_loc <> "P-all"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
