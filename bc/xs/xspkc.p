@@ -47,7 +47,8 @@ repeat:
   end.
   assign wmessage = "......".
 
-  find first xxwd_det no-lock where xxwD_nbr = substring(tcnbr,2) no-error.
+  find first xxwd_det no-lock where xxwd_type = substring(tcnbr,1,1) and
+             xxwd_nbr = substring(tcnbr,2) no-error.
   if not available xxwd_det then do:
     assign wmessage = "取/送料单未找到!".
     display  skip WMESSAGE NO-LABEL with fram framea1.
@@ -79,29 +80,30 @@ repeat:
       if not ret-ok then do:
          leave.
       end.
- 
-      for each xxwd_det exclusive-lock where xxwd_nbr = substring(tcnbr,2):
+
+      for each xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1,1) and
+               xxwd_nbr = substring(tcnbr,2):
         assign xxwd_stat = "C".
       end.
   end.
   else do:
-  		    DO i = 1 to length(vitem).
-  		       If index("0987654321", substring(vitem,i,1)) = 0 then do:
-  		       		display "项次输入错误." @ wmessage no-label with frame frameac.
-  		       		undo,retry.
-  		       end.
-  		    end.
-  		   
-  		    find first xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1,1) 
-  		    			  and xxwd_nbr = substring(tcnbr,2) 
-  		    			  and xxwd_sn = integer(vitem) no-error.
-  		    if available xxwd_det then do.
-  		    		assign xxwd_stat = "C".
-  		    end.
-  		    else do:
-  		    		display "单号/项次未找到." @ wmessage no-label with frame frameac.
-  		   	  undo,retry. 
-  		    end.
+          DO i = 1 to length(vitem).
+             If index("0987654321", substring(vitem,i,1)) = 0 then do:
+                display "项次输入错误." @ wmessage no-label with frame frameac.
+                undo,retry.
+             end.
+          end.
+
+          find first xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1,1)
+                  and xxwd_nbr = substring(tcnbr,2)
+                  and xxwd_sn = integer(vitem) no-error.
+          if available xxwd_det then do.
+              assign xxwd_stat = "C".
+          end.
+          else do:
+              display "单号/项次未找到." @ wmessage no-label with frame frameac.
+            undo,retry.
+          end.
   end.
  /*
   else do:
