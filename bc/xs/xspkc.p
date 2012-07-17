@@ -9,6 +9,7 @@ define variable sstat as character.
 define variable vcimfile as character.
 define variable part as character format "x(30)".
 define variable qtyreq as decimal format "->>>,>>>,>>9".
+define variable i as integer.
 
 assign vernbr = "110808.2".
 {mfdtitle.i vernbr}
@@ -86,21 +87,20 @@ repeat:
   else do:
   		    DO i = 1 to length(vitem).
   		       If index("0987654321", substring(vitem,i,1)) = 0 then do:
-  		       		display "项次输入错误." with wmessage no-lable with frame frameac.
+  		       		display "项次输入错误." @ wmessage no-label with frame frameac.
   		       		undo,retry.
   		       end.
   		    end.
+  		   
+  		    find first xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1,1) 
+  		    			  and xxwd_nbr = substring(tcnbr,2) 
+  		    			  and xxwd_sn = integer(vitem) no-error.
+  		    if available xxwd_det then do.
+  		    		assign xxwd_stat = "C".
+  		    end.
   		    else do:
-  		    		 find first xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1) 
-  		    		 			  and xxwd_nbr = substring(tcnbr,2) 
-  		    		 			  and xxwd_line = integer(vitem) no-error.
-  		    		 if available xxwd_det then do.
-  		    		 		assign xxwd_status = "C".
-  		    		 end.
-  		    		 else do:
-  		    		 		display "单号/项次未找到." with wmessage no-lable with frame frameac.
-  		       		  undo,retry. 
-  		    		 end.
+  		    		display "单号/项次未找到." @ wmessage no-label with frame frameac.
+  		   	  undo,retry. 
   		    end.
   end.
  /*
