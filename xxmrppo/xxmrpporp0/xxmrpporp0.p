@@ -764,14 +764,16 @@ repeat:
                 assign tpoqty = 0
                        tpoqtys = 0
                        tpopo = 0
-                       tpotpo = 0.
+                       tpotpo = 0
+/*719*/                aqty = 0.
              end.
              assign tpoqty = tpoqty + tpo_qty
                     tpoqtys = tpoqtys + tpo_qtys
                     tpopo = tpopo + tpo_po
                     tpotpo = tpotpo + tpo_tpo.
              if last-of(tpo_due) then do:
-                 assign areaDesc = "".
+/*719*/          assign aqty = 0
+                        areaDesc = "".
                  find first code_mstr no-lock where code_fldname = "vd__chr03"
                         and code_value = tpo_rule no-error.
                  if available code_mstr then do:
