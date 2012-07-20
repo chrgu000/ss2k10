@@ -596,7 +596,7 @@ by wr_start by wr_part by wr_op
                    xx_mch = wr_mch
                    xx_start =wr_start
                    xx_short = yes.
-**************************************************/                   
+**************************************************/
 /*6.25*/
             create usrw_wkfl.
             assign usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
@@ -964,8 +964,8 @@ end.
 if netgr then do:
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
-       for each ld_det no-lock use-index ld_part_lot where ld_part = tiss1_part 
-            and index(ld_lot,"WSA") = 0  /* WSA 的是武汉的物料不在此计算*/
+       for each ld_det no-lock use-index ld_part_lot where ld_part = tiss1_part
+            and r-index(ld_lot,"WSA") <> length(ld_lot) - 2  /* WSA 的是武汉的物料不在此计算*/
             and ld_site = "gsa01" and ld_qty_oh > 0 :
          create tsupp.
          assign
@@ -997,7 +997,7 @@ else do:  /*不考虑车间库存*/
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
-                and index(ld_lot,"WSA") = 0  /* WSA 的是武汉的物料不在此计算*/
+                and r-index(ld_lot,"WSA") <> length(ld_lot) - 2  /* WSA 的是武汉的物料不在此计算*/
                 and ld_site = "gsa01"  and ld_loc <> "P-all"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
@@ -1156,9 +1156,9 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
     if xxwd__int03 >= 0 and xxwd__int03 < i then do:
        assign xxwd_date = xxwd__dte01 + 1.
     end.
-    if xxwd_time >= 8.5 * 3600 and xxwd_time <= 11.2 * 3600 and 
-    	 xxwd__int01 >= 22 * 3600 then do:
- 		   assign xxwd_date = xxwd__dte01 - 1.  	
+    if xxwd_time >= 8.5 * 3600 and xxwd_time <= 11.2 * 3600 and
+       xxwd__int01 >= 22 * 3600 then do:
+       assign xxwd_date = xxwd__dte01 - 1.
     end.
     assign xxwd__int03 = 0.
 end.
