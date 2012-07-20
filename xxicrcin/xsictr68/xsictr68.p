@@ -14,6 +14,7 @@ DEFINE VARIABLE vv_loc_from as character.
 define variable vv_qty as decimal.
 define variable vv_ld_stat as character.
 define variable VV_Loclist as character.
+define variable availLoc as character initial "Check,P-2R,P-4RPS,P-4RSA,P-ALL,P-CGRD,PT,PT-ALL,TEMP,wt".
 {xxtrctrl.i}
 /*SS - 080912.1 E*/
 
@@ -664,19 +665,19 @@ If AVAILABLE ( ld_det ) then
         display skip "^" @ WMESSAGE NO-LABEL with fram F1500.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
-                  IF recid(LD_DET) = ? THEN find first LD_DET where
-                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                  IF recid(LD_DET) = ? THEN find first LD_DET use-index ld_part_lot where
+                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0) AND
 LD_SITE = V1002 AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   else do:
                        if LD_LOT =  INPUT V1500
-                       then find next LD_DET
-                       WHERE LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                       then find next LD_DET use-index ld_part_lot 
+                       WHERE LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0)  AND
 LD_SITE = V1002 AND LD_REF = ""
                         no-lock no-error.
-                        else find first LD_DET where
-                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                        else find first LD_DET use-index ld_part_lot where
+                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0)   AND
 LD_SITE = V1002 AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
@@ -687,19 +688,19 @@ LD_SITE = V1002 AND LD_REF = "" AND
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
             THEN DO:
-                  IF recid(LD_DET) = ? THEN find last LD_DET where
-                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                  IF recid(LD_DET) = ? THEN find last LD_DET use-index ld_part_lot where
+                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0)  AND
 LD_SITE = V1002 AND LD_REF = "" AND
                               LD_LOT <=  INPUT V1500
                                no-lock no-error.
                   else do:
                        if LD_LOT =  INPUT V1500
-                       then find prev LD_DET
-                       where LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                       then find prev LD_DET use-index ld_part_lot 
+                       where LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0)  AND
 LD_SITE = V1002 AND LD_REF = ""
                         no-lock no-error.
-                        else find first LD_DET where
-                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
+                        else find first LD_DET use-index ld_part_lot where
+                              LD_PART = V1300 AND LD_QTY_OH <> 0  AND (index ( "X", substring (ld_loc ,1,1 ) ) > 0  or index(availLoc,ld_loc) > 0)  AND
 LD_SITE = V1002 AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
