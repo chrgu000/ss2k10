@@ -132,12 +132,10 @@ assign
    wc_qoh      = 0
    pick-used   = no
    temp_nbr    = nbr.
-
 run gett0(input reldate, input reldate1,
           input site, input site1,
           input wkctr, input wkctr1).
-  {xxrepkdis1.i}
-
+{xxrepkdis1.i}
 /* FIND AND DISPLAY                                                         */
 /* rps_mstr 重复生产排程表                                                  */
 
@@ -581,7 +579,7 @@ by wr_start by wr_part by wr_op
                pt_um when (available pt_mstr)
                short-assy @ ps_par
             with frame short  /*GUI*/ .
-
+/****缺料的写在需求表了*********************************
             create xx_pklst.
             assign xx_site = wo_site
                    xx_line = wr_wkctr
@@ -598,6 +596,7 @@ by wr_start by wr_part by wr_op
                    xx_mch = wr_mch
                    xx_start =wr_start
                    xx_short = yes.
+**************************************************/                   
 /*6.25*/
             create usrw_wkfl.
             assign usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
@@ -827,9 +826,7 @@ end.
                xxwa_sstime = xxwa_sstime - v_lead_minus
                xxwa_setime = xxwa_setime - v_lead_minus.
   end.
-
   {xxrepkdis2.i}
-
   /* 按最小包装量计算需求到 xxwa_ord_mult
 /*   for each xxwa_det exclusive-lock:                                               */
 /*     assign xxwa_ord_mult = xxwa_qty_pln.                                          */
@@ -964,12 +961,11 @@ for each xxwa_det no-lock where
      end.
      tiss1_qty = tiss1_qty + xxwa_qty_pln.
 end.
-
 if netgr then do:
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_lot where ld_part = tiss1_part 
-            and substring(ld_lot,length(ld_lot) - 2) <> "WSA" 
+            and index(ld_lot,"WSA") = 0  /* WSA 的是武汉的物料不在此计算*/
             and ld_site = "gsa01" and ld_qty_oh > 0 :
          create tsupp.
          assign
@@ -998,11 +994,10 @@ else do:  /*不考虑车间库存*/
           assign  vwkline = vwkLine + ln_line + ",".
        end.
    end.
-
    for each tiss1 break by tiss1_part:
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
-                and substring(ld_lot,length(ld_lot) - 2) <> "WSA" 
+                and index(ld_lot,"WSA") = 0  /* WSA 的是武汉的物料不在此计算*/
                 and ld_site = "gsa01"  and ld_loc <> "P-all"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
