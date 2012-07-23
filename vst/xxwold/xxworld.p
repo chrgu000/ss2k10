@@ -90,15 +90,13 @@ repeat:
      if not can-find(first xxwoload) then do:
           {mfmsg.i 5935 1}
      end.
-     /*
      else do:
              {gprun.i ""xxwold1.p""}
      end.
-     */
      for each xxwoload exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxwo_lot xxwo_orel_date xxwo_rel_date xxwo_due_date xxwo_chk.
+         display xxwo_lot xxwo_orel_date xxwo_rel_date xxwo_odue_date xxwo_chk.
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
