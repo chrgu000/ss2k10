@@ -1216,74 +1216,73 @@ repeat on error undo, retry:
 /* ss 20120106.1 - B */
          sel_total = sel_total + tt1_qty_inv * tt1_price.
 
-         find first sod_det exclusive-lock where sod_domain = global_domain
-                and sod_nbr = tt1_order and sod_line = integer(tt1_line)
-         no-error.
-         if available sod_det and sod_price <> tt1_price then do:
-         find so_mstr no-lock where so_domain = global_domain and
-              so_nbr = sod_nbr no-error.
-           IF AVAILABLE so_mstr THEN DO:
-                 assign sod_price = tt1_price
-                        sod_list_pr = tt1_price
-                        sod_qty_chg = tt1_qty_inv.
-                  {gprun.i ""txcalc.p""  "(input  "13",
-                    input  so_nbr,
-                    input  '',
-                    input  0, /* ALL LINES */
-                    input  no,
-                    output v_result-status)"}
-                  /* CREATES TAX RECORDS WITH TRANSACTION TYPE "11" */
-                  /* FOR THE QUANTITY BACKORDER DURING PENDING      */
-                  /* INVOICE MAINTENANCE                            */
-                    if not so_sched
-                    then do:
-
-                       {gprun.i ""txcalc.p""
-                          "(input  "11",
-                            input  so_nbr,
-                            input  '',
-                            input  0,
-                            input  no,
-                            output v_result-status)"}
-                    end. /* IF NOT so_sched */
-               END.
-         end.
-
-/*           assign fname = "sod.txt" + string(time).                        */
-/*           output to value(fname  + ".bpi").                               */
-/*           put unformat tt1_order skip.                                    */
-/*           put unformat "-" skip.                                          */
-/*           put unformat "-" skip.                                          */
-/*           if not so_sched then do:                                        */
-/*              put unformat "-" skip.                                       */
-/*           end.                                                            */
-/*           put unformat "-" skip.    /*订货日期*/                          */
-/*           put unformat "-" skip.    /*税*/                                */
-/*           put unformat "-" skip.    /*推销员*/                            */
-/*           put unformat tt1_line skip.                                     */
-/*           put unformat "-" skip. /*site*/                                 */
-/*           put unformat "-" skip.                                          */
-/*           put unformat "YES" skip.                                        */
-/*           put unformat tt1_price skip.                                    */
-/*           put unformat "-" skip.                                          */
-/*           put unformat "-" skip.                                          */
-/*           put unformat "-" skip. /*税*/                                   */
-/*           put unformat "." skip.                                          */
-/*           put unformat "." skip.                                          */
-/*           put unformat "-" skip.                                          */
-/*           put unformat "-" skip.                                          */
-/*           output close.                                                   */
-/*           input from value(fname + ".bpi").                               */
-/*           output to value(fname + ".bpo") keep-messages.                  */
-/*           hide message no-pause.                                          */
-/*           batchrun  = yes.                                                */
-/*           {gprun.i ""soivmt.p""}                                          */
-/*           batchrun  = no.                                                 */
-/*           hide message no-pause.                                          */
-/*           output close.                                                   */
-/*           input close.                                                    */
-/*           os-delete value(fname + ".bpi").                                */
-/*           os-delete value(fname + ".bpo").                                */
+        find first sod_det exclusive-lock where sod_domain = global_domain
+               and sod_nbr = tt1_order and sod_line = integer(tt1_line)
+        no-error.
+        if available sod_det and sod_price <> tt1_price then do:
+                assign sod_price = tt1_price
+                       sod_list_pr = tt1_price
+                       sod_qty_chg = tt1_qty_inv.
+          end.
+/*               {gprun.i ""txcalc.p""  "(input  "13",                      */
+/*                 input  so_nbr,                                           */
+/*                 input  '',                                               */
+/*                 input  0, /* ALL LINES */                                */
+/*                 input  no,                                               */
+/*                 output v_result-status)"}                                */
+/*               /* CREATES TAX RECORDS WITH TRANSACTION TYPE "11" */       */
+/*               /* FOR THE QUANTITY BACKORDER DURING PENDING      */       */
+/*               /* INVOICE MAINTENANCE                            */       */
+/*                 if not so_sched                                          */
+/*                 then do:                                                 */
+/*                                                                          */
+/*                    {gprun.i ""txcalc.p""                                 */
+/*                       "(input  "11",                                     */
+/*                         input  so_nbr,                                   */
+/*                         input  '',                                       */
+/*                         input  0,                                        */
+/*                         input  no,                                       */
+/*                         output v_result-status)"}                        */
+/*                 end. /* IF NOT so_sched */                               */
+/*            END.                                                          */
+/*      end.                                                                */
+             find first so_mstr no-lock where so_domain = global_domain
+                    and so_nbr = tt1_order no-error.
+             assign fname = "sod.txt." + string(time).
+             output to value(fname  + ".bpi").
+             put unformat tt1_order skip.
+             put unformat "-" skip.
+             put unformat "-" skip.
+             if not so_sched then do:
+                put unformat "-" skip.
+             end.
+             put unformat "-" skip.    /*订货日期*/
+             put unformat "-" skip.    /*税*/
+             put unformat "-" skip.    /*推销员*/
+             put unformat tt1_line skip.
+             put unformat "-" skip. /*site*/
+             put unformat "-" skip.
+             put unformat "YES" skip.
+             put unformat tt1_price " " 0 skip.
+             put unformat "-" skip.
+             put unformat "-" skip.
+             put unformat "-" skip. /*税*/
+             put unformat "." skip.
+             put unformat "." skip.
+             put unformat "-" skip.
+             put unformat "-" skip.
+             output close.
+             input from value(fname + ".bpi").
+             output to value(fname + ".bpo") keep-messages.
+             hide message no-pause.
+             batchrun  = yes.
+             {gprun.i ""soivmt.p""}
+             batchrun  = no.
+             hide message no-pause.
+             output close.
+             input close.
+             os-delete value(fname + ".bpi").
+             os-delete value(fname + ".bpo").
 
 /*    for each tx2d_det                                                      */
 /*/*         fields (tx2d_domain tx2d_cur_tax_amt tx2d_ref tx2d_tr_type   */ */

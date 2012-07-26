@@ -258,7 +258,8 @@ post = yes.
 find first usrw_wkfl no-lock where usrw_domain = global_domain
 						 and usrw_key1 = "xxsoivm1.p.xxrqm_nbr" no-error.
 if availabl usrw_wkfl then do:
-	 assign nbr = usrw_key2.
+	 assign nbr = usrw_key2
+	 				inv_nbr = usrw_key2.
 end.
 {&SOIVPST-P-TAG1}
 {&SOIVPST-P-TAG9}
