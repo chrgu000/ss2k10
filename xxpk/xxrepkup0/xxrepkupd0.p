@@ -712,21 +712,26 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
       assign vqty = vqty + xx_qty_req
              aviqty = aviqty +  round((t0_tttime / t0_wktime)  * xx_qty_req,0).
       if last-of(xx_comp) then do:
+         find first xxwa_det exclusive-lock where xxwa_date = t0_date
+                and xxwa_site = t0_site and xxwa_line = t0_line
+                and xxwa_part = xx_comp and xxwa_rtime = t0_start no-error.
+         if not available xxwa_det then do:
          create xxwa_det.
          assign xxwa_date = t0_date
-                xxwa__dte01 = t0_date
                 xxwa_site = t0_site
                 xxwa_line = t0_line
-                xxwa_par  = t0_par
                 xxwa_part = xx_comp
+                xxwa_rtime = t0_start.
+         end.
+         assign xxwa__dte01 = t0_date
+                xxwa_par  = t0_par
                 xxwa_ladnbr = xx_nbr
                 xxwa_sn = t0_sn
                 xxwa_rtime = t0_start
                 xxwa_qty_req = vqty
                 xxwa_qty_pln = aviqty
                 xxwa__dec01 = xx_qty_need
-                xxwa_recid = recid(xxwa_det)
-                .
+                xxwa_recid = recid(xxwa_det).
       end.
  /*   {xxrepkdis2.i}   */
  /*
@@ -998,7 +1003,7 @@ else do:  /*不考虑车间库存*/
      if first-of(tiss1_part) then do:
        for each ld_det no-lock use-index ld_part_loc where ld_part = tiss1_part
                 and r-index(ld_lot,"WSA") <> length(ld_lot) - 2  /* WSA 的是武汉的物料不在此计算*/
-                and ld_site = "gsa01"  and ld_loc <> "P-all"
+                and ld_site = "gsa01"
                 and index(vwkline,ld_loc + ",") = 0
                 and ld_qty_oh > 0:
            create tsupp.
