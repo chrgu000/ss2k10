@@ -2,7 +2,7 @@ define variable vernbr as character format "x(20)".
 define variable tcnbr as character format "x(30)".
 define variable WMESSAGE as character format "x(40)".
 define variable ret-ok as logical initial yes.
-define variable vitem as character.
+define variable vitem as character format "X(30)".
 define variable vtrloc as character.
 define variable vtrstat as character.
 define variable sstat as character.
@@ -10,7 +10,7 @@ define variable vcimfile as character.
 define variable part as character format "x(30)".
 define variable qtyreq as decimal format "->>>,>>>,>>9".
 define variable i as integer.
-
+define variable j as integer.
 assign vernbr = "110808.2".
 {mfdtitle.i vernbr}
 {xsdfsite.i}
@@ -59,11 +59,11 @@ repeat:
 
   display "[取/送料单关闭]"   + "*" + TRIM ( wDefSite ) + vernbr  format "x(40)" skip(2) with fram framea2 no-box.
 
-  display "单号:" + trim(tcnbr) format "x(40)"  skip with frame framea2 no-box.
-  /* LABEL 4 - END */
+  display "单号:" + trim(tcnbr) format "x(40)"  skip(1) with frame framea2 no-box.
+  display "多个项次以逗号(,)隔开,最多10个项次." skip with frame framea2 no-box.
   display "项次/A(全部)/E退出" format "x(40)" skip skip with fram framea2 no-box.
 
-  update vitem no-label with frame framea2 no-box.
+  update vitem view-as fill-in size 40 by 1 no-label with frame framea2 no-box.
   if vitem = "E" then do:
      leave.
   end.
@@ -88,21 +88,22 @@ repeat:
   end.
   else do:
           DO i = 1 to length(vitem).
-             If index("0987654321", substring(vitem,i,1)) = 0 then do:
+             If index("0987654321,", substring(vitem,i,1)) = 0 then do:
                 display "项次输入错误." @ wmessage no-label with frame frameac.
                 undo,retry.
              end.
           end.
-
-          find first xxwd_det exclusive-lock where xxwd_type = substring(tcnbr,1,1)
-                  and xxwd_nbr = substring(tcnbr,2)
-                  and xxwd_sn = integer(vitem) no-error.
-          if available xxwd_det then do.
-              assign xxwd_stat = "C".
-          end.
-          else do:
-              display "单号/项次未找到." @ wmessage no-label with frame frameac.
-            undo,retry.
+          do i = 1 to 10:
+             assign j  = integer(entry(i,vitem,",")) no-error.
+             if j > 0 then do:
+                find first xxwd_det exclusive-lock 
+                		 where xxwd_type = substring(tcnbr,1,1)
+                        and xxwd_nbr = substring(tcnbr,2)
+                        and xxwd_sn = j no-error.
+                if available xxwd_det then do.
+                    assign xxwd_stat = "C".
+                end.
+             end.
           end.
   end.
  /*
