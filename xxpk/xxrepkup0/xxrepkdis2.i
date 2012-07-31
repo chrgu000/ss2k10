@@ -3,7 +3,7 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
 /* REVISION END                                                              */
-/****
+
     display t0_date t0_site t0_line t0_part
             t0_wktime
             t0_tttime
@@ -19,8 +19,8 @@
             t0_tttime / t0_wktime * xx_qty_req @ t0_time
             with frame detail001 width 300 .
      down with frame detail001.
-  ******/   
-     
+
+     /****
   for each xxwa_det exclusive-lock where
            xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
            xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
@@ -34,3 +34,4 @@
               string(xxwa_setime,"hh:mm:ss") @ xxwa_setime
               xxwa__log01 with width 300.
   end.
+    ******/   

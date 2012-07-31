@@ -177,104 +177,13 @@ each wod_det no-lock where wod_lot = wr_lot
 break by wo_site by wr_wkctr by wod_part by wod_deliver
 by wr_start by wr_part by wr_op
    with frame c width 132 no-attr-space down no-box:
-
-   /* SET EXTERNAL LABELS */
-   setFrameLabels(frame c:handle).
-
-   if first-of(wr_wkctr) then do:
-
-      pick-used = yes.
-
-      do on error undo, retry:
-
-         do while can-find (first lad_det
-            where lad_dataset = "rps_det"
-              and lad_nbr begins
-              trim(string(wo_site,"x(8)") + string(nbr,"x(10)"))):
-            {gprun.i ""gpnbr.p"" "(16,input-output nbr)"}
-            /* gpnbr.p 加密程序 */
-         end. /* do while can-find */
-
-         create lad_det.
-         assign
-            lad_dataset = "rps_det"
-            lad_nbr     = string(wo_site,"x(8)") + string(nbr,"x(10)")
-            lad_line    = "rps_det"
-            lad_part    = "rps_det"
-            lad_site    = string(mfguser,"x(10)")
-            lad_loc     = "rps_det"
-            lad_lot     = "rps_det"
-            lad_ref     = "rps_det".
-      end. /* do on error undo, retry */
-
-      /* ADDED frame b DEFINITION */
-      FORM /*GUI*/
-         wo_site
-         wr_wkctr
-         wc_desc no-label
-         nbr
-         skip(1)
-      with  /*GUI*/  frame b width 132 side-labels page-top.
-
-      /* SET EXTERNAL LABELS */
-      setFrameLabels(frame b:handle).
-
-      display
-         wo_site
-         wr_wkctr
-         wc_desc no-label    when (available wc_mstr)
-         string(nbr,"x(10)") when (not delete_pklst) @ nbr
-         nbr_replace         when (delete_pklst) @ nbr
-         skip(1)
-      with frame b width 132 side-labels page-top  /*GUI*/ .
-   end. /* if first-of(wr_wkctr) */
-
-   view frame b.
-   /* isspol = Yes 发放原则 */
-   isspol = yes.
-   find ptp_det no-lock
-   where ptp_site = wod_site
-     and ptp_part = wod_part no-error.
-   if available ptp_det then
-      isspol = ptp_iss_pol.
-   else do:
-      find pt_mstr no-lock where pt_part = wod_part no-error.
-      if available pt_mstr then
-         isspol = pt_iss_pol.
-   end.
-
-   if isspol then do:
-      accumulate max(wod_qty_req - wod_qty_all - wod_qty_pick - wod_qty_iss,0)
-         (total by wod_deliver).
-
-      if first-of (wod_deliver) then do with frame c:
-         assign
-            desc1 = ""
-            desc2 = ""
-            um    = "".
-         find pt_mstr no-lock where pt_part = wod_part no-error.
-         if available pt_mstr then
-            assign
-               desc1 = pt_desc1
-               desc2 = pt_desc2
-               um    = pt_um.
-         if detail_display then
-            display wod_part @ ps_comp desc1 WITH  /*GUI*/ .
-
-      end. /* if first-of (wod_deliver) do */
-      else
-      if desc2 <> "" and detail_display then do with frame c:
-         display
-            desc2 @ desc1 WITH  /*GUI*/ .
-         desc2 = "".
-      end. /* if first-of (wod_deliver) else */
       create xx_pklst.
       assign xx_site = wo_site
              xx_line = wr_wkctr
              xx_nbr = string(nbr)
              xx_comp = wod_part
-/*           xx_qty_req = max(wod_qty_req - wod_qty_iss,0)                */
-             xx_qty_req = wod_qty_req       /* 总需求量 */
+             xx_qty_req = max(wod_qty_req - wod_qty_iss,0)
+/*             xx_qty_req = wod_qty_req       /* 总需求量 */                */
              xx_qty_need = max(wod_qty_req - wod_qty_iss,0)  /* 缺料量 */
              xx_qty_iss = wod_qty_iss
              xx_um = um
@@ -283,407 +192,541 @@ by wr_start by wr_part by wr_op
              xx_op = wr_op
              xx_mch = wr_mch
              xx_start = wr_start.
-/*      create qad_wkfl.                                          */
-/*      assign qad_key1 = "xxpsref"                               */
-/*             qad_key2 = string(errnumber)                       */
-/*             qad_key3 = wod_part                                */
-/*             qad_key5 = wr_part                                 */
-/*             qad_decfld[1] = max(wod_qty_req - wod_qty_iss,0).  */
-      if detail_display then do:
-         display
-            max(wod_qty_req - wod_qty_iss,0) @ wod_qty_req
-            um
-            wr_part @ ps_par
-            wo_due_date
-            wr_op
-            wr_mch
-            wr_start WITH  /*GUI*/ .
-      end.
-      /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */
-      run store_demand (buffer wod_det, buffer wr_route).
+end.       
 
-      if last-of (wod_deliver) then do:
-
-         ord_max = 0.
-         find ptp_det no-lock
-         where ptp_part = wo_part and ptp_site = wo_site no-error.
-         if available ptp_det then
-            ord_max = ptp_ord_max.
-         else do:
-            find pt_mstr no-lock where pt_part = wo_part no-error.
-            if available pt_mstr then
-               ord_max = pt_ord_max.
-         end. /* if available ptp_det */
-         comp_max = 0.
-         if ord_max <> 0 then
-            comp_max = wod_qty_req / wo_qty_ord * ord_max.
-         /* qtyneed 为需求数量，从Wod表进行合计汇总 */
-         qtyneed = (accum total by wod_deliver
-                   (max(wod_qty_req - wod_qty_all -
-                    wod_qty_pick - wod_qty_iss,0))).
-
-         /* netgr = yes  考虑工作中心在库 */
-
-   if netgr then do:
-            /* Added wo_lot as input parameter */
-            {gprun.i ""repkupb.p"" "(wo_site,
-                                     wr_wkctr,
-                                     wod_part,
-                                     issue1,
-                                     qtyneed,
-                                     wo_lot,
-                                     input-output wc_qoh)"}
-    end.   /* if netgr then do: */
-
-         temp_qty = 0.
-         if netgr then
-            assign
-               temp_qty = min(qtyneed, wc_qoh)
-               qtyneed  = qtyneed - temp_qty.
-         /* 如果考虑车间在库，则减去车间在库wc_qoh */
-         nbr = string(wo_site,"x(8)") + nbr.
-
-         {gprun.i ""xxrepkall.p"" "(nbr,
-                                  wod_part,
-                                  wo_site,
-                                  wr_wkctr,
-                                  wod_deliver,
-                                  comp_max,
-                                  input-output qtyneed)" }
-
-         if detail_display then do
-            with frame dd width 132 no-attr-space down no-box:
-
-            display
-               skip
-            with frame e  /*GUI*/ .
-
-            /* SET EXTERNAL LABELS */
-            setFrameLabels(frame dd:handle).
-
-            display
-               "" @ ps_comp no-label
-               "" @ desc1 no-label WITH  /*GUI*/ .
-
-            display
-               accum total by wod_deliver
-               (max(wod_qty_req - wod_qty_all -
-               wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um WITH  /*GUI*/ .
-
-            display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .
-
-            wc_qoh = wc_qoh - temp_qty.
-
-            for each lad_det no-lock
-            where lad_dataset = "rps_det"
-              and lad_nbr = nbr and lad_line = wr_wkctr
-              and lad_part = wod_part and lad_site = wo_site
-              and lad_user1 = wod_deliver
-            break by lad_dataset by lad_nbr by lad_line
-            by lad_part by lad_site with frame dd:
-
-               display
-                  lad_loc
-                  lad_lot
-                  lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver WITH  /*GUI*/ .
-
-               accumulate lad_qty_all (total).
-
-               if last-of (lad_site) = no then
-                  down 1.
-            end.
-
-            if qtyneed > 0 then do with frame dd:
-               if can-find
-                  (first lad_det where lad_dataset = "rps_det"
-                  and lad_nbr = nbr and lad_line = wr_wkctr
-                  and lad_part = wod_part
-                  and lad_site = wo_site) then
-                  down 1.
-
-               display
-                  "" @ lad_lot
-                  qtyneed @ lad_qty_all /* WITH  GUI*/ .
-
-            end.
-
-            down 1.
-
-         end.  /* detail_display 详细显示 */
-               /* 简略显示 Start */
-         else do with frame d width 132 no-attr-space down no-box:
-
-            /* SET EXTERNAL LABELS */
-            setFrameLabels(frame d:handle).
-            display
-               wod_part @ ps_comp desc1 WITH  /*GUI*/ .
-
-            display
-               accum total by wod_deliver
-               (max(wod_qty_req - wod_qty_all -
-               wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req
-               um WITH  /*GUI*/ .
-
-            display
-               wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .
-
-            wc_qoh = wc_qoh - temp_qty.
-            for each lad_det no-lock
-            where lad_dataset = "rps_det"
-              and lad_nbr = nbr and lad_line = wr_wkctr
-              and lad_part = wod_part and lad_site = wo_site
-              and lad_user1 = wod_deliver
-            break by lad_dataset by lad_nbr by lad_line
-            by lad_part by lad_site with frame d:
-                create usrw_wkfl.
-                assign usrw_key1 = "xxrepkup0.p"
-                       usrw_key2 = string(i)
-                       usrw_key3 = wod_part
-                       usrw_key4 = nbr
-                       usrw_key5 = wo_site
-                       usrw_key6 = wr_wkctr
-                       usrw_charfld[1] = lad_lot
-                       usrw_charfld[2] = lad_lot
-                       usrw_decfld[1] = max(wod_qty_req - wod_qty_all -
-                                        wod_qty_pick - wod_qty_iss,0)
-                       usrw_decfld[2] = lad_qty_all.
-                assign i = i + 1.
-               display
-                  lad_loc
-                  lad_lot
-                  lad_qty_all column-label {&repkupd_p_12}
-                  lad_user1 @ wod_deliver WITH  /*GUI*/ .
-
-               accumulate lad_qty_all (total).
-
-               if last-of (lad_site) = no
-                  or (detail_display = no and desc2 <> "") then
-                  down 1.
-
-               if detail_display = no and desc2 <> "" then
-                  display
-                     desc2 @ desc1 WITH  /*GUI*/ .
-
-               desc2 = "".
-            end.
-
-            if qtyneed > 0 then do with frame d:
-               if can-find (first lad_det
-                  where lad_dataset = "rps_det"
-                    and lad_nbr = nbr and lad_line = wr_wkctr
-                    and lad_part = wod_part
-                    and lad_site = wo_site)
-                     or (detail_display = no and desc2 <> "") then
-                  down 1.
-
-               if detail_display = no and desc2 <> "" then
-                  display
-                     desc2 @ desc1 WITH  /*GUI*/ .
-
-               desc2 = "".
-
-               display
-                  "" @ lad_lot
-                  qtyneed @ lad_qty_all WITH  /*GUI*/ .
-
-            end.
-
-            down 1.
-
-         end. /* 简略显示 */
-
-         /* STORE AVAILABLE QUANTITY IN shortages TABLE */
-
-         run store_avail_qty (input (accum total by wod_deliver
-                                    (max(wod_qty_req  - wod_qty_all -
-                                     wod_qty_pick - wod_qty_iss,0))),
-                              input wod_part).
-
-         nbr = substring(nbr,9).
-      end.
-
-   end.  /* if isspol */
-
-   /* FOR SHORTAGE LIST PRINTING, DELETE THOSE COMPONENT DEMANDS */
-   /* FOR WHICH AVAILABLE QTY CAN BE ADJUSTED. AND SUMMARIZE     */
-   /* DEMANDS BY PARENT ITEMS.                                   */
-
-   if last-of(wod_part) then
-      run adjust_demand (input wod_part).
-
-   if last-of (wr_wkctr) then do:
-
-      find first lad_det
-      where lad_dataset = "rps_det"
-        and lad_nbr begins trim(string(wo_site,"x(8)") + string(nbr,"x(10)"))
-        and lad_part <> "rps_det" no-lock no-error.
-
-      find first shortages no-error.
-      if available shortages then do:
-
-         hide frame b.
-
-         page.
-
-         /* 打印物料短缺清单 */
-         FORM /*GUI*/
-            skip(1) space(19)
-            wo_site wr_wkctr
-            wc_desc no-label
-            nbr_replace label {&repkupd_p_3}
-         with  /*GUI*/  frame shortage page-top width 132 side-labels
-         title color normal (getFrameTitle("S_H_O_R_T_A_G_E___L_I_S_T",36)).
-
-         /* SET EXTERNAL LABELS */
-         setFrameLabels(frame shortage:handle).
-
-         display
-            wo_site
-            wo_site
-            wr_wkctr
-            wc_desc             when (available wc_mstr)
-            string(nbr,"x(10)") when (not delete_pklst) @ nbr_replace
-            nbr_replace         when (delete_pklst)
-         with frame shortage  /*GUI*/ .
-
-         /* PRINT DESCRIPTION OF PART ONLY ONCE. */
-
-         for each shortages exclusive-lock
-         break by short-part by short-date
-         with frame short width 132 no-attr-space:
-
-            /* SET EXTERNAL LABELS */
-            setFrameLabels(frame short:handle).
-
-            find pt_mstr no-lock
-            where pt_part = short-part no-error.
-
-            if page-size - line-counter < 1 then
-               page.
-
-            display
-               space(19)
-            with frame short  /*GUI*/ .
-
-            if first-of(short-part) then
-               display
-                  short-part @ ps_comp
-                  pt_desc1 when (available pt_mstr)
-               with frame short  /*GUI*/ .
-
-            display
-               short-qty
-               pt_um when (available pt_mstr)
-               short-assy @ ps_par
-            with frame short  /*GUI*/ .
-/****缺料的写在需求表了*********************************
-            create xx_pklst.
-            assign xx_site = wo_site
-                   xx_line = wr_wkctr
-                   xx_nbr = string(nbr,"x(10)") when (not delete_pklst)
-                   xx_comp = short-part
-/*                 xx_qty_req = max(wod_qty_req - wod_qty_iss,0)             */
-                   xx_qty_req = short-qty       /* 总需求量 */
-                   xx_qty_need = short-qty  /* 缺料量 */
-                   xx_qty_iss = 0
-                   xx_um = pt_um when (available pt_mstr)
-                   xx_par = short-assy
-                   xx_due_date = wo_due_date
-                   xx_op = wr_op
-                   xx_mch = wr_mch
-                   xx_start =wr_start
-                   xx_short = yes.
-**************************************************/
-/*6.25*/
-            create usrw_wkfl.
-            assign usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
-                   usrw_key2 = string(today) + string(time) + string(j)
-                   usrw_key3 = wo_site
-                   usrw_key4 = wr_wkctr
-                   usrw_key5 = string(nbr,"x(10)") when (not delete_pklst)
-                   usrw_key6 = short-part
-                   usrw_decfld[1] = short-qty
-                   usrw_charfld[1] = pt_um when (available pt_mstr)
-                   usrw_charfld[2] = short-assy
-                   usrw_charfld[3] = wr_mch
-                   usrw_intfld[1] = wr_op
-                   usrw_datefld[1] = wo_due_date
-                   usrw_datefld[2] = wr_start
-                   usrw_charfld[10] = "NUMBER".
-            find first tmp_file0 where t0_date = wo_due_date and
-                                       t0_site = wo_site and
-                                       t0_line = wr_wkctr and
-                                       t0_part  = short-assy no-error.
-            if available tmp_file0 then do:
-              assign usrw_intfld[2] = t0_start.
-            end.
-            assign j = j + 1.
-            if first-of(short-part) then do:
-               down 1.
-               if available pt_mstr and pt_desc2 <> "" then
-                  display
-                     pt_desc2 @ pt_desc1
-                  with frame short  /*GUI*/ .
-            end. /* FIRST-OF(short-part) */
-
-            if last-of(short-part) then
-               down 1.
-
-            delete shortages.
-         end.
-         hide frame shortage.
-         view frame b.
-         if not last (wr_wkctr) then page.
-      end.
-   end.
-
-end.
-
+       
+       
+       
+/*********************************************************************
+/* for each rps_mstr no-lock                                                        */
+/* where rps_part >= part and rps_part <= part1                                     */
+/*   and rps_site >= site and rps_site <= site1                                     */
+/*   and (rps_due_date >= issue and rps_due_date <= issue1)                         */
+/*   and (rps_rel_date >= reldate and rps_rel_date <= reldate1),                    */
+/* each wo_mstr no-lock where wo_lot = string(rps_record)                           */
+/*   and wo_part = rps_part and wo_type = "S"                                       */
+/*   and wo_site = rps_site and wo_status <> "C",                                   */
+/* each wr_route no-lock where wr_lot = wo_lot,                                     */
+/* first wc_mstr no-lock                                                            */
+/* where wc_wkctr = wr_wkctr                                                        */
+/*   and wc_mch = wr_mch                                                            */
+/*   and wc_wkctr >= wkctr and wc_wkctr <= wkctr1,                                  */
+/* each wod_det no-lock where wod_lot = wr_lot                                      */
+/*   and wod_op = wr_op                                                             */
+/*   and wod_part >= comp1 and wod_part <= comp2                                    */
+/*   and not can-find (first qad_wkfl where qad_key1 = "pt_kanban"                  */
+/*   and qad_key2 = wod_part)                                                       */
+/* break by wo_site by wr_wkctr by wod_part by wod_deliver                          */
+/* by wr_start by wr_part by wr_op                                                  */
+/*    with frame c width 132 no-attr-space down no-box:                             */
+/*                                                                                  */
+/*    /* SET EXTERNAL LABELS */                                                     */
+/*    setFrameLabels(frame c:handle).                                               */
+/*                                                                                  */
+/*    if first-of(wr_wkctr) then do:                                                */
+/*                                                                                  */
+/*       pick-used = yes.                                                           */
+/*                                                                                  */
+/*       do on error undo, retry:                                                   */
+/*                                                                                  */
+/*          do while can-find (first lad_det                                        */
+/*             where lad_dataset = "rps_det"                                        */
+/*               and lad_nbr begins                                                 */
+/*               trim(string(wo_site,"x(8)") + string(nbr,"x(10)"))):               */
+/*             {gprun.i ""gpnbr.p"" "(16,input-output nbr)"}                        */
+/*             /* gpnbr.p 加密程序 */                                               */
+/*          end. /* do while can-find */                                            */
+/*                                                                                  */
+/*          create lad_det.                                                         */
+/*          assign                                                                  */
+/*             lad_dataset = "rps_det"                                              */
+/*             lad_nbr     = string(wo_site,"x(8)") + string(nbr,"x(10)")           */
+/*             lad_line    = "rps_det"                                              */
+/*             lad_part    = "rps_det"                                              */
+/*             lad_site    = string(mfguser,"x(10)")                                */
+/*             lad_loc     = "rps_det"                                              */
+/*             lad_lot     = "rps_det"                                              */
+/*             lad_ref     = "rps_det".                                             */
+/*       end. /* do on error undo, retry */                                         */
+/*                                                                                  */
+/*       /* ADDED frame b DEFINITION */                                             */
+/*       FORM /*GUI*/                                                               */
+/*          wo_site                                                                 */
+/*          wr_wkctr                                                                */
+/*          wc_desc no-label                                                        */
+/*          nbr                                                                     */
+/*          skip(1)                                                                 */
+/*       with  /*GUI*/  frame b width 132 side-labels page-top.                     */
+/*                                                                                  */
+/*       /* SET EXTERNAL LABELS */                                                  */
+/*       setFrameLabels(frame b:handle).                                            */
+/*                                                                                  */
+/*       display                                                                    */
+/*          wo_site                                                                 */
+/*          wr_wkctr                                                                */
+/*          wc_desc no-label    when (available wc_mstr)                            */
+/*          string(nbr,"x(10)") when (not delete_pklst) @ nbr                       */
+/*          nbr_replace         when (delete_pklst) @ nbr                           */
+/*          skip(1)                                                                 */
+/*       with frame b width 132 side-labels page-top  /*GUI*/ .                     */
+/*    end. /* if first-of(wr_wkctr) */                                              */
+/*                                                                                  */
+/*    view frame b.                                                                 */
+/*    /* isspol = Yes 发放原则 */                                                   */
+/*    isspol = yes.                                                                 */
+/*    find ptp_det no-lock                                                          */
+/*    where ptp_site = wod_site                                                     */
+/*      and ptp_part = wod_part no-error.                                           */
+/*    if available ptp_det then                                                     */
+/*       isspol = ptp_iss_pol.                                                      */
+/*    else do:                                                                      */
+/*       find pt_mstr no-lock where pt_part = wod_part no-error.                    */
+/*       if available pt_mstr then                                                  */
+/*          isspol = pt_iss_pol.                                                    */
+/*    end.                                                                          */
+/*                                                                                  */
+/*    if isspol then do:                                                            */
+/*       accumulate max(wod_qty_req - wod_qty_all - wod_qty_pick - wod_qty_iss,0)   */
+/*          (total by wod_deliver).                                                 */
+/*                                                                                  */
+/*       if first-of (wod_deliver) then do with frame c:                            */
+/*          assign                                                                  */
+/*             desc1 = ""                                                           */
+/*             desc2 = ""                                                           */
+/*             um    = "".                                                          */
+/*          find pt_mstr no-lock where pt_part = wod_part no-error.                 */
+/*          if available pt_mstr then                                               */
+/*             assign                                                               */
+/*                desc1 = pt_desc1                                                  */
+/*                desc2 = pt_desc2                                                  */
+/*                um    = pt_um.                                                    */
+/*          if detail_display then                                                  */
+/*             display wod_part @ ps_comp desc1 WITH  /*GUI*/ .                     */
+/*                                                                                  */
+/*       end. /* if first-of (wod_deliver) do */                                    */
+/*       else                                                                       */
+/*       if desc2 <> "" and detail_display then do with frame c:                    */
+/*          display                                                                 */
+/*             desc2 @ desc1 WITH  /*GUI*/ .                                        */
+/*          desc2 = "".                                                             */
+/*       end. /* if first-of (wod_deliver) else */                                  */
+/*       create xx_pklst.                                                           */
+/*       assign xx_site = wo_site                                                   */
+/*              xx_line = wr_wkctr                                                  */
+/*              xx_nbr = string(nbr)                                                */
+/*              xx_comp = wod_part                                                  */
+/* /*           xx_qty_req = max(wod_qty_req - wod_qty_iss,0)                */     */
+/*              xx_qty_req = wod_qty_req       /* 总需求量 */                       */
+/*              xx_qty_need = max(wod_qty_req - wod_qty_iss,0)  /* 缺料量 */        */
+/*              xx_qty_iss = wod_qty_iss                                            */
+/*              xx_um = um                                                          */
+/*              xx_par = wr_part                                                    */
+/*              xx_due_date = wo_due_date                                           */
+/*              xx_op = wr_op                                                       */
+/*              xx_mch = wr_mch                                                     */
+/*              xx_start = wr_start.                                                */
+/* /*      create qad_wkfl.                                          */             */
+/* /*      assign qad_key1 = "xxpsref"                               */             */
+/* /*             qad_key2 = string(errnumber)                       */             */
+/* /*             qad_key3 = wod_part                                */             */
+/* /*             qad_key5 = wr_part                                 */             */
+/* /*             qad_decfld[1] = max(wod_qty_req - wod_qty_iss,0).  */             */
+/*       if detail_display then do:                                                 */
+/*          display                                                                 */
+/*             max(wod_qty_req - wod_qty_iss,0) @ wod_qty_req                       */
+/*             um                                                                   */
+/*             wr_part @ ps_par                                                     */
+/*             wo_due_date                                                          */
+/*             wr_op                                                                */
+/*             wr_mch                                                               */
+/*             wr_start WITH  /*GUI*/ .                                             */
+/*       end.                                                                       */
+/*       /* CREATE RECORDS IN shortage TABLE FOR EACH COMPONENT'S DEMAND */         */
+/*       run store_demand (buffer wod_det, buffer wr_route).                        */
+/*                                                                                  */
+/*       if last-of (wod_deliver) then do:                                          */
+/*                                                                                  */
+/*          ord_max = 0.                                                            */
+/*          find ptp_det no-lock                                                    */
+/*          where ptp_part = wo_part and ptp_site = wo_site no-error.               */
+/*          if available ptp_det then                                               */
+/*             ord_max = ptp_ord_max.                                               */
+/*          else do:                                                                */
+/*             find pt_mstr no-lock where pt_part = wo_part no-error.               */
+/*             if available pt_mstr then                                            */
+/*                ord_max = pt_ord_max.                                             */
+/*          end. /* if available ptp_det */                                         */
+/*          comp_max = 0.                                                           */
+/*          if ord_max <> 0 then                                                    */
+/*             comp_max = wod_qty_req / wo_qty_ord * ord_max.                       */
+/*          /* qtyneed 为需求数量，从Wod表进行合计汇总 */                           */
+/*          qtyneed = (accum total by wod_deliver                                   */
+/*                    (max(wod_qty_req - wod_qty_all -                              */
+/*                     wod_qty_pick - wod_qty_iss,0))).                             */
+/*                                                                                  */
+/*          /* netgr = yes  考虑工作中心在库 */                                     */
+/*                                                                                  */
+/*    if netgr then do:                                                             */
+/*             /* Added wo_lot as input parameter */                                */
+/*             {gprun.i ""repkupb.p"" "(wo_site,                                    */
+/*                                      wr_wkctr,                                   */
+/*                                      wod_part,                                   */
+/*                                      issue1,                                     */
+/*                                      qtyneed,                                    */
+/*                                      wo_lot,                                     */
+/*                                      input-output wc_qoh)"}                      */
+/*     end.   /* if netgr then do: */                                               */
+/*                                                                                  */
+/*          temp_qty = 0.                                                           */
+/*          if netgr then                                                           */
+/*             assign                                                               */
+/*                temp_qty = min(qtyneed, wc_qoh)                                   */
+/*                qtyneed  = qtyneed - temp_qty.                                    */
+/*          /* 如果考虑车间在库，则减去车间在库wc_qoh */                            */
+/*          nbr = string(wo_site,"x(8)") + nbr.                                     */
+/*                                                                                  */
+/*          {gprun.i ""xxrepkall.p"" "(nbr,                                         */
+/*                                   wod_part,                                      */
+/*                                   wo_site,                                       */
+/*                                   wr_wkctr,                                      */
+/*                                   wod_deliver,                                   */
+/*                                   comp_max,                                      */
+/*                                   input-output qtyneed)" }                       */
+/*                                                                                  */
+/*          if detail_display then do                                               */
+/*             with frame dd width 132 no-attr-space down no-box:                   */
+/*                                                                                  */
+/*             display                                                              */
+/*                skip                                                              */
+/*             with frame e  /*GUI*/ .                                              */
+/*                                                                                  */
+/*             /* SET EXTERNAL LABELS */                                            */
+/*             setFrameLabels(frame dd:handle).                                     */
+/*                                                                                  */
+/*             display                                                              */
+/*                "" @ ps_comp no-label                                             */
+/*                "" @ desc1 no-label WITH  /*GUI*/ .                               */
+/*                                                                                  */
+/*             display                                                              */
+/*                accum total by wod_deliver                                        */
+/*                (max(wod_qty_req - wod_qty_all -                                  */
+/*                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req                      */
+/*                um WITH  /*GUI*/ .                                                */
+/*                                                                                  */
+/*             display                                                              */
+/*                wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .   */
+/*                                                                                  */
+/*             wc_qoh = wc_qoh - temp_qty.                                          */
+/*                                                                                  */
+/*             for each lad_det no-lock                                             */
+/*             where lad_dataset = "rps_det"                                        */
+/*               and lad_nbr = nbr and lad_line = wr_wkctr                          */
+/*               and lad_part = wod_part and lad_site = wo_site                     */
+/*               and lad_user1 = wod_deliver                                        */
+/*             break by lad_dataset by lad_nbr by lad_line                          */
+/*             by lad_part by lad_site with frame dd:                               */
+/*                                                                                  */
+/*                display                                                           */
+/*                   lad_loc                                                        */
+/*                   lad_lot                                                        */
+/*                   lad_qty_all column-label {&repkupd_p_12}                       */
+/*                   lad_user1 @ wod_deliver WITH  /*GUI*/ .                        */
+/*                                                                                  */
+/*                accumulate lad_qty_all (total).                                   */
+/*                                                                                  */
+/*                if last-of (lad_site) = no then                                   */
+/*                   down 1.                                                        */
+/*             end.                                                                 */
+/*                                                                                  */
+/*             if qtyneed > 0 then do with frame dd:                                */
+/*                if can-find                                                       */
+/*                   (first lad_det where lad_dataset = "rps_det"                   */
+/*                   and lad_nbr = nbr and lad_line = wr_wkctr                      */
+/*                   and lad_part = wod_part                                        */
+/*                   and lad_site = wo_site) then                                   */
+/*                   down 1.                                                        */
+/*                                                                                  */
+/*                display                                                           */
+/*                   "" @ lad_lot                                                   */
+/*                   qtyneed @ lad_qty_all /* WITH  GUI*/ .                         */
+/*                                                                                  */
+/*             end.                                                                 */
+/*                                                                                  */
+/*             down 1.                                                              */
+/*                                                                                  */
+/*          end.  /* detail_display 详细显示 */                                     */
+/*                /* 简略显示 Start */                                              */
+/*          else do with frame d width 132 no-attr-space down no-box:               */
+/*                                                                                  */
+/*             /* SET EXTERNAL LABELS */                                            */
+/*             setFrameLabels(frame d:handle).                                      */
+/*             display                                                              */
+/*                wod_part @ ps_comp desc1 WITH  /*GUI*/ .                          */
+/*                                                                                  */
+/*             display                                                              */
+/*                accum total by wod_deliver                                        */
+/*                (max(wod_qty_req - wod_qty_all -                                  */
+/*                wod_qty_pick - wod_qty_iss,0)) @ wod_qty_req                      */
+/*                um WITH  /*GUI*/ .                                                */
+/*                                                                                  */
+/*             display                                                              */
+/*                wc_qoh @ ld_qty_oh column-label {&repkupd_p_13} WITH  /*GUI*/ .   */
+/*                                                                                  */
+/*             wc_qoh = wc_qoh - temp_qty.                                          */
+/*             for each lad_det no-lock                                             */
+/*             where lad_dataset = "rps_det"                                        */
+/*               and lad_nbr = nbr and lad_line = wr_wkctr                          */
+/*               and lad_part = wod_part and lad_site = wo_site                     */
+/*               and lad_user1 = wod_deliver                                        */
+/*             break by lad_dataset by lad_nbr by lad_line                          */
+/*             by lad_part by lad_site with frame d:                                */
+/*                 create usrw_wkfl.                                                */
+/*                 assign usrw_key1 = "xxrepkup0.p"                                 */
+/*                        usrw_key2 = string(i)                                     */
+/*                        usrw_key3 = wod_part                                      */
+/*                        usrw_key4 = nbr                                           */
+/*                        usrw_key5 = wo_site                                       */
+/*                        usrw_key6 = wr_wkctr                                      */
+/*                        usrw_charfld[1] = lad_lot                                 */
+/*                        usrw_charfld[2] = lad_lot                                 */
+/*                        usrw_decfld[1] = max(wod_qty_req - wod_qty_all -          */
+/*                                         wod_qty_pick - wod_qty_iss,0)            */
+/*                        usrw_decfld[2] = lad_qty_all.                             */
+/*                 assign i = i + 1.                                                */
+/*                display                                                           */
+/*                   lad_loc                                                        */
+/*                   lad_lot                                                        */
+/*                   lad_qty_all column-label {&repkupd_p_12}                       */
+/*                   lad_user1 @ wod_deliver WITH  /*GUI*/ .                        */
+/*                                                                                  */
+/*                accumulate lad_qty_all (total).                                   */
+/*                                                                                  */
+/*                if last-of (lad_site) = no                                        */
+/*                   or (detail_display = no and desc2 <> "") then                  */
+/*                   down 1.                                                        */
+/*                                                                                  */
+/*                if detail_display = no and desc2 <> "" then                       */
+/*                   display                                                        */
+/*                      desc2 @ desc1 WITH  /*GUI*/ .                               */
+/*                                                                                  */
+/*                desc2 = "".                                                       */
+/*             end.                                                                 */
+/*                                                                                  */
+/*             if qtyneed > 0 then do with frame d:                                 */
+/*                if can-find (first lad_det                                        */
+/*                   where lad_dataset = "rps_det"                                  */
+/*                     and lad_nbr = nbr and lad_line = wr_wkctr                    */
+/*                     and lad_part = wod_part                                      */
+/*                     and lad_site = wo_site)                                      */
+/*                      or (detail_display = no and desc2 <> "") then               */
+/*                   down 1.                                                        */
+/*                                                                                  */
+/*                if detail_display = no and desc2 <> "" then                       */
+/*                   display                                                        */
+/*                      desc2 @ desc1 WITH  /*GUI*/ .                               */
+/*                                                                                  */
+/*                desc2 = "".                                                       */
+/*                                                                                  */
+/*                display                                                           */
+/*                   "" @ lad_lot                                                   */
+/*                   qtyneed @ lad_qty_all WITH  /*GUI*/ .                          */
+/*                                                                                  */
+/*             end.                                                                 */
+/*                                                                                  */
+/*             down 1.                                                              */
+/*                                                                                  */
+/*          end. /* 简略显示 */                                                     */
+/*                                                                                  */
+/*          /* STORE AVAILABLE QUANTITY IN shortages TABLE */                       */
+/*                                                                                  */
+/*          run store_avail_qty (input (accum total by wod_deliver                  */
+/*                                     (max(wod_qty_req  - wod_qty_all -            */
+/*                                      wod_qty_pick - wod_qty_iss,0))),            */
+/*                               input wod_part).                                   */
+/*                                                                                  */
+/*          nbr = substring(nbr,9).                                                 */
+/*       end.                                                                       */
+/*                                                                                  */
+/*    end.  /* if isspol */                                                         */
+/*                                                                                  */
+/*    /* FOR SHORTAGE LIST PRINTING, DELETE THOSE COMPONENT DEMANDS */              */
+/*    /* FOR WHICH AVAILABLE QTY CAN BE ADJUSTED. AND SUMMARIZE     */              */
+/*    /* DEMANDS BY PARENT ITEMS.                                   */              */
+/*                                                                                  */
+/*    if last-of(wod_part) then                                                     */
+/*       run adjust_demand (input wod_part).                                        */
+/*                                                                                  */
+/*    if last-of (wr_wkctr) then do:                                                */
+/*                                                                                  */
+/*       find first lad_det                                                         */
+/*       where lad_dataset = "rps_det"                                              */
+/*         and lad_nbr begins trim(string(wo_site,"x(8)") + string(nbr,"x(10)"))    */
+/*         and lad_part <> "rps_det" no-lock no-error.                              */
+/*                                                                                  */
+/*       find first shortages no-error.                                             */
+/*       if available shortages then do:                                            */
+/*                                                                                  */
+/*          hide frame b.                                                           */
+/*                                                                                  */
+/*          page.                                                                   */
+/*                                                                                  */
+/*          /* 打印物料短缺清单 */                                                  */
+/*          FORM /*GUI*/                                                            */
+/*             skip(1) space(19)                                                    */
+/*             wo_site wr_wkctr                                                     */
+/*             wc_desc no-label                                                     */
+/*             nbr_replace label {&repkupd_p_3}                                     */
+/*          with  /*GUI*/  frame shortage page-top width 132 side-labels            */
+/*          title color normal (getFrameTitle("S_H_O_R_T_A_G_E___L_I_S_T",36)).     */
+/*                                                                                  */
+/*          /* SET EXTERNAL LABELS */                                               */
+/*          setFrameLabels(frame shortage:handle).                                  */
+/*                                                                                  */
+/*          display                                                                 */
+/*             wo_site                                                              */
+/*             wo_site                                                              */
+/*             wr_wkctr                                                             */
+/*             wc_desc             when (available wc_mstr)                         */
+/*             string(nbr,"x(10)") when (not delete_pklst) @ nbr_replace            */
+/*             nbr_replace         when (delete_pklst)                              */
+/*          with frame shortage  /*GUI*/ .                                          */
+/*                                                                                  */
+/*          /* PRINT DESCRIPTION OF PART ONLY ONCE. */                              */
+/*                                                                                  */
+/*          for each shortages exclusive-lock                                       */
+/*          break by short-part by short-date                                       */
+/*          with frame short width 132 no-attr-space:                               */
+/*                                                                                  */
+/*             /* SET EXTERNAL LABELS */                                            */
+/*             setFrameLabels(frame short:handle).                                  */
+/*                                                                                  */
+/*             find pt_mstr no-lock                                                 */
+/*             where pt_part = short-part no-error.                                 */
+/*                                                                                  */
+/*             if page-size - line-counter < 1 then                                 */
+/*                page.                                                             */
+/*                                                                                  */
+/*             display                                                              */
+/*                space(19)                                                         */
+/*             with frame short  /*GUI*/ .                                          */
+/*                                                                                  */
+/*             if first-of(short-part) then                                         */
+/*                display                                                           */
+/*                   short-part @ ps_comp                                           */
+/*                   pt_desc1 when (available pt_mstr)                              */
+/*                with frame short  /*GUI*/ .                                       */
+/*                                                                                  */
+/*             display                                                              */
+/*                short-qty                                                         */
+/*                pt_um when (available pt_mstr)                                    */
+/*                short-assy @ ps_par                                               */
+/*             with frame short  /*GUI*/ .                                          */
+/* /****缺料的写在需求表了*********************************                         */
+/*             create xx_pklst.                                                     */
+/*             assign xx_site = wo_site                                             */
+/*                    xx_line = wr_wkctr                                            */
+/*                    xx_nbr = string(nbr,"x(10)") when (not delete_pklst)          */
+/*                    xx_comp = short-part                                          */
+/* /*                 xx_qty_req = max(wod_qty_req - wod_qty_iss,0)             */  */
+/*                    xx_qty_req = short-qty       /* 总需求量 */                   */
+/*                    xx_qty_need = short-qty  /* 缺料量 */                         */
+/*                    xx_qty_iss = 0                                                */
+/*                    xx_um = pt_um when (available pt_mstr)                        */
+/*                    xx_par = short-assy                                           */
+/*                    xx_due_date = wo_due_date                                     */
+/*                    xx_op = wr_op                                                 */
+/*                    xx_mch = wr_mch                                               */
+/*                    xx_start =wr_start                                            */
+/*                    xx_short = yes.                                               */
+/* **************************************************/                              */
+/* /*6.25*/                                                                         */
+/*             create usrw_wkfl.                                                    */
+/*             assign usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"                       */
+/*                    usrw_key2 = string(today) + string(time) + string(j)          */
+/*                    usrw_key3 = wo_site                                           */
+/*                    usrw_key4 = wr_wkctr                                          */
+/*                    usrw_key5 = string(nbr,"x(10)") when (not delete_pklst)       */
+/*                    usrw_key6 = short-part                                        */
+/*                    usrw_decfld[1] = short-qty                                    */
+/*                    usrw_charfld[1] = pt_um when (available pt_mstr)              */
+/*                    usrw_charfld[2] = short-assy                                  */
+/*                    usrw_charfld[3] = wr_mch                                      */
+/*                    usrw_intfld[1] = wr_op                                        */
+/*                    usrw_datefld[1] = wo_due_date                                 */
+/*                    usrw_datefld[2] = wr_start                                    */
+/*                    usrw_charfld[10] = "NUMBER".                                  */
+/*             find first tmp_file0 where t0_date = wo_due_date and                 */
+/*                                        t0_site = wo_site and                     */
+/*                                        t0_line = wr_wkctr and                    */
+/*                                        t0_part  = short-assy no-error.           */
+/*             if available tmp_file0 then do:                                      */
+/*               assign usrw_intfld[2] = t0_start.                                  */
+/*             end.                                                                 */
+/*             assign j = j + 1.                                                    */
+/*             if first-of(short-part) then do:                                     */
+/*                down 1.                                                           */
+/*                if available pt_mstr and pt_desc2 <> "" then                      */
+/*                   display                                                        */
+/*                      pt_desc2 @ pt_desc1                                         */
+/*                   with frame short  /*GUI*/ .                                    */
+/*             end. /* FIRST-OF(short-part) */                                      */
+/*                                                                                  */
+/*             if last-of(short-part) then                                          */
+/*                down 1.                                                           */
+/*                                                                                  */
+/*             delete shortages.                                                    */
+/*          end.                                                                    */
+/*          hide frame shortage.                                                    */
+/*          view frame b.                                                           */
+/*          if not last (wr_wkctr) then page.                                       */
+/*       end.                                                                       */
+/*    end.                                                                          */
+/*                                                                                  */
+/* end.                                                                             */
+*****************************************************************************/
 /* 资料写入xxwa_det. */
-/* SS lambert 20120311 begin */
-       for each xxwd_det exclusive-lock where xxwd_date >= issue :
-           if xxwd_type = "P" then  do:
-             create tt1pwddet.
-             assign
-               tt1pwd_ladnbr    = xxwd_ladnbr
-               tt1pwd_nbr       = xxwd_nbr
-               tt1pwd_part      = xxwd_part
-               tt1pwd_site      = xxwd_site
-               tt1pwd_line      = xxwd_line
-               tt1pwd_date      = xxwd_date
-               tt1pwd_time      = xxwd_time
-               tt1pwd_loc       = xxwd_loc
-               tt1pwd_sn        = xxwd_sn
-               tt1pwd_lot       = xxwd_lot
-               tt1pwd_ref       = xxwd_ref
-               tt1pwd_qty_plan  = xxwd_qty_plan
-               tt1pwd_ok        = yes
-             .
-           end.
-           if xxwd_type = "S" then  do:
-             create tt1swddet.
-             assign
-               tt1swd_ladnbr    = xxwd_ladnbr
-               tt1swd_nbr       = xxwd_nbr
-               tt1swd_part      = xxwd_part
-               tt1swd_site      = xxwd_site
-               tt1swd_line      = xxwd_line
-               tt1swd_date      = xxwd_date
-               tt1swd_time      = xxwd_time
-               tt1swd_loc       = xxwd_loc
-               tt1swd_sn        = xxwd_sn
-               tt1swd_lot       = xxwd_lot
-               tt1swd_ref       = xxwd_ref
-               tt1swd_qty_plan  = xxwd_qty_plan
-               tt1swd_ok        = yes
-             .
-           end.
-       end.
-/* SS lambert 20120311 end */
+/* SS lambert 20120311 begin **************************************************
+/*        for each xxwd_det exclusive-lock where xxwd_date >= issue :  */
+/*            if xxwd_type = "P" then do:                              */
+/*              create tt1pwddet.                                      */
+/*              assign                                                 */
+/*                tt1pwd_ladnbr    = xxwd_ladnbr                       */
+/*                tt1pwd_nbr       = xxwd_nbr                          */
+/*                tt1pwd_part      = xxwd_part                         */
+/*                tt1pwd_site      = xxwd_site                         */
+/*                tt1pwd_line      = xxwd_line                         */
+/*                tt1pwd_date      = xxwd_date                         */
+/*                tt1pwd_time      = xxwd_time                         */
+/*                tt1pwd_loc       = xxwd_loc                          */
+/*                tt1pwd_sn        = xxwd_sn                           */
+/*                tt1pwd_lot       = xxwd_lot                          */
+/*                tt1pwd_ref       = xxwd_ref                          */
+/*                tt1pwd_qty_plan  = xxwd_qty_plan                     */
+/*                tt1pwd_ok        = yes                               */
+/*              .                                                      */
+/*            end.                                                     */
+/*            if xxwd_type = "S" then  do:                             */
+/*              create tt1swddet.                                      */
+/*              assign                                                 */
+/*                tt1swd_ladnbr    = xxwd_ladnbr                       */
+/*                tt1swd_nbr       = xxwd_nbr                          */
+/*                tt1swd_part      = xxwd_part                         */
+/*                tt1swd_site      = xxwd_site                         */
+/*                tt1swd_line      = xxwd_line                         */
+/*                tt1swd_date      = xxwd_date                         */
+/*                tt1swd_time      = xxwd_time                         */
+/*                tt1swd_loc       = xxwd_loc                          */
+/*                tt1swd_sn        = xxwd_sn                           */
+/*                tt1swd_lot       = xxwd_lot                          */
+/*                tt1swd_ref       = xxwd_ref                          */
+/*                tt1swd_qty_plan  = xxwd_qty_plan                     */
+/*                tt1swd_ok        = yes                               */
+/*              .                                                      */
+/*            end.                                                     */
+/*        end.                                                         */
+**************************************************** SS lambert 20120311 end */
 
+/*****************************************************************************
  for each xxwa_det exclusive-lock where
           xxwa__dte01 >= issue and xxwa__dte01 <= issue1 and
           xxwa_site >= site and xxwa_site <= site1 and
@@ -698,7 +741,7 @@ end.
      */
      delete xxwa_det.   /*明细表*/
  end.
-
+*****************************************************************************/
 for each tmp_file0 no-lock , each xx_pklst no-lock
     where xx_due_date = t0_date
       and xx_line = t0_line
@@ -733,28 +776,28 @@ for each tmp_file0 no-lock , each xx_pklst no-lock
                 xxwa__dec01 = xx_qty_need
                 xxwa_recid = recid(xxwa_det).
       end.
- /*   {xxrepkdis2.i}   */
- /*
-    display t0_date t0_site t0_line t0_part
-            t0_wktime
-            t0_tttime
-            string(t0_start,"hh:mm:ss") @ t0_start
-            string(t0_end,"hh:mm:ss") @ t0_end
-            t0_qtya
-            t0_qty
-            xx_comp
-            xx_qty_req
-            xx_nbr
-            xx_op
-            xx_start
-            t0_tttime / t0_wktime * xx_qty_req @ t0_time
-            t0_qty / t0_qtya * xx_qty_req @ xx_start
-            with width 300 .
- */
+/*  /*   {xxrepkdis2.i}   */                                */
+/*  /*                                                      */
+/*     display t0_date t0_site t0_line t0_part              */
+/*             t0_wktime                                    */
+/*             t0_tttime                                    */
+/*             string(t0_start,"hh:mm:ss") @ t0_start       */
+/*             string(t0_end,"hh:mm:ss") @ t0_end           */
+/*             t0_qtya                                      */
+/*             t0_qty                                       */
+/*             xx_comp                                      */
+/*             xx_qty_req                                   */
+/*             xx_nbr                                       */
+/*             xx_op                                        */
+/*             xx_start                                     */
+/*             t0_tttime / t0_wktime * xx_qty_req @ t0_time */
+/*             t0_qty / t0_qtya * xx_qty_req @ xx_start     */
+/*             with width 300 .                             */
+/*  */                                                      */
 end.
 
   for each xxwa_det exclusive-lock where xxwa_rtime >= 0 and xxwa_rtime < 32399:
-      assign xxwa_date = xxwa__dte01 + 1.
+      assign xxwa_date = xxwa__dte01 + 1 no-error.
   end.
 
  /*计算取料,发料时间区间*/
@@ -831,7 +874,7 @@ end.
                xxwa_sstime = xxwa_sstime - v_lead_minus
                xxwa_setime = xxwa_setime - v_lead_minus.
   end.
-  {xxrepkdis2.i}
+/*  {xxrepkdis2.i} */
   /* 按最小包装量计算需求到 xxwa_ord_mult
 /*   for each xxwa_det exclusive-lock:                                               */
 /*     assign xxwa_ord_mult = xxwa_qty_pln.                                          */
@@ -1026,6 +1069,25 @@ else do:  /*不考虑车间库存*/
      end.
    end.
 end.
+
+/*未发料的物料不能在当做需求了*/
+/*731*/ for each xxwd_det no-lock where xxwd_type = "S" and xxwd_stat = "":
+/*731*/ 		assign qtyneed = max(xxwd_qty_plan - xxwd_qty_iss,0).
+/*731*/ 		if qtyneed > 0 then do:
+/*731*/ 		   for each tsupp exclusive-lock where tsu_part = xxwd_part and
+/*731*/ 		   		 tsu_loc = xxwd_loc and tsu_lot = xxwd_lot break by tsu_qty:
+/*731*/ 		   		 if qtyneed >= tsu_qty then do:
+/*731*/ 		   		 	  assign qtyneed = qtyneed - tsu_qty.
+/*731*/ 		   		 	  delete tsupp.
+/*731*/ 		   		 end.
+/*731*/ 		   		 else do:
+/*731*/ 		   		 		 assign tsu_qty = tsu_qty - qtyneed.
+/*731*/ 		   		 		 assign qtyneed = 0.
+/*731*/ 		   		 end.
+/*731*/ 		   		 if qtyneed <= 0 then leave.
+/*731*/   	   end.
+/*731*/     end.
+/*731*/ end.
 
 thmsg = "" .
 {gprun.i ""xxrepkupall.p""}

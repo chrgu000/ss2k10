@@ -93,7 +93,8 @@
       dt1
       wkctr
       wkctr1
-/*GO59*   with frame a. */
+/*GO59*/   with frame a.
+/******************************************************************************
 /*GO59*/ with frame a editing:
 /*GO59*/    if frame-field = "nbr" and global_recid <> ? then do:
 /*GO59*/       find lad_det where recid(lad_det) =
@@ -114,6 +115,7 @@
 /*GO59*/    readkey.
 /*GO59*/    apply lastkey.
 /*GO59*/ end.
+******************************************************************************/
 
 /*G0B8*/ bcdparm = "".
             {mfquoter.i site    }
@@ -156,7 +158,7 @@
             /* SELECT PRINTER */
             {mfselbpr.i "printer" 132}
             {mfphead.i}
-
+/******************************************************************************
             if seq <> 0 then nbr = string(nbr,"x(10)") + string(seq,"999").
             nbr1 = string(nbr1,"x(10)") + string(seq1,"999").
 
@@ -261,35 +263,41 @@
                delete lad_det.
 
             end.
-       for each xxwa_det exclusive-lock where
-                xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
-                xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
-                xxwa_part >= comp and (xxwa_part <= comp1 or comp1 = "") and
-                xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
-                xxwa_date >= dte and xxwa_date <= dt1:
-          delete xxwa_det.
-       end.
-       for each xxwd_det exclusive-lock where 
-                xxwd_nbr >= nbr and (xxwd_nbr <= nbr1 or nbr1 = "") and
-                xxwd_site >= site and (xxwd_site <= site1 or site1 = ?) and
-                xxwd_line >= wkctr and (xxwd_line <= wkctr1 or wkctr1 = "") and
-                xxwd_date >= dte and xxwd_date <= dt1:
-            delete xxwd_det.
-       end.
-       
+******************************************************************************/
+
+for each xxwa_det exclusive-lock where
+         xxwa_site >= site and (xxwa_site <= site1 or site1 = ?) and
+         xxwa_line >= wkctr and (xxwa_line <= wkctr1 or wkctr1 = "") and
+         xxwa_part >= comp and (xxwa_part <= comp1 or comp1 = "") and
+         xxwa_nbr >= nbr and (xxwa_nbr <= nbr1 or nbr1 = "") and
+         xxwa_date >= dte and xxwa_date <= dt1:
+   delete xxwa_det.
+end.
+for each xxwd_det exclusive-lock where
+         xxwd_nbr >= nbr and (xxwd_nbr <= nbr1 or nbr1 = "") and
+         xxwd_site >= site and (xxwd_site <= site1 or site1 = ?) and
+         xxwd_line >= wkctr and (xxwd_line <= wkctr1 or wkctr1 = "") and
+         xxwd_date >= dte and xxwd_date <= dt1 break by xxwd_type
+         by xxwd_line by xxwd_date by xxwd_time with fram x width 300:
+     display xxwd_type xxwd_nbr xxwd_site xxwd_line xxwd_date 
+     			   string(xxwd_time,"hh:mm:ss") @ xxwd_time
+     			   xxwd_part xxwd_qty_plan.
+     delete xxwd_det.
+end.
+setFrameLabels(frame x:handle).
 for each usrw_wkfl exclusive-lock where usrw_key1 = "xxrepkup0.p":
 delete usrw_wkfl.
 end.
 
 /*删除缺料明细资料*/
 for each usrw_wkfl exclusive-lock where usrw_key1 = "XXMRPPORP0.P-SHORTAGELIST"
-		 and usrw_key4 >= wkctr and usrw_key4 <= wkctr1
-		 and usrw_datefld[1] >= dte and usrw_datefld[1] <= dt1:
-		 delete usrw_wkfl.
+     and usrw_key4 >= wkctr and usrw_key4 <= wkctr1
+     and usrw_datefld[1] >= dte and usrw_datefld[1] <= dt1:
+     delete usrw_wkfl.
 end.
 
-       
-/*       
+
+/*
        for each qad_wkfl where qad_key1 = "xxrepkup0.p"
            and qad_charfld[1] >= site and qad_charfld[1] <= site1
            and qad_charfld[2] >= wkctr and qad_charfld[2] <= wkctr1:
