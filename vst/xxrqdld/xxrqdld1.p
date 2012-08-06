@@ -7,10 +7,10 @@
 {mfdeclre.i}
 {xxrqdld.i}
 define variable vfile as character.
-
-assign vfile = "xxrqdld.p." + string(today,"99999999") + '.' + string(time).
-
+define variable oldglobaluserid as character.
+assign oldglobaluserid = global_userid.
 for each xxrqd no-lock where xxrqd_chk = "".
+assign vfile = "xxrqdld.p." + xxrqd_nbr + "-" + string(xxrqd_line).
     output to value(vfile + ".bpi").
     put unformat '"' xxrqd_nbr '"' skip.
     put unformat "-" skip.
@@ -24,11 +24,11 @@ for each xxrqd no-lock where xxrqd_chk = "".
     put unformat "-" skip.
     put unformat "-" skip.
     put unformat "-" skip.
-    /* put unformat "y" skip.   msg 4389*/
+/*    put unformat "y" skip.    msg 4389*/
     put unformat xxrqd_due_date ' - - - - - - - - "' xxrqd_stat '" N' skip.
     put unformat "." skip.
     put unformat "." skip.
-    put unformat "y" skip.
+    put unformat "n" skip.
     output close.
     if cloadfile then do:
     	 assign global_userid = xxrqd_rqby.
@@ -46,7 +46,7 @@ for each xxrqd no-lock where xxrqd_chk = "".
        batchrun = no.
 		 end.
 end.
-
+assign global_userid = oldglobaluserid.
 if cloadfile then do:		 
    for each xxrqd exclusive-lock where xxrqd_chk = "":
        find first rqd_det no-lock where rqd_nbr = xxrqd_nbr 

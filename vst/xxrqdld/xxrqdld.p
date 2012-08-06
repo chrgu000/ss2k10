@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120706.1"}
+{mfdtitle.i "120806.1"}
 {xxrqdld.i "new"}
 {gpcdget.i "UT"}
 define variable oldId like global_userid.
@@ -98,7 +98,7 @@ repeat:
      for each xxrqd exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxrqd except xxrqd_rqby.
+         display xxrqd .
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}

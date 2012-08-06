@@ -4,7 +4,7 @@
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
 /* REVISION END                                                              */
 
-/* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+define shared variable global_user_lang_dir like lng_mstr.lng_dir.       
 {xxrqdld.i}
 define variable txt as character.
 define variable vdte as character.
@@ -56,10 +56,16 @@ for each xxrqd exclusive-lock:
 end.
 
 for each xxrqd exclusive-lock:
-   find first rqd_det no-lock where rqd_nbr = xxrqd_nbr and rqd_line = xxrqd_line no-error.
+   find first rqd_det exclusive-lock where rqd_nbr = xxrqd_nbr 
+   				and rqd_line = xxrqd_line no-error.
    if available rqd_det then do:
         if rqd_status = "C" then do:
            assign xxrqd_chk = getMsg(3325).
+        end.
+        else do:
+        		 assign rqd_status = "C".
+        		 {gprun.i ""rqmrw.p""
+                "(input false, input rqd_site, input rqd_nbr, input rqd_line)"}
         end.
    end.
    else do:
