@@ -6,16 +6,19 @@
 {mfdeclre.i}
 {xxbmld.i}
 define variable vfile as character.
-assign vfile = "xxbmld.p." + string(today,"99999999") + '.' + string(time).
-
-output to value(vfile + ".bpi").
-
+define variable vi as integer.
+assign vi = 1.
+for each tmpbomn exclusive-lock:
+		assign tbmn_sn = vi.
+		assign vi = vi + 1.
+end.
 for each tmpbomn no-lock :
+assign vfile = "xxbmld.p." + string(tbmn_sn,"9999999999").
+output to value(vfile + ".bpi").
     put unformat '"' tbmn_par '"' skip.
     put unformat '"' tbmn_comp '" "" ' tbmn_start skip.
     put unformat tbmn_qty_per ' - - ' tbmn_end ' - ' tbmn_scrp ' - - - - - - N' skip.
     put "." skip.
-end.
 output close.
 if cloadfile then do:
        batchrun = yes.
@@ -30,19 +33,22 @@ if cloadfile then do:
        output close.
        input close.
        batchrun = no.
-       for each tmpbomn exclusive-lock:
-       		 find first ps_mstr no-lock where ps_par = tbmn_par 
-       		 				and ps_comp = tbmn_comp and ps_ref = "" 
-       		 				and ps_start = tbmn_start and ps_end = tbmn_end no-error.
-       		 if available ps_mstr then do:
-       		 		assign tbmn_chk = "OK".
-       		 end.
-       		 else do:
-       		 		assign tbmn_chk = "CIM_LOAD Fail".
-       		 end.
-       end.
-end.  /*if cloadfile then do:*/
-if cloadfile then do:
-   os-delete value(vfile + ".bpi").
-   os-delete value(vfile + ".bpo").
+       os-delete value(vfile + ".bpi").
+       os-delete value(vfile + ".bpo").
 end.
+end.
+
+if cloadfile then do:
+   for each tmpbomn exclusive-lock:
+       find first ps_mstr no-lock where ps_par = tbmn_par
+              and ps_comp = tbmn_comp and ps_ref = ""
+              and ps_start = tbmn_start and ps_end = tbmn_end no-error.
+       if available ps_mstr then do:
+          assign tbmn_chk = "OK".
+       end.
+       else do:
+          assign tbmn_chk = "CIM_LOAD Fail".
+       end.
+   end.
+end.  /*if cloadfile then do:*/
+
