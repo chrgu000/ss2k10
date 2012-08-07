@@ -1196,7 +1196,7 @@ for each xxwd_det exclusive-lock break by xxwd_date by xxwd_type by xxwd_line
           end.
           else do:
               assign startTime = xxwd_time - 9000
-                    endTime = xxwd_time - 7200.
+                     endTime = xxwd_time - 7200.
           end.
      end.
 
