@@ -1,12 +1,12 @@
 /* xxbmrld.p - BOM replease LOAD                                             */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
+/* REVISION: 120807.1 LAST MODIFIED: 08/07/12 BY:                            */
 /* REVISION END                                                              */
 
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120807.0"}
+{mfdtitle.i "120807.1"}
 {xxbmld.i "new"}
 {gpcdget.i "UT"}
 
@@ -92,7 +92,10 @@ repeat:
      else do:
           {gprun.i ""xxbmld1.p""}
      end.
-     for each tmpbomn exclusive-lock with width 320 frame c:
+     for each tmpbom no-lock:
+            display tbm_par tbm_old tbm_new.
+     end.
+     for each tmpbomn no-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
          display tmpbomn.

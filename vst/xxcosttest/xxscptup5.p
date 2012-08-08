@@ -29,37 +29,37 @@
 &SCOPED-DEFINE scptup_p_2 "Item Number"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_3 "侣PO基" 
+&SCOPED-DEFINE scptup_p_3 "舊PO價" 
 /* MaxLen: Comment: */ 
 
-&SCOPED-DEFINE scptup_p_4 "穝PO基"
+&SCOPED-DEFINE scptup_p_4 "新PO價"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_5 "POら戳"
+&SCOPED-DEFINE scptup_p_5 "PO日期"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_6 "蹦潦虫"
+&SCOPED-DEFINE scptup_p_6 "採購單位"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_7 "虫"
+&SCOPED-DEFINE scptup_p_7 "倉存單位"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_8 "虫锣传瞯"
+&SCOPED-DEFINE scptup_p_8 "單位轉換率"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_11 "腹"
+&SCOPED-DEFINE scptup_p_11 "料號"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_12 "弧"
+&SCOPED-DEFINE scptup_p_12 "說明"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_13 "蹦潦虫"
+&SCOPED-DEFINE scptup_p_13 "採購單"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_14 "Θセ璶"
+&SCOPED-DEFINE scptup_p_14 "成本要素"
 /* MaxLen: Comment: */
 
-&SCOPED-DEFINE scptup_p_15 "蹦潦计秖"
+&SCOPED-DEFINE scptup_p_15 "採購數量"
 /* MaxLen: Comment: */
 
 /* ********** End Translatable Strings Definitions ********* */

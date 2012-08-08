@@ -1,7 +1,7 @@
 /* bmpsmt.p - Product Structure Maintenance                                   */
 /* Copyright 1986-2001 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.8.1.8.2.1 $                                                       */
+/* $Revision: 1.8.1.8.2.1 $                                                   */
 /*                                                                            */
 /* Interactive maintenance program to create, update, delete product          */
 /* structures, using Progress native user interface.                          */
@@ -85,8 +85,7 @@
 /*                     - control QUOT part# by quot user list              */
 
 /* DISPLAY TITLE */
-/*ADM1 {mfdtitle.i "b+ "} */
-{mfdtitle.i "b+d1b"}
+{mfdtitle.i "A0722"}
 
 {pxmaint.i}
 
@@ -254,6 +253,7 @@ if needtochkps = Yes then do:
 end.
 /* ADM1a End check for pt_status */
 /**ADM1b*/ 
+	 if not batchrun then do:
           if isquotuser then do:
 	     if available pt_mstr and substr(pt_part,1,4) <> "QUOT" then do:
                if global_user_lang = "tw" then
@@ -274,6 +274,7 @@ end.
 	       undo,retry.
 	    end.
           end.
+        end. /*if not batchrun then do:*/
 /**ADM1b*/
 
    for first bom_mstr

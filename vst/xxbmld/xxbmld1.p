@@ -9,8 +9,8 @@ define variable vfile as character.
 define variable vi as integer.
 assign vi = 1.
 for each tmpbomn exclusive-lock:
-		assign tbmn_sn = vi.
-		assign vi = vi + 1.
+    assign tbmn_sn = vi.
+    assign vi = vi + 1.
 end.
 for each tmpbomn no-lock :
 assign vfile = "xxbmld.p." + string(tbmn_sn,"9999999999").
@@ -33,8 +33,13 @@ if cloadfile then do:
        output close.
        input close.
        batchrun = no.
-       os-delete value(vfile + ".bpi").
-       os-delete value(vfile + ".bpo").
+       find first code_mstr no-lock where
+              code_fldname = "Keep_Temp_WorkFile" and
+              code_value = "YES|OTHER" no-error.
+        if code_cmmt <> "Yes" then do:
+          os-delete value(vfile + ".bpi").
+          os-delete value(vfile + ".bpo").
+       end.
 end.
 end.
 

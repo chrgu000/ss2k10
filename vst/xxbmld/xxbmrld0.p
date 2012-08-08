@@ -1,7 +1,7 @@
-/* xxbmld.p - BOM LOAD                                                       */
+/* xxbmrld0.p -BOM replease LOAD                                             */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
+/* REVISION: 120807.1 LAST MODIFIED: 08/07/12 BY:                            */
 /* REVISION END                                                              */
 
 {mfdeclre.i}
@@ -67,11 +67,11 @@ for each tmpbom no-lock where tbm_par <> "":
     for each ps_mstr no-lock where ps_par = tbm_par
          and ps_comp = tbm_old
          and ps_ref = ""
-         and (ps_start <= today or ps_start = ?)
-         and (ps_end >= today or ps_end = ?)
+         and (ps_start <= today - 1 or ps_start = ?)
+         and (ps_end >= today - 1 or ps_end = ?)
           break by ps_comp by ps_end by ps_start:
           if last-of(ps_comp) then do:
-             if ps_end > today or ps_end = ? then do:
+             if ps_end >= today - 1 or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = ps_comp no-error.
                 if not available tmpbomn then do:
@@ -82,7 +82,7 @@ for each tmpbom no-lock where tbm_par <> "":
                 assign tbmn_start = ps_start
                        tbmn_qty_per = ps_qty_per
                        tbmn_scrp = ps_scrp
-                       tbmn_end = today.
+                       tbmn_end = today - 1.
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = tbm_new no-error.
                  if not available tmpbomn then do:
@@ -90,7 +90,7 @@ for each tmpbom no-lock where tbm_par <> "":
                    assign tbmn_par = ps_par
                           tbmn_comp = tbm_new.
                  end.
-                 assign tbmn_start = today + 1
+                 assign tbmn_start = today
                         tbmn_qty_per = ps_qty_per
                         tbmn_scrp = ps_scrp.
              end.
@@ -102,11 +102,11 @@ for each tmpbom no-lock where tbm_par = "":
     for each ps_mstr no-lock use-index ps_comp
        where ps_comp = tbm_old and ps_par <> ""
          and ps_ref = ""
-         and (ps_start <= today or ps_start = ?)
-         and (ps_end >= today or ps_end = ?)
+         and (ps_start <= today - 1 or ps_start = ?)
+         and (ps_end >= today - 1 or ps_end = ?)
           break by ps_comp by ps_par by ps_end by ps_start:
           if last-of(ps_par) then do:
-             if ps_end > today or ps_end = ? then do:
+             if ps_end >= today - 1 or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = ps_comp no-error.
                 if not available tmpbomn then do:
@@ -117,7 +117,7 @@ for each tmpbom no-lock where tbm_par = "":
                 assign tbmn_start = ps_start
                        tbmn_qty_per = ps_qty_per
                        tbmn_scrp = ps_scrp
-                       tbmn_end = today.
+                       tbmn_end = today - 1.
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = tbm_new no-error.
                  if not available tmpbomn then do:
@@ -125,7 +125,7 @@ for each tmpbom no-lock where tbm_par = "":
                    assign tbmn_par = ps_par
                           tbmn_comp = tbm_new.
                  end.
-                 assign tbmn_start = today + 1
+                 assign tbmn_start = today
                         tbmn_qty_per = ps_qty_per
                         tbmn_scrp = ps_scrp.
              end.
