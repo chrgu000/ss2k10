@@ -1,5 +1,0 @@
--db  /mfgeb2/eb2/db/plt/biometplt  -ld qaddb -trig triggers
--db  /mfgeb2/eb2/db/plt/plthlp     -ld qadhelp -trig triggers
--db  /mfgeb2/eb2/db/plt/pltadm     -ld qadadm -trig triggers
--db  /mfgeb2/eb2/db/xxcustplt      -ld qadadd -trig triggers
--db  /mfgeb2/eb2/sfc_db/xxsfctest  -ld sfctest 

@@ -1,9 +1,0 @@
-for each xpk_mstr where xpk_nbr = "00000050" :
- xpk_stat = "" .
-
-end.
-
-for each xpkd_det where xpkd_nbr = "00000050" no-lock:
-disp xpkd_det.
-end.
-

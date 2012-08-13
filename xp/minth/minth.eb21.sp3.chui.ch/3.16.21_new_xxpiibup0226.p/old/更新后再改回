@@ -1,8 +1,0 @@
-for each tag_mstr where tag_domain = "151" and tag_nbr >= 90800001 ,
-each ld_det where ld_domain = "151" and ld_part = tag_part and ld_site = tag_site
-and ld_loc = tag_site and ld_lot = tag_serial and ld_ref = tag_ref :
-display tag_nbr ld_loc ld_site ld_part ld_qty_oh.
-tag_pasted = no.
- ld_cnt_date = ?
-               ld_qty_frz  = tag__qad01.
-	       end.

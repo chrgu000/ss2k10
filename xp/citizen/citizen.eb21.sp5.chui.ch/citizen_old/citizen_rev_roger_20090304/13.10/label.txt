@@ -1,8 +1,0 @@
-ÒªÎ¬»¤5¸ölabel
-
-
-define var code  like ps_par label "ps_par" .
-define var code1 like ps_par label "ps_par" .
-define variable part     like pt_part  label "Existing Item".
-define variable part1    like pt_part  label "New Item".
-define variable effdate  like ps_start label "Effective".

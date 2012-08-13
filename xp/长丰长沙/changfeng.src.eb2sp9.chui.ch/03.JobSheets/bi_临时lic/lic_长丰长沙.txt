@@ -1,9 +1,0 @@
-Company:			CFSFCS
-MachineCode:			7AD-70D2D-93B1CB
-OrderQuantity(Developer):			1
-OrderQuantity(Runtime):			9
-E-Mail:			lwy@cfsfcs.com
-Address:			
-ZipCode:			
-Contact:			
-Phone:			

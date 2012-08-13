@@ -1,9 +1,0 @@
-@@batchload gplblmt.p
-ch
-so__dte01
-"作业日期" "作业日"
-@@end
-@@batchload gplbldmt.p
-so__dte01
-so__dte01
-@@end

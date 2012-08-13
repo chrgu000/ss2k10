@@ -1,5 +1,0 @@
-BEGIN: 13:52:30
-"so_nbr";"so_cust";"name";"so_ship";"so_ord_date";"so_stat";"so_slspsn[1]";"so_slspsn[2]";"so_slspsn[3]";"so_slspsn[4]";"so_curr";"v_disp_line1";"v_disp_line2";"so_rmks";"sod_line";"sod_part";"sod_um";"sod_qty_ord";"sod_qty_ship";"qty_open";"sod_confirm";"prt_curr";"base_price";"ext_price";"ext_gr_margin";"sod_due_date";"sod_type";"so_ex_rate";"so_ex_rate2";"so_exru_seq"
-"SO33361";"00010000";"University of Cal - Ship To";"00010000";08/06/07;"";"";"";"";"";"cad";"cad 1.2 = USD 1.0";"";"";1;"000-0117-38";"EA";10;0;10;yes;"USD";300;3000;2000;08/07/07;"";1.2;1;0
-END: 13:52:30
-

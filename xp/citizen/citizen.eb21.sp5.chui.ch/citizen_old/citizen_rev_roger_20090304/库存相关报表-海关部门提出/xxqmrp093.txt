@@ -1,4 +1,0 @@
-1100;1p1;Motor 24V 3amp 2hp;1p1;Motor 24V 3amp 2hp;0;0;0;0
-1200;1p2;Connector 25pin white;1p2;Connector 25pin white;0;0;0;0
-1300;1p3;Motor Mtg Plate 8 way;1p3;Motor Mtg Plate 8 way;0;0;0;0
-1400;1sa1;Motor Mtg Plate Asm;1sa1;Motor Mtg Plate Asm;0;0;0;0

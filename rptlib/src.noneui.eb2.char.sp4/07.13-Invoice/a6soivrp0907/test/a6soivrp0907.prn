@@ -1,6 +1,0 @@
-BEGIN: 13:06:41
-"ih_inv_nbr";"ih_rev";"ih_cust";"name";"ih_po";"ih_ship";"ih_ship_date";"inv_date";"ih_slspsn[1]";"ih_slspsn[2]";"ih_slspsn[3]";"ih_slspsn[4]";"ih_curr";"base_curr";"ih_ex_rate";"ih_ex_rate2";"ih_exru_seq";"v_disp_line1";"v_disp_line2";"ih_rmks";"idh_nbr";"idh_line";"idh_part";"idh_um";"idh_qty_ord";"idh_qty_inv";"idh_bo_chg";"disp_curr";"base_net_price";"base_price";"base_margin";"idh_due_date";"idh_type";"ih_channel";"ih_project";"idh_site";"idh_prodline";"idh_taxc";"idh_taxable";"idh_tax_in";"idh_acct";"idh_sub";"idh_cc";"idh_project";"tr_effdate";"ext_price";"ext_margin";"ext_tax";"base_tax"
-"IN83641";0;"AHNSZ177";"…Ó€⁄ –≤©ø®…˙ŒÔºº ı”–œﬁπ´Àæ";"";"AHNSZ177";03/07/07;03/07/07;"ASZ2";"";"";"";"CNY";"CNY";1;1;0;"";"";"";"z7030001";1;"2800A-03000-06";"EA";-1;-1;0;"";20000;-20000;-11328.14;03/07/07;"M";"02";"SOI04";"MIN";"3210";"1";yes;yes;"51010200";"ZYYW0001";"1604";"SOI04";03/07/07;-20000;-11328.14;-2905.98;-2905.98
-"IN83641";0;"AHNSZ177";"…Ó€⁄ –≤©ø®…˙ŒÔºº ı”–œﬁπ´Àæ";"";"AHNSZ177";03/07/07;03/07/07;"ASZ2";"";"";"";"CNY";"CNY";1;1;0;"";"";"";"z7030001";2;"S2800-2800";"EA";-1;-1;0;"";18000;-18000;-18000;03/07/07;"M";"02";"SOI04";"MIN";"C210";"2";yes;yes;"51010200";"ZYYW0002";"1604";"SOI04";03/07/07;-18000;-18000;-2615.38;-2615.38
-END: 13:06:42
-

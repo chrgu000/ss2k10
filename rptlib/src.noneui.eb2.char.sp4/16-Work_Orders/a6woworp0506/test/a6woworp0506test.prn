@@ -1,6 +1,0 @@
-BEGIN: 01:14:11
-"wo_nbr";"wo_lot";"wo_batch";"wo_qty_ord";"wo_ord_date";"glx_mthd";"wo_part";"desc1";"wo_qty_comp";"wo_rel_date";"premsg";"wo_so_job";"wo_qty_rjct";"wo_due_date";"wo_vend";"wo_status";"wo_rmks";"wod_part";"accqty";"expcst";"acrvar";"acccst";"rtevar";"usevar";"wowipx";"wipamt"
-"400016";"402185";"";2;06/09/07;"AVG";"ap1";"avaerage product 1";2;06/09/07;"";"";0;06/09/07;"";"C";"";"am1";2;0;0;3;0;0;3;0
-"400016";"402185";"";2;06/09/07;"AVG";"ap1";"avaerage product 1";2;06/09/07;"";"";0;06/09/07;"";"C";"";"am2";4;0;0;8;0;0;8;0
-END: 01:14:11
-

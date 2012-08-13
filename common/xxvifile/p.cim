@@ -1,8 +1,0 @@
-@@batchload xxbw800.p
-"yes"
-@@end
-@@batchload mgdlfhmt.p
-- "FILE_NAME" "xxvifile.p"
-"xxlu800.p"
-"FILE_NAME" 7 6
-@@end

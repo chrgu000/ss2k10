@@ -1,7 +1,0 @@
-BEGIN: 16:16:51
-"fabk_id";"fa_id";"fa_faloc_id";"fa_facls_id";"fa_entity";"fabd_peramt";"fabd_accamt";"fa_dispamt";"fabd_gainamt";"fa_disp_rsn";"fa_disp_dt"
-"BK01";"GZZC0033";"0217";"GZ";"1000";12174.86;1690.95;0;10483.91;"TK";02/28/06
-"BK01";"GZZC0034";"0217";"GZ";"1000";19596.81;2721.8;0;16875.01;"TK";02/28/06
-"BK01";"GZZC0035";"0217";"GZ";"1000";4844.19;672.8;0;4171.39;"TK";02/28/06
-END: 16:16:51
-

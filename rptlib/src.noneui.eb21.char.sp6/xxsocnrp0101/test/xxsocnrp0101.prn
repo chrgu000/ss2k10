@@ -1,9 +1,0 @@
-BEGIN: 18:06:31
-"地点";"地点名称";"订单";"项";"客户";"客户名称";"发货-至";"发货-至名称";"物料";"物料名称";"采购订单号";"最多过期天数";"库位";"批/序号";"授权";"库存数量";"库存单位";"已发货量";"发货人";"发货日期";"参考";"在途中";"最多过期日期";"原币金额";"原币";"本币金额";"本币";"curr_error1";"curr_error2"
-"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出";"标准输出"
-"cncix_site";"site_description";"cncix_so_nbr";"cncix_sod_line";"cncix_cust";"cust_description";"cncix_shipto";"ship_description";"cncix_part";"part_description";"cncix_po";"max_aging_days";"cncix_current_loc";"cncix_lotser";"cncix_auth";"cncix_qty_stock";"cncix_stock_um";"cncix_qty_ship";"cncix_asn_shipper";"cncix_ship_date";"cncix_ref";"cncix_intransit";"cncix_aged_date";"cncix_ship_value";"cncix_curr";"qoh_base_curr";"gl_base_curr";"curr_error1";"curr_error2"
-"1000";"宁波提爱思(加工区）";"C1004-08";1;"C1004";"TS TECH CO LTD.";"C1004";"TS TECH CO LTD.";"3.05.02.20.00";"";"";0;"1810";"";"";2550;"ST";2550;"SP08121001";08/12/02;"";yes;?;0;"JPY";0;"CNY";"";""
-"1000";"宁波提爱思(加工区）";"C1004-08";1;"C1004";"TS TECH CO LTD.";"C1004";"TS TECH CO LTD.";"3.05.02.20.00";"";"";0;"1810";"";"";1;"ST";1;"SP09031127";09/03/26;"";yes;?;120;"JPY";8.35752;"CNY";"";""
-"1000";"宁波提爱思(加工区）";"C1004-08";1;"C1004";"TS TECH CO LTD.";"C1004";"TS TECH CO LTD.";"3.05.02.20.00";"";"";0;"1810";"";"";2;"ST";2;"SP09031128";09/03/26;"";yes;?;240;"JPY";16.71504;"CNY";"";""
-"1000";"宁波提爱思(加工区）";"C1004-08";56;"C1004";"TS TECH CO LTD.";"C1004";"TS TECH CO LTD.";"3.05.01.20.00";"";"";0;"1810";"";"";1200;"ST";1200;"SP08121001";08/12/02;"";yes;?;0;"JPY";0;"CNY";"";""
-END: 18:06:31

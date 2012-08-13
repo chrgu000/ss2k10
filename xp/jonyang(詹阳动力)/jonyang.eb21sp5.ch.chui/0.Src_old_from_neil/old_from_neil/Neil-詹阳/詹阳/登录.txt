@@ -1,8 +1,0 @@
-8.6 qad user: he-f password: 718he305
-
-eb21sp5 192.100.100.10 linux user: mfg password: qad2009  
-qad user: mfg password : mfgmfg
-
-
-linux user: he-f passwd: 1111111
-erp   user: hefang passwd: 5555555

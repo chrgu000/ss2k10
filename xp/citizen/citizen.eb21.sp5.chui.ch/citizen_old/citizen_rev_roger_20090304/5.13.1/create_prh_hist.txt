@@ -1,8 +1,0 @@
-poporc.p
-poporcm.p
-porcxr.p
-poporcb.p
-poporcb8.p
-poporcb2.p
-poporcb7.p
-poporcb1.p

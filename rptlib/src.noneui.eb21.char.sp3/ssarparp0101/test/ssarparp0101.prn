@@ -1,5 +1,0 @@
-BEGIN: 08:50:33
-"batch";"nbr";"bill";"name";"type";"check";"base_amt";"date";"effdate";"entity";"acct";"sub";"cc";"po"
-"1013";"1011";"001";"PEI Computers Ltd.";"A";"1010";1;04/15/07;04/15/07;"1000";"1200";"";"";""
-"1021";"1019";"001";"PEI Computers Ltd.";"A";"1015";50;05/15/07;05/15/07;"1000";"1202";"";"";""
-END: 08:50:33

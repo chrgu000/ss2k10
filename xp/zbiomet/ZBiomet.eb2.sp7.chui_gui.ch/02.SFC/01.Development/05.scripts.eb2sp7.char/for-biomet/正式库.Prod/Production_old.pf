@@ -1,6 +1,0 @@
--db  /mfgeb2/eb2/db/biometprd -ld qaddb -trig triggers
--db  /mfgeb2/eb2/db/biomethlp -ld qadhelp
--db  /mfgeb2/eb2/db/biometadm -ld qadadm -trig triggers
--db  /mfgeb2/eb2/db/xxcustprd -ld qadadd -trig triggers
-
-

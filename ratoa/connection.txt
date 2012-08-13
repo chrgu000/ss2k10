@@ -1,4 +1,0 @@
-mstsc   222.179.153.58   administrator rato1025  
-AIX 192.168.102.4   root ratoyhb  
-/app/scripts/client.ratotest
-mfg /mfgpro              
