@@ -1,0 +1,69 @@
+/* xxrcsotra.p - Release Management Customer Schedules                    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/* REVISION: 9.0   LAST MODIFIED: 06/16/98       BY: *J2D9* Sachin Shah */
+/* REVISION: 9.0   LAST MODIFIED: 10/12/98       BY: *L0BY* Alfred Tan     */
+/*J2D9** ADDED NO-UNDO THROUGHOUT **/
+
+         /* SHIPPER CONFIRM SUBPROGRAM */
+
+/*K005*/ {mfdeclre.i}
+
+         define input parameter abs_recid as recid no-undo.
+
+/*K005*  {mfdeclre.i} */
+
+         define shared workfile work_abs_mstr like abs_mstr.
+         define variable par_shipfrom as character no-undo.
+         define variable par_id as character no-undo.
+
+/*J2D9*/ for first abs_mstr
+/*J2D9*/ fields (abs_id abs_item abs_line abs_loc abs_lotser
+                 abs_order abs_par_id abs_qty abs_ref abs_shipfrom
+                 abs_ship_qty abs_site abs__qad02 abs__qad03 abs__qad04
+                 abs__qad06 abs__qad07 abs__qad08 abs__qad09 abs__qad10)
+/*J2D9*/ where recid(abs_mstr) = abs_recid no-lock: end.
+
+         create work_abs_mstr.
+
+         assign
+            work_abs_mstr.abs_shipfrom = abs_mstr.abs_shipfrom
+            work_abs_mstr.abs_id       = abs_mstr.abs_id
+            work_abs_mstr.abs_par_id   = abs_mstr.abs_par_id
+            work_abs_mstr.abs_item     = abs_mstr.abs_item
+            work_abs_mstr.abs_qty      = abs_mstr.abs_qty
+            work_abs_mstr.abs_ship_qty = abs_mstr.abs_ship_qty
+            work_abs_mstr.abs_order    = abs_mstr.abs_order
+            work_abs_mstr.abs_line     = abs_mstr.abs_line
+            work_abs_mstr.abs_site     = abs_mstr.abs_site
+            work_abs_mstr.abs_loc      = abs_mstr.abs_loc
+            work_abs_mstr.abs_lotser   = abs_mstr.abs_lotser
+            work_abs_mstr.abs_ref      = abs_mstr.abs_ref
+/*H594*/    work_abs_mstr.abs__qad02   = abs_mstr.abs__qad02
+/*H074*/    work_abs_mstr.abs__qad03   = abs_mstr.abs__qad03
+/*K005*/    work_abs_mstr.abs__qad04   = abs_mstr.abs__qad04
+/*H074*/    work_abs_mstr.abs__qad06   = abs_mstr.abs__qad06
+/*H074*/    work_abs_mstr.abs__qad07   = abs_mstr.abs__qad07
+/*H594*/    work_abs_mstr.abs__qad08   = abs_mstr.abs__qad08
+/*H594*/    work_abs_mstr.abs__qad09   = abs_mstr.abs__qad09
+/*K1NF*/    work_abs_mstr.abs__qad10   = abs_mstr.abs__qad10
+            par_shipfrom               = abs_mstr.abs_shipfrom
+            par_id                     = abs_mstr.abs_id.
+
+/*GN84*/ if recid(work_abs_mstr) = -1 then .
+
+         for each abs_mstr
+/*J2D9*/ fields (abs_id abs_item abs_line abs_loc abs_lotser
+                 abs_order abs_par_id abs_qty abs_ref abs_shipfrom
+                 abs_ship_qty abs_site abs__qad02 abs__qad03 abs__qad04
+                 abs__qad06 abs__qad07 abs__qad08 abs__qad09 abs__qad10)
+         where abs_mstr.abs_shipfrom = par_shipfrom
+           and abs_mstr.abs_par_id = par_id no-lock:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            {gprun.i ""xxrcsotra.p"" "(input recid(abs_mstr))"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+

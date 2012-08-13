@@ -1,0 +1,1188 @@
+/* GUI CONVERTED from popomta.p (converter v1.69) Thu Mar 27 09:22:20 1997 */
+/* popomta.p - PURCHASE ORDER MAINTENANCE MULTI LINE ITEMS              */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 1.0     LAST MODIFIED: 04/29/86    BY: PML       */
+/* REVISION: 1.0     LAST MODIFIED: 10/29/86    BY: EMB *39*  */
+/* REVISION: 2.0     LAST MODIFIED: 11/19/86    BY: PML *A3*  */
+/* REVISION: 2.0     LAST MODIFIED: 03/12/87    BY: EMB *A41* */
+/* REVISION: 2.1     LAST MODIFIED: 06/17/87    BY: WUG *A69* */
+/* REVISION: 2.1     LAST MODIFIED: 06/17/87    BY: WUG *A70* */
+/* REVISION: 2.1     LAST MODIFIED: 08/12/87    BY: PML *A83* */
+/* REVISION: 2.1     LAST MODIFIED: 09/09/87    BY: PML *A92* */
+/* REVISION: 2.1     LAST MODIFIED: 09/09/87    BY: WUG *A94* */
+/* REVISION: 2.1     LAST MODIFIED: 10/02/87    BY: PML *A95* */
+/* REVISION: 4.0     LAST MODIFIED: 03/10/88    BY: FLM *A108**/
+/* REVISION: 4.0     LAST MODIFIED: 12/27/87    BY: PML *A119**/
+/* REVISION: 4.0     LAST MODIFIED: 03/14/88    BY: FLM *A184**/
+/* REVISION: 4.0     LAST MODIFIED: 04/18/88    BY: FLM *A189**/
+/* REVISION: 4.0     LAST MODIFIED: 06/15/88    BY: FLM *A268**/
+/* REVISION: 4.0     LAST MODIFIED: 07/22/88    BY: FLM *A346**/
+/* REVISION: 4.0     LAST MODIFIED: 09/06/88    BY: FLM *A419**/
+/* REVISION: 4.0     LAST MODIFIED: 09/08/88    BY: FLM *A425**/
+/* REVISION: 4.0     LAST MODIFIED: 09/20/88    BY: FLM *A445**/
+/* REVISION: 4.0     LAST MODIFIED: 09/26/88    BY: RL  *C0028*/
+/* REVISION: 4.0     LAST MODIFIED: 03/24/89    BY: FLM *A685**/
+/* REVISION: 5.0     LAST MODIFIED: 04/06/89    BY: MLB *B088**/
+/* REVISION: 5.0     LAST MODIFIED: 07/07/89    BY: MLB *B177**/
+/* REVISION: 5.0     LAST MODIFIED: 10/30/89    BY: MLB *B365**/
+/* REVISION: 5.0     LAST MODIFIED: 12/21/89    BY: FTB *B466**/
+/* REVISION: 5.0     LAST MODIFIED: 02/05/90    BY: FTB *Bftb**/
+/* REVISION: 5.0     LAST MODIFIED: 02/27/90    BY: EMB *B591**/
+/* REVISION: 6.0     LAST MODIFIED: 03/21/90    BY: FTB *D011**/
+/* REVISION: 6.0     LAST MODIFIED: 05/15/90    BY: WUG *D002**/
+/* REVISION: 5.0     LAST MODIFIED: 06/11/90    BY: RAM *B706**/
+/* REVISION: 6.0     LAST MODIFIED: 07/06/90    BY: EMB *D040**/
+/* REVISION: 6.0     LAST MODIFIED: 08/14/90    BY: SVG *D058**/
+/* REVISION: 6.0     LAST MODIFIED: 08/31/90    BY: RAM *D030**/
+/* REVISION: 6.0     LAST MODIFIED: 10/22/90    BY: RAM *D124**/
+/* REVISION: 6.0     LAST MODIFIED: 12/20/90    BY: RAM *D274**/
+/* REVISION: 6.0     LAST MODIFIED: 01/02/91    BY: MLB *D238**/
+/* REVISION: 6.0     LAST MODIFIED: 03/08/91    BY: RAM *D410**/
+/* REVISION: 6.0     LAST MODIFIED: 04/08/91    BY: RAM *D502**/
+/* REVISION: 6.0     LAST MODIFIED: 04/10/91    BY: WUG *D512**/
+/* REVISION: 6.0     LAST MODIFIED: 04/11/91    BY: RAM *D518**/
+/* REVISION: 6.0     LAST MODIFIED: 05/07/91    BY: RAM *D621**/
+/* REVISION: 6.0     LAST MODIFIED: 05/09/91    BY: RAM *D634**/
+/* REVISION: 6.0     LAST MODIFIED: 08/15/91    BY: PMA *D829**/
+/* REVISION: 7.0     LAST MODIFIED: 09/10/91    BY: MLV *F006**/
+/* REVISION: 6.0     LAST MODIFIED: 09/24/91    BY: RAM *D872**/
+/* REVISION: 6.0     LAST MODIFIED: 11/11/91    BY: RAM *D921**/
+/* REVISION: 6.0     LAST MODIFIED: 11/15/91    BY: RAM *D952**/
+/* REVISION: 7.0     LAST MODIFIED: 11/19/91    BY: PMA *F003**/
+/* REVISION: 7.0     LAST MODIFIED: 12/09/91    BY: RAM *F033**/
+/* REVISION: 7.0     LAST MODIFIED: 02/03/92    BY: pma *F085**/
+/* REVISION: 7.0     LAST MODIFIED: 03/25/92    BY: MLV *F316**/
+/* REVISION: 7.0     LAST MODIFIED: 05/20/92    BY: MLV *F514**/
+/* REVISION: 7.0     LAST MODIFIED: 07/31/92    BY: afs *F827**/
+/* REVISION: 7.0     LAST MODIFIED: 08/06/92    BY: tjs *G027**/
+/* REVISION: 7.3     LAST MODIFIED: 08/18/92    BY: tjs *G028**/
+/* REVISION: 7.3     LAST MODIFIED: 12/18/92    BY: afs *G465**/
+/* REVISION: 7.3     LAST MODIFIED: 01/08/93    BY: bcm *G417**/
+/* REVISION: 7.3     LAST MODIFIED: 02/17/93    BY: tjs *G684**/
+/* REVISION: 7.3     LAST MODIFIED: 02/23/93    BY: tjs *G728**/
+/* REVISION: 7.3     LAST MODIFIED: 04/09/93    BY: pma *G928**/
+/* REVISION: 7.3     LAST MODIFIED: 04/29/93    BY: afs *G972**/
+/* REVISION: 7.4     LAST MODIFIED: 06/09/93    BY: jjs *H006**/
+/* REVISION: 7.4     LAST MODIFIED: 07/02/93    BY: dpm *H017**/
+/* REVISION: 7.4     LAST MODIFIED: 07/02/93    BY: dpm *H018**/
+/* REVISION: 7.4     LAST MODIFIED: 07/21/93    BY: dpm *H034**/
+/* REVISION: 7.4     LAST MODIFIED: 07/30/93    BY: cdt *H047**/
+/* REVISION: 7.4     LAST MODIFIED: 09/07/93    BY: tjs *H082**/
+/* REVISION: 7.4     LAST MODIFIED: 09/29/93    BY: cdt *H086**/
+/* REVISION: 7.4     LAST MODIFIED: 10/28/93    BY: dpm *H198**/
+/* REVISION: 7.4     LAST MODIFIED: 10/23/93    BY: cdt *H184**/
+/* REVISION: 7.3     LAST MODIFIED: 11/12/93    BY: cdt *GH13**/
+/* REVISION: 7.4     LAST MODIFIED: 11/14/93    BY: afs *H221**/
+/* REVISION: 7.4     LAST MODIFIED: 02/16/94    BY: cdt *FM21**/
+/* REVISION: 7.4     LAST MODIFIED: 03/10/94    BY: cdt *H294**/
+/* REVISION: 7.4     LAST MODIFIED: 04/13/94    BY: dpm *GJ18**/
+/* REVISION: 7.4     LAST MODIFIED: 05/21/94    BY: qzl *H374**/
+/* REVISION: 7.4     LAST MODIFIED: 06/15/94    BY: qzl *H388**/
+/* REVISION: 7.4     LAST MODIFIED: 06/30/94    BY: afs *GK49**/
+/* REVISION: 7.4     LAST MODIFIED: 07/01/94    BY: afs *FP20**/
+/* REVISION: 7.4     LAST MODIFIED: 07/18/94    BY: bcm *H441**/
+/* REVISION: 7.4     LAST MODIFIED: 09/08/94    BY: rxm *FQ83**/
+/* REVISION: 7.4     LAST MODIFIED: 09/09/94    BY: dpm *FQ93**/
+/* REVISION: 7.4     LAST MODIFIED: 09/10/94    BY: afs *H510**/
+/* REVISION: 7.4     LAST MODIFIED: 09/29/94    BY: bcm *H541**/
+/* REVISION: 7.4     LAST MODIFIED: 11/09/94    BY: srk *GO05**/
+/* REVISION: 8.5     LAST MODIFIED: 11/09/94    BY: mwd *J034**/
+/* REVISION: 8.5     LAST MODIFIED: 12/01/94    BY: taf *J038**/
+/* REVISION: 8.5     LAST MODIFIED: 02/23/95    BY: dpm *J044**/
+/* REVISION: 8.5     LAST MODIFIED: 04/26/95    BY: sxb *J04D**/
+/* REVISION: 7.4     LAST MODIFIED: 12/30/94    BY: rxm *F0C8**/
+/* REVISION: 7.4     LAST MODIFIED: 01/28/95    BY: ljm *G0D7**/
+/* REVISION: 7.4     LAST MODIFIED: 02/09/95    BY: jxz *F0HF**/
+/* REVISION: 7.4     LAST MODIFIED: 03/29/95    BY: rxm *F0PJ**/
+/* REVISION: 7.4     LAST MODIFIED: 08/10/95    BY: jym *G0V1**/
+/* REVISION: 7.4     LAST MODIFIED: 08/16/95    BY: jym *F0TM**/
+/* REVISION: 7.4     LAST MODIFIED: 08/25/95    BY: jym *G0TW**/
+/* REVISION: 7.4     LAST MODIFIED: 09/19/95    BY: ais *G0X6**/
+/* REVISION: 7.4     LAST MODIFIED: 10/05/95    BY: ais *H0G7**/
+/* REVISION: 7.4     LAST MODIFIED: 10/18/95    BY: dxk *G0XK**/
+/* REVISION: 7.4     LAST MODIFIED: 11/13/95    BY: ais *H0GK**/
+/* REVISION: 7.4     LAST MODIFIED: 12/07/95    BY: rxm *H0FS**/
+/* REVISION: 8.5     LAST MODIFIED: 10/03/95    BY: taf *J053*                */
+/* REVISION: 8.5     LAST MODIFIED: 03/19/96    BY: *J0CV* Robert Wachowicz   */
+/* REVISION: 8.5     LAST MODIFIED: 04/11/96    BY: ais *G1QK*                */
+/* REVISION: 8.5     LAST MODIFIED: 05/15/96    BY: *J0MK* Sue Poland         */
+/* REVISION: 8.5     LAST MODIFIED: 07/02/96    BY: *H0LW* Dwight Kahng       */
+/* REVISION: 8.5     LAST MODIFIED: 09/04/96    BY: *H0ML* Suresh Nayak       */
+/* REVISION: 8.5     LAST MODIFIED: 09/05/96    BY: *G2D3* Ajit Deodhar       */
+/* REVISION: 8.5     LAST MODIFIED: 09/20/96    BY: *G2FX* Ajit Deodhar       */
+/* REVISION: 8.5     LAST MODIFIED: 10/22/96    BY: *H0NJ* Ajit Deodhar       */
+/* REVISION: 8.5     LAST MODIFIED: 11/19/96    BY: *H0PG* Suresh Nayak       */
+/* REVISION: 8.5     LAST MODIFIED: 12/03/96    BY: *H0Q3* Ajit Deodhar       */
+/* REVISION: 8.5     LAST MODIFIED: 03/26/97    BY: *H0VL* Suresh Nayak       */
+/* REVISION: 8.5     LAST MODIFIED: 03/26/97    BY: *H0V3* Jim Williams       */
+/* REVISION: 8.5     LAST MODIFIED: 11/14/03    BY: *LB01* Long Bo         */
+
+/************************************************************************/
+/*    THIS PROGRAM HANDLES BOTH MULTI-LINE AND SINGLE-LINE ENTRY.       */
+/************************************************************************/
+
+/*J034*  * MOVED MFDECLRE.I UP TO HERE */
+         /*F827*/ {mfdeclre.i}
+
+/*J053*/ define shared variable rndmthd like rnd_rnd_mthd.
+/*J053*/ define new shared variable ext_cost_fmt as character.
+
+/*J0CV*/ define variable errcd as integer no-undo.
+
+         define new shared variable desc1 like pt_desc1.
+         define new shared variable desc2 like pt_desc2.
+         define shared variable line like sod_line.
+         define shared variable due_date like pod_due_date.
+         define shared variable del-yn like mfc_logical.
+         define shared variable so_job like pod_so_job.
+         define shared variable disc like pod_disc_pct.
+         define shared variable po_recno as recid.
+         define shared variable vd_recno as recid.
+         define new shared variable qty_ord like pod_qty_ord.
+         define new shared variable old_qty_ord like pod_qty_ord.
+         define variable old_pur_cost like pod_pur_cost.
+         define variable old_vpart like pod_vpart.
+         define variable last_date like pod_due_date.
+         define new shared variable ext_cost like pod_pur_cost.
+         define variable yn like mfc_logical initial no.
+         define new shared variable old_pod_status like pod_status.
+         define new shared variable old_type like pod_type.
+         define new shared variable pod_recno as recid.
+         define new shared variable podcmmts like mfc_logical label "说明".
+         define new shared variable cmtindx as integer.
+         define shared variable sngl_ln like poc_ln_fmt.
+/*H0VL*/ define        variable l_sngl_ln like poc_ln_fmt no-undo.
+/*H006*/ define shared variable tax_in like ad_tax_in.
+         define new shared frame chead.
+         define new shared frame c.
+         define new shared frame d.
+         define new shared variable mfgr like vp_mfgr.
+         define new shared variable mfgr_part like vp_mfgr_part.
+         define new shared variable req_ok like mfc_logical.
+         define new shared variable continue like mfc_logical.
+         define new shared variable st_qty like pod_qty_ord.
+         define new shared variable st_um like pod_um.
+         define new shared variable old_um like pod_um.
+         define shared variable base_amt like pod_pur_cost.
+         define new shared variable clines as integer initial ?.
+         define variable first_time like mfc_logical initial yes.
+         define shared variable blanket like mfc_logical.
+
+/*F033*/ define shared variable new_db like si_db.
+/*F033*/ define shared variable old_db like si_db.
+/*F033*/ define shared variable new_site like si_site.
+/*F033*/ define shared variable old_site like si_site.
+/*F033*/ define new shared variable podnbr like pod_nbr.
+/*F033*/ define new shared variable podline like pod_line.
+/*F033*/ define new shared variable podreqnbr like pod_req_nbr.
+/*F033*/ {poprwkfl.i &new="new"}
+
+/*H006*/ define new shared variable old_pod_site like pod_site.
+/*H0NJ*/ define new shared variable new_pod like mfc_logical.
+/*H0NJ** /*F316*/ define variable new_pod like mfc_logical. */
+/*F085*/ define variable i as integer.
+/*G465** define            variable approval_req like mfc_logical. **/
+/*G027*/ define new shared variable pcqty like pod_qty_ord.
+/*H034*/ define            buffer   cmtdet       for cmt_det.
+/*H047*/ define new shared variable base_cost    like pod_pur_cost.
+/*H086*/ define            variable minprice     like pc_min_price.
+/*H086*/ define            variable maxprice     like pc_min_price.
+/*H086*/ define            variable lineffdate   like po_due_date.
+/*H086*/ define            variable warning      like mfc_logical initial no.
+/*H086*/ define            variable warmess      like mfc_logical initial yes.
+/*H086*/ define            variable minmaxerr    like mfc_logical.
+/*H086*/ define            variable dummy_cost   like pc_min_price.
+/*H086*/ define new shared variable match_pt_um  like mfc_logical initial no.
+/*H086*/ define     shared variable poc_pc_line  like mfc_logical.
+/*H184*/ define     shared variable pocrt_int    like pod_crt_int.
+/*H374*/ define            variable netcost      like pod_pur_cost.
+/*H374*/ define            variable old_disc_pct like pod_disc_pct.
+/*GK49** define            variable new_pod_det  like mfc_logical.  **/
+/*H510*/ define            variable pc_recno     as recid.
+/*H510*/ define new shared variable poc_pt_req   like mfc_logical.
+/*G0X6*/ define shared variable line_opened like mfc_logical.
+/*G0XK*/ define        variable err-flag as integer no-undo.
+/*G0XK*/ define        variable porecno as recid no-undo.
+/*G0XK*/ define        variable podrecno as recid no-undo.
+/*G0XK*/ define        variable pacrecno as recid init ? no-undo.
+/*J044*/ define     shared variable impexp   like mfc_logical no-undo.
+/*J044*/ define            variable imp-okay like mfc_logical no-undo.
+/*H0Q3*/ define        variable l_actual_disc     as decimal no-undo.
+/*H0Q3*/ define        variable l_display_disc    as decimal no-undo.
+/*H0Q3*/ define        variable l_min_disc    as decimal initial -99.99 no-undo.
+/*H0Q3*/ define        variable l_max_disc    as decimal initial 999.99 no-undo.
+/*LB01*/ define        variable l_gl_set     like icc_gl_set.
+
+         if sngl_ln then clines = 1.
+         {mfpomtb.i} /* defines forms c & d */
+/*G0D7*/ /*V8:HiddenDownFrame=c */
+/*G0D7*/ /*V8:HiddenDownFrame=d */
+
+         find first gl_ctrl no-lock.
+         find first poc_ctrl no-lock.
+         find first icc_ctrl no-lock.
+/*J04D*/ find first clc_ctrl no-lock no-error.
+/*J04D*/ if not available clc_ctrl then do:
+/*J04D*/    {gprun.i ""gpclccrt.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J04D*/    find first clc_ctrl no-lock.
+/*J04D*/ end.
+
+/*H510*/ /* Read price table required flag from mfc_ctrl */
+/*H510*/ find first mfc_ctrl where mfc_field = "poc_pt_req" no-lock no-error.
+/*H510*/ if available mfc_ctrl then poc_pt_req = mfc_logical.
+
+/*J053*/ /* SET EXT_COST FORMAT FOR FRAME D */
+/*J053*/ ext_cost_fmt = ext_cost:format.
+/*J053*/ {gprun.i ""gpcurfmt.p"" "(input-output ext_cost_fmt,
+                                   input rndmthd)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/ ext_cost:format = ext_cost_fmt.
+
+         find po_mstr where recid(po_mstr) = po_recno.
+         find vd_mstr where recid(vd_mstr) = vd_recno no-lock.
+
+         linefmt:
+         repeat on endkey undo, leave:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            /*GUI: view frame dtitle. */
+IF global-tool-bar AND global-tool-bar-handle <> ? THEN
+  view global-tool-bar-handle. /*GUI*/
+
+            display
+               po_nbr
+               po_vend
+               sngl_ln
+            with frame chead.
+
+/*H0VL*/    assign l_sngl_ln = sngl_ln.
+
+            if not first_time then
+               update sngl_ln with frame chead.
+
+/*H0VL*/    if l_sngl_ln <> sngl_ln then
+/*H0VL*/       clear frame c all no-pause.
+
+            clines = ?.
+            if sngl_ln then clines = 1.
+            first_time = no.
+
+            /* Single Line Entry */
+            mainloop: repeat on endkey undo, next linefmt:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+               continue = yes.
+               podcmmts = poc_lcmmts.
+               /*GUI: view frame dtitle. */
+IF global-tool-bar AND global-tool-bar-handle <> ? THEN
+  view global-tool-bar-handle. /*GUI*/
+
+               view frame chead.
+               hide frame c.
+               hide frame d.
+               view frame c.
+
+               if sngl_ln then do:
+                  view frame d.
+               end.
+
+               req_ok = no.
+
+/*F0PJ*/       /* SCREENS & REPORTS DON'T SUPPORT 4 DIGIT LINE NOS. */
+/*F0PJ*/       if line < 999 then
+                  line = line + 1.
+/*F0PJ*/       else
+/*F0PJ*/       if line = 999 then do:
+/*F0PJ*/          {mfmsg.i 7418 2}  /* LINE CANNOT BE > 999 */
+/*F0PJ*/       end.
+
+               find pod_det where pod_nbr = po_nbr and pod_line = line
+               no-lock no-error.
+               if not available pod_det then do:
+                  /* CLEAR DISPLAY */
+                  display
+                     line
+/*F033*/             po_site @ pod_site
+                     "" @ pod_req_nbr
+                     "" @ pod_part
+                     0 @ pod_qty_ord
+                     "" @ pod_um
+                     0 @ pod_pur_cost
+                     0 @ pod_disc_pct
+                  with frame c.
+/*FQ83*/          desc1 = "零件无库存".
+/*FQ83*/          desc2 = "".
+/*J0MK*/          if sngl_ln then clear frame d no-pause.
+               end.
+               if available pod_det then do:
+/*FQ83            desc1 = "Item not in inventory". */
+/*FQ83*/          desc1 = pod_desc.
+                  desc2 = "".
+                  st_qty = 0.
+/*F0TM*           st_um = "". */
+/*F0TM*/          st_um = pod_um.
+                  find pt_mstr where pt_part = pod_part
+                  no-lock no-error no-wait.
+                  if available pt_mstr then do:
+                     desc1 = pt_desc1.
+                     desc2 = pt_desc2.
+                     st_um = pt_um.
+                  end.
+                  st_qty = pod_qty_ord * pod_um_conv.
+/*F0HF*/          if pod_desc <> "" then desc1 = pod_desc.
+/*FQ83            if pod_desc <> "" then do:
+ *                   desc1 = pod_desc.
+ *                   desc2 = "".
+ ****             end. */
+
+                  {pomta01.i}
+
+               end. /* available pod_det */
+
+               display line with frame c.
+               setline:
+               do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  set line with frame c editing:
+                     /* FIND NEXT RECORD */
+                     {mfnp01.i pod_det line pod_line po_nbr pod_nbr pod_nbrln}
+                     if recno <> ? then do:
+                        line = pod_line.
+/*FQ83                  desc1 = "Item not in inventory". */
+/*FQ83*/                desc1 = pod_desc.
+                        desc2 = "".
+                        st_qty = 0.
+                        st_um = "".
+                        find pt_mstr where pt_part = pod_part
+                        no-lock no-error no-wait.
+                        if available pt_mstr then do:
+                           desc1 = pt_desc1.
+                           desc2 = pt_desc2.
+                           st_um = pt_um.
+                        end.
+                        st_qty = pod_qty_ord * pod_um_conv.
+/*F0HF*/                if pod_desc <> "" then desc1 = pod_desc.
+/*FQ83                  if pod_desc <> "" then do:
+ *                         desc1 = pod_desc.
+ *                         desc2 = "".
+ ****                   end. */
+
+                        {pomta01.i}
+
+                        req_ok = no.
+                        find last req_det where req_nbr = pod_req_nbr
+                        no-lock no-error.
+                        if available req_det then do:
+                           if can-find(first vp_mstr where vp_vend = po_vend
+                           and vp_part = req_part) then req_ok = yes.
+                        end.
+                     end.  /* recno <> ? */
+                  end. /* END EDITING */
+
+                  find pod_det where pod_nbr = po_nbr
+                  and pod_line = input line no-error.
+                  if not available pod_det and (po_stat = "c" or po_stat = "x")
+                  then do:
+                     yn = no.
+/*G0X6*/             /* ADDING NEW LINE TO CLOSED PO - REOPEN PURCHASE ORDER? */
+                     {mfmsg01.i 345 1 yn}
+                     if yn = yes then do:
+                        po_stat = "".
+                        po_cls_date = ?.
+/*G0X6*/                line_opened = true.
+                     end.
+                     if yn = no then do:
+                        next-prompt line with frame c.
+                        undo setline, retry.
+                     end.
+                  end.
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* END SETLINE */
+
+               assign line.
+/*GK49**       new_pod_det = no. **/
+
+               /* ADD/MOD/DELETE  */
+               find pod_det where pod_nbr = po_nbr
+               and pod_line = input line no-error.
+               if not available pod_det then do:
+/*G2FX*/          if input line = 0  then do:
+/*G2FX*/             {mfmsg.i 3953 3}
+/*G2FX*/             /* Value must be greater than zero */
+/*G2FX*/             undo, retry.
+/*G2FX*/          end.
+                  display
+                     line
+/*F033*/             po_site @ pod_site
+                     "" @ pod_req_nbr
+                     "" @ pod_part
+                     0 @ pod_qty_ord
+                     "" @ pod_um
+                     0 @ pod_pur_cost
+                     0 @ pod_disc_pct
+                  with frame c.
+
+                  clear frame d no-pause.
+
+                  {mfmsg.i 1 1} /* ADDING NEW RECORD */
+                  create pod_det.
+/*GK49**          new_pod_det = yes. **/
+                  assign
+                  pod_nbr = po_nbr
+                  pod_line = input line
+/*J04D*/          pod_lot_rcpt = clc_polot_rcpt
+                  pod_due_date = due_date
+                  pod_so_job = so_job
+/*H082*/          pod_fix_pr = po_fix_pr
+                  pod_disc_pct = disc
+                  pod_taxable = po_taxable
+                  pod_pst = po_pst
+                  pod_site = po_site
+/*F033*/          pod_po_db = global_db
+/*FQ83            desc1 = "" */
+/*FQ83*/          desc1 = pod_desc
+                  desc2 = ""
+/*G417*/          pod_tax_env = po_tax_env
+/*G417*/          pod_tax_usage = po_tax_usage
+                  pod_project = po_project
+/*H184*/          pod_crt_int = pocrt_int
+                  pod_contract = po_contract.
+                  if blanket = true then do:
+                     pod_type = "B".
+                     pod_blanket = po_blanket.
+                  end.
+/*G1QK            if icc_cur_cost = "NONE" then assign pod_cst_up = no. */
+/*G1QK            else assign pod_cst_up = yes.                         */
+/*G1QK*/          assign pod_cst_up = yes.
+
+/*H006*/          if {txnew.i} then do:
+/*H006*/             pod_taxc = po_taxc.
+/*H006*/             pod_tax_env = po_tax_env.
+/*H006*/             pod_tax_in = tax_in.
+/*H006*/          end.
+
+/*F316*/          new_pod = yes.
+                  req_ok = no.
+
+/*H034*/          pod_recno = recid(pod_det).
+/*H006*/          old_pod_site = pod_site.
+
+/*H034*/          continue = no.   /* CHECK REQUISITION & APPROVAL ETC */
+/*H034            {gprun.i ""popomti.p""} */
+/*LB01*/          {gprun.i ""zzpopomti.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H034*/          if continue = no then undo mainloop, next mainloop.
+/*G972*/          continue = no.
+/*LB01*/          {gprun.i ""zzpopomte.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  if continue = no then undo mainloop, next mainloop.
+
+/*H018*/          /* CHECK IF ITEM PLANNING RECORD AVAILABLE IF SO CHECK
+                   IF INSPECTION OF LOCATION REQUIRED    */
+
+/*G2D3*/          find si_mstr where si_site = pod_site no-lock no-error.
+/*G2D3*/       /* IN MULTI-DB INSPECTION LOCATION IS HANDLED BY popomte1.p */
+/*G2D3*/          if si_db = global_db then do:
+/*H018*/          find ptp_det where ptp_part = pod_part and
+/*H018*/               ptp_site = pod_site  no-lock no-error.
+/*H018*/               if available ptp_det then do:
+/*H018*/                    pod_insp_rqd = ptp_ins_rqd.
+/*H018*/               end.
+/*H018*/          if pod_insp_rqd then pod_loc = poc_insp_loc.
+/*G2D3*/          end.
+
+/*J0CV ADDED BLOCK*/
+                  /*DEFAULT ERS LINE ITEM OPTION TO PROPER VALUE*/
+                  if po_ers_opt = "" then do:
+                     /*DEFAULT TO VALUE IN ERS TABLE*/
+                     {gprun.i ""poers.p"" "(po_vend, pod_site, pod_part,
+                                           output pod_ers_opt,
+                                           output pod_pr_lst_tp,
+                                           output errcd)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                     /*ONLY USE RETURN VALUE IF PO PRICE LIST OPTION IS 0*/
+                     if po_pr_lst_tp <> 0 then
+                        pod_pr_lst_tp = po_pr_lst_tp.
+                  end. /*PO_ERS_OPT = "" */
+                  else
+                     assign
+                        pod_ers_opt = integer(po_ers_opt)
+                        pod_pr_lst_tp = po_pr_lst_tp.
+/*J0CV END OF ADD*/
+               end. /* New pod_det: site, req and part prompts */
+               else do:
+/*H388*/          old_pod_site = pod_site.
+                  /* MODIFY EXISTING LINE - REVERSE OLD HISTORY */
+
+/*J034*/          {gprun.i ""gpsiver.p""
+                   "(input pod_site, input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/          if return_int = 0 then do:
+/*J034*/             {mfmsg.i 725 3}  /* USER DOES NOT HAVE           */
+/*J034*/                              /* ACCESS TO SITE FOR THIS LINE */
+/*J034*/             pause.
+/*J034*/             undo mainloop, retry.
+/*J034*/          end.
+
+                  if po_stat <> "c" and po_stat <> "x" and
+                  pod_status <> "c" and pod_status <> "x" then do:
+                     pod_recno = recid(pod_det).
+
+/*H388*  /*H006*/             old_pod_site = pod_site.  */
+/*G028*/             po_recno = recid(po_mstr).
+/*G028*              {gprun.i ""popotr.p""} */
+/*G728*              {gprun.i ""mfpotr.p"" "(input ""DELETE"")"} */
+/*G0XK *G728*        {gprun.i ""gppotr.p"" "(input ""DELETE"")"} */
+
+/*G0XK*/             {gprun.i ""gppotr.p""
+                      "(input ""DELETE"", input pod_nbr, input pod_line)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK*/             find si_mstr where si_site = pod_site no-lock.
+/*G0XK*/             if si_db <> global_db then do:
+/*G0XK*/                old_db = global_db.
+/*G0XK*/                /* Delete the line in the remote database */
+/*G0XK*/                {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK*/                {gprun.i ""gppotr.p""
+                         "(input ""DELETE"", input pod_nbr, input pod_line)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK*/                {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK*/             end.
+                  end.
+/*F316*/          new_pod = no.
+/*FQ83*/          desc1 = pod_desc.
+/*FQ83*/          desc2 = "".
+               end.
+
+
+               status input.
+               line = pod_line.
+/*FQ83         desc1 = "Item not in inventory".
+ *             desc2 = "". */
+               find pt_mstr where pt_part = pod_part no-lock no-error.
+               if available pt_mstr then do:
+                  desc1 = pt_desc1.
+                  desc2 = pt_desc2.
+/*G0V1* * * INITIALIZE IN ADD MODE ONLY * * * * * * * * * * * * *
+ * /*F0C8*/          pod_taxc = pt_taxc.
+ * /*F0C8*/          if pt_taxable = yes and po_taxable = yes then do:
+ * /*F0C8*/             pod_taxable = yes.
+ * /*F0C8*/          end.
+ * /*F0C8*/          else do:
+ * /*F0C8*/             pod_taxable = no.
+ * /*F0C8*/          end.
+ *G0V1*/
+               end.
+
+/*F0HF*/       if pod_desc <> "" then desc1 = pod_desc.
+/*FQ83         if pod_desc <> "" then do:
+ *                desc1 = pod_desc.
+ *                desc2 = "".
+ ****          end. */
+/*FP20*/       if not sngl_ln then message desc1 desc2.
+
+               /* SET GLOBAL PART VARIABLE */
+               assign
+               global_part = pod_part
+               old_qty_ord = pod_qty_ord
+               old_pur_cost = pod_pur_cost
+               old_pod_status = pod_status
+               old_type = pod_type
+               old_vpart = pod_vpart
+               old_um = pod_um
+/*F0TM*/       st_um = if available pt_mstr then pt_um else " "
+/*H374*/       old_disc_pct = pod_disc_pct.
+/*H374*        st_qty = pod_qty_ord * pod_um_conv. */
+
+               /* DISPLAY FRAMES C & D, INITAILIZE mfgr */
+               {pomta01.i}
+
+               ststatus = stline[2].
+               status input ststatus.
+               del-yn = no.
+
+               if pod_um = "" and available vp_mstr then pod_um = vp_um.
+               if pod_um = "" and available pt_mstr then pod_um = pt_um.
+
+               display
+                  pod_qty_ord
+                  pod_um
+                  pod_pur_cost
+/*H0Q3**	  pod_disc_pct */
+/*H0Q3*/	  l_display_disc @ pod_disc_pct
+               with frame c.
+
+               setc-1:
+               do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H0ML*/          hide frame line_pop no-pause.
+                  pod_recno = recid(pod_det).
+/*LB01*/          {gprun.i ""zzpopomth.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  if keyfunction(lastkey) = "end-error" then
+                     undo mainloop, retry.
+                  if continue = no then next mainloop.
+
+/*H0ML*/          lineffdate = po_ord_date.
+/*H0ML*/          if sngl_ln and poc_pc_line then do:
+/*H0ML*/             update pod_due_date pod_crt_int
+/*H0ML*/                with frame line_pop.
+/*H0ML*/             display pod_due_date pod_crt_int with frame d.
+/*H0ML*/             hide frame line_pop no-pause.
+/*H0ML*/             lineffdate = pod_due_date.
+/*H0ML*/          end.
+/*H0ML*/          if lineffdate = ? then
+/*H0ML*/             lineffdate = today.
+
+/*GK49*/        /* Only check price list when line is created */
+/*GK49*/        if new_pod then do:
+
+/*H374*           This part has to be somewhere after pod_qty_ord and */
+/*H374*           pod_um have been updated                            */
+/*H374*/          st_qty = pod_qty_ord * pod_um_conv.
+
+/*H0ML** THIS BLOCK IS TAKEN OUTSIDE THE IF NEW pod_det SO THAT IT IS EXECUTED FOR
+*        EXISTING LINE ITEMS.
+* /*H086*/          /* POP-UP FOR REQUIRED ITEMS BEFORE PRICING */
+* /*H510**          lineffdate = po_due_date. **/
+* /*H510*/          lineffdate = po_ord_date.
+* /*H086*/          if sngl_ln and poc_pc_line then do:
+* /*H086*/             pause 0.
+* /*H086*/             update pod_due_date pod_crt_int
+* /*H086*/                with frame line_pop.
+* /*H086*/             display pod_due_date pod_crt_int with frame d.
+* /*H086*/             hide frame line_pop no-pause.
+* /*H086*/             lineffdate = pod_due_date.
+* /*H086*/          end.
+* /*H086*/          if lineffdate = ? then
+* /*H086*/             lineffdate = today.
+*H0ML**/
+
+/*H0LW* /*H0G7*/  dummy_cost = pod_pur_cost.  */
+/*H0LW*/          dummy_cost = pod_pur_cost * (1 - pod_disc_pct / 100).
+
+/*H086*/          /* PRICE TABLE LIST PRICE LOOK-UP */
+/*H086*/          if po_pr_list2 <> "" then do:
+/*H510*/             /* Added parameters for price table required, recid */
+/*H0JS*/             /* CHANGED pt_recno TO pc_recno BELOW */
+/*H0LW*/	     dummy_cost = ?.
+/*H086*/             {gprun.i ""gppclst.p""
+                              "(input        po_pr_list2,
+                                input        pod_part,
+                                input        pod_um,
+                                input        pod_um_conv,
+                                input        lineffdate,
+                                input        po_curr,
+                                input        new_pod,
+                                input        poc_pt_req,
+                                input-output pod_pur_cost,
+                                input-output dummy_cost,
+                                output       minprice,
+                                output       maxprice,
+                                output       pc_recno
+                               )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		     /*	The Price List Table Look-Up (PLTL) routine (gppclst.p)
+			may not return a price.  This can be intentional
+			(new_pod = "no"), or it can be due to a failure
+			to find a table or the table contains a zero
+			price.  In all cases, dummy_cost returns with
+			its original value (?) when no table price is found.
+			It returns with a non-? value if a price *is* found.
+			dummy_cost needs to hold the Net Price for processing
+			below, but doesn't on return from the PLTL routine.
+			The statements below ensure that dummy_cost contains
+			the Net Price */
+
+/*H0LW*/             if dummy_cost <> ? then
+		        /*Apply the line discount to the PLTL price */
+/*H0LW*/                dummy_cost = dummy_cost * (1 - pod_disc_pct / 100).
+/*H0LW*/	     else
+		        /*Calculate the Net Price from the PO line info */
+/*H0LW*/                dummy_cost = dummy_cost * (1 - pod_disc_pct / 100).
+/*H086*/          end.
+
+/*H510*/         /* Bounce line if the required item/um price tbl not found */
+/*H510*/         if poc_pt_req and (po_pr_list2 = "" or pc_recno = 0) then do:
+/*H510*/            {mfmsg03.i 6231 3 pod_part pod_um """"}
+/*H510*/            /* Price table for pod_part in pod_um not found */
+/*H510*/            if not batchrun then pause.
+/*H0GK*  /*H510*/   undo linefmt, leave.      */
+/*H0GK*/            undo mainloop, retry.
+/*H510*/          end.
+
+/*GH13*/          /* Since price lists are created for alternate units of   */
+/*GH13*/          /* measure expressing the qauntities in stocking um. It   */
+/*GH13*/          /* is not necessary to mulitply the "P" type lists by the */
+/*GH13*/          /* unit of measure conversion factor before price list    */
+/*GH13*/          /* lookup.                                                */
+/*GH13*/          /* st_qty = pod_qty_ord * pod_um_conv.                    */
+
+/*H047*/          if po_pr_list <> "" then do:
+/*G027*/             pt_recno = recid(pt_mstr).
+/*H510**             pcqty = st_qty.  **/
+/*H510*/             pcqty = pod_qty_ord.
+/*H086*/             /* {gprun.i ""popccal.p""} /* Price list look-up */ */
+
+/*H086*/             match_pt_um = poc_pl_req.
+/*H086*/             /* DISCOUNT TABLE LOOK-UP */
+/*H294*/             /* Use lineffdate for look-up, same as Price Table */
+/*H510*/             /* Added pc_recno to gppccal call below */
+/*G0TW*/             /* Added supplier discount percent as input 10 */
+/*H086*/             {gprun.i ""gppccal.p""
+                              "(input        pod_part,
+                                input        pcqty,
+                                input        pod_um,
+                                input        pod_um_conv,
+                                input        po_curr,
+                                input        po_pr_list,
+                                input        lineffdate,
+                                input        pod_pur_cost,
+                                input        match_pt_um,
+                                input        disc,
+                                input-output pod_pur_cost,
+                                output       pod_disc_pct,
+                                input-output dummy_cost,
+                                output       pc_recno
+                               )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*H0GK*/          end. /* po_pr_list <> "" */
+/*GK49**          if new_pod_det then do: **/
+
+/*H086*/          /* Bounce the line if the required item/um */
+/*H086*/          /* price list was not found                */
+/*H510*/          if poc_pl_req
+/*H510*/             and (po_pr_list = "" or pc_recno = 0) then do:
+/*H086*/             /* Price list for pod_part in pod_um not found */
+/*H0GK*  /*H086*/    {mfmsg03.i 689 3 pod_part pod_um """"}         */
+/*H0GK*/             /* Required Discount table for item in um not found*/
+/*H0GK*/             {mfmsg03.i 982 4 pod_part pod_um """"}
+/*H086*/             if not batchrun then pause.
+/*H0GK*  /*H086*/    undo linefmt, leave.      */
+/*H0GK*/             undo mainloop, retry.
+/*H086*/          end.
+/*H0GK*  /*H047*/ end.  */
+
+/*GK49*/          if new_pod then do:
+/*H374*/             pod__qad09 = dummy_cost.
+/*H374*/             pod__qad02 = (dummy_cost - pod__qad09) * 100000.
+/*H374*/             old_pur_cost = pod_pur_cost.
+/*H374*/             old_disc_pct = pod_disc_pct.
+/*H374*/          end.
+/*H374*           Used pod__qad02 and pod__qad09 to store net price
+ *                and avoid rounding errors.
+ *                Changed 8th input from pod_std_cost to pod_pur_cost
+ *                since in PO, the purchase price is the cost and in
+ ***              this program the pod_std_cost is not updated anyhow */
+
+/*GH13*/          /* Since price lists are created for alterante units of */
+/*GH13*/          /* measure expressing the qauntities in stocking um. It */
+/*GH13*/          /* is necessary to mulitply the "P" type lists by the   */
+/*GH13*/          /* unit of measure conversion factor after returning    */
+/*GH13*/          /* from the proce list look up.                         */
+/*GJ18*/          /* It is not necessary to multiply the price with the */
+/*GJ18*/          /* unit of measure conversion factor                  */
+/*GJ18*/          /* pod_pur_cost = pod_pur_cost * pod_um_conv.         */
+
+/*FM21*/          /* Only display base cost when adding new lines. Since    */
+/*FM21*/          /* thats the only time it's calculated in popomth.p       */
+/*FM21*/          /* if po_curr <> base_curr and pod_pur_cost <> 0 then do: */
+/*FM21*/          if new pod_det and
+/*FM21*/           po_curr <> base_curr and pod_pur_cost <> 0 then do:
+/*H047*/             {mfmsg02.i 684 1
+                      "base_cost, "">>>>,>>>,>>9.99<<<"" "}
+                                     /* Base currency list price: 19.99 */
+/*H047*/          end.
+
+/*H086*/          /* PRICE TABLE MIN/MAX WARNING FOR DISC TABLES. PLUG PRICES */
+/*H086*/          if po_pr_list2 <> "" then do:
+/*H374*/             netcost = pod_pur_cost * (1 - pod_disc_pct / 100).
+/*H086*/             assign
+/*H086*/                warmess = yes
+/*H086*/                warning = yes.
+/*H0FS*/             /* ADDED pod_part & REMOVED pod_um_conv PARAMETERS BELOW */
+/*H086*/             {gprun.i ""gpmnmx.p""
+                              "(input        warning,
+                                input        warmess,
+                                input        minprice,
+                                input        maxprice,
+                                output       minmaxerr,
+                                input-output netcost,
+                                input-output dummy_cost,
+                                input        pod_part
+                               )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H374*              changed 8th input-output from pod_pur_cost to netcost
+ *                   "pod_pur_cost * (1 - pod_disc_pct / 100)" to reflect
+ ***                 the net cost. */
+
+/*H086*/             display pod_pur_cost with frame c.
+/*H086*/          end.
+
+/*GK49*/         end.  /* price checking for new line */
+
+/*H441*/          if pod_pur_cost = 0 then do:
+/*H441*/             pod_pur_cost = dummy_cost.
+/*H441*/             display pod_pur_cost with frame c.
+/*H441*/          end.
+
+/*G0X6*/          st_qty = pod_qty_ord * pod_um_conv.
+/*G0X6*/          if sngl_ln then display st_qty with frame d.
+
+                  setc-2:
+                  do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*GK49**             if not new_pod_det then do: **/
+/*GK49*/             if not new_pod     then do:
+/*H374*/                pod_pur_cost = old_pur_cost.
+/*H374*/                pod_disc_pct = old_disc_pct.
+/*H374*/             end.
+
+/*H0Q3*/             assign l_actual_disc = pod_disc_pct.
+/*H0Q3*/             if  pod_disc_pct < l_min_disc or
+/*H0Q3*/		 pod_disc_pct > l_max_disc then do:
+/*H0Q3*/	        if pod_disc_pct >  l_max_disc then
+/*H0Q3*/		   pod_disc_pct =  l_max_disc.
+/*H0Q3*/	        if pod_disc_pct < l_min_disc then
+/*H0Q3*/		   pod_disc_pct = l_min_disc.
+/*H0Q3*/	         { mfmsg03.i 1651 2 l_actual_disc """" """"}.
+/*H0Q3*/    /* Discount # cannot be fit in the format, displayed as all 9's */
+/*H0Q3*/             end.
+
+                     update pod_pur_cost pod_disc_pct with frame c.
+/*H0Q3*/             if not pod_disc_pct entered
+/*H0Q3*/		then pod_disc_pct = l_actual_disc.
+
+                     if pod_pur_cost <> old_pur_cost
+                     and pod_qty_rcvd <> 0 then do:
+                        yn = no.
+                        /*Items received for this line-change purchase price?*/
+                        {mfmsg01.i 333 2 yn}
+                        if yn = no then do:
+                           pod_pur_cost = old_pur_cost.
+                           display pod_pur_cost with frame c.
+                           next-prompt pod_pur_cost with frame c.
+                           undo setc-2, retry.
+                        end.
+                     end.
+
+/*LB01*.. Validate: Cost set needed.                          */
+/*LB01*/			 find si_mstr where si_site = pod_site no-lock no-error.
+/*LB01*/			 l_gl_set = si_gl_set.
+/*LB01*/			 if l_gl_set = "" then do:
+/*LB01*/			 	find icc_ctrl where icc_site = pod_site no-lock no-error.
+/*LB01*/				if available icc_ctrl then
+/*LB01*/			 		l_gl_set = icc_gl_set.
+/*LB01*/			 end.
+/*LB01*/			 find sct_det where sct_sim = l_gl_set and sct_site = pod_site and pod_part = sct_part no-lock no-error.
+/*LB01*/		 	 if (l_gl_set="") or (not available sct_det) or (sct_cst_tot <= 0) then do:
+/*LB01*/			 	message "零件成本不存在，请先维护成本！" VIEW-AS ALERT-BOX ERROR BUTTONS OK.		
+/*LB01*/                undo setc-2, retry.
+/*LB01*/		 	 end. 
+
+/*LB01*/	   	     if pod_pur_cost = ? or pod_pur_cost < 0 then do:
+/*LB01*/			    /* Can not process order item when invalid price*/																	
+/*LB01                  {mfmsg.i 7364 3}*/
+/*LB01*/			    message "单位成本必须不能小于0，请重新输入！" VIEW-AS ALERT-BOX ERROR BUTTONS OK.
+/*LB01*/                undo setc-2, retry.
+/*LB01*/		     end.
+
+/*LB01*/	 	     if pod_pur_cost = 0 then do:
+/*LB01*/			    message "警告：单位成本为0，继续吗？" VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO TITLE "" UPDATE choice AS LOGICAL.
+						 if not choice then do:
+/*LB01*/ 		          undo setc-2, retry.
+     					 end.	 
+/*LB01*/		     end.
+
+/*H086*/             /* PRICE TABLE MIN/MAX ERROR */
+/*H086*/             if po_pr_list2 <> "" then do:
+/*H086*/                assign
+/*H086*/                   warmess = yes
+/*H086*/                   warning = no.
+/*H0FS*/             /* ADDED pod_part & REMOVED pod_um_conv PARAMETERS BELOW */
+/*H086*/                {gprun.i ""gpmnmx.p""
+                                 "(input        warning,
+                                   input        warmess,
+                                   input        minprice,
+                                   input        maxprice,
+                                   output       minmaxerr,
+                                   input-output dummy_cost,
+                                   input-output pod_pur_cost,
+                                   input        pod_part
+                                  )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*H086*/                if minmaxerr then do:
+/*H086*/                   undo setc-2, retry.
+/*H086*/                end.
+/*H086*/             end.
+                  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  /* END OF setc-2 BLOCK */
+
+/*H374*/          if pod_pur_cost <> old_pur_cost or
+/*H374*/          pod_disc_pct <> old_disc_pct or (new_pod and
+/*H374*/          (pod__qad09 + pod__qad02 / 100000) = 0) then do:
+/*H374*/             pod__qad09 = pod_pur_cost * (1 - (pod_disc_pct / 100)).
+/*H374*/             pod__qad02 = (pod_pur_cost * (1 - (pod_disc_pct / 100))
+/*H374*/                           - pod__qad09) * 100000.
+/*H374*/          end.
+
+                  if pod_pur_cost = 0 then do:
+                     {mfmsg.i 363 2}
+                     /* LINE ITEM HAS NO COST */
+                  end.
+
+                  if sngl_ln = yes then do:
+/*H015*/             continue = no.
+                     pod_recno = recid(pod_det).
+/*LB01*/             {gprun.i ""zzpopomtd.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H015*/          if continue = no then undo mainloop, next mainloop.
+                  end.
+/*FQ93*/          else do:
+/*FQ93*/             continue = no.
+/*FQ93*/             pod_recno = recid(pod_det).
+/*FQ93*/    /*       {gprun.i ""popomtd2.p""}*/
+/*LB01*/             {gprun.i ""zzpopomtd2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*FQ93*/             if continue = no then undo mainloop, next mainloop.
+/*FQ93*/          end.
+
+
+
+                  /*F316 ADDED - ERROR AND DELETE LINE IF APROVAL CODE*/
+                  /*EXISTS AND NO REQ ENTERED (NEW POD_DET ONLY)*/
+/*F514*/          find last req_det where req_nbr = pod_req_nbr
+/*H0V3 /*F514*/   and req_part = pod_part no-lock no-error.   */
+/*H0V3*/          and (req_part = pod_part or req_part = pod_vpart)
+/*H0V3*/          no-lock no-error.
+                  if
+/*F514*/          (not available req_det or
+                  pod_req_nbr = "")
+                  and new_pod then do:
+
+                  /* The Approval Code (pac_mstr) look-up was moved into
+                     popomtaa.p to stay within the 63K r-code limit */
+/*G0XK
+.                     /*SEE IF APPROVAL CODE EXISTS*/
+.                     find pt_mstr where pt_part = pod_part no-lock no-error.
+.                     if not available pt_mstr then do:
+.                        /*FIND WHERE SITE, PURCHASE ACCT/CC AND REQ BY MATCH*/
+.                        find first pac_mstr where
+.                        pac_site = pod_site and
+.                        pac_pl = "" and
+.                        pac_pur_acct = pod_acct and
+.                        pac_pur_cc = pod_cc and
+.                        pac_req_by = po_req_id no-lock no-error.
+.                        /*FIND WHERE SITE AND PURCHASE ACCT/CC MATCH*/
+.                        if not available pac_mstr then
+.                        find first pac_mstr where
+.                        pac_site = pod_site and
+.                        pac_pl = "" and
+.                        pac_pur_acct = pod_acct and
+.                        pac_pur_cc = pod_cc and
+.                        pac_req_by = "" no-lock no-error.
+.                     end.
+.                     else do:
+.                        /*FIND WHERE SITE, PRODLINE AND REQ BY MATCH*/
+.                        find first pac_mstr where
+.                        pac_site = pod_site and
+.                        pac_pl = pt_prod_line and
+.                        pac_pur_acct = "" and
+.                        pac_pur_cc = "" and
+.                        pac_req_by = po_req_id no-lock no-error.
+.                        /*FIND WHERE SITE AND PRODLINE MATCH*/
+.                        if not available pac_mstr then
+.                        find first pac_mstr where
+.                        pac_site = pod_site and
+.                        pac_pl = pt_prod_line and
+.                        pac_pur_acct = "" and
+.                        pac_pur_cc = "" and
+.                        pac_req_by = "" no-lock no-error.
+.                     end.
+.                     /*FIND WHERE SITE AND REQ_BY MATCH*/
+.                     if not available pac_mstr then
+.                     find first pac_mstr where
+.                     pac_site = pod_site and
+.                     pac_pl = "" and
+.                     pac_pur_acct = ""  and
+.                     pac_pur_cc = "" and
+.                     pac_req_by = po_req_id no-lock no-error.
+.                     /*FIND WHERE SITE MATCH*/
+.                     if not available pac_mstr then
+.                     find first pac_mstr where
+.                     pac_site = pod_site and
+.                     pac_pl = "" and
+.                     pac_pur_acct = "" and
+.                     pac_pur_cc = "" and
+.                     pac_req_by = "" no-lock no-error.
+.                     if available pac_mstr
+./*G465**             and approval_req **/
+./*G465*/             and poc_apv_req
+.                     then do:
+.                        {mfmsg.i 44 4}
+.                        /*APPROVAL CODE EXISTS. MUST USE REQ - DELETING LINE*/
+.
+.                        old_db = global_db.
+.                        new_site = pod_site.
+.                        if pod_site <> "" then do:
+.                            {gprun.i ""gpalias.p""}
+.                        end.
+.                        podnbr = pod_nbr.
+.                        podline = pod_line.
+.                        {gprun.i ""popomta2.p""}
+.                        new_db = old_db.
+.                        {gprun.i ""gpaliasd.p""}
+.                        if not batchrun then pause.
+.                        line = line - 1.
+.                        clear frame c.
+.                        /* Single Line Entry. */
+.                        if sngl_ln then
+.                        clear frame d all no-pause.
+.                        next mainloop.
+.                     end.
+.                     /*F514 ADDED FOLLOWING*/
+./*G465**             else if available pac_mstr and approval_req = no **/
+./*G465*/             else if available pac_mstr and poc_apv_req = no
+.                     then do:
+.                        {mfmsg.i 48 2}
+./*G684*/             /*Warn:Approval code exsits but apprvd reqsn isn't reqd*/
+./*G684*/                if not batchrun then pause.
+.                     end.
+.                     /*F514 END*/
+.*G0XK*/
+/*G0XK*/             porecno = recid(po_mstr).
+/*G0XK*/             podrecno = recid(pod_det).
+                     /* Approval Code subroutine */
+/*G0XK*/             {gprun.i ""popomtaa.p""
+                      "(porecno, podrecno, output pacrecno)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK*/             find pac_mstr where recid(pac_mstr) = pacrecno no-lock
+/*G0XK*/             no-error.
+
+/*G0XK*/             if available pac_mstr
+/*G0XK*/             and poc_apv_req
+/*G0XK*/             then do:
+/*G0XK*/                line = line - 1.
+/*G0XK*/                clear frame c.
+/*G0XK*/                /* Single Line Entry. */
+/*G0XK*/                if sngl_ln then
+/*G0XK*/                clear frame d all no-pause.
+/*G0XK*/                next mainloop.
+/*G0XK*/             end.
+                  end.
+
+                  /*END F316 SECTION*/
+
+                  /* SET pod_need AND pod_per_date, IF STILL BLANK */
+                  if pod_need = ? then pod_need = pod_due_date.
+                  if pod_per_date = ? then pod_per_date = pod_due_date.
+
+/*H198***         /* Moved following code into popomte, after item prompt */
+ *                   SET PURCHASE TYPE TO MEMO IF NECESSARY
+ *                   if (pod_qty_ord = 0 or not can-find(pt_mstr where
+ *                   if (not can-find(pt_mstr where
+ *                   pt_part = pod_part)) and pod_type = "" then do:
+ *                      {mfmsg.i 25 2}
+ *                      "Type set to (M)emo".
+ *                      pod_type = "M".
+ *                   end.
+ **H198*/
+
+                  /*ADD COMMENTS IF DESIRED */
+                  if podcmmts = yes then do:
+                     hide frame c no-pause.
+                     cmtindx = pod_cmtindx.
+                     global_ref = pod_part.
+                     {gprun.i ""gpcmmt01.p"" "(input ""pod_det"")"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                     pod_cmtindx = cmtindx.
+                  end.
+
+/*H221*/          /* Update ORD-PO and MRP Supply records */
+/*H221*/          /* (Local database only - remote db updates in popomtg2.) */
+                  if blanket = false then do:
+/*G0XK
+./*H221*/             find si_mstr where si_site = pod_site no-lock.
+./*H221*/             if si_db = global_db then do:
+.*G0XK*/
+                        pod_recno = recid(pod_det).
+                        {gprun.i ""popomtc.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0XK *H221*         end. */
+                  end.
+
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* setc-1 */
+
+               if not sngl_ln then down 1 with frame c.
+
+/*F085*/       i = 0.
+/*H0PG** /*F085*/       for each si_mstr                                   */
+/*H0PG*/       for each si_mstr where si_mstr.si_site >= ""
+/*G928*/       no-lock:
+/*F085*/          i = i + 1.
+/*F085*/          if i >= 2 then leave.
+/*F085*/       end.
+/*F085*/       if pod_site = po_site then pod_po_site = po_site.
+/*F085*/       else if po_site <> "" then pod_po_site = po_site.
+/*F085*/       else if not can-find(si_mstr where si_site = "")
+/*F085*/          then pod_po_site = pod_site.
+/*F085*/       else if i >= 2 then pod_po_site = pod_site.
+
+/*J044*/       imp-okay = no.
+/*J044*/       if can-find(first ie_mstr
+               where ie_type = "2" and ie_nbr =  pod_nbr)
+/*J044*/       then do:
+/*J044*/          {gprun.i ""iedetcr.p"" "(input ""2"",
+                                           input pod_nbr,
+                                           input pod_line,
+                                           input recid(pod_det),
+                                           input-output imp-okay)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J044*/          if imp-okay = no  then next mainloop.
+/*J044*/       end.
+
+            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* mainloop: repeat */
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* linefmt: repeat */
+/*GO05*/ hide frame d no-pause.
+         hide frame c.

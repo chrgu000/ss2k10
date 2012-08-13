@@ -1,0 +1,204 @@
+/* GUI CONVERTED from popomtd2.p (converter v1.69) Sun May 25 23:25:25 1997 */
+/* popomtd2.p - PURCHASE ORDER MAINTENANCE MULTI LINE MODE VALIDATION     */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.   */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                     */
+/* REVISION: 7.2     LAST MODIFIED: 09/09/94    BY: dpm *FQ93**/
+/* REVISION: 7.2     LAST MODIFIED: 11/09/94    BY: ljm *FT51**/
+/* REVISION: 7.2     LAST MODIFIED: 04/14/95    BY: dxk *F0PY**/
+/* REVISION: 7.3     LAST MODIFIED: 10/20/95    BY: ais *G19L**/
+/* REVISION: 8.5     LAST MODIFIED: 10/31/95    BY: taf *J053**/
+/* REVISION: 8.5     LAST MODIFIED: 03/25/96    BY: ais *G1QK**/
+/* REVISION: 8.5     LAST MODIFIED: 05/22/97    BY: *J1RZ* Molly Balan    */
+/* REVISION: 8.5     LAST MODIFIED: 11/14/03    BY: *LB01* Long Bo         */
+
+	 {mfdeclre.i}
+
+/*J053*/ define shared variable rndmthd like rnd_rnd_mthd.
+	 define shared variable desc1 like pt_desc1.
+	 define shared variable desc2 like pt_desc2.
+	 define shared variable line like sod_line.
+	 define shared variable due_date like pod_due_date.
+	 define shared variable del-yn like mfc_logical.
+	 define shared variable so_job like pod_so_job.
+	 define shared variable disc like pod_disc_pct.
+	 define shared variable po_recno as recid.
+	 define shared variable vd_recno as recid.
+	 define variable qty_ord like pod_qty_ord.
+	 define variable old_qty_ord like pod_qty_ord.
+	 define variable old_pur_cost like pod_pur_cost.
+	 define variable old_vpart like pod_vpart.
+	 define variable last_date like pod_due_date.
+	 define shared variable ext_cost like pod_pur_cost.
+	 define variable yn like mfc_logical initial no.
+	 define shared variable old_pod_status like pod_status.
+	 define shared variable old_type like pod_type.
+	 define shared variable pod_recno as recid.
+	 define shared variable podcmmts like mfc_logical label "หตร๗".
+	 define shared variable cmtindx as integer.
+	 define variable mfgr like vp_mfgr.
+	 define variable mfgr_part like vp_mfgr_part.
+	 define shared variable st_qty like pod_qty_ord.
+	 define shared variable st_um like pod_um.
+	 define shared variable old_um like pod_um.
+	 define variable old_um_conv like pod_um_conv.
+	 define shared variable base_amt like pod_pur_cost.
+	 define shared variable clines as integer.
+	 define shared variable blanket like mfc_logical.
+	 define shared variable sngl_ln like poc_ln_fmt.
+	 define variable valid_acct like mfc_logical.
+	 define shared variable continue like mfc_logical.
+	 define new shared variable err-flag as integer.
+	 define new shared variable workord  like wo_nbr.
+	 define new shared variable worklot  like wo_lot.
+	 define new shared variable routeop  like wr_op.
+	 define new shared variable workpart like wo_part.
+	 define new shared variable workproj like wo_project.
+	 define            variable old_db   like si_db.
+	 define            variable glvalid  like mfc_logical.
+
+	 find first gl_ctrl no-lock no-error.
+	 find first poc_ctrl no-lock no-error.
+	 find first icc_ctrl no-lock no-error.
+	 find po_mstr where recid(po_mstr) = po_recno no-error.
+	 find vd_mstr where recid(vd_mstr) = vd_recno no-lock no-error.
+	 find pod_det where recid(pod_det) = pod_recno no-error.
+	 find si_mstr where si_site = pod_site no-lock no-error.
+
+	 continue = no.
+/*FT51*/ /*V8+*/
+	 ext_cost = pod_qty_ord * pod_pur_cost * (1 - (pod_disc_pct / 100)).
+
+/*J053*/ /* ROUND EXT_COST BASE ON DOCUMENT CURRENCY ROUND METHOD */
+/*J053*/ {gprun.i ""gpcurrnd.p"" "(input-output ext_cost,
+				   input rndmthd)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+	 old_um_conv = pod_um_conv.
+	 mfgr = "".
+	 mfgr_part = "".
+	 if pod_vpart <> "" then do:
+	    find first vp_mstr where vp_part = pod_part
+	    and vp_vend_part = pod_vpart and vp_vend = po_vend
+	    no-lock no-error.
+	    if available vp_mstr then do:
+	       mfgr = vp_mfgr.
+	       mfgr_part = vp_mfgr_part.
+	    end.
+	 end.
+
+	 global_site = pod_site.
+	 global_addr = po_vend.
+
+
+	 if pod_per_date = ? then pod_per_date = pod_due_date.
+	 if pod_need = ? then pod_need = pod_due_date.
+	 if pod_status = "c" and old_pod_status = "x" then do:
+	    {mfmsg.i 329 2}
+	 end.
+	 if (pod_qty_ord = 0 or
+	    not can-find(pt_mstr where pt_part = pod_part)) and pod_type = "S"
+	 then do:
+/*J1RZ*/    /* TYPE (S)UBCONTRACT NOT ALLOWED FOR MEMO ITEMS */
+/*J1RZ*/    /* OR ZERO QUANTITIES */
+	    {mfmsg.i 342 3}
+	     continue = no.
+	     leave.
+	 end.
+
+	 if blanket and pod_qty_chg > (pod_qty_ord - pod_rel_qty) then do:
+	    {mfmsg.i 384 3}
+	    continue = no.
+	    leave.
+	 end.
+
+
+
+	 if pod_type = "B" and not blanket then do:
+	    {mfmsg.i 683 3} /* Type "B" is reserved for blanket orders */
+	    continue = no.
+	    leave.
+	 end.
+
+	 if pod_type <> "B" and blanket then do:
+	    {mfmsg.i 382  3}
+	    continue = no.
+	    leave.
+	 end.
+
+/*G19L   if pod_req_nbr <> ""                                               */
+/*G19L      and can-find(pt_mstr where pt_part = pod_part)                  */
+/*G19L      and ((new pod_det and pod_type <> ""                            */
+/*G19L      and can-find(last req_det where req_nbr = pod_req_nbr))         */
+/*G19L      or (not new pod_det and pod_type <> old_type))                  */
+/*G19L      and blanket = false then do:                                    */
+
+/*G19L*/ if pod_req_nbr <> ""
+/*G19L*/    and can-find(last req_det where req_nbr = pod_req_nbr)
+/*G19L*/    and can-find(pt_mstr where pt_part = pod_part)
+/*G19L*/    and blanket = false
+/*G19L*/    and ((new pod_det and pod_type <> "")
+/*G19L*/        or (not new pod_det and pod_type <> old_type))
+/*G19L*/    then do:
+
+	       /* PO type not allowed when using requisition */
+	       {mfmsg.i 348 3}
+	       continue = no.
+	       leave.
+	 end.
+
+	 /* VERIFY GL ACCOUNTS/COST CENTERS */
+	 {gprun.i ""gpglver.p"" "(input pod_acct, input pod_cc,
+						     output glvalid)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	 if glvalid = no then do:
+	    continue = no.
+	    leave .
+	 end.
+	 find pt_mstr where pt_part = pod_part no-lock no-error no-wait.
+	 if available pt_mstr and desc1 = pt_desc1 then do:
+	       pod_desc = "".
+	 end.
+	 else pod_desc = desc1.
+	 if pod_loc = "" and pod_insp_rqd then do:
+	    pod_loc = poc_insp_loc.
+	    {mfmsg02.i 351 1 pod_loc}
+	 end.
+/*G1QK	 if icc_cur_cost = "NONE" and pod_cst_up = yes then do:            */
+/*G1QK	    pod_cst_up = no.                                               */
+/*G1QK	    {mfmsg.i 374 2}                                                */
+/*G1QK	 end.                                                              */
+
+
+	 /* Work Order Update/Validation moved to subroutine to */
+	 /* pick up work orders in remote databases.            */
+	 if pod_type = "S"
+	    and pod_req_nbr = ""
+	 then do:
+
+	    old_db = global_db.
+	    if si_db <> global_db then do:
+	       {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	    end.
+
+	    assign
+		worklot  = pod_wo_lot
+		routeop  = pod_op
+		workpart = pod_part
+		workproj = pod_project.
+/*LB01*/{gprun.i ""zzpopomtd1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	    assign pod_wo_lot = worklot
+		      pod_op     = routeop.
+	    if old_db <> global_db then do:
+	       {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	    end.
+
+	 end.
+	 continue = yes. /* set the flag to yes for successful completion */

@@ -1,0 +1,1 @@
+%DLC%\bin\prowin32  -b -p cim-lot-mf.p -pf c:\mfg_demo\train.pf -ininame c:\mfg_demo\progress.svg

@@ -1,0 +1,929 @@
+UPDATE DATABASE "?"
+
+ADD TABLE "b_usr_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "user mastr file"
+  DUMP-NAME "b_usr_ms"
+
+ADD FIELD "b_usr_usrid" OF "b_usr_mstr" AS character 
+  DESCRIPTION "user code used to log in system"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "user code"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL ""
+  ORDER 10
+
+ADD FIELD "b_usr_pwd" OF "b_usr_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "密码"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "密码"
+  ORDER 20
+
+ADD FIELD "b_usr_name" OF "b_usr_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "用户姓名"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "用户姓名"
+  ORDER 30
+
+ADD FIELD "b_usr_printer" OF "b_usr_mstr" AS character 
+  DESCRIPTION "default printer for this user"
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "用户默认打印机"
+  POSITION 5
+  SQL-WIDTH 100
+  COLUMN-LABEL "用户默认打印机"
+  ORDER 40
+
+ADD INDEX "b_usr_usrid" ON "b_usr_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "b_usr_usrid" ASCENDING 
+
+ADD TABLE "b_mnd_det"
+  AREA "Schema Area"
+  LABEL "mnue mstr file"
+  DUMP-NAME "b_mnd_de"
+
+ADD FIELD "b_mnd_nbr" OF "b_mnd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "菜单号码"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "菜单号码"
+  ORDER 10
+
+ADD FIELD "b_mnd_exec" OF "b_mnd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "菜单文件"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "菜单文件"
+  ORDER 40
+
+ADD FIELD "b_mnd_name" OF "b_mnd_det" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "程序名"
+  POSITION 4
+  SQL-WIDTH 100
+  COLUMN-LABEL "程序名"
+  ORDER 30
+
+ADD FIELD "b_mnd_select" OF "b_mnd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "项次"
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "项次"
+  ORDER 20
+
+ADD FIELD "b_mnd_module" OF "b_mnd_det" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  LABEL "模块"
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "模块"
+  ORDER 50
+
+ADD INDEX "b_mnd_nbr" ON "b_mnd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "b_mnd_nbr" ASCENDING 
+
+ADD TABLE "b_usrd_det"
+  AREA "Schema Area"
+  DESCRIPTION "user menu detail"
+  DUMP-NAME "b_usrd_d"
+
+ADD FIELD "b_usrd_usrid" OF "b_usrd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "用户代码"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "用户代码"
+  ORDER 10
+
+ADD FIELD "b_usrd_exec" OF "b_usrd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "执行程序"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "执行程序"
+  ORDER 30
+
+ADD FIELD "b_usrd_sel" OF "b_usrd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "b_usrd_program" OF "b_usrd_det" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 100
+  ORDER 20
+
+ADD INDEX "b_usrd_usrid" ON "b_usrd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "b_usrd_usrid" ASCENDING 
+  INDEX-FIELD "b_usrd_exec" ASCENDING 
+
+ADD TABLE "b_usrh_hist"
+  AREA "Schema Area"
+  DESCRIPTION "the history of user's log on"
+  DUMP-NAME "b_usrh_h"
+
+ADD FIELD "b_usrh_usrid" OF "b_usrh_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_usrh_date" OF "b_usrh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "b_usrh_time" OF "b_usrh_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "b_usrh_exec" OF "b_usrh_hist" AS character 
+  FORMAT "X(15)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 30
+  ORDER 40
+
+ADD INDEX "b_usrh_usrid" ON "b_usrh_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "b_usrh_usrid" ASCENDING 
+  INDEX-FIELD "b_usrh_date" ASCENDING 
+  INDEX-FIELD "b_usrh_time" ASCENDING 
+
+ADD TABLE "b_tr_hist"
+  AREA "Schema Area"
+  LABEL "barcode transaction history"
+  DESCRIPTION "barcode transaction history"
+  DUMP-NAME "b_tr_his"
+
+ADD FIELD "b_tr_line" OF "b_tr_hist" AS integer 
+  DESCRIPTION "related order lines"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "b_tr_code" OF "b_tr_hist" AS character 
+  DESCRIPTION "barcode number"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "b_tr_part" OF "b_tr_hist" AS character 
+  DESCRIPTION "item number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "b_tr_lot" OF "b_tr_hist" AS character 
+  DESCRIPTION "lot number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "b_tr_qty_ord" OF "b_tr_hist" AS decimal 
+  DESCRIPTION "order qty"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "b_tr_qty_loc" OF "b_tr_hist" AS decimal 
+  DESCRIPTION "quantity changed by location"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "b_tr_qty_chg" OF "b_tr_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "b_tr_um" OF "b_tr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "b_tr_um1" OF "b_tr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "b_tr_um2" OF "b_tr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "b_tr_std_cost" OF "b_tr_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "b_tr_cur_cost" OF "b_tr_hist" AS decimal 
+  DESCRIPTION "current cost set"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "b_tr_tr_cost" OF "b_tr_hist" AS decimal 
+  DESCRIPTION "the transaction cost"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "b_tr_date" OF "b_tr_hist" AS date 
+  DESCRIPTION "the record entry date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "b_tr_tr_date" OF "b_tr_hist" AS date 
+  DESCRIPTION "transaction date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "b_tr_eff_date" OF "b_tr_hist" AS date 
+  DESCRIPTION "transaction effective date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "b_tr_type" OF "b_tr_hist" AS character 
+  DESCRIPTION "barcode transaction type, normally equal the mfgpro type"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 190
+
+ADD FIELD "b_tr_id" OF "b_tr_hist" AS integer 
+  DESCRIPTION "sequence number to barcode transaction"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "b_tr_trnbr" OF "b_tr_hist" AS integer 
+  DESCRIPTION "mfgpro transaction sequence number related to this barcode transaction number"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "b_tr_time" OF "b_tr_hist" AS integer 
+  DESCRIPTION "transaction time"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "b_tr_loc" OF "b_tr_hist" AS character 
+  DESCRIPTION "location related to transaction"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "b_tr_site" OF "b_tr_hist" AS character 
+  DESCRIPTION "site related to transaction"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "b_tr_nbr" OF "b_tr_hist" AS character 
+  DESCRIPTION "related order (including work order ,po,so number) "
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_tr_ser" OF "b_tr_hist" AS integer 
+  DESCRIPTION "serial number"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD INDEX "b_tr_id" ON "b_tr_hist" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "b_tr_id" ASCENDING 
+
+ADD TABLE "b_co_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "barcode master file"
+  DUMP-NAME "b_co_mst"
+
+ADD FIELD "b_co_code" OF "b_co_mstr" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_co_part" OF "b_co_mstr" AS character 
+  DESCRIPTION "item number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "b_co_um" OF "b_co_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "b_co_lot" OF "b_co_mstr" AS character 
+  DESCRIPTION "lot number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "b_co_status" OF "b_co_mstr" AS character 
+  DESCRIPTION "status of a barcode, indicate if this barcode is active, or have been received or issued"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "b_co_desc1" OF "b_co_mstr" AS character 
+  DESCRIPTION "barcode's description "
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "b_co_desc2" OF "b_co_mstr" AS character 
+  DESCRIPTION "barcode's description"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "b_co_qty_ini" OF "b_co_mstr" AS decimal 
+  DESCRIPTION "initial quantity of a barcode"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "b_co_qty_cur" OF "b_co_mstr" AS decimal 
+  DESCRIPTION "current qty of a barcode"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "b_co_qty_std" OF "b_co_mstr" AS decimal 
+  DESCRIPTION "standard quanity per package"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "b_co_ser" OF "b_co_mstr" AS integer 
+  DESCRIPTION "barcode serial number"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 4
+  ORDER 130
+
+ADD FIELD "b_co_ref" OF "b_co_mstr" AS character 
+  DESCRIPTION "reference number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD INDEX "x" ON "b_co_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "b_co_code" ASCENDING 
+
+ADD TABLE "b_ld_det"
+  AREA "Schema Area"
+  DESCRIPTION "barcode location detail"
+  DUMP-NAME "b_ld_det"
+
+ADD FIELD "b_ld_loc" OF "b_ld_det" AS character 
+  DESCRIPTION "the location code"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_ld_code" OF "b_ld_det" AS character 
+  DESCRIPTION "the barcode number of a item number"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "b_ld_part" OF "b_ld_det" AS character 
+  DESCRIPTION "item number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "b_ld_qty_oh" OF "b_ld_det" AS decimal 
+  DESCRIPTION "the quantity of stock of this barcode number"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "b_ld_site" OF "b_ld_det" AS character 
+  DESCRIPTION "the site referened to this location"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "b_ld_lot" OF "b_ld_det" AS character 
+  DESCRIPTION "lot number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "b_ld_ref" OF "b_ld_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD TABLE "b_loc_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "location for barcode"
+  DUMP-NAME "b_loc_ms"
+
+ADD FIELD "b_loc_code" OF "b_loc_mstr" AS character 
+  DESCRIPTION "location's barcode number"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_loc_loc" OF "b_loc_mstr" AS character 
+  DESCRIPTION "the location referenced to this code"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "b_loc_site" OF "b_loc_mstr" AS character 
+  DESCRIPTION "the site referened to this code"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD TABLE "b_ct_ctrl"
+  AREA "Schema Area"
+  DESCRIPTION "barcode control file"
+  DUMP-NAME "b_ct_ctr"
+
+ADD FIELD "b_ct_nrm" OF "b_ct_ctrl" AS character 
+  DESCRIPTION "the rule of how to generate a barcode number, if 'SEQ',system will generate the number by sequence number,if 'YMD',system will generate the number using the prefix 'yyyymmdd' add a sequence number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_ct_up_mtd" OF "b_ct_ctrl" AS character 
+  DESCRIPTION "the method used to update the MFGPRO. if 'ONLINE' then barcode system will update mfgpro instantly, if 'ASYN' then barcode transaction will be saved and be used to update mfgpro lately"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD TABLE "b_sch_det"
+  AREA "Schema Area"
+  DESCRIPTION "scheduel detail file"
+  DUMP-NAME "b_sch_de"
+
+ADD FIELD "b_sch_nbr" OF "b_sch_det" AS character 
+  DESCRIPTION "scheduel number,specified by user,identify a single schedule"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_sch_desc" OF "b_sch_det" AS character 
+  DESCRIPTION "a schedule's description"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 48
+  ORDER 20
+
+ADD FIELD "b_sch_week" OF "b_sch_det" AS logical 
+  DESCRIPTION "from monday to sunday, specify a schedule's duration in a week"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 4
+  SQL-WIDTH 56
+  EXTENT 7
+  ORDER 30
+
+ADD FIELD "b_sch_hour" OF "b_sch_det" AS logical 
+  DESCRIPTION "a schedule's time, in a day"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 5
+  SQL-WIDTH 192
+  EXTENT 24
+  ORDER 40
+
+ADD FIELD "b_sch_proc" OF "b_sch_det" AS character 
+  DESCRIPTION "the procedure to be executed by schedule"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 40
+  ORDER 50
+
+ADD TABLE "b_bf_det"
+  AREA "Schema Area"
+  LABEL "barcode transaction history"
+  DESCRIPTION "barcode transaction buffer used to cimload"
+  DUMP-NAME "b_bf_his"
+
+ADD FIELD "b_bf_line" OF "b_bf_det" AS integer 
+  DESCRIPTION "related order lines"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "b_bf_code" OF "b_bf_det" AS character 
+  DESCRIPTION "barcode number"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "b_bf_part" OF "b_bf_det" AS character 
+  DESCRIPTION "item number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "b_bf_lot" OF "b_bf_det" AS character 
+  DESCRIPTION "lot number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "b_bf_qty_ord" OF "b_bf_det" AS decimal 
+  DESCRIPTION "order qty"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "b_bf_qty_loc" OF "b_bf_det" AS decimal 
+  DESCRIPTION "quantity changed by location"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "b_bf_qty_chg" OF "b_bf_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "b_bf_um" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "b_bf_um1" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "b_bf_um2" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "b_bf_std_cost" OF "b_bf_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "b_bf_cur_cost" OF "b_bf_det" AS decimal 
+  DESCRIPTION "current cost set"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "b_bf_tr_cost" OF "b_bf_det" AS decimal 
+  DESCRIPTION "the transaction cost"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "b_bf_date" OF "b_bf_det" AS date 
+  DESCRIPTION "the record entry date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "b_bf_tr_date" OF "b_bf_det" AS date 
+  DESCRIPTION "transaction date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "b_bf_eff_date" OF "b_bf_det" AS date 
+  DESCRIPTION "transaction effective date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "b_bf_type" OF "b_bf_det" AS character 
+  DESCRIPTION "barcode transaction type, normally equal the mfgpro type"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 190
+
+ADD FIELD "b_bf_id" OF "b_bf_det" AS integer 
+  DESCRIPTION "sequence number to barcode transaction"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "b_bf_trnbr" OF "b_bf_det" AS integer 
+  DESCRIPTION "mfgpro transaction sequence number related to this barcode transaction number"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 22
+  SQL-WIDTH 4
+  ORDER 210
+
+ADD FIELD "b_bf_time" OF "b_bf_det" AS integer 
+  DESCRIPTION "transaction time"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "b_bf_loc" OF "b_bf_det" AS character 
+  DESCRIPTION "location related to transaction"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 24
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "b_bf_site" OF "b_bf_det" AS character 
+  DESCRIPTION "site related to transaction"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 250
+
+ADD FIELD "b_bf_nbr" OF "b_bf_det" AS character 
+  DESCRIPTION "related order (including work order ,po,so number) "
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 27
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "b_bf_ser" OF "b_bf_det" AS integer 
+  DESCRIPTION "serial number"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "b_bf_tolot" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 16
+  ORDER 290
+
+ADD FIELD "b_bf_toser" OF "b_bf_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 300
+
+ADD FIELD "b_bf_program" OF "b_bf_det" AS character 
+  DESCRIPTION "procedure used to process CIM"
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 31
+  SQL-WIDTH 40
+  ORDER 260
+
+ADD FIELD "b_bf_tosite" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 32
+  SQL-WIDTH 16
+  ORDER 270
+
+ADD FIELD "b_bf_toloc" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 33
+  SQL-WIDTH 16
+  ORDER 280
+
+ADD FIELD "b_bf_tocim" OF "b_bf_det" AS logical 
+  DESCRIPTION "indicate if this record has been processed by cim procedure"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 34
+  SQL-WIDTH 1
+  ORDER 310
+
+ADD FIELD "b_bf_sess" OF "b_bf_det" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 35
+  SQL-WIDTH 40
+  ORDER 320
+
+ADD FIELD "b_bf_ref" OF "b_bf_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 36
+  SQL-WIDTH 16
+  ORDER 330
+
+ADD INDEX "b_bf_id" ON "b_bf_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "b_bf_id" ASCENDING 
+
+.
+PSC
+cpstream=gb2312
+.
+0000019770

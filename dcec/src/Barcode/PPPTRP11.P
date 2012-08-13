@@ -1,0 +1,136 @@
+/* ppptrp11.p - ITEM MASTER DATA REPORT                                 */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/* web convert ppptrp11.p (converter v1.00) Mon Oct 06 14:21:31 1997 */
+/* web tag in ppptrp11.p (converter v1.00) Mon Oct 06 14:17:39 1997 */
+/*F0PN*/ /*K0R8*/ /*V8#ConvertMode=WebReport                            */
+/*V8:ConvertMode=FullGUIReport                                 */
+/* REVISION: 1.0      LAST MODIFIED: 06/03/86   BY: PML                 */
+/* REVISION: 7.0      LAST MODIFIED: 11/28/91   BY: pml                 */
+/* REVISION: 7.4      LAST MODIFIED: 08/05/93   BY: pma *H055*          */
+/* REVISION: 7.4      LAST MODIFIED: 08/27/94   BY: rxm *GL58*          */
+/* REVISION: 7.5      LAST MODIFIED: 02/01/95   BY: tjm *J042*          */
+/* REVISION: 8.6      LAST MODIFIED: 10/10/97   BY: mzv *K0R8*          */
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan   */
+/*K0R8*/ {mfdtitle.i "e+ "}
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+&SCOPED-DEFINE ppptrp11_p_1 "Í¼Ö½!·ÖÀà"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE ppptrp11_p_2 " (¼ÌÐø)"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE ppptrp11_p_3 "Í¼ºÅ"
+/* MaxLen: Comment: */
+
+/* ********** End Translatable Strings Definitions ********* */
+
+
+define variable line like pt_prod_line.
+define variable line1 like pt_prod_line.
+define variable part like pt_part.
+define variable part1 like pt_part.
+define variable type like pt_part_type.
+define variable type1 like pt_part_type.
+define variable pldesc like pl_desc.
+
+     /* SELECT FORM */
+     form
+        line           colon 15
+        line1          label {t001.i} colon 49 skip
+        part           colon 15
+        part1          label {t001.i} colon 49 skip
+        type           colon 15
+        type1          label {t001.i} colon 49 skip
+/*GL58   with frame a side-labels. */
+/*GL58*/ with frame a side-labels width 80.
+
+/* REPORT BLOCK */
+
+
+/*K0R8*/ {wbrp01.i}
+repeat:
+
+   if part1 = hi_char then part1 = "".
+   if line1 = hi_char then line1 = "".
+   if type1 = hi_char then type1 = "".
+
+
+/*K0R8*/ if c-application-mode <> 'web':u then
+   update line line1 part part1 type type1 with frame a.
+
+/*K0R8*/ {wbrp06.i &command = update &fields = "line line1 part part1 type
+type1" &frm = "a"}
+
+/*K0R8*/ if (c-application-mode <> 'web':u) or
+/*K0R8*/ (c-application-mode = 'web':u and
+/*K0R8*/ (c-web-request begins 'data':u)) then do:
+
+
+   bcdparm = "".
+   {mfquoter.i line   }
+   {mfquoter.i line1  }
+   {mfquoter.i part   }
+   {mfquoter.i part1  }
+   {mfquoter.i type   }
+   {mfquoter.i type1  }
+
+   if part1 = "" then part1 = hi_char.
+   if line1 = "" then line1 = hi_char.
+   if type1 = "" then type1 = hi_char.
+/*K0R8*/ end.
+
+   /* PRINTER SELECTION */
+   {mfselbpr.i "printer" 132}
+   {mfphead.i}
+
+   for each pt_mstr where (pt_part >= part
+   and pt_part <= part1)
+   and (pt_prod_line >= line
+   and pt_prod_line <= line1)
+   and (pt_part_type >= type
+   and pt_part_type <= type1)
+   no-lock use-index pt_prod_part  break by pt_prod_line
+   by pt_part   with frame b width 132 no-box:
+
+      if first-of(pt_prod_line) then do:
+       if page-size  - line-counter < 7 then page.
+       find pl_mstr where pl_prod_line = pt_prod_line no-lock no-error.
+       pldesc = pl_desc.
+       display pt_prod_line pldesc no-label with frame c side-labels.
+      end.
+
+      form
+       header
+      skip(1)
+      pt_prod_line pldesc {&ppptrp11_p_2}
+      with frame a1 page-top side-labels width 132.
+      view frame a1.
+
+      if page-size - line-counter < 3 then page.
+      display
+      pt_part  pt_desc1 pt_um  pt_rev  pt_draw
+/*J042*/ column-label {&ppptrp11_p_1}
+      pt_group pt_part_type pt_status pt_added
+/*H055*/ pt_dsgn_grp pt_drwg_loc pt_drwg_size column-label {&ppptrp11_p_3}.
+/*J042** if pt_desc2 <> "" then do: **/
+/*J042*/ if pt_desc2 <> "" or pt_break_cat <> "" then do:
+     down 1.
+     display pt_desc2 @ pt_desc1
+/*J042*/         pt_break_cat @ pt_draw.
+      end.
+
+      {mfrpexit.i}
+
+   end.
+
+   /* REPORT TRAILER */
+
+   {mfrtrail.i}
+
+end.
+
+/*K0R8*/ {wbrp04.i &frame-spec = a}

@@ -1,0 +1,95 @@
+/* GUI CONVERTED from popomtb1.p (converter v1.69) Sat Mar 30 01:18:22 1996 */
+/* popomtb1.p - PURCHASE ORDER MAINTENANCE -- ORDER HEADER subroutine    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.  */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                    */
+/* REVISION: 7.4     LAST MODIFIED: 09/28/93    BY: cdt *H086**/
+/* REVISION: 7.5     LAST MODIFIED: 02/20/94    BY: dpm *J044**/
+
+/*J044*/ {mfdeclre.i}
+
+	 define shared variable po_recno as recid.
+	 define shared variable ponbr like po_nbr.
+	 define shared variable new_po like mfc_logical.
+	 define shared variable so_job like pod_so_job.
+	 define shared variable disc like pod_disc label "每项折扣".
+	 define shared variable undo_all like mfc_logical.
+	 define shared variable pocmmts like mfc_logical label "说明".
+	 define shared frame a.
+	 define shared frame b.
+	 define shared variable pocrt_int like pod_crt_int.
+/*J044*/ define shared variable impexp   like mfc_logical no-undo.
+
+/*J044*  {mfdeclre.i} */
+	 {popomt02.i}  /* Shared frames a and b */
+
+	 undo_all = yes.
+
+	 find po_mstr exclusive where recid(po_mstr) = po_recno.
+
+/*J044*
+ *       /* ALLOW CHG TO EXRATE ON ADD AND MODIFY */
+ *       /* AS LONG AS NO PRH_HIST EXISTS */
+ *       if not can-find(first prh_hist where prh_nbr = po_nbr)
+ *       and po_curr <> base_curr then
+ *J044*/
+	 setb_sub:
+	 do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J044*/    /* ALLOW CHG TO EXRATE ON ADD AND MODIFY */
+/*J044*/    /* AS LONG AS NO PRH_HIST EXISTS */
+/*J044*/    if not can-find(first prh_hist where prh_nbr = po_nbr)
+/*J044*/    and po_curr <> base_curr then do:
+
+	       FORM /*GUI*/ 
+		  
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_ent_ex colon 15
+		  po_fix_rate colon 15
+	        SKIP(.4)  /*GUI*/
+with frame setb_sub attr-space overlay side-labels
+	       centered row frame-row(b) + 4 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-setb_sub-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame setb_sub = F-setb_sub-title.
+ RECT-FRAME-LABEL:HIDDEN in frame setb_sub = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame setb_sub =
+  FRAME setb_sub:HEIGHT-PIXELS - RECT-FRAME:Y in frame setb_sub - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME setb_sub = FRAME setb_sub:WIDTH-CHARS - .5.  /*GUI*/
+
+
+	       /* DEFAULT EXRATE IF NEW PO FROM EXCHANGE RATE TABLE */
+	       if new_po then do:
+		  {gpgtex5.i &ent_curr = base_curr
+			     &curr = po_curr
+			     &date = po_ord_date
+			     &exch_from = exd_ent_rate
+			     &exch_to = po_ent_ex
+			     &loop = setb_sub}
+	       end.
+
+	       display po_ent_ex with frame setb_sub.
+	       update po_ent_ex po_fix_rate with frame setb_sub.
+	       if po_ent_ex = 0  then do:
+		  {mfmsg.i 317 3}
+		  /*ZERO NOT ALLOWED*/
+		  undo setb_sub, retry.
+	       end.
+	       hide frame setb_sub.
+	       /* SET THE EX_RATE FROM THE ENTERED EXCHANGE RATE */
+	       if new_po or po_ent_ex entered then do:
+		  {gpgtexch.i &ent_curr = base_curr
+			      &curr = po_curr
+			      &exch_from = po_ent_ex
+			      &exch_to = po_ex_rate}
+	       end.
+	    end.
+/*J044*/    undo_all = no.
+	 end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /*setb_sub*/
+
+/*J044*  undo_all = no. */

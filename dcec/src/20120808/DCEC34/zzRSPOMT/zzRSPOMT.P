@@ -1,0 +1,714 @@
+/* GUI CONVERTED from rspomt.p (converter v1.69) Mon Jan 20 16:27:29 1997 */
+/* rspomt.p - Release Management Supplier Schedules                         */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.     */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                       */
+/* REVISION: 7.3    LAST MODIFIED: 12/08/92           BY: WUG *G462*        */
+/* REVISION: 7.3    LAST MODIFIED: 03/16/93           BY: WUG *G817*        */
+/* REVISION: 7.3    LAST MODIFIED: 06/10/93           BY: WUG *GB74*        */
+/* REVISION: 7.3    LAST MODIFIED: 06/24/93           BY: WUG *GC68*        */
+/* REVISION: 7.3    LAST MODIFIED: 07/14/93           BY: WUG *GD43*        */
+/* REVISION: 7.4    LAST MODIFIED: 08/05/93           BY: bcm *H057*        */
+/* REVISION: 7.4    LAST MODIFIED: 11/01/93           BY: WUG *H204*        */
+/* REVISION: 7.3    LAST MODIFIED: 04/21/94           BY: WUG *GJ48*        */
+/* REVISION: 7.3    LAST MODIFIED: 05/16/94           BY: WUG *GJ59*        */
+/* REVISION: 7.3    LAST MODIFIED: 08/11/94           BY: dpm *GL23*        */
+/* REVISION: 8.5    LAST MODIFIED: 10/18/94           BY: mwd *J034*        */
+/* REVISION: 7.4    LAST MODIFIED: 02/06/95           BY: rxm *G0DH*        */
+/* REVISION: 8.5    LAST MODIFIED: 02/21/95           BY: dpm *J044*        */
+/* REVISION: 7.4    LAST MODIFIED: 02/23/95           BY: jzw *H0BM*        */
+/* REVISION: 7.4    LAST MODIFIED: 03/23/95           BY: bcm *G0J1*        */
+/* REVISION: 7.4    LAST MODIFIED: 04/10/95           BY: jpm *H0CH*        */
+/* REVISION: 8.5    LAST MODIFIED: 10/27/95           BY: dpm *J08Y*        */
+/* REVISION: 7.4    LAST MODIFIED: 10/05/95           BY: ais *H0G9*        */
+/* REVISION: 8.5    LAST MODIFIED: 02/22/96     BY: *J0CV* Brandy J Ewing   */
+/* REVISION: 8.5    LAST MODIFIED: 09/18/96     BY: *G2FN* Suresh Nayak     */
+/* REVISION: 8.5    LAST MODIFIED: 01/09/97     BY: *J1B1* Robin McCarthy   */
+/* REVISION: 8.5    LAST MODIFIED: 11/14/03           BY: *LB01* Long Bo      */
+
+         /* SCHEDULED ORDER MAINT */
+
+         {mfdtitle.i "++ "}       /*H057*/
+
+
+         define new shared variable cmtindx like cmt_indx.
+         define new shared frame po.
+         define new shared frame po1.
+         define new shared frame pod.
+         define new shared frame pod1.
+         define new shared frame pod2.
+         define new shared variable tax_recno as recid.
+         define variable del-yn like mfc_logical.
+         define variable yn like mfc_logical.
+         define buffer scxref for scx_ref.
+         define variable line as integer.
+         define variable scx_recid as recid.
+         define variable po_recid as recid.
+         define variable ponbr as character.
+         define variable tax_date like tax_effdate.
+         define variable valid_acct like mfc_logical.
+/*H057*/ define new shared variable tax_in like ad_tax_in.
+/*H057*/ define variable zone_to like txe_zone_to.
+/*H057*/ define variable zone_from like txe_zone_from.
+/*G0J1*/ define variable new_po like mfc_logical.
+/*J044*/ define new shared variable impexp   like mfc_logical no-undo.
+/*J044*/ define            variable imp-okay like mfc_logical no-undo.
+/*J044*/ define            variable impexp_edit     like mfc_logical no-undo.
+/*J044*/ define            variable upd_okay        like mfc_logical no-undo.
+/*J044*/ define            variable impexp_order    like po_nbr no-undo.
+
+/*H057*/ {gptxcdec.i}  /* DECLARATIONS FOR gptxcval.i */
+
+
+/*H057*/ /* TAX MANAGEMENT FORM */
+         FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_tax_usage colon 25
+            po_tax_env  colon 25
+/*H0CH*/    space(2)
+          SKIP(.4)  /*GUI*/
+with frame set_tax row 8 centered overlay side-labels NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-set_tax-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame set_tax = F-set_tax-title.
+ RECT-FRAME-LABEL:HIDDEN in frame set_tax = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame set_tax =
+  FRAME set_tax:HEIGHT-PIXELS - RECT-FRAME:Y in frame set_tax - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME set_tax = FRAME set_tax:WIDTH-CHARS - .5.  /*GUI*/
+
+
+         if no then find first pod_det no-lock.
+
+         {zzrsordfrm.i}
+
+/*G817   find first poc_ctrl no-lock. */
+
+         find first gl_ctrl no-lock no-error.
+
+/*G817   pocmmts = poc_hcmmts. */
+
+         mainloop:
+         repeat:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            find first poc_ctrl no-lock no-error. /*G817*/
+/*J08Y*/    find first iec_ctrl no-lock no-error.
+
+            pocmmts = poc_hcmmts.        /*G817*/
+
+            hide frame pod2.
+            hide frame pod1.
+            hide frame pod.
+            hide frame po1.
+
+/*G2FN**    do trans with frame po:                     */
+
+/*G2FN*/    block_1:
+/*G2FN*/    do with frame po:
+               prompt-for po_nbr po_vend editing:
+                  if frame-field = "po_nbr" then do:
+                     {mfnp05.i po_mstr po_nbr "po_sched" po_nbr "input po_nbr"}
+
+                     if recno <>  ? then do:
+                        find ad_mstr where ad_addr = po_vend no-lock no-error.
+
+                        display
+                             po_nbr
+                             po_vend
+                             ad_name.
+                     end.
+                  end.
+                  else
+                  if frame-field = "po_vend" then do:
+                     {mfnp05.i vd_mstr vd_addr yes vd_addr "input po_vend"}
+
+                     if recno <> ? then do:
+                        find ad_mstr where ad_addr = vd_addr no-lock.
+
+                        disp
+                            /*G817 po_nbr */
+                            /*G817 po_vend  */
+                            vd_addr @ po_vend        /*G817*/
+                            ad_name.
+                     end.
+                  end.
+                  else do:
+                     status input.
+                     readkey.
+                     apply lastkey.
+                  end.
+               end. /* EDITING */
+
+/*J08Y*/       impexp = no.
+/*J08Y*/       /* SET THE DEFAULT VALUE BASED ON IEC_CTRL FILE */
+/*J08Y*/       if available iec_ctrl and iec_impexp = yes then impexp = yes.
+
+
+/*G2FN**       find po_mstr where po_nbr = input po_nbr exclusive-lock no-error.   */
+/*G2FN*/       find po_mstr where po_nbr = input po_nbr no-lock no-error.
+
+               if available po_mstr then do:
+                  if not po_sched then do:
+                     {mfmsg.i 8181 3}
+                     bell.
+                     undo, retry.
+                  end.
+/*G2FN*/          new_po = no.
+/*G2FN*/          recno = recid(po_mstr).
+
+                  find ad_mstr where ad_addr = po_vend no-lock no-error.
+
+                  disp po_nbr
+                       po_vend
+                       ad_name.
+
+/*J034*/          assign pocmmts = (po_cmtindx <> 0)
+/*J034*/          print_sch      = (po_sch_mthd = "" or
+/*J034*/                     substr(po_sch_mthd,1,1) = "p" or
+/*J034*/                     substr(po_sch_mthd,1,1) = "b" or
+/*J034*/                     substr(po_sch_mthd,1,1) = "y")
+/*J034*/          edi_sch        = (substr(po_sch_mthd,1,1) = "e" or
+/*J034*/                            substr(po_sch_mthd,1,1) = "b" or
+/*J034*/                            substr(po_sch_mthd,2,1) = "y")
+/*J034*/          fax_sch        =  substr(po_sch_mthd,3,1) = "y".
+
+
+/*J08Y* *J044*          impexp = no. */
+
+                  if can-find( first ie_mstr where
+                     ie_type = "2" and ie_nbr = po_nbr ) then impexp = yes.
+                  else impexp = no.
+
+/*J034*/          display po_ap_acct
+/*J034*/                  po_ap_cc
+/*J034*/                  po_taxable
+/*H057*/                  po_taxc when ({txnew.i})
+/*J034*/                  po_cr_terms
+/*J034*/                  po_bill
+/*J034*/                  po_ship                   /*GD43*/
+/*J034*/                  print_sch
+/*J034*/                  edi_sch
+/*J034*/                  fax_sch                   /*H204*/
+/*J034*/                  po_site                   /*GC68*/
+/*J034*/                  po_shipvia
+/*J034*/                  po_fob
+/*J034*/                  po_buyer
+/*J034*/                  po_contact
+/*J034*/                  po_contract
+/*J034*/                  pocmmts
+/*J044*/                  impexp
+/*J034*/          with frame po1.
+
+/*J034*/          {gprun.i ""gpsiver.p"" "(input po_site,
+                                           input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/          if return_int = 0 then do:
+/*J034*/             {mfmsg.i 725 3} /* USER DOES NOT HAVE ACCESS TO SITE */
+/*J034*/              undo mainloop, retry mainloop.
+/*J034*/          end.
+
+/*J034** end of changes. */
+
+               end.  /* IF AVAILABLE PO_MSTR */
+
+/*GL23*        find vd_mstr where vd_addr = input po_vend no-lock. */
+/*GL23*/       find vd_mstr where vd_addr = input po_vend no-lock no-error.
+               if not available vd_mstr then do:
+                  {mfmsg.i 2 3} /* "Not a valid supplier" */
+                  next-prompt po_vend.
+                  undo, retry.
+               end.
+
+
+               /*GJ59 HAVE TO BE IN PO DATABASE*/
+               find first pod_det where pod_nbr = input po_nbr no-lock no-error.
+
+               if available pod_det and pod_po_db <> global_db then do:
+                  {mfmsg03.i 2514 3 """²É¹ºµ¥""" """" pod_po_db}
+                  undo, retry.
+               end.
+
+
+               find ad_mstr where ad_addr = vd_addr no-lock.
+
+               disp
+                    ad_name.
+
+               if not available po_mstr then do:
+/*G2FN**
+*                  {mfmsg.i 1 1}
+*
+*                  create po_mstr.
+*G2FN**/
+
+/*G0J1*/          new_po = yes.
+
+/*G2FN**          if input po_nbr = "" then do:                    */
+/*G2FN*/          if input po_nbr = "" then do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                     {mfnctrlc.i poc_ctrl poc_po_pre
+                                 poc_po_nbr po_mstr po_nbr ponbr}
+                     find first poc_ctrl no-lock.
+                     disp ponbr @ po_nbr.
+                  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*G2FN*/       end. /*if not available po_mstr                     */
+/*G2FN*/    end. /* end of block_1                                 */
+
+/*G2FN*/    block_2:
+/*G2FN*/    do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*G2FN*/    find first poc_ctrl no-lock.
+/*G2FN*/    if not new_po then
+/*G2FN*/    do:
+/*G2FN*/       find po_mstr where recid(po_mstr) = recno exclusive-lock .
+/*G2FN*/    end.
+/*G2FN*/    else
+/*G2FN*/    do:
+/*G2FN*/       {mfmsg.i 1 1}
+/*G2FN*/       create po_mstr.
+/*G2FN*/       recno = recid(po_mstr).
+
+               assign
+                  po_nbr = input po_nbr
+                  po_ord_date = today
+                  po_due_date = today
+                  po_ship = poc_ship
+                  po_bill = poc_bill
+                  po_confirm = yes
+                  po_user_id = global_userid
+                  po_fst_id = poc_fst_id
+                  po_pst_id = poc_pst_id
+                  po_vend = vd_addr
+                  po_sched = yes
+/*J0CV*/          po_ers_opt = "1"
+                  po_cr_terms = vd_cr_terms
+                  po_buyer = vd_buyer
+                  po_disc_pct = vd_disc_pct
+                  po_shipvia = vd_shipvia
+                  po_taxable = vd_taxable
+                  po_contact = vd_pur_cntct
+                  po_rmks = vd_rmks
+                  po_ap_acct = vd_ap_acct
+                  po_ap_cc = vd_ap_cc
+                  po_curr = vd_curr
+                  po_lang = vd_lang
+                  po_sch_mthd = ad_sch_mthd      /*GB74*/
+                  po_inv_mthd = ad_po_mthd       /*GB74*/
+                  .
+
+/*G0DH*/          if base_curr <> po_curr then do:
+/*G0DH*/             {gpgtex5.i  &ent_curr  = base_curr
+                                 &curr      = po_curr
+                                 &date      = po_ord_date
+                                 &exch_from = exd_ent_rate
+                                 &exch_to   = po_ent_ex
+                                 &loop      = mainloop}
+
+/*G0DH*/             {gpgtexch.i &ent_curr  = base_curr
+                                 &curr      = po_curr
+                                 &exch_from = po_ent_ex
+                                 &exch_to   = po_ex_rate}
+/*G0DH*/          end.
+
+                  tax_date = today.
+
+/*H057*/          if {txnew.i} then do:
+/*H057*/             po_taxable   = ad_taxable.
+/*H057*/             po_tax_usage = ad_tax_usage.
+                     po_taxc      = ad_taxc.
+                     tax_in       = ad_tax_in.
+/*H057*/          end.
+/*H057*/          else do:
+                     {gprun.i ""gptax.p"" "(input ad_state, input ad_county,
+                                            input ad_city, input tax_date)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                     find tax_mstr where
+                        recid(tax_mstr) = tax_recno no-lock no-error.
+                     if available tax_mstr then do:
+                        assign
+                               po_tax_pct[1] = tax_tax_pct[1]
+                               po_tax_pct[2] = tax_tax_pct[2]
+                               po_tax_pct[3] = tax_tax_pct[3].
+                     end.
+/*H057*/          end.
+
+
+                  if po_ap_acct = "" then do:
+                     find first gl_ctrl no-lock no-error.
+                     assign
+                           po_ap_acct = gl_ap_acct
+                           po_ap_cc = gl_ap_cc.
+                  end.
+/*G2FN**       end.                                            */
+/*G2FN*/       end.  /* end of create po_mstr                  */
+
+/*G2FN**
+* /*G0J1*/       else  /* is available */
+* /*G0J1*/          new_po = no.
+*G2FN**/
+
+               po_recid = recid(po_mstr).
+/*G2FN**    end.                                               */
+
+/*G2FN**    release poc_ctrl.                                  */
+
+
+
+            /* HEADER DATA ITEMS */
+
+/*G2FN**
+*           do trans:
+*              find po_mstr where recid(po_mstr) = po_recid exclusive-lock.
+*G2FN**/
+
+               pocmmts = (po_cmtindx <> 0 or (new po_mstr and poc_hcmmts)).
+
+               /*H204 REVISIONS TO FOLLOWING SECTION*/
+               print_sch =
+                          (po_sch_mthd = ""
+                          or
+                          substr(po_sch_mthd,1,1) = "p"
+                          or
+                          substr(po_sch_mthd,1,1) = "b"
+                          or
+                          substr(po_sch_mthd,1,1) = "y").
+
+               edi_sch =
+                         (substr(po_sch_mthd,1,1) = "e"
+                         or
+                         substr(po_sch_mthd,1,1) = "b"
+                         or
+                         substr(po_sch_mthd,2,1) = "y").
+
+               fax_sch = substr(po_sch_mthd,3,1) = "y".
+               /*H204 END SECTION*/
+
+               disp
+                    po_ap_acct
+                    po_ap_cc
+                    po_taxable /*H057*/ po_taxc when ({txnew.i})
+                    po_cr_terms
+                    po_bill
+                    po_ship                   /*GD43*/
+                    print_sch
+                    edi_sch
+                    fax_sch                   /*H204*/
+                    po_site                   /*GC68*/
+                    po_shipvia
+                    po_fob
+                    po_buyer
+                    po_contact
+                    po_contract
+/*G0J1*/            po_curr
+                    pocmmts
+                    impexp                   /*J044*/
+               with frame po1.
+
+/*G0J1*/       setb:
+               do with frame po1 on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  set
+                     po_ap_acct
+                     po_ap_cc
+                     po_taxable /*H057*/ po_taxc when ({txnew.i})
+                     po_cr_terms
+                     po_bill
+                     po_ship                /*GD43*/
+                     print_sch
+                     edi_sch
+                     fax_sch                /*H204*/
+                     po_site                /*GC68*/
+                     po_shipvia
+                     po_fob
+                     po_buyer
+                     po_contact
+                     po_contract
+/*G0J1*/             po_curr when (new_po)
+                 /*  pocmmts.                *J044*/
+                     pocmmts                 /*J044*/
+                     impexp.                 /*J044*/
+
+                  {gpglver1.i &acc=po_ap_acct &sub=? &cc=po_ap_cc &frame=po1}
+
+                  if po_curr <> base_curr then do:
+                     find ac_mstr where
+                        ac_code = substring(po_ap_acct,1,(8 - global_sub_len))
+                        no-lock no-error.
+
+                     if available ac_mstr and
+                     ac_curr <> po_curr and ac_curr <> base_curr then do:
+                        {mfmsg.i 134 3}
+                        /*ACCT CURRENCY MUST MATCH TRANSACTION OR BASE CURR*/
+                        next-prompt po_ap_acct.
+                        undo, retry.
+                     end.
+                  end.
+
+                  if not can-find(ad_mstr where ad_addr = po_ship)
+                  then do:                                /*GD43*/
+                     {mfmsg.i 13 3}                       /*GD43*/
+                     next-prompt po_ship.                 /*GD43*/
+                     undo, retry.                         /*GD43*/
+                  end.                                    /*GD43*/
+
+                  /*H204 REVISIONS TO FOLLOWING SECTION*/
+                  po_sch_mthd = "nnn".
+                  if print_sch then substr(po_sch_mthd,1,1) = "y".
+                  if edi_sch then substr(po_sch_mthd,2,1) = "y".
+                  if fax_sch then substr(po_sch_mthd,3,1) = "y".
+                  /*H204 END SECTION*/
+
+/*J034*/          {gprun.i ""gpsiver.p"" "(input po_site,
+                                    input ?,
+                                    output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/          if return_int = 0 then do:
+/*J034*/             {mfmsg.i 725 3} /* USER DOES NOT HAVE ACCESS TO THIS SITE*/
+/*J034*/             next-prompt po_site.
+/*J034*/             undo, retry.
+/*J034*/          end.
+
+/*G0J1*/          /* ALLOW CHG TO EXRATE ON ADD AND MODIFY */
+/*G0J1*/          /* AS LONG AS NO PRH_HIST EXISTS */
+/*G0J1*/          if not can-find(first prh_hist where prh_nbr = po_nbr)
+/*G0J1*/          and po_curr <> base_curr then
+/*G0J1*/          setb_sub:
+/*G0J1*/          do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G0J1*/             FORM /*GUI*/ 
+/*G0J1*/                
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_ent_ex colon 15 space(2)
+/*G0J1*/                po_fix_rate colon 15 space(2)
+/*G0J1*/              SKIP(.4)  /*GUI*/
+with frame setb_sub attr-space overlay side-labels
+/*H0G9  /*G0J1*/     centered row frame-row(b) + 4.       */
+/*H0G9*/             centered row frame-row(po1) + 4 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-setb_sub-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame setb_sub = F-setb_sub-title.
+ RECT-FRAME-LABEL:HIDDEN in frame setb_sub = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame setb_sub =
+  FRAME setb_sub:HEIGHT-PIXELS - RECT-FRAME:Y in frame setb_sub - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME setb_sub = FRAME setb_sub:WIDTH-CHARS - .5.  /*GUI*/
+
+
+/*G0J1*/             /* DEFAULT EXRATE IF NEW PO FROM EXCHANGE RATE TABLE */
+/*G0J1*/             if new_po then do:
+/*G0J1*/               {gpgtex5.i &ent_curr = base_curr
+                                  &curr = po_curr
+                                  &date = po_ord_date
+                                  &exch_from = exd_ent_rate
+                                  &exch_to = po_ent_ex
+                                  &loop = setb}
+/*G0J1*/             end.
+
+/*G0J1*/             display po_ent_ex with frame setb_sub.
+/*G0J1*/             update po_ent_ex po_fix_rate with frame setb_sub.
+/*G0J1*/             if po_ent_ex = 0  then do:
+/*G0J1*/                {mfmsg.i 317 3}
+/*G0J1*/                /*ZERO NOT ALLOWED*/
+/*G0J1*/                undo setb_sub, retry.
+/*G0J1*/             end.
+/*G0J1*/             hide frame setb_sub.
+/*G0J1*/             /* SET THE EX_RATE FROM THE ENTERED EXCHANGE RATE */
+/*G0J1*/             if new_po or po_ent_ex entered then do:
+/*G0J1*/                {gpgtexch.i &ent_curr = base_curr
+/*G0J1*/                            &curr = po_curr
+/*G0J1*/                            &exch_from = po_ent_ex
+/*G0J1*/                            &exch_to = po_ex_rate}
+/*G0J1*/             end.
+/*G0J1*/          end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /*setb_sub*/
+
+/*H057*/          /* VALIDATE TAX CODE AND TAXABLE BY TAX DATE OR DUE DATE */
+                  if {txnew.i} then do:
+                     {gptxcval.i &code=po_taxc &taxable=po_taxable
+                                 &date=po_tax_date &frame="b"}
+                     set_tax: do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                        if po_tax_env = "" then do:
+
+                           /* GET SHIP-TO TAX ZONE FROM PO_SHIP ADDRESS */
+                           find ad_mstr where
+                              ad_addr = po_ship no-lock no-error.
+                           if available(ad_mstr) then zone_to = ad_tax_zone.
+                           else do:
+/*H0BM*                       {mfmsg03.i 902 2 """Site Address""" """" """"} */
+/*H0BM*/                      {mfmsg.i 864 2} /* SITE ADDRESS DOES NOT EXIST */
+                              zone_to = "".
+                           end.
+
+                           /* GET VENDOR SHIP-FROM TAX ZONE FROM ADDRESS */
+                           find first ad_mstr where ad_addr = po_vend
+                              no-lock no-error.
+                           if available(ad_mstr) then zone_from = ad_tax_zone.
+
+                           /* SUGGEST A TAX ENVIRONMENT */
+                           {gprun.i ""txtxeget.p"" "(input  zone_to,
+                                                     input  zone_from,
+                                                     input  po_taxc,
+                                                     output po_tax_env)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                        end.
+
+                        update po_tax_usage po_tax_env with frame set_tax.
+
+                        /* VALIDATE TAX ENVIRONMENT */
+                        if po_tax_env = "" then do:
+/*H0BM*                    {mfmsg03.i 906 3 """ Tax Environment""" """" """"}*/
+/*H0BM*/                   {mfmsg.i 944 3} /* BLANK TAX ENVIRONMENT NOT */
+/*H0BM*/                                   /* ALLOWED */
+                           next-prompt po_tax_env with frame set_tax.
+                           undo, retry set_tax.
+                        end.
+
+                        if not {gptxe.v po_tax_env ""no""} then do:
+/*H0BM*                    {mfmsg03.i 902 3 """Tax Environment""" """" """"}.*/
+/*H0BM*/                   {mfmsg.i 869 3}. /* TAX ENVIRONMENT DOES NOT EXIST */
+                           next-prompt po_tax_env with frame set_tax.
+                           undo, retry set_tax.
+                        end.
+                     end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* SET_TAX */
+                     hide frame set_tax.
+                  end.  /* if txnew.i */
+                  /*H057 END OF NEW CODE */
+
+/*J044*/       /* IF IMPORT EXPORT FLAG IS SET TO YES CALL THE IMPORT EXPORT*/
+/*J044*/       /* CREATE ROUTINE TO CREATE ie_mstr ied_det AND UPDATE ie_mstr */
+/*J044*/          if impexp then do:
+/*J044*/             imp-okay = no.
+/*J044*/             {gprun.i ""iemstrcr.p"" "(input ""2"",
+                                               input po_nbr,
+                                               input recid(po_mstr),
+                                               input-output imp-okay )"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J044*/             if imp-okay = no then do:
+/*J044*/                view frame  po1 .
+/*J044*/                undo , retry.
+/*J044*/             end.
+/*J044*/          end.
+
+/**J0CV**FOLLOWING BLOCK ADDED TO SUPPORT ERS PROCESSING**/
+
+                  find first poc_ctrl no-lock no-error.
+
+                  /* UPDATE ERS FIELDS ONLY IF ERS PROCESSING ENABLED */
+                  if available poc_ctrl and poc_ers_proc then do:
+                     if new_po then
+                        po_ers_opt = poc_ers_opt.
+
+                     display
+                        po_ers_opt   colon 23 skip
+                        po_pr_lst_tp colon 23 space(1)
+                     with frame po-ers side-labels overlay centered
+                     row (frame-row(po1) + 5).
+
+                     ers-loop:
+                     do with frame poers on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                        set po_ers_opt po_pr_lst_tp with frame po-ers.
+
+                        /* VALIDATE ERS OPTION */
+                        if not({gppoers.v po_ers_opt}) then do:
+/*J1B1                     /* ERS OPTION MUST BE BLANK, 0, OR 1 */ */
+/*J1B1                     {mfmsg02.i 2303 3 "'Blank, 0, or 1'"} */
+/*J1B1*/                   {mfmsg.i 2303 3}          /* INVALID ERS OPTION */
+                           next-prompt po_ers_opt.
+                           undo, retry ers-loop.
+                        end.
+
+                     end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+   /* ERS-LOOP */
+                     hide frame po-ers.
+                  end.  /* IF AVAIL POC_CTRL */
+/**J0CV**END OF ADDED BLOCK**/
+
+                  hide frame po1.
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+
+               /* HEADER COMMENTS */
+
+               global_lang = po_lang.
+               global_type = "".
+
+               if pocmmts = yes then do:
+                  cmtindx = po_cmtindx.
+                  global_ref = po_vend.
+                  {gprun.i ""gpcmmt01.p"" "(input ""po_mstr"")"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  po_mstr.po_cmtindx = cmtindx.
+
+                  view frame po.
+               end.
+/*G2FN**    end.                                                */
+/*G2FN*/    end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* end of block_2                              */
+
+/*J044*/    impexp_order = po_nbr.
+
+            release po_mstr.    /*GJ48*/
+
+
+            /*GJ59 COPY PO HEADER TO ALL REMOTE DBS*/
+            {gprun.i ""rsrsoup.p"" "(input po_recid)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+
+            /* DO DETAIL MAINTENANCE */
+
+            /*GJ48 USE PO_RECID INSTEAD OF RECID(PO_MSTR)*/
+
+/*LB01 031114*/
+            {gprun.i ""zzrspomtb.p"" "(input po_recid)"}
+            
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J044*/    /* IMPORT EXPORT FLAG IS SET TO YES CALL THE IMPORT EXPORT DETAIL */
+/*J044*/    /* LINE MAINTENANCE PROGRAM FOR USER TO UPDATE ied_det            */
+
+/*J044*/    if not batchrun and impexp then do:
+/*J044*/       impexp_edit = no.
+/*J044*/       {mfmsg01.i 271 1 impexp_edit} /*VIEW EDIT IMPORT EXPORT DATA ? */
+/*J044*/       if impexp_edit then do:
+/*J044*/          upd_okay = no.
+/*J044*/          {gprun.i ""iedmta.p"" "(input ""2"",
+                                          input impexp_order,
+                                          input-output upd_okay )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J044*/       end.
+/*J044*/    end.
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+

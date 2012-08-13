@@ -1,0 +1,6 @@
+DEFINE {1} SHARED TEMP-TABLE xxerrtb
+    FIELD xxerr AS CHARACTER
+    FIELD xxmsg AS CHARACTER .
+
+DEFINE {1} SHARED VARIABLE xxxfid LIKE bdld_id.
+DEFINE {1} SHARED VARIABLE xxxlid LIKE bdld_id.

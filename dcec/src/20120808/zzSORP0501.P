@@ -1,0 +1,672 @@
+/* GUI CONVERTED from zzsorp0501.p (converter v1.69) Mon Aug 25 00:54:35 1997 */
+/* sorp0501.p  -  SALES ORDER PRINT                             */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Report                                        */
+/* REVISION: 5.0      LAST MODIFIED: 03/15/90   BY: MLB *B615**/
+/* REVISION: 5.0      LAST MODIFIED: 03/30/90   BY: ftb *B642**/
+/* REVISION: 5.0      LAST MODIFIED: 06/21/90   BY: MLB *B711**/
+/* REVISION: 6.0      LAST MODIFIED: 07/05/90   BY: WUG *D043**/
+/* REVISION: 6.0      LAST MODIFIED: 08/20/90   BY; MLB *B755**/
+/* REVISION: 6.0      LAST MODIFIED: 12/13/90   BY: dld *D257**/
+/* REVISION: 6.0      LAST MODIFIED: 12/27/90   BY: MLB *D238**/
+/* REVISION: 6.0      LAST MODIFIED: 03/12/91   BY: afs *D425**/
+/* REVISION: 6.0      LAST MODIFIED: 12/16/91   BY: MLV *D962**/
+/* REVISION: 7.0      LAST MODIFIED: 04/02/92   BY: dld *F322**/
+/* REVISION: 7.0      LAST MODIFIED: 04/09/92   BY: emb *F369**/
+/* REVISION: 7.0      LAST MODIFIED: 04/10/92   BY: dld *F358**/
+/* REVISION: 7.2      LAST MODIFIED: 11/13/92   BY: tjs *G191**/
+/* REVISION: 7.3      LAST MODIFIED: 12/02/92   BY: WUG *G383**/
+/* REVISION: 7.3      LAST MODIFIED: 02/19/93   by: jms *G712**/
+/* REVISION: 7.4      LAST MODIFIED: 07/20/93   by: bcm *H032**/
+/* REVISION: 7.2      LAST MODIFIED: 01/05/94   by: dpm *FL18**/
+/* REVISION: 7.3      LAST MODIFIED: 06/22/94   BY: WUG *GK60**/
+/* REVISION: 7.2      LAST MODIFIED: 02/25/95   BY: aep *F0KF**/
+/* REVISION: 7.4      LAST MODIFIED: 03/27/95   BY: kjm *F0NZ**/
+/* REVISION: 7.4      LAST MODIFIED: 04/27/95   BY: rxm *F0PD**/
+/* REVISION: 8.5      LAST MODIFIED: 02/24/95   BY: NTE *J042**/
+/* REVISION: 8.5      LAST MODIFIED: 10/05/95   BY: srk *J08B**/
+/* REVISION: 8.5      LAST MODIFIED: 07/13/95   BY: taf *J053**/
+/* REVISION: 8.5      LAST MODIFIED: 06/13/96   BY: DAH *J0T0**/
+/* REVISION: 8.5      LAST MODIFIED: 07/19/96   BY: taf *J0ZZ**/
+/* REVISION: 8.5      LAST MODIFIED: 09/16/96   BY: *G2FH* Aruna Patil  */
+/* REVISION: 8.5      LAST MODIFIED: 08/25/97   BY: *J1YJ* Aruna Patil  */
+
+/* LAST MODIFIED BY *LB01* LONG BO 2004/07/12				*/
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+/*B615*/ {mfdeclre.i}
+
+/*J053*/ define new shared variable rndmthd like rnd_rnd_mthd.
+     define shared variable cust like so_cust.
+     define shared variable cust1 like so_cust.
+     define shared variable nbr like so_nbr.
+     define shared variable nbr1 like so_nbr.
+     define shared variable ord like so_ord_date.
+     define shared variable ord1 like so_ord_date.
+     define shared variable company as character format "X(38)" extent 6.
+     define shared variable print_options like mfc_logical initial no label
+                          "打印特性与选项".
+	 define    shared        variable comp_addr like soc_company.  /*lb01*/
+     define shared variable addr as character format "x(38)" extent 6.
+/*B615*/ define shared variable lang like so_lang.
+/*B615*/ define shared variable lang1 like so_lang.
+
+     define variable qty_open like sod_qty_ord format "->>>>>>9.9<<<<<"
+                           label "供货数量".
+     define variable ext_price like sod_price label "总价格"
+                       format "->>>,>>>,>>9.99".
+     define variable desc1 like pt_desc1.
+     define variable pages as integer.
+     define buffer ship for ad_mstr.
+     define new shared variable so_recno as recid.
+     define variable billto as character format "x(38)" extent 6.
+     define variable shipto as character format "x(38)" extent 6.
+     define variable ext_price_total like ext_price.
+     define variable termsdesc like ct_desc.
+     define variable billattn like ad_attn.
+     define variable shipattn like ad_attn.
+     define variable billphn like ad_phone.
+     define variable shipphn like ad_phone.
+     define variable shipfax like ad_fax.	/*lb01*/ 
+     define variable billfax like ad_fax.  /*lb01*/    
+     define variable first_line like mfc_logical.
+     define variable sob_desc like pt_desc1.
+     define variable sob_desc2 like pt_desc2.
+     define variable sob_um like pt_um.
+     define variable desc2 like pt_desc2.
+     define variable sob-qty like sob_qty_req.
+/*B642*/ define shared variable print_trlr like mfc_logical initial no
+/*B642*/        label "打印客户订单尾栏吗 ?".
+/*B642*/ define variable prepaid-lbl as character format "x(12)".
+     define variable total-lbl as character format "x(12)".
+/*J053 /*B755*/ define variable i as integer. */
+/*D257*/ define variable resale like cm_resale format "x(20)".
+/*D238*/ define shared variable gst_id like so_fst_id.
+/*F0KF*/ define buffer somstr for so_mstr.
+/*F0KF*/ define variable so_printso like mfc_logical.
+/*F0PD*/ define variable cont_lbl as character format "x(10)"
+        initial "** 继续 **" no-undo.
+/*F0PD*/ define new shared frame c.
+/*J053*/ define variable oldsession as character no-undo.
+/*J053*/ define variable ext_price_fmt as character no-undo.
+/*J053*/ define variable ext_price_old as character no-undo.
+/*J053*/ define variable prepaid_fmt as character no-undo.
+/*J053*/ define variable prepaid_old as character no-undo.
+/*J053*/ define variable oldcurr like so_curr no-undo.
+/*J0T0*/ define new shared variable disc_prnt_label as character format "x(8)".
+/*J0T0*/ define            variable hdl_disc_lbl as handle.
+/*J0T0*/ define            variable hdl_sum_disc_lbl as handle.
+/*J0T0*/ define            variable pm_code like pt_pm_code.
+
+/*lb01*--*/
+		define variable saleattn like ad_attn.
+		define variable salephn	 like ad_phone.
+		define variable salephn2 like ad_phone2.
+		define variable salefax	 like ad_fax.
+		define variable saleqry	 like ad_fax2.		
+/*--lb01*/
+/*J042*/ {sodiscwk.i &new="new"} /* Shared workfile for summary discounts */
+
+/*J053*/ {mfsotrla.i "NEW"}
+/*B755 /*B642*/ {mfsotrla.i}*/
+/*J053* /*D238*/ find first gl_ctrl no-lock.  TAKEN CARE OF IN MFSOTRLA.I */
+/*F0PD   form with frame c down. */
+
+/*J0T0*/ FORM /*GUI*/ 
+/*J0T0*/    space(46)
+/*J0T0*/    total-lbl
+/*J0T0*/    space(4)
+/*J0T0*/    ext_price_total
+/*J0T0*/ with STREAM-IO /*GUI*/  frame no_trailer down width 80 no-labels no-box.
+
+
+/*lb01*--*/
+		FORM
+			"客户确认意见：" skip(3)
+			so_shipvia no-label skip
+			"汇款内容:"
+		with stream-io frame so_tr_add1 side-label width 80 no-box.
+/*--lb01*/
+
+/*J0T0*/ hdl_disc_lbl     = prnt_disc_amt:handle in frame disc_print.
+/*J0T0*/ hdl_sum_disc_lbl = prnt_sum_disc_amt:handle in frame disc_sum_print.
+
+/*J053*/ /* ASSIGN ORIGINAL FORMAT TO _OLD VARIABLES */
+/*J053*/ assign
+/*J053*/   nontax_old = nontaxable_amt:format
+/*J053*/   taxable_old = taxable_amt:format
+/*J053*/   line_tot_old = line_total:format
+/*J053*/   line_pst_old = line_pst:format
+/*J053*/   disc_old     = disc_amt:format
+/*J053*/   trl_amt_old = so_trl1_amt:format
+/*J053*/   tax_amt_old = tax_amt:format
+/*J053*/   tot_pst_old = total_pst:format
+/*J053*/   tax_old     = tax[1]:format
+/*J053*/   amt_old     = amt[1]:format
+/*J053*/   ord_amt_old = ord_amt:format.
+
+/*J053*/ FORM /*GUI*/ 
+/*J053*/    prepaid-lbl at 2
+/*J053*/    so_prepaid
+/*J053*/ with STREAM-IO /*GUI*/  frame prepd width 80 no-labels.
+
+/*J053*/ oldsession = SESSION:numeric-format.
+/*F0PD*/ {so05f01.i}               /* INCLUDE FILE FOR FRAME C */
+
+/*J053*/ /* SET PREPAID OLD TO PREPAID:FORMAT AND EXT_PRICE:FORMAT */
+/*J053*/ assign prepaid_old = so_prepaid:format
+/*J053*/        ext_price_old = ext_price:format.
+
+/*G712*/ /* DEFINE THE VARIABLES FOR DISPLAY OF VAT REG NO & COUNTRY CODE */
+/*G712*/ {gpvtecdf.i &var="shared"}
+/*G712*/ {gpvtepdf.i &var=" "}
+
+     pages = 0.
+     for each so_mstr where (so_nbr >= nbr)
+     and (so_nbr <= nbr1)
+     and (so_cust >= cust)
+     and (so_cust <= cust1)
+     and (so_print_so = yes)
+     and (so_ord_date >= ord or ord = ?)
+     and (so_ord_date <= ord1 or ord1 = ?)
+/*B615*/ and (so_lang >= lang and so_lang <= lang1)
+/*G383*/ and not so_sched
+/*J1YJ*/ and so_fsm_type = ""
+     no-lock by so_nbr with frame b no-box:
+
+/*F0KF*/    so_recno = recid(so_mstr).
+
+/*F0KF*/    /* DO LOOP ADDED TO SKIP LOCKED SO_MSTR RECORDS */
+
+/*F0KF*/    do for somstr:
+/*F0KF*/       find somstr where so_recno = recid(somstr)
+/*F0KF*/       exclusive-lock no-wait no-error.
+/*F0KF*/       if (available somstr and not locked somstr) then
+/*F0KF*/          so_printso = yes.
+/*F0KF*/       else
+/*F0KF*/          so_printso = no.
+/*F0KF*/    end.
+/*F0KF*/    if so_printso = no then next.
+
+
+/*J0ZZ************* REPLACE BY GPCURMTH.I ***********************************
+** /*J053*/ if (oldcurr <> so_curr) then do:
+** /*J053*/    assign
+** /*J053*/       oldcurr = so_curr.
+** /*J053*/    /* DETERMINE ROUNDING METHOD FROM DOCUMENT CURRENCY OR BASE    */
+** /*J053*/    if (gl_base_curr <> so_curr) then do:
+** /*J053*/       find first ex_mstr where ex_curr = so_curr no-lock no-error.
+** /*J053*/       if not available ex_mstr then do:
+** /*J053*           CURRENCY EXCHANGE MASTER DOES NOT EXIST              */
+** /*J053*/          {mfmsg.i 964 4}
+** /*J053*/          next.
+** /*J053*/       end.
+** /*J053*/       rndmthd = ex_rnd_mthd.
+** /*J053*/    end.
+** /*J053*/    else rndmthd = gl_rnd_mthd.
+**J0ZZ***********************************************************************/
+
+/*J0ZZ*/    if (oldcurr <> so_curr) or (oldcurr = "") then do:
+/*J0ZZ*/       {gpcurmth.i
+            "so_curr"
+            "4"
+            "next"
+            "pause" }
+/*J053*   DETERMINE CURRENCY DISPLAY AMERICAN OR EUROPEAN                  */
+/*J053*/       find rnd_mstr where rnd_rnd_mthd = rndmthd no-lock no-error.
+/*J053*/       if not available rnd_mstr then do:
+/*J053*/          {mfmsg.i 863 4}    /* ROUND METHOD RECORD NOT FOUND */
+/*J053*/          next.
+/*J053*/       end.
+/*J053*/       /* IF RND_DEC_PT = COMMA FOR DECIMAL POINT */
+/*J053*/       /* THIS IS THE EUROPEAN CURRENCY */
+/*J053*/       if (rnd_dec_pt = ",")
+/*J053*/       then SESSION:numeric-format = "European".
+/*J053*/       else SESSION:numeric-format = "American".
+
+/*J053*/       prepaid_fmt = prepaid_old.
+/*J053*/       {gprun.i ""gpcurfmt.p"" "(input-output prepaid_fmt,
+                    input rndmthd)"}
+
+/*J053* SETUP THE FORMAT FOR DISPLAING EXT_PRICE_TOTAL - USE GPCURFMT.P */
+/*J053*/       ext_price_fmt = ext_price_old.
+/*J053*/       {gprun.i ""gpcurfmt.p"" "(input-output ext_price_fmt,
+                    input rndmthd)"}
+/*J053*/       {socurfmt.i} /* SET UP TRAILER FORMATS */
+/*J0ZZ*/       assign oldcurr = so_curr.
+/*J053*/    end. /* IF (OLDCURR <> SO_CURR) */
+
+        first_line = yes.
+
+        termsdesc = "".
+        find ct_mstr where ct_code = so_cr_terms no-lock no-error.
+        if available ct_mstr then termsdesc = ct_desc.
+
+        so_recno = recid(so_mstr).
+
+        update billto = "".
+        update shipto = "".
+
+        find ad_mstr where ad_addr = so_cust
+        no-lock no-wait no-error.
+        if available ad_mstr then do:
+           addr[1] = ad_name.
+           addr[2] = ad_line1.
+           addr[3] = ad_line2.
+           addr[4] = ad_line3.
+           addr[6] = ad_country.
+           {mfcsz.i addr[5] ad_city ad_state ad_zip}.
+           {gprun.i ""gpaddr.p"" }
+           billto[1] = addr[1].
+           billto[2] = addr[2].
+           billto[3] = addr[3].
+           billto[4] = addr[4].
+           billto[5] = addr[5].
+           billto[6] = addr[6].
+
+           billattn = ad_attn.
+           billphn = ad_phone.
+           billfax = ad_fax.  /*lb01*/
+        end.
+
+        find ad_mstr where ad_addr = so_ship
+        no-lock no-wait no-error.
+        if available ad_mstr then do:
+           addr[1] = ad_name.
+           addr[2] = ad_line1.
+           addr[3] = ad_line2.
+           addr[4] = ad_line3.
+           addr[6] = ad_country.
+           {mfcsz.i addr[5] ad_city ad_state ad_zip}.
+           {gprun.i ""gpaddr.p"" }
+           shipto[1] = addr[1].
+           shipto[2] = addr[2].
+           shipto[3] = addr[3].
+           shipto[4] = addr[4].
+           shipto[5] = addr[5].
+           shipto[6] = addr[6].
+           shipattn = ad_attn.
+           shipphn = ad_phone.
+           shipfax = ad_fax.
+
+/*F0NZ****************
+* /*G712*/        /* FIND VAT REG NO & COUNTRY CODE */
+* /*G712*/       {gpvteprg.i}
+*F0NZ***************/
+
+        end.
+
+/*F0NZ*/    /* GET VAT REG NO AND COUNTRY CODE FOR SHIP-TO */
+/*F0NZ*/    find ad_mstr where ad_addr = so_ship no-lock no-wait no-error.
+/*F0NZ*/    if available ad_mstr then do:
+/*F0NZ*/       if ad_pst_id = "" then do:
+/*F0NZ*/          find ad_mstr where ad_addr = so_bill
+/*F0NZ*/          no-lock no-wait no-error.
+/*F0NZ*/          if available ad_mstr then do:
+/*F0NZ*/             {gpvteprg.i}
+/*F0NZ*/          end.
+/*F0NZ*/       end.
+/*F0NZ*/       else do:
+/*F0NZ*/          {gpvteprg.i}
+/*F0NZ*/       end.
+/*F0NZ*/    end.
+
+/*D257*/    resale = "".
+/*G2FH** /*D257*/    find cm_mstr where cm_addr = so_cust no-error. */
+/*G2FH*/    find cm_mstr where cm_addr = so_cust no-lock no-error.
+/*D257*/    if available cm_mstr then resale = cm_resale.
+        {zzso05a01.i}  /*lb01*/
+        
+/*D238*/    if gl_can then do:
+/*D238*/       {zzct05c01.i}  /*lb01*/
+/*D238*/    end.
+/*D238*/    else do:
+/*D238*/       {zzso05c01.i}  /*lb01*/
+/*D238*/    end.
+        hide frame phead1.
+       
+    	view frame phead1.
+		
+        pages = page-number - 1.
+
+        hide frame phead2.
+
+        display  so_cust
+        so_ship billto[1] shipto[1] billto[2] shipto[2]
+        billto[3] shipto[3] billto[4] shipto[4] billto[5]
+        shipto[5] billto[6] shipto[6]
+        with frame phead2 STREAM-IO /*GUI*/ .
+
+/*G712*/         /* DISPLAY VAT REG NO & COUNTRY CODE */
+/*G712*/    {sovtesfm.i}
+
+        /*lb01*--*/
+        find first ad_mstr no-lock where
+        ad_addr = so_slspsn[1] and ad_type = "SLSPRSN" no-error.
+        if available ad_mstr then
+        	assign
+				saleattn= ad_attn 
+				salephn	= ad_phone
+				salephn2= ad_phone2
+				salefax	= ad_fax  
+				saleqry	= ad_fax2.
+        /*--lb01*/
+
+/*D238*/    if gl_can then do:
+/*D238*/       display billattn shipattn billphn shipphn /* so_slspsn[1] */
+				shipfax billfax /*lb01*/
+				saleattn
+				salephn	
+				salephn2
+				salefax	
+				saleqry	
+
+				/*
+/*D962*/       so_slspsn[2]
+/*F322*/       so_slspsn[3] so_slspsn[4] */
+
+/*D238*/       so_po so_cr_terms so_shipvia termsdesc so_fob
+/*D238*/       resale so_rmks so_pst_id so_fst_id gst_id
+           with frame phead3-can STREAM-IO /*GUI*/ .
+/*D238*/       hide frame phead3-can.
+/*D238*/    end.
+/*D238*/    else do:
+           display billattn shipattn billphn shipphn /*so_slspsn[1]*/
+           		shipfax billfax /*lb01*/
+           		saleattn
+				salephn	
+				salephn2
+				salefax	
+				saleqry	
+
+/*D962*/      /*  so_slspsn[2]
+/*F322*/       so_slspsn[3] so_slspsn[4] */
+           so_po so_cr_terms so_shipvia termsdesc so_fob
+/*D257*/       resale so_rmks with frame phead3 STREAM-IO /*GUI*/ .
+/*D238*/       hide frame phead3.
+/*D238*/    end.
+
+        if print_trlr then
+/*B642*/    view frame continue.
+
+/*D043*/    {gpcmtprt.i &type=SO &id=so_cmtindx &pos=3}
+
+        put skip(1).
+
+/*J0T0*/    /*Establish the label for the display of discounts*/
+
+/*J0T0*/    if disc_det_key <> "1" then do:
+/*J0T0*/       find first lngd_det where lngd_dataset begins "soprint"
+/*J0T0*/                             and lngd_field   = "det_disc_prnt"
+/*J0T0*/                             and lngd_lang    = global_user_lang
+/*J0T0*/                             and lngd_key1    = disc_det_key
+/*J0T0*/                           no-lock no-error.
+/*J0T0*/       if available lngd_det then
+/*J0T0*/          disc_prnt_label = lngd_translation.
+/*J0T0*/    end.
+
+          /* GET ORDER DETAIL  */
+
+        ext_price_total = 0.
+        for each sod_det where sod_nbr = so_nbr
+/*G383*/    and not sod_sched
+        no-lock by sod_nbr by sod_line:
+/*B711*/       desc1 = sod_desc.
+           desc2 = "".
+
+           qty_open = sod_qty_ord - sod_qty_ship.
+           ext_price = qty_open * sod_price.
+/*J053**  ROUND EXT_PRICE USING GPCURRND.P AND THE DOCUMENT CURRENCY RNDMTHD */
+/*J053*/       {gprun.i ""gpcurrnd.p"" "(input-output ext_price,
+                     input rndmthd)"}
+/*J053*/       ext_price_total = ext_price_total + ext_price.
+/*J053*        ext_price_total = ext_price_total + ROUND(ext_price, 2). */
+
+           desc1 = sod_desc.
+           find pt_mstr where pt_part = sod_part
+           no-lock no-wait no-error.
+           if available pt_mstr then do:
+/*FL18*           if desc1 = "" then desc1 = pt_desc1. */
+/*FL18*/          if desc1 = "" then do:
+             desc1 = pt_desc1.
+             desc2 = pt_desc2.
+/*FL18*/          end.
+           end.
+
+           first_line = no.
+
+           if page-size - line-count < 3 then page.
+
+/*J053*/       ext_price:format = ext_price_fmt.
+
+/*B615*/       {so05b01.i} /*Display Line*/
+
+/*B711         if desc1 <> "" then*/
+           if page-size - line-count < 1 then do:
+          page.
+          {so05e01.i}
+           end.
+           put desc1 at 5.
+
+           if desc2 > "" then do:
+          if page-size - line-count < 1 then do:
+             page.
+             {so05e01.i}
+          end.
+          put desc2 at 5.
+           end.
+
+/*F0PD*******************************************
+      sob_serial subfield positions:
+      1-4     operation number (old - now 0's)
+      5-10    scrap percent
+      11-14   id number of this record
+      15-15   structure code
+      16-16   "y" (indicates "new" format sob_det record)
+      17-34   original qty per parent
+      35-35   original mandatory indicator (y/n)
+      36-36   original default indicator (y/n)
+      37-39   leadtime offset
+      40-40   price manually updated (y/n)
+      41-46   operation number (new - 6 digits)
+      *******************************************/
+
+           if print_options and can-find(first sob_det
+           where sob_nbr
+           = so_nbr and sob_line = sod_line)
+           then do:
+
+/*J08B*/          /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
+/*J042*/          /* Print discounts for parent item */
+/*J0T0*/          /* added net_price parameter */
+/*J0T0*/          /* changed qty from ordered to open qty */
+/*J042*/          {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
+                  &part=sod_part
+                  &parent="""" &feature="""" &opt=""""
+                  &qty=qty_open &list_price=sod_list_pr
+                  &net_price=sod_price
+                  &confg_disc="no"
+                  &command="~{so05e01.i~}"}
+
+/*F0PD*/          find first sob_det where sob_nbr = sod_nbr
+/*F0PD*/          and sob_line = sod_line no-lock no-error.
+/*F0PD*/          /* NEW STYLE sob_det RECORDS DO NOT HAVE DATA IN sob_parent
+             THAT CORRESPONDS TO A pt_part RECORD.  THEY CONTAIN A
+             SYMBOLIC REFERENCE IDENTIFIED BY BYTES 11-14 IN sob_serial.
+             NEW STYLE sob_det RECORDS ARE FOR SALES ORDERS CREATED
+             SINCE PATCH GK60.
+          */
+/*F0PD*/          if substring(sob_serial, 16, 1) = "Y" then do:
+/*F0PD*/             {gprun.i ""sorp5a01.p"" "(input """", input 0,
+                           input sod_nbr, input sod_line)"}
+/*F0PD*/          end.
+/*F0PD*/          else do:
+          for each sob_det where sob_nbr = so_nbr
+          and sob_line = sod_line
+/*F369*           and substring(sob_feature, 13, 18) = sod_part no-lock: */
+/*F369*/          and (sob_parent = sod_part
+/*GK60*/          or sob_parent = "")
+/*GK60*/          and sob_qty_req <> 0
+          no-lock:
+          if sod_qty_ord = 0 then sob-qty = 0.
+          else sob-qty = sob_qty_req / sod_qty_ord.
+          find pt_mstr where pt_part = sob_part
+          no-lock no-error.
+          if available pt_mstr then do:
+             sob_desc = pt_desc1.
+             sob_desc2 = pt_desc2.
+             sob_um = pt_um.
+          end.
+
+          if page-size - line-count < 1 then do:
+             page.
+             {so05e01.i}
+          end.
+/*G191*           put sob_feature at 5 " " sob_part sob-qty " " sob_um. */
+/*G191*/          put sob_feature format "x(12)" at 5 " " sob_part
+/*G191*/          sob-qty " " sob_um.
+/*G191*           if sob_desc > "" then put sob_desc at 20 skip. */
+/*G191*/          if sob_desc > "" then do:
+/*G191*/             if page-size - line-count < 1 then do:
+/*G191*/                page.
+/*G191*/                {so05e01.i}
+/*G191*/             end.
+/*G191*/             put sob_desc at 20 skip.
+/*G191*/          end.
+/*G191*           if sob_desc2 > "" then put sob_desc2 at 20 skip. */
+/*G191*/          if sob_desc2 > "" then do:
+/*G191*/          if page-size - line-count < 1 then do:
+/*G191*/             page.
+/*G191*/             {so05e01.i}
+/*G191*/          end.
+/*G191*/          put sob_desc2 at 20 skip.
+/*G191*/       end.
+
+/*J08B*/       /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
+/*J042*/       /* Print discounts for component item */
+/*J0T0*/       /* added net_price parameter */
+/*J0T0*/       /* changed qty from ordered to open qty */
+/*J042*/       {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
+               &part=sod_part
+               &parent=sob_parent &feature=sob_feature
+               &opt=sob_part
+               &qty="((sob_qty_req / sod_qty_ord) * qty_open)"
+               &list_price=sob_tot_std
+               &net_price=sob_price
+               &confg_disc="no"
+               &command="~{so05e01.i~}"}
+        end.
+/*F0PD*/    end. /* do */
+     end.
+
+/*J08B*/ /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
+
+/*J0T0*/ /* Test for configured parent without components */
+
+/*J0T0*/ if available pt_mstr then do:
+/*J0T0*/    pm_code = pt_pm_code.
+/*J0T0*/    find ptp_det where ptp_part = sod_part and ptp_site = sod_site
+/*J0T0*/                 no-lock no-error.
+/*J0T0*/    if available ptp_det then
+/*J0T0*/       pm_code = ptp_pm_code.
+/*J0T0*/    if pm_code = "C" and
+/*J0T0*/       not can-find(first sob_det where sob_nbr  = sod_nbr and
+/*J0T0*/                                        sob_line = sod_line)
+/*J0T0*/    then do:
+/*J0T0*/       {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
+                   &part=sod_part
+                   &parent="""" &feature="""" &opt=""""
+                   &qty=qty_open &list_price=sod_list_pr
+               &net_price=sod_price
+                   &confg_disc="no"
+                   &command="~{so05e01.i~}"}
+/*J0T0*/    end.
+/*J0T0*/ end.
+
+/*J042*/ /* Print global discounts for item/configuration */
+/*J0T0*/ /* added net_price parameter */
+/*J0T0*/ /* changed qty from ordered to open qty */
+/*J042*/ {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
+             &part=sod_part
+             &parent="""" &feature="""" &opt=""""
+             &qty=qty_open &list_price=sod_list_pr
+             &net_price=sod_price
+             &confg_disc="yes"
+             &command="~{so05e01.i~}"}
+
+/*J08B*/ /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
+/*D043*/ {gpcmtprt.i &type=SO &id=sod_cmtindx &pos=5
+     &command="~{so05e01.i~}"}
+/*J042** down 1 with frame c. **/
+
+     
+/*GUI*/ {mfguirex.i } /*Replace mfrpexit*/
+
+     end. /* for each sod_det */
+
+/*J0T0*/ /*Establish the label for the display of discounts*/
+
+/*J0T0*/ if disc_sum_key <> "1" and
+/*J0T0*/    disc_sum_key <> disc_det_key
+/*J0T0*/ then do:
+/*J0T0*/    find first lngd_det where lngd_dataset begins "soprint"
+/*J0T0*/                          and lngd_field   = "det_disc_prnt"
+/*J0T0*/                          and lngd_lang    = global_user_lang
+/*J0T0*/                          and lngd_key1    = disc_sum_key
+/*J0T0*/                        no-lock no-error.
+/*J0T0*/    if available lngd_det then
+/*J0T0*/       disc_prnt_label = lngd_translation.
+/*J0T0*/    else
+/*J0T0*/       disc_prnt_label = "".
+/*J0T0*/ end.
+
+/*J042*/ /* Print discount summary, delete disc wkfl records */
+/*J042*/ {sopiprn2.i}
+
+     hide frame continue.
+     if print_trlr then do:
+          /* TRAILER */
+/*H032*/    if not {txnew.i} then do:
+           if page-size - line-counter < 10 then page.
+          do while page-size - line-counter > 10:
+             put skip(1).
+          end.
+          put "----------------------------------------------"
+          + "---------------------------------" format "x(77)".
+/*H032*/       end.
+
+         /*PRINT TRAILER*/
+           {gprun.i ""sotr0501.p""}
+/*J053*        if so_prepaid <> 0 then put     */
+/*J053* /*B615*/       prepaid-lbl  space so_prepaid.     */
+/*J053*/       if so_prepaid <> 0
+/*J053*/       then do:
+/*J053*/          so_prepaid:format = prepaid_fmt.
+/*J053*/          display prepaid-lbl so_prepaid with frame prepd STREAM-IO /*GUI*/ .
+/*J053*/       end.
+        end.
+/*B642*/    else do:
+/*J0T0**
+**         underline ext_price with frame c no-box.
+**         down 1 with frame c.
+**         display total-lbl  @ sod_price
+**         ext_price_total @ ext_price
+**         with frame c no-box.
+**J0T0*/
+/*J0T0*/       if page-size - line-counter < 2 then page.
+/*J0T0*/       underline ext_price_total with frame no_trailer.
+/*J0T0*/       down 1 with frame no_trailer.
+/*J0T0*/       display total-lbl ext_price_total
+/*J0T0*/       with frame no_trailer STREAM-IO /*GUI*/ .
+/*B642*/    end.
+/*lb01*/	{zzsorp05.i}		        
+/*lb01*/	{gprun.i ""zzsorp05t.p"" "(input comp_addr)"}
+        {gprun.i ""sosorp5a.p""}
+        page.
+
+     end.
+     
+
+/*J053*/ SESSION:numeric-format = oldsession.

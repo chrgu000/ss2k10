@@ -1,0 +1,267 @@
+[Startup]
+; SCCS: @(#)progress.svg        1.2 05/21/97 16:21:30 >
+V6Display=no
+;ImmediateDisplay=yes
+;MultitaskingInterval=100
+;SVGA - low-resolution (800 x 600)
+CharWidth=8
+DefaultFont=宋体, size 10
+DefaultFixedFont=宋体, size 10
+printfont=宋体,size 10
+;DefaultFont=MS Sans Serif, size 8 bold
+;DefaultFixedFont=Courier New, bold, size=8
+;Defaultprintfont = arial ,bold,size =10.
+;* New frame spacing parameter from Progress - required for legacy code
+FrameSpacing=1
+Use-3D-Size=no
+DLC=d:\mfg\dlc91d
+PROBUILD=d:\mfg\dlc91d\probuild
+PROPATH=.,d:\mfg\eb2_sp8\mfgsvr\guicli,d:\mfg\eb2_sp8\mfgsvr\guicli\bbi,d:\mfg\eb2_sp8\mfgsvr\guicli\images.pl,d:\mfg\eb2_sp8\mfgsvr\guicli\xrc,d:\yfkbc\guicli,d:\yfkbc\guicli\bbi,d:\yfkbc\logo
+PROMSGS=d:\mfg\dlc91d\promsgs
+
+PROMSGS=d:\mfg\dlc91d\promsgs
+OLD-PROPATH=.,d:\yfk\guicli,d:\mfg\eb2_sp8\mfgsvr\guicli,d:\mfg\eb2_sp8\mfgsvr\guicli\bbi,d:\yfk\guicli\images.pl,d:\mfg\eb2_sp8\mfgsvr\guicli\xrc,d:\mfg\eb2_sp8\mfgsvr\guicli\ch\xx,d:\mfg\DLC91d\gui\adecomm.pl,d:\mfg\DLC91d\gui\adecomp.pl,d:\mfg\DLC91d\gui\adedesk.pl,d:\mfg\DLC91d\gui\adedict.pl,d:\mfg\DLC91d\gui\adeedit.pl,d:\mfg\DLC91d\gui\adeicon.pl,d:\mfg\DLC91d\gui\aderes.pl,d:\mfg\DLC91d\gui\adeshar.pl,d:\mfg\DLC91d\gui\adeuib.pl,d:\mfg\DLC91d\gui\adexml.pl,d:\mfg\DLC91d\gui\as4dict.pl,d:\mfg\DLC91d\gui\prodict.pl,d:\mfg\DLC91d\gui\protools.pl,d:\mfg\DLC91d,d:\mfg\DLC91d\bin,d:\yfk\guicli\bbi,d:\yfk\logo,
+
+
+[Applications]
+;* Enable Spinning MFG/PRO Globe
+spin=yes
+;* Enable Graphs with the Browse and specify the Grafsman path
+graph=No
+GRAFPATH=
+;* Specifies the executable to run when you select edit image
+paint=
+;* Auto-go default
+auto-go=false
+GRAPATH=
+
+[Colors]
+;******************************************************************************
+; THE DEFINITION OF COLOR 0 THROUGH 15 IS PRIVATE TO THE PROGRESS ADE.  
+; MODIFYING COLORS 0 THROUGH 15 MAY PREVENT THE PROGRESS ADE FROM RUNNING.
+; The following color definitions correspond to the ADE standards.
+;  0 to 15  - reserved
+color0=0,0,0
+color1=0,0,128
+color2=0,128,0
+color3=0,128,128
+color4=128,0,0
+color5=128,0,128
+color6=128,128,0
+color7=128,128,128
+color8=192,192,192
+color9=0,0,255
+color10=0,255,0
+color11=0,255,255
+color12=255,0,0
+color13=255,0,255
+color14=255,255,0
+color15=255,255,255
+color16=255,255,0
+NORMAL=0,15
+INPUT=15,0
+MESSAGES=15,1
+
+[Default Window]
+
+;x=
+;y=
+;rows=
+;columns=
+[fonts]
+;******************************************************************************
+; THE DEFINITION OF FONT 0 THROUGH 7 IS PRIVATE TO THE PROGRESS ADE.  
+; MODIFYING FONTS 0 THROUGH 7 MAY PREVENT THE PROGRESS ADE FROM RUNNING.
+; The following fonts definitions correspond to the ADE standards.
+;       ?  - Note choice of DefaultFont above (=FixedSys)
+;       0  - Fixed System Font (1 char per PPU)  
+;       1  - Proportional System Font
+;       2  - Editor Font for 4GL program entry
+;       3  - TTY Simulator (should be fixed)
+;       4 -  Desktop Font
+;  5 to 7  - reserved
+;font0=Fixedsys
+;font1=System, bold
+;font2=Courier New, size 8
+;font3=Courier New, size=8
+;font4=System
+;font5=System
+;font6=System
+;font7=System
+font0=宋体
+font1=宋体
+font2=宋体, size 9
+font3=宋体, size 9
+font4=宋体
+font5=宋体
+font6=宋体
+font7=宋体
+font8=Small Fonts
+font9=Times New Roman
+font10=Times New Roman, bold
+font11=Times New Roman, bold
+font12=Arial, size=10 bold Script=ansi
+font13=Arial, size=9 bold Script=ansi
+font14=System, bold
+font15=Arial, size 8 bold
+font16=Arial, size 9 bold
+font17=Arial, size 10 bold
+font18=Arial, size=22 bold Script=ansi
+font19=Arial, size 12 bold
+font20=MS Sans Serif, size 10
+font21=Courier New, bold, size=8
+font22=Courier New, bold, size=10
+font23=MS Sans Serif, bold, size=8
+font24=Fixedsys
+font25=System
+font26=System
+font27=System
+font28=System
+font29=System
+font30=System
+font31=System
+; The following variables identify which of the above fonts will be used for
+; 80-column and 132-column reports.  Always used fixed-space fonts for reports.
+80ColumnReportFont=21
+132ColumnReportFont=22
+
+[DOS Startup]
+;PROPATH=
+;PROMSGS=
+;PROCFG=
+;DLC=
+DLC=C:\DLC
+PROBUILD=C:\DLC\PROBUILD
+PROPATH=.,C:\DLC\PROBUILD\EUCAPP,C:\DLC\PROBUILD\EUCAPP\EUC.PL
+
+[DOS Colors]
+color0=WHITE/BLUE          "NORMAL"
+color1=BLACK/GRAY          "INPUT, UNDERLINE"   
+color2=BLACK/GRAY          "MESSAGES, REVERSE"
+color3=BLUE/WHITE          "HIGHLITE, HELP"
+color4=BLINK-RED/WHITE     "URGENT"
+
+;NORMAL=WHITE/BLUE
+;INPUT=BLACK/GRAY 
+;MESSAGES=BLACK/GRAY 
+[DOS Default Window]
+
+;rows=25
+;rows=50
+[DOS Keys]
+
+;GO=F1,CTRL-X
+[Debug-Init]
+;******************************************************************************
+; THE FOLLOWING INFORMATION IS PRIVATE TO THE DEBUGGER. IT SHOULD NEVER BE
+; MODIFIED EXCEPT BY THE DEBUGGER PROGRAM.
+;
+Location=
+Pane0=1,46," "
+Pane1=1,14,""
+Pane2=1,16,"Commands in Queue: 0"
+Pane3=1,25,""
+DebuggerName=PRODEBUG.EXE
+
+[Debug-Macros]
+Macro0=r, run &file
+Macro1=c, continue
+Macro2=s, step
+Macro3=n, next
+Macro4=b, break &file &line
+Macro5=cb, cancel break &file &line
+Macro6=sb, show breaks
+Macro7=ss, show stack
+Macro8=u, up
+Macro9=d, down
+Macro10=di, display &text
+Macro11=sm, show macros
+
+[Debug-Buttons]
+Button0=Run,run &file
+Button1=Cont,continue
+Button2=Step,step
+Button3=Next,next
+Button4=Break,break &file &line
+Button5=Stack,show stack
+Button6=Up,up
+Button7=Down,down
+Button8=Disp,display &text
+Button9=Exit,exit
+
+[ProADE]
+
+;DividerFgColor=15
+;DividerBgColor=1
+;OKBoxFgColor=1
+;OKBoxBgColor=8
+;FillinFgColor=0
+;FillinBgColor=8
+;Editor4GLFgColor=DEFAULT
+;Editor4GLBgColor=DEFAULT
+;Editor4GLFgSmallColor=0
+;Editor4GLBgSmallColor=8
+;FixedFont=0
+;StandardFont=1
+;Editor4GLFont=2
+[Proedit]
+SaveSettings=yes
+BufList=
+ExitWarning=yes
+SaveBufList=no
+MinimizeBeforeRun=no
+RestoreAfterRun=yes
+PauseAfterRun=yes
+AutoCleanup=yes
+MostRecentlyUsedFileList=yes
+MRUEntries=4
+EditorFont=9
+MRUFile1=D:\YFKBC\Guicli\po\bcporet.p
+MRUFile2=E:\barcode\bcporec.p
+MRUFile3=D:\YFKBC\Guicli\mg\bcmgxx.p
+MRUFile4=D:\YFKBC\Guicli\bc_mf_main.p
+
+[MFGPRO]
+mfguserid=mfg
+
+[WinChar Startup]
+DLC=d:\mfg\dlc91d
+PROBUILD=d:\mfg\dlc91d\probuild
+PROMSGS=d:\mfg\dlc91d\promsgs
+PROPATH=d:\mfg\eb2sp5\guicli,d:\mfg\eb2sp5\guicli\bbi
+
+[WinChar Colors]
+color0=WHITE/BLUE          "NORMAL"
+color1=BLACK/GRAY          "INPUT, UNDERLINE"
+color2=BLACK/GRAY          "MESSAGES, REVERSE"
+color3=BLUE/WHITE          "HIGHLITE, HELP"
+color4=BLINK-RED/WHITE     "URGENT"
+[uib]
+[Procomp]
+SaveSettings=yes
+DefFileSpec=*.p *.w
+LogFile=compile.log
+ShowStatus=yes
+RemoveOldRs=yes
+IfNoR=no
+SubDirs=no
+SaveNewRs=yes
+XrefAppend=no
+ListAppend=no
+PageLength=60
+PageWidth=80
+V6Frame=No
+StreamIO=no
+MinRcodeSize=no
+GenerateMD5=no
+FileSpec01=D:\LEAR\Guicli\gpmumt.p,
+FileSpec03=D:\LEAR\Guicli\mfmain.p,
+FileSpec02=D:\LEAR\Guicli\jitmf.p,
+FileSpec04=D:\MFG\eB2sp5\guicli\us\xx\,*.p *.w
+[Debug-Temp-Macros]
+[WidAttr]
+ObjRef-Object=Browse
+[ADM]
+Color3DFace=17
+Color3DHighLight=18
+Color3DShadow=19

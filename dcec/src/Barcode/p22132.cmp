@@ -1,0 +1,60 @@
+ define  variable part AS CHAR FORMAT "x(12)" VIEW-AS EDITOR SIZE 8 BY 1 LABEL "零件代码" .
+DEFINE VAR recevier AS CHAR FORMAT "x(12)" VIEW-AS FILL-IN SIZE 8 BY 1 LABEL "收货单号".
+
+DEFINE VAR standard AS LOGICAL VIEW-AS FILL-IN SIZE 5 BY 1 FORMAT "Yes/No" INITIAL YES LABEL "标准".
+DEFINE VAR qty AS INTEGER VIEW-AS FILL-IN SIZE 8 BY 1 LABEL "数量".
+FORM
+    SKIP(1)
+    recevier COLON 18
+    part COLON 45
+    standard COLON 60
+    SKIP(1)
+    
+    WITH  FRAME a WIDTH 80  TITLE "采购收货打印" THREE-D SIDE-LABEL.
+  FORM 
+      
+qty COLON 18
+      WITH FRAME b WIDTH 80  THREE-D SIDE-LABEL.
+mainloop:
+REPEAT:
+
+
+/*UPDATE
+   recevier
+    part
+    WITH FRAME a.*/
+ 
+ seta1:
+      do transaction on error undo, retry:
+       SET recevier WITH FRAME a EDITING:
+        IF recevier = " " THEN DO:
+         MESSAGE "The recevier is invalid!"  VIEW-AS ALERT-BOX  error BUTTONS OK. 
+           NEXT-PROMPT recevier WITH FRAME a.
+           UNDO,RETRY.
+           END.
+      END.
+           END.
+    
+      seta2:
+      do transaction on error undo, retry:
+
+         UPDATE part WITH FRAME a.
+         ENABLE part WITH FRAME a.
+        IF part = " " THEN DO:
+          MESSAGE "error".
+            NEXT-PROMPT part WITH FRAME a.
+           UNDO,RETRY.
+           END.
+          
+          END.
+           seta2:
+      do transaction on error undo, retry:
+
+        UPDATE standard WITH FRAME a.
+            
+          END.
+          UPDATE qty WITH FRAME b.
+         MESSAGE "over".
+          END.
+         
+    

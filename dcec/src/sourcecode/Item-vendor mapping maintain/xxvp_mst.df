@@ -1,0 +1,33 @@
+ADD TABLE "xxvp_mstr"
+  DESCRIPTION "Item vendor mapping master table"
+  DUMP-NAME "xxvp_mst"
+
+ADD FIELD "xxvp_part" OF "xxvp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件号"
+  ORDER 10
+
+ADD FIELD "xxvp_vend" OF "xxvp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "供应商"
+  ORDER 20
+
+ADD FIELD "xxvp_rmks" OF "xxvp_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "备注"
+  ORDER 30
+
+ADD INDEX "xxvp_part" ON "xxvp_mstr" 
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxvp_part" ASCENDING 
+  INDEX-FIELD "xxvp_vend" ASCENDING 
+
+.
+PSC
+codepage=GB2312
+.
+0000000585

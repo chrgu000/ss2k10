@@ -1,0 +1,345 @@
+/* GUI CONVERTED from sosorp09.p (converter v1.69) Wed May  1 20:46:15 1996 */
+/* sosorp09.p - SALES SHIPPING REPORT BY CUSTOMER                       */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=FullGUIReport                                 */
+/* REVISION: 1.0      LAST MODIFIED: 04/27/87   BY: PML      */
+/* REVISION: 2.1      LAST MODIFIED: 01/19/88   BY: RL  *A153**/
+/* REVISION: 4.0      LAST MODIFIED: 03/31/88   BY: FLM *A175**/
+/* REVISION: 4.0      LAST MODIFIED: 10/13/88   BY: flm *A482**/
+/* REVISION: 5.0      LAST MODIFIED: 01/24/89   BY: MLB *A619**/
+/* REVISION: 5.0      LAST MODIFIED: 02/08/89   BY: JLC *C0028*/
+/* REVISION: 5.0      LAST MODIFIED: 03/20/89   BY: MLB *B072**/
+/* REVISION: 5.0      LAST MODIFIED: 07/05/89   BY: BJJ *B106* */
+/* REVISION: 6.0      LAST MODIFIED: 04/05/90   BY: pml *D001* */
+/* REVISION: 6.0      LAST MODIFIED: 03/06/91   BY: afs *D408**/
+/* REVISION: 6.0      LAST MODIFIED: 10/21/91   BY: afs *D903**/
+/* REVISION: 7.3      LAST MODIFIED: 11/19/92   BY: jcd *G348**/
+/* REVISION: 7.3      LAST MODIFIED: 03/09/93   BY: tjs *G791**/
+/* REVISION: 7.3      LAST MODIFIED: 11/06/94   BY: dpm *FT42**/
+/* REVISION: 7.3      LAST MODIFIED: 05/11/95   BY: jym *F0RM**/
+/* REVISION: 7.3      LAST MODIFIED: 04/10/96   BY: jzw *G1P6**/
+/* REVISION: 7.4      LAST MODIFIED: 09/06/96   BY: kang jian*/
+/* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu         */
+
+/* DISPLAY TITLE */
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+{mfdtitle.i "99 "}  /*G791*/
+
+define variable addr like tr_addr.
+define variable addr1 like tr_addr.
+define variable so_job like tr_so_job.
+define variable so_job1 like tr_so_job.
+define variable part like tr_part.
+define variable part1 like tr_part.
+define variable trdate like tr_effdate.
+define variable trdate1 like tr_effdate.
+define variable region like cm_region.
+define variable region1 like cm_region.
+define variable name like ad_name.
+define variable ext_price like tr_price label "总价格"
+       format "->,>>>,>>>,>>9.99".
+define variable gr_margin like tr_price.
+define variable ext_gr_margin like tr_price label "毛利合计"
+       format "->,>>>,>>>,>>9.99<<<".
+define variable summary like mfc_logical format "S-汇总/D-明细"
+label "S-汇总/D-明细".
+define variable base_rpt like so_curr.
+/*G1P6*     initial "Base" format "x(4)". */
+define variable base_price like tr_price.
+define variable disp_curr as character format "x(1)" label "C".
+/*B388*/ define variable prod_line like tr_prod_line.
+/*B388*/ define variable prod_line1 like tr_prod_line.
+define variable pct_margin as decimal format "->>9.99"
+label "毛利 %".
+define variable show_margin like mfc_logical initial yes label "显示毛利".
+/*D408*/ define variable unit_cost like tr_mtl_std.
+
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+   
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+addr           colon 15
+   addr1          label {t001.i} colon 49 skip
+   part           colon 15
+   part1          label {t001.i} colon 49 skip
+/*B388*/
+   prod_line      colon 15
+   prod_line1     label {t001.i} colon 49 skip
+   trdate         colon 15
+   trdate1        label {t001.i} colon 49 skip
+   so_job         colon 15
+   so_job1        label {t001.i} colon 49 skip
+   region         colon 15
+   region1        label {t001.i} colon 49 skip(1)
+/*kangjian   show_margin    colon 15 skip kangjian*/
+   summary        colon 15 skip
+/*kangjian   base_rpt       colon 15 skip kangjian*/
+ SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = " 选择条件 ".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+/*judy 07/07/05*/   /* SET EXTERNAL LABELS */
+/*judy 07/07/05*/   setFrameLabels(frame a:handle).
+
+/*K0ZX*/ {wbrp01.i}
+
+
+
+/*GUI*/ {mfguirpa.i true  "printer" 132 }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
+   if part1 = hi_char then part1 = "".
+   if addr1 = hi_char then addr1 = "".
+   if so_job1 = hi_char then so_job1 = "".
+   if trdate = low_date then trdate = ?.
+   if trdate1 = hi_date then trdate1 = ?.
+   if prod_line1 = hi_char then prod_line1 = "".
+/*G791*/ if region1 = hi_char then region1 = "".
+
+   
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
+
+   bcdparm = "".
+   {mfquoter.i addr       }
+   {mfquoter.i addr1      }
+   {mfquoter.i part       }
+   {mfquoter.i part1      }
+   {mfquoter.i prod_line  }
+   {mfquoter.i prod_line1 }
+   {mfquoter.i trdate     }
+   {mfquoter.i trdate1    }
+   {mfquoter.i so_job     }
+   {mfquoter.i so_job1    }
+   {mfquoter.i region     }
+   {mfquoter.i region1    }
+/*kangjian   {mfquoter.i show_margin} */
+   {mfquoter.i summary    }
+/*kangjian   {mfquoter.i base_rpt   } kangjian*/
+
+   if  part1 = "" then part1 = hi_char.
+   if  prod_line1 = "" then prod_line1 = hi_char.
+   if  addr1 = "" then addr1 = hi_char.
+   if  trdate = ? then trdate = low_date.
+   if  trdate1 = ? then trdate1 = hi_date.
+   if  so_job1 = "" then so_job1 = hi_char.
+   if  region1 = "" then region1 = hi_char.
+
+   /* SELECT PRINTER */
+   
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i  "printer" 132}
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+
+
+
+
+   {mfphead.i}
+
+   FORM /*GUI*/ 
+   skip(1)
+   with STREAM-IO /*GUI*/  frame a1 page-top width 132.
+   view frame a1.
+
+   for each cm_mstr where
+   (cm_addr >= addr and cm_addr <= addr1) and
+   (cm_region >= region and cm_region <= region1)
+   use-index cm_sort,
+   each tr_hist where (tr_addr = cm_addr) and
+   (tr_part >= part and tr_part <= part1)
+   and (tr_prod_line >= prod_line and tr_prod_line <= prod_line1)
+   and (tr_effdate >= trdate and tr_effdate <= trdate1)
+   and (tr_so_job >= so_job and tr_so_job <= so_job1)
+   and (tr_type = "ISS-SO" or tr_type = "RCT-SOR")
+/*G1P6*  and ((base_rpt = "base") */
+/*G1P6*/ and ((base_rpt = "")
+	 or (tr_curr = base_rpt))
+   use-index tr_addr_eff  no-lock
+   break by cm_sort by tr_addr
+   by tr_part by tr_effdate
+   with frame b width 132 no-box:
+				
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+                     /*G348*/
+
+      if first-of(tr_addr) and not summary then do:
+	    if page-size - line-counter < 3 then page.
+	    if not summary then display with frame b STREAM-IO /*GUI*/ .
+	    else display with frame c STREAM-IO /*GUI*/ .
+	    put "客户: " tr_addr " " cm_sort.
+	 end.
+
+	 base_price = tr_price.
+	 disp_curr = "".
+/*kangjian /*G1P6*  if base_rpt <> "Base" */
+/*G1P6*/ if base_rpt <> ""
+	 and tr_curr <> base_curr then
+	 base_price = base_price * tr_ex_rate.
+/*G1P6*  if base_rpt = "Base" */
+/*G1P6*/ if base_rpt = ""
+	 and tr_curr <> base_curr
+	 then disp_curr = "Y".
+	 ext_price =  - tr_qty_loc * base_price. kangjian*/
+/*kangjian*/ if  tr_curr <> base_curr then
+	 base_price = base_price * tr_ex_rate.
+       if tr_curr <> base_curr
+	 then disp_curr = "Y".
+	 ext_price =  - tr_qty_loc * base_price. /*kangjian*/
+/*D408*  gr_margin = tr_price - tr_mtl_std - tr_lbr_std */
+/*D408*  - tr_bdn_std - tr_ovh_std - tr_sub_std.        */
+/*D408*/ unit_cost = - tr_gl_amt / tr_qty_loc.
+
+/*F0RM /*FT42*/ if tr_type <> "" then do: */
+/*F0RM*/   if tr_ship_type <> " " then do:
+/*FT42*/     unit_cost = tr_mtl_std + tr_lbr_std + tr_bdn_std
+/*FT42*/               + tr_ovh_std + tr_sub_std .
+/*FT42*/ end.
+
+/*D408*/ gr_margin = tr_price - unit_cost.
+/*G1P6*  if base_rpt <> "Base" */
+/* kangjian /*G1P6*/ if base_rpt <> ""
+	 and tr_curr <> base_curr then
+	 gr_margin = gr_margin * tr_ex_rate.
+	 ext_gr_margin = - tr_qty_loc * gr_margin. kangjian*/
+/* kangjian*/ if tr_curr <> base_curr then
+	 gr_margin = gr_margin * tr_ex_rate.
+	 ext_gr_margin = - tr_qty_loc * gr_margin. /*kangjian*/
+
+
+/*D408*  if (tr_mtl_std + tr_lbr_std + tr_bdn_std  */
+/*D408*   + tr_ovh_std + tr_sub_std) = 0           */
+/*D408*  then pct_margin = 100.                    */
+/*D408*/ if unit_cost = 0 then pct_margin = 100.
+	 else if (- tr_qty_loc) = 0 then pct_margin = 0.
+	 else pct_margin = (ext_gr_margin / ext_price) * 100.
+
+	 accumulate ext_gr_margin (total by  tr_addr by tr_part).
+	 accumulate tr_qty_loc (total  by tr_addr  by tr_part).
+	 accumulate ext_price (total  by tr_addr by tr_part).
+
+	 find pt_mstr where pt_part = tr_part no-lock no-wait no-error.
+
+	 if not summary then do:
+
+	    if page-size - line-counter < 3 then page.
+
+	    display tr_trnbr tr_effdate  tr_part tr_serial WITH STREAM-IO /*GUI*/ .
+	    if available pt_mstr then display pt_desc1 format "X(20)" WITH STREAM-IO /*GUI*/ .
+	    display (- tr_qty_loc) @ tr_qty_loc label "已发货量"
+/*kangjian	    disp_curr base_price label "单价" ext_price  kangjian */ WITH STREAM-IO /*GUI*/ .
+/*kang jian	    if show_margin = yes then display
+	    ext_gr_margin pct_margin WITH STREAM-IO /*GUI*/ . kangjian */
+	    if available pt_mstr and pt_desc2 <> "" then do:
+	       down 1.
+	       display pt_desc2 @ pt_desc1 WITH STREAM-IO /*GUI*/ .
+	    end.
+
+	    if last-of(tr_addr)  then do:
+	       if page-size - line-counter < 2 then page.
+/*kangjian	       underline tr_qty_loc ext_price. 
+	       if show_margin = yes then underline 
+				       ext_gr_margin
+				      pct_margin. kangjian*/
+
+	       display  "客户合计:" @ pt_desc1
+	       - accum total by tr_addr (tr_qty_loc) @ tr_qty_loc
+	       /*kangjian accum total by tr_addr  (ext_price) @ ext_price kangjian*/ WITH STREAM-IO /*GUI*/ .
+/*kangjian	       if show_margin = yes then display
+	       accum total by tr_addr (ext_gr_margin) @ ext_gr_margin
+	       (((accum total by tr_addr  (ext_gr_margin)) /
+	       (accum total by tr_addr (ext_price))) * 100) @ pct_margin  WITH STREAM-IO /*GUI*/ . kangjian */
+	    end.
+
+	    if last(tr_addr)  then do:
+	      if page-size - line-counter < 2 then page.
+        underline  tr_qty_loc. 
+/*kangjian	      if show_margin = yes then underline
+	      ext_gr_margin pct_margin. kangjian */
+	      display  "  报表合计:" @ pt_desc1
+	    - accum total  (tr_qty_loc) @ tr_qty_loc
+/*kangjian    accum total  (ext_price) @ ext_price kangjian*/ WITH STREAM-IO /*GUI*/ .
+/*kangjian	      if show_margin = yes then display
+	      accum total  (ext_gr_margin) @ ext_gr_margin
+	      (((accum total (ext_gr_margin)) /
+	      (accum total (ext_price))) * 100) @ pct_margin WITH STREAM-IO /*GUI*/ . kangjian*/
+	    end.
+      end.  /* not summary */
+
+      if summary then do:
+/*kangjian	 accumulate tr_qty_loc (total  by tr_addr  by tr_part). kangjian*/
+	 if last-of(tr_addr)  then do:
+	    if page-size - line-counter < 2 then page.
+	    display tr_addr cm_sort cm_region
+/*kangjian*/	  0  - accum total by tr_addr (tr_qty_loc) @ tr_qty_loc  /*kangjian*/
+/*kangjian	    accum total by tr_addr  (ext_price) @ ext_price kangjian*/ with
+	    frame c down width 132 STREAM-IO /*GUI*/ .
+	    
+/*kangjian	    if show_margin = yes then display
+	    accum total by tr_addr (ext_gr_margin) @ ext_gr_margin
+	    (((accum total by tr_addr (ext_gr_margin)) /
+	    (accum total by tr_addr (ext_price))) * 100) @ pct_margin
+	    with frame c down width 132 STREAM-IO /*GUI*/ . kangjian*/
+	 end.
+
+	 if last(tr_addr)  then do:
+	    if page-size - line-counter < 2 then page.
+/*kangjian*/		 underline tr_qty_loc with frame c. /*kangjian*/
+/*kangjian		 if show_margin = yes then underline
+		 ext_gr_margin pct_margin with frame c. kangjian*/
+		 
+
+	    display  "  报表合计:" @ cm_sort
+	       0  - accum total (tr_qty_loc) @ tr_qty_loc
+/*kangjian	    accum total  (ext_price) @ ext_price kangjian */ with frame c STREAM-IO /*GUI*/ .
+/*kangjian	    if show_margin = yes then display
+	    accum total  (ext_gr_margin) @ ext_gr_margin
+	    (((accum total (ext_gr_margin)) /
+	    (accum total (ext_price))) * 100) @ pct_margin
+	    with frame c STREAM-IO /*GUI*/ . kangjian*/
+	 end.
+      end. /* summary*/
+   end. /*for each*/
+   /* REPORT TRAILER  */
+   
+/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+/*K0ZX*/ {wbrp04.i &frame-spec = a} 
+end.
+
+/*GUI*/ end procedure. /*p-report*/
+/*kangjian*/ {mfguirpb.i &flds=" addr addr1 part part1 prod_line prod_line1 trdate trdate1 so_job so_job1 region region1 summary  "} /*Drive the Report*/

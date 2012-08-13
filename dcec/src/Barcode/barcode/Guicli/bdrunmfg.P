@@ -1,0 +1,427 @@
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+DEFINE NEW GLOBAL SHARED VAR b_barcode AS CHAR.
+DEFINE NEW GLOBAL SHARED VAR b_runmfg AS DEC.
+ASSIGN b_runmfg = 0.
+/*
+{mfdtitle.i "e+ "}*/
+/*{mfdtitle.i "2+ "}*/
+{bdtitl1.i}
+&SCOPED-DEFINE mgbdpro_p_1 "          程序警告 "
+&SCOPED-DEFINE mgbdpro_p_2 "由于缺少会话记录, CIM 处理中断"
+&SCOPED-DEFINE mgbdpro_p_4 "         处理错误 "
+&SCOPED-DEFINE mgbdpro_p_5 "批处理数据文件名"
+&SCOPED-DEFINE mgbdpro_p_6 "分组标志: "
+&SCOPED-DEFINE mgbdpro_p_7 "        程序错误 "
+&SCOPED-DEFINE mgbdpro_p_8 "批处理数据装入结束"
+&SCOPED-DEFINE mgbdpro_p_9 "已处理数据组"
+&SCOPED-DEFINE mgbdpro_p_10 "错误: 过程不存在 -> "
+&SCOPED-DEFINE mgbdpro_p_11 "批处理数据装入开始 "
+&SCOPED-DEFINE mgbdpro_p_12 "分组标志:"
+&SCOPED-DEFINE mgbdpro_p_13 "错误: 无效的过程类型 -> "
+&SCOPED-DEFINE mgbdpro_p_14 "输入文件名"
+&SCOPED-DEFINE mgbdpro_p_15 "例外文件名"
+&SCOPED-DEFINE mgbdpro_p_16 "处理直接来自文件"
+&SCOPED-DEFINE mgbdpro_p_17 "重复处理前暂停秒数"
+&SCOPED-DEFINE mgbdpro_p_18 "重复处理"
+&SCOPED-DEFINE mgbdpro_p_19 "警告: 转换型新的装入过程 : "
+define variable batchdata as character format "x(20)":U
+  label {&mgbdpro_p_5}.
+define variable exceptionfile as character format "x(20)":U
+  label {&mgbdpro_p_15}.
+define variable repeat_process like mfc_logical
+  label {&mgbdpro_p_18} .
+define variable pause_seconds as integer
+  label {&mgbdpro_p_17} format ">>>>9":U
+  init 300.
+define variable linefield as character extent 40 format "x(80)":U.
+define variable linedata as character.
+define variable linedata2 as character.
+define stream errorlog.
+define variable writing_function_data like mfc_logical.
+define variable i as integer.
+define variable j as integer.
+define variable group_count as integer.
+define variable progress_errors as integer.
+define variable function_warnings as integer.
+define variable function_errors as integer.
+define variable group_progress_errors as integer.
+define variable group_function_errors as integer.
+define variable from_id like bdl_id init 0.
+define variable to_id like bdl_id init 99999999.
+define variable last_id like bdl_id.
+define variable lastexecname as character.
+define variable current_bdl_source like bdl_source.
+define variable current_bdl_id like bdl_id.
+define variable first_shot     like mfc_logical.
+define variable session_no     as   character.
+define variable start_date     as   date.
+define variable start_time     as   character.
+define variable work_i_file    as   character.
+define variable work_o_file    as   character.
+DEF OUTPUT PARAMETER iserror AS LOGICAL.
+define variable go_on like mfc_logical init yes.
+
+define variable save-sys-alert like mfc_logical.
+define variable save-app-alert like mfc_logical.
+define variable lastbatchrun like batchrun.
+
+define variable err_out_file as character initial "" no-undo.
+define variable suc_out_file as character initial "" no-undo.
+define variable template_file as character initial "" no-undo.
+define temp-table template-table
+  field exec-name as character
+  field group-name as character
+  field field-name as character
+  field field-value as character
+  index template-index is unique primary exec-name group-name field-name.
+define stream temp_load.
+define stream copy_file.
+define variable row_count as integer no-undo.
+define variable old_row_count as integer no-undo.
+define variable finished like mfc_logical no-undo.
+define variable new_file like mfc_logical no-undo.
+DEFINE NEW GLOBAL SHARED VAR global_user AS CHAR.
+define variable process_file like mfc_logical
+  label {&mgbdpro_p_16}.
+ASSIGN PROCESS_file = TRUE.
+define variable file_name as character format "x(50)":U.
+ASSIGN file_name = /*b_barcode + "xrc\inputfile\" +   global_user + */ "c:\prsh.cim".
+DEF   SHARED  VAR lang AS CHAR.
+
+define stream cim_load.
+define variable bdl_recno as recid no-undo.
+DEF VAR mstr1 AS CHAR FORMAT "x(45)" INITIAL "数据传递完成.............".
+    DEF VAR mstr2 AS CHAR FORMAT "x(45)" INITIAL "数据处理完成.............".
+DEF VAR mstr3 AS CHAR FORMAT "x(45)" INITIAL  "数据接收完成.............               ".
+lastbatchrun = batchrun.
+
+start_date = today.
+start_time = string(time, "HH:MM:SS":U).
+do on error undo, return ERROR:
+   run get_CIM_session (OUTPUT session_no).
+end.
+work_i_file = mfguser + ".bpi".
+work_o_file = mfguser + ".bpo".
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM    
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  
+ skip(1)
+   process_file        colon 5 view-as toggle-box
+   skip(1)
+   file_name           colon 10 NO-LABEL
+   skip(1)
+    mstr1 NO-LABEL AT ROW 2 COL 5
+  mstr2 NO-LABEL AT ROW 3 COL 5
+  mstr3 NO-LABEL AT ROW 4 COL 5
+ with frame a side-labels width 80 attr-space NO-BOX THREE-D .
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  
+&UNDEFINE PP_FRAME_NAME
+IF lang = 'en' THEN DO:
+assign
+    mstr1 = "Data has been transfered............." 
+    mstr2 = "Data has been handled............."
+    mstr3 = "Data has been received.............               ".
+    
+    
+    END.
+mainloop:
+repeat:
+    iserror = NO.
+     hide all no-pause.
+  if global-tool-bar and global-tool-bar-handle <> ? then
+   view global-tool-bar-handle.
+  DISABLE mstr1 mstr2 mstr3 WITH FRAME a.
+  view frame a.
+ 
+  DISPLAY PROCESS_FILE FILE_NAME mstr1 mstr2 mstr3 WITH FRAME A.
+  ASSIGN b_runmfg = b_runmfg + 1.
+ {bdRUNMF.i "TEST" 13 page "stream errorlog" append}
+  RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+  
+  row_count = 0.
+  if process_file then do:
+    run setup_input(INPUT file_name,
+                    OUTPUT execname,
+                    OUTPUT new_file).
+   
+    if new_file THEN
+       run process_by_screen.
+    else
+      run process_all.
+    os-delete value(work_i_file).
+    os-delete value(work_o_file).
+    if not go_on then
+      function_errors = function_errors + 1.
+
+    group_count = 1.
+    put stream errorlog skip(1) {&mgbdpro_p_8}
+      today space(1)
+      string(time,"HH:MM:SS":U) skip.
+    put stream errorlog unformatted
+      {&mgbdpro_p_9} group_count
+      {&mgbdpro_p_4} progress_errors
+      {&mgbdpro_p_1} function_warnings
+      {&mgbdpro_p_7} function_errors
+      skip(1).
+  end.
+  IF PROGRESS_errors <> 0 OR FUNCTION_errors <> 0 THEN  iserror = YES.
+  end.
+
+do transaction:
+   find qad_wkfl exclusive-lock where qad_key1 = "Cim Process Session" and
+      qad_key2 = session_no no-error.
+
+   if available qad_wkfl then do:
+      delete qad_wkfl.
+   end.
+end.
+procedure process_all:
+    define variable linedata as character no-undo.
+    define variable current_line as integer initial -1 no-undo.
+    define variable save_appl_boxes like mfc_logical no-undo.
+    define variable save_sys_boxes like mfc_logical no-undo.
+    define variable l-first like mfc_logical initial TRUE no-undo.
+    if process_file then
+      input stream cim_load from value(file_name).
+    lastbatchrun = batchrun.
+    save_appl_boxes = session:appl-alert-boxes.
+    save_sys_boxes = session:system-alert-boxes.
+    session:appl-alert-boxes = FALSE.
+    session:system-alert-boxes = FALSE.
+    output to value(work_i_file).
+    old_line_process:
+      repeat:
+        if process_file then do:
+          linedata = "".
+          readkey stream cim_load.
+          do while lastkey <> keycode("RETURN":U) and lastkey >= 0:
+            linedata = linedata + chr(lastkey).
+            readkey stream cim_load.
+          end.
+          if(lastkey<0) then
+     leave old_line_process.
+        end.
+        else do:
+          find first bdld_det no-lock where
+            bdld_source = current_bdl_source and
+            bdld_id = current_bdl_id and
+            bdld_line > current_line no-error.
+  
+          if((not available(bdld_det)) and (not l-first)) then
+            leave old_line_process.
+ 
+    if((not available(bdld_det)) and (l-first)) then do:
+      output close.
+      return "".
+    end.
+   l-first=FALSE.
+          linedata = bdld_data.
+          current_line = bdld_line.
+        end.
+
+
+        if substr(linedata,1,11) = "@@BATCHLOAD":U then do:
+          execname = trim(substr(linedata,12)).
+          next old_line_process.
+        end.
+
+        if(substr(linedata,1,5) = "@@END":U and not process_file) then do:
+          leave old_line_process.
+        end.
+   if(substr(linedata,1,5)<>"@@END":U) then do:
+        if linedata = "" then
+          put skip(1).
+        else
+          put unformatted linedata skip.
+   end.
+      end.
+      output close.
+
+      {gprun.i ""mgbdpro1.p"" "(input execname, output go_on)"}
+      if go_on then do:
+        input from value(work_i_file) no-echo.
+        output to value(work_o_file) keep-messages.
+
+        FIND first mnd_det where mnd_exec=execname no-lock no-error.
+        {mfmenu.i}
+        batchrun=yes.
+        dtitle = lc(execname).
+
+        pause 0 before-hide.
+
+
+            do on error undo, leave on endkey undo, leave:
+              {gprun.i ""gpwinrun.p"" "(execname, 'CIM')"}.
+            end.
+        batchrun = lastbatchrun.   
+
+        pause before-hide.
+
+        output close.
+        input close.
+        execname = lastexecname.
+
+
+        group_progress_errors = 0.
+        group_function_errors = 0.
+
+        if process_file then
+          return "".
+
+        input from value(work_o_file) no-echo.
+
+        repeat:
+
+          linefield = "".
+          set linefield with width 255.
+
+          if linefield[1] = "**":U or
+             linefield[1] = "WARNING: ":U or
+             linefield[1] = "ERROR: ":U  then do:
+
+            put stream errorlog unformatted {&mgbdpro_p_6} space current_bdl_id space. 
+            do i = 1 to 40:
+              if linefield[i] = "" then leave.
+              put stream errorlog unformatted linefield[i] space.
+            end.
+ 
+            i = i - 1.
+            put stream errorlog skip(1).
+          end.
+
+
+          if linefield[1] = "**":U then do:
+            if ( linefield[2] = "tr_hist":U  and linefield[i] = "(132)":U ) or
+               ( linefield[2] = "op_hist":U and linefield[i] = "(132)":U )  then
+              function_warnings = function_warnings + 1.
+            else do:
+              progress_errors = progress_errors + 1.
+              group_progress_errors = group_progress_errors + 1.
+            end.
+          end.
+          else
+            if linefield[1] = "WARNING: ":U then
+              function_warnings = function_warnings + 1.
+            else
+            if linefield[1] = "ERROR: ":U then do:
+              function_errors = function_errors + 1.
+              group_function_errors = group_function_errors + 1.
+            end.
+          end.
+
+          input close.
+        end. 
+        else do:
+
+          put stream errorlog unformatted {&mgbdpro_p_6} space 
+          current_bdl_id space.                                
+          put stream errorlog unformatted
+            {&mgbdpro_p_10} execname skip(1).
+
+        end.
+  
+      batchrun = lastbatchrun.
+      if process_file then
+        input stream cim_load close.
+      session:appl-alert-boxes = save_appl_boxes.
+      session:system-alert-boxes = save_sys_boxes.
+  end.
+
+procedure get_CIM_session:
+  define output parameter session_no as character.
+
+  do transaction:
+
+    do i = 0 to 999:
+      find first qad_wkfl exclusive-lock where
+        qad_key1 = "Cim Process Session":U    and
+        qad_key2 > string(i, "999":U)
+        use-index qad_index1 no-error.
+      if not available qad_wkfl then leave.
+      else if decimal(qad_key2) > i + 1 then leave.
+    end.
+
+    if i = 999 then do:
+      bell.
+      
+      {mfmsg.i 1324 4}
+      return ERROR.
+    end.
+
+    session_no = string(i + 1, "999":U).
+
+    if available qad_wkfl then release qad_wkfl.
+
+
+    create qad_wkfl.
+    qad_key1 = "Cim Process Session":U.
+    qad_key2 = session_no.
+    qad_datefld[1] = start_date.
+    qad_charfld[1] = start_time.
+    release qad_wkfl.
+
+  end.
+end.
+
+
+
+procedure setup_input:
+
+
+  define input parameter file_name as character no-undo.
+  define output parameter function_to_run as character no-undo.
+  define output parameter new_file like mfc_logical no-undo.
+
+
+  define variable linedata as character no-undo.
+  define variable i as integer no-undo.
+  define variable tmp_function as character no-undo.
+
+  if search(file_name) = ? then do:
+    {mfmsg03.i 391 3 file_name '' ''}
+    return "".
+  end.
+
+  function_to_run="".
+  new_file=FALSE.
+
+
+  input stream temp_load from value(file_name).
+
+do while not new_file:
+
+  linedata="".
+  readkey stream temp_load.
+  do while lastkey <> keycode("RETURN":U) and lastkey >= 0:
+    linedata = linedata + chr(lastkey).
+    readkey stream temp_load.
+  end.
+
+
+  if substr(linedata,1,11) = "@@BATCHLOAD":U then
+    function_to_run = trim(substr(linedata,12)).
+
+    if substr(linedata,1,5) = "@@END":U  then
+      leave.
+    if substr(linedata,1,7) = "@ACTION":U then do:
+      new_file=TRUE.
+      leave.
+    end.
+  end.
+
+  input stream temp_load close.
+
+  return "".
+end.
+
+

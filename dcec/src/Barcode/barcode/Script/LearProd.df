@@ -1,0 +1,165 @@
+UPDATE DATABASE "?"
+
+ADD TABLE "j_usr_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "user mastr file"
+  DUMP-NAME "usr_mstr"
+
+ADD FIELD "j_usr_usrid" OF "j_usr_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "用户名"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "用户名"
+  ORDER 10
+
+ADD FIELD "j_usr_pwd" OF "j_usr_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "密码"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "密码"
+  ORDER 20
+
+ADD FIELD "j_usr_name" OF "j_usr_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "用户姓名"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "用户姓名"
+  ORDER 30
+
+ADD FIELD "j_usr_printer" OF "j_usr_mstr" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "用户默认打印机"
+  POSITION 5
+  SQL-WIDTH 100
+  COLUMN-LABEL "用户默认打印机"
+  ORDER 40
+
+ADD INDEX "j_usr_usrid" ON "j_usr_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "j_usr_usrid" ASCENDING 
+
+ADD TABLE "j_mnd_det"
+  AREA "Schema Area"
+  LABEL "mnue mstr file"
+  DUMP-NAME "mnd_det"
+
+ADD FIELD "j_mnd_nbr" OF "j_mnd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "菜单号码"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "菜单号码"
+  ORDER 10
+
+ADD FIELD "j_mnd_exec" OF "j_mnd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "菜单文件"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "菜单文件"
+  ORDER 40
+
+ADD FIELD "j_mnd_name" OF "j_mnd_det" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "程序名"
+  POSITION 4
+  SQL-WIDTH 100
+  COLUMN-LABEL "程序名"
+  ORDER 30
+
+ADD FIELD "j_mnd_select" OF "j_mnd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "项次"
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "项次"
+  ORDER 20
+
+ADD FIELD "j_mnd_module" OF "j_mnd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD TABLE "j_usrd_det"
+  AREA "Schema Area"
+  DESCRIPTION "user menu detail"
+  DUMP-NAME "j_usrd_d"
+
+ADD FIELD "j_usrd_usrid" OF "j_usrd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "用户代码"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "用户代码"
+  ORDER 10
+
+ADD FIELD "j_usrd_exec" OF "j_usrd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "执行程序"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "执行程序"
+  ORDER 30
+
+ADD FIELD "j_usrd_sel" OF "j_usrd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "j_usrd_program" OF "j_usrd_det" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 100
+  ORDER 20
+
+ADD TABLE "j_usrh_hist"
+  AREA "Schema Area"
+  DESCRIPTION "the history of user's log on"
+  DUMP-NAME "j_usrh_h"
+
+ADD FIELD "j_usrh_usrid" OF "j_usrh_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "j_usrh_date" OF "j_usrh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "j_usrh_time" OF "j_usrh_hist" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+.
+PSC
+cpstream=CP936
+.
+0000003126

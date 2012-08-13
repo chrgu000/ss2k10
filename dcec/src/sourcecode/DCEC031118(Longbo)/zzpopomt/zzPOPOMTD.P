@@ -1,0 +1,724 @@
+/* GUI CONVERTED from popomtd.p (converter v1.69) Fri Aug 29 04:20:06 1997 */
+/* popomtd.p - PURCHASE ORDER MAINTENANCE SINGLE LINE ITEMS             */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 1.0     LAST MODIFIED: 04/29/86    BY: PML                     */
+/* REVISION: 1.0     LAST MODIFIED: 10/29/86    BY: EMB *39*                */
+/* REVISION: 2.0     LAST MODIFIED: 11/19/86    BY: PML *A3*                */
+/* REVISION: 2.0     LAST MODIFIED: 03/12/87    BY: EMB *A41*               */
+/* REVISION: 2.1     LAST MODIFIED: 06/17/87    BY: WUG *A69*               */
+/* REVISION: 2.1     LAST MODIFIED: 06/17/87    BY: WUG *A70*               */
+/* REVISION: 2.1     LAST MODIFIED: 08/12/87    BY: PML *A83*               */
+/* REVISION: 2.1     LAST MODIFIED: 09/09/87    BY: PML *A92*               */
+/* REVISION: 2.1     LAST MODIFIED: 09/09/87    BY: WUG *A94*               */
+/* REVISION: 2.1     LAST MODIFIED: 10/02/87    BY: PML *A95*               */
+/* REVISION: 4.0     LAST MODIFIED: 03/10/88    BY: FLM *A108*              */
+/* REVISION: 4.0     LAST MODIFIED: 12/27/87    BY: PML *A119*              */
+/* REVISION: 4.0     LAST MODIFIED: 03/14/88    BY: FLM *A184*              */
+/* REVISION: 4.0     LAST MODIFIED: 04/18/88    BY: FLM *A189*              */
+/* REVISION: 4.0     LAST MODIFIED: 06/15/88    BY: FLM *A268*              */
+/* REVISION: 4.0     LAST MODIFIED: 09/02/88    BY: FLM *A419*              */
+/* REVISION: 4.0     LAST MODIFIED: 09/20/88    BY: FLM *A445*              */
+/* REVISION: 4.0     LAST MODIFIED: 09/26/88    BY: RL  *C0028              */
+/* REVISION: 4.0     LAST MODIFIED: 03/24/89    BY: FLM *A685*              */
+/* REVISION: 5.0     LAST MODIFIED: 04/06/89    BY: MLB *B088*              */
+/* REVISION: 5.0     LAST MODIFIED: 12/21/89    BY: FTB *B466*              */
+/* REVISION: 6.0     LAST MODIFIED: 05/15/90    BY: WUG *D002*              */
+/* REVISION: 6.0     LAST MODIFIED: 08/14/90    BY: SVG *D058*              */
+/* REVISION: 6.0     LAST MODIFIED: 08/31/90    BY: RAM *D030*              */
+/* REVISION: 6.0     LAST MODIFIED: 10/19/90    BY: RAM *D124*              */
+/* REVISION: 6.0     LAST MODIFIED: 12/18/90    BY: RAM *D275*              */
+/* REVISION: 6.0     LAST MODIFIED: 03/08/91    BY: RAM *D410*              */
+/* REVISION: 6.0     LAST MODIFIED: 04/08/91    BY: RAM *D502*              */
+/* REVISION: 6.0     LAST MODIFIED: 04/11/91    BY: RAM *D518*              */
+/* REVISION: 6.0     LAST MODIFIED: 05/07/91    BY: RAM *D621*              */
+/* REVISION: 6.0     LAST MODIFIED: 05/09/91    BY: RAM *D634*              */
+/* REVISION: 6.0     LAST MODIFIED: 08/15/91    BY: PMA *D829*              */
+/* REVISION: 7.0     LAST MODIFIED: 09/12/91    BY: RAM *F033*              */
+/* REVISION: 6.0     LAST MODIFIED: 09/24/91    BY: RAM *D872*              */
+/* REVISION: 6.0     LAST MODIFIED: 11/11/91    BY: RAM *D921*              */
+/* REVISION: 6.0     LAST MODIFIED: 11/15/91    BY: RAM *D952*              */
+/* REVISION: 7.0     LAST MODIFIED: 03/03/92    BY: PMA *F085*              */
+/* REVISION: 7.0     LAST MODIFIED: 06/18/92    BY: JJS *F672*(rev only)    */
+/* REVISION: 7.3     LAST MODIFIED: 08/19/92    BY: MPP *G012*              */
+/* REVISION: 7.3     LAST MODIFIED: 10/01/92    BY: tjs *G117*              */
+/* REVISION: 7.3     LAST MODIFIED: 10/12/92    BY: tjs *G164*              */
+/* REVISION: 7.3     LAST MODIFIED: 10/26/92    BY: afs *G232*              */
+/* REVISION: 7.3     LAST MODIFIED: 12/31/92    BY: afs *G489*              */
+/* REVISION: 7.3     LAST MODIFIED: 01/20/93    BY: bcm *G417*              */
+/* REVISION: 7.3     LAST MODIFIED: 02/17/93    BY: tjs *G684*              */
+/* REVISION: 7.3     LAST MODIFIED: 04/19/93    BY: tjs *G964*              */
+/* REVISION: 7.3     LAST MODIFIED: 05/27/93    BY: kgs *GB37*              */
+/* REVISION: 7.4     LAST MODIFIED: 06/09/93    BY: jjs *H006*              */
+/* REVISION: 7.4     LAST MODIFIED: 07/02/93    BY: dpm *H015*              */
+/* REVISION: 7.4     LAST MODIFIED: 09/29/93    BY: wug *H144*              */
+/* REVISION: 7.4     LAST MODIFIED: 09/07/93    BY: tjs *H082*              */
+/* REVISION: 7.4     LAST MODIFIED: 10/23/93    BY: cdt *H184*              */
+/* REVISION: 7.4     LAST MODIFIED: 11/14/93    BY: afs *H221*              */
+/* REVISION: 7.4     LAST MODIFIED: 03/22/94    BY: bcm *H299*              */
+/* REVISION: 7.4     LAST MODIFIED: 05/21/94    BY: qzl *H374*              */
+/* REVISION: 7.4     LAST MODIFIED: 07/05/94    BY: qzl *H417*              */
+/* REVISION: 7.4     LAST MODIFIED: 11/21/94    BY: afs *H605*              */
+/* REVISION: 8.5     LAST MODIFIED: 12/01/94    BY: taf *J038*              */
+/* REVISION: 8.5     LAST MODIFIED: 02/14/95    BY: ktn *J041*              */
+/* REVISION: 8.5     LAST MODIFIED: 06/06/95    BY: sxb *J04D*              */
+/* REVISION: 7.4     LAST MODIFIED: 02/13/95    BY: dxk *F0J0*              */
+/* REVISION: 7.4     LAST MODIFIED: 02/23/95    BY: jzw *H0BM*              */
+/* REVISION: 7.4     LAST MODIFIED: 03/06/95    BY: wjk *H0BT*              */
+/* REVISION: 7.4     LAST MODIFIED: 04/02/95    BY: dxk *F0PY*              */
+/* REVISION: 7.4     LAST MODIFIED: 08/25/95    BY: ais *H0FQ*              */
+/* REVISION: 7.4     LAST MODIFIED: 09/19/95    BY: ais *G0X6*              */
+/* REVISION: 7.4     LAST MODIFIED: 10/20/95    BY: ais *G19L*              */
+/* REVISION: 8.5     LAST MODIFIED: 10/03/95    BY: taf *J053*              */
+/* REVISION: 7.4     LAST MODIFIED: 01/04/96    BY: ais *G1J1*              */
+/* REVISION: 8.5     LAST MODIFIED: 03/19/96    BY: *J0CV* Robert Wachowicz */
+/* REVISION: 8.5     LAST MODIFIED: 03/25/96    BY: ais *G1QK*              */
+/* REVISION: 8.5     LAST MODIFIED: 04/23/96    BY: rpw *J0K2*              */
+/* REVISION: 8.5     LAST MODIFIED: 05/20/96    BY: rxm *G1NZ*              */
+/* REVISION: 8.5     LAST MODIFIED: 06/07/96    BY: ajw *J0S6*              */
+/* REVISION: 8.5     LAST MODIFIED: 08/21/96    BY: *G2CV* Aruna P. Patil   */
+/* REVISION: 8.5     LAST MODIFIED: 11/19/96    BY: *H0PG* Suresh Nayak     */
+/* REVISION: 8.5     LAST MODIFIED: 01/09/97    BY: *J1B1* Robin McCarthy   */
+/* REVISION: 8.5     LAST MODIFIED: 05/22/97    BY: *J1RZ* Molly Balan      */
+/* REVISION: 8.5     LAST MODIFIED: 08/29/97    BY: *J204* Aruna Patil      */
+
+
+/*G684** {mfdtitle.i "e+ "} */
+/*G489** {mfdeclre.i} */
+/*G684*/ {mfdeclre.i}
+
+/*J0CV*/ define variable ersnbr like ers_opt no-undo.
+/*J0CV*/ define variable ersplo like ers_pr_lst_tp no-undo.
+/*J0CV*/ define variable error_code as integer.
+
+/*J053*/ define shared variable rndmthd like rnd_rnd_mthd.
+         define shared variable desc1 like pt_desc1.
+         define shared variable desc2 like pt_desc2.
+         define shared variable line like sod_line.
+         define shared variable due_date like pod_due_date.
+         define shared variable del-yn like mfc_logical.
+         define shared variable so_job like pod_so_job.
+         define shared variable disc like pod_disc_pct.
+         define shared variable po_recno as recid.
+         define shared variable vd_recno as recid.
+         define variable qty_ord like pod_qty_ord.
+         define variable old_qty_ord like pod_qty_ord.
+         define variable old_pur_cost like pod_pur_cost.
+         define variable old_vpart like pod_vpart.
+         define variable last_date like pod_due_date.
+         define shared variable ext_cost like pod_pur_cost.
+         define variable yn like mfc_logical initial no.
+         define shared variable old_pod_status like pod_status.
+         define shared variable old_type like pod_type.
+         define shared variable pod_recno as recid.
+         define shared variable podcmmts like mfc_logical label "หตร๗".
+         define shared variable cmtindx as integer.
+/*H221** define variable workord like wo_nbr.  **/
+         define shared frame d.
+         define variable mfgr like vp_mfgr.
+         define variable mfgr_part like vp_mfgr_part.
+         define shared variable st_qty like pod_qty_ord.
+         define shared variable st_um like pod_um.
+         define shared variable old_um like pod_um.
+         define variable old_um_conv like pod_um_conv.
+         define shared variable base_amt like pod_pur_cost.
+         define shared variable clines as integer.
+         define shared variable blanket like mfc_logical.
+         define shared variable sngl_ln like poc_ln_fmt.
+         define variable valid_acct like mfc_logical.
+/*H006*/ define variable zone_to like txz_tax_zone no-undo.
+/*H006*/ define variable zone_from like txz_tax_zone no-undo.
+/*H006*/ define shared variable old_pod_site like pod_site.
+/*H015*/ define shared variable continue like mfc_logical.
+/*H184*/ define shared variable poc_pc_line like mfc_logical.
+/*H221*/ define new shared variable err-flag as integer.
+/*H221*/ define new shared variable workord  like wo_nbr.
+/*H221*/ define new shared variable worklot  like wo_lot.
+/*H221*/ define new shared variable routeop  like wr_op.
+/*H221*/ define new shared variable workpart like wo_part.
+/*H221*/ define new shared variable workproj like wo_project.
+/*H221*/ define            variable old_db   like si_db.
+/*G0X6*/ define shared variable line_opened like mfc_logical.
+
+/*H006*/ {gptxcdec.i}  /* DECLARATIONS FOR gptxcval.i */
+
+
+/*H006*/ /* TAX ENVIRONMENT FORM */
+         FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+pod_tax_usage     colon 25
+/*F0PY      pod_tax_env   colon 25 */
+/*F0PY*/    pod_tax_env   colon 25  space(2)
+/*H0BT*/    pod_taxc      colon 25
+/*H0BT*/    pod_taxable   colon 25
+            pod_tax_in        colon 25
+          SKIP(.4)  /*GUI*/
+with frame set_tax row 13 overlay centered side-labels attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-set_tax-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame set_tax = F-set_tax-title.
+ RECT-FRAME-LABEL:HIDDEN in frame set_tax = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame set_tax =
+  FRAME set_tax:HEIGHT-PIXELS - RECT-FRAME:Y in frame set_tax - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME set_tax = FRAME set_tax:WIDTH-CHARS - .5.  /*GUI*/
+
+
+         {mfpomtb.i} /* defines frames c and d */
+
+         find first gl_ctrl no-lock.
+         find first poc_ctrl no-lock.
+         find first icc_ctrl no-lock.
+         find po_mstr where recid(po_mstr) = po_recno.
+         find vd_mstr where recid(vd_mstr) = vd_recno no-lock.
+         find pod_det where recid(pod_det) = pod_recno.
+/*H221*/ find si_mstr where si_site = pod_site no-lock.
+/*J041*/ find pt_mstr where pt_part = pod_part no-lock no-error.
+/*J04D*/ if available pt_mstr and pt_lot_ser = "s" then pod_lot_rcpt = yes.
+
+/*H015*/ continue = no.            /* set the flag to no */
+         /*GUI: view frame dtitle. */
+IF global-tool-bar AND global-tool-bar-handle <> ? THEN
+  view global-tool-bar-handle. /*GUI*/
+
+         view frame d.
+
+/*H374*  ext_cost = pod_qty_ord * pod_pur_cost * (1 - (pod_disc_pct / 100)).*/
+/*H0FQ*/ if ((pod__qad02 = 0 or pod__qad02 = ?) and
+/*H0FQ*/     (pod__qad09 = 0 or pod__qad09 = ?))
+/*H0FQ*/ then
+/*H0FQ*/    ext_cost = pod_qty_ord * pod_pur_cost * (1 - (pod_disc_pct / 100)).
+/*H0FQ*/ else
+/*H374*/    ext_cost = pod_qty_ord * (pod__qad09 + pod__qad02 / 100000).
+/*J053*/ /* ROUND PER DOCUMENT CURRENCY ROUND METHOD */
+/*J053*/ {gprun.i ""gpcurrnd.p"" "(input-output ext_cost,
+                                   input rndmthd)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         display
+/*F033      pod_site */
+/*J038*/    pod_lot_rcpt
+            pod_loc
+            pod_rev
+            pod_vpart
+            desc1
+            desc2
+            pod_due_date
+            pod_per_date
+            pod_need
+            pod_so_job
+/*H082*/    pod_fix_pr
+/*H184*/    pod_crt_int
+            pod_status
+            pod_acct
+            pod_cc
+            pod_project
+            pod_type
+            pod_taxable
+/*H006*/    pod_taxc when ({txnew.i})
+            pod_insp_rqd
+            pod_um_conv
+            pod_cst_up
+            st_qty
+            st_um
+            podcmmts
+            ext_cost
+/*H417*/    when (ext_cost <> ?)
+         with frame d.
+
+         old_um_conv = pod_um_conv.
+         mfgr = "".
+         mfgr_part = "".
+         if pod_vpart <> "" then do:
+            find first vp_mstr where vp_part = pod_part
+            and vp_vend_part = pod_vpart and vp_vend = po_vend
+            no-lock no-error.
+            if available vp_mstr then do:
+               mfgr = vp_mfgr.
+               mfgr_part = vp_mfgr_part.
+            end.
+         end.
+         display
+            mfgr
+            mfgr_part
+         with frame d.
+
+/*7.0*/  global_site = pod_site.
+/*G232*/ global_addr = po_vend.
+
+         setd:
+         do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            set
+               pod_qty_chg when (blanket)
+/*F033         pod_site */
+/*J038*/       pod_lot_rcpt when (pod_qty_rcvd = 0 and
+/*J04D*/                          available pt_mstr and
+                                  pt_lot_ser <> "s")
+               pod_loc
+               pod_rev
+/*H144*/       pod_status       when (not pod_sched)
+               pod_vpart
+/*G2CV**       desc1  */
+/*G2CV*/       desc1            when (not can-find(pt_mstr where pt_part =
+                            pod_part))
+/*H184*/       /* pod_due_date */
+/*H605*//*H184*/  pod_due_date /* when not poc_pc_line */
+               pod_per_date
+               pod_need
+               pod_so_job
+/*H082*/       pod_fix_pr
+               pod_acct
+               pod_cc
+               pod_project
+               pod_type when (not blanket)
+               pod_taxable
+/*H006*/       pod_taxc when ({txnew.i})
+               pod_insp_rqd
+               podcmmts
+               pod_um_conv when (new pod_det)
+               pod_cst_up
+            with frame d editing:
+               if frame-field = "pod_vpart" then do:
+                  {mfnp05.i vp_mstr vp_partvend
+                  "pod_part = vp_part and po_vend = vp_vend"
+                  vp_vend_part "input pod_vpart"}
+                  if recno <> ? and po_curr = vp_curr then do:
+                     pod_vpart = vp_vend_part.
+                     mfgr = vp_mfgr.
+                     mfgr_part = vp_mfgr_part.
+                     display pod_vpart mfgr mfgr_part with frame d.
+                  end.
+               end.
+               else do:
+                  ststatus = stline[3].
+                  status input ststatus.
+                  readkey.
+                  apply lastkey.
+               end.
+            end.
+            /* END EDITING SECTION FRAME D */
+
+/*H006*/    /* VALIDATE TAXABLE AND TAX CODE */
+            if {txnew.i} then do:
+               {gptxcval.i &code=pod_taxc &taxable=pod_taxable &date=po_tax_date
+                           &frame="d" &undo_label="setd"}
+            end.
+
+/*H006*/    /* GET TAX MANAGEMENT DATA */
+            if {txnew.i} and pod_taxable then do:
+               if pod_site <> old_pod_site then do:
+/*H0BM*           {mfmsg03.i 922 2 """Site""" """" """"} */
+/*H0BM*/          {mfmsg.i 955 2}
+/*H0BM*/                   /* NEW SITE SPECIFIED; CHECK TAX ENVIRONMENT */
+                  pod_tax_env = "".
+               end.
+               taxloop:  do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  /* SUGGEST TAX ENVIRONMENT */
+                  if pod_tax_env = "" then do:
+                     /* GET VENDOR SHIP_FROM TAX ZONE FROM ADDRESS */
+                     find ad_mstr where ad_addr = vd_addr no-lock no-error.
+                     if available ad_mstr then zone_from = ad_tax_zone.
+
+                     /* GET SHIP_TO TAX ZONE FROM POD_SITE ADDRESS */
+                     find ad_mstr where ad_addr = pod_site no-lock no-error.
+                     if available ad_mstr then zone_to = ad_tax_zone.
+                     else do:
+                        /* USE DEFAULT TAX COMPANY ADDRESS */
+/*H299*/                find ad_mstr where ad_addr = "~taxes"
+/*H299*/                no-lock no-error.
+/*H299*/                if available ad_mstr then
+/*H299*/                   zone_to = ad_tax_zone.
+/*H299*/                else do:
+/*H0BM*                    {mfmsg03.i 902 2 """Site Address""" """" """"} */
+/*H0BM*/                   {mfmsg.i 864 2} /* SITE ADDRESS DOES NOT EXIST */
+                           zone_to = "".
+/*H299*/                end.
+                     end.
+
+                     /* SUGGEST A TAX ENVIRONMENT */
+                     {gprun.i ""txtxeget.p"" "(input zone_to,
+                                               input zone_from,
+                                               input po_taxc,
+                                               output pod_tax_env)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  end.
+
+                  update pod_tax_usage
+                         pod_tax_env
+/*H0BT*/                 pod_taxc
+/*H0BT*/                 pod_taxable
+                         pod_tax_in
+                  with frame set_tax.
+
+                  /* VALIDATE TAX ENVIRONMENT -- BLANKS NOT ALLOWED */
+                  if pod_tax_env = "" then do:
+/*H0BM*              {mfmsg03.i 906 3 """Tax Environment""" """" """"} */
+/*H0BM*/             {mfmsg.i 944 3} /* BLANK TAX ENVIRONMENT NOT ALLOWED */
+                     next-prompt pod_tax_env with frame set_tax.
+                     undo taxloop, retry.
+                  end.
+
+                  if not {gptxe.v "pod_tax_env" ""no""} then do:
+/*H0BM*              {mfmsg03.i 902 3 """Tax Environment""" """" """"} */
+/*H0BM*/             {mfmsg.i 869 3} /* TAX ENVIRONMENT DOES NOT EXIST */
+                     next-prompt pod_tax_env with frame set_tax.
+                     undo taxloop, retry.
+                  end.
+                  hide frame set_tax.
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* TAXLOOP */
+
+            end.  /*H006 END TAX CODE */
+
+            if pod_per_date = ? then pod_per_date = pod_due_date.
+            if pod_need = ? then pod_need = pod_due_date.
+
+/*H0PG**    if can-find (first vp_mstr)                                   */
+/*H0PG*/    if can-find (first vp_mstr where vp_mstr.vp_part >= ""
+/*H0PG*/                               and   vp_mstr.vp_vend >= ""
+/*H0PG*/                               and   vp_mstr.vp_vend_part >= "")
+/*G1J1         and pod_vpart <> "" */
+            then do:
+               find vp_mstr where vp_vend_part = pod_vpart
+               and vp_part = pod_part and vp_vend = po_vend no-lock no-error.
+               if not available vp_mstr
+/*G1J1*/          and pod_vpart <> ""
+               then do:
+                  mfgr = "".
+                  mfgr_part = "".
+                  {mfmsg.i 238 1}  /* Supplier item does not exist */
+/*G1J1*/          hide message.
+               end.
+               if available vp_mstr then do:
+                  mfgr = vp_mfgr.
+                  mfgr_part = vp_mfgr_part.
+                  if (new pod_det or pod_pur_cost <> old_pur_cost
+                  or pod_vpart <> old_vpart)
+                  and vp_q_price <> pod_pur_cost and vp_um = pod_um
+/*J204*/          and po_curr = vp_curr and pod_qty_ord >= vp_q_qty
+                  and available vp_mstr then do:
+                     yn = no.
+                     /* Update supplier quote cost with purchase cost? */
+                     {mfmsg01.i 334 1 yn}
+                     if yn = yes then do:
+                        find vp_mstr where vp_vend_part = pod_vpart
+                        and vp_part = pod_part and vp_vend = po_vend
+                        exclusive-lock no-error.
+                        vp_q_price = pod_pur_cost.
+                        vp_q_date = today.
+                     end.
+                  end.
+               end.
+               display
+                  mfgr
+                  mfgr_part
+               with frame d.
+            end.
+
+            if pod_status = "c" and old_pod_status = "x" then do:
+               /* Cancelled line changed to closed */
+               {mfmsg.i 329 2}
+            end.
+
+            if (po_stat = "c" or po_stat = "x")
+            and (pod_status <> "c" and pod_status <> "x" ) then do:
+               yn = no.
+               /* PO and/or PO line closed or cancelled - reopen? */
+               {mfmsg01.i 339 1 yn}
+               if yn = yes then do:
+                  po_stat = "".
+                  po_cls_date = ?.
+/*G0X6*/          line_opened = true.
+               end.
+               if yn = no then do:
+                  pod_status = old_pod_status.
+                  display pod_status with frame d.
+                  next-prompt pod_status with frame d.
+                  undo setd, retry.
+               end.
+            end.
+            if (pod_qty_ord = 0 or
+            not can-find(pt_mstr where pt_part = pod_part)) and pod_type = "S"
+            then do:
+/*J1RZ**       /* Type (S)ubcontract not allowed for memo items */   */
+/*J1RZ*/       /* TYPE (S)UBCONTRACT NOT ALLOWED FOR MEMO ITEMS */
+/*J1RZ*/       /* OR ZERO QUANTITIES */
+               {mfmsg.i 342 3}
+               next-prompt pod_type with frame d.
+               undo setd, retry.
+            end.
+
+            if blanket and pod_qty_chg > (pod_qty_ord - pod_rel_qty) then do:
+               /* Quantity to release is more than open quantity */
+               {mfmsg.i 384 3}
+               next-prompt pod_qty_chg with frame d.
+               undo setd, retry.
+            end.
+
+/*G164*/    if pod_type = "B" and not blanket then do:
+/*G164*/       {mfmsg.i 683 3} /* Type "B" is reserved for blanket orders */
+/*G164*/       next-prompt pod_type with frame d.
+/*G164*/       undo setd, retry.
+/*G164*/    end.
+
+            if pod_type <> "B" and blanket then do:
+               /* Blanket order type must be "B" */
+               {mfmsg.i 382  3}
+               next-prompt pod_type with frame d.
+               undo setd, retry.
+            end.
+
+/*G19L      if pod_req_nbr <> ""                                            */
+/*G19L      and can-find(pt_mstr where pt_part = pod_part)                  */
+/*G19L      and ((new pod_det and pod_type <> ""                            */
+/*G19L      and can-find(last req_det where req_nbr = pod_req_nbr))         */
+/*G19L      or (not new pod_det and pod_type <> old_type))                  */
+/*G19L      and blanket = false then do:                                    */
+
+/*G19L*/    if pod_req_nbr <> ""
+/*G19L*/    and can-find(last req_det where req_nbr = pod_req_nbr)
+/*G19L*/    and can-find(pt_mstr where pt_part = pod_part)
+/*G19L*/    and blanket = false
+/*G19L*/    and ((new pod_det and pod_type <> "")
+/*G19L*/        or (not new pod_det and pod_type <> old_type))
+/*G19L*/    then do:
+               /* PO type not allowed when useing requisition */
+               {mfmsg.i 348 3}
+               next-prompt pod_type with frame d.
+               undo setd, retry.
+            end.
+
+            /* VERIFY GL ACCOUNTS/COST CENTERS */
+/*G012      {gpglac.i
+ *             &acct  = "pod_acct"
+ *             &cc    = "pod_cc"
+ *             &frame = "d"
+ ***           &label = "setd"} **/
+/*G012*/    {gpglver1.i &acc  = "pod_acct" &sub=? &cc="pod_cc" &frame="d"}
+
+            find pt_mstr where pt_part = pod_part no-lock no-error no-wait.
+            if available pt_mstr and desc1 = pt_desc1 then do:
+               pod_desc = "".
+            end.
+            else pod_desc = desc1.
+            if pod_um_conv <> old_um_conv then do:
+               st_qty = pod_qty_ord * pod_um_conv.
+               display st_qty with frame d.
+            end.
+            if pod_loc = "" and pod_insp_rqd then do:
+               pod_loc = poc_insp_loc.
+               /* Inspection required - location set to xxxx */
+               {mfmsg02.i 351 1 pod_loc}
+            end.
+
+/*G1QK      if icc_cur_cost = "NONE" and pod_cst_up = yes then do:       */
+/*G1QK         pod_cst_up = no.                                          */
+/*G1QK         /* Update Cost not allowed, Current Cost ctrl = "None"*/  */
+/*G1QK         {mfmsg.i 374 2}                                           */
+/*G1QK      end.                                                         */
+
+/*F003      if po_curr <> base_curr and pod_cst_up = yes then do: */
+/*F003         pod_cst_up = no.                                   */
+/*F003         {mfmsg.i 85 2}                                     */
+/*F003      end.                                                  */
+
+
+
+/*H221*/    /* Work Order Update/Validation moved to subroutine to */
+/*H221*/    /* pick up work orders in remote databases.            */
+            if pod_type = "S"
+/*G1NZ             and pod_req_nbr = "" */
+/*G1NZ*/     and (pod_req_nbr = "" or not can-find(first req_det where req_nbr =
+/*G1NZ*/     pod_req_nbr))
+             then do:
+
+               old_db = global_db.
+               if si_db <> global_db then do:
+                  {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               end.
+
+               assign
+                worklot  = pod_wo_lot
+                routeop  = pod_op
+                workpart = pod_part
+                workproj = pod_project.
+/*LB01*/        {gprun.i ""zzpopomtd1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               assign pod_wo_lot = worklot
+                      pod_op     = routeop.
+
+               if old_db <> global_db then do:
+                  {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               end.
+
+/*H221*/    end.
+
+/*F0J0*/    /* Validate pod_site's pt_mstr when po_line had been memo */
+/*F0J0*/    if (pod_type = "") and (old_type = "M") then do:
+
+/*F0J0*/       /* Multi-Database Re-assignment */
+/*F0J0*/       assign old_db = global_db.
+/*F0J0*/       if si_db <> global_db then do:
+/*F0J0*/          {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F0J0*/       end.
+/*F0J0*/       if err-flag <> 0 then do:
+/*F0J0*/           /* Message: Database # is not connected */
+/*F0J0*/          {mfmsg03.i 2510 4 "si_db" """" """"}
+/*F0J0*/       end.
+
+/*F0J0*/       /* Check that pt_mstr exists in PO line site's DB */
+/*F0J0*/       else do:
+/*F0PY **********************************************************************
+* /*F0J0*/        if not can-find (first pt_mstr where pt_part = pod_part) then do:
+* /*F0J0*/             assign err-flag = -1.
+* /*F0J0*/              /* Message: Item does not exist in Item Master */
+* /*F0J0*/             {mfmsg.i 715 4}
+* /*F0J0*/          end.
+********************************************************************** F0PY*/
+/*F0PY*/          {gprun.i ""popomtdv.p"" "(pod_part, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F0J0*/       end.
+
+/*F0J0*/        /* If any errors then reset DB aliases and Item Type */
+/*F0J0*/       if err-flag <> 0 then do:
+/*F0J0*/          if old_db <> global_db then do:
+/*F0J0*/             {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F0J0*/          end.
+/*F0J0*/          assign pod_type = old_type
+/*F0J0*/                 err-flag = 0.
+/*F0J0*/          display pod_type with frame d.
+/*F0J0*/          next-prompt pod_type with frame d.
+/*F0J0*/          undo setd, retry.
+/*F0J0*/       end.
+/*F0J0*/       else do:
+/*F0J0*/          if old_db <> global_db then do:
+/*F0J0*/             {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F0J0*/          end.
+/*F0J0*/       end.
+/*F0J0*/    end.
+
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* setd */
+
+/*J0CV ADDED BLOCK*/
+
+         pause 0.
+
+         /*ERS PROCESSING BLOCK*/
+         if poc_ers_proc = yes then do:
+            /*ERS POP UP BOX*/
+            FORM /*GUI*/ 
+               
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+pod_ers_opt colon 22
+/*J0S6*/       space(2)
+               skip
+               pod_pr_lst_tp colon 22
+/*J0S6*/       space(2)
+             SKIP(.4)  /*GUI*/
+with frame ers side-labels centered row 13 overlay NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-ers-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame ers = F-ers-title.
+ RECT-FRAME-LABEL:HIDDEN in frame ers = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame ers =
+  FRAME ers:HEIGHT-PIXELS - RECT-FRAME:Y in frame ers - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME ers = FRAME ers:WIDTH-CHARS - .5.  /*GUI*/
+
+
+            /*UPDATE ERS FIELDS*/
+/*J0K2*     display pod_ers_opt pod_pr_lst_tp with frame ers. */
+            looper:
+            do on error undo looper, retry looper with frame ers:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J0K2*/       display pod_ers_opt pod_pr_lst_tp with frame ers.
+               set pod_ers_opt pod_pr_lst_tp with frame ers.
+               /*VALIDATE ERS OPTION ENTERED IS VALID*/
+               if not ({gppoders.v}) then do:
+/*J1B1            /*ERS OPTION MUST BE 0,1,2,3 */ */
+/*J1B1 /*J0K2*/   {mfmsg02.i 2303 3 "'0, 1, 2, or 3'"} */
+/*J1B1*/          {mfmsg.i 2303 3}          /* INVALID ERS OPTION */
+                  next-prompt pod_ers_opt.
+                  undo, retry looper.
+               end.
+
+               if pod_ers_opt entered then do:
+                  /*VALIDATE ERS OPT BY FINDING HIGH ERS MASTER MATCH*/
+                  {gprun.i ""poers.p"" "(po_vend, pod_site, pod_part,
+                                         output ersnbr, output ersplo,
+                                         output error_code)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /*IF MISSING ERS MASTER RECORD*/
+                  if error_code <> 0 then do:
+                     if error_code = 3 then do:
+/*J1B1                  {mfmsg02.i 2301 2 "'ERS Option set to 1'"} */
+/*J1B1*/                {mfmsg.i 2301 2}   /* MISSING SITE AND SUPPLIER */
+/*J1B1*/                {mfmsg.i 2346 1}   /* ERS OPTION SET TO 1 */
+                     end.
+                     else if error_code = 2 then do:
+/*J1B1                  {mfmsg02.i 2309 2 "'ERS Option set to 1'"} */
+/*J1B1*/                {mfmsg.i 2309 2}   /* MISSING SUPPLIER */
+/*J1B1*/                {mfmsg.i 2346 1}   /* ERS OPTION SET TO 1 */
+                     end.
+                     else if error_code = 1 then do:
+/*J1B1                  {mfmsg02.i 2311 2 "'ERS Option set to 1'"} */
+/*J1B1*/                {mfmsg.i 2311 2}   /* MISSING SITE */
+/*J1B1*/                {mfmsg.i 2346 1}   /* ERS OPTION SET TO 1 */
+                     end.
+
+                     pod_ers_opt = 1.
+                     display pod_ers_opt with frame ers.
+                     next-prompt pod_ers_opt.
+                     undo, retry looper.
+                  end. /*ERROR CODE <> 0*/
+
+                  /*IF INVALID ERS OPTION*/
+                  else if pod_ers_opt > ersnbr then do:
+                     {mfmsg.i 2317 1}
+
+                     /*INVALID ERS OPTION BASED ON SUPPLIER SITE ITEM*/
+                     {mfmsg02.i 2318 3 "string(ersnbr)"}
+
+                     /*ERS MUST BE <= VALUE*/
+                     next-prompt pod_ers_opt.
+                     undo looper, retry looper.
+                  end. /*POD_ERS INVALID*/
+               end. /*IF POD_ERS_OPT ENTERED*/
+            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /*LOOPER*/
+
+            hide frame ers.
+
+         end. /*IF POC_ERS_PROC = YES*/
+
+/*J0CV END OF ADD*/
+
+/*H015*/ continue = yes. /* set the flag to yes for successful completion */
+         hide frame d no-pause.

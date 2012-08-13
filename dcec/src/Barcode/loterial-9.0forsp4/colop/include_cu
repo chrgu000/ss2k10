@@ -1,0 +1,63 @@
+mfnewa3.p                                             2.1.1 Customer Maintenance                                      Date: 12/06/04
+Page:    1                                           Coroplast Harness Technology                                     Time: 16:13:05
+
+Prod Line: 2100 ELT cable/wires
+                                                    Drawing
+Item Number        Description              UM Rev  Brk Cat            Group    Type     Status   Added    Copper Weight
+------------------ ------------------------ -- ---- ------------------ -------- -------- -------- -------- -------------
+2.54877-00         FLR31Y11Y 2x0,75/0,16SW  m                          2114     Raw      act      12/03/04        0.0144
+2.54878-00         FLR31Y11Y 2x0,75 SW(GN#  m                          2114     Raw      act      12/03/04        0.0144
+
+Prod Line: 6300 EKS harness
+                                                    Drawing
+Item Number        Description              UM Rev  Brk Cat            Group    Type     Status   Added    Copper Weight
+------------------ ------------------------ -- ---- ------------------ -------- -------- -------- -------- -------------
+6.53415-00         8LO.927.904.D            ea                         6312     FP       act      12/03/04     0.0148176
+                   ABS-Sensorcbl. RrLR
+6.73903-00         1KO.927.903 A            ea                         6311     FP       act      12/03/04     0.0356256
+                   ABS-Sensorcbl. FrR
+6.76382-00         1TO.927.904.L            ea                         6311     FP       act      12/03/04     0.0148176
+                   ABS-Sensorcbl. RrL
+6.76383-00         1TO.927.904.M            ea                         6311     FP       act      12/03/04     0.0148176
+                   ABS-Sensorcbl. RrR
+6.84172-00         1JO.927.903.Q            ea                         6312     FP       act      12/03/04     0.0356256
+                   ABS-Sensorcbl. FrL
+6.86492-00         2KO.927.904.A            ea                         6311     FP       act      12/03/04     0.0148176
+                   ABS-Sensorcbl. RrLR
+
+Prod Line: 9000 Semi FP
+                                                    Drawing
+Item Number        Description              UM Rev  Brk Cat            Group    Type     Status   Added    Copper Weight
+------------------ ------------------------ -- ---- ------------------ -------- -------- -------- -------- -------------
+9.87877-00         Assy cut cable           ea                         9020     Assy     act      12/03/04     0.0148176
+9.87878-00         Assy cut cable           ea                         9020     Assy     act      12/03/04     0.0356256
+9.87903-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0356256
+9.87915-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0148176
+9.87972-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0356256
+9.87982-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0148176
+9.87983-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0148176
+9.87992-00         Assy cut with housing    ea                         9030     Assy     act      12/03/04     0.0148176
+
+Prod Line: 9605 Vehicle wires and cores
+                                                    Drawing
+Item Number        Description              UM Rev  Brk Cat            Group    Type     Status   Added    Copper Weight
+------------------ ------------------------ -- ---- ------------------ -------- -------- -------- -------- -------------
+9.54877-00         FLR31Y11Y 2X0.75/0.16 SW m                          9605     RAW      act      12/03/04        0.0144
+                   N901911.01
+9.54878-00         FLR31Y11Y 2X0.75 SW      m                          9605     RAW      act      12/03/04        0.0144
+                   N901918.02
+
+
+------ End of Report ------
+mfnewa3.p                                             2.1.1 Customer Maintenance                                      Date: 12/06/04
+Page:    2                                           Coroplast Harness Technology                                     Time: 16:13:05
+
+
+
+
+REPORT CRITERIA:                        Report Submitted By:       est
+
+            Line:                               To: 
+     Item Number:                               To: 
+            Type:                               To: 
+     Only Including Copper: Y

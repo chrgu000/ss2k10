@@ -1,0 +1,17 @@
+
+11/09/07 14:54:01
+Progress Recent Message(s): (513) (4053) (4053) (452) (452) (452) (452)
+  *** 4GL Call Stack ***
+2461: enable_UI ch/mf1a.p (D:\shlqaddb\sp4服务器\ch\mf1a.r)
+3997: ch/mf1a.p (D:\shlqaddb\sp4服务器\ch\mf1a.r)
+1301: mf1.p (D:\shlqaddb\sp4服务器\ch\xrc\mf1.p)
+179: mf.p (D:\shlqaddb\qadguifs服务器\ch\XRC\mf.p)
+
+11/10/07 00:31:22
+Progress Recent Message(s): (5180) (513) (5180) (4053) (5180) (4053) (5180) (452) (5180) (452) (5180) (452) (5180) (452)
+  *** 4GL Call Stack ***
+2461: enable_UI ch/mf1a.p (D:\shlqaddb\sp4服务器\ch\mf1a.r)
+3997: ch/mf1a.p (D:\shlqaddb\sp4服务器\ch\mf1a.r)
+1301: mf1.p (D:\shlqaddb\sp4服务器\ch\xrc\mf1.p)
+179: mf.p (D:\shlqaddb\qadguifs服务器\ch\XRC\mf.p)
+44: c:\cim-lot.p (c:\cim-lot.p)

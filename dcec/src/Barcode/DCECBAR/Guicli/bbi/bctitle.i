@@ -1,0 +1,1 @@
+CURRENT-WINDOW:TITLE = bc_name.

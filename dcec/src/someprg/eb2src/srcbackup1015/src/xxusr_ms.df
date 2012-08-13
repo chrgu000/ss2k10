@@ -1,0 +1,30 @@
+ADD TABLE "xxusr_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxusr_ms"
+
+ADD FIELD "xxusr_userid" OF "xxusr_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxusr_passwd" OF "xxusr_mstr" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 840
+  EXTENT 20
+  ORDER 20
+
+ADD INDEX "xxusr_userid" ON "xxusr_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxusr_userid" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000000481

@@ -1,0 +1,54 @@
+/* GUI CONVERTED from zzbgpavlsi3.p (converter v1.69) Sat Mar 30 01:10:28 1996 */
+/* gpavlsi3.p - PART AVAILABILITY FOR A SINGLE SITE SUBROUTINE          */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.3      LAST MODIFIED: 01/05/92   BY: afs *G501*          */
+/* REVISION: 7.3      LAST MODIFIED: 06/14/93   BY: afs *GC24*          */
+/* REVISION: 7.3      LAST MODIFIED: 01/26/95   BY: bcm *F0G8*          */
+
+{mfdeclre.i}
+define shared variable new_site like si_site.
+define shared variable selected_site like sod_site.
+{avlwkfl.i &new="new"}  /* define workfile for part/site availability */
+define variable original_site like si_site.
+define variable err-flag as integer.
+/*GC24*/ define shared variable so_db like dc_name.
+
+original_site = global_site.
+
+/* Switch to the Inventory site */
+{gprun.i ""gpalias2.p"" "(new_site,output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*F0G8*/ if err-flag = 0 or err-flag = 9 then do:
+	    /* Load the display workfile from in_mstr */
+	    {gprun.i ""gpavlsi2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+	    /* Display the results */
+	    find first avl_wkfl no-lock.
+
+/*lb03	    {mfmsg03.i 5000 1 avl_qoh avl_qty_ord avl_alloc}
+*/
+/*lb03*--*/
+      	find pt_mstr no-lock where pt_part = global_part no-error.
+		find ptp_det no-lock where ptp_part = global_part
+				and ptp_site = avl_site no-error.
+		message "库存量：" + string(avl_qoh) +
+		        " 订货量：" + string(avl_qty_ord) +
+		        " 可备料量：" + string(avl_alloc) +
+				" 最小订货量: " + 
+				if available ptp_det then string(ptp_ord_min) 
+				else if available pt_mstr then string(pt_ord_min)
+				else "0".
+        /*--lb03*/
+
+/*F0G8*/ end.
+
+/* Set the alias back to the original database */
+/*GC24** {gprun.i ""gpalias2.p"" "(original_site,output err-flag)" } **/
+/*GC24*/ {gprun.i ""gpalias3.p"" "(so_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+

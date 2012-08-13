@@ -1,0 +1,162 @@
+ADD TABLE "xxtl_det"
+  AREA "Schema Area"
+  DESCRIPTION "Transfer List"
+  DUMP-NAME "xxtl_det"
+
+ADD FIELD "xxtl_nbr" OF "xxtl_det" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "移仓单"
+  POSITION 2
+  SQL-WIDTH 32
+  ORDER 10
+
+ADD FIELD "xxtl_site" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxtl_effdate" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "生效日期"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxtl_part" OF "xxtl_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件"
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxtl_loc_fr" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "移出库位"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxtl_loc_to" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "车间库位"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxtl_qty_req" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "需求量"
+  POSITION 8
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxtl_qty_tr" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "移仓量"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxtl_date" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxtl_qty_pick" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "待移仓量"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxtl_site1" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "移入地点"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxtl_status" OF "xxtl_det" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "状态"
+  POSITION 13
+  SQL-WIDTH 2
+  ORDER 120
+
+ADD FIELD "xxtl_type" OF "xxtl_det" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "类型"
+  POSITION 14
+  SQL-WIDTH 2
+  ORDER 130
+
+ADD FIELD "xxtl__chr" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "usr file"
+  POSITION 15
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 140
+
+ADD FIELD "xxtl__dte" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "usr field"
+  POSITION 16
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 150
+
+ADD FIELD "xxtl_model" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "机型"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxtl__dec" OF "xxtl_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "usr filed"
+  POSITION 18
+  SQL-WIDTH 110
+  EXTENT 5
+  DECIMALS 2
+  ORDER 170
+
+ADD INDEX "xxtl_index" ON "xxtl_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxtl_nbr" ASCENDING 
+  INDEX-FIELD "xxtl_part" ASCENDING 
+  INDEX-FIELD "xxtl_loc_fr" ASCENDING 
+  INDEX-FIELD "xxtl_loc_to" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000002937

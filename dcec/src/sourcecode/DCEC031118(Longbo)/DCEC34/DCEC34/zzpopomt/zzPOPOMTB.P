@@ -1,0 +1,557 @@
+/* GUI CONVERTED from popomtb.p (converter v1.69) Mon Oct 21 10:19:33 1996 */
+/* popomtb.p - PURCHASE ORDER MAINTENANCE -- ORDER HEADER subroutine    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.0     LAST MODIFIED: 09/12/91    BY: ram *F033*          */
+/* REVISION: 7.0     LAST MODIFIED: 11/08/91    BY: mlv *F029*          */
+/* REVISION: 7.0     LAST MODIFIED: 07/01/92    BY: afs *F727*          */
+/* REVISION: 7.3     LAST MODIFIED: 08/06/92    BY: tjs *G027*          */
+/* REVISION: 7.3     LAST MODIFIED: 09/29/92    BY: tjs *G028*          */
+/* REVISION: 7.3     LAST MODIFIED: 10/02/92    BY: tjs *G117*          */
+/* REVISION: 7.3     LAST MODIFIED: 10/09/92    BY: wug *G153*          */
+/* REVISION: 7.3     LAST MODIFIED: 10/22/92    BY: mpp *G481*          */
+/* REVISION: 7.3     LAST MODIFIED: 02/22/93    BY: bcm *G717*          */
+/* REVISION: 7.3     LAST MODIFIED: 02/23/93    BY: tjs *G735*          */
+/* REVISION: 7.3     LAST MODIFIED: 03/19/93    BY: tjs *G815*          */
+/* REVISION: 7.3     LAST MODIFIED: 04/29/93    BY: afs *G972*          */
+/* REVISION: 7.4     LAST MODIFIED: 06/08/93    BY: jjs *H006*          */
+/* REVISION: 7.4     LAST MODIFIED: 08/09/93    BY: bcm *H062*          */
+/* REVISION: 7.4     LAST MODIFIED: 11/22/93    BY: tjs *H082*          */
+/* REVISION: 7.4     LAST MODIFIED: 09/28/93    BY: cdt *H086*          */
+/* REVISION: 7.4     LAST MODIFIED: 10/23/93    BY: cdt *H184*          */
+/* REVISION: 7.4     LAST MODIFIED: 12/28/93    BY: bcm *H269*          */
+/* REVISION: 7.4     LAST MODIFIED: 03/03/94    BY: cdt *H288*          */
+/* REVISION: 7.4     LAST MODIFIED: 03/22/94    BY: bcm *H299*          */
+/* REVISION: 7.4     LAST MODIFIED: 07/29/94    BY: bcm *H465*          */
+/* REVISION: 7.4     LAST MODIFIED: 09/13/94    BY: bcm *H516*          */
+/* REVISION: 7.4     LAST MODIFIED: 09/29/94    BY: bcm *H541*          */
+/* REVISION: 8.5     LAST MODIFIED: 10/18/94    BY: mwd *J034*          */
+/* REVISION: 7.4     LAST MODIFIED: 10/31/94    BY: mmp *H582*          */
+/* REVISION: 7.5     LAST MODIFIED: 02/21/95    BY: dpm *J044*          */
+/* REVISION: 7.4     LAST MODIFIED: 02/23/95    BY: jzw *H0BM*          */
+/* REVISION: 7.4     LAST MODIFIED: 03/06/95    BY: wjk *H0BT*          */
+/* REVISION: 7.4     LAST MODIFIED: 03/20/95    by: srk *H0C4*          */
+/* REVISION: 7.4     LAST MODIFIED: 09/19/95    BY: ais *G0X6*          */
+/* REVISION: 8.5     LAST MODIFIED: 10/27/95    BY: dpm *J08Y*          */
+/* REVISION: 8.5     LAST MODIFIED: 09/27/95    BY: taf *J053*          */
+/* REVISION: 8.5     LAST MODIFIED: 02/16/96    BY: rxm *H0JR*          */
+/* REVISION: 8.5     LAST MODIFIED: 03/04/96    BY: rxm *F0X2*          */
+/* REVISION: 8.5     LAST MODIFIED: 07/18/96    BY: taf *J0ZS*          */
+/* REVISION: 8.5     LAST MODIFIED: 09/18/96    BY: *H0MV* Aruna P.Patil*/
+/* REVISION: 8.5     LAST MODIFIED: 10/20/96    BY: *H0ND* Aruna P.Patil*/
+/* REVISION: 8.5     LAST MODIFIED: 11/14/03    BY: *LB01* Long Bo         */
+
+	 {mfdeclre.i}
+
+/*H082*/ define new shared variable tax_nbr like tx2d_nbr initial "".
+/*H082*/ define new shared variable tax_tr_type like tx2d_tr_type initial "20".
+/*H086*/ define new shared variable undo_all like mfc_logical.
+
+/*J053*/ define shared variable rndmthd like rnd_rnd_mthd.
+	 define shared variable line like pod_line.
+	 define shared variable due_date like pod_due_date.
+	 define shared variable del-yn like mfc_logical.
+	 define shared variable qty_ord like pod_qty_ord.
+	 define shared variable so_job like pod_so_job.
+	 define shared variable disc like pod_disc label "每项折扣".
+	 define shared variable po_recno as recid.
+	 define shared variable ponbr like po_nbr.
+	 define shared variable old_po_stat like po_stat.
+/*G0X6*/ define shared variable line_opened like mfc_logical.
+	 define shared variable old_rev like po_rev.
+	 define shared variable pocmmts like mfc_logical label "说明".
+	 define shared variable new_po like mfc_logical.
+/*F033*/ define shared variable new_db like si_db.
+/*F033*/ define shared variable old_db like si_db.
+/*F033*/ define shared variable new_site like si_site.
+/*F033*/ define shared variable old_site like si_site.
+	 define shared variable continue like mfc_logical no-undo.
+/*H006*/ define shared variable tax_in like ad_tax_in.
+/*H184*/ define shared variable pocrt_int like pod_crt_int.
+
+	 define shared frame a.
+	 define shared frame b.
+	 define shared frame vend.
+	 define shared frame ship_to.
+
+/*H082*  define variable tax_nbr like tx2d_nbr initial "".           */
+/*H082*  define variable tax_tr_type like tx2d_tr_type initial "20". */
+/*H006*/ define variable zone_to like txe_zone_to.
+/*H006*/ define variable zone_from like txe_zone_from.
+/*H288*/ define variable con-yn like mfc_logical.
+/*H541*/ define variable poc_pt_req      like mfc_logical.
+/*J044*/ define shared variable impexp   like mfc_logical no-undo.
+/*J044*/ define        variable imp-okay like mfc_logical no-undo.
+
+/*H006*/ {gptxcdec.i}  /* DECLARATIONS FOR gptxcval.i */
+/*H082*/ {popomt02.i}  /* Shared frames a and b */
+
+
+/*H006*/ /* TAX MANAGEMENT FORM */
+	 FORM /*GUI*/ 
+	    
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_tax_usage colon 25
+	    po_tax_env  colon 25
+/*H0C4*/    space(1)
+/*H0BT*/    po_taxc      colon 25
+/*H0BT*/    po_taxable   colon 25
+/*H0BT*/    tax_in       colon 25
+/*H0BT*  with frame set_tax row 14 centered overlay side-labels.   */
+/*H0BT*/  SKIP(.4)  /*GUI*/
+with frame set_tax row 8 centered overlay side-labels NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-set_tax-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame set_tax = F-set_tax-title.
+ RECT-FRAME-LABEL:HIDDEN in frame set_tax = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame set_tax =
+  FRAME set_tax:HEIGHT-PIXELS - RECT-FRAME:Y in frame set_tax - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME set_tax = FRAME set_tax:WIDTH-CHARS - .5.  /*GUI*/
+
+
+	 {mfadform.i "vend" 1 " 供应商 "}
+	 {mfadform.i "ship_to" 41 " 货物发往 "}
+
+
+	 find po_mstr exclusive-lock where recid(po_mstr) = po_recno.
+	 find vd_mstr no-lock where vd_addr = po_vend.
+/*H541*/ find first poc_ctrl no-lock.
+/*J053*/ find first gl_ctrl no-lock.
+/*J08Y*/ find first iec_ctrl no-lock no-error.
+
+
+	 order-header:
+	 do on error undo, retry on endkey undo, leave with frame b:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+	    ststatus = stline[2].
+	    status input ststatus.
+	    del-yn = no.
+
+	    if new_po then do:
+	       /* USE VENDOR INFO FOR DEFAULT */
+	       assign
+	       po_cr_terms = vd_cr_terms
+	       po_buyer = vd_buyer
+	       po_disc_pct = vd_disc_pct
+	       po_shipvia = vd_shipvia
+/*G117*/       po_taxable = vd_taxable
+	       po_contact = vd_pur_cntct
+	       po_rmks = vd_rmks
+	       po_ap_acct = vd_ap_acct
+	       po_ap_cc = vd_ap_cc
+	       po_curr = vd_curr
+/*G027*/       po_pr_list = vd_pr_list
+/*H086*/       po_pr_list2 = vd_pr_list2
+/*H082*/       po_fix_pr = vd_fix_pr
+	       po_lang = vd_lang.
+	       if po_ap_acct = "" then do:
+		  find first gl_ctrl no-lock.
+		  assign
+		  po_ap_acct = gl_ap_acct
+		  po_ap_cc = gl_ap_cc.
+	       end.
+/*H086*/       if po_cr_terms <> "" then do:
+/*H086*/          find first ct_mstr where ct_code = po_cr_terms
+/*H086*/          no-lock no-error.
+/*H086*/          if available ct_mstr then
+/*H086*/             pocrt_int = ct_terms_int.
+/*H086*/       end.
+
+/*H006 ADDED FOLLOWING CODE */
+	       if {txnew.i} then do:
+		  /* LOAD DEFAULT TAX CLASS AND USAGE */
+		  find ad_mstr where ad_addr = vd_addr no-lock no-error.
+		  if available ad_mstr then do:
+		     po_taxable   = ad_taxable.
+		     po_tax_usage = ad_tax_usage.
+		     po_taxc      = ad_taxc.
+		     tax_in       = ad_tax_in.
+		  end.
+	       end.
+/*H006 END OF NEW CODE */
+	    end.
+
+/*G117*     disc = vd_disc_pct. */
+/*G117*/    disc = po_disc_pct.
+
+	    if not new_po and po_print = no then do:
+	       {mfmsg.i 302 1}
+	       /* Purchase order already printed, press enter to continue. */
+	       pause.
+	    end.
+
+
+/*J044*/    impexp = no.
+
+/*J08Y*     /* IF ie_mstr AVAILABLE THEN SET THE IMPEXP FLAG TO YES. */*/
+/*J08Y*     if can-find( first ie_mstr                                  */
+/*J08Y*       where ie_type = "2" and ie_nbr = po_nbr) then impexp = yes. */
+
+/*J08Y*/    /* SET THE DEFAULT VALUE BASED ON IEC_CTRL FILE */
+/*J08Y*/    if available iec_ctrl and iec_impexp = yes then impexp = yes.
+
+	    assign
+	    old_po_stat = po_stat
+/*G0X6*/    line_opened = false
+	    old_rev = po_rev.
+
+/*H541*/    display
+/*H541*/          po_ord_date po_due_date po_buyer po_bill
+/*H541*/          so_job po_contract po_contact po_rmks
+/*H541*/          po_pr_list2 po_pr_list disc po_site
+/*H541*/          po_project po_confirm po_curr po_lang
+/*H0JR /*H541*/   po_taxable po_taxc po_tax_date po_fix_pr */
+/*H0JR*/          po_taxable po_taxc when ({txnew.i}) po_tax_date po_fix_pr
+/*H541*/          po_cr_terms
+/*H541*/          pocrt_int
+/*H541*/          po_req_id pocmmts
+/*J044*/          impexp
+/*H541*/    with frame b.
+
+	    setb:
+	    do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H086*/       /* Rearranged frame b */
+/*H086*        update po_ord_date po_cr_terms po_buyer po_bill po_confirm
+ *             po_contact  po_contract
+ *             po_rmks  po_curr when new_po po_lang when new_po
+ *          /* pocmmts po_site po_project po_req_id due_date disc po_taxable */
+ *             pocmmts po_site po_project po_req_id po_due_date disc po_taxable
+ *             po_taxc when {txnew.i} po_tax_date
+ *          /* so_job go-on ("F5" "CTRL-D" ) with frame b. */
+ *          /* so_job po_pr_list go-on ("F5" "CTRL-D" ) with frame b. */
+ *             so_job po_pr_list po_fix_pr go-on ("F5" "CTRL-D" ) with frame b.
+ *H086*/
+
+/*H541**       update **/
+/*H541*/       set
+/*H086*/          po_ord_date po_due_date po_buyer po_bill
+/*H086*/          so_job po_contract po_contact po_rmks
+/*H086*/          po_pr_list2 po_pr_list disc po_site
+/*J044*           po_project po_confirm po_curr po_lang */
+/*H0MV** /*J044*/          po_project po_confirm impexp po_curr po_lang */
+/*H0MV*/          po_project po_confirm impexp
+/*H0MV*/          po_curr when (new_po) po_lang when (new_po)
+/*H0JR /*H086*/   po_taxable po_taxc po_tax_date po_fix_pr */
+/*H0JR*/          po_taxable po_taxc when ({txnew.i}) po_tax_date po_fix_pr
+/*H086*/          po_cr_terms
+/*H184*/          pocrt_int
+/*H086*/          po_req_id pocmmts
+/*H582*  **  /*H086*/       go-on ("F5" "CTRL-D" ) with frame b .  */
+/*H582*/          go-on ("F5" "CTRL-D") with frame b editing:
+
+/*H582*  ADDED THIS SECTION - DISPLAY INTEREST AFTER ENTERING CREDIT TERMS */
+		  readkey.
+		  if frame-field = "po_cr_terms" then do:
+		     if (lastkey = keycode("RETURN") or
+			 lastkey = keycode("CTRL-X") or
+			 lastkey = keycode("F1"))
+		     then do:
+			  find first ct_mstr where ct_code = input po_cr_terms
+			       no-lock no-error.
+			  if available ct_mstr then do:
+			     display string(ct_terms_int,"->>>9.99")
+				     @ pocrt_int.
+			     pocrt_int = ct_terms_int.
+			  end.
+		     end.
+		  end.
+		  apply lastkey.
+	       end. /*editing*/
+
+/*H582*  END SECTION */
+
+	       /* DELETE */
+	       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
+	       then do:
+
+/*H082*/          undo_all = yes.
+/*H082*/          po_recno = recid(po_mstr).
+/*H082*/          {gprun.i ""popomtb2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H082*/          if undo_all then do:
+/*H082*/             undo, retry.
+/*H082*/          end.
+
+		  clear frame a.
+/*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+		  clear frame vend.
+/*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame vend = F-vend-title.
+		  clear frame ship_to.
+/*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame ship_to = F-ship_to-title.
+		  clear frame b.
+/*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame b = F-b-title.
+/*F727*/          /* Leave del-yn set so pomt knows what to do */
+/*F727**          del-yn = no. **/
+		  continue = no.
+		  leave order-header.
+
+	       end.
+	       /* Delete */
+
+/*H541*/       find first mfc_ctrl where mfc_field = "poc_pt_req" no-lock
+	       no-error.
+/*H541*/       if available mfc_ctrl then poc_pt_req = mfc_logical.
+/*H541*/       else poc_pt_req = false.
+/*H541*/       /* MOVED PRICE TABLE VALIDATION TO adprclst.i */
+/*H541*/       {adprclst.i &price-list     = "po_pr_list2"
+/*H541*/                   &curr           = "po_curr"
+/*H541*/                   &price-list-req = "poc_pt_req"
+/*H541*/                   &undo-label     = "setb"
+/*H541*/                   &with-frame     = "with frame b"}
+
+/*H541*/       /* MOVED DISCOUNT TABLE VALIDATION TO addsclst.i */
+/*H541*/       {addsclst.i &disc-list      = "po_pr_list"
+/*H541*/                   &curr           = "po_curr"
+/*H541*/                   &disc-list-req  = "poc_pl_req"
+/*H541*/                   &undo-label     = "setb"
+/*H541*/                   &with-frame     = "with frame b"}
+
+/*H541** MOVED VALIDATIONS TO adprclst.i & addsclst.i **
+ ** /*H086*/       if po_pr_list2 <> ""
+ ** /*H086*/       and not can-find(first pc_mstr where pc_list = po_pr_list2
+ ** /*H086*/                                        and pc_curr = po_curr)
+ ** /*H086*/       then do:
+ ** /*H086*/          del-yn = yes.
+ /*H516** /*H086*/ {mfmsg01.i 644 2 del-yn} Price list not found. Continue? */
+ ** /*H516*/{mfmsg01.i 6202 2 del-yn} /* Price list not found. Continue? */
+ ** /*H086*/          if not del-yn then do:
+ ** /*H086*/             next-prompt po_pr_list2.
+ ** /*H086*/             undo, retry.
+ ** /*H086*/          end.
+ ** /*H086*/          del-yn = no.
+ ** /*H086*/       end.
+ **
+ ** /*H465*/       /* VALIDATE THAT A PRICE LIST FOR TYPE "L" EXISTS */
+ ** /*H465*/       if po_mstr.po_pr_list2 > "" then do:
+ ** /*H465*/          find first pc_mstr where pc_list = po_mstr.po_pr_list2 and
+ **               pc_curr = po_mstr.po_curr and pc_amt_type = "L"
+ **               no-lock no-error.
+ ** /*H465*/          if not available pc_mstr then do:
+ ** /*H465*/              {mfmsg.i 6228 4}
+ ** /*H465*/              next-prompt po_pr_list2.
+ ** /*H465*/              undo, retry.
+ ** /*H465*/          end.
+ ** /*H465*/       end.
+ **
+ ** /*H086*/       if po_pr_list <> ""
+ ** /*H086*/       and not can-find(first pc_mstr where pc_list = po_pr_list
+ ** /*H086*/                                        and pc_curr = po_curr)
+ ** /*H086*/       then do:
+ ** /*H086*/          del-yn = yes.
+ ** /*H516** /*H086*/ {mfmsg01.i 644 2 del-yn}Price list not found. Continue? */
+ ** /*H516*/ {mfmsg01.i 6203 2 del-yn} /* Price list not found. Continue? */
+ ** /*H086*/          if not del-yn then do:
+ ** /*H086*/             next-prompt po_pr_list.
+ ** /*H086*/             undo, retry.
+ ** /*H086*/          end.
+ ** /*H086*/          del-yn = no.
+ ** /*H086*/       end.
+ ** /*H086*/       po_disc_pct = disc.
+ **
+ ** /*H465*/       /* VALIDATE THAT A DISC LIST TYPE D,M or P EXISTS */
+ ** /*H465*/       if po_mstr.po_pr_list > "" then do:
+ ** /*H465*/          find first pc_mstr where pc_list = po_mstr.po_pr_list and
+ **               pc_curr = po_mstr.po_curr and index("DMP",pc_amt_type) <> 0
+ **               no-lock no-error.
+ ** /*H465*/          if not available pc_mstr then do:
+ ** /*H465*/              {mfmsg.i 6229 4}
+ ** /*H465*/              next-prompt po_pr_list.
+ ** /*H465*/              undo, retry.
+ ** /*H465*/          end.
+ ** /*H465*/       end.
+ **H541** END MOVED SECTION **/
+
+/*J034*/       {gprun.i ""gpsiver.p""
+	       "(input po_site, input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/       if return_int = 0 then do:
+/*J034*/          {mfmsg.i 725 3}       /* USER DOES NOT HAVE */
+/*J034*/                                /* ACCESS TO THIS SITE*/
+/*J034*/          next-prompt po_site.
+/*J034*/          undo setb, retry.
+/*J034*/       end.
+
+/*H086*/       /* EXCHANGE RATE VALIDATION */
+/*H086*/       undo_all = yes.
+/*H086*/       po_recno = recid(po_mstr).
+/*H086 	       {gprun.i ""popomtb1.p""}*/
+/*LB01*/       {gprun.i ""zzpopomtb1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H086*/       if undo_all then do:
+/*F0X2*/          next-prompt po_curr.
+/*H086*/          undo, retry.
+/*H086*/       end.
+
+
+/*J0ZS************* REPLACE BY GPCURMTH.I ***********************************
+** /*J053*/    /* DETERMINE ROUNDING METHOD FROM DOCUMENT CURRENCY OR BASE    */
+** /*J053*/    if (gl_base_curr <> po_curr) then do:
+** /*J053*/       find first ex_mstr where ex_curr = po_curr no-lock no-error.
+** /*J053*/       if not available ex_mstr then do:
+** /*J053*           CURRENCY EXCHANGE MASTER DOES NOT EXIST              */
+** /*J053*/          {mfmsg.i 964 3}
+** /*J053*/          next-prompt po_curr with frame b.
+** /*J053*/          undo setb, retry.
+** /*J053*/       end.
+** /*J053*/       rndmthd = ex_rnd_mthd.
+** /*J053*/    end.
+** /*J053*/    else rndmthd = gl_rnd_mthd.
+**J0ZS***********************************************************************/
+
+/*J0ZS*/       {gpcurmth.i
+		    "po_curr"
+		    "3"
+		    "undo setb, retry"
+		    "next-prompt po_curr with frame b" }
+
+/*H006*/       /* VALIDATE TAX CODE AND TAXABLE BY TAX DATE OR DUE DATE */
+	       if {txnew.i} then do:
+		  {gptxcval.i &code=po_taxc &taxable=po_taxable
+			      &date=po_tax_date &frame="b"}
+	       end.
+
+/*H086*/       /* Move code up into correct sequence per new frame b. */
+/*H086*
+/*G027*/       if po_pr_list <> ""
+/*G027*/       and not can-find(first pc_mstr where pc_list = po_pr_list
+/*G027*/                                        and pc_curr = po_curr)
+/*G027*/       then do:
+/*G027*/          del-yn = yes.
+/*G027*/          {mfmsg01.i 644 2 del-yn} /* Price list not found. Continue? */
+/*G027*/          if not del-yn then do:
+/*G027*/             next-prompt po_pr_list.
+/*G027*/             undo, retry.
+/*G027*/          end.
+/*G027*/          del-yn = no.
+/*G027*/       end.
+/*G117*/       po_disc_pct = disc.
+ *H086*/
+/*H0ND*/       po_disc_pct = disc.
+
+/*H062*/       find first gl_ctrl no-lock.
+/*H062*/       po_pst = gl_can and po_taxable.
+
+/*H006 ADDED FOLLOWING CODE */
+	       if {txnew.i} then do:
+/*H269*/          ststatus = stline[1].
+/*H269*/          status input ststatus.
+
+		  set_tax: do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		     if po_tax_env = "" then do:
+
+			/* GET SHIP-TO TAX ZONE FROM PO_SITE ADDRESS */
+/*H299*/                find ad_mstr where ad_addr = po_site no-lock no-error.
+/*H299*/                if available(ad_mstr) then zone_to = ad_tax_zone.
+/*H299*/                else do:
+			   /* GET SHIP-TO TAX ZONE FROM PO_SHIP ADDRESS */
+			   find ad_mstr where ad_addr = po_ship no-lock
+			   no-error.
+			   if available(ad_mstr) then zone_to = ad_tax_zone.
+			   else do:
+			      /* USE TAX DEFAULT COMPANY ADDRESS */
+/*H299*/                      find ad_mstr where ad_addr = "~taxes"
+/*H299*/                      no-lock no-error.
+/*H299*/                      if available ad_mstr then
+/*H299*/                         zone_to = ad_tax_zone.
+/*H299*/                      else do:
+/*H0BM*                         {mfmsg03.i 902 2 """Site Address""" """" """"}*/
+/*H0BM*/                         {mfmsg.i 864 2} /* SITE ADDRESS DOES NOT */
+/*H0BM*/                                         /* EXIST */
+				 zone_to = "".
+/*H299*/                      end.
+/*H299*/                   end.
+			end.
+
+			/* GET VENDOR SHIP-FROM TAX ZONE FROM ADDRESS */
+			find first ad_mstr where ad_addr = po_vend
+			   no-lock no-error.
+			if available(ad_mstr) then zone_from = ad_tax_zone.
+
+			/* SUGGEST A TAX ENVIRONMENT */
+			{gprun.i ""txtxeget.p"" "(input  zone_to,
+						  input  zone_from,
+						  input  po_taxc,
+						  output po_tax_env)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		     end.
+
+		     update po_tax_usage
+			    po_tax_env
+/*H0BT*/                    po_taxc
+/*H0BT*/                    po_taxable
+/*H0BT*/                    tax_in
+		     with frame set_tax.
+
+		     /* VALIDATE TAX ENVIRONMENT */
+		     if po_tax_env = "" then do:
+/*H0BM*                 {mfmsg03.i 906 3 """ Tax Environment""" """" """"} */
+/*H0BM*/                {mfmsg.i 944 3} /* BLANK TAX ENVIRONMENT NOT ALLOWED */
+			next-prompt po_tax_env with frame set_tax.
+			undo, retry set_tax.
+		     end.
+
+		     if not {gptxe.v po_tax_env ""no""} then do:
+/*H0BM*                 {mfmsg03.i 902 3 """Tax Environment""" """" """"}. */
+/*H0BM*/                {mfmsg.i 869 3}. /* TAX ENVIRONMENT DOES NOT EXIST */
+			next-prompt po_tax_env with frame set_tax.
+			undo, retry set_tax.
+		     end.
+		  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* SET_TAX */
+		  hide frame set_tax.
+	       end.  /* if txnew.i */
+/*H006 END OF NEW CODE */
+
+/*H184*/       /* UPDATE ORDER HEADER TERMS INTEREST PERCENTAGE */
+/*H184*/       if pocrt_int <> 0  and po_cr_terms <> "" then do:
+/*H184*/          find ct_mstr where ct_code = po_cr_terms no-lock no-error.
+/*H184*/          if available ct_mstr and pocrt_int <> 0 then do:
+/*H184*/             if pocrt_int <> ct_terms_int then do:
+/*H184*/                {mfmsg03.i 6212 2 pocrt_int ct_terms_int """" }
+/*H184*/             /* Entered terms interest # does not match ct interest # */
+/*H288*/                con-yn = yes.
+/*H288*/                {mfmsg01.i 7734 2 con-yn}
+/*H184*/                /* Do you wish to continue? */
+/*H288*/                if not con-yn then do:
+/*H184*/                   next-prompt pocrt_int.
+/*H184*/                   undo, retry.
+/*H184*/                end.
+/*H184*/             end.
+/*H184*/          end.
+/*H184*/       end.
+
+/*J044*/       if impexp then do:
+/*J044*/          hide frame b.
+/*J044*/          imp-okay = no.
+/*J044*/          {gprun.i ""iemstrcr.p"" "( input ""2"",
+					     input po_nbr,
+					     input recid(po_mstr),
+					     input-output imp-okay )"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J044*/          if imp-okay = no then do:
+/*J044*/             undo setb, retry.
+/*J044*/          end.
+/*J044*/       end.
+	    end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /*setb */
+
+	    continue = yes.
+
+	 end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* order-header */

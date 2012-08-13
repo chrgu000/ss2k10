@@ -1,0 +1,117 @@
+/* GUI CONVERTED from popomta1.p (converter v1.69) Mon Sep 16 10:12:16 1996 */
+/* popomta1.p - PURCHASE ORDER MAINTENANCE REQUISITION DEFAULTS         */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.0     LAST MODIFIED: 12/09/91    BY: RAM *F033**/
+/* REVISION: 7.0     LAST MODIFIED: 07/31/92    BY: afs *F827**/
+/* REVISION: 7.3     LAST MODIFIED: 10/08/92    BY: tjs *G143**/
+/* REVISION: 7.3     LAST MODIFIED: 04/29/93    BY: afs *G972**/
+/* REVISION: 7.3     LAST MODIFIED: 06/24/93    BY: dpm *GC69**/
+/* REVISION: 7.3     LAST MODIFIED: 07/30/93    BY: cdt *H047**/
+/* REVISION: 7.4     LAST MODIFIED: 06/15/94    BY: afs *FO92**/
+/* REVISION: 7.4     LAST MODIFIED: 09/13/96    BY: *G2F5* Ajit Deodhar */
+
+	 {mfdeclre.i}
+
+	 define shared variable new_site like si_site.
+	 define shared variable podreqnbr like pod_req_nbr.
+	 define variable i as integer.
+/*G972*/ define variable conv like um_conv.
+/*H047*/ define shared variable exchange_rate like po_ex_rate.
+
+	 {poprwkfl.i}
+
+/*F827*/ /* DELETE PREVIOUS REQUISITIONS FROM WORKFILE */
+/*F827*/ for each wkreq_det exclusive-lock:
+/*F827*/    delete wkreq_det.
+/*F827*/ end.
+/*FO92*/ for each wkcmt_det exclusive-lock:
+/*FO92*/    delete wkcmt_det.
+/*FO92*/ end.
+
+	 /* FIND REQUISITION */
+	 find last req_det
+	 where req_nbr = podreqnbr no-lock no-error.
+
+	 if available req_det then do:
+
+/*G972**    if new_site = ""                                   **/
+/*G972**    or (new_site <> req_site and req_site <> "") then  **/
+/*G972*/    if req_site <> "" then
+	       new_site = req_site.
+
+	    create wkreq_det.
+	    assign
+	       wkreq_nbr                  = req_nbr
+	       wkreq_line                 = req_line
+	       wkreq_part                 = req_part
+/*G143*/       wkreq_pur_cost             = req_pur_cost
+	       wkreq_qty                  = req_qty
+	       wkreq_rel_date             = req_rel_date
+	       wkreq_need                 = req_need
+	       wkreq_um                   = req_um
+	       wkreq_site                 = new_site
+	       wkreq_acct                 = req_acct
+	       wkreq_cc                   = req_cc
+	       wkreq_request              = req_request
+	       wkreq_approved             = req_approved
+/*GC69*/       wkreq_apr_by               = req_apr_by
+/*GC69*/       wkreq_request              = req_request
+/*GC69*/       wkreq_apr_code             = req_apr_code
+	       wkreq_cmtindx              = req_cmtindx.
+
+	    find pt_mstr where pt_part = req_part no-lock no-error.
+	    if available pt_mstr then do:
+	       wkreq_insp_rqd             = pt_insp_rqd.
+	       if pt_insp_rqd then do:
+		  find first poc_ctrl no-lock no-error.
+		  if available poc_ctrl then
+		     wkreq_loc            = poc_insp_loc.
+	       end.
+	       else
+		  wkreq_loc               = pt_loc.
+
+/*G972*/       /* Get updated cost for pt_mstr items */
+/*G972*/       {gpsct05.i &part=pt_part &site=req_site &cost=sct_mtl_tl}
+/*G972*/       if pt_um <> req_um then do:
+/*G972*/          find um_mstr where um_um = pt_um
+/*G972*/                         and um_alt_um = req_um
+/*G972*/                         and um_part = req_part no-lock no-error.
+/*G972*/          if not available um_mstr then
+/*G972*/           find um_mstr where um_um = pt_um
+/*G972*/                          and um_alt_um = req_um
+/*G972*/                          and um_part = "" no-lock no-error.
+/*G972*/          if available um_mstr then conv = um_conv.
+/*G972*/                               else conv = 1.
+/*G972*/          wkreq_pur_cost = glxcst * conv.
+/*H047*/          wkreq_pur_cost = wkreq_pur_cost * exchange_rate.
+/*G972*/       end.
+/*G972*/       else
+/*H047*/          /* wkreq_pur_cost = glxcst. */
+/*H047*/          wkreq_pur_cost = glxcst * exchange_rate.
+
+	    end.
+/*G2F5*/    else if not available pt_mstr then
+/*G2F5*/	   wkreq_pur_cost = wkreq_pur_cost * exchange_rate.
+
+	    for each cmt_det where cmt_indx = req_cmtindx no-lock:
+	       find first wkcmt_det
+	       where wkcmt_site = new_site
+	       and wkcmt_indx = cmt_indx
+	       and wkcmt_seq = cmt_seq no-error.
+	       if not available wkcmt_det then do:
+		  create wkcmt_det.
+		  assign
+		     wkcmt_site      = new_site
+		     wkcmt_indx      = cmt_indx
+/*FO92*/             wkcmt_seq       = cmt_seq /* . */
+/*FO92*/             wkcmt_ref       = cmt_ref
+/*FO92*/             wkcmt_type      = cmt_type
+/*FO92*/             wkcmt_print     = cmt_print
+/*FO92*/             wkcmt_lang      = cmt_lang .
+		  do i = 1 to 15:
+		     wkcmt_cmmt [i]  = cmt_cmmt [i].
+		  end.
+	       end.  /* if not available wkcmt_det */
+	    end.  /* for each cmt_det */
+	 end.  /* if available req_det */

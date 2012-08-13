@@ -1,0 +1,16 @@
+/* GUI CONVERTED from popomt.p (converter v1.69) Sat Mar 30 01:18:20 1996 */
+/* popomt.p - PURCHASE ORDER MAINTENANCE                                */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 6.0     LAST MODIFIED: 08/13/90    BY: SVG *D058**/
+/* REVISION: 7.0      LAST MODIFIED: 07/01/92   BY: afs *F727*   (rev only) */
+/* REVISION: 8.5     LAST MODIFIED: 11/14/03    BY: *LB01* Long Bo         */
+
+	 {mfdeclre.i}
+
+	 define new shared variable blanket like mfc_logical.
+
+	    blanket = false.
+
+	    {gprun.i ""zzpomt.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.

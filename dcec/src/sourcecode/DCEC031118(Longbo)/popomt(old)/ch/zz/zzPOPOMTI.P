@@ -1,0 +1,326 @@
+/* GUI CONVERTED from popomti.p (converter v1.69) Sat Mar 30 01:18:25 1996 */
+/* popomti.p - PURCHASE ORDER MAINTENANCE SUBROUTINE                    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.4     LAST MODIFIED: 07/21/93    BY: dpm *H034*          */
+/* REVISION: 7.4     LAST MODIFIED: 07/30/93    BY: cdt *H047*          */
+/* REVISION: 7.5     LAST MODIFIED: 10/18/94    BY: mwd *J034*          */
+/************************************************************************/
+
+/*J034*/ /* MFDECLRE.I MOVED TO TOP OF PROGRAM */
+	 {mfdeclre.i}
+
+	 define  shared variable desc1 like pt_desc1.
+	 define  shared variable desc2 like pt_desc2.
+	 define shared variable line like sod_line.
+	 define shared variable due_date like pod_due_date.
+	 define shared variable del-yn like mfc_logical.
+	 define shared variable so_job like pod_so_job.
+	 define shared variable disc like pod_disc_pct.
+	 define shared variable po_recno as recid.
+	 define shared variable vd_recno as recid.
+	 define  shared variable qty_ord like pod_qty_ord.
+	 define  shared variable old_qty_ord like pod_qty_ord.
+	 define variable old_pur_cost like pod_pur_cost.
+
+	 define  shared variable ext_cost like pod_pur_cost.
+	 define  shared variable old_pod_status like pod_status.
+	 define  shared variable old_type like pod_type.
+	 define  shared variable pod_recno as recid.
+	 define  shared variable podcmmts like mfc_logical label "หตร๗".
+	 define  shared variable cmtindx as integer.
+	 define shared variable sngl_ln like poc_ln_fmt.
+	 define  shared frame chead.
+	 define  shared frame c.
+	 define  shared frame d.
+	 define  shared variable mfgr like vp_mfgr.
+	 define  shared variable mfgr_part like vp_mfgr_part.
+	 define  shared variable req_ok like mfc_logical.
+	 define  shared variable continue like mfc_logical.
+	 define  shared variable st_qty like pod_qty_ord.
+	 define  shared variable st_um like pod_um.
+	 define  shared variable old_um like pod_um.
+	 define shared variable base_amt like pod_pur_cost.
+	 define  shared variable clines as integer initial ?.
+	 define shared variable blanket like mfc_logical.
+
+	 define shared variable new_db like si_db.
+	 define shared variable old_db like si_db.
+	 define shared variable new_site like si_site.
+	 define shared variable old_site like si_site.
+	 define  shared variable podnbr like pod_nbr.
+	 define  shared variable podline like pod_line.
+	 define  shared variable podreqnbr like pod_req_nbr.
+	 {poprwkfl.i }
+
+	 define variable i as integer.
+	 define  shared variable pcqty like pod_qty_ord.
+	 define buffer cmtdet for cmt_det.
+/*H047*/ define new shared variable exchange_rate like po_ex_rate.
+
+	 if sngl_ln then clines = 1.
+	 {mfpomtb.i} /* defines forms c & d */
+	 continue = no.
+	 find po_mstr where recid(po_mstr) = po_recno.
+	 find vd_mstr where recid(vd_mstr) = vd_recno no-lock.
+	 find pod_det where pod_recno =  recid(pod_det)  no-error.
+
+		  setreq:
+		  do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		     ststatus = stline[1].
+		     status input ststatus.
+		     prompt-for
+			pod_site
+			pod_req_nbr
+		     with frame c editing:
+			if frame-field = "pod_site" then do:
+			   /* FIND NEXT/PREVIOUS RECORD */
+			   {mfnp.i
+			      si_mstr
+			      pod_site
+			      si_site
+			      pod_site
+			      si_site
+			      si_site}
+			   if recno <> ? then do:
+			      pod_site = si_site.
+			      display pod_site with frame c.
+			   end.
+			end.  /* if frame-field = "pod_site" */
+			else if frame-field = "pod_req_nbr" then do:
+			   find si_mstr
+			   where si_site = pod_site no-lock no-error.
+			   if (available si_mstr and si_db = global_db)
+			   or (not available si_mstr and pod_site = "")
+			   then do:
+			      if not available si_mstr then do:
+				 /* FIND NEXT/PREVIOUS RECORD */
+				 {mfnp.i
+				    req_det
+				    pod_req_nbr
+				    req_nbr
+				    pod_req_nbr
+				    req_nbr
+				    req_nbr}
+			      end.
+			      else do:
+				 /* FIND NEXT/PREVIOUS RECORD */
+				 {mfnp01.i
+				    req_det
+				    pod_req_nbr
+				    req_nbr
+				    pod_site
+				    req_site
+				    req_nbr}
+			      end.
+			      if recno <> ? then do:
+				 assign
+				 pod_req_nbr = req_nbr
+				 pod_req_line = req_line
+				 pod_part = req_part
+				 pod_um = req_um
+				 pod_qty_ord = req_qty
+				 pod_acct = req_acct
+				 pod_cc = req_cc
+				 pod_approve = req_apr_by
+				 pod_request = req_request
+				 pod_apr_code = req_apr_code
+				 pod_cmtindx = req_cmtindx
+				 pod_pur_cost = 0
+				 pod_vpart = ""
+				 desc1 = ""
+				 desc2 = ""
+				 mfgr = ""
+				 mfgr_part = ""
+				 st_qty = req_qty
+				 st_um = req_um
+				 pod_um_conv = 1.
+
+				 for each  vp_mstr no-lock  where vp_part =
+				    req_part and vp_vend = po_vend
+				    break by vp_q_date descending:
+				    if first(  vp_mstr.vp_q_date) then do:
+					if pod_qty_ord >= vp_q_qty
+					and pod_um = vp_um
+					and vp_q_price > 0
+					and po_curr = vp_curr then do:
+					    pod_pur_cost = vp_q_price.
+					end.
+					if pod_um <> vp_um then do:
+					    find um_mstr where um_um = req_um
+					    and um_alt_um = vp_um
+					    and um_part = req_part
+					    no-lock no-error.
+					    if not available um_mstr then
+					    find um_mstr where um_um = req_um
+					    and um_alt_um = vp_um
+					    and um_part = "" no-lock no-error.
+					    if available um_mstr then do:
+						if pod_qty_ord / um_conv >=
+						vp_q_qty
+						and po_curr = vp_curr then
+						pod_pur_cost = vp_q_price
+							    / um_conv.
+					    end.
+					end.
+					assign
+					pod_vpart = vp_vend_part
+					mfgr = vp_mfgr
+					mfgr_part = vp_mfgr_part.
+					leave .
+				    end.
+				 end. /* for each vp_mstr*/
+				 find pt_mstr
+				 where pt_part = req_part no-lock no-error.
+				 if available pt_mstr then do:
+				    {gpsct05.i
+				       &part=pt_part
+				       &site=pod_site
+				       &cost=sct_mtl_tl}
+				    assign
+				    pod_part = pt_part
+				    desc1 = pt_desc1
+				    desc2 = pt_desc2
+				    st_um = pt_um.
+				    if {txnew.i} then do:
+					assign pod_taxc = pt_taxc
+					       pod_taxable = (po_taxable and
+							      pt_taxable).
+				    end.
+
+/*H047*/                            /* if pod_pur_cost = 0                   */
+/*H047*/                            /* and po_curr = base_curr then          */
+/*H047*/                            /*  pod_pur_cost = glxcst * pod_um_conv. */
+/*H047*/                            if pod_pur_cost = 0 then do:
+/*H047*/                               pod_pur_cost = glxcst * pod_um_conv.
+/*H047*/                               pod_pur_cost = pod_pur_cost * po_ex_rate.
+/*H047*/                            end.
+				 end.
+				 else if pod_pur_cost = 0
+				 and po_curr = base_curr then
+				    pod_pur_cost = req_pur_cost.
+				 display
+				    req_site @ pod_site
+				    pod_req_nbr
+				    pod_part
+				    pod_qty_ord
+				    pod_um
+				    pod_pur_cost
+				 with frame c.
+				 if pod_desc <> "" then do:
+				    assign
+				    desc1 = pod_desc
+				    desc2 = "".
+				 end.
+			      end.
+			   end.  /* if si_db = global_db */
+			   else do:
+			      ststatus = stline[3].
+			      status input ststatus.
+			      readkey.
+			      apply lastkey.
+			   end.
+			end.  /* if frame-field = "pod_req_nbr" */
+			else do:
+			   ststatus = stline[3].
+			   status input ststatus.
+			   readkey.
+			   apply lastkey.
+			end.
+		     end.  /* editing */
+
+		     assign pod_site.
+		     assign pod_req_nbr.
+		     pod_recno = recid(pod_det).
+
+/*J034*/             if pod_site = "" then do:
+/*J034*/                find pt_mstr where pt_part = pod_part no-lock no-error.
+/*J034*/                if available pt_mstr and pt_site <> "" then do:
+/*J034*/                   {gprun.i ""gpsiver.p""
+			   "(input pt_site, input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/                   if return_int = 0 then do:
+/*J034*/                      {mfmsg.i 726 3} /* USER DOES NOT HAVE ACCESS */
+/*J034*/                                      /* TO DEFLT SITE FOR THIS PART */
+/*J034*/                      next-prompt pod_site with frame c.
+/*J034*/                      undo setreq, retry.
+/*J034*/                   end.
+/*J034*/                end.
+/*J034*/             end.  /* IF POD_SITE = "" */
+/*J034*/             else do:
+/*J034*/                {gprun.i ""gpsiver.p""
+		        "(input pod_site, input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J034*/                if return_int = 0 then do:
+/*J034*/                   {mfmsg.i 725 3} /* USER DOES NOT HAVE */
+/*J034*/                                    /* ACCESS TO THIS SITE*/           
+/*J034*/                   next-prompt pod_site with frame c.
+/*J034*/                   undo setreq, retry.
+/*J034*/                end.
+/*J034*/             end.
+
+		     if pod_req_nbr <> "" then do:
+			old_db = global_db.
+			new_site = pod_site.
+			if pod_site <> "" then do:
+			   {gprun.i ""gpalias.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+			end.
+			podreqnbr = pod_req_nbr.
+/*H047*/                exchange_rate = po_ex_rate.
+/*H047*/	{gprun.i ""popomta1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+			new_db = old_db.
+			{gprun.i ""gpaliasd.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+			find last wkreq_det
+			where wkreq_site = new_site
+			and wkreq_nbr = pod_req_nbr no-lock no-error.
+			if available wkreq_det and wkreq_approved = no then do:
+			   {mfmsg.i 195 3}
+			   /*ERROR: REQUISITION NOT APPROVED*/
+			   next-prompt pod_req_nbr with frame c.
+			   undo setreq, retry.
+			end.
+			/* Validate Requistion Site */
+			if available wkreq_det
+			 and wkreq_site <> pod_site then do:
+			   {mfmsg02.i 394 3 wkreq_site}
+			   next-prompt pod_site with frame c.
+			   undo setreq, retry.
+			end.
+		     end.
+		     if available wkreq_det then do:
+
+			{pomta02.i}
+
+			if available pt_mstr then do:
+			   if pt_um <> pod_um then do:
+			      find um_mstr where um_um = pt_um
+			      and um_alt_um = pod_um
+			      and um_part = pod_part no-lock no-error.
+			      if not available um_mstr then
+				 find um_mstr where um_um = pt_um
+				 and um_alt_um = pod_um
+				 and um_part = "" no-lock no-error.
+			      if available um_mstr then do:
+				 pod_um_conv = um_conv.
+			      end.
+			      else do:
+				 {mfmsg.i 33 2} /* No UM conversion exists */
+			      end.
+			   end.
+			end. /* if available pt_mstr */
+		     end. /* if available wkreq_det */
+		     continue = yes.
+		  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* if pod_req_nbr <> "" */

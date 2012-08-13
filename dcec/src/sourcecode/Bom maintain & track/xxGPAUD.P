@@ -1,0 +1,118 @@
+/* GUI CONVERTED from gpaud.p (converter v1.69) Sat Mar 30 01:10:26 1996 */
+/* gpaud.p - -- AUDIT TRAIL ROUTINE                                     */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.3             CREATED: 09/18/92    BY: MPP *G069*        */
+/*                     LAST MODIFIED: 12/03/92    BY: MPP *G390*        */
+/*                                    02/22/93    by: jms *G724*        */
+/*                                    04/28/94    by: gjp *GJ64*        */
+/*                                    10/31/94    by: ame *GN80*        */
+/*                                    12/07/95    by: ame *F0WW*        */
+/* REVISION: 7.3 LAST MODIFIED: 10/05/03   BY: *DCEC101* Kevin*/
+
+/*!
+	 Receives two external file parameters (which were created by
+	 exporting a single record, before change to one file, after
+	 change to another), a database file parameter (used to access
+	 the meta-schema), and the name of the field containing the
+	 addr for that file.  ie, vd_mstr would give vd_addr.
+
+	 Called by gpaud2.i
+
+*/
+/*F0WW*/ {mfdeclre.i}
+
+	 define input parameter file1 as character.
+	 define input parameter file2 as character.
+	 define input parameter dfile as character.
+	 define input parameter a_addr as character.
+/*G724*/ define input parameter a_addr1 as character.
+
+/*DCEC101*/ DEF INPUT PARAMETER a_addr2 AS CHARACTER.
+/*DCEC101*/ DEF INPUT PARAMETER a_addr3 AS CHARACTER.
+
+	 define input parameter rec_gone like mfc_logical.
+
+	 define stream a_stream1.
+	 define stream a_stream2.
+
+/*DCEC101*
+ *   define variable a_string1 as character extent 100 initial "".
+ *   define variable a_string2 as character extent 100 initial "". */
+/*DCEC101*/ DEFINE variable a_string1 as character extent 1000 initial "".
+/*DCEC101*/ define variable a_string2 as character extent 1000 initial "". 
+	 
+	 define variable counter as integer.
+	 define variable counter2 as integer.
+	 define variable old_entry as integer.
+	 define variable field_changed like mfc_logical.
+	 define variable loop_limit as integer.
+	 define variable save_addr as character.
+
+	 define variable db_point as integer.
+	 define variable db_hold as character.
+	 define variable file_found like mfc_logical initial no.
+/*F0WW*/ define variable db-error as integer.
+/*F0WW*/ define variable sdb as integer.
+/*F0WW*  {mfdeclre.i}*/
+	 db_hold = ?.
+
+/*F0WW*  do db_point = 1 to num-alias:
+ *F0WW*     if alias(db_point) = "dictdb" then do:
+ *F0WW*        db_hold = ldbname(alias(db_point)).
+ *F0WW*        leave.
+ *F0WW*     end.
+ *F0WW*  end. */
+/*F0WW*/ db_hold = sdbname("dictdb").
+
+	 do db_point = 1 to num-dbs while not file_found:
+/*GN80*/    if dbtype(db_point) = "PROGRESS" then do:
+	       delete alias dictdb.
+	       create alias dictdb for database value(ldbname(db_point)).
+/*F0WW*       {gprun.i ""gpalias3.p"" "(input ldbname(db_point), output db-error)"}*/
+
+               {gprun.i ""gpaudc.p"" "(input "dfile",			/*GJ64*/
+                                       output "file_found")"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+		/*GJ64*/
+/*									 *GJ64*
+  the following lines of code were moved to gpaudc.p, because the create alias
+  and delete alias does not take affect until in a subsequently called program
+	       find dictdb._file where dictdb._file._file-name = string(dfile)
+		  no-lock no-error.		 			 *GJ64*
+	       if available dictdb._file then file_found = yes.		 *GJ64*
+									 *GJ64*/
+/*GN80*/    end. /* if dbtype is PROGRESS */
+	 end.
+
+/*	 if available dictdb._file then do:				 *GJ64*/
+	 if file_found then do:						/*GJ64*/
+
+/*DCEC101* begin marked 
+/*G724*/ {gprun.i ""gpaudb.p"" "("string(file1)",
+				 "string(file2)",
+				 "string(dfile)",
+				 "string(a_addr)",
+				 "string(a_addr1)",
+				 "rec_gone")"}
+end marked*/
+
+/*DCEC101*/ {gprun.i ""xxgpaudb.p"" "("string(file1)",
+                 "string(file2)",
+                 "string(dfile)",
+                 "string(a_addr)",
+                 "string(a_addr1)",
+                 "string(a_addr2)",
+                 "string(a_addr3)",
+                 "rec_gone")"}
+
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+	 end.
+	 else do:
+	       {mfmsg.i 3009 3} /*Meta schema not accessible*/
+	 end.
+/*F0WW*  {gprun.i ""gpalias3.p"" "(input db_hold, output db-error)"}*/
+	 delete alias dictdb.
+	 create alias dictdb for database value(db_hold).

@@ -1,0 +1,45 @@
+0000	blank sub account
+1100	BPT
+1200	BPI
+1300	BNKB
+2100	ELT
+2200	ELS
+6100	EKA
+6200	EKI
+6300	EKS
+6400	EKD
+8100	FPC
+9000	Semi FG
+9500	Plastic Granulates
+9510	Log Rolls
+9520	"Cable, Wire"
+9530	Crimps / Splices
+9540	"Contacts, Terminals"
+9550	Housings
+9560	Grommets
+9605	Fahrzeugleitungen Kabel und Seile
+9610	Mehradr.KFZ-Leitungen
+9615	Hochspannungsleitungen
+9620	Bandleitungen
+9625	Fluorkunststoffleitungen
+9630	doppelt isolierte Leitungen
+9635	offen verseilte Leitungen
+9640	Sonstige Leitungen
+9655	Si-isolierte Leitungen
+9705	PVC-Klebeband automotive
+9710	Velour-Klebeband
+9715	Polyesthervlies
+9720	Zellwollrohgewebeklebeband
+9725	Polyesthergewebeklebeband
+9730	Folienklebeb?nder
+9735	Halogenfreie Klebeb?nder
+9755	PVC-Klebeb?nder non automotive
+9760	Gewebeklebeb?nder
+9570	Hoses
+9580	Fixtures
+9590	Others
+9910	Packaging materials
+9920	Labels
+9930	"Boxes, inhouse"
+9940	Supply materials
+9900	spare parts

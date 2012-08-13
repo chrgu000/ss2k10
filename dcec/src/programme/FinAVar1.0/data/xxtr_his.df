@@ -1,0 +1,98 @@
+ADD TABLE "xxtr_hist"
+  AREA "Schema Area"
+  DUMP-NAME "xxtr_his"
+
+ADD FIELD "xxtr_site" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxtr_part" OF "xxtr_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxtr_type" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxtr_key1" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key1"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxtr_key2" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key2"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxtr_key3" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key3"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxtr_trnbr" OF "xxtr_hist" AS integer 
+  FORMAT ">>>>>>>>>>"
+  INITIAL "0"
+  LABEL "TRNBR"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xxtr_idx0" ON "xxtr_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxtr_trnbr" ASCENDING 
+
+ADD INDEX "xxtr_idx1" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+
+ADD INDEX "xxtr_idx1_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx2" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+
+ADD INDEX "xxtr_idx2_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx3" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+
+ADD INDEX "xxtr_idx3_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000001948

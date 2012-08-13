@@ -1,0 +1,6 @@
+-db dcec -H dcecssy005 -S dcec85 -N TCP  -trig TRIGGERS
+-db mfghelp -ld qadhelp -H dcecssy005 -S helpdcec -N TCP  
+-db gui -ld qadgui -H dcecssy005 -S guidcec -N TCP  
+-db cfg -ld qadcf -H dcecssy005 -S cfgdcec -N TCP  
+-db mfgadd -H dcecssy005 -S adddcec -N TCP
+-cpstream GB2312 -cpinternal GB2312 -cprcodein GB2312 -cpcoll basic -Bt 350 -c 30 -D 100 -mmax 8192 -nb 200 -s 48

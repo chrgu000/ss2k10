@@ -1,0 +1,298 @@
+
+DEF TEMP-TABLE chk_mes
+    FIELD chk_part AS CHAR
+    FIELD chk_due_date AS CHAR
+    FIELD chk_qty_req AS CHAR
+    FIELD chk_ln_loc AS CHAR.
+DEF VAR yn1 AS LOGICAL.
+DEF VAR yn2 AS LOGICAL.
+DEF VAR yn3 AS LOGICAL.
+DEF VAR yn4 AS LOGICAL.
+DEF VAR ipath AS CHAR.
+DEF VAR opath AS CHAR.
+DEF VAR mdate AS DATE.
+assign
+    yn1 = NO
+    yn2 = NO
+    yn3 = NO
+    yn4 = NO.
+FIND FIRST CODE_mstr WHERE CODE_fldname = 'mesipath' AND code_value <> '' NO-LOCK NO-ERROR.
+
+IF AVAILABLE CODE_mstr THEN ipath = CODE_value.
+FIND FIRST CODE_mstr WHERE CODE_fldname = 'mesopath' AND CODE_value <> '' NO-LOCK NO-ERROR.
+IF AVAILABLE CODE_mstr THEN opath = CODE_value.
+IF ipath <> '' AND opath <> '' THEN DO:
+
+
+    INPUT FROM VALUE(ipath).
+    REPEAT:
+        CREATE chk_mes.
+        IMPORT DELIMITER ";"  chk_part chk_due_date chk_qty_req chk_ln_loc.
+
+    END.
+    INPUT CLOSE.
+
+OUTPUT TO VALUE(opath).
+FOR EACH chk_mes WHERE chk_part = '':
+DELETE chk_mes.
+END.
+FOR EACH chk_mes NO-LOCK:
+  PUT SKIP.
+FIND FIRST pt_mstr WHERE pt_part = chk_part NO-LOCK NO-ERROR.
+IF AVAILABLE pt_mstr THEN yn1 = YES.
+   ELSE DO:
+       PUT UNFORMAT chk_Part ' Please check part!' SPACE(2).
+       yn1 = NO.
+   END.
+    
+   RUN datechk(INPUT chk_due_date,OUTPUT yn2).
+   IF NOT yn2 THEN PUT UNFORMAT chk_due_date ' Please check date!' SPACE(2).
+
+   FIND FIRST loc_mstr WHERE loc_loc = chk_ln_loc NO-LOCK NO-ERROR.
+   IF AVAILABLE loc_mstr THEN yn3 = YES.
+   ELSE DO:
+       PUT UNFORMAT chk_ln_loc ' Please check line location!' SPACE(2).
+       yn3 = NO.
+   END.
+   
+   
+   
+   
+  RUN qtychk(INPUT chk_qty_req,OUTPUT yn4).
+  IF NOT yn4 THEN PUT UNFORMAT chk_qty_req ' Please check qunatity!' SPACE(2).
+     
+   IF yn1 AND yn2 AND yn3 AND yn4 THEN  DO:
+       
+       CASE SESSION:DATE-FORMAT:
+           WHEN 'mdy' THEN DO:
+               mdate = DATE(chk_due_date).
+
+
+           END.
+
+
+           WHEN 'dmy' THEN DO:
+
+               mdate = DATE(SUBSTR(chk_due_date,4,2) + '/' + SUBSTR(chk_due_date,1,2) + '/' +
+                            SUBSTR(chk_due_date,7,2)).
+
+
+           END.
+
+           WHEN 'ymd' THEN DO:
+
+               mdate = DATE(SUBSTR(chk_due_date,7,2) + '/' + SUBSTR(chk_due_date,1,2) + '/' +
+                            SUBSTR(chk_due_date,4,2)).
+
+
+           END.
+
+
+
+       END CASE.
+       
+       
+       
+       FIND FIRST b_mes_wkfl WHERE b_mes_part = chk_part AND b_mes_due_date = mdate AND b_mes_ln_loc = chk_ln_loc EXCLUSIVE-LOCK NO-ERROR.
+       IF AVAILABLE b_mes_wkfl THEN
+           ASSIGN
+             b_mes_qty_req = DECIMAL(chk_qty_req).
+           ELSE
+           DO:
+           
+       CREATE b_mes_wkfl.
+       ASSIGN
+           b_mes_part = chk_part
+           b_mes_due_date = mdate
+           b_mes_qty_req = DECIMAL(chk_qty_req)
+           b_mes_ln_loc = chk_ln_loc.
+
+   END.
+   END.
+
+
+
+END.
+OUTPUT CLOSE.
+MESSAGE 'MES需求数据导入完毕!' VIEW-AS ALERT-BOX.
+END.
+ELSE MESSAGE '请检验路径!' VIEW-AS ALERT-BOX.
+
+
+
+
+
+
+PROCEDURE datechk:
+    DEF INPUT PARAMETER mdtstr AS CHAR.
+    DEF OUTPUT PARAMETER pass AS LOGICAL.
+     DEF VAR m_month AS CHAR.
+     DEF VAR m_day AS CHAR.
+     DEF VAR m_year AS CHAR.
+     DEF VAR i AS INT.
+     
+     pass = YES.
+     IF LENGTH(mdtstr) = 8 THEN DO:
+      
+         ASSIGN 
+             m_month = SUBSTR(mdtstr,1,2)
+             m_day = SUBSTR(mdtstr,4,2)
+             m_year = SUBSTR(mdtstr,7,2).
+
+         DO i = 1 TO LENGTH(m_month):
+   
+        IF SUBSTR(m_month,i,1) < '0' OR  SUBSTR(m_month,i,1) > '9' THEN DO: 
+         pass = NO.
+        LEAVE.
+        END.
+                
+        END.
+    IF NOT pass  THEN RETURN.
+    
+    DO i = 1 TO LENGTH(m_day):
+   
+        IF SUBSTR(m_day,i,1) < '0' OR  SUBSTR(m_day,i,1) > '9' THEN DO: 
+         pass = NO.
+        LEAVE.
+        END.
+                
+        END.
+    IF NOT pass  THEN RETURN.
+
+     DO i = 1 TO LENGTH(m_year):
+   
+        IF SUBSTR(m_year,i,1) < '0' OR  SUBSTR(m_year,i,1) > '9' THEN DO: 
+         pass = NO.
+        LEAVE.
+        END.
+                
+        END.
+    IF NOT pass  THEN RETURN.
+
+   IF INTEGER(m_month) < 1 OR INTEGER(m_month) > 12 THEN DO:
+      pass = NO.
+      RETURN.
+       END.
+
+      CASE m_month :
+          WHEN '01' THEN DO:
+           IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+           
+
+          END.
+           WHEN '02' THEN DO:
+               IF integer(m_year) MOD 4 = 0 THEN
+                    IF integer(m_day) < 1 OR integer(m_day) > 29 THEN pass = NO.
+               ELSE 
+                    IF integer(m_day) < 1 OR integer(m_day) > 28 THEN pass = NO.
+           END.
+
+           WHEN '03' THEN DO:
+           IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+           
+
+          END.
+
+               WHEN '04' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 30 THEN pass = NO.
+
+
+               END.
+
+                WHEN '05' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+
+
+               END.
+
+               WHEN '06' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 30 THEN pass = NO.
+
+
+               END.
+
+
+               WHEN '07' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+
+
+               END.
+
+                WHEN '08' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+
+
+               END.
+
+
+                WHEN '09' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 30 THEN pass = NO.
+
+
+               END.
+
+
+                WHEN '10' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+
+
+               END.
+
+               WHEN '11' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 30 THEN pass = NO.
+
+
+               END.
+
+                WHEN '12' THEN DO:
+                IF integer(m_day) < 1 OR integer(m_day) > 31 THEN pass = NO.
+
+
+               END.
+
+
+         
+
+
+
+      END CASE.
+
+
+
+      IF NOT pass THEN RETURN.
+
+     
+
+
+
+
+
+
+
+     
+
+     END.
+     ELSE pass = NO.
+     END.
+    
+  
+PROCEDURE qtychk:
+    DEF INPUT PARAMETER mqty AS CHAR.
+    DEF OUTPUT PARAMETER pass AS LOGICAL.
+    DEF VAR i AS INT.
+    pass = YES.
+
+DO i = 1 TO LENGTH(mqty):
+   
+        IF (SUBSTR(mqty,i,1) < '0' OR  SUBSTR(mqty,i,1) > '9') AND SUBSTR(mqty,i,1) <> '.' AND SUBSTR(mqty,i,1) <> ','  THEN DO: 
+         pass = NO.
+        LEAVE.
+        END.
+                
+        END.
+        
+
+
+
+END.
+    

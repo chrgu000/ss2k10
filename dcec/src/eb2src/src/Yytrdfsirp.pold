@@ -1,0 +1,224 @@
+/*Yytrdfsirp.p       --    Transfer Order Report Between Site         */
+/*Revision: Eb2 + sp7       Last modified: 07/27/2005             By: Judy Liu   */
+ 
+  /*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+ 
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+&SCOPED-DEFINE trdfsirp_p_1 "Summary/Detail"
+
+{mfdtitle.i "b+ "}
+
+DEFINE VARIABLE keeper AS CHAR.
+DEFINE VARIABLE keeper1 AS CHAR.
+DEFINE VARIABLE  trdate LIKE tr_date.
+DEFINE VARIABLE trdate1 LIKE tr_date.
+DEFINE VARIABLE effdate LIKE tr_effdate.
+DEFINE VARIABLE effdate1 LIKE tr_effdate.
+DEFINE VARIABLE part LIKE pt_part.
+DEFINE VARIABLE part1 LIKE pt_part.
+DEFINE VARIABLE planner LIKE pt_buyer.
+DEFINE VARIABLE planner1 LIKE pt_buyer.
+DEFINE VARIABLE site_from LIKE si_site LABEL "移出地点".
+DEFINE VARIABLE site_to LIKE si_site LABEL "移入地点".
+DEFINE VARIABLE  summary_only like mfc_logical
+   label {&trdfsirp_p_1} format {&trdfsirp_p_1} initial no.
+DEFINE BUFFER tr FOR tr_hist.
+DEFINE VARIABLE issqty LIKE tr_qty_loc.
+DEFINE VARIABLE rctqty LIKE tr_qty_loc.
+DEFINE VARIABLE i AS INTE.
+
+FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+         keeper    colon 20   keeper1 label {t001.i}   colon 49 SKIP
+         trdate  COLON 20   trdate1   COLON 49 SKIP
+         effdate     colon 20  effdate1  label {t001.i}   colon 49 skip
+         part   colon 20 part1 label {t001.i}   colon 49 skip
+          planner    colon 20 planner1 label  {t001.i}   colon 49 skip
+          SKIP(1)
+           site_from    colon 30 SKIP 
+           site_to        COLON 30 SKIP
+           summary_only  colon 30 SKIP 
+          SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = &IF (DEFINED(SELECTION_CRITERIA) = 0)
+  &THEN " Selection Criteria "
+  &ELSE {&SELECTION_CRITERIA}
+  &ENDIF .
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+ 
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+
+
+
+         /* SET EXTERNAL LABELS */
+         setFrameLabels(frame a:handle).
+
+/*K0ZX*/ {wbrp01.i}
+
+         
+/*GUI*/ {mfguirpa.i true  "printer" 132 }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
+                if keeper1 = hi_char then keeper1 = "".
+                if trdate = low_date then trdate = ?.
+                if trdate1 = hi_date  then trdate1 = ?.
+                if effdate = low_date then effdate = ?.
+                if effdate1 = hi_date  then effdate1 = ?.
+                if part1 = hi_char then part1 = "".
+                IF planner = hi_char then planner1 = "".
+                if c-application-mode <> 'web' then
+            
+            run p-action-fields (input "display").
+            run p-action-fields (input "enable").
+           end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+           
+              {wbrp06.i &command = update
+                      &fields = " keeper keeper1 trdate trdate1 effdate effdate1 part part1  planner planner1 site_from site_to summary_only "
+                      &frm = "a"} 
+ 
+/*K0ZX*/    if (c-application-mode <> 'web') or
+/*K0ZX*/       (c-application-mode = 'web' and
+/*K0ZX*/       (c-web-request begins 'data'))
+            then do:
+
+               /* CREATE BATCH INPUT STRING */
+               bcdparm = "".
+               {mfquoter.i keeper     }
+                   {mfquoter.i keeper1    }
+                   {mfquoter.i trdate    }
+                   {mfquoter.i trdate1    }
+                   {mfquoter.i effdate    }
+                   {mfquoter.i effdate1    }
+                   {mfquoter.i part     }
+                   {mfquoter.i part1    }
+                   {mfquoter.i site_from    }
+                   {mfquoter.i site_to    }
+                   {mfquoter.i SUMMARY_only    }
+
+
+               if keeper1 = "" then keeper1 = hi_char.
+               if trdate = ? then trdate = low_date.
+               if trdate1 = ? then trdate1 = hi_date.
+               if effdate = ? then effdate = low_date.
+               if effdate1 = ? then effdate1 = hi_date.
+               if part1 = "" then part1 = hi_char.
+           end.
+
+            /* SELECT PRINTER */
+            
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+                         
+    FIND FIRST si_mstr WHERE si_site =  site_from NO-LOCK NO-ERROR.
+     IF NOT AVAIL si_mstr   THEN DO:
+                  MESSAGE "原地点不存在" VIEW-AS ALERT-BOX ERROR.
+         UNDO, RETRY.
+     END.
+     FIND FIRST si_mstr WHERE si_site = site_to NO-LOCK NO-ERROR.
+     IF NOT AVAIL si_mstr THEN DO:
+         MESSAGE "目标地点不存在" VIEW-AS ALERT-BOX ERROR.
+         UNDO, RETRY.
+     END.
+/*GUI*/   {gpprtrpa.i  "printer" 132}
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+             
+ 
+
+            {mfphead.i}
+             issqty = 0.
+            rctqty = 0.
+            i = 0.
+            FOR EACH   tr_hist WHERE tr_part >= part AND tr_part <= part1 
+                     AND tr_date >= trdate AND tr_date <= trdate1
+                     AND tr_effdate >= effdate AND tr_effdate <= effdate1
+                     AND (tr_type = "iss-tr"  AND tr_site = site_from
+                        OR tr_type = "rct-tr" AND tr_site = site_to ) 
+                    USE-INDEX tr_eff_trnbr   NO-LOCK ,
+                   EACH ptp_det WHERE ptp_site = site_from AND ptp_part = tr_part 
+                                                AND ptp_buyer >= planner AND ptp_buyer <= planner1 NO-LOCK,
+                  EACH IN_mstr WHERE IN_site = ptp_site AND IN_part = tr_part 
+                                               AND in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK
+                             BREAK BY tr_part BY tr_trnbr:
+                   {mfguichk.i}
+                    i = i + 1.
+                   put screen "报表正在处理: " + string(i,"9999999999") row 16 COLOR red .
+                   /*MESSAGE i.
+                    MESSAGE tr_hist.tr_effdate   tr_hist.tr_part tr_hist.tr_trnbr tr_hist.tr_nbr tr_type tr_site.
+                      PAUSE.*/
+                  /* DISP tr_hist.tr_effdate   tr_hist.tr_part tr_hist.tr_trnbr tr_hist.tr_nbr tr_type tr_site.*/
+                  FIND FIRST pt_mstr WHERE pt_part = tr_part NO-LOCK NO-ERROR.
+                  IF tr_hist.tr_type = "iss-tr" THEN DO:
+                      FIND FIRST tr WHERE tr.tr_trnbr >= tr_hist.tr_trnbr + 1 AND tr.tr_site = site_to 
+                             AND tr.tr_date = tr_hist.tr_date AND tr.tr_program = tr_hist.tr_program 
+                             AND tr.tr_userid = tr_hist.tr_userid AND tr.tr_part = tr_hist.tr_part
+                             AND tr.tr_qty_loc =  - tr_hist.tr_qty_loc   
+                             AND tr.tr_time + 600 >= tr_hist.tr_time  NO-LOCK NO-ERROR.
+                      /*MESSAGE tr_hist.tr_effdate   tr_hist.tr_part tr_hist.tr_trnbr tr_hist.tr_nbr.
+                      PAUSE.*/
+                      IF NOT AVAIL tr THEN NEXT. 
+                      ELSE issqty = issqty + tr_hist.tr_qty_loc.
+                  END.
+                  IF tr_hist.tr_type = "rct-tr"  THEN  DO:
+                      FIND  FIRST tr WHERE tr.tr_trnbr <= tr_hist.tr_trnbr - 1 AND tr.tr_site = site_from 
+                             AND tr.tr_date = tr_hist.tr_date AND tr.tr_program = tr_hist.tr_program 
+                             AND tr.tr_userid = tr_hist.tr_userid AND tr.tr_part = tr_hist.tr_part
+                             AND tr.tr_qty_loc = - tr_hist.tr_qty_loc 
+                             AND tr.tr_time - 600 <= tr_hist.tr_time
+                             NO-LOCK NO-ERROR.
+                      IF NOT AVAIL tr THEN NEXT. 
+                      ELSE rctqty = rctqty + tr_hist.tr_qty_loc.
+                  END.
+                  IF SUMMARY_only = NO THEN DO:
+                          DISP tr_hist.tr_part pt_desc1 pt_desc2 ptp_buyer IN__qadc01 tr_hist .tr_type
+                                   tr_hist.tr_trnbr tr_hist.tr_nbr tr_hist.tr_date tr_hist.tr_effdate
+                                   tr_hist.tr_qty_loc  tr_hist.tr_rmks WITH FRAME b WIDTH 250 DOWN STREAM-IO.
+                   END.
+                   ELSE DO:
+                       IF LAST-OF(tr_hist.tr_part) THEN DO:
+                           DISP site_from site_to tr_hist.tr_part pt_desc1 pt_desc2 
+                                  ptp_buyer LABEL "计划员" IN__qadc01 LABEL "保管员"
+                                    issqty LABEL "发出数量" rctqty LABEL "收货数量" WITH FRAME c WIDTH 200 DOWN STREAM-IO .
+                           issqty = 0.
+                           rctqty = 0.
+                       END.
+                   END.
+ 
+               
+                
+            END.
+        /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+
+ 
+         end.
+ 
+/*K0ZX*/ {wbrp04.i &frame-spec = a} 
+
+/*GUI*/ end procedure. /*p-report*/
+ 
+/*GUI*/ {mfguirpb.i &flds="  keeper keeper1 trdate trdate1 effdate effdate1 part part1  planner planner1 site_from site_to summary_only  "} /*Drive the Report*/
+

@@ -1,0 +1,240 @@
+/* GUI CONVERTED from popomtd1.p (converter v1.69) Thu Nov 21 11:25:07 1996 */
+/* popomtd1.p - PO MAINTENANCE VALIDATE REMOTE DB WORK ORDERS           */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.3      LAST MODIFIED: 11/01/93   BY: afs *H221*          */
+/* REVISION: 8.5      LAST MODIFIED: 08/09/94   BY: tjs *J014*          */
+/* REVISION: 7.4      LAST MODIFIED: 10/10/94   BY: dpm *FS27*          */
+/* REVISION: 7.4      LAST MODIFIED: 02/06/95   BY: jxz *F0H3*          */
+/* REVISION: 7.4      LAST MODIFIED: 03/09/95   BY: dxk *H0BY*          */
+/* REVISION: 7.4      LAST MODIFIED: 03/16/95   BY: pcd *G0HM*          */
+/* REVISION: 7.4      LAST MODIFIED: 03/31/95   BY: JPM *G0JZ*          */
+/* REVISION: 7.4      LAST MODIFIED: 04/10/95   BY: YEP *G0KL*          */
+/* REVISION: 7.4      LAST MODIFIED: 09/11/95   BY: ais *G0WR*          */
+/* REVISION: 7.4      LAST MODIFIED: 01/02/96   BY: ais *G1HS*          */
+/* REVISION: 8.5      LAST MODIFIED: 05/20/96   BY: rxm *G1NZ*          */
+/* REVISION: 8.5      LAST MODIFIED: 11/20/96   BY: *J191* Suresh Nayak */
+/* REVISION: 8.5     LAST MODIFIED: 11/14/03    BY: *LB01* Long Bo         */
+
+	    {mfdeclre.i}
+	    define shared variable workord  like wo_nbr.
+	    define shared variable worklot  like wo_lot.
+	    define shared variable routeop  like wr_op.
+	    define shared variable workpart like wo_part.
+	    define shared variable workproj like wo_project.
+/*H0BY*/    define variable cont_yn like mfc_logical initial true.
+
+/*G0HM*/    {rewrsdef.i}
+
+	    setd_sub:
+/*G1NZ
+ * /*G0JZ*/ /*V8-*/ do on error undo, retry: /*V8+*/
+ * /*G0JZ*/ /*V8!   do on error undo, retry on endkey undo, leave: */
+ *G1NZ*/
+/*G1NZ*/    do on error undo, retry on endkey undo, leave:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	       pause 0.
+
+	       FORM /*GUI*/ 
+		  
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+workord        colon 16
+/*G0JZ*/       space(2)    
+		  worklot        colon 16
+		  routeop        colon 16
+	        SKIP(.4)  /*GUI*/
+with frame dsub attr-space overlay side-labels
+		  centered row 15 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-dsub-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame dsub = F-dsub-title.
+ RECT-FRAME-LABEL:HIDDEN in frame dsub = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame dsub =
+  FRAME dsub:HEIGHT-PIXELS - RECT-FRAME:Y in frame dsub - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME dsub = FRAME dsub:WIDTH-CHARS - .5.  /*GUI*/
+
+
+	       find wo_mstr where wo_lot = worklot no-lock no-error.
+	       if available wo_mstr then workord = wo_nbr.
+				    else workord = "".
+
+/*H0BY         update */
+/*H0BY*/       display workord worklot routeop with frame dsub.
+/*H0BY*/       setd_sub1:
+/*H0BY*/       do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H0BY*/         set
+		  workord
+		  worklot
+		  routeop
+		with frame dsub editing:
+		  if frame-field = "workord" then do:
+		     readkey.
+		     apply lastkey.
+		     if input workord <> ""
+/*G1HS* /*F0H3*/         and worklot = ""    */
+		     and can-find(first wo_mstr where wo_nbr = input workord)
+/*G1HS*/             /* look up new ID # if we don't have a valid match */
+/*G1HS*/             and not can-find(first wo_mstr where
+/*G1HS*/                wo_nbr = input workord and wo_lot = input worklot)
+		     then do:
+			find first wo_mstr where wo_nbr = input workord
+			and wo_part = workpart no-lock no-error.
+			if available wo_mstr then do:
+			   worklot = wo_lot.
+			   display worklot with frame dsub.
+			end.
+			else do:
+			   display "" @ worklot with frame dsub.
+			end.
+		     end.
+		  end.
+		  else do:
+		     ststatus = stline[3].
+		     status input ststatus.
+		     readkey.
+		     apply lastkey.
+		  end.
+	       end. /* frame dsub editing */
+
+	       /* FIND WORK ORDER */
+	       if worklot <> "" and workord <> "" then
+		  find wo_mstr where worklot = wo_lot
+				 and workord = wo_nbr no-error.
+	       else do:
+		  if worklot <> "" then
+		     find wo_mstr where worklot = wo_lot no-error.
+		  else do:
+		     if workord <> "" then
+		     find first wo_mstr where workord = wo_nbr no-error.
+		     if available wo_mstr then
+			display wo_lot @ worklot with frame dsub.
+		  end.
+	       end.
+
+	       /* VALIDATE WO AGAINST PO INFO */
+	       if not available wo_mstr then do:
+/***************************** LB01 change block below:  
+		  {mfmsg.i 510 2}    /* WORK ORDER/LOT DOES NOT EXIST */
+/*H0BY*/          cont_yn = true.
+/*G0KL*  /*H0BY*/  {mfmsg01.i 7734 1 cont_yn}  /* DO YOU WISH TO CONTINUE? */ */
+/*G0KL*/             {mfmsg01.i 8500 1 cont_yn}   /* DO YOU WISH TO CONTINUE? */
+/*H0BY*/          if not cont_yn then do:
+/*H0BY*/             next-prompt workord with frame dsub.
+/*H0BY*/             undo, retry setd_sub1.
+/*H0BY*/          end.
+****************************** LB01 new block below: */	       
+/*LB01                  must input valid work order  */
+/*LB01*/		  {mfmsg02.i 510 4 workord}		
+/*LB01*/      next-prompt workord with frame dsub.
+/*LB01*/      undo, retry setd_sub1.
+/*LB01                              new block end.   */	       
+	       end.
+	       else do:
+
+		  if workpart <> wo_part then do:
+		     /* WORK ORDER ITEM NUMBER */
+/*J191**             {mfmsg02.i 692 1 wo_part}                           */
+/*LB01** 	 */      {mfmsg02.i 692 4 wo_part}      
+/*LB01*/      undo, retry setd_sub1.
+		  end.
+
+/*J014*/          if wo_joint_type <>"" then do:
+/*J014*/             /* ERROR: LINKED WORK ORDER MAY NOT BE SUBCONTRACTED */
+/*J014*/             {mfmsg.i 6517 3}
+/*LB01**J014             pause.*/
+/*LB01**J014             undo setd_sub, retry.*/
+/*LB01*/  		     undo, retry setd_sub1.
+/*J014*/          end.
+
+/*H221**          (Users not allowed to subroutine if req exists)
+ *                /* ERROR IF REQ USED FOR WHAT WOULD BE SUBCONTRACTED */
+ *                if pod_req_nbr <> "" then do:
+ *                   {mfmsg.i 347 3}
+ *                   next-prompt worklot with frame dsub.
+ *                   undo setd_sub, retry.
+ *                end.
+ **H221*/
+
+		  /* WORK ORDER LOT IS CLOSED, PLANNED OR FIRM PLANNED */
+		  if index ("FPC",wo_status) <> 0 then do:
+/*LB01*/     {mfmsg.i 523 4}   /* WORK ORDER LOT IS CLOSED,PLANNED OR FIRM PLANNED */
+/*LB01*/      undo, retry setd_sub1.
+		  end.
+
+/*FS27*/          if index ("S",wo_type) <> 0 then do:
+/*FS27*/             /* WORK ORDER LOT IS SCHEDULED WORK ORDER */
+/*LB01**FS27*/             {mfmsg.i 506 4}
+/*LB01*/ 		     undo, retry setd_sub1.
+/*FS27*/          end.
+
+		  /* WO PROJECT DOES NOT MATCH PO PROJECT */
+		  if wo_project <> workproj then do:
+/*LB01*/     {mfmsg.i 553 4}    /* WO PROJECT DOES NOT MATCH
+					   PO PROJECT */
+/*LB01*/      undo, retry setd_sub1.
+		  end.
+
+		  /* EDIT OPERATION DATA ONLY IF WORK ORDER EXISTS */
+		  find wr_route where worklot = wr_lot
+				      and routeop = wr_op
+		   no-error.
+		  /* WORK ORDER OPERATION DOES NOT EXIST */
+		  if not available wr_route then do:
+/*LB01*/     {mfmsg.i 511 4}
+/*LB01*/      undo, retry setd_sub1.
+		  end.
+		  /* WORK ORDER OPERATION IS CLOSED */
+		  if available wr_route and wr_status = "c" then do:
+/*LB01*/     {mfmsg.i 524 4}
+/*LB01*/      undo, retry setd_sub1.
+		  end.
+
+/*G0WR*/          /* PATCH G0HM ONLY APPLIES TO CUMULATIVE ORDERS */
+/*G0WR*/          if wo_type = "c" then do:
+
+/*G0HM*/             /* Begin */
+		     /* VALIDATION FOR ADVANCED REPETITIVE */
+		     find mfc_ctrl where mfc_field = "rpc_using_new"
+			no-lock no-error.
+
+		     if available mfc_ctrl and mfc_logical then do:
+			/* CHECK FOR EXPIRED WORK ORDER */
+			if wo_type = "c" and wo_due_date < today then do:
+/*LB01*/	   {mfmsg.i 5124 4}
+/*LB01*/      undo, retry setd_sub1.
+			end.
+			if available wr_route then do:
+			   /* CHECK SUBCONTRACT COST FOR OPERATION */
+			   {rewrsget.i
+			      &lot    = "worklot"
+			      &op     = "routeop"
+			      &lock   = "no-lock"}
+
+			   if wr_sub_cost = 0 then do:
+/*LB01*/	      {mfmsg.i 5118 3}
+/*LB01*/          undo, retry setd_sub1.
+			   end.
+			end. /* if available wr_route */
+		     end. /* if mfc_logical */
+/*G0HM*/ /* End */
+/*G0WR*/          end.
+
+	       end.
+
+/*H0BY*/     end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* SETD_SUB1 */
+	     hide frame dsub no-pause.
+
+	    end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* setd_sub */
+
+/*G1NZ /*G0JZ*/ /*V8! hide frame dsub no-pause. */ */
+/*G1NZ*/ hide frame dsub no-pause.
+	    message. message.

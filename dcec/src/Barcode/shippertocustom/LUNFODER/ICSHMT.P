@@ -1,0 +1,935 @@
+/* GUI CONVERTED from icshmt.p (converter v1.71) Tue Oct  6 14:31:57 1998 */
+/* icshmt.p - Multi-Transaction Shipper Maintenance                          */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.      */
+/*V8:ConvertMode=Maintenance                                                 */
+/*K1Q4*/ /*V8:WebEnabled=No                                                  */
+/* REVISION: 8.6      LAST MODIFIED: 03/15/97   BY: *K04X* Steve Goeke       */
+/* REVISION: 8.6      LAST MODIFIED: 04/09/97   BY: *K08N* Steve Goeke       */
+/* REVISION: 8.6      LAST MODIFIED: 04/22/97   BY: *K0C5* Taek-Soo Chang    */
+/* REVISION: 8.6      LAST MODIFIED: 09/26/97   BY: *K0K1* John Worden       */
+
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan        */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan        */
+         {mfdeclre.i}
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+&SCOPED-DEFINE icshmt_p_1 "货物发往/码头"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE icshmt_p_2 "货物发自"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE icshmt_p_3 "编号"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE icshmt_p_4 " 发货信息 "
+/* MaxLen: Comment: */
+
+/* ********** End Translatable Strings Definitions ********* */
+
+
+         /* INPUT PARAMETERS */
+         define input parameter i_src_addr  like ad_addr no-undo.
+         define input parameter i_dest_addr like ad_addr no-undo.
+         define input parameter i_tr_type   like tr_type no-undo.
+         define input parameter i_eff_date  as   date    no-undo.
+
+         /* OUTPUT PARAMETERS */
+         define output parameter o_recid as recid init ? no-undo.
+
+         /* SHARED VARIABLES */
+         define shared variable global_recid as recid.
+
+         /* LOCAL VARIABLES */
+         define variable v_upd_addrs     like mfc_logical      no-undo.
+/*K08N*  define variable v_srcname       like ad_name      no-undo.  *K08N*/
+         define variable v_shipgrp       like sg_grp       no-undo.
+         define variable v_invmov        like im_inv_mov   no-undo.
+         define variable v_save_shipfrom like abs_shipfrom no-undo.
+         define variable v_save_id       like abs_id       no-undo.
+         define variable v_save_shipto   like abs_shipto   no-undo.
+         define variable v_save_invmov   like im_inv_mov   no-undo.
+         define variable v_number        like abs_id       no-undo.
+/*K08N*  define variable v_lang          like ad_lang      no-undo.  *K08N*/
+         define variable v_addr          like ad_addr      no-undo.
+         define variable v_access        as   integer      no-undo.
+         define variable v_auth          like mfc_logical      no-undo.
+         define variable v_fob           as   character    no-undo.
+         define variable v_shipvia       as   character    no-undo.
+         define variable v_cont          like mfc_logical  no-undo.
+         define variable v_err           like mfc_logical      no-undo.
+         define variable v_errnum        as   integer      no-undo.
+/*K08N*/ define variable v_deleted       like mfc_logical      no-undo.
+
+         /* SHARED TEMP TABLES */
+         {icshmtdf.i}
+
+         /* FRAMES */
+         
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+abs_shipfrom   colon 25 label {&icshmt_p_2}
+            si_desc           at 37 no-label
+            abs_id         colon 25 label {&icshmt_p_3}
+            skip(1)
+            abs_shipto     colon 25 label {&icshmt_p_1}
+            ad_name           at 37 no-label
+            ad_line1          at 37 no-label
+            sg_grp         colon 25 LABEL "货运组"
+            sg_desc           at 37 no-label
+            v_invmov       colon 25 LABEL "运输代码"
+            im_desc           at 37 no-label
+          SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space
+             NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = {&icshmt_p_4}.
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+
+         /* TRIGGERS */
+         on entry of abs_shipfrom in frame a do:
+            v_save_shipfrom = input abs_shipfrom.
+         end.  /* on entry of abs_shipfrom */
+
+         on entry of abs_id in frame a do:
+            v_save_id = input abs_id.
+         end.  /* on entry of abs_id */
+ 
+        
+         on entry of abs_shipto in frame a do:
+            v_save_shipto = input abs_shipto.
+         end.  /* on entry of abs_shipto */
+
+         on entry of v_invmov in frame a do:
+            v_save_invmov = input v_invmov.
+         end.  /* on entry of v_invmov */
+
+         on leave of abs_shipfrom in frame a do:
+            if v_save_shipfrom ne input abs_shipfrom then run ip_refresh_id.
+         end.  /* on leave of abs_shipfrom */
+
+         on leave of abs_id in frame a do:
+            if v_save_id ne input abs_id then run ip_refresh_id.
+         end.  /* on leave of abs_id */
+
+         on leave of abs_shipto in frame a do:
+            if v_save_shipto ne input abs_shipto then run ip_refresh_grp.
+         end.  /* on leave of abs_shipto */
+
+         on leave of v_invmov in frame a do:
+            if v_save_invmov ne input v_invmov then run ip_refresh_invmov.
+         end.  /* on leave of v_invmov */
+
+
+         /* MAIN PROCEDURE BODY */
+
+
+         /* Read shipper control file */
+/*K08N*/ {gprun.i ""socrshc.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         find first shc_ctrl no-lock.
+
+         main_blk:
+         repeat:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            /* Allow update of addresses if SO or WO shipper */
+            v_upd_addrs = i_tr_type eq "ISS-SO" or i_tr_type eq "ISS-WO".
+
+            /* Check whether initial data is OK if addresses aren't editable */
+            if not v_upd_addrs then do:
+
+               /* Check that addresses are different.  If not then leave. */
+               if i_src_addr eq i_dest_addr then leave main_blk.
+
+               /* Check that both addresses exist.  If not then leave. */
+               if not
+                  (can-find (ad_mstr where ad_addr eq i_src_addr) and
+                   can-find (ad_mstr where ad_addr eq i_dest_addr))
+                  then leave main_blk.
+
+               /* Check if shipping group exists.  If not then leave. */
+               {gprun.i
+                  ""gpgetgrp.p""
+                  "(i_src_addr, i_dest_addr, output v_shipgrp)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               find sg_mstr no-lock where sg_grp eq v_shipgrp no-error.
+               if not available sg_mstr then leave main_blk.
+
+               /* Check that shipping group includes at least one valid */
+               /* inventory movement code.  If not then leave. */
+               find first sgid_det no-lock where
+                  sgid_grp eq sg_grp and
+                  can-find
+                     (first im_mstr where
+                        im_inv_mov eq sgid_inv_mov and
+                        im_tr_type eq i_tr_type)
+                  no-error.
+               if not available sgid_det then leave main_blk.
+
+            end.  /* if not v_upd_addrs */
+
+            /* Look for existing shipper that matches type, source, and dest */
+            find abs_mstr no-lock where recid(abs_mstr) eq global_recid
+               no-error.
+
+            if available abs_mstr and
+               abs_id begins "s" and
+               ((abs_type eq "s" and
+                 can-find (im_mstr where
+                    im_inv_mov eq abs_inv_mov and im_tr_type eq i_tr_type)) or
+                (abs_type eq "s" and abs_inv_mov eq "" and
+                 i_tr_type eq "ISS-SO")                            or
+                (abs_type eq "u" and i_tr_type eq "ISS-WO")) and
+               (v_upd_addrs or
+                (abs_shipfrom eq i_src_addr and abs_shipto eq i_dest_addr))
+               then do:
+
+               display
+                  abs_shipfrom
+                  substring(abs_id,2) @ abs_id
+                  abs_shipto
+               with frame a.
+               run ip_refresh_id.
+
+            end.  /* if available */
+
+            /* Display initial address fields */
+            else do:
+               display
+                  i_src_addr  @ abs_shipfrom
+                  i_dest_addr @ abs_shipto
+               with frame a.
+               run ip_refresh_shipfrom.
+               run ip_refresh_grp.
+            end.  /* else */
+
+            /* Get header information */
+            input_blk:
+            repeat with frame a on endkey undo main_blk, leave main_blk:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+               global_site = input abs_shipfrom.
+
+               prompt-for
+                  abs_shipfrom when (v_upd_addrs)
+                  abs_id
+                  abs_shipto   when (v_upd_addrs)
+                  v_invmov
+               editing:
+
+                  /* Ship from field */
+                  if frame-field eq "abs_shipfrom" then do:
+
+                     {mfnp05.i
+                        abs_mstr
+                        abs_id
+                        "abs_id begins 's' and
+                         (v_upd_addrs or abs_shipto eq input abs_shipto) and
+                         (can-find
+                            (im_mstr where
+                               im_inv_mov eq abs_inv_mov and
+                               im_tr_type eq i_tr_type) or
+                          (abs_type eq 's' and abs_inv_mov eq '' and
+                           i_tr_type eq 'ISS-SO') or
+                          abs_type eq 'u')"
+                        abs_shipfrom
+                        "input abs_shipfrom" }
+
+                     /* Process Next/Previous selection */
+                     if recno ne ? then do:
+                        /* Display Next/Previous selection */
+                        display
+                           abs_shipfrom
+                           substring(abs_id,2) @ abs_id.
+                        run ip_refresh_id.
+                     end. /* if recno ne ? */
+
+                  end.  /* if frame-field eq "abs_shipfrom" */
+
+                  /* Shipper number field */
+                  else if frame-field eq "abs_id" then do:
+
+                     {mfnp05.i
+                        abs_mstr
+                        abs_id
+                        "abs_shipfrom eq input abs_shipfrom and
+                         abs_id begins 's'                  and
+                         (v_upd_addrs or abs_shipto eq input abs_shipto) and
+                         (can-find
+                            (im_mstr where
+                               im_inv_mov eq abs_inv_mov and
+                               im_tr_type eq i_tr_type) or
+                          (abs_type eq 's' and abs_inv_mov eq ''
+                           and i_tr_type eq 'ISS-SO') or
+                          abs_type eq 'u')"
+                        abs_id
+                        "('s' + input abs_id)" }
+
+                     /* Process Next/Previous selection */
+                     if recno ne ? then do:
+                        /* Display Next/Previous selection */
+                        display substring(abs_id,2) @ abs_id.
+                        run ip_refresh_id.
+                     end. /* if recno ne ? */
+
+                  end.  /* if frame-field eq "abs_id" */
+
+
+                  if frame-field eq "abs_shipto" then do:
+
+                     if i_tr_type eq "ISS-WO" then do:
+
+                        {mfnp.i
+                           vd_mstr
+                           abs_shipto
+                           vd_addr
+                           abs_shipto
+                           vd_addr
+                           vd_addr }
+
+                        /* Process Next/Previous selection */
+                        if recno ne ? then do:
+                           /* Display Next/Previous selection */
+                           display vd_addr @ abs_shipto.
+                           run ip_refresh_grp.
+                        end. /* if recno ne ? */
+
+                     end.  /* if i_tr_type eq "ISS-WO" */
+
+                     else do:
+
+                        {mfnp05.i
+                           ad_mstr
+                           ad_addr
+                           "can-find
+                              (ls_mstr where
+                                 ls_addr eq ad_addr and
+                                 (ls_type eq 'customer' or
+                                  ls_type eq 'ship-to'  or
+                                  ls_type eq 'dock'))"
+                           ad_addr
+                           "input abs_shipto" }
+
+                        /* Process Next/Previous selection */
+                        if recno ne ? then do:
+                           /* Display Next/Previous selection */
+                           display ad_addr @ abs_shipto.
+                           run ip_refresh_grp.
+                        end. /* if recno ne ? */
+
+                     end.  /* else */
+
+                  end.  /* if frame-field eq "abs_shipto" */
+
+                  /* Inventory movement code field */
+                  else if frame-field eq "v_invmov" then do:
+                     {mfnp05.i
+                        im_mstr
+                        im_inv_mov
+                        "(im_tr_type eq i_tr_type)"
+                        im_inv_mov
+                        "input v_invmov" }
+
+                     /* Display Next/Previous selection */
+                     if recno ne ? then do:
+                        display im_inv_mov @ v_invmov.
+                        run ip_refresh_invmov.
+                     end.  /* if recno ne ? */
+
+                  end.  /* else if frame-field eq "v_invmov" */
+
+               end.  /* editing */
+ FIND FIRST abs_mstr WHERE substr(abs_mstr.ABS_par_id,2,50) = INPUT ABS_id NO-LOCK NO-ERROR.
+        IF AVAILABLE abs_mstr AND abs_mstr.ABS_loc = '8888'  THEN DO:
+            MESSAGE "该货运单已发运!" VIEW-AS ALERT-BOX BUTTON OK. 
+           
+         next-prompt abs_shipfrom.
+                     undo input_blk, retry input_blk.
+        END.
+               /* Find selected shipper */
+               find abs_mstr no-lock where
+                  abs_shipfrom eq       input abs_shipfrom and
+                  abs_id       eq "s" + input abs_id no-error.
+
+               if available abs_mstr then run ip_refresh_id.
+
+               /* Validate addresses if editable */
+               if v_upd_addrs then do:
+
+                  /* Validate shipfrom */
+                  if not can-find
+                     (si_mstr where si_site eq input abs_shipfrom) then do:
+                     {mfmsg.i 708 3}
+                     /* Site does not exist */
+                     next-prompt abs_shipfrom.
+                     undo input_blk, retry input_blk.
+                  end. /* if not can-find */
+
+                  /* Validate shipto */
+                  if not can-find
+                     (ad_mstr where ad_addr eq input abs_shipto) then do:
+                     {mfmsg.i 980 3}
+                     /* Address does not exist */
+                     next-prompt abs_shipto.
+                     undo input_blk, retry input_blk.
+                  end. /* if not can-find */
+
+                  /* Validate shipto vendor if work order */
+                  if i_tr_type eq "ISS-WO" and
+                     not can-find (vd_mstr where vd_addr eq input abs_shipto)
+                     then do:
+                     {mfmsg.i 2 3}
+                     /* Not a valid supplier */
+                     next-prompt abs_shipto.
+                     undo input_blk, retry input_blk.
+                  end.  /* if i_tr_type */
+
+                  /* Validate shipto customer if sales order */
+                  if i_tr_type eq "ISS-SO" then do:
+                     find first ls_mstr no-lock where
+                        ls_addr eq input abs_shipto and
+                        (ls_type eq "customer" or
+                         ls_type eq "ship-to" or
+                         ls_type eq "dock") no-error.
+                     if not available ls_mstr then do:
+                        {mfmsg.i 8129 3}
+                        /* Not a valid customer or ship-to */
+                        next-prompt abs_shipto.
+                        undo input_blk, retry input_blk.
+                     end.  /* if not available */
+
+                     v_addr = input abs_shipto.
+                     do while v_addr ne "":
+                        find cm_mstr no-lock where cm_addr eq v_addr no-error.
+                        find ad_mstr no-lock where ad_addr eq v_addr no-error.
+                        if not available cm_mstr and available ad_mstr then
+/*K0C5*                v_addr = ad_addr. */
+/*K0C5*/               v_addr = ad_ref.
+                        else v_addr = "".
+                     end.  /* do while */
+                     if not available cm_mstr then do:
+                        {mfmsg.i 8129 3}
+                        /* Not a valid customer or ship-to */
+                        next-prompt abs_shipto.
+                        undo input_blk, retry input_blk.
+                     end.  /* if not available */
+                  end.  /* if i_tr_type */
+
+               end.  /* if v_upd_addrs */
+
+               /* Check user's access to shipfrom site */
+               {gprun.i
+                  ""gpsiver.p""
+                  "(input input abs_shipfrom, ?, output v_access)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               if v_access eq 0 then do:
+                  {mfmsg.i 725 3}
+                  /* User does not have access to this site */
+                  next-prompt abs_shipfrom.
+                  undo input_blk, retry input_blk.
+               end.  /* if v_access */
+
+               /* Validate that inventory movement code can be blank */
+               if input v_invmov eq "" then do:
+                  if not available abs_mstr and
+                     (shc_require_inv_mov or
+                      (i_tr_type ne "ISS-SO" and i_tr_type ne "ISS-WO"))
+                     then do:
+                     {mfmsg.i 5981 3}
+                     /* Inventory movement code must be specified */
+                     next-prompt v_invmov.
+                     undo input_blk, retry input_blk.
+                  end.  /* if (shc_require_inv_mov */
+               end.  /* if input v_invmov */
+
+               /* Validate non-blank inventory movement code */
+               else do:
+
+                  /* Validate that inventory movement code exists */
+                  if not can-find
+                     (im_mstr where im_inv_mov eq input v_invmov) then do:
+                     {mfmsg.i 5800 3}
+                     /* Inventory movement code does not exist */
+                     next-prompt v_invmov.
+                     undo input_blk, retry input_blk.
+                  end.  /* if not can-find */
+
+                  /* Validate that inventory movement code is correct type */
+                  if not can-find
+                     (im_mstr where
+                        im_inv_mov eq input v_invmov and
+                        im_tr_type eq i_tr_type) then do:
+                     {mfmsg03.i 5847 3 i_tr_type """" """" }
+/*K0K1*              /* Inventory movement code should be for trans type # */ */
+/*K0K1*/             /* Inventory movement code with transaction type # required */
+                     next-prompt abs_id.
+                     undo input_blk, retry input_blk.
+                  end.  /* if not can-find */
+
+                  /* Validate site/inventory movement code security */
+                  {gprun.i
+                     ""gpsimver.p""
+                     "(input input abs_shipfrom,
+                       input input v_invmov,
+                       output v_auth)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  if not v_auth then do:
+                     {mfmsg.i 5990 3}
+                     /* User does not have access to this site/inv mov code */
+                     next-prompt v_invmov.
+                     undo input_blk, retry input_blk.
+                  end.  /* if not v_auth */
+
+               end.  /* else */
+
+               if available abs_mstr then do:
+
+                  /* Error if selected shipper has incorrect type */
+                  if
+                     (if i_tr_type eq "ISS-WO"
+                        then abs_type ne "s" and abs_type ne "u"
+                        else abs_type ne "s")
+                     then do:
+                     {mfmsg.i 5814 3}
+                     /* Selected shipper has invalid type */
+                     next-prompt abs_id.
+                     undo input_blk, retry input_blk.
+                  end.  /* if (if i_tr_type */
+
+                  /* Error if selected shipper has different ship-to */
+                  if abs_shipto ne i_dest_addr and not v_upd_addrs then do:
+                     {mfmsg03.i 5812 3 abs_shipto """" """" }
+                     /* Selected shipper is for ship-to # */
+                     next-prompt abs_id.
+                     undo input_blk, retry input_blk.
+                  end.  /* if abs_shipto */
+
+                  /* Error if canceled shipper selected and adding lines */
+                  if abs_canceled and can-find (first t_abs) then do:
+                     {mfmsg.i 5885 3}
+                     /* Shipper canceled */
+                     next-prompt abs_id.
+                     undo input_blk, retry input_blk.
+                  end.  /* if abs_canceled */
+
+                  /* Warn if already printed */
+                  if substring(abs_status,1,1) eq "y" then do:
+                     v_cont = false.
+                     {mfmsg01.i 5803 2 v_cont}
+                     /* Shipper has already been printed.  Continue? */
+                     if not v_cont then undo input_blk, retry input_blk.
+                  end.  /* if substring */
+
+                  /* Warn if consolidation prohibited */
+                  if abs_cons_ship eq "0" then do:
+                     v_cont = false.
+                     {mfmsg01.i 5804 2 v_cont}
+                     /* Shipper prohibits consolidation.  Continue? */
+                     if not v_cont then undo input_blk, retry input_blk.
+                  end.  /* if abs_cons_ship */
+
+                  /* Warn if different effective date */
+                  if i_eff_date   ne ? and
+                     abs_eff_date ne ? and
+                     abs_eff_date ne i_eff_date then do:
+                     v_cont = false.
+/*K08N*              {mfmsg07.i 5807 2 abs_eff_date """" """" v_cont }  *K08N*/
+/*K08N*/             {mfmsg07g.i 5807 2 abs_eff_date """" """" v_cont }
+                     /* Shipper has effective date of #.  Continue? */
+                     if not v_cont then undo input_blk, retry input_blk.
+                  end.  /* if i_eff_date */
+
+                  /* Warn if shipper canceled */
+                  if abs_canceled then do:
+                     {mfmsg.i 5885 2}
+                     /* Shipper canceled */
+                  end.  /* if abs_canceled */
+
+                  /* Warn if shipper previously confirmed */
+                  if i_eff_date eq ? and substring(abs_status,2,1) eq "y" then do:
+                     {mfmsg.i 8146 2}
+                     /* Shipper previously confirmed */
+                  end.  /* if i_eff_date */
+
+               end.  /* if available abs_mstr */
+
+               /* Warn if customer on credit hold */
+               if i_tr_type eq "ISS-SO" and
+                  available cm_mstr and
+                  cm_cr_hold then do:
+                  v_cont = false.
+                  {mfmsg01.i 5816 2 v_cont}
+                  /* Customer is on credit hold.  Continue? */
+                  if not v_cont then undo input_blk, retry input_blk.
+               end.  /* if i_tr_type */
+
+               /* Create new shipper.  Keep the transaction block small to */
+               /* minimize the time that NRM records will have to be locked. */
+
+               if not available abs_mstr then
+                  create_blk:
+                  do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Check if another existing shipper requires consolidation */
+                  find first abs_mstr no-lock where
+                     abs_shipfrom  eq input abs_shipfrom and
+                     abs_id    begins "s"                and
+                     abs_type      eq "s"                and
+                     abs_shipto    eq input abs_shipto   and
+                     abs_inv_mov   ne ""                 and
+                     abs_inv_mov   eq input v_invmov     and
+                     not abs_canceled                    and
+                     substring(abs_status,1,1) ne "y"    and
+                     abs_cons_ship eq "2"                and
+                     (if i_eff_date eq ?
+                        then substring(abs_status,2,1) ne "y"
+                        else abs_eff_date  eq i_eff_date)
+                     no-error.
+
+                  if available abs_mstr then do:
+                     v_cont = true.
+/*K08N*              {mfmsg07.i 5806 2 substring(abs_id,2) """" """" v_cont}  *K08N*/
+/*K08N*/             {mfmsg07g.i 5806 2 substring(abs_id,2) """" """" v_cont}
+                     /* Unprinted ship # requires consolidation. Consolidate? */
+                     if v_cont then do:
+                        display substring(abs_id,2) @ abs_id.
+                        run ip_refresh_id.
+                        leave create_blk.
+                     end.  /* if v_cont */
+                  end.  /* if available_abs_mstr */
+
+                  /* Get shipping group/inventory movement details */
+                  if input v_invmov ne "" then do:
+                     find first sgid_det no-lock where
+                        sgid_grp     eq input sg_grp and
+                        sgid_inv_mov eq input v_invmov
+                        no-error.
+                     if not available sgid_det then do:
+                        {mfmsg03.i 5985 3 "input sg_grp" """" """" }
+                        /* Inventory movement code is not valid for ship group # */
+                        next-prompt v_invmov.
+                        undo input_blk, retry input_blk.
+                     end.  /* if not available sgid_det */
+                  end.  /* if input v_invmov */
+
+                  /* Generate/validate shipper number using NRM */
+                  v_number = input abs_id.
+                  {gprun.i
+                     ""gpnrmgv.p""
+                     "(if input v_invmov ne """"
+                          then sgid_ship_nr_id
+                          else shc_ship_nr_id,
+                       input-output v_number,
+                       output v_err,
+                       output v_errnum)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  if v_err then do:
+                     {mfmsg.i v_errnum 3}
+                     next-prompt abs_id.
+                     undo input_blk, retry input_blk.
+                  end.
+                  display v_number @ abs_id.
+
+                  {mfmsg.i 1 1}  /* Adding new record */
+
+                  create abs_mstr.
+
+                  assign
+                     abs_shipfrom = input abs_shipfrom
+                     abs_id       = "s" + input abs_id
+                     abs_type     =
+                        if i_tr_type eq "ISS-WO" and input v_invmov eq ""
+                           then "u"
+                           else "s"
+                     abs_shipto   = input abs_shipto
+                     abs_inv_mov  = input v_invmov
+                     abs_nr_id    =
+                        if input v_invmov ne ""
+                           then sgid_ship_nr_id
+                           else shc_ship_nr_id
+                     abs_shp_date = today
+/*K08N*              abs_lang     = v_lang  *K08N*/
+                     abs_qty      = 1.
+
+                  if recid(abs_mstr) = -1 then .
+
+                  /* Flag as confirmed */
+                  if i_eff_date ne ? then
+                     assign
+                        substring(abs_status,2,1) = "y"
+                        abs_eff_date              = i_eff_date.
+
+/*K08N*/          /* Get the shipper consolidation flag */
+/*K08N*/          {gprun.i
+                     ""icshfmt.p""
+                     "(recid(abs_mstr),
+                       input input sg_grp,
+                       output abs_format)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Get the shipper consolidation flag */
+                  {gprun.i
+                     ""icshcon.p""
+                     "(input input sg_grp,
+                       abs_shipfrom,
+                       abs_shipto,
+                       output abs_cons_ship)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Add carrier records */
+                  {gprun.i ""icshcar.p"" "(recid(abs_mstr))" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*K08N*/          /* Get the default language */
+/*K08N*/          {gprun.i ""icshlng.p"" "(recid(abs_mstr), output abs_lang)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Get the FOB and shipvia defaults */
+                  {gprun.i
+                     ""icshfob.p""
+                     "(recid(abs_mstr), output v_fob, output v_shipvia)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Assign packed fields */
+                  substring(abs__qad01,1,60) =
+                     string(v_shipvia,          "x(20)") +   /* shipvia */
+                     string(v_fob,              "x(20)") +   /* FOB */
+                     string(substring(abs_id,2),"x(20)").    /* carrier ref */
+
+                  release abs_mstr.
+
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* create_blk */
+
+               /* Edit the new or existing record in a new transaction */
+               /* block, to prevent prolonged locking of NRM records */
+               do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  /* Re-read shipper record exclusive-lock */
+                  find abs_mstr exclusive-lock where
+                     abs_shipfrom eq       input abs_shipfrom and
+                     abs_id       eq "s" + input abs_id
+                     no-error.
+                  if not available abs_mstr then
+                     undo input_blk, retry input_blk.
+
+                  /* Build new line items from temp table */
+                  if not abs_canceled then do:
+                     {gprun.i ""icshmt1b.p"" "(recid(abs_mstr))" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  end.  /*if not abs_canceled */
+
+                  /* Update header information */
+                  {gprun.i ""icshhdr.p"" "(recid(abs_mstr), output v_deleted)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*K08N*/          if v_deleted then leave input_blk.
+
+                  /* Update line item information */
+                  if not abs_canceled and
+                     ((i_tr_type ne "ISS-SO" and
+                       i_tr_type ne "ISS-WO") or
+                      substring(abs_status,2,1) ne "y")
+                     then do:
+                     {gprun.i ""icshdet.p"" "(recid(abs_mstr))" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  end.  /*if not abs_canceled */
+
+                  /* Update trailer information */
+                  {gprun.i ""icshtrl.p"" "(recid(abs_mstr))" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                  o_recid = recid(abs_mstr).
+
+                  release abs_mstr.
+
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* transaction */
+
+               /* Print shipper */
+               {gprun.i ""icshprt.p"" "(o_recid)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+               global_recid = o_recid.
+
+               leave input_blk.
+
+            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* input_blk */
+
+            if not v_upd_addrs then leave main_blk.
+
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* main_blk */
+
+         /* Clear temp table */
+         {gprun.i ""icshmt1c.p"" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+         hide frame a no-pause.
+
+
+         /* END OF MAIN PROCEDURE BODY */
+
+
+         /* INTERNAL PROCEDURES */
+
+
+         procedure ip_refresh_id:
+
+            define buffer b_abs_mstr for abs_mstr.
+
+            run ip_refresh_shipfrom.
+
+            for first b_abs_mstr no-lock where
+               abs_shipfrom eq input frame a abs_mstr.abs_shipfrom and
+               abs_id eq "s" + input frame a abs_mstr.abs_id with frame a:
+               display abs_shipto  @ abs_mstr.abs_shipto.
+            end.  /* for first */
+
+            run ip_refresh_grp.
+
+         end procedure.  /* ip_refresh_id */
+
+
+         procedure ip_refresh_shipfrom:
+
+            find si_mstr no-lock where
+               si_site eq input frame a abs_mstr.abs_shipfrom no-error.
+
+            find ad_mstr no-lock where
+               ad_addr eq input frame a abs_mstr.abs_shipfrom no-error.
+
+            display
+               if available si_mstr
+                  then si_desc
+                  else if available ad_mstr
+                     then ad_name
+                     else ""
+                  @ si_desc
+            with frame a.
+
+         end procedure.  /* ip_refresh_shipfrom */
+
+
+         procedure ip_refresh_grp:
+
+            define buffer b_abs_mstr for abs_mstr.
+
+            {gprun.i
+               ""gpgetgrp.p""
+               "(input input frame a abs_shipfrom,
+                 input input frame a abs_shipto,
+                 output v_shipgrp)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            find sg_mstr no-lock where sg_grp eq v_shipgrp no-error.
+            display
+               if available sg_mstr then sg_grp  else "" @ sg_grp
+               if available sg_mstr then sg_desc else "" @ sg_desc
+            with frame a.
+
+            find b_abs_mstr no-lock where
+               b_abs_mstr.abs_shipfrom eq
+                  input frame a abs_mstr.abs_shipfrom and
+               b_abs_mstr.abs_id eq
+                  "s" + input frame a abs_mstr.abs_id no-error.
+            if available b_abs_mstr then
+               display
+                  b_abs_mstr.abs_inv_mov @ v_invmov
+               with frame a.
+
+            else if input frame a v_invmov eq "" then do:
+               find first sgid_det no-lock where
+                  sgid_grp     eq input frame a sg_grp and
+                  sgid_default eq true and
+                  can-find
+                     (first im_mstr where
+                        im_inv_mov eq sgid_inv_mov and
+                        im_tr_type eq i_tr_type)
+                  no-error.
+               display
+                  if available sgid_det then sgid_inv_mov else "" @ v_invmov
+               with frame a.
+
+            end.  /* else */
+
+            run ip_refresh_shipto.
+            run ip_refresh_invmov.
+
+         end procedure.  /* ip_refresh_grp */
+
+
+         procedure ip_refresh_shipto:
+
+            find ad_mstr no-lock where
+               ad_addr eq input frame a abs_mstr.abs_shipto no-error.
+
+            display
+               if available ad_mstr then ad_name  else "" @ ad_name
+               if available ad_mstr then ad_line1 else "" @ ad_line1
+            with frame a.
+
+         end procedure.  /* ip_refresh_shipto */
+
+
+         procedure ip_refresh_invmov:
+
+            find im_mstr no-lock where
+               im_inv_mov eq input frame a v_invmov no-error.
+            display
+               if available im_mstr then im_desc else "" @ im_desc
+            with frame a.
+
+         end procedure.  /* ip_refresh_invmov */
+
+
+         /* END OF INTERNAL PROCEDURES */

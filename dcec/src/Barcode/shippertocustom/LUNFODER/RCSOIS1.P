@@ -1,0 +1,2448 @@
+/* GUI CONVERTED from RCSOIS1.P (converter v1.77) Tue Apr 24 09:30:20 2007 */
+/* rcsois1.p - Release Management Customer Schedules                         */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.      */
+/*V8:ConvertMode=Maintenance                                                 */
+/*V8:RunMode=Character,Windows                                               */
+/* REVISION: 7.3      LAST MODIFIED: 10/12/92   BY: WUG *G462*               */
+/* REVISION: 7.3      LAST MODIFIED: 04/22/93   BY: WUG *GA12*               */
+/* REVISION: 7.3      LAST MODIFIED: 06/01/93   BY: WUG *GB46*               */
+/* REVISION: 7.3      LAST MODIFIED: 07/26/93   BY: WUG *GD70*               */
+/* REVISION: 7.3      LAST MODIFIED: 08/13/93   BY: WUG *GE19*               */
+/* REVISION: 7.3      LAST MODIFIED: 08/27/93   BY: WUG *GE58*               */
+/* REVISION: 7.3      LAST MODIFIED: 09/03/93   BY: WUG *GE79*               */
+/* REVISION: 7.4      LAST MODIFIED: 07/22/93   BY: pcd *H039*               */
+/* REVISION: 7.4      LAST MODIFIED: 09/21/93   BY: WUG *H130*               */
+/* REVISION: 7.4      LAST MODIFIED: 09/28/93   BY: WUG *H140*               */
+/* REVISION: 7.4      LAST MODIFIED: 09/30/93   BY: WUG *H146*               */
+/* REVISION: 7.4      LAST MODIFIED: 10/13/93   BY: WUG *H172*               */
+/* REVISION: 7.4      LAST MODIFIED: 10/15/93   BY: WUG *H180*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/01/93   BY: WUG *H257*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/21/93   BY: WUG *GI20*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/22/93   BY: WUG *H268*               */
+/* REVISION: 7.4      LAST MODIFIED: 01/04/93   BY: tjs *H166*               */
+/* REVISION: 7.4      LAST MODIFIED: 03/24/94   BY: pcd *H304*               */
+/* REVISION: 7.4      LAST MODIFIED: 03/24/94   BY: dpm *H074*               */
+/* REVISION: 7.4      LAST MODIFIED: 04/14/94   BY: dpm *H347*               */
+/* REVISION: 7.4      LAST MODIFIED: 07/20/94   BY: bcm *H447*               */
+/* REVISION: 7.4      LAST MODIFIED: 08/09/94   BY: dpm *GL13*               */
+/* REVISION: 7.4      LAST MODIFIED: 09/07/94   BY: bcm *H507*               */
+/*                                   09/08/94   BY: bcm *H509*               */
+/*                                   11/02/94   BY: mmp *H579*               */
+/* REVISION: 7.4      LAST MODIFIED: 11/19/94   BY: GWM *H604*               */
+/* REVISION: 7.4      LAST MODIFIED: 11/30/94   BY: afs *H611*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/07/94   BY: bcm *H617*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/08/94   BY: jxz *GO77*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/09/94   BY: jxz *GO83*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/15/94   BY: str *G09F*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/15/94   BY: rxm *GN16*               */
+/* REVISION: 7.4      LAST MODIFIED: 12/19/94   BY: bcm *H09G*               */
+/* REVISION: 7.4      LAST MODIFIED: 01/06/94   BY: aep *G0BK*               */
+/* REVISION: 8.5      LAST MODIFIED: 12/13/94   BY: mwd *J034*               */
+/* REVISION: 7.4      LAST MODIFIED: 01/20/95   BY: rxm *G0CX*               */
+/* REVISION: 7.4      LAST MODIFIED: 03/13/95   BY: jxz *F0M3*               */
+/* REVISION: 7.4      LAST MODIFIED: 04/06/95   BY: ame *H0CF*               */
+/* REVISION: 7.4      LAST MODIFIED: 05/09/95   BY: dxk *G0MC*               */
+/* REVISION: 7.4      LAST MODIFIED: 06/14/95   BY: bcm *F0SR*               */
+/* REVISION: 8.5      LAST MODIFIED: 06/16/95   BY: rmh *J04R*               */
+/* REVISION: 7.4      LAST MODIFIED: 07/20/95   BY: jym *H0F7*               */
+/* REVISION: 7.4      LAST MODIFIED: 08/15/95   BY: vrn *G0V3*               */
+/* REVISION: 7.4      LAST MODIFIED: 08/28/95   BY: vrn *G0VP*               */
+/* REVISION: 7.4      LAST MODIFIED: 09/25/95   BY: vrn *H0G2*               */
+/* REVISION: 7.4      LAST MODIFIED: 10/05/95   BY: vrn *G0X3*               */
+/* REVISION: 8.5      LAST MODIFIED: 08/01/95   BY: taf *J053*               */
+/* REVISION: 8.5      LAST MODIFIED: 07/13/95   BY: gwm *J0JL*               */
+/* REVISION: 8.5      LAST MODIFIED: 04/18/96   BY: mzh *J0JL*               */
+/* REVISION: 8.5      LAST MODIFIED: 04/24/96   BY: GWM *J0K9*               */
+/* REVISION: 8.5      LAST MODIFIED: 05/14/96   BY: vrn *G1LV*               */
+/* REVISION: 8.6      LAST MODIFIED: 06/11/96   BY: ejh *K001*               */
+/* REVISION: 8.5      LAST MODIFIED: 06/19/96   BY: rvw *G1XY*               */
+/* REVISION: 8.5      LAST MODIFIED: 07/18/96   BY: taf *J0ZS*               */
+/* REVISION: 8.5      LAST MODIFIED: 07/30/96   BY: gwm *J12V*               */
+/* REVISION: 8.6      LAST MODIFIED: 08/09/96   BY: *K02H* Vinay Nayak-Sujir */
+/* REVISION: 8.5      LAST MODIFIED: 08/16/96   BY: *H0MD* Suresh Nayak      */
+/* REVISION: 8.5      LAST MODIFIED: 08/26/96   BY: *G2CR* Ajit Deodhar      */
+/* REVISION: 8.6      LAST MODIFIED: 09/20/96   BY: TSI *K005*               */
+/* REVISION: 8.6      LAST MODIFIED: 10/04/96   BY: *K02H* forrest mori      */
+/* REVISION: 8.6      LAST MODIFIED: 10/22/96   BY: *K004* Kurt De Wit       */
+/* REVISION: 8.6      LAST MODIFIED: 10/22/96   BY: *K01T* Kurt De Wit       */
+/* REVISION: 8.6      LAST MODIFIED: 12/06/96   BY: *K030* Vinay Nayak-Sujir */
+/* REVISION: 8.6      LAST MODIFIED: 12/10/96   BY: *K039* Vinay Nayak-Sujir */
+/* REVISION: 8.6      LAST MODIFIED: 12/30/96   BY: *K03V* Vinay Nayak-Sujir */
+/* REVISION: 8.6      LAST MODIFIED: 01/26/96   BY: *K03J* Vinay Nayak-Sujir */
+/* REVISION: 8.6      LAST MODIFIED: 02/04/97   BY: *K05V* Vinay Nayak-Sujir */
+/* REVISION: 8.6      LAST MODIFIED: 03/15/97   BY: *K04X* Steve Goeke       */
+/* REVISION: 8.6      LAST MODIFIED: 04/02/97   BY: *K09H* Vinay Nayak-Sujir */
+/* REVISION: 8.5      LAST MODIFIED: 04/07/97   BY: *J1M3* Jean Miller       */
+/* REVISION: 8.6      LAST MODIFIED: 04/15/97   BY: *H0W3* Suresh Nayak      */
+/* REVISION: 8.6      LAST MODIFIED: 05/13/97   BY: *J1MP* Aruna Patil       */
+/* REVISION: 8.6      LAST MODIFIED: 07/10/97   BY: *K0G6* Arul Victoria     */
+/* REVISION: 8.6      LAST MODIFIED: 07/12/97   BY: *K0DH* Kieu Nguyen       */
+/* REVISION: 8.6      LAST MODIFIED: 08/06/97   BY: *J1YG* Seema Varma       */
+/* REVISION: 8.6      LAST MODIFIED: 09/20/97   BY: *H1F5* Niranjan Ranka    */
+/* REVISION: 8.6      LAST MODIFIED: 10/09/97   BY: *K0JV* Surendra Kumar    */
+/* REVISION: 8.6      LAST MODIFIED: 11/03/97   BY: *J22N* Aruna Patil       */
+/* REVISION: 8.6      LAST MODIFIED: 11/18/97   BY: *K18W* Taek-Soo Chang    */
+/* REVISION: 8.6      LAST MODIFIED: 11/06/97   BY: *H1GD* Seema Varma       */
+/* REVISION: 8.6      LAST MODIFIED: 11/19/97   BY: *H1GL* Nirav Parikh      */
+/* REVISION: 8.6      LAST MODIFIED: 11/28/97   BY: *H1GZ* Seema Varma       */
+/* REVISION: 8.6      LAST MODIFIED: 12/13/97   BY: *J20Q* Aruna Patil       */
+/* REVISION: 8.6      LAST MODIFIED: 12/30/97   BY: *J281* Manish K.         */
+/* REVISION: 8.6      LAST MODIFIED: 12/02/97   BY: *K15N* Jim Williams      */
+/* REVISION: 8.6      LAST MODIFIED: 01/22/98   BY: *H1J7* Nirav Parikh      */
+/* REVISION: 8.6E     LAST MODIFIED: 04/07/98   BY: *J2DD* Kawal Batra       */
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane         */
+/* REVISION: 8.6E     LAST MODIFIED: 05/09/98   BY: *L00Y* Jeff Wootton      */
+/* REVISION: 8.6E     LAST MODIFIED: 05/29/98   BY: *K1JN* Niranjan R.       */
+/* REVISION: 8.6E     LAST MODIFIED: 06/18/98   BY: *J2KY* Dana Tunstall     */
+/* REVISION: 8.6E     LAST MODIFIED: 06/26/98   BY: *J2MG* Samir Bavkar      */
+/* REVISION: 8.6E     LAST MODIFIED: 06/29/98   BY: *J2PB* Dana Tunstall     */
+/* REVISION: 8.6E     LAST MODIFIED: 07/07/98   BY: *L03Q* Niranjan R.       */
+/* Old ECO marker removed, but no ECO header exists *F0PN*                   */
+/* REVISION: 8.6E     LAST MODIFIED: 07/15/98   BY: *L024* Bill Reckard      */
+/* REVISION: 8.6E     LAST MODIFIED: 08/27/98   BY: *K1WQ* Irine D'mello     */
+/* REVISION: 8.6E     LAST MODIFIED: 09/02/98   BY: *H1LZ* Manish K.         */
+/* REVISION: 8.6E     LAST MODIFIED: 10/23/98   BY: *L0CD* Steve Goeke       */
+/* REVISION: 9.0      LAST MODIFIED: 12/16/98   BY: *J371* Niranjan R.       */
+/* REVISION: 9.0      LAST MODIFIED: 12/17/98   BY: *K1YG* Seema Varma       */
+/* REVISION: 9.0      LAST MODIFIED: 01/19/99   BY: *M05Q* Seema Varma       */
+/* REVISION: 9.0      LAST MODIFIED: 03/13/99   BY: *M0BD* Alfred Tan        */
+/* REVISION: 9.0      LAST MODIFIED: 03/23/99   BY: *H1NP* Poonam Bahl       */
+/* REVISION: 9.0      LAST MODIFIED: 03/30/99   BY: *K1ZH* Santosh Rao       */
+/* REVISION: 9.0      LAST MODIFIED: 04/27/99   BY: *H1NW* Santosh Rao       */
+/* REVISION: 9.0      LAST MODIFIED: 04/28/99   BY: *J3BM* Reetu Kapoor      */
+/* REVISION: 9.0      LAST MODIFIED: 05/26/99   BY: *J3G7* Poonam Bahl       */
+/* REVISION: 9.0      LAST MODIFIED: 06/22/99   BY: *K21B* Reetu Kapoor      */
+/* REVISION: 9.0      LAST MODIFIED: 07/09/99   BY: *J3HZ* Poonam Bahl       */
+/* REVISION: 9.0      LAST MODIFIED: 08/11/99   BY: *K224* Reetu Kapoor      */
+/* REVISION: 9.0      LAST MODIFIED: 08/12/99   BY: *J3KJ* Bengt Johansson   */
+/* REVISION: 9.0      LAST MODIFIED: 01/11/00   BY: *J3N6* Santosh Rao       */
+/* REVISION: 9.0      LAST MODIFIED: 05/17/00   BY: *L0XV* Kedar Deherkar    */
+/* REVISION: 9.0      LAST MODIFIED: 06/28/00   BY: *L10K* Reetu Kapoor      */
+/* REVISION: 9.0      LAST MODIFIED: 07/20/00   BY: *L0QV* Manish K.         */
+/* REVISION: 9.0      LAST MODIFIED: 08/25/00   BY: *L12D* Reetu Kapoor      */
+/* REVISION: 9.0      LAST MODIFIED: 12/14/00   BY: *M0Y0* Ashwini G.        */
+/* REVISION: 9.0      LAST MODIFIED: 12/20/00   BY: *L155* Abhijeet Thakur   */
+/* REVISION: 9.0      LAST MODIFIED: 03/30/01   BY: *M14H* Rajesh Kini       */
+/* REVISION: 9.0      LAST MODIFIED: 04/17/01   BY: *M11Z* Jean Miller       */
+/*J3BM*/ /** TO IMPROVE PERFORMANCE   **/
+
+         /*!
+            rcsois1.p Customer Scheduling Confirm Shipper
+          */
+
+         /*!
+            CHANGES MADE TO THIS PROGRAM NEED TO BE MADE TO RCSOIS2.P, AS WELL
+          */
+
+         /* SHIPPER CONFIRM */
+
+         {mfdeclre.i}
+
+         /* ********** Begin Translatable Strings Definitions ********* */
+
+         &SCOPED-DEFINE rcsois1_p_1 "货物发往/码头"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_2 "货物发自"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_3 "货运单号"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_4 "发票号用作货运单号"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_5 "单件毛利"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_6 "单位成本"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_7 "Consolidated/Detail"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_8 "过帐发票"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_9 "发票"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_10 "合并发票"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_11 "P-备料单/S-货运单"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_12 " 从备料单转为货运单 "
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_13 "打印发运零件的批/序号"
+         /* MaxLen: Comment: */
+
+/*L0CD*  &SCOPED-DEFINE rcsois1_p_14 "Print Invoice"  *L0CD*/
+/*L0CD*  /* MaxLen: Comment: */                       *L0CD*/
+
+         &SCOPED-DEFINE rcsois1_p_15 "编号"
+         /* MaxLen: Comment: */
+
+/*L0CD*  &SCOPED-DEFINE rcsois1_p_16 "Conversion"  *L0CD*/
+/*L0CD*  /* MaxLen: Comment: */                    *L0CD*/
+
+         &SCOPED-DEFINE rcsois1_p_17 "毛利合计"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_18 "借方金额"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_19 "贷方金额"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_20 "总价格"
+         /* MaxLen: Comment: */
+
+         &SCOPED-DEFINE rcsois1_p_21 "生效日期"
+         /* MaxLen: Comment: */
+
+/*J3G7*/ &SCOPED-DEFINE rcsois1_p_22 "计算运费"
+/*J3G7*/ /* MaxLen: 25 Comment: Label for l_calc_freight */
+
+         /* ********** End Translatable Strings Definitions ********* */
+
+
+         {gldydef.i new}
+         {gldynrm.i new}
+
+         /* NEW SHARED VARIABLES, BUFFERS AND FRAMES */
+         define new shared variable rndmthd like rnd_rnd_mthd.
+         define new shared variable abs_carr_ref as character.
+         define new shared variable abs_fob like so_fob.
+         define new shared variable abs_recid as recid.
+         define new shared variable abs_shipvia like so_shipvia.
+         define new shared variable accum_wip like tr_gl_amt.
+/*L0CD*  define new shared variable addr like tr_addr.  *L0CD*/
+         define new shared variable already_posted like glt_amt.
+/*L0CD*  define new shared variable auto_inv like mfc_logical  *L0CD*/
+/*L0CD*     label {&rcsois1_p_14}.  *L0CD*/
+         define new shared variable auto_post like mfc_logical
+            label {&rcsois1_p_8}.
+         define new shared variable base_amt   like ar_amt.
+         define new shared variable batch   like ar_batch.
+         define new shared variable batch_tot like glt_amt.
+         define new shared variable bill    like so_bill.
+         define new shared variable bill1   like so_bill.
+         define new shared variable change_db like mfc_logical.
+         define new shared variable consolidate like mfc_logical
+            label {&rcsois1_p_10}.
+/*L0CD*  define new shared variable conv like um_conv  *L0CD*/
+/*L0CD*     label {&rcsois1_p_16} no-undo.             *L0CD*/
+/*L0CD*  define new shared variable copyusr like mfc_logical.  *L0CD*/
+         define new shared variable cr_acct like trgl_cr_acct.
+         define new shared variable cr_amt   as decimal
+            format "->>>,>>>,>>>.99" label {&rcsois1_p_19}.
+         define new shared variable cr_cc   like trgl_cr_cc.
+         define new shared variable cr_proj like trgl_cr_proj.
+         define new shared variable curr_amt   like glt_amt.
+         define new shared variable cust    like so_cust.
+         define new shared variable cust1   like so_cust.
+         define new shared variable desc1   like pt_desc1 format "x(49)".
+         define new shared variable dr_acct like trgl_dr_acct.
+         define new shared variable dr_amt   as decimal
+            format "->>>,>>>,>>>.99" label {&rcsois1_p_18}.
+         define new shared variable dr_cc like trgl_dr_cc.
+         define new shared variable eff_date like glt_effdate label {&rcsois1_p_21}.
+/*L024*  define new shared variable ent_exch    like exd_ent_rate.  */
+/*L024*  define new shared variable exch_rate like exd_rate.        */
+/*L024*  /*L00Y*/ define new shared variable exch_rate2 like exd_rate.       */
+/*L024*/ define new shared variable exch_rate like exr_rate.
+/*L024*/ define new shared variable exch_rate2 like exr_rate2.
+/*L00Y*/ define new shared variable exch_ratetype like exr_ratetype.
+/*L00Y*/ define new shared variable exch_exru_seq like exru_seq.
+         define new shared variable ext_cost   like sod_price.
+         define new shared variable ext_disc   as decimal decimals 2.
+         define new shared variable gr_margin  like sod_price
+            label {&rcsois1_p_5} format "->>>>,>>9.99".
+         define new shared variable ext_gr_margin like gr_margin
+            label {&rcsois1_p_17}.
+         define new shared variable base_margin  like ext_gr_margin.
+         define new shared variable ext_list   like sod_list_pr decimals 2.
+         define new shared variable ext_price  as decimal
+            label {&rcsois1_p_20} decimals 2 format "->>>>,>>>,>>9.99".
+         define new shared variable base_price  like ext_price.
+/*L0CD*  define new shared variable fas_so_rec as character.  *L0CD*/
+         define new shared variable freight_ok like mfc_logical.
+         define new shared variable gl_amt    like sod_fr_chg.
+         define new shared variable gl_sum   like mfc_logical
+            format {&rcsois1_p_7} initial yes.
+         define new shared variable inv    like ar_nbr label {&rcsois1_p_9}.
+         define new shared variable inv1    like ar_nbr label {t001.i}.
+         define new shared variable inv_only   like mfc_logical initial yes.
+/*L0CD*  define new shared variable issrct as character format "x(3)".  *L0CD*/
+/*L0CD*  define new shared variable issue like mfc_logical.  *L0CD*/
+         define new shared variable loc like pt_loc.
+/*L0CD*  define new shared variable lot_ser like pt_lot_ser.  *L0CD*/
+/*L0CD*  define new shared variable lotserial_qty like sr_qty no-undo.  *L0CD*/
+         define new shared variable lotserial_total like tr_qty_chg.
+         define new shared variable name    like ad_name.
+         define new shared variable nbr like tr_nbr.
+         define new shared variable net_price  like sod_price.
+         define new shared variable net_list   like sod_list_pr.
+         define new shared variable old_ft_type as character.
+/*L0CD*  define new shared variable open_ref like sod_qty_ord.  *L0CD*/
+         define new shared variable ord-db-cmtype like cm_type no-undo.
+         define new shared variable order_ct as integer.
+         define new shared variable order_nbrs as character extent 30.
+         define new shared variable order_nbr_list as character no-undo.
+/*L0CD*  define new shared variable orderline like tr_line.  *L0CD*/
+/*L0CD*  define new shared variable ordernbr like tr_nbr.  *L0CD*/
+         define new shared variable part as character format "x(18)".
+         define new shared variable post    like mfc_logical.
+         define new shared variable post_entity  like ar_entity.
+/*L0CD*  define new shared variable prev_consume like sod_consume.  *L0CD*/
+/*L0CD*  define new shared variable prev_qty_ord like sod_qty_ord.  *L0CD*/
+/*L0CD*  define new shared variable prev_due like sod_due_date.  *L0CD*/
+/*L0CD*  define new shared variable prev_site like sod_site.  *L0CD*/
+/*L0CD*  define new shared variable prev_type like sod_type.  *L0CD*/
+         define new shared variable print_lotserials like mfc_logical
+            label {&rcsois1_p_13}.
+         define new shared variable project like wo_project.
+/*L0CD*  define new shared variable pt_recid  as recid.  *L0CD*/
+         define new shared variable que-doc as logical.
+         define new shared variable qty as decimal.
+         define new shared variable qty_all  like sod_qty_all.
+         define new shared variable qty_pick like sod_qty_pick.
+         define new shared variable qty_bo   like sod_bo_chg.
+         define new shared variable qty_chg  like sod_qty_chg.
+         define new shared variable qty_cum_ship like sod_qty_ship.
+         define new shared variable qty_inv  like sod_qty_inv.
+         define new shared variable qty_iss_rcv like tr_qty_loc.
+         define new shared variable qty_left like tr_qty_chg.
+         define new shared variable qty_open   like sod_qty_ord.
+         define new shared variable qty_ord  like sod_qty_ord.
+         define new shared variable qty_req like in_qty_req.
+         define new shared variable qty_ship like sod_qty_ship.
+         define new shared variable ref like glt_ref.
+         define new shared variable rejected like mfc_logical no-undo.
+         define new shared variable rmks like tr_rmks.
+         define new shared variable sct_recid as recid.
+         define new shared variable sct_recno as recid.
+         define new shared variable ship_db like global_db.
+         define new shared variable ship_dt like so_ship_date.
+         define new shared variable ship_line like sod_line.
+         define new shared variable ship_site as character.
+         define new shared variable ship_so like so_nbr.
+         define new shared variable should_be_posted like glt_amt.
+         define new shared variable so_db like global_db.
+         define new shared variable so_job like tr_so_job.
+         define new shared variable so_hist like soc_so_hist.
+         define new shared variable so_mstr_recid as recid.
+         define new shared variable so_recno   as recid.
+         define new shared variable sod_entity like en_entity.
+         define new shared variable sod_recno as recid.
+         define new shared variable std_cost like sod_std_cost.
+         define new shared variable tax_recno  as recid.
+         define new shared variable tot_curr_amt  like glt_amt.
+         define new shared variable tot_ext_cost  like sod_price.
+         define new shared variable tot_line_disc as decimal decimals 2.
+         define new shared variable tr_recno as recid.
+         define new shared variable transtype as character format "x(7)".
+         define new shared variable trgl_recno as recid.
+         define new shared variable trlot like tr_lot.
+         define new shared variable trqty like tr_qty_chg.
+         define new shared variable unit_cost like tr_price label {&rcsois1_p_6}.
+         define new shared variable undo_all   like mfc_logical no-undo.
+/*L0CD*  define new shared variable undo_sois1a as logical.  *L0CD*/
+/*L0CD*  define new shared variable undo_stat like mfc_logical no-undo.  *L0CD*/
+         define new shared variable use_shipper like mfc_logical
+            label {&rcsois1_p_4}.
+         define new shared variable wip_entity  like si_entity.
+         define new shared workfile work_sr_wkfl like sr_wkfl.
+         define new shared variable yn    like mfc_logical.
+         define new shared variable critical-part like wod_part no-undo.
+
+/*J3BM** define new shared workfile work_abs_mstr like abs_mstr.  */
+
+         /* SHARED VARIABLES, BUFFERS AND FRAMES */
+
+         define new shared variable prog_name as character
+                                             initial "rcsois.p" no-undo.
+         define     shared variable confirm_mode like mfc_logical no-undo.
+         define shared variable global_recid as recid.
+
+         /* LOCAL VARIABLES, BUFFERS AND FRAMES */
+         define variable abs_trans_mode as character.
+         define variable abs_veh_ref as character.
+/*L0CD*  define variable cust_id as character.  *L0CD*/
+         define variable disp_abs_id like abs_mstr.abs_id.
+         define variable first_so_bill like so_bill.
+         define variable first_so_cust like so_cust.
+         define variable first_so_curr like so_curr.
+         define variable first_so_cr_terms like so_cr_terms.
+         define variable first_so_slspsn like so_slspsn.
+         define variable first_so_trl1_cd like so_trl1_cd.
+         define variable first_so_trl2_cd like so_trl2_cd.
+         define variable first_so_trl3_cd like so_trl3_cd.
+         define variable first_so_entity  like si_entity no-undo.
+         define variable msg_text as character.
+         define variable shipqty as decimal no-undo.
+/*L0CD*  define variable ship_id as character.  *L0CD*/
+/*L0CD*  define variable so_consign like mfc_logical.  *L0CD*/
+         define variable txcalcref as character.
+         define variable conf_type as logical format {&rcsois1_p_11}
+            initial true no-undo.
+/*L0CD*  define variable authorized     as logical no-undo.  *L0CD*/
+         define variable l_first_so_nbr like so_nbr no-undo.
+         define variable l_consolidate_ok as logical no-undo.
+
+         define variable oldcurr like so_curr.
+         define variable id_length as integer no-undo.
+         define variable shipgrp        like sg_grp no-undo.
+         define variable shipnbr        like abs_mstr.abs_id no-undo.
+         define variable nrseq          like shc_ship_nr_id no-undo.
+         define variable errorst        as logical no-undo.
+         define variable errornum       as integer no-undo.
+         define variable is_valid       as logical no-undo.
+         define variable is_internal    as logical no-undo.
+
+         define buffer abs_temp for abs_mstr.
+/*L0CD*  define variable sr_recid as recid.  *L0CD*/
+
+         define variable l_disc_pct1     as   decimal     no-undo.
+         define variable l_net_price     as   decimal     no-undo.
+         define variable l_list_price    as   decimal     no-undo.
+         define variable l_rec_no        as   recid       no-undo.
+         define variable change-queued   as   logical     no-undo.
+/*L0CD*  define variable err_flag        as   integer     no-undo.  *L0CD*/
+/*J2MG*/ define variable l_flag          like mfc_logical no-undo.
+/*L0CD*/ define variable undo_stat       like mfc_logical no-undo.
+
+/*L0CD* /*L024*/ define variable mc-error-number like msg_nbr no-undo.  *L0CD*/
+
+/*H1NW*/ define variable l_tr_type like tx2d_tr_type initial "13" no-undo.
+/*H1NW*/ define variable l_nbr     like tx2d_nbr     initial ""   no-undo.
+/*H1NW*/ define variable l_line    like tx2d_line    initial 0    no-undo.
+/*J3G7*/ define variable l_calc_freight like mfc_logical initial yes
+/*J3G7*/    label {&rcsois1_p_22} no-undo.
+/*L155*/ define variable l_flag1   like mfc_logical  no-undo.
+
+/*L0CD*/ /* Euro Tool Kit definitions */
+/*L0CD*/ {etvar.i &new="new"}
+/*L0CD*/ {etdcrvar.i "new"}
+/*L0CD*/ {etrpvar.i &new="new"}
+/*L0CD*/ {etsotrla.i "new"}
+
+         {fsdeclr.i new}
+
+         {gpglefdf.i}
+         {txcalvar.i}
+/*J3BM*/ {rcwabsdf.i new}
+
+         if daybooks-in-use then
+            {gprun.i ""nrm.p"" "persistent set h-nrm"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+         
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+/*L03Q** /*K1JN*/    abs_mstr.abs_shipfrom colon 35 label "Ship-From" */
+/*L03Q*/    
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+abs_mstr.abs_shipfrom colon 35 label {&rcsois1_p_2}
+            si_desc               at 47 no-label
+            conf_type             colon 35 label {&rcsois1_p_11}
+            abs_mstr.abs_id       colon 35 label {&rcsois1_p_15}
+            skip(1)
+            abs_mstr.abs_shipto   colon 35 label {&rcsois1_p_1}
+            ad_name               at 47 no-label
+            ad_line1              at 47 no-label
+            ship_dt               colon 35
+            eff_date              colon 35
+          SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+
+         FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+auto_post             colon 35
+            use_shipper           colon 35
+            consolidate           colon 35
+/*J3G7*/    l_calc_freight        colon 35
+          SKIP(.4)  /*GUI*/
+with frame b side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-b-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame b = F-b-title.
+ RECT-FRAME-LABEL:HIDDEN in frame b = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame b =
+  FRAME b:HEIGHT-PIXELS - RECT-FRAME:Y in frame b - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME b = FRAME b:WIDTH-CHARS - .5.  /*GUI*/
+
+
+         FORM /*GUI*/ 
+            
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+space(1)
+            shipnbr label {&rcsois1_p_3}
+          SKIP(.4)  /*GUI*/
+with frame convfrm centered side-label attr-space  overlay width 39 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-convfrm-title AS CHARACTER.
+ F-convfrm-title = {&rcsois1_p_12}.
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame convfrm = F-convfrm-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame convfrm =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame convfrm + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame convfrm =
+  FRAME convfrm:HEIGHT-PIXELS - RECT-FRAME:Y in frame convfrm - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME convfrm = FRAME convfrm:WIDTH-CHARS - .5. /*GUI*/
+
+
+/*J3BM** find first gl_ctrl no-lock no-error.  */
+/*J3BM*/ for first gl_ctrl
+/*J3BM*/    fields (gl_base_curr gl_can gl_rnd_mthd gl_vat) no-lock:
+/*J3BM*/ end. /* FOR FIRST GL_CTRL */
+
+         {gprun.i ""socrshc.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J3BM** find first shc_ctrl no-lock. */
+/*J3BM*/ for first shc_ctrl
+/*J3BM*/    fields (shc_ship_nr_id shc_trl_amts) no-lock:
+/*J3BM*/ end. /* FOR FIRST SHC_CTRL */
+
+         {gprun.i ""rcpma.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J2DD*  * MOVED SECTION TO INTERNAL PROCEDURE ****************
+*        find mfc_ctrl where mfc_field = "rcc_auto_post" no-lock.
+*        auto_post = mfc_logical.
+*        find mfc_ctrl where mfc_field = "rcc_use_shipper" no-lock.
+*        use_shipper = mfc_logical.
+*        find mfc_ctrl where mfc_field = "rcc_consolidate" no-lock.
+*        consolidate = mfc_logical.
+**J2DD*  * END SECTION MOVED **********************************/
+
+/*J2DD*/ run find-mfc-j2dd.
+
+/*J3BM** find abs_mstr where recid(abs_mstr) = global_recid no-lock no-error. */
+/*J3BM*/ for first abs_mstr
+/*J3BM*/    fields (abs_canceled abs_eff_date abs_format abs_id
+/*J3BM*/            abs_inv_mov abs_nr_id abs_preship_id abs_preship_nr_id
+/*J3BM*/            abs_shipfrom abs_shipto abs_shp_date abs_status
+/*J3BM*/            abs_type abs__qad01)
+/*J3BM*/    where recid(abs_mstr) = global_recid no-lock:
+/*J3BM*/ end. /* FOR FIRST ABS_MSTR */
+
+         if available abs_mstr and abs_type = "s"
+         and (abs_id begins "p" or abs_id begins "s") then do:
+
+/*J3BM**    find si_mstr where si_site = abs_shipfrom no-lock. */
+/*J3BM*/    for first si_mstr
+/*J3BM*/       fields (si_db si_desc si_entity si_site)
+/*J3BM*/       where si_site = abs_shipfrom no-lock:
+/*J3BM*/    end. /* FOR FIRST SI_MSTR */
+
+            conf_type = abs_id begins "p".
+
+            display
+               abs_shipfrom
+               si_desc
+               conf_type
+               substring(abs_id,2,50) @ abs_id
+            with frame a.
+         end.
+
+/*L0CD*/ assign
+            ship_dt  = today
+/*L0CD*/    eff_date =
+/*L0CD*/       if confirm_mode or not available abs_mstr
+/*L0CD*/          then today
+/*L0CD*/          else abs_eff_date
+/*L0CD*/    oldcurr  = "".
+
+/*L0CD*  if confirm_mode then
+ *L0CD*     eff_date = today.
+ *L0CD*  else
+ *L0CD*     eff_date = if available abs_mstr then abs_eff_date else today.
+ *L0CD*/
+
+         display
+            ship_dt
+            eff_date
+            conf_type
+         with frame a.
+
+/*L0CD*  oldcurr = "".  *L0CD*/
+         mainloop:
+         repeat:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*K1JN**    SECTION MOVED TO INTERNAL PROCEDURE TO AVOID ACTION SEGMENT ** */
+/*K1JN*     * BEGIN DELETE **
+ *          for each qad_wkfl exclusive-lock where
+ *             qad_key3 = "rcsois.p"   and
+ *             qad_key4 = mfguser:
+ *             delete qad_wkfl.
+ *          end.  /* FOR EACH qad_wkfl */
+ **K1JN*    * END DELETE ** */
+
+/*K1JN*/    run del-qad-wkfl.
+
+            do with frame a:
+               prompt-for abs_shipfrom conf_type abs_id editing:
+
+                  global_site = input abs_shipfrom.
+
+                  if frame-field = "abs_shipfrom" then do:
+
+                     {mfnp05.i abs_mstr abs_id
+                        "abs_id begins 's' or abs_id begins 'p'"
+                        abs_shipfrom
+                        "input abs_shipfrom"}
+
+                     if recno <> ? then do:
+/*J3BM**                find si_mstr where si_site = abs_shipfrom no-lock */
+/*J3BM**                   no-error.                                      */
+/*J3BM*/                for first si_mstr
+/*J3BM*/                   fields (si_db si_desc si_entity si_site)
+/*J3BM*/                   where si_site = abs_shipfrom no-lock:
+/*J3BM*/                end. /* FOR FIRST SI_MSTR */
+
+                        assign
+                           global_site = abs_shipfrom
+                           global_lot  = abs_id
+                           conf_type   = abs_id begins "p"
+                           disp_abs_id = substr(abs_id,2,50).
+
+                        display
+                           abs_shipfrom
+                           si_desc  when (available si_mstr)
+                           ""       when (not available si_mstr) @ si_desc
+                           conf_type
+                           disp_abs_id @ abs_id.
+                     end. /* if recno <> ? */
+                  end. /* if frame-field "abs_shipfrom" */
+                  else if frame-field = "abs_id" then do:
+
+                     /* HANDLE SHIPPERS */
+/*L0CD*              if input conf_type = false then do:  *L0CD*/
+/*L0CD*/             if not input conf_type then do:
+
+                        {mfnp05.i abs_mstr abs_id
+                           "abs_shipfrom = input abs_shipfrom
+                            and abs_id begins ""s"" and abs_type = ""s"""
+                            abs_id " ""s"" + input abs_id"}
+
+                     end. /* if not input conf_type */
+
+                     else do:
+
+                        {mfnp05.i abs_mstr abs_id
+                           "abs_shipfrom = input abs_shipfrom and abs_id begins
+                           ""p"" " abs_id " ""p"" + input abs_id"}
+                     end. /* else */
+
+                     if recno <> ? then do:
+/*J3BM**                find si_mstr where si_site = abs_shipfrom no-lock */
+/*J3BM**                   no-error.                                      */
+/*J3BM*/                for first si_mstr
+/*J3BM*/                   fields (si_db si_desc si_entity si_site)
+/*J3BM*/                   where si_site = abs_shipfrom no-lock:
+/*J3BM*/                end. /* FOR FIRST SI_MSTR */
+
+                        assign
+                           global_site = abs_shipfrom
+                           global_lot  = abs_id
+                           conf_type   = abs_id begins "p"
+                           disp_abs_id = substr(abs_id,2,50).
+
+                        display
+                           abs_shipfrom
+                           si_desc  when (available si_mstr)
+                           ""       when (not available si_mstr) @ si_desc
+                           conf_type
+                           disp_abs_id @ abs_id.
+                     end. /* if recno <> ? */
+                  end. /* if frame-field = "abs_id" */
+                  else do:
+                     status input.
+                     readkey.
+                     apply lastkey.
+                  end.
+               end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* prompt-for */
+            end. /* do with frame a */
+
+            so_db = global_db.
+
+/*J3BM**    find si_mstr where si_site = input abs_shipfrom no-lock no-error. */
+/*J3BM*/    for first si_mstr
+/*J3BM*/       fields (si_db si_desc si_entity si_site)
+/*J3BM*/       where si_site = input abs_shipfrom no-lock:
+/*J3BM*/    end. /* FOR FIRST SI_MSTR */
+
+            if not available si_mstr then do:
+/*L0CD*        {mfmsg.i 708 3}   /* Site doesn't exist */  *L0CD*/
+/*L0CD*/       run ip_msg (input 708, input 3).   /* Site doesn't exist */
+               next-prompt abs_shipfrom with frame a.
+               undo, retry.
+            end.
+            display si_desc with frame a.
+
+            /* Making sure db is connected */
+            if si_db <> global_db and not connected(si_db) then do:
+/*L12D**       {mfmsg03.i 2510 3 si_db """" """"}  /*db # not connected*/ */
+/*L12D*/       run p-msg03 (input 2510,
+                            input 3,
+                            input si_db,
+                            input "",
+                            input "").
+
+               next-prompt abs_shipfrom with frame a.
+               undo, retry.
+            end.
+
+/*L0CD*/    assign
+               ship_db   = si_db
+               change_db = ship_db <> global_db.
+
+/*L0CD*     if input conf_type = false then
+ *L0CD*        find abs_mstr where
+ *L0CD*           abs_shipfrom = input abs_shipfrom and
+ *L0CD*           abs_id       = "s" + input abs_id and
+ *L0CD*           abs_type     = "s"
+ *L0CD*           no-lock no-error.
+ *L0CD*     else
+ *L0CD*        find abs_mstr where
+ *L0CD*           abs_shipfrom = input abs_shipfrom and
+ *L0CD*           abs_id       = "p" + input abs_id and
+ *L0CD*           abs_type     = "s"
+ *L0CD*           no-lock no-error.
+ *L0CD*/
+
+/*J3BM** /*L0CD*/    find abs_mstr where             */
+/*J3BM*/    for first abs_mstr
+/*J3BM*/       fields (abs_canceled abs_eff_date abs_format abs_id
+/*J3BM*/               abs_inv_mov abs_nr_id abs_preship_id abs_preship_nr_id
+/*J3BM*/               abs_shipfrom abs_shipto abs_shp_date abs_status
+/*J3BM*/               abs_type abs__qad01)
+/*J3BM*/       where
+/*L0CD*/       abs_shipfrom = input abs_shipfrom and
+/*L0CD*/       abs_id       =
+/*L0CD*/          (if input conf_type then "p" else "s") + input abs_id and
+/*L0CD*/       abs_type     = "s"
+/*J3BM** /*L0CD*/       no-lock no-error.  */
+/*J3BM*/       no-lock:
+/*J3BM*/    end. /* FOR FIRST ABS_MSTR */
+
+            if not available abs_mstr then do:
+/*L0CD*        {mfmsg.i 8145 3}  *L0CD*/
+/*L0CD*        bell.             *L0CD*/
+/*L0CD*/       run ip_msg (input 8145, input 3).
+               next-prompt abs_id with frame a.
+               undo, retry.
+            end.
+
+            {gprun.i ""gpsiver.p""
+               "(input (input abs_shipfrom), input ?, output return_int)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            if return_int = 0 then do:
+/*L0CD*        {mfmsg.i 725 3}  /* User does not have access to site */  *L0CD*/
+/*L0CD*/       run ip_msg (input 725, input 3).  /* User does not have access to site */
+               undo, retry.
+            end.
+
+/*L0CD*/    /* Changed "authorized" to "l_flag" below */
+            {gprun.i ""gpsimver.p"" "(input abs_shipfrom,
+                                      input abs_inv_mov,
+                                      output l_flag)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            if not l_flag then do:
+/*L0CD*        {mfmsg.i 5990 4}  *L0CD*/
+/*L0CD*/       run ip_msg (input 5990, input 4).
+               /* USER DOES NOT HAVE ACCESS TO THIS SITE/INVENTORY
+                  MOVEMENT CODE */
+               undo, retry.
+            end.
+
+            if abs_canceled then do:
+/*L0CD*        {mfmsg.i 5885 3}  *L0CD*/
+/*L0CD*/       run ip_msg (input 5885, input 3).
+               /* SHIPPER CANCELED */
+               undo, retry.
+            end.
+
+/*L0CD*     if confirm_mode then do:
+ *L0CD*        if substr(abs_status,2,1) = "y" then do:
+ *L0CD*           {mfmsg.i 8146 3} /* SHIPPER PREVIOUSLY CONFIRMED */
+ *L0CD*           undo, retry.
+ *L0CD*        end.
+ *L0CD*     end.
+ *L0CD*     else do:
+ *L0CD*        if substr(abs_status,2,1) <> "y" then do:
+ *L0CD*           {mfmsg.i 8140 3} /* SHIPPER PREVIOUSLY NOT CONFIRMED */
+ *L0CD*           undo, retry.
+ *L0CD*        end.
+ *L0CD*     end.
+ *L0CD*/
+
+/*L0CD*/    if (substr(abs_status,2,1) = "y") = confirm_mode then do:
+/*L0CD*/       run ip_msg (input (if confirm_mode then 8146 else 8140), input 3).
+/*L0CD*/       /* 8146 - Shipper previously confirmed */
+/*L0CD*/       /* 8140 - Shipper previously not confirmed */
+/*L0CD*/       undo, retry.
+/*L0CD*/    end.
+
+            if abs_inv_mov ne "" and
+               not can-find
+                  (first im_mstr where
+                     im_inv_mov eq abs_inv_mov and
+                     im_tr_type eq "ISS-SO")
+               then do:
+/*L0CD*        {mfmsg.i 5802 3} /* Not a sales order shipper */  *L0CD*/
+/*L0CD*/       run ip_msg (input 5802, input 3).
+               undo, retry.
+            end.  /* if abs_inv_mov */
+
+            if not confirm_mode then do:
+               yn = no.
+               {mfmsg01.i 5987 1 yn}
+               /* Continue with Unconfirm ? */
+               if not yn then undo mainloop, retry mainloop.
+               assign
+                  eff_date = abs_eff_date
+                  ship_dt  = abs_shp_date.
+               display eff_date ship_dt with frame a.
+            end.
+
+            /* Get length of shipper# */
+            if abs_id begins "p" then do:
+               {gprun.i ""gpgetgrp.p""
+                  "(input  abs_shipfrom,
+                    input  abs_shipto,
+                    output shipgrp)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               nrseq = shc_ship_nr_id.
+               if shipgrp <> ? then do:
+/*J3BM**          find sgid_det where        */
+/*J3BM*/          for first sgid_det
+/*J3BM*/             fields (sgid_grp sgid_inv_mov sgid_ship_nr_id)
+/*J3BM*/             where
+                       sgid_grp = shipgrp and
+/*J3BM**               sgid_inv_mov = abs_inv_mov no-lock no-error. */
+/*J3BM*/               sgid_inv_mov = abs_inv_mov no-lock:
+/*J3BM*/          end. /* FOR FIRST SGID_DET */
+
+                  if available sgid_det then nrseq = sgid_ship_nr_id.
+               end. /* if shipgrp <> ? */
+
+               run get_nr_length (input nrseq, output id_length,
+                                   output errorst,  output errornum).
+               if errorst then do:
+/*L0CD*           {mfmsg.i errornum 3}  *L0CD*/
+/*L0CD*/          run ip_msg (input errornum, input 3).
+                  undo, retry .
+               end.
+
+            end. /* if abs_id begins "p" */
+
+            else
+               id_length = length(substring(abs_id,2)).
+
+            /* Since invoice# can be 8 char or less, we cannot process this
+               preshipper to create a combined shipper-invoice*/
+            if abs_id begins "p" and
+               can-find (first df_mstr where
+/*J3BM**          df_format = abs_format and   */
+                  df_type   = "1"        and
+/*J3BM*/          df_format = abs_format and
+/*L0CD*           df_inv    = yes)       and  *L0CD*/
+/*L0CD*/          df_inv)                and
+               id_length > 8 then do:
+/*L0CD*        {mfmsg.i 5887 4}  *L0CD*/
+/*L0CD*/       run ip_msg (input 5887, input 4).
+               /* INVALID DOCUMENT FORMAT, CANNOT ASSIGN SHIPPER NUMBER */
+               undo, retry.
+            end. /* if abs_id begins "p" */
+
+/*L0CD*     if confirm_mode then if substr(abs_status,1,1) <> "y" then do:  *L0CD*/
+/*L0CD*        {mfmsg.i 8147 2} /* Shipper not printed */  *L0CD*/
+/*L0CD*        bell.  *L0CD*/
+/*L0CD*     end.  *L0CD*/
+
+/*L0CD*/    if confirm_mode and substring(abs_status,1,1) <> "y" then
+/*L0CD*/       run ip_msg (input 8147, input 2).
+
+            abs_recid = recid(abs_mstr).
+
+            for each work_abs_mstr exclusive-lock:
+               delete work_abs_mstr.
+            end.
+
+            /* EXPLODE SHIPPER TO GET ORDER DETAIL */
+            {gprun.i ""rcsoisa.p"" "(input recid(abs_mstr))"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            /* USE THE qad_wkfl TO KEEP TRACK OF THE SALES ORDERS BEING     */
+            /* CONFIRMED SO THAT SHIPPERS RELATED TO THE SAME ORDER ARE NOT */
+            /* SIMULTANEOUSLY CONFIRMED.                                    */
+
+            do transaction:
+/*J3BM**       for each work_abs_mstr no-lock where     */
+/*J3BM**          work_abs_mstr.abs_order <> "":        */
+
+/*J3BM*/       for each work_abs_mstr exclusive-lock:
+
+/*J3BM*/          if work_abs_mstr.abs_order <> "" then do:
+/*J3BM**          find qad_wkfl no-lock where          */
+/*J3BM*/             for first qad_wkfl
+/*J3BM*/                fields (qad_charfld qad_datefld qad_key1 qad_key2
+/*J3BM*/                        qad_key3 qad_key4)
+/*J3BM*/                where
+                        qad_key1 = "rcsois.p" and
+/*J3BM**                qad_key2 = work_abs_mstr.abs_order no-error. */
+/*J3BM*/                qad_key2 = work_abs_mstr.abs_order :
+/*J3BM*/             end. /* FOR FIRST QAD_WKFL */
+                     if available qad_wkfl and
+                        qad_key4 <> mfguser
+                    then do:
+                       /* SALES ORDER # IS BEING CONFIRMED BY USER # */
+/*L12D**               {mfmsg03.i 2262 3 qad_key2 qad_charfld[1] """"} */
+/*L12D*/               run p-msg03 (input 2262,
+                                    input 3,
+                                    input qad_key2,
+                                    input qad_charfld[1],
+                                    input "").
+                       undo mainloop, retry mainloop.
+                   end.  /* IF AVAILABLE qad_wkfl */
+
+                   else if not available qad_wkfl then do:
+                      create qad_wkfl.
+                      assign
+                        qad_key1       = "rcsois.p"
+                        qad_key2       = work_abs_mstr.abs_order
+                        qad_key3       = "rcsois.p"
+                        qad_key4       = mfguser
+                        qad_charfld[1] = global_userid
+                        qad_charfld[2] = work_abs_mstr.abs_par_id
+                        qad_charfld[3] = work_abs_mstr.abs_shipfrom
+                        qad_date[1]    = today
+                        qad_charfld[5] = string(time, "hh:mm:ss").
+                     if recid(qad_wkfl) = -1 then .
+                   end.  /* ELSE OF IF AVAILABLE qad_wkfl */
+/*J3BM*/         end. /* IF ABS_ORDER <> "" */
+/*J3BM*/         work_abs_mstr.abs_ship_qty = 0.
+              end.  /* FOR EACH work_abs_mstr */
+            end.  /* DO TRANSACTION */
+
+/*J3BM** BEGIN DELETE **
+ *          for each work_abs_mstr exclusive-lock:
+ *             work_abs_mstr.abs_ship_qty = 0.
+ *          end.
+ *J3BM** END DELETE **/
+
+            /*EXIT IF THERE IS ANY PENDING CHANGE FOR BTB ORDER */
+            que-doc = no.
+/*J3BM**    for each work_abs_mstr no-lock break by work_abs_mstr.abs_order */
+/*J3BM*/    for each work_abs_mstr
+/*J3BM*/       where abs_order > "" no-lock
+/*J3BM*/       break by work_abs_mstr.abs_order
+               on endkey undo mainloop, retry mainloop:
+/*J3BM**       if first-of (work_abs_mstr.abs_order) and     */
+/*J3BM**          work_abs_mstr.abs_order <> ""              */
+/*J3BM*/       if first-of (work_abs_mstr.abs_order)
+                  then do:
+/*J3BM** BEGIN DELETE **
+ *                find so_mstr where so_nbr   = abs_order no-lock no-error.
+ *                find sod_det where sod_nbr  = abs_order
+ *                               and sod_line = integer(abs_line)
+ *                   no-lock no-error.
+ *J3BM** END DELETE **/
+
+/*L12D*/          /* ADDED so_quote IN THE FIELDLIST */
+/*J3BM*/          for first so_mstr
+/*J3BM*/             fields (so_bill so_cr_terms so_curr so_cust so_disc_pct
+/*J3BM*/                     so_exru_seq so_ex_rate so_ex_rate2 so_ex_ratetype
+/*J3BM*/                     so_fix_rate so_fr_terms so_invoiced so_inv_mthd
+/*J3BM*/                     so_inv_nbr so_nbr so_pst_pct so_quote
+/*J3BM*/                     so_secondary so_ship_date so_site so_slspsn
+/*J3BM*/                     so_stat so_tax_date so_tax_pct so_to_inv
+/*J3BM*/                     so_trl1_amt so_trl1_cd so_trl2_amt so_trl2_cd
+/*L12D*/                     so_trl3_amt so_trl3_cd)
+/*J3BM*/             where so_nbr   = abs_order no-lock:
+/*J3BM*/         end. /* FOR FIRST SO_MSTR */
+
+/*J3BM*/         for first sod_det
+/*J3BM*/            fields (sod_btb_po sod_cum_qty sod_fsm_type sod_line
+/*J3BM*/                    sod_list_pr sod_nbr sod_part sod_price sod_pr_list
+/*J3BM*/                    sod_qty_chg sod_sched sod_site sod_std_cost
+/*J3BM*/                    sod_taxc sod_um sod_um_conv)
+/*J3BM*/            where sod_nbr  = abs_order
+/*J3BM*/              and sod_line = integer(abs_line) no-lock:
+/*J3BM*/        end. /* FOR FIRST SOD_DET */
+
+                  if available so_mstr and available sod_det then
+                     if not so_secondary then
+/*J3BM**                find cmf_mstr where  cmf_doc_type = "PO"       */
+/*J3BM*/                for first cmf_mstr
+/*J3BM*/                   fields (cmf_doc_ref cmf_doc_type cmf_status cmf_trans_nbr)
+/*J3BM*/                   where cmf_doc_type = "PO"
+                             and  cmf_doc_ref  = sod_btb_po
+                             and (cmf_status   = "1" or
+                                  cmf_status   = "2" or
+                                  cmf_status   = "3"   )
+/*J3BM**                no-lock no-error.        */
+/*J3BM*/                   no-lock:
+/*J3BM*/                end. /* FOR FIRST CMF_MSTR */
+                     else
+/*L0CD*/                do:
+/*L0CD*                 if so_secondary then do: *L0CD*/
+/*J3BM**                find cmf_mstr where  cmf_doc_type = "SO"       */
+/*J3BM*/                for first cmf_mstr
+/*J3BM*/                   fields (cmf_doc_ref cmf_doc_type cmf_status cmf_trans_nbr)
+/*J3BM*/                   where cmf_doc_type = "SO"
+                             and cmf_doc_ref  = so_nbr
+                             and cmf_status   = "1"
+/*J3BM**                no-lock no-error.        */
+/*J3BM*/                   no-lock:
+/*J3BM*/                end. /* FOR FIRST CMF_MSTR */
+                        if available cmf_mstr then
+/*J3BM**                   find first cmd_det where         */
+/*J3BM*/                   for first cmd_det
+/*J3BM*/                      fields (cmd_field cmd_key_val cmd_trans_nbr)
+/*J3BM*/                      where
+                              cmd_trans_nbr = cmf_trans_nbr and
+                              cmd_key_val   = so_nbr + "," + string(sod_line) and
+                              (cmd_field    = "sod_due_date" or
+                               cmd_field    = "sod_qty_ord" )
+/*J3BM**                      no-lock no-error.     */
+/*J3BM*/                      no-lock:
+/*J3BM*/                   end. /* FOR FIRST CMD_DET */
+                           if available cmd_det then change-queued = yes.
+                     end.
+
+/*M14H**          if ( not so_secondary and avail cmf_mstr ) or  */
+/*M14H**             ( so_secondary and change-queued ) then do: */
+
+/*M14H*/          if available so_mstr
+/*M14H*/             and ((not so_secondary
+/*M14H*/                   and available cmf_mstr)
+/*M14H*/                  or (so_secondary
+/*M14H*/                      and change-queued))
+/*M14H*/          then do:
+/*L0CD*              {mfmsg.i 2834 3}  *L0CD*/
+/*L0CD*/             run ip_msg (input 2834, input 3).
+                     /* CHANGE ON BTB SO WITH PENDING CHANGE IS NOT ALLOWED */
+                     undo, retry.
+                  end. /* available cmf_mstr */
+
+                  /* THIS IS THE NORMAL SHIPMENT OF A SALES ORDER THUS */
+                  /* WE ONLY QUEUE A DOCUMENT IF THIS IS THE SECONDARY */
+                  /* SO BECAUSE FOR THE PRIMARY SO THIS CORRESPONDS TO */
+                  /* THE SHIPMENT OF A NORMAL SO AND NO DOCUMENT WILL  */
+                  /* BE QUEUED.                                        */
+
+                  /* THIS IS DIFFERENT IN THE PROGRAM rcsois2.p !!!!!!! */
+
+/*L0CD*           if available so_mstr and so_secondary and que-doc = no then  *L0CD*/
+/*L0CD*/          if available so_mstr and so_secondary and not que-doc then
+                     que-doc = yes.
+               end. /* if first-of(abs_order) */
+            end. /* for each work_abs_mstr */
+
+/*L0CD*     find ad_mstr where ad_addr = abs_shipto no-lock.
+ *L0CD*     cust_id = "".
+ *L0CD*     ship_id = ad_addr.
+ *L0CD*     find first ls_mstr where ls_addr = ad_addr and ls_type = "customer"
+ *L0CD*        no-lock no-error.
+ *L0CD*     do while not available ls_mstr and ad_ref > "":
+ *L0CD*        addr = ad_ref.
+ *L0CD*        find ad_mstr where ad_addr = addr no-lock.
+ *L0CD*        find ls_mstr where ls_addr = ad_addr
+ *L0CD*           and ls_type = "customer" no-lock no-error.
+ *L0CD*     end.
+ *L0CD*     if available ls_mstr then cust_id = ls_addr.
+ *L0CD*/
+
+            assign
+               abs_shipvia    = substring(abs__qad01,1,20)
+               abs_fob        = substring(abs__qad01,21,20)
+               abs_carr_ref   = substring(abs__qad01,41,20)
+               abs_trans_mode = substring(abs__qad01,61,20)
+               abs_veh_ref    = substring(abs__qad01,81,20).
+
+/*J3BM**    find first scx_ref where      */
+
+/*L10K*/    for first work_abs_mstr
+/*L10K*/       where work_abs_mstr.abs_id begins "i" no-lock:
+/*L10K*/    end. /* FOR FIRST WORK_ABS_MSTR */
+
+/*L10K*/    if work_abs_mstr.abs_order <> "" then
+/*L10K*/    do:
+/*L10K*/       for first scx_ref
+/*L10K*/          fields (scx_order scx_shipfrom scx_shipto scx_type)
+/*L10K*/          where scx_type  = 1
+/*L10K*/            and scx_order = abs_order no-lock:
+/*L10K*/       end. /* FOR FIRST SCX_REF */
+/*L10K*/    end. /* IF WORK_ABS_MSTR.ABS_ORDER <> "" */
+/*L10K*/    else do:
+/*J3BM*/       for first scx_ref
+/*J3BM*/          fields (scx_order scx_shipfrom scx_shipto scx_type)
+/*J3BM*/          where
+                  scx_type     = 1            and
+                  scx_shipfrom = abs_shipfrom and
+/*L0CD*           scx_shipto   = ship_id  *L0CD*/
+/*L0CD*/          scx_shipto   = abs_shipto
+/*J3BM**          no-lock no-error.      */
+/*J3BM*/          no-lock:
+/*J3BM*/       end. /* FOR FIRST SCX_REF */
+/*L10K*/    end. /* ELSE DO */
+
+            if available scx_ref then do:
+/*J3BM**       find so_mstr where so_nbr = scx_order no-lock. */
+/*L12D*/       /* ADDED so_quote IN THE FIELDLIST */
+/*J3BM*/       for first so_mstr
+/*J3BM*/          fields (so_bill so_cr_terms so_curr so_cust so_disc_pct
+/*J3BM*/                  so_exru_seq so_ex_rate so_ex_rate2 so_ex_ratetype
+/*J3BM*/                  so_fix_rate so_fr_terms so_invoiced so_inv_mthd
+/*J3BM*/                  so_inv_nbr so_nbr so_pst_pct so_quote so_secondary
+/*J3BM*/                  so_ship_date so_site so_slspsn so_stat so_tax_date
+/*J3BM*/                  so_tax_pct so_to_inv so_trl1_amt so_trl1_cd
+/*J3BM*/                  so_trl2_amt so_trl2_cd so_trl3_amt so_trl3_cd)
+/*J3BM*/          where so_nbr = scx_order no-lock:
+/*J3BM*/       end. /* FOR FIRST SO_MSTR */
+
+/*L0CD*        so_consign = substring(so_conrep,35,1) = "y".  *L0CD*/
+               auto_post  = substring(so_inv_mthd,2,1) = "y".
+            end.
+
+/*K224**    find ad_mstr where ad_addr = abs_shipto no-lock.     */
+/*J3BM*/    for first ad_mstr
+/*J3BM*/       fields (ad_addr ad_line1 ad_name)
+/*J3BM*/       where ad_addr = abs_shipto no-lock:
+/*J3BM*/    end. /* FOR FIRST AD_MSTR */
+
+            display si_desc abs_shipto ad_name ad_line1 with frame a.
+
+            if confirm_mode then
+                DISPLAY eff_date WITH FRAME a.
+                update
+                  ship_dt
+                  /*eff_date*/
+               with frame a.
+/*H1LZ*/    run p_vtmstr_chk .
+
+/*J2MG*/    /* VERIFY OPEN GL PERIOD FOR LINE ITEM SITE/ENTITY, */
+/*J2MG*/    /* NOT PRIMARY ENTITY                               */
+
+/*J2MG*     *BEGIN DELETE**
+ *          /* rcsois CAN CREATE IC AND SO TRANSACTIONS, THEREFORE  */
+ *          /* BOTH MODULES MUST BE OPEN FOR THE PERIOD OF eff_date */
+ *          {gpglef.i ""IC"" glentity eff_date}
+ *          {gpglef.i ""SO"" glentity eff_date}
+ *J2MG*     *END DELETE*/
+
+/*J2MG*/    /* THE PROCEDURE P_GLCALVAL, VERIFIES OPEN GL PERIOD FOR */
+/*J2MG*/    /* SITE/ENTITY OF EACH LINE ITEM                         */
+
+/*J2MG*/    run p_glcalval (output l_flag).
+/*J2MG*/    if l_flag then do:
+/*J2MG*/       next-prompt abs_mstr.abs_shipfrom with frame a.
+/*J2MG*/       undo mainloop, retry mainloop.
+/*J2MG*/    end.  /* IF L_FLAG */
+
+            /* Warn if there is any sales orders on the shipper that has
+               its action status non-blank */
+            for each work_abs_mstr no-lock
+/*J3BM**       where abs_order <> "" and abs_line <> ""             */
+/*J3BM**       break by abs_shipfrom by abs_dataset by abs_order    */
+/*J3BM*/       where abs_order > "" break by abs_order
+               on endkey undo mainloop, retry mainloop:
+               if first-of (abs_order) then do:
+/*J3BM**          find so_mstr where so_nbr = abs_order no-lock no-error.   */
+/*L12D*/          /* ADDED so_quote IN THE FIELDLIST */
+/*J3BM*/          for first so_mstr
+/*J3BM*/             fields (so_bill so_cr_terms so_curr so_cust so_disc_pct
+/*J3BM*/                     so_exru_seq so_ex_rate so_ex_rate2 so_ex_ratetype
+/*J3BM*/                     so_fix_rate so_fr_terms so_invoiced so_inv_mthd
+/*J3BM*/                     so_inv_nbr so_nbr so_pst_pct so_quote
+/*J3BM*/                     so_secondary so_ship_date so_site so_slspsn
+/*J3BM*/                     so_stat so_tax_date so_tax_pct so_to_inv
+/*J3BM*/                     so_trl1_amt so_trl1_cd so_trl2_amt so_trl2_cd
+/*L12D*/                     so_trl3_amt so_trl3_cd)
+/*J3BM*/             where so_nbr = abs_order no-lock:
+/*J3BM*/         end. /* FOR FIRST SO_MSTR */
+
+                  if available so_mstr then do:
+/*J3BM**             find cm_mstr where cm_addr = so_bill no-lock no-error. */
+/*J3BM*/             for first cm_mstr
+/*J3BM*/                fields (cm_addr cm_cr_hold)
+/*J3BM*/                 where cm_addr = so_bill no-lock:
+/*J3BM*/             end. /* FOR FIRST CM_MSTR */
+                     if available cm_mstr and cm_cr_hold then do:
+                        /* CUSTOMER ON CREDIT HOLD */
+/*L0CD*                 {mfmsg.i 614 2}  *L0CD*/
+/*L0CD*/                run ip_msg (input 614, input 2).
+                        leave.
+                     end. /* IF AVAILABLE CM_MSTR */
+                     if so_stat <> "" then do:
+/*L0CD*                 {mfmsg.i 623 2}  *L0CD*/
+/*L0CD*/                run ip_msg (input 623, input 2).
+                        /* SALES ORDER STATUS NOT BLANK */
+                        leave.
+                     end.
+                  end. /* IF AVAILABLE SO_MSTR */
+                  else if not available so_mstr then do:
+/*L0CD*              {mfmsg.i 609 3}  *L0CD*/
+/*L0CD*/             run ip_msg (input 609, input 3).
+                     /* SALES ORDER DOES NOT EXIST  */
+                     undo mainloop, retry mainloop.
+                     leave.
+                  end.
+               end. /* if first-of  abs_order */
+               if not
+                  can-find(sod_det where
+                     sod_nbr  = abs_order and
+                     sod_line = integer(abs_line)) and
+                  abs_qty <> abs_ship_qty then do:
+                  {mfmsg.i 764 3}
+/*L0CD*           {mfmsg.i 764 3}  *L0CD*/
+/*L0CD*/          run ip_msg (input 764, input 3).
+                  /* SALES ORDER LINE DOES NOT EXIST  */
+                  undo mainloop, retry mainloop.
+               end.
+            end. /* for each work_abs_mstr */
+
+/*J2KY*/    do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J2KY*/       /* If the structure is a "pre-shipper" then convert it into
+/*J2KY*/          a "shipper" first. For that, generate the shipper# */
+/*J2KY*/       if abs_mstr.abs_id begins "p" then do:
+/*J2KY*/          {gprun.i ""gpgetgrp.p""
+/*J2KY*/             "(input  abs_mstr.abs_shipfrom,
+/*J2KY*/               input  abs_mstr.abs_shipto,
+/*J2KY*/               output shipgrp)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J2KY*/          nrseq = shc_ship_nr_id.
+/*J2KY*/          if shipgrp <> ? then do:
+/*J3BM** /*J2KY*/    find sgid_det where */
+/*J3BM*/             for first sgid_det
+/*J3BM*/                fields (sgid_grp sgid_inv_mov sgid_ship_nr_id)
+/*J3BM*/                where
+/*J2KY*/                  sgid_grp = shipgrp and
+/*J3BM** /*J2KY*/         sgid_inv_mov = abs_inv_mov no-lock no-error. */
+/*J3BM*/                  sgid_inv_mov = abs_inv_mov no-lock:
+/*J3BM*/             end. /* FOR FIRST SGID_DET */
+
+/*J2KY*/             if available sgid_det then
+/*J2KY*/                nrseq = sgid_ship_nr_id.
+/*J2KY*/          end.
+/*J2KY*/          run chk_internal (input nrseq, output is_internal,
+/*J2KY*/                            output errorst,  output errornum).
+/*J2KY*/          if errorst then do:
+/*L0CD* /*J2KY*/     {mfmsg.i errornum 3}  *L0CD*/
+/*L0CD*/             run ip_msg (input errornum, input 3).
+/*J2KY*/             undo mainloop, retry mainloop.
+/*J2KY*/          end.
+
+/*J2KY*/          if is_internal then do:
+/*J2KY*/             run getnbr (input nrseq, input today,
+/*J2KY*/                         output shipnbr, output errorst,
+/*J2KY*/                         output errornum).
+/*J2KY*/             if errorst then do:
+/*L0CD* /*J2KY*/        {mfmsg.i errornum 3}  *L0CD*/
+/*L0CD*/                run ip_msg (input errornum, input 3).
+/*J2KY*/                undo mainloop, retry mainloop.
+/*J2KY*/             end.
+/*J2KY*/             display shipnbr with frame convfrm.
+/*J2KY*/             if not batchrun then pause.
+/*J2KY*/          end.
+/*J2KY*/          else do: /* external sequence */
+/*J2KY*/             updnbr:
+/*J2KY*/             do on endkey undo updnbr, leave updnbr:
+/*J2KY*/                update shipnbr with frame convfrm.
+
+/*J2KY*/                if can-find (first abs_temp where
+/*J2KY*/                   abs_temp.abs_shipfrom = abs_mstr.abs_shipfrom and
+/*J2KY*/                   abs_temp.abs_id = "s" + shipnbr) then
+/*J2KY*/                do:
+/*L0CD* /*J2KY*/           {mfmsg.i 8278 3}  *L0CD*/
+/*L0CD*/                   run ip_msg (input 8278, input 3).
+/*J2KY*/                   /* SHIPPER ALREADY EXISTS */
+/*J2KY*/                   undo updnbr, retry updnbr.
+/*J2KY*/                end.
+
+/*J2KY*/                run valnbr (input nrseq, today,
+/*J2KY*/                            input shipnbr,
+/*J2KY*/                            output is_valid, output errorst,
+/*J2KY*/                            output errornum).
+/*J2KY*/                if errorst then do:
+/*L0CD* /*J2KY*/           {mfmsg.i errornum 3}  *L0CD*/
+/*L0CD*/                   run ip_msg (input errornum, input 3).
+/*J2KY*/                   undo updnbr, retry updnbr.
+/*J2KY*/                end.
+/*J2KY*/                else if not is_valid then do:
+/*L0CD* /*J2KY*/           {mfmsg.i 5950 3}  *L0CD*/
+/*L0CD*/                   run ip_msg (input 5950, input 3).
+/*J2KY*/                   /* INVALID PRE-SHIPPER/SHIPPER NUMBER FORMAT */
+/*J2KY*/                   undo updnbr, retry updnbr.
+/*J2KY*/                end.
+/*J2KY*/             end. /* updnbr */
+/*J2KY*/             if keyfunction(lastkey) = "end-error" then do:
+/*J2KY*/                hide frame convfrm no-pause.
+/*J2KY*/                undo mainloop, retry mainloop.
+/*J2KY*/             end.
+/*J2KY*/          end. /* external sequence */
+/*J2KY*/          hide frame convfrm no-pause.
+
+/*J2KY*/          shipnbr = "s" + shipnbr.
+
+/*M05Q*/ /* THE FOLLOWING LOGIC FOR CONVERTING PRE-SHIPPER TO SHIPPER */
+/*M05Q*/ /* IS NOW REPLACED BY A CALL TO ICSHCHG.P                    */
+/*M05Q** BEGIN DELETE **
+ * /*J2KY*/          for each abs_temp where
+ * /*J2KY*/                   abs_temp.abs_par_id = abs_mstr.abs_id and
+ * /*J2KY*/                   abs_temp.abs_shipfrom = abs_mstr.abs_shipfrom
+ * /*J2KY*/                   exclusive-lock:
+ * /*J2KY*/             abs_temp.abs_par_id = shipnbr.
+ * /*J2KY*/          end.
+ *
+ * /*J2KY*/          for each absc_det where absc_abs_id = abs_mstr.abs_id
+ * /*J2KY*/             exclusive-lock:
+ * /*J2KY*/             absc_abs_id = shipnbr.
+ * /*J2KY*/          end.
+ *M05Q** END DELETE   */
+
+/*K21B** BEGIN DELETE **
+ * /*J2KY*/     /* AFTER THE PRE-SHIPPER IS CONVERTED TO SHIPPER REPLACING */
+ * /*J2KY*/     /* SHIPMENT REQUIREMENT DETAIL                             */
+ * /*J2KY*/          run p-shipreq-update (input abs_mstr.abs_shipfrom ,
+ * /*J2KY*/                                input abs_mstr.abs_id ,
+ * /*J2KY*/                                input shipnbr ) .
+ *K21B** END DELETE **/
+
+/*M05Q*/ /* THE FOLLOWING CODE IS ALREADY PRESENT IN ICSHCHG.P */
+/*M05Q*/ /* HENCE IT HAS BEEN COMMENTED OUT HERE               */
+/*M05Q** BEGIN DELETE **
+ * /*J2KY*/          /* Any custom information for printing documents needs
+ * /*J2KY*/             to have the keys change since abs_id is changing   */
+ * /*J2KY*/          {gprun.i ""sofsre.p"" "(input abs_recid,
+ * /*J2KY*/                                  input shipnbr)"}
+ *M05Q** END DELETE   */
+
+/*J2KY*/          find abs_mstr where recid(abs_mstr) = abs_recid
+/*J2KY*/             exclusive-lock no-error.
+/*J2KY*/          /* Save the preshipper# and overwrite abs_id with shipper# */
+/*J2KY*/          assign
+/*J2KY*/             abs_mstr.abs_preship_id    = abs_mstr.abs_id
+/*J2KY*/             abs_mstr.abs_preship_nr_id = abs_mstr.abs_nr_id
+/*M05Q** /*J2KY*/    abs_mstr.abs_id            = shipnbr. */
+/*M05Q*/             abs_mstr.abs_nr_id         = nrseq
+/*M05Q*/           .
+
+/*M05Q*/          /* CHANGE THE SHIPPER NUMBER IN THE WORK_ABS_MSTR */
+/*M05Q*/          {gprun.i ""rcsoisa1.p"" "(abs_mstr.abs_shipfrom,
+                                            abs_mstr.abs_id,
+                                            shipnbr)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*M05Q*/          /* CHANGE THE SHIPPER NUMBER FOR ENTIRE SHIPPER STRUCTURE */
+/*M05Q*/          {gprun.i ""icshchg.p"" "(recid(abs_mstr), shipnbr)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J2KY*/          /* ASSIGN SHIPPER NUMBER TO CARRIER REF IF CARRIER REF IS */
+/*J2KY*/          /* PRE_SHIPPER NUMBER */
+
+/*K1WQ*           * BEGIN DELETE **
+ * /*J2KY*/       if substring(abs_mstr.abs_preship_id,2,20) =
+ * /*J2KY*/          substring(abs_mstr.abs__qad01,41,20) then
+ * /*J2KY*/          assign
+ * /*J2KY*/             substring(abs_mstr.abs__qad01,41,20) =
+ * /*J2KY*/                substring(abs_mstr.abs_id,2,20)
+ *K1WQ*           * END DELETE */
+
+/*K1WQ*/          if right-trim(substring(abs_mstr.abs_preship_id,2,20)) =
+/*K1WQ*/             right-trim(substring(abs_mstr.abs__qad01,41,20)) then
+/*K1WQ*/             assign
+/*K1WQ*/                overlay(abs_mstr.abs__qad01,41,20) =
+/*K1WQ*/                   substring(abs_mstr.abs_id,2,20)
+/*J2KY*/                abs_carr_ref = substring(abs_mstr.abs__qad01,41,20).
+
+/*J2KY*/       end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* IF ABS_MSTR.ABS_ID BEGINS "P"  */
+/*J2KY*/    end. /* DO TRANSACTION */
+
+/*L0CD*     issue = true.  *L0CD*/
+
+            /* CHECK FOR UNPEGGED SHIPPER LINES */
+            {gprun.i ""rcsois4a.p"" "(input abs_recid,
+                                      output yn)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            if yn then
+               undo mainloop, retry mainloop.
+
+/*J3BM**    find first df_mstr where df_format = abs_format and            */
+/*J3BM**                             df_type = "1" no-lock no-error.       */
+/*J3BM*/    for first df_mstr
+/*J3BM*/       fields (df_format df_inv df_type)
+/*J3BM*/       where  df_type = "1"
+/*J3BM*/         and  df_format = abs_format no-lock:
+/*J3BM*/    end. /* FOR FIRST DF_MSTR */
+
+            if available df_mstr and
+/*L0CD*        df_inv =  yes then  *L0CD*/
+/*L0CD*/       df_inv then
+               assign auto_post   = yes
+                      use_shipper = yes
+                      consolidate = yes.
+
+            if id_length > 8 then use_shipper = no.
+
+/*L0CD*     if issue then do:  *L0CD*/
+/*L0CD*        display auto_post use_shipper consolidate with frame b.  *L0CD*/
+           AUTO_POST = NO.
+           DISPLAY auto_post WITH FRAME b. 
+           update
+              /* auto_post*/
+               use_shipper
+               consolidate
+/*J3G7*/       l_calc_freight
+            with frame b.
+
+/*L0CD*     end.  *L0CD*/
+
+/*L0CD*     if id_length > 8 and use_shipper = yes then do:
+ *L0CD*        {mfmsg.i 5982 3}
+ *L0CD*       /* SHIPPER NUMBER TOO LONG TO USE SHIPPER DOCUMENT AS INVOICE */
+ *L0CD*        next-prompt use_shipper with frame b.
+ *L0CD*        undo, retry.
+ *L0CD*     end.
+ *L0CD*     if use_shipper and not consolidate then do:
+ *L0CD*        {mfmsg.i 5984 3}
+ *L0CD*        /* CONSOLIDATING IS MANDATORY WHEN USING SHIPPER NUMBER AS INVOICE */
+ *L0CD*        next-prompt use_shipper with frame b.
+ *L0CD*        undo, retry.
+ *L0CD*     end.
+ *L0CD*/
+
+/*L0CD*/    errornum =
+/*L0CD*/       if use_shipper and id_length > 8
+/*L0CD*/          then 5982
+/*L0CD*/               /* SHIPPER NUMBER TOO LONG TO USE SHIPPER... */
+/*L0CD*/               /* ... DOCUMENT AS INVOICE */
+/*L0CD*/          else
+/*L0CD*/             if use_shipper and not consolidate
+/*L0CD*/                then 5984
+/*L0CD*/                     /* CONSOLIDATING IS MANDATORY WHEN USING... */
+/*L0CD*/                     /* ... SHIPPER NUMBER AS INVOICE */
+/*L0CD*/                else 0.
+
+/*L0CD*/    if errornum <> 0 then do:
+/*L0CD*/       run ip_msg (input errornum, input 3).
+/*L0CD*/       next-prompt use_shipper with frame b.
+/*L0CD*/       undo, retry.
+/*L0CD*/    end.
+
+/*L0CD*     if available df_mstr and df_inv and use_shipper = no then do:  *L0CD*/
+/*L0CD*/    if available df_mstr and df_inv and not use_shipper then do:
+/*L0CD*        {mfmsg.i 5992 2}  *L0CD*/
+/*L0CD*/       run ip_msg (input 5992, input 2).
+               /* DOCUMENT FORMAT REQUIRES SHIPPER NUMBER TO BE USED FOR INVOICE */
+            end.
+
+            /* VALIDATES THAT THERE IS ADEQUATE INVENTORY AVAILABLE TO SHIP ALL
+               LINES WITH SAME SITE, LOC & PART IF OVER-ISSUE NOT ALLOWED */
+
+            {gprun.i ""rcsoisg.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            if rejected then undo mainloop, retry mainloop.
+
+            /* GO THRU WORKFILE FOR  VALIDATION,  UPDATE  STD  COSTS,  SET
+            PRICES,  SET  INVOICING  FLAGS, UPDATE FREIGHT CHARGES, MANUAL
+            UPDATE OF TRAILER CHARGES, AND ORDER  THE  SECRETARY  FLOWERS.
+            */
+
+            order_ct = 0.
+
+            do trans:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*M11Z*        for each work_abs_mstr no-lock, */
+/*M11Z*/       for each work_abs_mstr where abs_order > "" no-lock,
+               each sod_det exclusive-lock where sod_nbr = abs_order
+               and sod_line = integer(abs_line)
+/*J3BM**       break by sod_nbr by sod_line:  */
+/*J3BM*/       break by abs_order by abs_line:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*L024*           if (oldcurr <> so_curr) then do:           */
+/*L024*              if (gl_base_curr <> so_curr) then do:   */
+/*L024*                 find first ex_mstr where ex_curr = so_curr  */
+/*L024*                 no-lock no-error.                    */
+/*L024*                 if not available ex_mstr then do:    */
+/*L024*                    /* CURRENCY EXCHANGE MASTER DOES NOT EXIST */ */
+/*L024*                    {mfmsg.i 964 3}                   */
+/*L024*                    undo mainloop, retry mainloop.    */
+/*L024*                 end.                                 */
+/*L024*                 rndmthd = ex_rnd_mthd.               */
+/*L024*              end.                                    */
+/*L024*              else rndmthd = gl_rnd_mthd.             */
+/*L024*              oldcurr = so_curr.                      */
+/*L024*                                                      */
+/*L024*           end.                                       */
+
+                  if (oldcurr <> so_curr) or (oldcurr = "") then do:
+/*L024*              {gpcurmth.i                                    */
+/*L024*                   "so_curr"                                 */
+/*L024*                   "3"                                       */
+/*L024*                   "undo mainloop, retry mainloop"           */
+/*L024*                   "pause 0" }                               */
+
+/*L024*/             /* GET ROUNDING METHOD FROM CURRENCY MASTER */
+/*L024*/             {gprunp.i "mcpl" "p" "mc-get-rnd-mthd"
+                        "(input so_curr,
+                          output rndmthd,
+                          output mc-error-number)"}
+/*L024*/             if mc-error-number <> 0 then do:
+/*L0CD* /*L024*/        {mfmsg.i mc-error-number 3}  *L0CD*/
+/*L0CD*/                run ip_msg (input mc-error-number, input 3).
+/*L024*/                undo mainloop, retry mainloop.
+/*L024*/             end.  /* mc-error-number <> 0 */
+
+                     oldcurr = so_curr.
+                  end.
+
+/*J3BM**          if first(sod_nbr) then do:    */
+/*J3BM*/          if first(abs_order) then do:
+                     find so_mstr where so_nbr = sod_nbr exclusive-lock.
+                     assign
+                        l_first_so_nbr     = so_nbr
+                        first_so_bill      = so_bill
+                        first_so_cust      = so_cust
+                        first_so_curr      = so_curr
+                        first_so_cr_terms  = so_cr_terms
+                        first_so_trl1_cd   = so_trl1_cd
+                        first_so_trl2_cd   = so_trl2_cd
+                        first_so_trl3_cd   = so_trl3_cd
+                        first_so_slspsn[1] = so_slspsn[1]
+                        first_so_slspsn[2] = so_slspsn[2]
+                        first_so_slspsn[3] = so_slspsn[3]
+                        first_so_slspsn[4] = so_slspsn[4].
+
+/*J3BM**             find si_mstr where si_site = so_site no-lock no-error. */
+/*J3BM*/             for first si_mstr
+/*J3BM*/                fields (si_db si_desc si_entity si_site)
+/*J3BM*/                where si_site = so_site no-lock:
+/*J3BM*/             end. /* FOR FIRST SI_MSTR */
+
+                     first_so_entity   =
+                        if available si_mstr
+                           then si_entity
+                           else "" .
+
+                        /*! MULTI-DB: USE SHIP-TO CUSTOMER TYPE FOR DEFAULT
+                            IF AVAILABLE ELSE USE BILL-TO TYPE USED TO
+                            FIND COGS ACCOUNT IN SOCOST02.p */
+                        {gprun.i ""gpcust.p"" "( input  so_nbr,
+                                                 output ord-db-cmtype)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*L0CD*           if confirm_mode then
+ *L0CD*              shipqty = (work_abs_mstr.abs_qty -
+ *L0CD*                         work_abs_mstr.abs_ship_qty) *
+ *L0CD*                         decimal(work_abs_mstr.abs__qad03).
+ *L0CD*           else
+ *L0CD*              shipqty = (work_abs_mstr.abs_qty) *
+ *L0CD*                         decimal(work_abs_mstr.abs__qad03).
+ *L0CD*/
+
+                  /* CONVERTING SHIPQTY TO INVENTORY UM FROM SHIP UM */
+
+/*L0CD*/          shipqty =
+/*L0CD*/             (if confirm_mode
+/*L0CD*/                then (work_abs_mstr.abs_qty - work_abs_mstr.abs_ship_qty)
+/*J3N6*/              /* CORRECTED THE SHIPQTY DURING UNCONFIRM MODE */
+/*J3N6** /*L0CD*/     else (work_abs_mstr.abs_qty)) *                */
+/*J3N6*/              else (-1 * work_abs_mstr.abs_qty)) *
+/*L0CD*/                 decimal(work_abs_mstr.abs__qad03).
+
+                  if abs_item = sod_part then
+/*L0CD*           do:  *L0CD*/
+/*J3BM**             accumulate shipqty (sub-total by sod_line). */
+/*J3BM*/             accumulate shipqty (sub-total by abs_line).
+/*L0CD*           end.  *L0CD*/
+
+/*J3BM**          if first-of(sod_nbr) then do:     */
+/*J3BM*/          if first-of(abs_order) then do:
+                     order_ct = order_ct + 1.
+                     if order_ct <= 30 then
+                        order_nbrs[order_ct] = sod_nbr.
+                     else
+                        order_nbr_list = order_nbr_list + sod_nbr + ",".
+
+/*J3BM**             find so_mstr where so_nbr = sod_nbr no-lock.     */
+/*L12D*/             /* ADDED so_quote IN THE FIELDLIST */
+/*J3BM*/             for first so_mstr
+/*J3BM*/             fields (so_bill so_cr_terms so_curr so_cust so_disc_pct
+/*J3BM*/                     so_exru_seq so_ex_rate so_ex_rate2 so_ex_ratetype
+/*J3BM*/                     so_fix_rate so_fr_terms so_invoiced so_inv_mthd
+/*J3BM*/                     so_inv_nbr so_nbr so_pst_pct so_quote
+/*J3BM*/                     so_secondary so_ship_date so_site so_slspsn
+/*J3BM*/                     so_stat so_tax_date so_tax_pct so_to_inv
+/*J3BM*/                     so_trl1_amt so_trl1_cd so_trl2_amt so_trl2_cd
+/*L12D*/                     so_trl3_amt so_trl3_cd)
+/*J3BM*/                where so_nbr = sod_nbr no-lock:
+/*J3BM*/             end. /* FOR FIRST SO_MSTR */
+
+                     /* CHECK FOR USE SHIPPER AS INVOICE NUMBER */
+/*L0CD*              if issue then do:  *L0CD*/
+                     if use_shipper then do:
+                        if can-find(first so_mstr
+                        where so_inv_nbr = substr(abs_mstr.abs_id,2,50))
+/*L0CD*                 or can-find(so_mstr  *L0CD*/
+/*L0CD*                 where so_inv_nbr = substr(abs_mstr.abs_id,2,50))  *L0CD*/
+                        or can-find(ar_mstr
+                        where ar_nbr = substr(abs_mstr.abs_id,2,50))
+                        or can-find(first ih_hist
+                        where ih_inv_nbr = substr(abs_mstr.abs_id,2,50))
+                        then do:
+/*L0CD*                    {mfmsg.i 8150 3}  *L0CD*/
+/*L0CD*/                   run ip_msg (input 8150, input 3).
+                           undo mainloop, retry mainloop.
+                        end.
+                     end.
+
+                     /*CHECK CONSISTENCY OF SALES ORDERS*/
+                     if consolidate then do:
+                        msg_text = "".
+
+                        /* PROCEDURE FOR CONSOLIDATION RULES */
+                        {gprun.i ""soconso.p"" "( input 2,
+                           input  l_first_so_nbr ,
+                           input  so_nbr ,
+                           output l_consolidate_ok,
+                           output msg_text)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                        if msg_text > "" then do:
+                           /* MISMATCH WITH PENDING INVOICE - CAN'T CONSOLIDATE. */
+/*J3G7**                   {mfmsg02.i 1046 3 msg_text} */
+/*J3G7*/                   run ip_msg02 (input 1046,
+                                         input 3,
+                                         input msg_text).
+                           undo mainloop, retry mainloop.
+                        end.
+                     end. /* IF CONSOLIDATE */
+/*L0CD*              end.  *L0CD*/
+
+/*L024*              if base_curr <> so_curr then do:
+ *L024*                 if so_fix_rate = no then do:
+ *L024*                    find last exd_det where exd_curr = so_curr and
+ *L024*                    exd_eff_date <= eff_date and
+ *L024*                    exd_end_date >= eff_date
+ *L024*                    no-lock no-error.
+ *L024*                    if not available exd_det then do:
+ *L024*                       {mfmsg.i 81 3}
+ *L024*                       undo mainloop, retry mainloop.
+ *L024*                    end.
+ *L024*                    else exch_rate = exd_rate.
+ *L024*                 end.
+ *L024*                 else exch_rate = so_ex_rate.
+ *L024*              end.
+ *L024*              else exch_rate = 1.0.
+ *L024*/
+
+/*L024*/             if so_fix_rate then
+/*L024*/                assign
+/*L024*/                   exch_rate     = so_ex_rate
+/*L024*/                   exch_rate2    = so_ex_rate2
+/*L024*/                   exch_ratetype = so_ex_ratetype
+/*L024*/                   exch_exru_seq = so_exru_seq.
+/*L024*/             else do:
+
+/*L024*/                /* GET EXCHANGE RATE FOR BASE TO ACCOUNT CURRENCY */
+/*L024*/                {gprunp.i "mcpl" "p" "mc-get-ex-rate"
+                           "(input  so_curr,
+                             input  base_curr,
+                             input  so_ex_ratetype,
+                             input  eff_date,
+                             output exch_rate,
+                             output exch_rate2,
+                             output mc-error-number)" }
+/*L024*/                if mc-error-number <> 0 then do:
+/*L0CD* /*L024*/           {mfmsg.i mc-error-number 3}  *L0CD*/
+/*L0CD*/                   run ip_msg (input mc-error-number, input 3).
+/*L024*/                   undo mainloop, retry mainloop.
+/*L024*/                end.
+/*L024*/                assign
+/*L024*/                   exch_ratetype = so_ex_ratetype
+/*L024*/                   exch_exru_seq = 0.
+
+/*L024*/             end.  /* else */
+
+                     find so_mstr where so_nbr = sod_nbr exclusive-lock.
+                     assign
+                        so_to_inv    = yes
+                        so_ship_date = ship_dt
+                        so_invoiced  = no
+                        so_tax_date  = ship_dt.
+                  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* IF FIRST-OF(ABS_ORDER) */
+
+/*J3BM**          if last-of(sod_line) then do:          */
+/*J3BM*/          if last-of(abs_line) then do:
+                     /* SET STANDARD COST */
+
+                     /* SWITCH TO INVENTORY DATABASE IF NECESSARY */
+                     if change_db then do:
+
+/*L0CD*                 {gprun.i ""gpalias3.p"" "(ship_db, output err_flag)" }
+ *L0CD*                 if err_flag = 2 or err_flag = 3 then do:
+ *L0CD*                    {mfmsg03.i 2510 4 "ship_db" """" """"}
+ *L0CD*                    /* DB NOT CONNECTED */
+ *L0CD*                    undo mainloop, retry mainloop.
+ *L0CD*                 end.
+ *L0CD*/
+
+/*L0CD*/                run ip_alias (input ship_db, output l_flag).
+/*L0CD*/                if l_flag then undo mainloop, retry mainloop.
+
+                     end.
+
+                     /* SET STANDARD COST FROM INVENTORY DATABASE */
+                     {gprun.i ""gpsct05.p"" "(input sod_part,
+                          input sod_site,
+                          input 1,
+                          output glxcst,
+                          output curcst)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                     /* SWITCH BACK TO SALES ORDER DATABASE IF NECESSARY */
+                     if change_db then do:
+
+/*L0CD*                 {gprun.i ""gpalias3.p"" "(so_db, output err_flag)" }
+ *L0CD*                 if err_flag = 2 or err_flag = 3 then do:
+ *L0CD*                    {mfmsg03.i 2510 4 "so_db" """" """"}
+ *L0CD*                    /* DB NOT CONNECTED */
+ *L0CD*                    undo mainloop, retry mainloop.
+ *L0CD*                 end.
+ *L0CD*/
+
+/*L0CD*/                run ip_alias (input so_db, output l_flag).
+/*L0CD*/                if l_flag then undo mainloop, retry mainloop.
+
+                     end.
+
+                     sod_std_cost = glxcst * sod_um_conv.
+
+                     if sod_sched then do:
+                        if  sod_cum_qty[3] > 0 and sod_cum_qty[1] +
+/*J3BM**                    ((accum sub-total by sod_line shipqty) /    */
+/*J3BM*/                    ((accum sub-total by abs_line shipqty) /
+                                    sod_um_conv) >= sod_cum_qty[3] then
+                        do on endkey undo mainloop, retry mainloop :
+                           hide message no-pause.
+/*L0CD*                    {mfmsg.i 8220 2}  *L0CD*/
+/*L0CD*/                   run ip_msg (input 8220, input 2).
+                        /* CUM SHIPPED QTY >= MAX ORDER QTY FOR ORDER SELECTED*/
+/*L12D**                   {mfmsg03.i 8310 1 "sod_nbr"  "sod_line" """"} */
+/*L12D*/                   run p-msg03 (input 8310,
+                                        input 1,
+                                        input "sod_nbr",
+                                        input "sod_line",
+                                        input "").
+                                /* Order <> Line <> */
+                           if not batchrun then pause.
+                        end.
+                        /* SET CURRENT PRICE */
+
+/*J3BM**                find pt_mstr where pt_part = sod_part no-lock no-error.  */
+/*J3BM*/                for first pt_mstr
+/*J3BM*/                   fields (pt_part pt_price)
+/*J3BM*/                    where pt_part = sod_part no-lock:
+/*J3BM*/                end. /* FOR FIRST PT_MSTR */
+
+                        /* FOLLOWING SECTION IS ADDED TO REPLACE rcpccal.p */
+                        /* WITH gppccal.p TO TAKE CARE OF PRICE LIST TYPES */
+                        /* "M" AND "D" IN ADDITION TO "P"                  */
+
+/*J3BM**                find first soc_ctrl no-lock no-error.   */
+/*J3BM*/                for first soc_ctrl
+/*J3BM*/                   fields (soc_pl_req) no-lock:
+/*J3BM*/                end. /* FOR FIRST SOC_CTRL */
+
+                        assign l_disc_pct1  = 0
+                               l_net_price  = ?
+                               l_rec_no     = ?
+                               l_list_price = 0.
+
+                        /* SCHEDULED ORDERS CAN BE CREATED ONLY IN STOCKING */
+                        /* UM MULTIPLYING BY sod_um_conv JUST FOR SAFETY    */
+
+/*L024*                 if available pt_mstr then                              */
+/*L024*                    l_list_price = pt_price * exch_rate * sod_um_conv.  */
+
+/*L024*/                if available pt_mstr then do:
+
+/*L024*/                   /* CONVERT FROM BASE TO ACCOUNT CURRENCY */
+/*L024*/                   {gprunp.i "mcpl" "p" "mc-curr-conv"
+                              "(input  base_curr,
+                                input  so_curr,
+                                input  exch_rate2,
+                                input  exch_rate,
+                                input  pt_price * sod_um_conv,
+                                input  false,   /* DO NOT ROUND */
+                                output l_list_price,
+                                output mc-error-number)"}.
+/*L024*/                   if mc-error-number <> 0 then do:
+/*L0CD* /*L024*/              {mfmsg.i mc-error-number 3}  *L0CD*/
+/*L0CD*/                      run ip_msg (input mc-error-number, input 3).
+/*L024*/                      undo mainloop, retry mainloop.
+/*L024*/                   end.
+
+/*L024*/                end.  /* if available */
+/*J3BM*/ /** CHANGED THE BREAK BY CLAUSE OF THE SECOND INPUT PARAMETER TO  **/
+/*J3BM*/ /** ABS_LINE FROM SOD_LINE                                        **/
+                        {gprun.i ""gppccal.p""
+                           "( input  sod_part,
+                              input (accum sub-total by abs_line shipqty)
+                                 / sod_um_conv,
+                              input sod_um,
+                              input sod_um_conv,
+                              input so_curr,
+                              input sod_pr_list ,
+                              input eff_date,
+                              input sod_std_cost,
+                              input soc_pl_req,
+                              0.0,
+                              input-output  l_list_price,
+                              output        l_disc_pct1,
+                              input-output  l_net_price,
+                              output        l_rec_no)"
+                              }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                        if l_net_price <> ? then sod_price = l_net_price.
+
+/*J2PB**                sod_list_pr = sod_price.    */
+/*J371*/                /* UPDATE SOD_LIST_PRICE FOR SCHEDULE ORDER WHEN   */
+/*L0XV*/                /* SOD_LIST_PRICE IS ZERO OR                       */
+/*J371*/                /* LIST PRICE IN ITEM MASTER IS ZERO SO THAT SALES */
+/*J371*/                /* AMOUNT SHOULD BE POSTED TO PROPER ACCOUNT       */
+/*L0XV** /*J371*/                if pt_price = 0 then */
+/*L0XV*/                if pt_price    = 0 or
+/*L0XV*/                   sod_list_pr = 0 then
+/*J371*/                   sod_list_pr = sod_price.
+                     end.
+
+                     /* SOD_QTY_CHG IS FOR EVERY SALES ORDER LINE AND THE */
+                     /* QUANTITY SHOULD BE ACCUMULATED FOR EACH LOTSERIAL */
+                     /* LINE ENTERED VIA MULTI-ENTRY MODE                 */
+
+/*J3BM**             sod_qty_chg = (accum sub-total by sod_line shipqty) / */
+/*J3BM*/             sod_qty_chg = (accum sub-total by abs_line shipqty) /
+                                    sod_um_conv.
+
+                  end. /* if last-of sod_line */
+
+/*J3BM**          if last-of(sod_nbr) then do:   */
+/*J3BM*/          if last-of(abs_order) then do:
+/*J3G7**             if so_fr_terms <> "" then do: */
+
+/*M0Y0*/             gl_amt = 0 .
+/*J3G7*/             if so_fr_terms <> "" and l_calc_freight then
+/*J3G7*/             do:
+                        /*CALCULATE FREIGHT CHARGES*/
+
+/*J3BM**                find ft_mstr where ft_terms = so_fr_terms    */
+/*J3BM**                   no-lock no-error.                         */
+/*J3BM*/                for first ft_mstr
+/*J3BM*/                   fields (ft_terms ft_type)
+/*J3BM*/                   where ft_terms = so_fr_terms no-lock:
+/*J3BM*/                end. /* FOR FIRST FT_MSTR */
+                        if available ft_mstr then old_ft_type = ft_type.
+                        so_mstr_recid = recid(so_mstr).
+                        {gprun.i ""sofrcals.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+                        if not freight_ok then do:
+/*L0CD*                    {mfmsg.i 669 2}  *L0CD*/
+/*L0CD*/                   run ip_msg (input 669, input 2).
+                           /* Freight error detected - */
+                           pause.
+                        end.
+                     end. /* IF SO_FR_TERMS <> "" AND L_CALC_FREIGHT */
+
+                     /*MANUAL UPDATE OF TRAILER DATA*/
+
+/*K1ZH*/ /* COMMENTED THE CODE BELOW TO FACILATE TAX CALCULATION EVEN  */
+/*K1ZH*/ /* WHEN MAINTAIN TRAILER AMOUNTS IS SET TO "NO"               */
+
+/*K1ZH**             if shc_trl_amts then do: */
+                        {gprun.i ""rcsoistr.p"" "(input sod_nbr,
+                                                  output undo_stat)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*J3HZ*/                /* POST FREIGHT ACCRUALS */
+/*J3HZ*/                if gl_amt <> 0 then do:
+/*J3HZ*/                   so_mstr_recid = recid(so_mstr).
+/*L0QV** /*J3HZ*/          {gprun.i ""sofrpst.p""} */
+/*L0QV*/                   {gprun.i ""sofrpst.p"" "(input eff_date)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J3HZ*/                end. /* IF GL_AMT <> 0 */
+
+                        if undo_stat then undo mainloop, retry mainloop.
+/*K1ZH**             end.                     */
+                  end. /* if last-of(sod_line) */
+               end. /* for each work_abs_mstr */
+
+/*L12D** BEGIN DELETE **
+ *             yn = yes.
+ *             {mfmsg01.i 12 1 yn}
+ *             if not yn then undo mainloop, retry mainloop.
+ *L12D** END DELETE **/
+
+/*L155*/       /* WHILE UNCONFIRMING THE SHIPPER, trq_mstr GETS DELETED  */
+/*L155*/       /* IF ASN HAS BEEN EXPORTED OTHERWISE DISPLAY THE WARNING */
+
+/*L155*/       if can-find(btb_det where  btb_so       = sod_nbr   and
+/*L155*/                                  btb_sod_line = sod_line) and
+/*L155*/                                  not confirm_mode
+/*L155*/       then do:
+/*L155*/          run p-del-trq_mstr.
+/*L155*/          if l_flag1 = yes
+/*L155*/          then
+/*L155*/             undo mainloop, retry mainloop.
+/*L155*/       end. /* IF CAN-FIND(btb_det) */
+
+/*J2KY*        * BEGIN DELETE SECTION **
+ *
+ *             /* If the structure is a "pre-shipper" then convert it into
+ *                a "shipper" first. For that, generate the shipper# */
+ *             if abs_mstr.abs_id begins "p" then do:
+ *                {gprun.i ""gpgetgrp.p""
+ *                "(input  abs_mstr.abs_shipfrom,
+ *                  input  abs_mstr.abs_shipto,
+ *                  output shipgrp)"}
+ *
+ *                nrseq = shc_ship_nr_id.
+ *                if shipgrp <> ? then do:
+ *                   find sgid_det where
+ *                        sgid_grp = shipgrp and
+ *                        sgid_inv_mov = abs_inv_mov no-lock no-error.
+ *                   if available sgid_det then
+ *                      nrseq = sgid_ship_nr_id.
+ *                end.
+ *                run chk_internal (input nrseq, output is_internal,
+ *                                  output errorst,  output errornum).
+ *                if errorst then do:
+ *                   {mfmsg.i errornum 3}
+ *                   undo mainloop, retry mainloop.
+ *                end.
+ *
+ *                if is_internal then do:
+ *                   run getnbr (input nrseq, input today,
+ *                               output shipnbr, output errorst,
+ *                               output errornum).
+ *                   if errorst then do:
+ *                      {mfmsg.i errornum 3}
+ *                      undo mainloop, retry mainloop.
+ *                   end.
+ *                   display shipnbr with frame convfrm.
+ *                   if not batchrun then pause.
+ *                end.
+ *                else do: /* external sequence */
+ *                   updnbr:
+ *                   do on endkey undo updnbr, leave updnbr:
+ *                      update shipnbr with frame convfrm.
+ *
+ *                      if can-find (first abs_temp where
+ *                         abs_temp.abs_shipfrom = abs_mstr.abs_shipfrom and
+ *                         abs_temp.abs_id = "s" + shipnbr) then
+ *                      do:
+ *                         {mfmsg.i 8278 3}
+ *                         /* SHIPPER ALREADY EXISTS */
+ *                         undo updnbr, retry updnbr.
+ *                      end.
+ *
+ *                      run valnbr (input nrseq, today,
+ *                                  input shipnbr,
+ *                                  output is_valid, output errorst,
+ *                                  output errornum).
+ *                      if errorst then do:
+ *                         {mfmsg.i errornum 3}
+ *                         undo updnbr, retry updnbr.
+ *                      end.
+ *                      else
+ *                      if not is_valid then do:
+ *                         {mfmsg.i 5950 3}
+ *                         /* INVALID PRE-SHIPPER/SHIPPER NUMBER FORMAT */
+ *                         undo updnbr, retry updnbr.
+ *                      end.
+ *                   end. /* updnbr */
+ *                   if keyfunction(lastkey) = "end-error" then do:
+ *                      hide frame convfrm no-pause.
+ *                      undo mainloop, retry mainloop.
+ *                   end.
+ *                end. /* external sequence */
+ *                hide frame convfrm no-pause.
+ *
+ *                shipnbr = "s" + shipnbr.
+ *                for each abs_temp where
+ *                         abs_temp.abs_par_id = abs_mstr.abs_id and
+ *                         abs_temp.abs_shipfrom = abs_mstr.abs_shipfrom
+ *                         exclusive-lock:
+ *                    abs_temp.abs_par_id = shipnbr.
+ *                end.
+ *
+ *                for each absc_det where absc_abs_id = abs_mstr.abs_id
+ *                    exclusive-lock:
+ *                    absc_abs_id = shipnbr.
+ *                end.
+ *
+ * /*K1JN*/       /* AFTER THE PRE-SHIPPER IS CONVERTED TO SHIPPER REPLACING */
+ * /*K1JN*/       /* SHIPMENT REQUIREMENT DETAIL                             */
+ * /*K1JN*/       run p-shipreq-update (input abs_mstr.abs_shipfrom ,
+ * /*K1JN*/                             input abs_mstr.abs_id ,
+ * /*K1JN*/                             input shipnbr ) .
+ *
+ *                /* Any custom information for printing documents needs
+ *                   to have the keys change since abs_id is changing   */
+ *                {gprun.i ""sofsre.p"" "(input abs_recid,
+ *                                        input shipnbr)"}
+ *
+ *                find abs_mstr where recid(abs_mstr) = abs_recid
+ *                     exclusive-lock no-error.
+ *                /* Save the preshipper# and overwrite abs_id with shipper# */
+ *                assign
+ *                   abs_mstr.abs_preship_id = abs_mstr.abs_id
+ *                   abs_mstr.abs_preship_nr_id = abs_mstr.abs_nr_id
+ *                   abs_mstr.abs_id = shipnbr.
+ *
+ *               /* ASSIGN SHIPPER NUMBER TO CARRIER REF IF CARRIER REF IS */
+ *               /* PRE_SHIPPER NUMBER */
+ *               if substring(abs_mstr.abs_preship_id,2,20) =
+ *                  substring(abs_mstr.abs__qad01,41,20) then
+ *                  assign substring(abs_mstr.abs__qad01,41,20) =
+ *                                substring(abs_mstr.abs_id,2,20)
+ *                         abs_carr_ref = substring(abs_mstr.abs__qad01,41,20).
+ *
+ *             end. /* if abs_mstr.abs_id begins "p"  */
+ *
+ *J2KY*        * END DELETE SECTION */
+
+               txcalcref = string(abs_mstr.abs_shipfrom,"x(8)") +
+                           abs_mstr.abs_id.
+
+               if {txnew.i} then do:
+
+                  /* THE POST FLAG IS SET TO 'NO' BECAUSE WE ARE NOT CREATING
+                   * QUANTUM REGISTER RECORDS FROM THIS CALL TO TXCALC.P */
+
+/*L12D*/          /* MOVED THE BELOW CODE TO rctxcal.i */
+/*L12D*/          run p_taxcal.
+
+/*L12D** BEGIN DELETE **
+ *                {gprun.i ""txcalc.p"" "(input ""14"",
+ *                   input txcalcref,
+ *                   input '*',  /* ALL RELATED SO's */
+ *                   input 0     /* ALL LINES */,
+ *                   input no /* NO POSTING */,
+ *                   output result-status)"}
+ *
+ *                for each work_abs_mstr no-lock,
+ *                   each sod_det exclusive-lock where
+ *                      sod_nbr = abs_order and sod_line = integer(abs_line),
+ *                   each so_mstr exclusive-lock where so_nbr = sod_nbr
+/*J3BM**             break by sod_nbr by sod_line:   */
+ * /*J3BM*/             break by abs_order by abs_line:
+ *
+/*J3BM**             if last-of(sod_nbr) then do: */
+ * /*J3BM*/             if last-of(abs_order) then do:
+ *
+ *                      /* CREATE TAX DETAIL FOR PENDING INVOICE MAINTENANCE */
+/*H1NP**                {gprun.i ""txdelete.p"" "( input '13',      */
+/*H1NP**                                           input sod_nbr,   */
+/*H1NP**                                           input '' )"}     */
+ *
+/*H1NW** BEGIN DELETE **
+ *                      {gprun.i ""txdetcpy.p"" "( input txcalcref,
+ *                                                 input sod_nbr,
+ *                                                 input '14',
+ *                                                 input sod_nbr,
+ *                                                 input '',
+ *                                                 input '13')"}
+ *H1NW** END DELETE **/
+ *
+ * /*H1NW*/             {gprun.i ""txcalc.p"" "(input l_tr_type,
+ *                                              input sod_nbr,
+ *                                              input l_nbr,
+ *                                              input l_line,
+ *                                              input no,
+ *                                              output result-status)"}
+ *
+ *
+ *                   end. /* last-of */
+ *                end. /* for each work_abs_mstr */
+ *L12D** END DELETE **/
+               end.   /* if {txnew.i} */
+
+/*L12D*/       yn = yes.
+/*L12D*/       {mfmsg01.i 12 1 yn}
+/*L12D*/       if not yn
+/*L12D*/       then undo mainloop, retry mainloop.
+
+            end. /* do transaction */
+
+            do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+               /* SWITCH TO INVENTORY DATABASE IF NECESSARY */
+               if change_db then do:
+
+/*L0CD*           {gprun.i ""gpalias3.p"" "(ship_db, output err_flag)" }
+ *L0CD*           if err_flag = 2 or err_flag = 3 then do:
+ *L0CD*              {mfmsg03.i 2510 4 "ship_db" """" """"}
+ *L0CD*              /* DB NOT CONNECTED */
+ *L0CD*              undo mainloop, retry mainloop.
+ *L0CD*           end.
+ *L0CD*/
+
+/*L0CD*/          run ip_alias (input ship_db, output l_flag).
+/*L0CD*/          if l_flag then undo mainloop, retry mainloop.
+
+               end.
+
+               {gprun.i ""gpnxtsq.p"" "(output trlot)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+               /* SWITCH BACK TO SALES ORDER DATABASE IF NECESSARY */
+               if change_db then do:
+
+/*L0CD*           {gprun.i ""gpalias3.p"" "(so_db, output err_flag)" }
+ *L0CD*           if err_flag = 2 or err_flag = 3 then do:
+ *L0CD*              {mfmsg03.i 2510 4 "so_db" """" """"}
+ *L0CD*              /* DB NOT CONNECTED */
+ *L0CD*              undo mainloop, retry mainloop.
+ *L0CD*           end.
+ *L0CD*/
+
+/*L0CD*/          run ip_alias (input so_db, output l_flag).
+/*L0CD*/          if l_flag then undo mainloop, retry mainloop.
+
+               end.
+
+            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*L0CD*     undo_sois1a = true.
+ *L0CD*     {gprun.i ""rcsois1a.p""}
+ *L0CD*     if undo_sois1a then undo mainloop, retry.
+ *L0CD*/
+
+/*J3KJ*     Added input parameter so_shipper_confirm */
+/*J3KJ*/    {gprun.i ""rcsois1a.p"" "(input ""so_shipper_confirm"",
+                                      output undo_stat)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*L0CD*/    if undo_stat then undo mainloop, retry.
+
+/*L12D*/    if {txnew.i}
+/*L12D*/    then do:
+/*L12D*/       run p_wrk_so_calc.
+/*L12D*/    end. /* IF {txnew.i} */
+
+            global_recid = abs_recid.
+            release sod_det.
+         end. /* repeat */
+         if daybooks-in-use then delete procedure h-nrm no-error.
+
+         {gpnbrgen.i}
+         {gpnrseq.i}
+
+/*L12D*/ {rctxcal.i}
+
+/*K1JN*  * SECTION MOVED TO INTERNAL PROCEDURE TO AVOID ACTION SEGMENT ** */
+/*K1JN*  * BEGIN DELETE **
+ *       for each qad_wkfl exclusive-lock where
+ *          qad_key3 = "rcsois.p"   and
+ *          qad_key4 = mfguser:
+ *          delete qad_wkfl.
+ *       end. /* FOR EACH qad_wkfl */
+ **K1JN* * END DELETE ** */
+
+/*K1JN*/ run del-qad-wkfl.
+
+/*K21B** BEGIN DELETE **
+ * /*K1JN*/ procedure p-shipreq-update:
+ *
+ * /*K1JN*/    /* THIS PROCEDURE TRANSFERS THE PEGGED SHIP LINE QUANTITY TO  */
+ * /*K1JN*/    /* THE NEWLY CREATED SHIPPER                                  */
+ *
+ * /*K1JN*/    define input parameter shipfrom like abs_shipfrom    no-undo.
+ * /*K1JN*/    define input parameter absid    like abs_id          no-undo.
+ * /*K1JN*/    define input parameter shipnbr  like abs_id no-undo.
+ *
+ * /*K1JN*/    for each absr_det  where absr_shipfrom = shipfrom
+ * /*K1JN*/                         and absr_ship_id  = absid  exclusive-lock :
+ *
+ * /*K1JN*/       assign
+ * /*K1YG** /*K1JN*/          absr_id = right-trim(substring(absr_id,1,1))  */
+ * /*K1YG** /*K1JN*/                              + shipnbr                 */
+ * /*K1YG** /*K1JN*/                              + right-trim(substring    */
+ * /*K1YG** /*K1JN*/                 (absr_id,length(abs_mstr.abs_id) + 2)) */
+ * /*M05Q*/          absr_id      = right-trim(substring(absr_id,1,1))
+ * /*M05Q*/                       + shipnbr
+ * /*M05Q*/                       + right-trim(substring
+ * /*M05Q*/                         (absr_id,length(abs_mstr.abs_id) + 2))
+ * /*K1JN*/          absr_ship_id = shipnbr.
+ *
+ * /*K1JN*/    end.  /* FOR EACH ABSR_DET */
+ * /*K1JN*/ end procedure.  /* P-SHIPREQ-UPDATE */
+ *K21B** END DELETE **/
+
+/*K1JN*/ procedure del-qad-wkfl:
+/*K1JN*/    for each qad_wkfl exclusive-lock where
+/*K1JN*/       qad_key3 = "rcsois.p" and
+/*K1JN*/       qad_key4 = mfguser:
+/*K1JN*/       delete qad_wkfl.
+/*K1JN*/    end.  /* FOR EACH qad_wkfl */
+/*K1JN*/ end procedure.  /* del-qad-wkfl */
+
+
+/*J2DD*  * ADDED INTERNAL PROCEDURE **/
+         procedure find-mfc-j2dd:
+/*J3BM**    find mfc_ctrl where mfc_field = "rcc_auto_post" no-lock.  */
+/*J3BM*/    for first mfc_ctrl
+/*J3BM*/       fields (mfc_field mfc_logical)
+/*J3BM*/       where mfc_field = "rcc_auto_post" no-lock:
+/*J3BM*/    end. /* FOR FIRST MFC_CTRL */
+            auto_post = mfc_logical.
+
+/*J3BM**    find mfc_ctrl where mfc_field = "rcc_use_shipper" no-lock.  */
+/*J3BM*/    for first mfc_ctrl
+/*J3BM*/       fields (mfc_field mfc_logical)
+/*J3BM*/       where mfc_field = "rcc_use_shipper" no-lock:
+/*J3BM*/    end. /* FOR FIRST MFC_CTRL */
+            use_shipper = mfc_logical.
+
+/*J3BM**    find mfc_ctrl where mfc_field = "rcc_consolidate" no-lock. */
+/*J3BM*/    for first mfc_ctrl
+/*J3BM*/       fields (mfc_field mfc_logical)
+/*J3BM*/       where mfc_field = "rcc_consolidate" no-lock:
+/*J3BM*/    end. /* FOR FIRST MFC_CTRL */
+            consolidate = mfc_logical.
+
+         end procedure.
+/*J2DD*  * END PROCEDURE ***************/
+
+
+/*J2MG*/ PROCEDURE p_glcalval:
+
+/*J2MG*/    define output parameter l_flag like mfc_logical no-undo.
+
+/*J2MG*/    for each work_abs_mstr
+/*J2MG*/       where work_abs_mstr.abs_qty <> work_abs_mstr.abs_ship_qty and
+/*J2MG*/             (work_abs_mstr.abs_id begins "i" or
+/*J2MG*/              work_abs_mstr.abs_id begins "c") no-lock :
+
+/*J2MG*/       for first si_mstr
+/*J2MG*/          fields ( si_db si_desc si_entity si_site )
+/*J2MG*/          where si_site = work_abs_mstr.abs_site no-lock:
+/*J2MG*/       end. /* FOR FIRST SI_MSTR */
+
+/*J2MG*/       if available si_mstr then do:
+/*J2MG*/          /* CHECK GL EFFECTIVE DATE */
+/*J2MG*/          {gpglef01.i ""IC"" si_entity eff_date}
+
+/*J2MG*/          if gpglef > 0 then do:
+/*J3G7** /*J2MG*/    {mfmsg02.i gpglef 4 si_entity} */
+/*J3G7*/             run ip_msg02 (input gpglef,
+                                   input 4,
+                                   input si_entity).
+
+/*J2MG*/             l_flag = yes.
+/*J2MG*/             return.
+/*J2MG*/          end. /* IF GPGLEF > 0 */
+
+/*J2MG*/          else
+/*J2MG*/          do:
+/*J2MG*/             /* CHECK GL EFFECTIVE DATE */
+/*J2MG*/             {gpglef01.i ""SO"" si_entity eff_date}
+/*J2MG*/             if gpglef > 0 then do:
+/*J3G7** /*J2MG*/        {mfmsg02.i gpglef 4 si_entity} */
+/*J3G7*/                  run ip_msg02 (input gpglef,
+                                        input 4,
+                                        input si_entity).
+/*J2MG*/                l_flag = yes.
+/*J2MG*/                return.
+/*J2MG*/             end. /* IF GPGLEF > 0 */
+/*J2MG*/          end. /* ELSE IF GPGLEF = 0 */
+
+/*J2MG*/       end. /* IF AVAILABLE SI_MSTR */
+
+/*J2MG*/    end. /* FOR EACH WORK_ABS_MSTR */
+
+/*J2MG*/ END PROCEDURE.  /* p_glcalval */
+
+
+/*H1LZ*/ procedure p_vtmstr_chk :
+/*L12D*/    /* ADDED gl_can IN THE FIELDLIST */
+/*H1LZ*/    for first gl_ctrl
+/*H1LZ*/       fields ( gl_base_curr gl_can gl_rnd_mthd gl_vat ) no-lock :
+/*H1LZ*/    end. /* FOR FIRST */
+/*H1LZ*/    if available gl_ctrl and gl_vat then do:
+/*J3BM** /*H1LZ*/       for each work_abs_mstr  where work_abs_mstr.abs_order <> "" */
+/*J3BM*/       for each work_abs_mstr  where work_abs_mstr.abs_order > ""
+/*H1LZ*/                                 and work_abs_mstr.abs_line  <> ""
+/*H1LZ*/                                 no-lock :
+/*L12D*/          /* ADDED sod_btb_po sod_list_pr sod_price IN THE FIELDLIST */
+/*H1LZ*/          for first sod_det
+/*H1LZ*/              fields ( sod_cum_qty sod_fsm_type sod_line sod_nbr
+/*H1LZ*/                       sod_part sod_pr_list sod_qty_chg
+/*H1LZ*/                       sod_sched sod_site sod_std_cost sod_taxc
+/*H1LZ*/                       sod_um sod_um_conv sod_btb_po sod_list_pr
+/*L12D*/                       sod_price)
+/*H1LZ*/              where sod_nbr = abs_order
+/*H1LZ*/                and sod_line = integer (abs_line) no-lock:
+/*H1LZ*/          end. /* FOR FIRST */
+/*H1LZ*/          if available sod_det and
+/*H1LZ*/             not can-find ( first vt_mstr where
+/*H1LZ*/                           ( vt_class = sod_taxc and
+/*H1LZ*/                             ship_dt >= vt_start and
+/*H1LZ*/                             ship_dt <= vt_end ) ) then do:
+/*H1LZ*/             /* TAX CLASS DOES NOT EXIST */
+/*L0CD* /*H1LZ*/     {mfmsg.i 2032 2}  *L0CD*/
+/*L0CD*/             run ip_msg (input 2032, input 2).
+/*H1LZ*/             leave.
+/*H1LZ*/          end. /* IF AVAILABLE SOD_DET */
+/*H1LZ*/       end.  /* FOR EACH WORK_ABS_MSTR */
+/*H1LZ*/    end. /* IF AVAILABLE GL_CTRL */
+/*H1LZ*/ end. /* PROCEDURE P_VTMSTR_CHK */
+
+
+/*L0CD*/ procedure ip_msg:
+/*L0CD*/    define input parameter i_num  as integer no-undo.
+/*L0CD*/    define input parameter i_stat as integer no-undo.
+/*L0CD*/    {mfmsg.i i_num i_stat}
+/*L0CD*/ end procedure.  /* ip_msg */
+
+/*L0CD*/ procedure ip_alias:
+
+/*L0CD*/    define input  parameter i_db       like global_db no-undo.
+/*L0CD*/    define output parameter o_err_flag as   logical   no-undo.
+/*L0CD*/    define variable         v_err_num  as   integer   no-undo.
+
+/*L0CD*/    {gprun.i ""gpalias3.p"" "(i_db, output v_err_num)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*L0CD*/    o_err_flag = v_err_num = 2 or v_err_num = 3.
+/*L0CD*/    if o_err_flag then do:
+/*L12D** /*L0CD*/ {mfmsg03.i 2510 4 "i_db" """" """"} /* DB not connected */ */
+/*L12D*/       run p-msg03 (input 2510,
+                            input 4,
+                            input "i_db",
+                            input "",
+                            input "").
+/*L0CD*/    end.
+
+/*L0CD*/ end procedure.  /* ip_alias */
+
+/*J3G7*/ PROCEDURE ip_msg02:
+/*J3G7*/    define input parameter i_num  like msg_nbr   no-undo.
+/*J3G7*/    define input parameter i_stat   as integer   no-undo.
+/*J3G7*/    define input parameter i_concat as character no-undo.
+
+/*J3G7*/    {mfmsg02.i i_num i_stat i_concat}
+
+/*J3G7*/ end.  /* IP_MSG02 */
+
+/*L12D*/ /* TO REMOVE ACTION SEGMENT ERROR CREATED INTERNAL PROCEDURE */
+
+         PROCEDURE p-msg03:
+
+            define input parameter l_num1    as integer   no-undo.
+            define input parameter l_stat1   as integer   no-undo.
+            define input parameter l_db      as character no-undo.
+            define input parameter l_char1   as character no-undo.
+            define input parameter l_char2   as character no-undo.
+
+            {mfmsg03.i l_num1 l_stat1 l_db l_char1 l_char2}
+
+         END PROCEDURE.  /* p-msg03 */
+
+/*L155*/ /* TO REMOVE ACTION SEGMENT ERROR CREATED INTERNAL PROCEDURE */
+
+         PROCEDURE p-del-trq_mstr:
+            find first trq_mstr
+               where trq_doc_type = "ASN"                  and
+                     trq_doc_ref  =  abs_mstr.abs_shipfrom and
+                     trq_add_ref  =  trim("s" +
+                                           substring(abs_mstr.abs__qad01,41,20))
+               exclusive-lock no-error.
+               if available trq_mstr
+               then
+                  delete trq_mstr.
+               else do:
+                  yn = no.
+                  run ip_msg (input 4391, input 1).
+                  {mfmsg01.i 5987 1 yn}
+                  if yn = no
+                  then
+                     l_flag1 = yes.
+                  else
+                     l_flag1 = no.
+               end. /* ELSE DO */
+
+         END PROCEDURE. /*PROCEDURE p-del-trq_mstr */

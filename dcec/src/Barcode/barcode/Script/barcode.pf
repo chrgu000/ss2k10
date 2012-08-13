@@ -1,0 +1,7 @@
+-db  d:\yfkbc\db\barcode -ld barcode -S barcode -trig triggers
+-db  d:\mfg\eb2_sp8\mfgsvr\db\mfgdemo -ld qaddb -trig triggers
+-db  d:\mfg\eb2_sp8\mfgsvr\db\hlpdemo -ld qadhelp
+-db  d:\mfg\eb2_sp8\mfgsvr\db\admdemo -ld qadadm -trig triggers
+
+
+

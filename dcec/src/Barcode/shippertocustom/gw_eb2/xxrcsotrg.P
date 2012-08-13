@@ -1,0 +1,130 @@
+/* xxrcsotrg.p - Validate against available inventory for TRANSFER        */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.      */
+/* REVISION: 8.6    LAST MODIFIED: 09/15/98           BY: *K1X2* Manish K.    */
+/* REVISION: 8.6    LAST MODIFIED: 02/17/99           BY: *J3B9* Narender     */
+
+/*G0CX*/ /* VALIDATES THAT THERE IS ADEQUATE INVENTORY AVAILABLE TO SHIP ALL
+            LINES WITH SAME SITE, LOC & PART IF OVER-ISSUE NOT ALLOWED.
+            PER BILL GATES, ALL LINES MUST SHIP OR NONE SHIP */
+
+         {mfdeclre.i}
+
+         define shared variable so_db like global_db.
+         define shared variable ship_db like global_db.
+         define shared variable change_db like mfc_logical.
+         define shared variable rejected like mfc_logical no-undo.
+        define shared variable transfer_mode like mfc_logical no-undo.
+
+         define        variable accum_ship_qty as decimal.
+         define        variable err-flag as integer.
+/*K003*/ define        variable umconv like sod_um_conv no-undo.
+/*K003*/ define        variable um like sod_um no-undo.
+
+         define shared workfile work_abs_mstr like abs_mstr. /*pv7 fix, */
+
+/*J3B9*/ assign rejected = no.
+
+         for each work_abs_mstr no-lock,
+         each sod_det exclusive-lock where sod_nbr = abs_order
+         and sod_line = integer(abs_line)
+/*J3B9*/ and sod_type = ""
+/*G2PK*/ break by abs_site by abs_loc by abs_item by abs_lotser by abs_ref:
+
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            /* SWITCH DATABASES TO FIND ALLOCATIONS IF NECESSARY */
+
+/*K1G4*/    find si_mstr where si_site = abs_site no-lock no-error.
+            if available si_mstr then
+               ship_db = si_db.
+            else do:
+/*F0TC*       {mfmsg03.i 708 4 "sod_site" """" """"}*/ /* SITE DOES NOT EXIST */
+/*F0TC*/      {mfmsg03.i 708 4 "abs_site" """" """"} /* SITE DOES NOT EXIST */
+               pause.
+               rejected = yes.
+               leave.
+            end.
+
+            change_db = (ship_db <> global_db).
+            if change_db then do:
+               so_db = global_db.
+               {gprun.i ""gpalias3.p"" "(ship_db, output err-flag)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               if err-flag = 2 or err-flag = 3  then do:
+                  {mfmsg03.i 2510 4 "ship_db" """" """"} /* DB NOT CONNECTED */
+                  pause.
+                  rejected = yes.
+                  leave.
+               end.
+            end.
+
+/*G2PK*/    if first-of(abs_ref) then
+/*G2PK*/        accum_ship_qty = 0.
+
+/*F0TC*/    if first-of(abs_item) then  do:
+/*G2PK**       accum_ship_qty = 0. */
+/*K003*/       /* SET UM AND CONVERSION FROM pt_mstr FOR KIT COMPONENTS */
+               if abs_item <> sod_part and sod_type = "" then
+               find pt_mstr where pt_part = abs_item no-lock no-error.
+               if available pt_mstr then assign
+                  um = pt_um
+                  umconv = 1.
+/*J20Q*/       /* CONVERT SHIP UM TO INVENTORY UM FOR INVENTORY VALIDATION */
+/*J20Q**       if abs_item = sod_part then assign  */
+/*J20Q**          um = sod_um                      */
+/*J20Q**          umconv = sod_um_conv.            */
+/*J20Q*/       if abs_item = sod_part then
+/*J20Q*/          assign um = abs__qad02
+/*J20Q*/                 umconv = decimal(abs__qad03).
+
+/*K003*/    end.
+
+/*G1HQ*/    if sod_type = "" then
+/*K003*/       if transfer_mode = yes then
+/*G2CM**          accum_ship_qty = abs_qty - abs_ship_qty. */
+/*G2CM*/          accum_ship_qty = accum_ship_qty + abs_qty - abs_ship_qty.
+/*K003*/       else
+/*K003*/          accum_ship_qty = -1 * (accum_ship_qty + abs_qty).
+
+/*K1X2*/    if abs_id begins "i" then do:
+/*K1X2*/       if not ( can-find ( first abs_mstr where
+/*K1X2*/                abs_mstr.abs_par_id = work_abs_mstr.abs_id ) ) then do:
+
+/*K003*/          {gprun.i ""icedit2.p"" "(
+                         input ""ISS-TR"",
+                         input abs_site,
+                         input abs_loc,
+                         input abs_item,
+                         input abs_lotser,
+                         input abs_ref,
+                         input accum_ship_qty * umconv,
+                         input um,
+                         input """",
+                         input """",
+                         output rejected)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*K1X2*/       end. /* IF NOT CAN_FIND */
+/*K1X2*/    end. /* IF ABS_ID */
+
+            /* RETURN TO SALES ORDER DATABASE */
+            if change_db then do:
+               {gprun.i ""gpalias3.p"" "(so_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+               if err-flag = 2 or err-flag = 3 then do:
+                  {mfmsg03.i 2510 4 "so_db" """" """"} /* DB NOT CONNECTED */
+                  pause.
+               end.
+            end.
+
+            if rejected then do:
+                 {mfmsg02.i 161 3 abs_item} /* INSUFFICIENT INVENTORY TO SHIP */
+                 pause.
+                 leave.
+            end.
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+

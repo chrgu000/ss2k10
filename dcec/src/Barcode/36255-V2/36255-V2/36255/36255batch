@@ -1,0 +1,13 @@
+
+# tokens:
+# &DLC = Progress Directory
+# &CLIENT-DB-CONNECT = command line to connect to each db in dbset
+ 
+DLC=/mfgpro/dlc91d;export DLC
+PATH=$PATH:$DLC:$DLC/bin:$DLC/tty:/mfgpro/ebressz;export PATH
+PROMSGS=$DLC/promsgs;export PROMSGS
+PROTERMCAP=$DLC/protermcap;export PROTERMCAP
+PROPATH=.,/home/test,/mfgpro/ebcust,/mfgpro/eb,/mfgpro/eb/ch/bbi,/mfgpro/ebressz,/mfgpro/dlc91d/tty;export PROPATH
+ 
+ 
+$DLC/bin/_progres /testdb/szeb/mfgszt -ld qaddb -db /testdb/szeb/admszt -ld qadadm  -c 30 -Bt 350 -D 100 -mmax 3000 -nb 200 -s 63 -noshvarfix -b -p /mfgpro/ebcust/batch/36255batch.p

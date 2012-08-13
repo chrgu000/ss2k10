@@ -1,0 +1,136 @@
+/* GUI CONVERTED from potrldef.i (converter v1.75) Fri Aug  4 22:32:22 2000 */
+/* potrldef.i - PURCHASE ORDER TRAILER FIELD DEFINITIONS                      */
+/* Copyright 1986-2000 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/*F0PN*/
+/* $Revision: 1.6.3.3 $                                                               */
+/*V8:ConvertMode=Maintenance                                                  */
+/*                                                                            */
+/* REVISION: 7.4  BY: Bryan Merich DATE:04/11/94   ECO: *H334*                */
+/* REVISION: 8.5  BY: ccc          DATE:09/08/95   ECO: *J053*                */
+/* REVISION: 8.6E BY: A. Rahane    DATE:02/23/98   ECO: *L007*                */
+/* REVISION: 8.6E BY:Alfred Tan    DATE:05/20/98   ECO: *K1Q4*                */
+/* REVISION: 8.6E BY:Alfred Tan    DATE:10/04/98   ECO: *J314*                */
+/* REVISION: 9.1  BY:Annasaheb Rahane DATE:03/24/00 ECO: *N08T*               */
+/* $Revision: 1.6.3.3 $   BY:Mark B. Smith DATE: 07/20/00   ECO: *N059*               */
+
+/* ********** Begin Translatable Strings Definitions ********* */
+
+&SCOPED-DEFINE potrldef_i_1 "折扣"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_2 "项目合计"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_3 "非应纳税"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_4 "EDI 采购单"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_5 "          查看/编辑纳税明细:"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_6 "税款合计"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_7 "应纳税 PST"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_8 "应纳税合计"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_9 "应纳税"
+/* MaxLen: Comment: */
+
+&SCOPED-DEFINE potrldef_i_10 "合计 "
+/* MaxLen: Comment: */
+
+/* ********** End Translatable Strings Definitions ********* */
+
+define {1} shared frame    potot.
+define {1} shared frame    potrail.
+define {1} shared frame    pocttrl.
+define {1} shared frame    povttrl.
+define {1} shared frame    pomtd.
+
+define {1} shared variable undo_trl2        like mfc_logical.
+define {1} shared variable taxable_amt      as decimal
+   format "->>>>,>>>,>>9.99"
+   label {&potrldef_i_9}.
+define {1} shared variable nontaxable_amt   like taxable_amt
+   label {&potrldef_i_3}.
+define {1} shared variable lines_total      as decimal
+   format "-zzzz,zzz,zz9.99"
+   label {&potrldef_i_2}.
+define {1} shared variable tax_total        like lines_total
+   label {&potrldef_i_6}.
+define {1} shared variable tax_date         like po_tax_date.
+define {1} shared variable tax_edit         like mfc_logical
+   initial false.
+define {1} shared variable tax_edit_lbl     like mfc_char
+   format "x(28)"
+   initial {&potrldef_i_5}.
+define {1} shared variable order_amt         like lines_total
+   label {&potrldef_i_10}.
+define {1} shared variable edi_po            like mfc_logical
+   label {&potrldef_i_4}.
+define {1} shared variable line_tax    as decimal
+   format "(>>,>>>,>>>,>>9.99)"
+   label {&potrldef_i_8}.
+define {1} shared variable line_total  as decimal
+   format "(zz,zzz,zzz,zz9.99)"
+   label {&potrldef_i_2}.
+define {1} shared variable tax_amt     like line_total
+   label {&potrldef_i_6}.
+define {1} shared variable tax_1       like line_total.
+define {1} shared variable tax_2       like line_total.
+define {1} shared variable tax_3       like line_total.
+define {1} shared variable ord_amt     like line_total
+   label {&potrldef_i_10}.
+define {1} shared variable vtln_total  as decimal
+   format "(zzzz,zzz,zz9.99)"
+   label {&potrldef_i_2}.
+define {1} shared variable vtdisc_amt  like vtln_total
+   label {&potrldef_i_1}.
+define {1} shared variable vtord_amt   like vtln_total
+   label {&potrldef_i_10}.
+define {1} shared variable line_pst    as decimal
+   format "->>,>>>,>>>,>>9.99"
+   label {&potrldef_i_7}.
+define {1} shared variable gst_taxed   like po_taxable.
+define {1} shared variable pst_taxed   like po_pst.
+define {1} shared variable frt_amt     as decimal
+   format "->>,>>>,>>9.99".
+define {1} shared variable duty_amt    as decimal
+   format "->>,>>>,>>9.99".
+define {1} shared variable bkage_amt   as decimal
+   format "->>,>>>,>>9.99".
+define {1} shared variable duty_type   like vp_duty_type.
+define {1} shared variable l_nontaxable_lbl as character format "x(12)" no-undo.
+define {1} shared variable l_taxable_lbl    as character format "x(12)" no-undo.
+
+/* WHEN THE VARS ARE "NEW", THE CURRENCY DEPENDENT FORMATS REQUIRED */
+/* BY THE FORMS ARE NOT YET AVAILABLE                               */
+if (string("{1}") <> "NEW") then do:
+   {pototfrm.i}
+   FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+{pomtdfrm.i}  SKIP(.4)  /*GUI*/
+with frame pomtd attr-space side-labels width 80 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-pomtd-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame pomtd = F-pomtd-title.
+ RECT-FRAME-LABEL:HIDDEN in frame pomtd = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame pomtd =
+  FRAME pomtd:HEIGHT-PIXELS - RECT-FRAME:Y in frame pomtd - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME pomtd = FRAME pomtd:WIDTH-CHARS - .5.  /*GUI*/
+
+   /* SET EXTERNAL LABELS */
+   setFrameLabels(frame pomtd:handle).
+
+   tax_edit_lbl = getTermLabelRtColon("VIEW/EDIT_TAX_DETAIL", 28).
+   po_prepaid:format = prepaid_fmt.
+end.

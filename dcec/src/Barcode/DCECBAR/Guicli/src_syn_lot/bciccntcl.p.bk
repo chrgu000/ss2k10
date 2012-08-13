@@ -1,0 +1,6 @@
+FOR EACH b_co_mstr USE-INDEX b_co_st EXCLUSIVE-LOCK WHERE b_co_status <> 'ia' AND b_co_cntst <> '':
+    ASSIGN
+        b_co_cntst = ''.
+    END.
+
+   MESSAGE 'Ãı¬Î≈Ãµ„◊¥Ã¨“—÷√ø’!' VIEW-AS ALERT-BOX.

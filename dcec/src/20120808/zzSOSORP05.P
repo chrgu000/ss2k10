@@ -1,0 +1,355 @@
+/* GUI CONVERTED from sosorp05.p (converter v1.69) Wed May  1 15:01:19 1996 */
+/* sosorp05.p  -  SALES ORDER PRINT                                     */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*H0CH*/ /*V8:ConvertMode=FullGUIReport                                 */
+/* REVISION: 1.0      LAST MODIFIED: 05/13/86   BY: PML       */
+/* REVISION: 1.0      LAST MODIFIED: 08/29/86   BY: EMB *12*  */
+/* REVISION: 4.0     LAST EDIT: 12/30/87        BY: WUG *A137**/
+/*                                   10/06/86       pml *31*  */
+/*           2.0                     12/23/86       pml *A8*  */
+/* REVISION: 2.0      LAST MODIFIED: 07/17/87   BY: EMB *A23* */
+/* REVISION: 2.1      LAST MODIFIED: 07/30/87   BY: WUG *A78* */
+/* REVISION: 2.1      LAST MODIFIED: 10/20/87   BY: WUG *A94* */
+/* REVISION: 4.0      LAST MODIFIED: 12/18/87   BY: pml *A113 */
+/* REVISION: 4.0      LAST MODIFIED: 01/11/88   BY: RL  *A136**/
+/* REVISION: 4.0      LAST MODIFIED: 02/09/88   BY: pml *A119**/
+/* REVISION: 4.0      LAST MODIFIED: 02/19/88   BY: WUG *A177**/
+/* REVISION: 4.0      LAST MODIFIED: 02/29/88   BY: WUG *A175**/
+/* REVISION: 4.0      LAST MODIFIED: 05/24/88   BY: flm *A251**/
+/* REVISION: 4.0      LAST MODIFIED: 12/02/88   BY: MLB *A547**/
+/* REVISION: 4.0      LAST MODIFIED: 01/11/89   BY: emb *A596**/
+/* REVISION: 5.0      LAST MODIFIED: 01/12/89   BY: MLB *A608**/
+/* REVISION: 5.0      LAST MODIFIED: 03/02/89   BY: MLB *B056**/
+/* REVISION: 5.0      LAST MODIFIED: 04/07/89   BY: WUG *B094**/
+/* REVISION: 5.0      LAST MODIFIED: 05/25/89   BY: MLB *B123**/
+/* REVISION: 5.0      LAST MODIFIED: 06/10/89   BY: MLB *B130**/
+/* REVISION: 4.0      LAST MODIFIED: 06/27/89   BY: MLB *A751**/
+/* REVISION: 5.0      LAST MODIFIED: 10/16/89   BY: MLB *B342,B344**/
+/* REVISION: 5.0      LAST MODIFIED: 11/22/89   BY: WUG *B402**/
+/* REVISION: 5.0      LAST MODIFIED: 02/12/90   BY: ftb *B564**/
+/* REVISION: 5.0      LAST MODIFIED: 03/15/90   BY: MLB *B615**/
+/* REVISION: 5.0      LAST MODIFIED: 03/30/90   BY: ftb *B642**/
+/* REVISION: 6.0      LAST MODIFIED: 11/12/90   BY: MLB *D200**/
+/* REVISION: 6.0      LAST MODIFIED: 12/13/90   BY: dld *D257**/
+/* REVISION: 6.0      LAST MODIFIED: 12/27/90   BY: MLB *D238**/
+/* REVISION: 6.0      LAST MODIFIED: 03/12/91   BY: afs *D425**/
+/* REVISION: 7.0      LAST MODIFIED: 09/17/91   BY: MLV *F015**/
+/* REVISION: 7.0      LAST MODIFIED: 03/18/92   BY: TMD *F263*   (rev only) */
+/* REVISION: 7.0      LAST MODIFIED: 04/02/92   BY: dld *F322*   (rev only) */
+/* REVISION: 7.0      LAST MODIFIED: 04/08/92   BY: tmd *F367*   (rev only) */
+/* REVISION: 7.0      LAST MODIFIED: 04/06/92   BY: dld *F358**/
+/* REVISION: 7.0      LAST MODIFIED: 04/30/92   BY: tmd *F458*   (rev only) */
+/* REVISION: 7.3      LAST MODIFIED: 11/13/92   BY: tjs *G191*   (rev only) */
+/* REVISION: 7.3      LAST MODIFIED: 02/19/93   by: jms *G712*              */
+/* REVISION: 7.3      LAST MODIFIED: 03/17/93   BY: afs *G820*   (rev only) */
+/* REVISION: 7.4      LAST MODIFIED: 07/20/93   BY: bcm *H032*   (rev only) */
+/* REVISION: 7.3      LAST MODIFIED: 10/18/94   BY: jzs *GN91**/
+/* REVISION: 7.4      LAST MODIFIED: 04/12/95   BY: jpm *H0CH**/
+/* REVISION: 8.5      LAST MODIFIED: 03/06/95   BY: nte *J042**/
+/* REVISION: 7.4      LAST MODIFIED: 05/15/95   BY: jym *G0MP**/
+/* REVISION: 7.4      LAST MODIFIED: 10/09/95   BY: jym *G0XY**/
+/* REVISION: 8.5      LAST MODIFIED: 04/26/96   BY: jpm *J0KK**/
+
+/* LAST MODIFIED BY *LB01* LONG BO 2004/07/12				*/ 
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+/*GN91*/ {mfdtitle.i "99 "}
+
+	 define new shared variable cust like so_cust.
+	 define new shared variable cust1 like so_cust.
+	 define new shared variable nbr like so_nbr.
+	 define new shared variable nbr1 like so_nbr.
+	 define new shared variable ord like so_ord_date.
+	 define new shared variable ord1 like so_ord_date.
+/*	 define            variable comp_addr like soc_company. lb01*/
+	 define new shared variable comp_addr like soc_company.  /*lb01*/
+	 define            variable yn like mfc_logical initial yes.
+	 define new shared variable company as character
+			   format "X(38)" extent 6.
+	 define new shared variable print_options like mfc_logical initial no label
+			   "打印特性与选项".
+	 define new shared variable addr as character format "x(38)"
+						      extent 6.
+	 define new shared variable lang like so_lang.
+	 define new shared variable lang1 like so_lang.
+	 define            variable form_code as character
+			   format "x(2)" label "格式代码".
+	 define new shared variable print_trlr like mfc_logical
+			   initial no label "打印客户订单尾栏".
+	 define            variable run_file as character format "X(12)".
+/*D238*/ define new shared variable gst_id like so_fst_id.
+/*F358*/ define new shared variable bump_rev like mfc_logical initial true
+/*F358*/                   label "递增订单版本号".
+/*J042*/ define            variable disc_det      like lngd_translation
+/*J042*/                   label "折扣明细".
+/*J042*/ define            variable disc_sum      like disc_det
+/*J042*/                   label "折扣汇总".
+/*J042*/ define new shared variable disc_det_key  like lngd_key1
+/*J042*/                                          initial "1".
+/*J042*/ define new shared variable disc_sum_key  like lngd_key1
+/*J042*/                                          initial "1".
+
+
+/*D238*/ find first gl_ctrl no-lock.
+
+/*G712*/ /* DEFINE VARIABLES FOR VAT REG NO & COUNTRY CODE */
+/*G712*/    {gpvtecdf.i &var="new shared"}
+
+	 
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+	    
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+nbr              colon 20
+	    nbr1             label {t001.i} colon 49 skip
+	    cust             colon 20
+	    cust1            label {t001.i} Colon 49 skip
+	    ord              colon 20
+	    ord1             label {t001.i} Colon 49 skip
+	    lang             colon 20
+	    lang1            label {t001.i} colon 49 skip(1)
+	    print_options    colon 30 skip
+	    comp_addr        colon 30 skip
+	    form_code        colon 30 deblank skip
+	    print_trlr       colon 30
+/*J042*/    disc_det         colon 30
+/*J042*/    disc_sum         colon 30
+/*F358*/    bump_rev         colon 30 skip
+/*H0CH*/  SKIP(.4)  /*GUI*/
+with frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = " 选择条件 ".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+
+	 find first soc_ctrl no-lock.
+	 comp_addr = soc_company.
+
+
+/*J042*/ find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                       and lngd_field   = "det_disc_prnt"
+/*J042*/                       and lngd_lang    = global_user_lang
+/*J042*/                       and lngd_key1    = disc_det_key
+/*J042*/                     no-lock no-error.
+/*J042*/ if available lngd_det then disc_det = lngd_translation.
+/*J042*/                       else disc_det = "".
+/*J042*/ find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                       and lngd_field   = "det_disc_prnt"
+/*J042*/                       and lngd_lang    = global_user_lang
+/*J042*/                       and lngd_key1    = disc_sum_key
+/*J042*/                     no-lock no-error.
+/*J042*/ if available lngd_det then disc_sum = lngd_translation.
+/*J042*/                       else disc_sum = "".
+
+	 
+/*GUI*/ {mfguirpa.i true  "printer" 80 }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
+/*GN91** do: **/
+	    if nbr1 = hi_char then nbr1 = "".
+	    if cust1 = hi_char then cust1 = "".
+	    if lang1 = hi_char then lang1 = "".
+	    if form_code = "" then form_code = "1".
+/*GN91*/    assign company = "".
+/*GN91*/    gst_id = "".
+
+	    
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
+
+/*J042*/    /* Validate discount print options */
+/*J042*/    find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                          and lngd_field       = "det_disc_prnt"
+/*J042*/                          and lngd_lang        = global_user_lang
+/*J042*/                          and lngd_translation = disc_det
+/*J042*/                        no-lock no-error.
+/*J042*/    if not available lngd_det then do:
+/*J042*/       {mfmsg02.i 712 3 disc_det}  /* Invalid Option */
+/*J042*/       {gprun.i ""gpmsgls1.p""
+/*J042*/          "(6928, 'soprint.p', 'det_disc_prnt', global_user_lang )"}
+/*J042*/       /*GUI NEXT-PROMPT removed */
+/*J042*/       /*GUI UNDO removed */ RETURN ERROR.
+/*J042*/    end.
+/*J042*/    disc_det_key = lngd_key1.
+/*J042*/    find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                          and lngd_field       = "det_disc_prnt"
+/*J042*/                          and lngd_lang        = global_user_lang
+/*J042*/                          and lngd_translation = disc_sum
+/*J042*/                        no-lock no-error.
+/*J042*/    if not available lngd_det then do:
+/*J042*/       {mfmsg02.i 712 3 disc_sum}  /* Invalid Option */
+/*J042*/       {gprun.i ""gpmsgls1.p""
+/*J042*/          "(6928, 'soprint.p', 'det_disc_prnt', global_user_lang )"}
+/*J042*/       /*GUI NEXT-PROMPT removed */
+/*J042*/       /*GUI UNDO removed */ RETURN ERROR.
+/*J042*/    end.
+/*J042*/    disc_sum_key = lngd_key1.
+
+	    bcdparm = "".
+	    {mfquoter.i nbr    }
+	    {mfquoter.i nbr1   }
+	    {mfquoter.i cust   }
+	    {mfquoter.i cust1  }
+	    {mfquoter.i ord    }
+	    {mfquoter.i ord1   }
+	    {mfquoter.i lang   }
+	    {mfquoter.i lang1}
+	    {mfquoter.i print_options}
+	    {mfquoter.i comp_addr}
+	    {mfquoter.i form_code}
+	    {mfquoter.i print_trlr}
+/*J042*/    {mfquoter.i disc_det  }
+/*J042*/    {mfquoter.i disc_sum  }
+/*F358*/    {mfquoter.i bump_rev  }
+
+	    if nbr1 = "" then nbr1 = hi_char.
+	    if cust1 = "" then cust1 = hi_char.
+	    if lang1 = "" then lang1 = hi_char.
+
+/*B615 TO TRANSLATE, ADD THE LANGUAGE CODE IN THE LOOKUP BELOW*/
+/*B615*/    if lookup(form_code,"1") = 0 then do:
+/*B615*/       {mfmsg.i 129 3}
+/*B615*/       /*GUI NEXT-PROMPT removed */
+/*B615*/       /*GUI UNDO removed */ RETURN ERROR.
+/*B615*/    end.
+
+/*GN91**    update company = "". **/
+/*GN91** /*D238*/    gst_id = "". **/
+	    if comp_addr <> "" then do:
+/*G0XY*/       if not available gl_ctrl then
+/*G0XY*/          find first gl_ctrl no-lock.
+	       find ad_mstr where ad_addr = comp_addr no-lock no-error.
+	       if available ad_mstr then do:
+		  find ls_mstr where ls_addr = ad_addr and ls_type = "company"
+			       no-lock no-error.
+		  if not available ls_mstr then do:
+		     {mfmsg.i 28 3}
+		     /* Address must be for a company */
+		     /*GUI NEXT-PROMPT removed */
+		     /*GUI UNDO removed */ RETURN ERROR.
+		  end.
+/*B130*/          addr[1] = ad_name.
+/*B130*/          addr[2] = ad_line1.
+/*B130*/          addr[3] = ad_line2.
+/*B130*/          addr[4] = ad_line3.
+/*B130*/          addr[6] = ad_country.
+/*H0CH*/ /*F015*/ if gl_ctrl.gl_can then gst_id = ad_gst_id.
+/*B130*/          {mfcsz.i addr[5] ad_city ad_state ad_zip}.
+/*B130*/          {gprun.i ""gpaddr.p"" }
+/*B130*/          company[1] = addr[1].
+/*B130*/          company[2] = addr[2].
+/*B130*/          company[3] = addr[3].
+/*B130*/          company[4] = addr[4].
+/*B130*/          company[5] = addr[5].
+/*B130*/          company[6] = addr[6].
+
+/*G712*/          /* FIND VAT REG NO & COUNTRY CODE */
+/*G712*/          {gpvtecrg.i}
+
+	       end.
+	       else do:
+		  {mfmsg.i 28 3}  /* Address must be for a company */
+		  /*GUI NEXT-PROMPT removed */
+		  /*GUI UNDO removed */ RETURN ERROR.
+	       end.
+	    end.
+
+	    
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i  "printer" 80}
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+find first gl_ctrl no-lock.
+find first soc_ctrl no-lock.
+find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                       and lngd_field   = "det_disc_prnt"
+/*J042*/                       and lngd_lang    = global_user_lang
+/*J042*/                       and lngd_key1    = disc_det_key
+/*J042*/                     no-lock no-error.
+find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                       and lngd_field   = "det_disc_prnt"
+/*J042*/                       and lngd_lang    = global_user_lang
+/*J042*/                       and lngd_key1    = disc_sum_key
+/*J042*/                     no-lock no-error.
+find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                          and lngd_field       = "det_disc_prnt"
+/*J042*/                          and lngd_lang        = global_user_lang
+/*J042*/                          and lngd_translation = disc_det
+/*J042*/                        no-lock no-error.
+find first lngd_det where lngd_dataset begins "soprint"
+/*J042*/                          and lngd_field       = "det_disc_prnt"
+/*J042*/                          and lngd_lang        = global_user_lang
+/*J042*/                          and lngd_translation = disc_sum
+/*J042*/                        no-lock no-error.
+find first gl_ctrl no-lock.
+find ad_mstr where ad_addr = comp_addr no-lock no-error.
+find ls_mstr where ls_addr = ad_addr and ls_type = "company"
+			       no-lock no-error.
+
+
+
+
+/*GN91** end. **/
+
+	 
+/*GUI mainloop removed */
+ do transaction:
+
+	    /*RUN SELECTED FORMAT */
+	    {gprfile.i}
+
+/*J0KK*/    if false then do:
+/*J0KK*/      {gprun.i ""zzsorp0501.p""} /*lb01*/
+/*J0KK*/    end.
+
+	    {gprun.i " ""zzsorp05"" + run_file + "".p"""}  /*lb01*/
+
+	    
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+{mfreset.i}
+
+/*G0MP*     if not batchrun then do:                                       */
+/*G0MP*/    if not batchrun then do on endkey undo mainloop,
+						leave mainloop:
+	       yn = yes.
+	       {mfmsg01.i 610 1 yn}  /* Sales orders printed correctly */
+	       if not yn then undo mainloop , leave.
+	    end.
+
+	 end. /*transaction*/
+
+      end.
+
+/*GUI*/ end procedure. /*p-report*/
+/*GUI*/ {mfguirpb.i &flds=" nbr nbr1 cust cust1 ord ord1 lang lang1 print_options comp_addr form_code print_trlr  disc_det  disc_sum  bump_rev   "} /*Drive the Report*/

@@ -1,0 +1,18 @@
+/* GUI CONVERTED from txecck.p (converter v1.69) Sat Mar 30 01:25:31 1996 */
+/* txecck.p - Routine to Check if Intra-EC is being used                      */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.       */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                         */
+/* REVISION: 7.4      LAST MODIFIED: 08/16/93   BY: dpm H075                  */
+/* REVISION: 7.5      LAST MODIFIED: 03/06/95   BY: dpm J044                  */
+
+
+	 define output parameter ec_ok like mfc_logical.
+
+	 ec_ok = false.
+
+/*J044*  find first mfc_ctrl where mfc_field = "ec_stat"
+ *                         no-lock no-error.
+ *         ec_ok = ( available mfc_ctrl and mfc_logical).
+ *J044*/
+/*J044*/ find first iec_ctrl no-lock no-error.
+/*J044*/ if available iec_ctrl then ec_ok = iec_use_instat.

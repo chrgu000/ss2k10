@@ -1,0 +1,9 @@
+ {BCDECLRE.I}
+     DEF  VAR win AS WIDGET-HANDLE.
+     {bcwinset.i "bc_name"}
+    
+    {bcrun.i "bc_exec"}
+        
+        DELETE WIDGET win.
+    {bcsess.i}
+   

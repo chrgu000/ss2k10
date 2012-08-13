@@ -1,0 +1,616 @@
+/* GUI CONVERTED from popomtf.p (converter v1.69) Fri May  3 14:49:38 1996 */
+/* popomtf.p - PURCHASE ORDER MAINTENANCE TRAILER                       */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 5.1     LAST MODIFIED: 10/21/88    BY: WUG *A494**/
+/* REVISION: 4.0     LAST MODIFIED: 03/24/89    BY: FLM *A685**/
+/* REVISION: 5.0     LAST MODIFIED: 08/28/89    BY: MLB *B324**/
+/* REVISION: 5.0     LAST MODIFIED: 10/27/89    BY: MLB *B324**/
+/* REVISION: 5.0     LAST MODIFIED: 02/27/90    BY: EMB *B591**/
+/* REVISION: 6.0     LAST MODIFIED: 07/06/90    BY: EMB *D040**/
+/* REVISION: 6.0     LAST MODIFIED: 08/14/90    BY: SVG *D058**/
+/* REVISION: 6.0     LAST MODIFIED: 09/18/90    BY: MLB *D055**/
+/* REVISION: 6.0     LAST MODIFIED: 01/02/90    BY: MLB *D238**/
+/* REVISION: 6.0     LAST MODIFIED: 04/26/91    BY: MLV *D559**/
+/* REVISION: 6.0     LAST MODIFIED: 11/15/91    BY: RAM *D952**/
+/* REVISION: 7.0     LAST MODIFIED: 03/09/92    BY: RAM *F272**/
+/* REVISION: 7.0     LAST MODIFIED: 06/24/92    BY: JJS *F681**/
+/* REVISION: 7.3     LAST MODIFIED: 08/18/92    BY: tjs *G028**/
+/* REVISION: 7.3     LAST MODIFIED: 10/02/92    BY: mpp *G012**/
+/* REVISION: 7.3     LAST MODIFIED: 01/08/93    BY: bcm *G417**/
+/* REVISION: 7.3     LAST MODIFIED: 02/11/93    BY: afs *G674**/
+/* REVISION: 7.3     LAST MODIFIED: 02/23/93    BY: tjs *G728**/
+/* REVISION: 7.4     LAST MODIFIED: 06/22/93    BY: jjs *H006**/
+/* REVISION: 7.4     LAST MODIFIED: 08/12/93    BY: tjs *H065**/
+/* REVISION: 7.4     LAST MODIFIED: 10/07/93    BY: afs *H162**/
+/* REVISION: 7.4     LAST MODIFIED: 04/11/94    BY: bcm *H334**/
+/* REVISION: 7.4     LAST MODIFIED: 06/21/94    BY: qzl *H397**/
+/* Oracle changes (share-locks)     09/12/94    BY: rwl *GM41**/
+/* REVISION: 7.4     LAST MODIFIED: 09/20/94    BY: jpm *GM74**/
+/* REVISION: 7.4     LAST MODIFIED: 11/06/94    BY: ljm *GO15**/
+/* REVISION: 7.4     LAST MODIFIED: 07/19/95    BY: rxm *G0QG**/
+/* REVISION: 7.4     LAST MODIFIED: 09/19/95    BY: ais *G0X6**/
+/* REVISION: 7.4     LAST MODIFIED: 10/18/95    BY: dxk *G0XK**/
+/* REVISION: 8.5     LAST MODIFIED: 09/18/95    BY: ccc *J053*/
+/* REVISION: 8.5     LAST MODIFIED: 02/14/96    BY: rxm *H0JJ*/
+/* REVISION: 8.5     LAST MODIFIED: 05/01/96    BY: *J04C* Sue Poland         */
+
+	 {mfdeclre.i}
+
+/*H0JJ*/ define new shared variable convertmode as character no-undo.
+/*J053*/ define     shared variable rndmthd     like rnd_rnd_mthd.
+/*J053*/ define     shared variable oldcurr     like po_curr.
+/*J053*/ define            variable tmp_amt     as decimal no-undo.
+/*J053*/ define            variable retval      as integer no-undo.
+	 define shared variable new_po like mfc_logical.
+	 define shared variable po_recno as recid.
+/*G028*/ define new shared variable pod_recno as recid.
+	 define shared variable old_rev like po_rev.
+	 define shared variable comment_type like po_lang.
+	 define shared variable old_po_stat like po_stat.
+/*G0X6*/ define shared variable line_opened like mfc_logical.
+	 define shared variable yn like mfc_logical.
+	 define shared variable qty_ord like pod_qty_ord.
+	 define variable openqty like mrp_qty.
+	 define shared variable blanket like mfc_logical.
+	 define variable bl_qty_chg like pod_rel_qty.
+	 define buffer poddet for pod_det.
+/*G012*/ define variable valid_acct like mfc_logical.
+/*H334** /*H006*/ define new shared variable undo_trl2 like mfc_logical. **/
+/*H006*/ define new shared variable maint like mfc_logical.
+/*G0QG*/ define shared variable del-yn like mfc_logical.
+
+/*J053 /*H006*/ define new shared frame d.  FRAMES ARE DEFINED IN POTRLDEF.I */
+
+/*H006   define new shared variable lines_total as decimal
+	    format "-zzzz,zzz,zz9.99" label "Line Total".  */
+/*H006   define variable tax_env    like txe_tax_env. */
+/*H006   define new shared variable tax_total like lines_total
+	   label "Total Tax". */
+/*H006   define variable tax_tr_type like tx2d_tr_type. */
+/*H006   define variable tax_nbr like tx2d_nbr.  */
+/*G674    /*G417*/ define shared frame a. */
+/*H006   define new shared variable ord_total like line_total label "Total".  */
+/*J053   MOVED VARIABLE EDI_PO DEFINITION TO POTRLDEF.I */
+/*J053  /*GM74*/ define variable edi_po like mfc_logical label "EDI PO".  */
+
+/*J053*/ /* DEFINE CURRENCY DEPENDENT ROUNDING VARIABLES */
+/*J053*/ {pocurvar.i}
+/*J053*/ {txcurvar.i}
+
+/*H334*/ /* DEFINE PO TRAILER VARIABLES */
+         {potrldef.i }
+
+	       /* DISPLAY SELECTION FORM */
+	       
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+		  
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_nbr
+		  po_vend
+		  po_ship
+	        SKIP(.4)  /*GUI*/
+with frame a attr-space side-labels width 80 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
+
+/*H006 REMOVED FORM G417 **BEGIN**
+*               form
+*                   lines_total    colon 35
+*                   tax_total      colon 35
+*                   po_curr        to 25 no-label
+*                   ord_total      colon 35
+*               with frame taxtot width 80
+*               side-labels.
+* H006 G417*** END */
+
+/*J053 ALL FORMS HAVE ALREADY BEEN DEFINED BY INCLUDES IN POTRLDEF.I
+ *** /*H334*/ {pototfrm.i}
+ *** /*GM74 /*H397*/ {pomtdfrm.i} */
+ *** /*GM74*/ form {pomtdfrm.i}
+ *** /*GM74*/ with frame d attr-space side-labels width 80.
+ ********************************************************************** J053 */
+
+/*H006*/ maint = true.
+
+/*H0JJ*/ convertmode = "MAINT".
+
+	 find first gl_ctrl no-lock.
+
+/*GM74*/ /*V8+*/
+/*GM74*/      
+	 do transaction on error undo, retry
+	    on endkey undo, leave:
+/*GUI*/ if global-beam-me-up then undo, leave.
+    
+
+	    find po_mstr where recid(po_mstr) = po_recno.
+
+/*G674** /*G417*/    display po_nbr po_vend po_ship with frame a. **/
+
+            if gl_vat then
+               display
+/*J053*/            po_curr
+/*J053*/            vtord_amt
+               with frame povttrl.
+            else if gl_can then
+               display
+/*J053*/            line_pst
+/*J053*/            line_total
+/*J053*/            po_frt
+/*J053*/            po_serv_chg
+/*J053*/            po_spec_chg
+/*J053*/            po_duty_type
+/*J053*/            po_tax_pct[2]
+/*J053*/            tax_2
+/*J053*/            po_curr
+/*J053*/            ord_amt
+               with frame pocttrl.
+/*G417**    else  */
+/*G417*/    else if not {txnew.i} then
+               display
+/*J053*/            line_tax
+/*J053*/            line_total
+/*J053*/            po_tax_pct[1]
+/*J053*/            po_tax_pct[2]
+/*J053*/            po_tax_pct[3]
+/*J053*/            tax_amt
+/*J053*/            po_curr
+/*J053*/            ord_amt
+               with frame potrail.
+
+/*H397 MOVED FORM DEF TO POMTDFRM.I **
+ *          form
+ *             po_rev         colon 15
+ *             po_prepaid     colon 50
+ *             po_print       colon 15
+ *             po_stat        colon 50
+ *             edi_po         colon 15
+ *             po_cls_date    colon 50
+ *             po_ap_acct     colon 15
+ *             po_ap_cc       no-label
+ *             po_fob         colon 50
+ *             po_del_to      colon 15
+ *             po_shipvia     colon 50
+ *          with frame d attr-space side-labels width 80.  **/
+
+/*G417*/    /* CODE REQUIRING gl_vat & gl_can WILL NOT EXECUTE WHEN {txnew.i} */
+	    if {txnew.i} then do:
+/*H006*/       undo_trl2 = true.
+	       /* CALCULATE, DISPLAY, AND EDIT TAXES */
+/*H006*/       {gprun.i ""pomttrl2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*H006*/       if undo_trl2 then return.
+	    end.
+
+/*H006 REMOVED FOLLOWING CODE
+*               tax_tr_type = "20".  /* 20 = PURCHASE ORDERS */
+*               tax_nbr = "".        /* HOW TO USE  */
+*
+*               /* NOTE nbr FIELD BLANK UNTIL I KNOW HOW TO USE IT */
+*               {gprun.i ""txcalc.p""  "(input  tax_tr_type,
+*                                        input  po_nbr,
+*                                        input  tax_nbr)" }
+*
+*               /* DO TAX DETAIL DISPLAY / EDIT HERE */
+*               {gprun.i ""txedit.p""  "(input  tax_tr_type,
+*                                        input  po_nbr,
+*                                        input  tax_nbr,
+*                                        input  po_tax_env,
+*                                        output tax_total)"}
+*
+*               /* CALCULATE TOTALS */
+*               {gprun.i ""txtotal.p"" "(input  tax_tr_type,
+*                                        input  po_nbr,
+*                                        input  tax_nbr,
+*                                        output tax_total)"}
+*
+* G674** /*G417** END */ display po_nbr po_vend po_ship with frame a. ***
+*
+*               for each pod_det where pod_nbr = po_nbr and
+*               pod_status <> "c" and pod_status <> "x":
+*                   lines_total = lines_total
+*                   + (pod_pur_cost *  (if pod_qty_ord >= 0 then
+*                   max  (pod_qty_ord - pod_qty_rcvd,0) else
+*                   min (pod_qty_ord - pod_qty_rcvd,0))
+*                   *  (1 -  (pod_disc_pct / 100))).
+*               end.
+*               ord_total = lines_total + tax_total.
+*               display lines_total tax_total po_curr ord_total
+*               with frame taxtot.
+*           end.
+* H006 END OF REMOVED CODE */
+
+/*G417*/    if not {txnew.i} then do:
+                if gl_vat then
+                    display
+/*J053*/                po_curr
+/*J053*/                vtord_amt
+                    with frame povttrl.
+                else if gl_can then
+                    display
+/*J053*/                line_pst
+/*J053*/                line_total
+/*J053*/                po_frt
+/*J053*/                po_serv_chg
+/*J053*/                po_duty_type
+/*J053*/                po_spec_chg
+/*J053*/                po_tax_pct[2]
+/*J053*/                tax_2
+/*J053*/                po_curr
+/*J053*/                ord_amt
+                    with frame pocttrl.
+/*G417**        else  */
+/*G417*/        else if not {txnew.i} then
+                    display
+/*J053*/                line_tax
+/*J053*/                line_total
+/*J053*/                po_tax_pct[1]
+/*J053*/                po_tax_pct[2]
+/*J053*/                po_tax_pct[3]
+/*J053*/                tax_amt
+/*J053*/                po_curr
+/*J053*/                ord_amt
+                    with frame potrail.
+
+/*J053          display with frame d.     */
+
+/*J053*/        display
+/*J053*/            po_rev
+/*J053*/            po_print
+/*J053*/            po_ap_acct
+/*J053*/            po_ap_cc
+/*J053*/            po_shipvia
+/*J053*/            po_del_to
+/*J053*/            po_prepaid
+/*J053*/            po_stat
+/*J053*/            po_cls_date
+/*J053*/            po_fob
+/*J053*/            edi_po
+/*J053*/        with frame pomtd.
+		if gl_vat then do:
+		    {povttrl.i}
+		end.
+		else if not gl_can then do: /*U.S*/
+		    {mfpotrl.i}
+		    update po_tax_pct[1] po_tax_pct[2] po_tax_pct[3]
+		    with frame potrail.
+		    {mfpotot.i}
+		end.
+		else if gl_can then do:
+                    {pocttrl.i}     /* CALC LINE_TOTAL & LINE_PST */
+/*J053*/            trlloop: do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                        update  po_frt
+                                po_serv_chg
+                                po_duty_type
+                                po_spec_chg
+                                po_tax_pct[2]
+                        with frame pocttrl.
+/*J053*/                /* VALIDATE PO_FRT AMOUNT */
+/*J053*/                if (po_frt <> 0) then do:
+/*J053*/                    {gprun.i ""gpcurval.p"" "(input po_frt,
+                                                      input rndmthd,
+                                                      output retval)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/                    if retval <> 0 then do:
+/*J053*/                        next-prompt po_frt with frame pocttrl.
+/*J053*/                        undo trlloop, retry.
+/*J053*/                    end.
+/*J053*/                end.
+/*J053*/                /* VALIDATE PO_SERV_CHG AMOUNT */
+/*J053*/                if (po_serv_chg <> 0) then do:
+/*J053*/                    {gprun.i ""gpcurval.p"" "(input po_serv_chg,
+                                                      input rndmthd,
+                                                      output retval)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/                    if retval <> 0 then do:
+/*J053*/                        next-prompt po_serv_chg with frame pocttrl.
+/*J053*/                        undo trlloop, retry.
+/*J053*/                    end.
+/*J053*/                end.
+/*J053*/                /* VALIDATE PO_SPEC_CHG AMOUNT */
+/*J053*/                if (po_spec_chg <> 0) then do:
+/*J053*/                    {gprun.i ""gpcurval.p"" "(input po_spec_chg,
+                                                      input rndmthd,
+                                                      output retval)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/                    if retval <> 0 then do:
+/*J053*/                        next-prompt po_spec_chg with frame pocttrl.
+/*J053*/                        undo trlloop, retry.
+/*J053*/                    end.
+/*J053*/                end.
+
+/*J053*/            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* TRLLOOP: DO ON ERROR */
+                    {pocttot.i}    /* CALCULATE ORD_AMT */
+		end.  /* else, if gl_can do */
+	    end.   /* if not {txnew.i} */
+
+	    edi_po = (po_inv_mthd = "e" or po_inv_mthd = "b").  /*H397*/
+
+	    display
+	       po_rev po_print po_ap_acct po_ap_cc po_shipvia po_del_to
+	       po_prepaid po_stat po_cls_date po_fob
+               edi_po /*H397*/
+/*J053*/    with frame pomtd.
+/*J053*     with frame d.      */
+	    settrl:
+	    do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	       /*H397 REVISED FOLLOWING STATEMENT*/
+	       set
+	       po_rev
+	       po_print
+	       edi_po
+	       po_ap_acct
+	       po_ap_cc
+	       po_del_to
+	       po_prepaid
+	       po_stat          when (not po_sched) /*H397*/
+	       po_fob
+	       po_shipvia
+/*J053*/       with frame pomtd.
+/*J053*        with frame d.   */
+
+/*H162**       (SECTION REMOVED; po_ap_acct CHANGED TO DISPLAY ONLY)
+ *             /* VERIFY GL ACCOUNT/COST CENTER */
+/*G012*/       {gpglver1.i &acc = po_ap_acct
+ *                         &sub = ?
+ *                         &cc = po_ap_cc
+ *                         &frame = d
+ *                         &loop = settrl}
+/*G012*        {gpglac.i
+ *G012*           &acct  = "po_ap_acct"
+ *G012*           &cc    = "po_ap_cc"
+ *G012*           &frame = "d"
+ *G012*           &label = "settrl"}
+ *G012*/
+ *
+ *             /* ACCOUNT MUST EITHER BE BASE OR EQUAL TO PO CURRENCY*/
+ *             if po_curr <> base_curr then do:
+ *                find ac_mstr where
+/*F681*/             ac_code = substring(po_ap_acct,1,(8 - global_sub_len))
+/*7.0             and ac_ctr = po_ap_cc */
+ *                no-lock no-error.
+ *                if available ac_mstr and
+ *                ac_curr <> po_curr and ac_curr <> base_curr then do:
+ *                   {mfmsg.i 134 3}
+ *                   /*ACCT CURRENCY MUST MATCH TRANSACTION OR BASE CURR*/
+ *                   next-prompt po_ap_acct with frame d.
+ *                   undo settrl, retry.
+ *                end.
+ *             end.
+ **H162**/
+
+/*J053*/       /* VALIDATE PREPAID AMOUNT */
+/*J053*/       if (po_prepaid <> 0) then do:
+/*J053*/           {gprun.i ""gpcurval.p"" "(input po_prepaid,
+                                             input rndmthd,
+                                             output retval)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/           if retval <> 0 then do:
+/*J053*/               next-prompt po_prepaid with frame pomtd.
+/*J053*/               undo settrl, retry.
+/*J053*/           end.
+/*J053*/       end.
+
+	       if gl_can then
+	       setd_sub:
+		  do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		     FORM /*GUI*/ 
+/*GO15                 po_fst_id colon 12 label "GST ID"
+*                      po_pst_id colon 12 */
+/*GO15*/               
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+po_fst_id colon 12 label "GST 标志" space(2)
+/*GO15*/               po_pst_id colon 12 space(2)
+        	      SKIP(.4)  /*GUI*/
+with frame setd_sub attr-space overlay side-labels
+/*J04C*/	     centered row frame-row(pomtd) + 2 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-setd_sub-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame setd_sub = F-setd_sub-title.
+ RECT-FRAME-LABEL:HIDDEN in frame setd_sub = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame setd_sub =
+  FRAME setd_sub:HEIGHT-PIXELS - RECT-FRAME:Y in frame setd_sub - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME setd_sub = FRAME setd_sub:WIDTH-CHARS - .5.  /*GUI*/
+
+/*J04C* 	     centered row frame-row(d) + 2.    */
+		     update po_fst_id po_pst_id with frame setd_sub.
+
+		     if not gst_taxed and po_fst_id = "" then do:
+			{mfmsg.i 8001 3}
+			next-prompt po_fst_id with frame setd_sub.
+			undo setd_sub, retry.
+		     end.
+		     if not pst_taxed and po_pst_id = "" then do:
+			{mfmsg.i 8002 3}
+			next-prompt po_pst_id with frame setd_sub.
+			undo setd_sub, retry.
+		     end.
+		  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+		  /*setd_sub*/
+
+	       /*H397 ADDED FOLLOWING SECTION*/
+	       if po_print then do:
+		  if edi_po then po_inv_mthd = "b".
+		  else po_inv_mthd = "p".
+	       end.
+	       else do:
+		  if edi_po then po_inv_mthd = "e".
+		  else po_inv_mthd = "n".
+	       end.
+	       /*H397 END SECTION*/
+
+	    end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+	    if not new_po and old_rev = po_rev and po_print = no then do:
+	       {mfmsg.i 335 1}
+	    end.
+	    if not new_po and old_rev <> po_rev then do:
+	       po_print = yes.
+	    end.
+
+	    global_type = comment_type.
+
+	    if (old_po_stat = "c" or old_po_stat = "x")
+	    and po_stat <> "c" and po_stat <> "x" then do:
+	       po_cls_date = ?.
+               display po_cls_date with frame pomtd.
+/*J053*	       display po_cls_date with frame d.   */
+	       /* DO YOU WISH TO REOPEN ALL P.O. LINE ITEMS */
+	       yn = no.
+	       {mfmsg01.i 327 1 yn}
+/*F272         if yn = yes and blanket = false then do: */
+/*F272*/       if yn then do:
+
+		  /* REOPEN P.O. LINES */
+/*GM41*/          for each pod_det exclusive-lock
+		     where pod_nbr = po_nbr and pod_status <> "":
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+		     /* ADJUST BLANKET PO WHEN UN-CANCELING */
+		     /* PO CREATED BY BLANKET               */
+		     if pod_status = "x"
+		     and not blanket then do:
+			{pobladj.i &incr="yes"}
+		     end.
+
+		     pod_status = "".
+
+/*F272*/             if not blanket then do:
+/*G028*                 {mfpotr.i "ADD"} */
+/*G028*/                pod_recno = recid(pod_det).
+/*G028*/                po_recno = recid(po_mstr).
+/*G728*                 {gprun.i ""mfpotr.p"" "(input ""ADD"")"} */
+/*G0XK *G728*           {gprun.i ""gppotr.p"" "(input ""ADD"")"} */
+
+			/* gppotr.p will create a booking record and will also
+			   update in_mstr and MRP reqs if pod_po_db is in the
+			   same DB as pod_site.  If pod_po_db is not the
+			   Central/Header DB then in_mstr and MRP reqs are
+			   updated via popomtg.p */
+
+/*G0XK*/                {gprun.i ""gppotr.p"" "(input ""ADD"", input pod_nbr, input pod_line)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+			if pod_type = "" then do:
+
+			   if pod_qty_ord >= 0 then
+			      openqty = max(pod_qty_ord - pod_qty_rcvd,0)
+				       * pod_um_conv.
+			   else
+			      openqty = min(pod_qty_ord - pod_qty_rcvd,0)
+				       * pod_um_conv.
+
+			   /* UPDATE MRP RECS, ORDER QTY, REQS, NET CHG FLAG */
+			   {mfmrw.i "pod_det" pod_part pod_nbr
+			      string(pod_line) """" ? pod_due_date openqty
+			      "SUPPLY" "采购单" pod_site
+			   }
+
+			end.
+/*F272*/             end.
+		  end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	       end.
+	    end.
+/*G0X6*     if old_po_stat <> "c" and old_po_stat <> "x"                      */
+/*F272      and (po_stat = "c" or po_stat = "x") and blanket = false then do: */
+
+/*G0X6*/    if ((old_po_stat <> "c" and old_po_stat <> "x") or
+/*G0X6*/         line_opened) /* true if closed line item was opened */
+/*F272*/    and index("cx",po_stat) <> 0 then do:
+	       po_cls_date = today.
+                /* MESSAGE IF OPTION SELECTED IS TO CLOSE A P.O.   */
+               display po_cls_date with frame pomtd.
+/*J053*	       display po_cls_date with frame d.   */
+
+	       /* MESSAGE IF OPTION SELECTED IS TO CLOSE A P.O.   */
+	       {mfmsg.i 326 1}
+/*G0X6*/       if not blanket then pause 2. /* non-blanket routine hides msg*/
+
+	       /* CLOSE P.O. LINES NOT ALREADY CANCELLED BY ZERO BACKORDERS */
+	       for each pod_det where pod_nbr = po_nbr and pod_status <> "x":
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F272*/          if not blanket then do:
+/*G028*              {mfpotr.i "DELETE"} */
+/*G028*/             pod_recno = recid(pod_det).
+/*G028*/             po_recno = recid(po_mstr).
+/*G728*              {gprun.i ""mfpotr.p"" "(input ""DELETE"")"} */
+/*G0XK *G728*        {gprun.i ""gppotr.p"" "(input ""DELETE"")"} */
+/*G0XK*/             {gprun.i ""gppotr.p"" "(input ""DELETE"", input pod_nbr, input pod_line)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F272*/          end.
+/*H065*           if po_stat = "c" then pod_status = "c". */
+/*H065*           if po_stat = "x" then pod_status = "x". */
+/*H065*/          if po_stat = "c" and pod_status <> "x" then pod_status = "c".
+/*H065*/          if po_stat = "x" and pod_status <> "c" then pod_status = "x".
+		  if pod_type = "" and blanket = false then do:
+
+		     /* UPDATE MRP RECS, ORDER QTY, REQS, NET CHG FLAG */
+		     {mfmrw.i "pod_det" pod_part pod_nbr string(pod_line)
+		     """" ? pod_due_date "0" "SUPPLY" "采购单"
+		     pod_site}
+
+		  end.
+		  /* ADJUST BLANKET PO WHEN CANCELING PO CREATED BY BLANKET */
+		  if pod_status = "x"
+		  and not blanket then do:
+		     {pobladj.i}
+		  end.
+	       end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	    end.
+	 end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+	
+/*J04C*/ hide frame pomtd.
+/*J04C*/ hide frame potrail.
+/*J04C*/ hide frame povttrl.
+/*J04C*/ hide frame pocttrl.
+/*J04C*/ hide frame potot.	
+
+/*GM74*/      
+	 hide all no-pause.
+	 if global-tool-bar and valid-handle(global-tool-bar-handle)
+	      then global-tool-bar-handle:visible = true.      

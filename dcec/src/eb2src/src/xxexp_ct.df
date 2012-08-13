@@ -1,0 +1,50 @@
+ADD TABLE "xxexp_ctrl"
+  AREA "Schema Area"
+  LABEL "制造费用报表控制文件"
+  DUMP-NAME "xxexp_ct"
+
+ADD FIELD "xxexp_sales" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "销售收入分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "销售收入分析代码"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售收入分析代码"
+  ORDER 20
+
+ADD FIELD "xxexp_discount" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "销售折扣分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "销售折扣分析代码"
+  POSITION 4
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售折扣分析代码"
+  ORDER 30
+
+ADD FIELD "xxexp_dir" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "输出目录"
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "输出目录"
+  POSITION 5
+  SQL-WIDTH 60
+  COLUMN-LABEL "输出目录"
+  ORDER 40
+
+ADD FIELD "xxexp_expense" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "制造费用分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "制造费用分析代码"
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "制造费用分析代码"
+  ORDER 50
+
+.
+PSC
+cpstream=GB2312
+.
+0000000995

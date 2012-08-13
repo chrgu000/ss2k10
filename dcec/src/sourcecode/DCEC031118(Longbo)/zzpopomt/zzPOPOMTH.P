@@ -1,0 +1,465 @@
+/* GUI CONVERTED from popomth.p (converter v1.69) Sun Sep  7 22:45:46 1997 */
+/* popomth.p - PURCHASE ORDER MAINTENANCE SUBROUTINE                    */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 6.0     LAST MODIFIED: 11/11/91    BY: RAM *D921**/
+/* REVISION: 6.0     LAST MODIFIED: 11/15/91    BY: RAM *D952**/
+/* REVISION: 7.2     LAST MODIFIED: 11/19/92    BY: WUG *G340**/
+/* REVISION: 7.3     LAST MODIFIED: 04/29/93    BY: afs *G972**/
+/* REVISION: 7.3     LAST MODIFIED: 07/30/93    BY: cdt *H047**/
+/* REVISION: 7.4     LAST MODIFIED: 09/29/93    BY: cdt *H086**/
+/* REVISION: 7.4     LAST MODIFIED: 11/19/93    BY: pxd *H225**/
+/* REVISION: 7.4     LAST MODIFIED: 02/10/94    BY: dpm *FL69**/
+/* REVISION: 7.3     LAST MODIFIED: 04/20/94    BY: WUG *FN48**/
+/* REVISION: 7.4     LAST MODIFIED: 04/21/94    BY: dpm *FN53**/
+/* Oracle changes (share-locks)    09/12/94           BY: rwl *GM41*    */
+/* REVISION: 7.4     LAST MODIFIED: 01/28/95    BY: ljm *G0D7**/
+/* REVISION: 7.4     LAST MODIFIED: 09/19/95    BY: ais *G0X6**/
+/* REVISION: 7.4     LAST MODIFIED: 11/07/95    BY: dxk *G0XK**/
+/* REVISION: 7.4     LAST MODIFIED: 12/12/95    BY: ais *G1G4**/
+/* REVISION: 7.4     LAST MODIFIED: 01/02/96    BY: ais *G1HW**/
+/* REVISION: 7.4     LAST MODIFIED: 01/15/96    BY: ais *G1JY**/
+/* REVISION: 7.4     LAST MODIFIED: 09/04/97    BY: *G2PD* Nirav Parikh */
+
+
+     {mfdeclre.i}
+
+     define shared variable desc1 like pt_desc1.
+     define shared variable desc2 like pt_desc2.
+     define shared variable line like sod_line.
+     define shared variable del-yn like mfc_logical.
+     define shared variable po_recno as recid.
+     define shared variable vd_recno as recid.
+     define shared variable old_qty_ord like pod_qty_ord.
+     define shared variable ext_cost like pod_pur_cost.
+     define variable yn like mfc_logical initial no.
+     define shared variable pod_recno as recid.
+     define shared variable podcmmts like mfc_logical label "หตร๗".
+     define shared variable sngl_ln like poc_ln_fmt.
+     define shared frame chead.
+     define shared frame c.
+     define shared frame d.
+     define shared variable mfgr like vp_mfgr.
+     define shared variable mfgr_part like vp_mfgr_part.
+     define shared variable continue like mfc_logical.
+     define shared variable st_qty like pod_qty_ord.
+     define shared variable st_um like pod_um.
+     define shared variable old_um like pod_um.
+     define shared variable clines as integer initial ?.
+     define shared variable blanket like mfc_logical.
+     define variable bl_qty_chg like pod_rel_qty.
+/*G1JY*/ define buffer pomstr for po_mstr.
+     define buffer poddet for pod_det.
+
+/*F033*/ define shared variable new_db like si_db.
+/*F033*/ define shared variable old_db like si_db.
+/*F033*/ define shared variable new_site like si_site.
+/*F033*/ define shared variable old_site like si_site.
+/*F033*/ define shared variable podnbr like pod_nbr.
+/*F033*/ define shared variable podline like pod_line.
+/*F033*/ define shared variable podreqnbr like pod_req_nbr.
+/*G972*/ define        variable err-flag as integer.
+/*F033*/ {poprwkfl.i}
+/*H047*/ define shared variable base_cost like pod_pur_cost.
+/*G0X6*/ define shared variable line_opened like mfc_logical.
+/*G0XK*/ define        variable qty_ord like pod_qty_ord no-undo.
+/*G1JY*/ define        variable po-found as character no-undo.
+
+     find po_mstr where recid(po_mstr) = po_recno.
+     find vd_mstr where recid(vd_mstr) = vd_recno no-lock.
+
+     {mfpomtb.i} /* defines forms c & d */
+/*G0D7*/ /*V8:HiddenDownFrame=c */
+     find pod_det where recid(pod_det) = pod_recno.
+     find pt_mstr no-lock
+     where pt_part = pod_part no-error.
+     find vp_mstr no-lock
+     where vp_part = pod_part
+     and vp_vend = po_vend
+     and vp_vend_part = pod_vpart no-error.
+
+/*G1HW*/ base_cost = 0.
+
+     setc-1:
+     do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+        set
+           pod_qty_ord
+           pod_um when (new pod_det)
+        with frame c editing:
+
+           readkey.
+           /* DELETE */
+           if lastkey = keycode("F5")
+           or lastkey = keycode("CTRL-D")
+           then do:
+
+/*G2PD** BEGIN DELETE **
+ *        if pod_qty_rcvd <> 0 then do:
+ *           {mfmsg.i 364 4}
+ *           /* DELETE NOT ALLOWED, PO LINE HAS RECEIPTS */
+ *           undo setc-1.
+ *        end.
+ *G2PD** END DELETE ** */
+
+/*G2PD*/       find first prh_hist where prh_nbr = pod_nbr and
+/*G2PD*/            prh_line = pod_line no-lock no-error.
+/*G2PD*/       if available prh_hist then do :
+/*G2PD*/        /* DELETE NOT ALLOWED, PO LINE HAS RECEIPTS */
+/*G2PD*/      {mfmsg.i 364 4}
+/*G2PD*/      undo setc-1.
+/*G2PD*/       end. /* IF AVAILABLE prh_hist THEN */
+
+          /*FN48 COMMMENTED FOLLOWING SECTION******************
+          /*G340 NO DELETE IF SCHEDULES PRESENT*/
+          if
+          can-find
+          (first sch_mstr where sch_type = 4 and sch_nbr = po_nbr)
+          or
+          can-find
+          (first sch_mstr where sch_type = 5 and sch_nbr = po_nbr)
+          or
+          can-find
+          (first sch_mstr where sch_type = 6 and sch_nbr = po_nbr)
+          then do:
+             {mfmsg.i 6022 3} /* Schedule exists, delete not allowed */
+             undo setc-1.
+          end.
+          **FN48 END SECTION**********************************/
+
+          /*FN48 ADDED FOLLOWING SECTION*/
+          find first sch_mstr where sch_type = 4 and sch_nbr = pod_nbr
+          and sch_line = pod_line
+          no-lock no-error.
+
+          if available sch_mstr then do:
+             {mfmsg.i 6022 3} /* Schedule exists, delete not allowed */
+             undo setc-1.
+          end.
+          /*FN48 END SECTION*/
+
+/*G1JY*/          if (po_type = "B" and po_rel_nbr <> 0 and pod_rel_nbr <> 0)
+/*G1JY*/          then do for pomstr:
+/*G1JY*/             for each pomstr no-lock
+/*G1JY*/                where pomstr.po_vend = po_mstr.po_vend and
+/*G1JY*/                      pomstr.po_nbr <> po_mstr.po_nbr:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G1JY*/                if pomstr.po_blanket <> po_mstr.po_nbr then next.
+/*G1JY*/                /* this PO is for the blanket PO we want to delete */
+/*G1JY*/                do for poddet:
+/*G1JY*/                   find first poddet no-lock
+/*G1JY*/                      where poddet.pod_nbr = pomstr.po_nbr
+/*G1JY*/                        and poddet.pod_part = pod_det.pod_part
+/*G1JY*/                        and poddet.pod_blanket = po_mstr.po_nbr
+/*G1JY*/                        and poddet.pod_blnkt_ln = pod_det.pod_line
+/*G1JY*/                      use-index pod_part no-error.
+/*G1JY*/                   if available poddet
+/*G1JY*/                   then do:
+/*G1JY*/                      po-found = poddet.pod_nbr + "/"
+/*G1JY*/                               + string(poddet.pod_line).
+/*G1JY*/                   /* delete not allowed,
+/*G1JY*/                      # was released from this Blanket PO */
+/*G1JY*/                      {mfmsg03.i 1102 4 po-found """" """"}
+/*G1JY*/                      undo setc-1.
+/*G1JY*/                   end.
+/*G1JY*/                end.
+/*G1JY*/             end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G1JY*/          end.
+          del-yn = yes.
+          /* Please confirm delete */
+          {mfmsg01.i 11 1 del-yn}
+          if del-yn then leave.
+           end.
+           else apply lastkey.
+        end.
+        /* END EDITING PORTION OF FRAME C */
+
+        ststatus = stline[3].
+        status input ststatus.
+
+        if po_stat <> "c" and po_stat <> "x" and
+        pod_status <> "c" and pod_status <> "x" and pod_type = ""
+        and blanket = false then do:
+
+           /* UPDATE PART MASTER MRP FLAG */
+/*F033*/
+           old_db = global_db.
+           new_site = pod_site.
+           if pod_site <> "" then do:
+          {gprun.i ""gpalias.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+           end.
+           global_part = pod_part.
+/*H225         {gprun.i ""inmrp.p""}        */
+/*H225*/       {gprun.i ""inmrp.p"" "(pod_part, pod_site)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+           new_db = old_db.
+           {gprun.i ""gpaliasd.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F033  /*D274*/               {inmrp.i &part=pod_part &site=pod_site} */
+/*F033*/
+        end.
+
+        if del-yn = yes then do:
+
+           /* DELETE */
+
+/*F033         /* Moved to popomta2.p */
+ *             /* MRP WORKFILE */
+ *             {mfmrwdel.i "pod_det" pod_part pod_nbr string(pod_line) }
+ *
+ *             /* ADJUST BLANKET PO */
+ *             if po_stat <> "c" and po_stat <> "x"
+ *             and pod_status <> "c" and pod_status <> "x"
+ *             and not blanket then do:
+ *                {pobladj.i}
+ *             end.
+ *
+ *             /*DELETE COMMENTS*/
+ *             for each cmt_det where cmt_indx = pod_cmtindx:
+ *                delete cmt_det.
+ *             end.
+ *
+ *             delete pod_det.
+ *F033*/
+
+/*G972*/       /* MAJOR REVISION TO LINE DELETE PARAGRAPH BELOW */
+           assign podnbr  = pod_nbr
+              podline = pod_line.
+           /* Create ORD-PO booking in Central/Header DB, always */
+
+/*G1G4*/       /* ORD-PO Booking was already created (popomta.p called  */
+           /* gppotr.p), and we don't need to create another one.   */
+/*G1G4 /*G0XK*/{mfpotr01.i "DELETE"}                                    */
+
+           find si_mstr where si_site = pod_site no-lock.
+           if si_db <> global_db then do:
+          old_db = global_db.
+          /* Delete the line in the remote database */
+          {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+          {gprun.i ""popomta2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+          {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+          /* Adjust Blanket PO in Header/Central DB */
+/*G0XK*/          if po_stat <> "c" and po_stat <> "x"
+/*G0XK*/          and pod_status <> "c" and pod_status <> "x"
+/*G0XK*/          and not blanket then do:
+/*G0XK*/             {pobladj.i}
+/*G0XK*/          end.
+
+          /* Delete the local database line data */
+/*GM41*/          for each cmt_det exclusive-lock where cmt_indx = pod_cmtindx:
+             delete cmt_det.
+          end.
+          delete pod_det.
+           end.
+           else do:
+          {gprun.i ""popomta2.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+           end.
+/*G972*/       /* END REWRITE */
+
+           del-yn = no.
+           clear frame c.
+           /* Single Line Entry. */
+           if sngl_ln then
+          clear frame d all no-pause.
+
+           /* End Single Line Entry. */
+           {mfmsg.i 6 1}  /* Line item deleted */
+           continue = no.
+           leave setc-1.
+        end.  /* if del-yn = yes */
+
+        else do:
+           /* ADD OR MODIFY  */
+
+           if new pod_det then do:
+          if pod_qty_ord <= 0 then do:
+             {mfmsg.i "(if pod_qty_ord < 0 then 331 else 332)" 1}
+          end.
+           end.
+
+           if not new pod_det then do:
+          if pod_cmtindx <> 0 then podcmmts = yes.
+          if pod_qty_ord <> old_qty_ord
+          and (po_stat = "c" or po_stat = "x"
+          or pod_status = "c" or pod_status = "x" ) then do:
+             yn = no.
+             /* PO and/or PO line closed or cancelled - reopen? */
+             {mfmsg01.i 339 1 yn}
+             if yn = yes then do:
+            po_stat = "".
+            po_cls_date = ?.
+            pod_status = "".
+/*G0X6*/                line_opened = true.
+             end.
+             if yn = no then do:
+            pod_qty_ord = old_qty_ord.
+            display pod_qty_ord with frame c.
+            next-prompt pod_qty_ord with frame c.
+            undo setc-1, retry.
+             end.
+          end.
+          if (pod_qty_ord < pod_qty_rcvd and old_qty_ord > 0
+          and pod_qty_rcvd > 0)
+          or (pod_qty_ord > pod_qty_rcvd and old_qty_ord < 0
+          and pod_qty_rcvd < 0) then do:
+/*FL69*              {mfmsg.i 330 3} CHANGED ERROR TO WARNING */
+/*FL69*/             {mfmsg.i 330 2}
+/*FL69*              pod_qty_ord = old_qty_ord.
+ *                   display pod_qty_ord with frame c.
+ *                   next-prompt pod_qty_ord with frame c.
+ *                   undo setc-1, retry.
+ *FL69**/
+          end.
+           end.
+
+/*FN53*//*     if available pt_mstr and pt_um = pod_um then */
+/*FN53*//*        pod_um_conv = 1. */
+/*FN53*/       if available pt_mstr and pt_um = pod_um then do:
+/*FN53*/          if new pod_det then pod_um_conv = 1.
+/*FN53*/       end.
+           else
+           if available pt_mstr and pt_um <> pod_um then do:
+          find um_mstr where um_um = pt_um and um_alt_um = pod_um
+          and um_part = pod_part no-lock no-error.
+          if not available um_mstr then
+             find um_mstr where um_um = pt_um and um_alt_um = pod_um
+             and um_part = "" no-lock no-error.
+/*FN53*//*        if available um_mstr then pod_um_conv = um_conv. */
+/*FN53*/          if available um_mstr then do:
+/*FN53*/             if new pod_det then pod_um_conv = um_conv.
+/*FN53*/          end.
+          else do:
+             /* No unit of measure conversion exists. */
+             {mfmsg.i 33 2}
+             if pod_um_conv = 0 or pod_um_conv = ? then
+            pod_um_conv = 1.
+          end.
+           end.
+           else
+           if pod_um_conv = 0 or pod_um_conv = ? then
+          pod_um_conv = 1.
+
+           if pod_qty_ord <> old_qty_ord and pod_req_nbr <> ""
+           and pod_um = old_um and pod_um <> st_um and not new pod_det
+           then do:
+          yn = no.
+          /* Convert quantity from stock units to purchased units */
+          {mfmsg01.i 372 2 yn}
+          if yn = yes then do:
+             pod_qty_ord = pod_qty_ord / pod_um_conv.
+             display pod_qty_ord with frame c.
+          end.
+           end.
+
+           /* GET DEFAULT PURCHASE ORDER UNIT COST */
+
+/*G972**       {gpsct05.i &part=pod_part &site=pod_site &cost=sct_mtl_tl} **/
+
+           if (pod_um entered or new pod_det)
+           and available pt_mstr then do:
+          if pod_req_nbr <> "" and pod_um <> st_um
+          and (pod_qty_ord <> old_qty_ord or pod_um <> old_um) then do:
+             yn = no.
+          /* Convert quantity from stock units to purchased units */
+             {mfmsg01.i 372 2 yn}
+             if yn = yes then do:
+            pod_qty_ord = pod_qty_ord / pod_um_conv.
+            display pod_qty_ord with frame c.
+             end.
+          end.
+          /* Get part costs */
+/*G972*/          find si_mstr where si_site = pod_site no-lock.
+/*G972*/          if si_db <> global_db then do:
+/*G972*/             old_db = global_db.
+/*G972*/             {gprun.i ""gpalias3.p"" "(si_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G972*/          end.
+/*G972*/          {gprun.i ""gpsct05.p""
+           "(pt_part, si_site, 2, output glxcst, output curcst)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G972*/          if old_db <> global_db then do:
+/*G972*/             {gprun.i ""gpalias3.p"" "(old_db, output err-flag)" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*G972*/          end.
+/*G1HW*/          base_cost = glxcst * pod_um_conv.
+          if not available vp_mstr then do:
+             pod_pur_cost = 0.
+/*H047*/             /* Compute costs for foreign currency. */
+/*H047*/             /* if po_curr = base_curr then         */
+/*F003               pod_pur_cost = pt_mtl_stdtl * pod_um_conv. */
+/*F003*/             pod_pur_cost = glxcst * pod_um_conv.
+/*H086*/             /* base_cost = pod_pur_cost. */
+/*G1HW* /*H086*/     base_cost = pod_pur_cost * pod_um_conv.    */
+/*H047*/             pod_pur_cost = pod_pur_cost * po_ex_rate.
+          end.
+          else if new pod_det and available vp_mstr then do:
+             if pod_qty_ord >= vp_q_qty and pt_um = vp_um
+             and vp_q_price > 0 and po_curr = vp_curr
+             then do:
+            pod_pur_cost = vp_q_price * pod_um_conv.
+             end.
+             else if pod_qty_ord >= vp_q_qty and pt_um <> vp_um
+             and pod_um = vp_um and vp_q_price > 0
+             and po_curr = vp_curr
+             then do:
+            pod_pur_cost = vp_q_price.
+             end.
+             else do:
+            pod_pur_cost = 0.
+/*H047*/             /* Compute costs for foreign currency. */
+/*H047*/             /* if po_curr = base_curr then         */
+/*F003                  pod_pur_cost = pt_mtl_stdtl * pod_um_conv. */
+/*F003*/                pod_pur_cost = glxcst * pod_um_conv.
+/*H086*/                /* base_cost = pod_pur_cost. */
+/*G1HW* /*H086*/        base_cost = pod_pur_cost * pod_um_conv.    */
+/*H047*/                pod_pur_cost = pod_pur_cost * po_ex_rate.
+             end.
+          end.
+           end.
+           if new pod_det and available vp_mstr then do:
+          if pod_qty_ord >= vp_q_qty and pod_um = vp_um
+          and vp_q_price > 0
+          and po_curr = vp_curr then
+             pod_pur_cost = vp_q_price.
+          if pod_um <> vp_um and vp_q_price > 0 and po_curr = vp_curr
+          then do:
+             find um_mstr where um_um = pod_um and um_alt_um = vp_um
+             and um_part = pod_part no-lock no-error.
+             if not available um_mstr then
+            find um_mstr where um_um = pod_um and um_alt_um = vp_um
+            and um_part = "" no-lock no-error.
+             if available um_mstr then do:
+            if pod_qty_ord / um_conv >= vp_q_qty then
+               pod_pur_cost = vp_q_price / um_conv.
+             end.
+          end.
+          if pod_um <> vp_um then do:
+             {mfmsg02.i 304 2 vp_um}
+             /* UM not the same as for vendor part " */
+          end.
+           end.
+        end.  /* else do (ADD OR MODIFY) */
+     end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+  /* setc-1 */
+     /* END OF SET C-1 BLOCK */

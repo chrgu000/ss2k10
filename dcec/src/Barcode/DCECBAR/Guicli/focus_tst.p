@@ -1,0 +1,24 @@
+DEF VAR c AS INT.
+DEF VAR a AS INT  .
+DEF FRAME tst
+    a AT ROW 2.5 COL 4
+    c AT ROW 5 COL 4
+    WITH WIDTH 80.
+
+
+ENABLE a WITH FRAME tst.
+DISP FRAME tst:FIRST-CHILD:first-child:next-sibling:NAME.
+ON enter OF a
+DO:
+   DISABLE a WITH FRAME tst.
+   ENABLE c WITH FRAME tst.
+END.
+ON esc ANYWHERE
+DO:
+    /*IF VALID-HANDLE(FOCUS:PREV-SIBLING) THEN DO:
+      
+         FOCUS:SENSITIVE = FALSE.
+    FOCUS:prev-sibling:SENSITIVE = TRUE .
+        END.*/
+END.
+WAIT-FOR CLOSE OF THIS-PROCEDURE.

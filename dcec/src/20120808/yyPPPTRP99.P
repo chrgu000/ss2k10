@@ -1,0 +1,218 @@
+/* GUI CONVERTED from ppptrp.p (converter v1.69) Sat Mar 30 01:19:34 1996 */
+/* xxppptrp99.p - DCEC ITEM Standard Cost REPORT                                        */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=FullGUIReport                                 */
+/* REVISION: 1.0      LAST MODIFIED: 01/04/86   BY: PML                 */
+/* REVISION: 7.0      LAST MODIFIED: 09/04/91   BY: pma *F003*          */
+/* REVISION: 7.3      LAST MODIFIED: 09/17/92   BY: pma *G068*          */
+/* REVISION: 7.3      LAST MODIFIED: 08/27/94   BY: rxm *GL58*          */
+/* REVISION: 7.2      LAST MODIFIED: 03/03/95   BY: qzl *F0LG*          */
+/* REVISION: 7.5      LAST MODIFIED: 02/01/95   BY: tjm *J042*          */
+/* REVISION: 8.5 V1     LAST MODIFIED: 10/09/01   BY: RAO HAOBIN */
+/* REVISION: 8.5 V2   LAST MODIFIED: 10/30/01   BY: RAO HAOBIN */
+
+/* DISPLAY TITLE */
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+{mfdtitle.i "f "}
+
+define variable line like pt_prod_line.
+define variable line1 like pt_prod_line.
+define variable part like pt_part.
+define variable part1 like pt_part.
+define variable type like pt_part_type.
+define variable type1 like pt_part_type.
+define variable ptgroup like pt_group.
+define variable group1 like pt_group.
+define variable added like pt_added initial ?.
+define variable added1 like pt_added initial ?.
+/* define variable zerocost like mfc_logical label "仅打印零成本零件". */
+define variable stcost like sct_cst_tot.
+define variable stcost1 like sct_cst_tot.
+define variable abc like in_abc.
+define variable abc1 like in_abc.
+
+define variable i as integer.
+define variable pldesc like pl_desc.
+
+/* SELECT FORM */
+	 
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+	    
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+line           colon 15
+	    line1          label {t001.i} colon 49 skip
+	    part           colon 15
+	    part1          label {t001.i} colon 49 skip
+	    type           colon 15
+	    type1          label {t001.i} colon 49 skip
+	    ptgroup        colon 15
+	    group1         label {t001.i} colon 49 skip
+	    added          colon 15
+	    added1         label {t001.i} colon 49 skip
+	    stcost	   colon 15
+	    stcost1        label {t001.i} colon 49 skip
+	    abc		   colon 15
+	    abc1        label {t001.i} colon 49
+	    
+/*	    zerocost	   colon 30 */
+/*GL58   with frame a side-labels. */
+/*GL58*/  SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = " 选择条件 ".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+/*judy 05/08/05*/ /* SET EXTERNAL LABELS */
+/*judy 05/08/05*/  setFrameLabels(frame a:handle).
+
+
+/* REPORT BLOCK */
+
+
+/*GUI*/ {mfguirpa.i true  "printer" 132 }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
+   if part1 = hi_char then part1 = "".
+   if line1 = hi_char then line1 = "".
+   if type1 = hi_char then type1 = "".
+   if group1 = hi_char then group1 = "".
+   if added1 = hi_date then added1 = ?.
+   if added  = low_date then added = ?.
+   if stcost1 = 0 then stcost1 = 99999999.
+   if abc1 = hi_char then abc1= "".
+   
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
+
+
+   bcdparm = "".
+   {mfquoter.i line   }
+   {mfquoter.i line1  }
+   {mfquoter.i part   }
+   {mfquoter.i part1  }
+   {mfquoter.i type   }
+   {mfquoter.i type1  }
+   {mfquoter.i ptgroup}
+   {mfquoter.i group1 }
+   {mfquoter.i added  }
+   {mfquoter.i added1 }
+   {mfquoter.i stcost  }
+   {mfquoter.i stcost1 }
+   {mfquoter.i abc  }
+   {mfquoter.i abc1 }
+   
+/*    {mfquoter.i zerocost  } */
+
+   if  part1 = "" then part1 = hi_char.
+   if  line1 = "" then line1 = hi_char.
+   if  type1 = "" then type1 = hi_char.
+   if  group1 = "" then group1 = hi_char.
+   if  added = ? then added = low_date.
+   if  added1 = ? then added1 = hi_date.
+   if  stcost1 = ? then stcost1 = 99999999.
+   if abc1 = ? then abc1 = hi_char.
+   /* PRINTER SELECTION */
+   
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i  "printer" 132}
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+
+
+
+   {mfphead.i}
+
+   for each pt_mstr where (pt_part >= part and pt_part <= part1)
+   and (pt_prod_line >= line and pt_prod_line <= line1)
+   and (pt_part_type >= type and pt_part_type <= type1)
+   and (pt_group >= ptgroup and pt_group <= group1)
+   and ((pt_added  >= added and pt_added <= added1) or pt_added = ?)
+   no-lock use-index pt_prod_part
+   break by pt_prod_line by pt_part with frame b width 132 down:
+
+
+      if first-of (pt_prod_line) then do:
+	 if page-size - line-counter < 7 then page.
+	 find pl_mstr where pl_prod_line = pt_prod_line no-lock.
+	 pldesc = pl_desc.
+	 display skip(1) pt_prod_line pl_desc no-label
+	 with frame c side-labels
+	 no-box STREAM-IO /*GUI*/ .
+      end.
+
+
+      FORM /*GUI*/ 
+       header
+      skip(1)
+      pt_prod_line pldesc "(继续)"
+      with STREAM-IO /*GUI*/  frame a1 page-top side-labels width 132.
+
+      view frame a1.
+
+      if page-size - line-counter < 3 then page.
+
+/*F003*/ /*RETURN OLD GL COST TOTAL AS GLXCST*/
+      find in_mstr where in_part = pt_part and in_site = pt_site and in_abc >= abc and in_abc <= abc1
+      no-lock no-error.
+      {gpsct03.i &cost=sct_cst_tot}
+/* if zerocost <> yes or zerocost = yes and glxcst = 0 then        */
+if available in_mstr then 
+if glxcst >= stcost and glxcst <= stcost1 then
+      display  pt_part  format "X(26)"
+      pt_desc2
+      pt_um
+      pt_part_type
+      pt_status
+      pt_added
+      in_abc
+      glxcst WITH STREAM-IO /*GUI*/ .
+
+      
+/*GUI*/ {mfguirex.i } /*Replace mfrpexit*/
+
+
+   end.
+
+   /* REPORT TRAILER */
+   
+/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+
+
+end.
+
+/*GUI*/ end procedure. /*p-report*/
+/*GUI*/ {mfguirpb.i &flds=" line line1 part part1 type type1 ptgroup group1 added added1 stcost stcost1 abc abc1"} /*Drive the Report*/

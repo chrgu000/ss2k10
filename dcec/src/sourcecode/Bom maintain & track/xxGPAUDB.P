@@ -1,0 +1,216 @@
+/* GUI CONVERTED from gpaudb.p (converter v1.69) Tue Nov 19 13:38:37 1996 */
+/* gpaudb.p - -- AUDIT TRAIL SUBROUTINE                                 */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                   */
+/* REVISION: 7.3             CREATED: 09/18/92    BY: MPP *G069*        */
+/* REVISION: 7.3       LAST MODIFIED: 12/03/92    BY: MPP *G390*        */
+/* REVISION: 7.3       LAST MODIFIED: 12/10/92    BY: MPP *G440*        */
+/* REVISION: 7.3       LAST MODIFIED: 02/09/93    BY: JMS *G657*        */
+/*                                    02/22/93    by: jms *G724*        */
+/* REVISION: 7.3       LAST MODIFIED: 08/11/93    BY: gjp *GE12*        */
+/* REVISION: 7.3       LAST MODIFIED: 04/22/94    BY: gjp *GJ53*        */
+/* REVISION: 7.3       LAST MODIFIED: 09/25/96    BY: ame *G2FW*        */
+/* REVISION: 7.3       LAST MODIFIED: 10/05/03    BY: *DCEC101* Kevin*/
+
+	 define input parameter file1 as character.
+	 define input parameter file2 as character.
+	 define input parameter dfile as character.
+	 define input parameter a_addr as character.
+/*G724*/ define input parameter a_addr1 as character.
+
+/*DCEC101*/ DEF INPUT PARAMETER a_addr2 AS CHARACTER.
+/*DCEC101*/ DEF INPUT PARAMETER a_addr3 AS CHARACTER.
+
+	 define input parameter rec_gone like mfc_logical.
+
+	 define stream a_stream1.
+	 define stream a_stream2.
+
+/*DCEC101***begin marked
+	 define variable a_string1 as character extent 100 initial "".
+	 define variable a_string2 as character extent 100 initial "".
+end marked*/
+/*DCEC101*/ DEFINE variable a_string1 as character extent 1000 initial "" NO-UNDO.
+/*DCEC101*/ define variable a_string2 as character extent 1000 initial "" NO-UNDO. 
+	 
+	 define variable c1 as integer.
+	 define variable c2 as integer.
+	 define variable old_entry as integer.
+	 define variable field_changed like mfc_logical.
+	 define variable loop_limit as integer.
+	 define variable loop_limit2 as integer.			/*GJ53*/
+	 define variable loop_limit3 as integer.			/*GJ53*/
+	 define variable save_addr as character.
+/*G724*/ define variable save_addr1 as character.
+
+/*DCEC101*/ define variable save_addr2 as CHARACTER NO-UNDO.
+/*DCEC101*/ define variable save_addr3 as CHARACTER NO-UNDO.
+
+/*G657*/ define variable seq as integer.
+         define buffer auddet for aud_det.                  		/*GE12*/
+/*G2FW*/ define shared variable global_userid as character.
+/*G2FW*/ define shared variable global_user_lang_dir as character.
+
+/*G2FW*  {mfdeclre.i}*/ /* REDUCE AUDIT OVERHEAD */
+
+	 input stream a_stream1 from value(file1).
+	 if not rec_gone then
+	    input stream a_stream2 from value(file2).
+	 find dictdb._file where dictdb._file._file-name = string(dfile)
+	    no-lock.
+	 import stream a_stream1 a_string1.
+	 if not rec_gone then
+	    import stream a_stream2 a_string2.
+	 c2 = 1.
+/*G724*/ save_addr1 = "".
+
+/*DCEC101*/ save_addr2 = "".
+/*DCEC101*/ save_addr3 = "".
+
+	 for each dictdb._field of dictdb._file by _order:
+	    if dictdb._field._field-name = string(a_addr) then  do:
+	       save_addr = a_string1[c2].
+	    end.
+/*G724*/    else if dictdb._field._field-name = string(a_addr1) and
+/*G724*/       string(a_addr1) <> "" then do:
+/*G724*/       save_addr1 =  "." + a_string1[c2].
+/*G724*/    end.
+
+/*DCEC101*begin*/
+    else if dictdb._field._field-name = string(a_addr2) and
+       string(a_addr2) <> "" then do:
+       save_addr2 =  "." + a_string1[c2].
+    end.
+    else if dictdb._field._field-name = string(a_addr3) and
+       string(a_addr3) <> "" then do:
+       save_addr3 =  "." + a_string1[c2].
+    end.
+/*DCEC101*end*/
+
+	    if dictdb._field._extent = 0 then c2 = c2 + 1.
+	    else c2 = c2 + dictdb._field._extent.
+	 end.
+	 if rec_gone then do:
+/*G2FW**
+ * /*GE12*/ outside: repeat:  /*GE12* added error handling to this block... */
+ * 	    find last aud_det no-lock no-error.
+ * 	    if available aud_det then do:
+ *             if aud_entry = 0 then next.
+ * 		old_entry = aud_entry.
+ *          end.
+ * 	    else
+ * 		old_entry = 0.
+ *          do on error undo, leave:
+ *             pause 0.
+ * 	       create aud_det.
+ * 	       assign
+ *                  aud_det.aud_entry = old_entry + 1.
+ *G2FW*/
+/*G2FW*/       /* FIRST CREATE AUD_DET AND ASSIGN UNIQUE PRIMARY KEY AUD_ENTRY */
+/*G2FW*/       {gprun.i ""gpaudd.p"" "(output old_entry)"}
+
+/*G2FW*/       /* NOW ASSIGN THE REST OF THE AUD_DET FIELDS */
+/*G2FW*/       find first aud_det where aud_det.aud_entry = old_entry no-error.
+/*G657*/       find last auddet where auddet.aud_dataset = string(dfile) and
+
+/*DCEC101*marked** /*G724*//*G657*/    auddet.aud_key1 = (save_addr + save_addr1) no-lock*/
+/*DCEC101*/          auddet.aud_key1 = (save_addr + save_addr1 + save_addr2 + save_addr3)
+
+/*G657*/            use-index aud_dataset no-error.
+/*G657*/       if available auddet then seq = integer(auddet.aud_key2) + 1.
+/*G657*/       else seq = 1.
+               assign
+  	         aud_det.aud_dataset = string(dfile)
+	         aud_det.aud_userid = global_userid
+	         aud_det.aud_date = today
+	         aud_det.aud_time = string(time,"hh:mm:ss")
+
+/*DCEC101*marked*** /*G724*/         aud_det.aud_key1 = save_addr + save_addr1*/
+/*DCEC101*/   aud_det.aud_key1 = save_addr + save_addr1 + save_addr2 + save_addr3
+
+/*G657*/         aud_det.aud_field = "DELETED"
+/*G657*/         aud_det.aud_key2 = string(seq,"99999").
+/*G2FW**
+ *             leave outside.
+ *	    end.
+ * /*GE12*/  end.  /*GE12* end of error handling modifications */
+ *G2FW*/
+	 end.
+	 else do:
+	    c1 = 0.
+	    for each dictdb._field of dictdb._file by _order:
+	       field_changed = no.
+	       if dictdb._field._extent = 0 then loop_limit = 1.
+	       else loop_limit = dictdb._field._extent.
+               if loop_limit > 100 then loop_limit3 = 100.		/*GJ53*/
+                                   else loop_limit3 = loop_limit.	/*GJ53*/
+               if loop_limit > 15 then loop_limit2 = 15.		/*GJ53*/
+                                  else loop_limit2 = loop_limit.	/*GJ53*/
+/*	       do c2 = 1 to loop_limit:					 *GJ53*/
+	       do c2 = 1 to loop_limit3:				/*GJ53*/
+		  if a_string1[c1 + c2]
+		     <> a_string2[c1 + c2] then field_changed = yes.
+	       end. /*do*/
+	       if field_changed then do:
+/*G2FW**
+ * /*GE12*/	outside: repeat:  /*GE12* added error handling to block... */
+ *		  find last aud_det no-lock no-error.
+ *		  if available aud_det then do:
+ *                   if aud_entry = 0 then next.
+ *		     old_entry = aud_entry.
+ *                end.
+ *		  else
+ *		     old_entry = 0.
+ *                do on error undo, leave:
+ *                   pause 0.
+ *	 	     create aud_det.
+ *		     assign
+ *                       aud_det.aud_entry = old_entry + 1.
+ *G2FW*/
+/*G2FW*/             /* FIRST CREATE AUD_DET AND ASSIGN UNIQUE PRIMARY KEY AUD_ENTRY */
+/*G2FW*/             {gprun.i ""gpaudd.p"" "(output old_entry)"}
+
+/*G2FW*/             /* NOW ASSIGN THE REST OF THE AUD_DET FIELDS */
+/*G2FW*/             find first aud_det where aud_det.aud_entry = old_entry no-error.
+/*G657*/             find last auddet
+                         where auddet.aud_dataset = string(dfile) and
+
+/*DCEC101*marked*** /*G724*//*G657*/         auddet.aud_key1 = (save_addr + save_addr1) no-lock*/
+/*DCEC101*/          auddet.aud_key1 = (save_addr + save_addr1 + save_addr2 + save_addr3)
+
+/*G657*/                 use-index aud_dataset no-error.
+/*G657*/            if available auddet then seq = integer(auddet.aud_key2) + 1.
+/*G657*/            else seq = 1.
+                    assign
+		       aud_det.aud_dataset = string(dfile)
+		       aud_det.aud_userid = global_userid
+		       aud_det.aud_date = today
+		       aud_det.aud_time = string(time,"hh:mm:ss")
+
+/*DCEC101*markd*** /*G724*/               aud_det.aud_key1 = save_addr + save_addr1*/
+/*DCEC101*/   aud_det.aud_key1 = save_addr + save_addr1 + save_addr2 + save_addr3
+
+		       aud_det.aud_field = dictdb._field._field-name
+/*G657*/               aud_det.aud_key2 = string(seq,"99999").
+/*		    do c2 = 1 to loop_limit:				 *GJ53*/
+		    do c2 = 1 to loop_limit2:				/*GJ53*/
+                       assign
+			aud_det.aud_old_data[c2] = a_string1[c1 + c2]
+			aud_det.aud_new_data[c2] = a_string2[c1 + c2].
+		     end.
+/*G2FW**             leave outside.
+ *	          end.
+ * /*GE12*/      end.  /*GE12* end of error handling modifications */
+ *G2FW*/
+	       end.
+	       c1 = c1 + loop_limit.
+	    end.
+	 end.
+	 input stream a_stream1 close.
+/*G440** {gpfldel2.i &filename = file1}
+**G440*/
+	 if not rec_gone then do:
+	    input stream a_stream2 close.
+/*G440**    {gpfldel2.i &filename = file2}
+**G440*/
+	 end.

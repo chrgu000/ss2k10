@@ -1,0 +1,14 @@
+1.By Kevin, 03/14/2004:
+update the logic of the default location for every parts,
+from pod_loc to in_user1
+
+updated programs list: 
+1.zzpoporca.p
+action: change sub-program 'poporca3.p' to 'zzpoporca3.p'
+
+2.zzpoporca.p
+action: change the logic of the default value of input
+	field 'location'. The original logic is 'pod_loc',
+	current logic is 'in_user1' if the purchase part
+	is a item, and its in_mstr is existing.
+

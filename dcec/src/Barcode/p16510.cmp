@@ -1,0 +1,23 @@
+define  variable part    AS CHAR FORMAT "x(12)" VIEW-AS EDITOR SIZE 8 BY 1 LABEL "item number" .
+DEFINE VAR recevier AS CHAR FORMAT "x(12)" VIEW-AS EDITOR SIZE 8 BY 1 LABEL "Recevier".
+FORM
+    SKIP(1)
+    recevier COLON 18
+    part COLON 45
+     WITH  FRAME a WIDTH 80 THREE-D TITLE " label" SIDE-LABEL.
+mainloop:
+REPEAT:
+do transaction on error undo, retry:
+         set part with frame a editing:
+
+         DISPLAY part WITH FRAME a.
+       END.
+ END.
+ END.       /* STATUS INPUT.
+
+         UPDATE
+    recevier 
+    part
+    WITH FRAME a.
+DISPLAY recevier.
+END.*/

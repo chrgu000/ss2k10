@@ -1,0 +1,526 @@
+/* GUI CONVERTED from icxfer.p (converter v1.69) Thu Mar 27 14:27:48 1997 */
+/* icxfer.p - LOCATION TRANSFER SUBROUTINE                                  */
+/* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.     */
+/*F0PN*/ /*V8:ConvertMode=Maintenance                                       */
+/* REVISION: 7.0      LAST MODIFIED: 09/11/91   BY: pma *F003*              */
+/* REVISION: 7.0      LAST MODIFIED: 11/11/91   BY: WUG *D887*              */
+/* REVISION: 7.0      LAST MODIFIED: 01/24/92   BY: pma *F003*              */
+/* REVISION: 7.0      LAST MODIFIED: 01/28/92   BY: pma *F104*              */
+/* REVISION: 7.0      LAST MODIFIED: 02/05/92   BY: pma *F167*              */
+/* REVISION: 7.0      LAST MODIFIED: 02/10/92   BY: pma *F190*              */
+/* REVISION: 7.0      LAST MODIFIED: 02/18/92   BY: pma *F085*              */
+/* REVISION: 7.0      LAST MODIFIED: 04/06/92   BY: pma *F359*              */
+/* REVISION: 7.0      LAST MODIFIED: 06/12/92   BY: pma *F564*              */
+/* REVISION: 7.0      LAST MODIFIED: 07/01/92   BY: pma *F701*              */
+/* REVISION: 7.0      LAST MODIFIED: 07/09/92   BY: pma *F748*              */
+/* Revision: 7.3      Last edit:     09/27/93   By: jcd *G247*              */
+/* REVISION: 7.3      LAST MODIFIED: 02/25/93   BY: pma *G745*              */
+/* REVISION: 7.3      LAST MODIFIED: 06/21/94   BY: jjs *GK33*              */
+/* Oracle changes (share-locks)      09/11/94   BY: rwl *GM31*              */
+/* REVISION: 7.3      LAST MODIFIED: 10/04/94   BY: pxd *FR90*              */
+/*           7.3                     10/29/94   BY: bcm *GN73*              */
+/* REVISION: 8.5      LAST MODIFIED: 01/09/95   BY: taf *J038*              */
+/* REVISION: 8.5      LAST MODIFIED: 01/09/95   BY: pma *J040*              */
+/* REVISION: 8.5      LAST MODIFIED: 04/23/95   BY: sxb *J04D*              */
+/* REVISION: 8.5      LAST MODIFIED: 07/20/95   BY: taf *J053*              */
+/*           7.3                     01/16/96   BY: ame *G1K4*              */
+/* REVISION: 8.5      LAST MODIFIED: 09/23/96   BY: *G2FZ* Julie Milligan   */
+/* REVISION: 8.5      LAST MODIFIED: 11/19/96   BY: *H0PF* Suresh Nayak     */
+/* REVISION: 8.5      LAST MODIFIED: 03/26/97   BY: *J1M8* Sue Poland       */
+/* LAST MODIFIED BY LONG BO 2004-08-29 22:19    ADD TR LINE      *lb01*     */
+         {mfdeclre.i}
+
+         define new shared variable ref like glt_ref.
+         define buffer lddet for ld_det.
+         define shared variable transtype as character format "x(7)"
+                initial "ISS-TR".
+/*       define shared variable mfguser as character.           *G247* */
+
+         define input parameter lot like tr_lot.
+         define input parameter lotserial like sr_lotser no-undo.
+         define input parameter lotref_from like sr_ref no-undo. /*D887*/
+         define input parameter lotref_to like sr_ref no-undo. /*D887*/
+         define input parameter xfer_qty like sr_qty no-undo.
+         define input parameter nbr like tr_nbr  no-undo.
+         define input parameter so_job like tr_so_job no-undo.
+         define input parameter rmks like tr_rmks no-undo.
+         define input parameter project like trgl_dr_proj no-undo.
+         define input parameter eff_date as date.
+         define input parameter site_from like pt_site no-undo.
+         define input parameter loc_from like pt_loc no-undo.
+         define input parameter site_to like pt_site no-undo.
+         define input parameter loc_to like pt_loc no-undo.
+         define input parameter tempid like mfc_logical no-undo.
+         
+         define input parameter trline like tr_line no-undo. /*lb01*/
+         
+         define output parameter glcost like sct_cst_tot.
+/*F190*/ define input-output parameter assay like tr_assay.
+/*F190*/ define input-output parameter grade like tr_grade.
+/*F190*/ define input-output parameter expire like tr_expire.
+/*F701*/ define variable lotser_from like sr_lotser no-undo.
+/*F701*/ define variable lotser_to like sr_lotser no-undo.
+/*J038*/ define variable trans-ok like mfc_logical.
+
+         define variable trgl_recno as recid.
+         define /*F359*/ new shared /**/ variable from_entity like en_entity.
+         define /*F359*/ new shared /**/ variable to_entity like en_entity.
+         define /*F359*/ new shared /**/ variable from_cost like glxcst.
+         define /*F359*/ new shared /**/ variable to_cost like glxcst.
+         define /*F359*/ new shared /**/ variable intermediate_acct
+                like trgl_dr_acct.
+         define /*F359*/ new shared /**/ variable intermediate_cc
+                like trgl_dr_cc.
+         define /*F359*/ new shared /**/ variable xfer_acct like trgl_dr_acct.
+         define /*F359*/ new shared /**/ variable xfer_cc   like trgl_dr_cc.
+         define variable tempid_pass as integer.
+/*F085*/ define variable newmtl_tl as decimal.
+/*F085*/ define variable newlbr_tl as decimal.
+/*F085*/ define variable newbdn_tl as decimal.
+/*F085*/ define variable newovh_tl as decimal.
+/*F085*/ define variable newsub_tl as decimal.
+/*F085*/ define variable newmtl_ll as decimal.
+/*F085*/ define variable newlbr_ll as decimal.
+/*F085*/ define variable newbdn_ll as decimal.
+/*F085*/ define variable newovh_ll as decimal.
+/*F085*/ define variable newsub_ll as decimal.
+/*F085*/ define /*F359*/ new shared /**/ variable newcst as decimal.
+/*F085*/ define /*F359*/ new shared /**/ variable glx_mthd like cs_method.
+/*F085*/ define variable glx_set like cs_set.
+/*F085*/ define variable cur_mthd like cs_method.
+/*F085*/ define variable cur_set like cs_set.
+/*F085*/ define /*F359*/ new shared /**/ variable reavg_yn like mfc_logical.
+/*F085*/ define variable msgref like tr_msg.
+/*J053*/ define variable tmp_amt as decimal no-undo.
+/*J053*/ define variable gl_tmp_amt as decimal no-undo.
+
+/*J053*/ find first gl_ctrl no-lock.
+         find first icc_ctrl no-lock.
+/*J04D*/ find first clc_ctrl no-lock no-error.
+/*J04D*/ if not available clc_ctrl then do:
+/*J04D*/    {gprun.i ""gpclccrt.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J04D*/    find first clc_ctrl no-lock.
+/*J04D*/ end.
+
+         find pt_mstr where pt_part = global_part no-lock no-error.
+         if not available pt_mstr then return.
+         find pl_mstr where pl_prod_line = pt_prod_line no-lock no-error.
+
+         from_cost = 0.
+         to_cost = 0.
+		
+         do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+            if tempid then do:
+               find sct_det where recid(sct_det) = recno no-error.
+               tempid_pass = 1.
+            end.
+            else do:
+               {gpsct06.i &part=global_part &site=site_from &type=""GL""}
+               tempid_pass = 0.
+            end.
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         if available sct_det then from_cost = sct_cst_tot.
+
+/*F085*/ /* EXTENSIVELY MODIFIED FOLLOWING SECTION */
+         /* FROM HERE UPTO TRANSFER PROCESSING     */
+
+         /*DETERMINE COSTING METHOD*/
+         {gprun.i ""csavg01.p"" "(input global_part,
+                                  input site_to,
+                                  output glx_set,
+                                  output glx_mthd,
+                                  output cur_set,
+                                  output cur_mthd)"
+         }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+         /*UPDATE CURRENT COST & POST ANY GL DISCREPANCY*/
+/*GK33*/ if (glx_mthd = "AVG" or cur_mthd = "AVG" or cur_mthd = "LAST")
+/*G745*/ and site_from <> site_to
+         then do:
+            {gprun.i ""csavg02.p"" "(input global_part,
+                                     input site_to,
+                                     input ""ISS-TR"",
+                                     input recid(sct_det),
+                                     input nbr,
+                                     input xfer_qty,
+                                     input 0,
+                                     input glx_set,
+                                     input glx_mthd,
+                                     input cur_set,
+                                     input cur_mthd,
+                                     output newmtl_tl,
+                                     output newlbr_tl,
+                                     output newbdn_tl,
+                                     output newovh_tl,
+                                     output newsub_tl,
+                                     output newmtl_ll,
+                                     output newlbr_ll,
+                                     output newbdn_ll,
+                                     output newovh_ll,
+                                     output newsub_ll,
+                                     output newcst,
+                                     output reavg_yn,
+                                     output msgref)"
+            }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         end.
+
+/*G745*/ if site_from = site_to then reavg_yn = no.
+
+/*F359*/ /*MOVED FOLLOWING SECTIONS TO ICXFERA.P*/
+         {gprun.i ""icxfera.p"" "(input nbr,
+                                  input lot,
+                                  input site_from,
+                                  input site_to,
+                                  input tempid)"
+         }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+/*G2FZ* * BEGIN DELETE * * ADDED TRIM FUNCTION TO CONFORM TO ORACLE STD *
+./*F701*/ lotser_from = substring(lotserial,1,18).
+./*F701*/ if substring(lotserial,40,1) = "#" then lotser_to = "".
+./*F701*/ else if substring(lotserial,19) = "" then lotser_to = lotser_from.
+./*F701*/ else lotser_to = substring(lotserial,19,18).
+**G2FZ* * * END DELETE SECTION */
+
+/*G2FZ*/ lotser_from = trim(substring(lotserial,1,18)).
+/*G2FZ*/ if trim(substring(lotserial,40,1)) = "#" then lotser_to = "".
+/*G2FZ*/ else if trim(substring(lotserial,19)) = ""
+/*G2FZ*/   then lotser_to = lotser_from.
+/*G2FZ*/ else lotser_to = trim(substring(lotserial,19,18)).
+
+
+         /*TRANSFER PROCESSING*/
+         do transaction:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+
+            /*ISSUE --> TRANSFER CLEARING*/
+            find pld_det where pld_prodline  = pt_prod_line
+            and pld_site = site_from and pld_loc = loc_from no-lock no-error.
+            if not available pld_det then do:
+               find pld_det where pld_prodline = pt_prod_line
+               and pld_site = site_from and pld_loc = "" no-lock no-error.
+               if not available pld_det then do:
+                  find pld_det where pld_prodline = pt_prod_line
+                  and pld_site = "" and pld_loc = "" no-lock no-error.
+               end.
+            end.
+
+/*J1M8*     ADDED THE FOLLOWING */
+            /* IF THIS IS PROCESSING AN SEO SHIPMENT, THEN FSEOIVTR.P
+                CREATED A SPECIAL QAD_WKFL RECORD CONTAINING SOME
+                EXTRA INFORMATION FOR ICXFER.P TO GET LOADED INTO THE
+                NEW TR_HISTS BEING CREATED... */
+            find qad_wkfl where qad_key1 = mfguser and qad_key2 = "SEO":u + nbr
+                no-lock no-error.
+/*J1M8*     END ADDED CODE */
+
+/*FR90*/    /* changed &crproj to have the same value as &drproj*/
+/*F701*/    /* changed "lotserial" to "lotser_from"*/
+            {ictrans.i
+               &addrid=global_addr
+               &bdnstd=0
+               &cracct="
+                  if available pld_det then pld_inv_acct
+                  else pl_inv_acct"
+               &crcc="
+                  if available pld_det then pld_inv_cc
+                  else pl_inv_cc"
+               &crproj=project
+               &curr=""""
+               &dracct=intermediate_acct
+               &drcc=intermediate_cc
+               &drproj=project
+               &effdate=eff_date
+               &exrate=0
+               &glamt="from_cost * xfer_qty"
+               &lbrstd=0
+               &line=trline
+               &location=loc_from
+               &lotnumber=lot
+               &lotref=lotref_from
+               &lotserial=lotser_from
+               &mtlstd=0
+               &ordernbr=nbr
+               &ovhstd=0
+               &part=global_part
+               &perfdate=?
+               &price=from_cost
+               &quantityreq=0
+               &quantityshort=0
+               &quantity="- xfer_qty"
+               &revision=""""
+               &rmks=rmks
+               &shiptype=""""
+               &site=site_from
+               &slspsn1=""""
+               &slspsn2=""""
+               &sojob=so_job
+               &substd=0
+               &transtype=""ISS-TR""
+               &msg=trmsg
+               &ref_site=site_to
+               &tempid=tempid_pass
+            }
+
+/*J1M8*     ADDED THE FOLLOWING */
+            /* LOAD SEO-SPECIFIC FIELDS, IF NECESSARY */
+            if available qad_wkfl then
+	       assign tr_prod_line = qad_charfld[1]
+                      tr_eng_code  = qad_charfld[2]		
+		      tr_fcg_code  = qad_charfld[3]
+		      tr_fsm_type  = qad_charfld[4]
+		      tr_line      = integer(qad_decfld[1]).
+/*J1M8*     END ADDED CODE */
+/*F701*/    if lot = "" and (lotser_from <> "" or lotser_to <> "") then do:
+/*F701*/       lot = string(tr_trnbr mod 1000000,"999999") + "*".
+/*F701*/       tr_lot = lot.
+/*F701*/    end.
+
+/*F190*/    if transtype begins "ISS" then do:
+/*F190*/       assay = tr_assay.
+/*F190*/       grade = tr_grade.
+/*F190*/       expire = tr_expire.
+/*F190*/    end.
+/*F190*/    else if transtype begins "RCT" then do:
+/*F190*/       tr_assay = assay.
+/*F190*/       tr_grade = grade.
+/*F190*/       tr_expire = expire.
+/*F190*/    end.
+
+            /*TRANSFER CLEARING --> TRANSFER VARIANCE*/
+/*F085*     * if site_from <> site_to then do: */
+/*F085*/    if (from_entity <> to_entity) or (from_cost <> to_cost) then do:
+
+/*J053*/       /* RECORD TRANSFER ADJUSTMENT COST TO TRGL_DET */
+               create trgl_det.
+/*G1K4*/       assign
+               trgl_type = "CST-TR"
+/*G1K4*/       trgl_sequence = recid(trgl_det)
+               trgl_recno = recid(trgl_det)
+/*F564*/       trgl_trnbr = 100000000 + integer(trgl_recno)
+               trgl_dr_acct = xfer_acct
+               trgl_dr_cc   = xfer_cc
+               trgl_dr_proj = project
+               trgl_cr_acct = intermediate_acct
+               trgl_cr_cc   = intermediate_cc
+               trgl_cr_proj = project
+/*J053*******  trgl_gl_amt  = trgl_gl_amt + (from_cost * xfer_qty) */
+/*J053*/       tmp_amt = (from_cost * xfer_qty).
+/*J053*/       /* ROUND TRANSFERRED ADJ COST PER BASE CURRENCY ROUND METHOD */
+/*J053*/       {gprun.i ""gpcurrnd.p"" "(input-output tmp_amt,
+                                         input gl_rnd_mthd)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J053*/       trgl_gl_amt  = trgl_gl_amt + tmp_amt.
+
+/*J053*/       /* RECORD TRANSFER ADJUSTMENT COST TO GLT_DET */
+/*J053*/       /* CHANGED  GL-AMOUNT FROM (FROM_COST * XFER_QTY) TO TMP_AMT */
+/*GN73* Added same-ref */
+               {mficgl02.i
+                  &gl-amount=tmp_amt
+                  &tran-type=""CST-TR""
+                  &order-no=nbr
+                  &dr-acct=trgl_dr_acct
+                  &dr-cc=trgl_dr_cc
+                  &drproj=trgl_dr_proj
+                  &cr-acct=trgl_cr_acct
+                  &cr-cc=trgl_cr_cc
+                  &crproj=trgl_cr_proj
+                  &entity=to_entity
+                  &find="false"
+                  &same-ref="icc_gl_sum"
+               }
+
+            end.
+
+            /*TRANSFER VARIANCE --> RECEIPT*/
+            find pld_det where pld_prodline  = pt_prod_line
+            and pld_site = site_to and pld_loc = loc_to no-lock no-error.
+            if not available pld_det then do:
+               find pld_det where pld_prodline = pt_prod_line
+               and pld_site = site_to and pld_loc = "" no-lock no-error.
+               if not available pld_det then do:
+                  find pld_det where pld_prodline = pt_prod_line
+                  and pld_site = "" and pld_loc = "" no-lock no-error.
+               end.
+            end.
+
+            /*CALCULATE NEW AVERAGE COST*/
+/*F085*/    if glx_mthd = "AVG" and reavg_yn then do:
+/*F085*/       {gpsct01.i &set=glx_set &part=global_part &site=site_to}
+/*F085*/       {gprun.i ""csavg03.p"" "(input recid(sct_det),
+                                        input xfer_qty,
+                                        input newmtl_tl,
+                                        input newlbr_tl,
+                                        input newbdn_tl,
+                                        input newovh_tl,
+                                        input newsub_tl,
+                                        input newmtl_ll,
+                                        input newlbr_ll,
+                                        input newbdn_ll,
+                                        input newovh_ll,
+                                        input newsub_ll)"
+               }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*F085*/    end.
+
+/*J038*     * CALL GPICLT.P TO CREATE THE LOT MASTER RECORD */
+/*J04D*/    if (clc_lotlevel <> 0) and (lotser_to <> "") then do:
+/*J04D*/       {gprun.i ""gpiclt.p"" "(input global_part,
+                                       input lotser_to,
+                                       input """",
+                                       input """",
+                                       output trans-ok )" }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+/*J038*/       if not trans-ok then do:
+/*J038*/          {mfmsg.i 2740 4}  /* CURRENT TRANSACTION REJECTED - CONTINUE*/
+/*J04D*/          undo, leave.      /* WITH NEXT TRANSACTION. */
+/*J038*/       end. /* IF NOT TRANS-OK THEN DO: */
+/*J038*/    end. /* IF CLC_LOTLEV <> 0 */
+
+/*FR90*     * changed &crproj to have the same value as &drproj*/
+/*F701*     * changed "lotserial" to "lotser_to"*/
+            {ictrans.i
+               &addrid=global_addr
+               &bdnstd=0
+               &cracct=xfer_acct
+               &crcc=xfer_cc
+               &crproj=project
+               &curr=""""
+               &dracct="
+                  if available pld_det then pld_inv_acct
+                  else pl_inv_acct"
+               &drcc="
+                  if available pld_det then pld_inv_cc
+                  else pl_inv_cc"
+               &drproj=project
+               &effdate=eff_date
+               &exrate=0
+               &glamt="to_cost * xfer_qty"
+               &lbrstd=0
+               &line=trline
+               &location=loc_to
+               &lotnumber=lot
+               &lotref=lotref_to
+               &lotserial=lotser_to
+               &mtlstd=0
+               &ordernbr=nbr
+               &ovhstd=0
+               &part=global_part
+               &perfdate=?
+               &price=to_cost
+               &quantityreq=0
+               &quantityshort=0
+               &quantity="xfer_qty"
+               &revision=""""
+               &rmks=rmks
+               &shiptype=""""
+               &site=site_to
+               &slspsn1=""""
+               &slspsn2=""""
+               &sojob=so_job
+               &substd=0
+               &transtype=""RCT-TR""
+               &msg=trmsg
+               &ref_site=site_from
+               &tempid=tempid_pass
+            }
+/*J1M8*     ADDED THE FOLLOWING */
+            /* LOAD SEO-SPECIFIC FIELDS, IF NECESSARY */
+            if available qad_wkfl then
+	       assign tr_prod_line = qad_charfld[1]
+                      tr_eng_code  = qad_charfld[2]		
+		      tr_fcg_code  = qad_charfld[3]
+		      tr_fsm_type  = qad_charfld[4]
+		      tr_line      = integer(qad_decfld[1]).
+/*J1M8*     END ADDED CODE */
+
+/*F085*/    if glx_mthd = "AVG" and to_cost <> from_cost
+/*F085*/    then do:
+/*F085*/        trgl_type = "RCT-AVG".
+/*F085*/        if msgref <> 0 then tr_msg = msgref.
+/*F085*/    end.
+
+/*F564      * find trgl_det where recid(trgl_det) = trgl_recno no-error.  */
+/*F564      * if available trgl_det then trgl_trnbr = tr_trnbr.           */
+/*H0PF********************************************************************/
+/*H0PF* The FOR EACH below makes sense but was very slow in ORACLE.      */
+/*H0PF* Replaced it with a DO WHILE trgl_recno <> ? so that we don't     */
+/*H0PF* run into the Oracle IS/IS NOT NULL issue with missing values,    */
+/*H0PF* and we don't want to access the DB anyway if it is missing.      */
+/*H0PF* If trgl_recno is not missing then the DO WHILE is always TRUE,   */
+/*H0PF* so we loop until the find next fails, then we leave the block.   */
+/*H0PF********************************************************************/
+
+/*H0PF** /*F564*/    for each trgl_det exclusive-lock          /*GM31*/  */
+/*H0PF** /*F564*/    where trgl_trnbr = 100000000 + integer(trgl_recno): */
+
+/*H0PF*/    trueblk:
+/*H0PF*/    do while trgl_recno <> ?:
+/*H0PF*/       find next trgl_det
+/*H0PF*/          where trgl_trnbr >= 100000000 + integer(trgl_recno) and
+/*H0PF*/                trgl_trnbr <= 100000000 + integer(trgl_recno)
+/*H0PF*/                exclusive-lock no-error.
+
+/*H0PF*/       if not available(trgl_det) then leave trueblk.
+
+/*F564*/       trgl_trnbr = tr_trnbr.
+/*F748*/       find glt_det where glt_ref = trgl_gl_ref
+/*F748*/                      and glt_rflag = false
+/*F748*/                      and glt_line = trgl_dr_line
+/*F748*/       no-error.
+/*F748*/       if available glt_det then glt_doc = string(tr_trnbr).
+/*F748*/       find glt_det where glt_ref = trgl_gl_ref
+/*F748*/                      and glt_rflag = false
+/*F748*/                      and glt_line = trgl_cr_line
+/*F748*/       no-error.
+/*F748*/       if available glt_det then glt_doc = string(tr_trnbr).
+/*F564*/    end.
+
+/*F190*/    if transtype begins "ISS" then do:
+/*F190*/       tr_assay = assay.
+/*F190*/       tr_grade = grade.
+/*F190*/       tr_expire = expire.
+/*F190*/    end.
+
+/*J040*/    /* USING TRMSG AS A RETURN VARIABLE FOR PO AND WO RECEIPT */
+/*J040*/    if tr_type = "RCT-TR" then trmsg = tr_trnbr.
+
+/*F190      if transtype = "ISS-TR" and new(ld_det) then do:   */
+/*F190         find lddet where lddet.ld_part = global_part    */
+/*F190                      and lddet.ld_site = site_from      */
+/*F190                      and lddet.ld_loc = loc_from        */
+/*F190                      and lddet.ld_lot = lotserial       */
+/*F190                      and lddet.ld_ref = lotref_from     */
+/*F190         no-lock no-error.                               */
+
+/*F190         if available lddet then do:                     */
+/*F190            if lddet.ld_expire <> ? then                 */
+/*F190               ld_det.ld_expire = lddet.ld_expire.       */
+/*F190            if lddet.ld_date <> ? then                   */
+/*F190               ld_det.ld_date = lddet.ld_date.           */
+/*F190 /*F167*/   if lddet.ld_assay <> ? then                  */
+/*F190 /*F167*/      ld_det.ld_assay = lddet.ld_assay.         */
+/*F190 /*F167*/   if lddet.ld_grade <> ? then                  */
+/*F190 /*F167*/      ld_det.ld_grade = lddet.ld_grade.         */
+/*F190         end.                                            */
+/*F190      end.                                               */
+
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+         glcost = to_cost.

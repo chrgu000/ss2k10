@@ -1,0 +1,1278 @@
+@@batchload ppptmt04.p
+"9.87808-00" 
+"ea" "ETR 8" "" 
+"9910" - - - "Raw" "act" "9910" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87816-00" 
+"ea" "Label" "" 
+"9920" - - - "Raw" "act" "9920" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87811-00" 
+"ea" "EFS 8" "" 
+"9910" - - - "Raw" "act" "9910" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87809-00" 
+"ea" "ETR 6" "" 
+"9910" - - - "Raw" "act" "9910" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.80306-00" 
+"ea" "1KO.927.903" "ABS-Sensorcbl. FrL" 
+"6300" - - - "FP" "act" "6311" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.73903-00" 
+"ea" "1KO.927.903 A" "ABS-Sensorcbl. FrR" 
+"6300" - - - "FP" "act" "6311" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.76382-00" 
+"ea" "1TO.927.904.L" "ABS-Sensorcbl. RrL" 
+"6300" - - - "FP" "act" "6311" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.76383-00" 
+"ea" "1TO.927.904.M" "ABS-Sensorcbl. RrR" 
+"6300" - - - "FP" "act" "6311" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.86492-00" 
+"ea" "2KO.927.904.A" "ABS-Sensorcbl. RrLR" 
+"6300" - - - "FP" "act" "6311" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.84172-00" 
+"ea" "1JO.927.903.Q" "ABS-Sensorcbl. FrL" 
+"6300" - - - "FP" "act" "6312" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.84173-00" 
+"ea" "1JO.927.903.R" "ABS-Sensorcbl. FrR" 
+"6300" - - - "FP" "act" "6312" 
+. 
+@@end
+@@batchload ppptmt04.p
+"6.53415-00" 
+"ea" "8LO.927.904.D" "ABS-Sensorcbl. RrLR" 
+"6300" - - - "FP" "act" "6312" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87906-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87903-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87982-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87983-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87992-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87972-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87915-00" 
+"ea" "Assy cut with housing" "" 
+"9000" - - - "Assy" "act" "9030" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87879-00" 
+"ea" "Assy cut cable" "" 
+"9000" - - - "Assy" "act" "9020" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87878-00" 
+"ea" "Assy cut cable" "" 
+"9000" - - - "Assy" "act" "9020" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87877-00" 
+"ea" "Assy cut cable" "" 
+"9000" - - - "Assy" "act" "9020" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.54879-00" 
+"m" "FLR31Y11Y 2x0,75 SW(BR#" "" 
+"2100" - - - "Raw" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.54878-00" 
+"m" "FLR31Y11Y 2x0,75 SW(GN#" "" 
+"2100" - - - "Raw" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.54877-00" 
+"m" "FLR31Y11Y 2x0,75/0,16SW" "" 
+"2100" - - - "Raw" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.54875-00" 
+"m" "FLR31Y11Y 4X0.50 SW" "" 
+"2100" - - - "RAW" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.42927-00" 
+"m" "FLRY11Y 3x0.35 SW" "" 
+"2100" - - - "RAW" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.41030-00" 
+"ea" "Housing GDL" "" 
+"9550" - - - "Raw" "act" "9550" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.38727-00" 
+"ea" "Housing 2-Pol." "" 
+"9550" - - - "Raw" "act" "9550" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.16201-00" 
+"ea" "Grommet" "" 
+"9560" - - - "Raw" "act" "9560" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.38720-00" 
+"ea" "Grommet" "" 
+"9560" - - - "Raw" "act" "9560" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.44426-00" 
+"ea" "Contact" "" 
+"9540" - - - "Raw" "act" "9540" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.36143-00" 
+"ea" "Contact" "" 
+"9540" - - - "Raw" "act" "9540" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.36146-00" 
+"ea" "Contact" "" 
+"9540" - - - "Raw" "act" "9540" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.10101-00" 
+"ea" "Contact" "" 
+"9540" - - - "Raw" "act" "9540" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.09876-00" 
+"ea" "Seal 0,75" "" 
+"9530" - - - "Raw" "act" "9530" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.35682-00" 
+"ea" "Seal 0.50" "" 
+"9530" - - - "Raw" "act" "9530" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.09879-00" 
+"ea" "Seal" "" 
+"9530" - - - "Raw" "act" "9530" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.41570-00" 
+"ea" "Protection cover" "" 
+"9590" - - - "Raw" "act" "9590" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.47531-00" 
+"ea" "Cable clip" "" 
+"9580" - - - "Raw" "act" "9580" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.77111-00" 
+"ea" "Welding holder" "" 
+"9580" - - - "Raw" "act" "9580" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.31077-00" 
+"m" "Foam tape" "" 
+"1100" - - - "FP" "act" "1111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.39568-00" 
+"kg" "PUR raw material" "PUR-Shore 75 AW NF" 
+"9500" - - - "Raw" "act" "9500" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.22229-00" 
+"kg" "PUR color comp. Bk" "FK-PUR 65-BK-20 sw" 
+"9500" - - - "Raw" "act" "9500" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.87819-00" 
+"m" "N.908.285.01" "PUR Hose" 
+"9570" - - - "Raw" "act" "9570" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.84160-40" 
+"m" "651MSX 0,15x640x33 SW" "EWB 100" 
+"9705" - - - "Raw" "act" "9705" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.08768-00" 
+"ea" "Carton core" "" 
+"9910" - - - "Raw" "act" "9910" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.08806-00" 
+"ea" "Side disc" "" 
+"9910" - - - "Raw" "act" "9910" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01795-01-1525" 
+"m" "302 0,15MMx15MMx25M WS" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01812-01-1925" 
+"m" "302 0,15MMx19MMx25M OR" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01813-01-1925" 
+"m" "302 0,15MMx19MMx25M GE" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01814-04-1925" 
+"m" "302 0,15MMx19MMx25M WS" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01817-04-1925" 
+"m" "302 0,15MMx19MMx25M RT" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01820-04-1925" 
+"m" "302 0,15MMx19MMx25M VI" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01824-04-1925" 
+"m" "302 0,15MMx19MMx25M HBL" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.01825-04-1925" 
+"m" "302 0,15MMx19MMx25M GN" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03085-11-1925" 
+"m" "8002 0,28MMx19MMx25M SW" "KN17 1,5"." 
+"1200" - - - "Trade" "act" "1221" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03094-11-1925" 
+"m" "8110 0,26MMx19MMx25M SW" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03096-11-0925" 
+"m" "8110 0,26MMx9MMx25M SW" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03101-11-1925" 
+"m" "8110 0,26MMx19MMx25M RWS" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03119-03-1950" 
+"m" "8120 0,26MMx19MMx50M SW" "KN3 3"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03120-03-1550" 
+"m" "8120 0,26MMx15MMx50M SW" "KN3 3"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03121-03-0950" 
+"m" "8120 0,26MMx9MMx50M SW" "KN3 3"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03123-03-0975" 
+"m" "8120 0,26MMx9MMx75M SW" "KN3 1,5"." 
+"1100" - - - "Trade" "act" "1141" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.03133-11-1925" 
+"m" "8310 SE 0,30x19x25 SW" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1151" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.20849-17-1925" 
+"m" "8550 0,30MMx19MMx25M SW" "KN17 1,5" Meter" 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.31596-17-1925" 
+"m" "8550 0,30MMx19MMx25M SW" "KN17 1,5"." 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.33832-11-1905" 
+"m" "8570 0,90MMx19MMx5M SW" "KN11" 
+"1100" - - - "Trade" "act" "1133" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.34002-17-1950" 
+"m" "8560 0,30MMx19MMx50M SW" "KN17 3"." 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.34182-11-3005" 
+"m" "8570 0,90MMx30MMx5M SW" "KN11" 
+"1100" - - - "Trade" "act" "1133" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.37001-11-1912" 
+"m" "8310 SE 0,30x19x12,5 SW" "KN11 1,5"Met." 
+"1100" - - - "Trade" "act" "1151" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.37129-38-1910" 
+"m" "8510 0,50MMx19MMx10M SW" "KN38 Meter" 
+"1100" - - - "Trade" "act" "1151" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.38161-11-1925" 
+"m" "8310 SE 0,30x19x25 SW" "KN11 1,5"Met." 
+"1100" - - - "Trade" "act" "1151" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.43994-11-1925" 
+"m" "837X 0,30MMx19MMx25M SW" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1152" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.51603-38-1915" 
+"m" "8550 0,30MMx19MMx15M SW" "KN38 1,5" Meter" 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.60789-11-0910" 
+"m" "8550 0,30MMx9MMx10M SW" "KN17 1,5"." 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.68427-11-1925" 
+"m" "837X 0,30MMx19MMx25M SW" "KN11 1,5" Meter" 
+"1100" - - - "Trade" "act" "1152" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.71781-08-1920" 
+"m" "651MSX 0,15x19x20 SW" "KB8 Meter #" 
+"1100" - - - "Trade" "act" "1111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.71784-01-1933" 
+"m" "651MSX 0,15x19x33 SW" "KB8 ¨¹bersee #" 
+"1100" - - - "FP" "act" "1111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.34420-04-1233" 
+"m" "302 0,15MMx12MMx33M GE" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.34421-04-1233" 
+"m" "302 0,15MMx12MMx33M WS" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.71791-17-1966" 
+"m" "651MSX 0,15x19x66 SW" "KN17 ¨¹bersee #" 
+"1100" - - - "Trade" "act" "1111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.71796-08-1210" 
+"m" "651MSX 0,15x12x10 SW" "KB8 Meter #" 
+"1100" - - - "Trade" "act" "1111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.72604-04-1533" 
+"m" "302 0,15MMx15MMx33M BL" "KB4" 
+"1200" - - - "Trade" "act" "1211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.74116-11-3025" 
+"m" "837X 0,30MMx30MMx25M SW" "KN11 1,5"." 
+"1100" - - - "Trade" "act" "1152" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.77275-03-0950" 
+"m" "838X 0,30MMx9MMx50M SW" "KN3 1,5"." 
+"1100" - - - "Trade" "act" "1152" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.79962-11-0925" 
+"m" "837X 0,30MMx9MMx25M SW" "KN11  Meter" 
+"1100" - - - "Trade" "act" "1152" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.81741-17-4515" 
+"m" "880 1MMx45MMx15M SW" "KN17" 
+"1100" - - - "Trade" "act" "1121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.86056-11-2525" 
+"m" "Y1335XE 25MMx25M TR" "KN11" 
+"1100" - - - "Trade" "act" "1161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"1.35645-11-2525" 
+"m" "8550 0,30MMx25MMx25M SW" "KN17 1,5"." 
+"1100" - - - "Trade" "act" "1131" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83188-68" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.02 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83187-68" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.01 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83190-68" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.05 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83178-68" 
+"m" "FLYW 10/0,21 RTSW" "N101627.03 ETR8BLK" 
+"2100" - - - "FP" "act" "2111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83201-68" 
+"m" "FLYW-B 25,00 SW" "N903232.01 ETR8BLK" 
+"2100" - - - "FP" "act" "2111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83177-68" 
+"m" "FLYW 10/0,21 RT" "N101627.01 ETR8BLK" 
+"2100" - - - "FP" "act" "2111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83183-78" 
+"m" "FLRYYW 0,50 SW(BR)" "N102405.01 EFS8BLK" 
+"2100" - - - "FP" "act" "2170" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83184-78" 
+"m" "FLRYYW 0,50 SW(GE)" "N102 405.02 EFS8BLK" 
+"2100" - - - "FP" "act" "2170" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83185-78" 
+"m" "FLRYYW 0,50 SW(GNSW)" "N102405.06 EFS8BLK" 
+"2100" - - - "FP" "act" "2170" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.05253-68" 
+"m" "FLRYYW 2,50 SW(RT)" "N102471.01 ETR8BLK" 
+"2100" - - - "FP" "act" "2170" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83338-68" 
+"m" "FL2G-B 16,00 SW" "N903222.01 STR8BLK" 
+"2200" - - - "FP" "act" "2211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83166-78" 
+"m" "FLR31Y 2,50 BR" "N037248.8 EFS8BLK" 
+"2100" - - - "FP" "act" "2113" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.17350-68" 
+"m" "FLRY 2x0,35-A(ORGN/ORBR" "N901916.04 STR8BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83163-78" 
+"m" "FLR31Y 0,50 RTSW" "N037203.9 EFS8BLK" 
+"2100" - - - "FP" "act" "2113" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83189-68" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.03 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.28717-66" 
+"m" "FLRY-B 2x1,00(RTGN/BRGN" "N906581.03 ETR6BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83203-68" 
+"m" "FLRYYW 2x1,00 SW/RTGN" "N904811.01 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83200-68" 
+"m" "FLYW-B 16,00 RT" "N903231.02 ETR8BLK" 
+"2100" - - - "FP" "act" "2111" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83186-68" 
+"m" "FLRYBYW 1x0,50+0,50 SW" "N901905.02 ETR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83333-68" 
+"m" "FLR31Y11Y 2x0,75/0,16 SW" "N901911.02 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83332-68" 
+"m" "FLR31Y11Y 2x0,75/0,16 SW" "N901911.01 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83339-68" 
+"m" "FL2G-B 25,00 SW" "N903223.01 STR8BLK" 
+"2100" - - - "FP" "act" "2211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83335-68" 
+"m" "FLR31Y11Y 2x0,75 SW/GN" "N901918.02 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83334-68" 
+"m" "FLR31Y11Y 2x0,75 SW/BR" "N901918.01 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83337-68" 
+"m" "FL2G-B 25,00 SW" "N901936.01 STR8BLK" 
+"2200" - - - "FP" "act" "2211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83336-68" 
+"m" "FL2G-B 16,00 SW" "N901935.01 STR8BLK" 
+"2200" - - - "FP" "act" "2211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.43481-68" 
+"m" "FLR31Y 2x0,35 ORGN/ORBR" "N901945.01 STR8BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83202-78" 
+"m" "FL2G 2,5/0,21 RTSW" "N903347.03 EFS8BLK" 
+"2200" - - - "FP" "act" "2211" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83193-66" 
+"m" "FLR7Y-A 2x0,35 GRWS" "N901944.02 ETR6/4B" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83179-68" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.01 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83181-68" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.03 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83180-68" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.02 STR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.46893-68" 
+"m" "FLRY 2x0,35-A(ORBR/ORSW" "N901916.03 ETR8BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83195-78" 
+"m" "FLRYYW-A 2x0,50 SWBL" "N901987.05 EFS8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83196-78" 
+"m" "FLRYYW-A 2x0,50 SWGN" "N901987.09 EFS8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83164-78" 
+"m" "FLR31Y 1,00 RTGE" "N037223.1 EFS8BLK" 
+"2100" - - - "FP" "act" "2113" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83165-78" 
+"m" "FLR31Y 2,50 RTWS" "N037243.0 EFS8BLK" 
+"2100" - - - "FP" "act" "2113" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83197-78" 
+"m" "FLRYYW-A 2x0,50 SWWS" "N901987.10 EFS8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83159-66" 
+"m" "FLRY-A 2x0,50 (SW,WS)" "N018886.3 ETR6BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83199-68" 
+"m" "FL11Y 25,00 SW" "N901959.01 STR8BLK" 
+"2100" - - - "FP" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83192-68" 
+"m" "A1(10x0,22-A+0,35" "N901931.01 STR8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83162-68" 
+"m" "FLRY-B 6,00 RT" "N037063.3 STR8BLK" 
+"2100" - - - "FP" "act" "2112" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83169-78" 
+"m" "FLR7Y-A 0,50 SW" "N037609.9 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83176-78" 
+"m" "FLR7Y-B 1,00 SWWS" "N037 629.0 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.72694-68" 
+"m" "FL11Y 16,00 RT" "N105392.01 STR8BLK" 
+"2100" - - - "FP" "act" "2114" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83182-78" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.04 EFS8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83194-78" 
+"m" "FLRYYW-A 2x0,35 SW(SW" "N901952.12 EFS8BLK" 
+"2100" - - - "FP" "act" "2121" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83160-66" 
+"m" "FLRY-A 2x0,50(GE,WS" "N018886.22 ETR6BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83161-66" 
+"m" "FLRY-A 2x0,50(GR,WS" "N018886.23 ETR6BLK" 
+"2100" - - - "FP" "act" "2180" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83473-68" 
+"m" "FLRYB11Y 1x0,35+0,35 SW" "N101944.01 ETR8BLK" 
+"2100" - - - "FP" "act" "2122" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83198-78" 
+"m" "FLRYWYW2x0.50 SW" "N901987.11  EFS8" 
+"2100" - - - "FP" "act" "2112" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83167-78" 
+"m" "FLR7Y-A 0,50 WSBL" "N037600.5 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83175-78" 
+"m" "FLR7Y-B 1,00 BR" "N037628.8 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83168-78" 
+"m" "FLR7Y-A 0,50 BRWS" "N037608.0 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83172-78" 
+"m" "FLR7Y-B 1,00 VIWS" "N037624.0 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83174-78" 
+"m" "FLR7Y-B 1,00 BRWS" "N037628.0 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83171-78" 
+"m" "FLR7Y-B 1,00 WSRT" "N037620.3 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83173-78" 
+"m" "FLR7Y-B 1,00 GRGE" "N037627.1 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"2.83170-78" 
+"m" "FLR7Y-B 1,00 SWVI" "N037629.4 EFS8BLK" 
+"2100" - - - "FP" "act" "2161" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83188-00" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.02 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83187-00" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83190-00" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.05 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83178-00" 
+"m" "FLYW 10/0,21 RTSW" "N101627.03 ETR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83201-00" 
+"m" "FLYW-B 25,00 SW" "N903232.01 ETR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83177-00" 
+"m" "FLYW 10/0,21 RT" "N101627.01 ETR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83183-00" 
+"m" "FLRYYW 0,50 SW(BR)" "N102405.01 EFS8BLK" 
+"9630" - - - "RAW" "act" "9630" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83184-00" 
+"m" "FLRYYW 0,50 SW(GE)" "N102 405.02 EFS8BLK" 
+"9630" - - - "RAW" "act" "9630" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83185-00" 
+"m" "FLRYYW 0,50 SW(GNSW)" "N102405.06 EFS8BLK" 
+"9630" - - - "RAW" "act" "9630" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.05253-00" 
+"m" "FLRYYW 2,50 SW(RT)" "N102471.01 ETR8BLK" 
+"9630" - - - "RAW" "act" "9630" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83338-00" 
+"m" "FL2G-B 16,00 SW" "N903222.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83166-00" 
+"m" "FLR31Y 2,50 BR" "N037248.8 EFS8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.17350-00" 
+"m" "FLRY 2x0,35-A(ORGN/ORBR" "N901916.04 STR8BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83163-00" 
+"m" "FLR31Y 0,50 RTSW" "N037203.9 EFS8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83189-00" 
+"m" "FLRYBYW 2x0,50+0,50 SW" "N901906.03 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.28717-00" 
+"m" "FLRY-B 2x1,00(RTGN/BRGN" "N906581.03 ETR6BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83203-00" 
+"m" "FLRYYW 2x1,00 SW/RTGN" "N904811.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83200-00" 
+"m" "FLYW-B 16,00 RT" "N903231.02 ETR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83186-00" 
+"m" "FLRYBYW 1x0,50+0,50 SW" "N901905.02 ETR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83333-00" 
+"m" "FLR31Y11Y 2x0,75/0,16 SW" "N901911.02 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83332-00" 
+"m" "FLR31Y11Y 2x0,75/0,16 SW" "N901911.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83339-00" 
+"m" "FL2G-B 25,00 SW" "N903223.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83335-00" 
+"m" "FLR31Y11Y 2x0,75 SW/GN" "N901918.02 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83334-00" 
+"m" "FLR31Y11Y 2x0,75 SW/BR" "N901918.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83337-00" 
+"m" "FL2G-B 25,00 SW" "N901936.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83336-00" 
+"m" "FL2G-B 16,00 SW" "N901935.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.43481-00" 
+"m" "FLR31Y 2x0,35 ORGN/ORBR" "N901945.01 STR8BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83202-00" 
+"m" "FL2G 2,5/0,21 RTSW" "N903347.03 EFS8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83193-00" 
+"m" "FLR7Y-A 2x0,35 GRWS" "N901944.02 ETR6/4B" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83179-00" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83181-00" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.03 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83180-00" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.02 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.46893-00" 
+"m" "FLRY 2x0,35-A(ORBR/ORSW" "N901916.03 ETR8BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83195-00" 
+"m" "FLRYYW-A 2x0,50 SWBL" "N901987.05 EFS8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83196-00" 
+"m" "FLRYYW-A 2x0,50 SWGN" "N901987.09 EFS8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83164-00" 
+"m" "FLR31Y 1,00 RTGE" "N037223.1 EFS8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83165-00" 
+"m" "FLR31Y 2,50 RTWS" "N037243.0 EFS8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83197-00" 
+"m" "FLRYYW-A 2x0,50 SWWS" "N901987.10 EFS8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83159-00" 
+"m" "FLRY-A 2x0,50 (SW,WS)" "N018886.3 ETR6BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83199-00" 
+"m" "FL11Y 25,00 SW" "N901959.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83192-00" 
+"m" "A1(10x0,22-A+0,35" "N901931.01 STR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83162-00" 
+"m" "FLRY-B 6,00 RT" "N037063.3 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83169-00" 
+"m" "FLR7Y-A 0,50 SW" "N037609.9 EFS8BLK" 
+"9625" - - - "RAW" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83176-00" 
+"m" "FLR7Y-B 1,00 SWWS" "N037 629.0 EFS8BLK" 
+"9625" - - - "RAW" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.72694-00" 
+"m" "FL11Y 16,00 RT" "N105392.01 STR8BLK" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83182-00" 
+"m" "FLRYB11Y 2x0,35+0,35 SW" "N101945.04 EFS8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83194-00" 
+"m" "FLRYYW-A 2x0,35 SW(SW" "N901952.12 EFS8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83160-00" 
+"m" "FLRY-A 2x0,50(GE,WS" "N018886.22 ETR6BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83161-00" 
+"m" "FLRY-A 2x0,50(GR,WS" "N018886.23 ETR6BLK" 
+"9635" - - - "RAW" "act" "9635" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83473-00" 
+"m" "FLRYB11Y 1x0,35+0,35 SW" "N101944.01 ETR8BLK" 
+"9610" - - - "RAW" "act" "9610" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83198-00" 
+"m" "FLRYWYW2x0.50 SW" "N901987.11  EFS8" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.54879-00" 
+"m" "FLR31Y11Y 2X0.75 SW" "N901918.01" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.54878-00" 
+"m" "FLR31Y11Y 2X0.75 SW" "N901918.02" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.54875-00" 
+"m" "FLR31Y11Y 4X0.50 SW" "N901942.01" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.42927-00" 
+"m" "FLRY11Y 3x0.35 SW" "N901932.01" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.54877-00" 
+"m" "FLR31Y11Y 2X0.75/0.16 SW" "N901911.01" 
+"9605" - - - "RAW" "act" "9605" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83167-00" 
+"m" "FLR7Y-A 0,50 WSBL" "N037600.5 EFS8BLK" 
+"9625" - - - "raw" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83175-00" 
+"m" "FLR7Y-B 1,00 BR" "N037628.8 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83168-00" 
+"m" "FLR7Y-A 0,50 BRWS" "N037608.0 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83172-00" 
+"m" "FLR7Y-B 1,00 VIWS" "N037624.0 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83174-00" 
+"m" "FLR7Y-B 1,00 BRWS" "N037628.0 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83171-00" 
+"m" "FLR7Y-B 1,00 WSRT" "N037620.3 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83173-00" 
+"m" "FLR7Y-B 1,00 GRGE" "N037627.1 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end
+@@batchload ppptmt04.p
+"9.83170-00" 
+"m" "FLR7Y-B 1,00 SWVI" "N037629.4 EFS8BLK" 
+"9625" - - - "FP" "act" "9625" 
+. 
+@@end

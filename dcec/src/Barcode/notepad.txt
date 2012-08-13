@@ -1,0 +1,16 @@
+
+
+
+
+
+
+           Work order
+
+
+           WO: j02-003
+
+           Item: 09-0001                         QTY: 1
+
+           Description: PACKAGING BLISTER SEAL
+
+           Type:                  Status: R
