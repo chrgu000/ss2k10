@@ -120,12 +120,14 @@ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
 		
 		/*{mfphead.i} */
 		
-		for each lad_det exclusive-lock where lad_dataset = "itm_mstr"
+		for each lad_det exclusive-lock where lad_domain = global_domain 
+			and lad_dataset = "itm_mstr"
 			and lad_nbr >= nbr and lad_nbr <= nbr1 
 			and lad_user1 >= sd and lad_user1 <= sd1
 			and lad_ref >= rmks and lad_ref <= rmks1
-			and can-find(first laddet where laddet.lad_nbr = lad_det.lad_nbr and
-			                  laddet.lad_dataset = "itm_det" and laddet.lad_qty_all <> 0)
+			and can-find(first laddet where laddet.lad_domain = global_domain and
+												 laddet.lad_nbr = lad_det.lad_nbr and
+			                   laddet.lad_dataset = "itm_det" and laddet.lad_qty_all <> 0)
 			break by lad_nbr:
      		
      		isCopy = if lad_lot = "Y" then "副本" else "原本".  /*打印标志*/

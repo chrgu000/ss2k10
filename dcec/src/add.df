@@ -1,0 +1,7657 @@
+UPDATE DATABASE "?"
+
+ADD TABLE "short-pklst"
+  AREA "Schema Area"
+  DUMP-NAME "short-pk"
+
+ADD FIELD "short-site" OF "short-pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "short-wkctr" OF "short-pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "short-part" OF "short-pklst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "short-assy" OF "short-pklst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "short-qty" OF "short-pklst" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 21
+  DECIMALS 6
+  ORDER 50
+
+ADD FIELD "short-wcdesc" OF "short-pklst" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 48
+  ORDER 60
+
+ADD FIELD "short-pknbr" OF "short-pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "short-deliv" OF "short-pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD INDEX "short-pklst" ON "short-pklst" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "short-site" ASCENDING 
+  INDEX-FIELD "short-wkctr" ASCENDING 
+  INDEX-FIELD "short-part" ASCENDING 
+
+ADD INDEX "short-pknbr" ON "short-pklst" 
+  AREA "Schema Area"
+  INDEX-FIELD "short-pknbr" ASCENDING 
+
+ADD TABLE "atpubom"
+  AREA "Schema Area"
+  LABEL "ATPU Bom"
+  DUMP-NAME "atpubom"
+
+ADD FIELD "abom_par" OF "atpubom" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "parents items"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "abom_comp" OF "atpubom" AS character 
+  DESCRIPTION "son items"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "abom_ref" OF "atpubom" AS character 
+  DESCRIPTION "reference"
+  FORMAT "X(12)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 24
+  ORDER 30
+
+ADD FIELD "abom_cdesc" OF "atpubom" AS character 
+  DESCRIPTION "Chinese describe"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 48
+  ORDER 40
+
+ADD FIELD "abom_udesc" OF "atpubom" AS character 
+  DESCRIPTION "English describe"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 48
+  ORDER 50
+
+ADD FIELD "abom_qty" OF "atpubom" AS decimal 
+  DESCRIPTION "quantity per"
+  FORMAT "->>,>>>,>>9.999,999"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 24
+  DECIMALS 9
+  ORDER 60
+
+ADD FIELD "abom_um" OF "atpubom" AS character 
+  DESCRIPTION "unit"
+  FORMAT "X(2)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "abom_um_qty" OF "atpubom" AS decimal 
+  FORMAT "->>>>>,,>>9.99,999"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "abom_op" OF "atpubom" AS integer 
+  DESCRIPTION "BOM Option"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "abom_start" OF "atpubom" AS date 
+  DESCRIPTION "start date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "abom_end" OF "atpubom" AS date 
+  DESCRIPTION "end date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "abom_log1" OF "atpubom" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 13
+  SQL-WIDTH 1
+  ORDER 120
+
+ADD FIELD "abom_log2" OF "atpubom" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 14
+  SQL-WIDTH 1
+  ORDER 130
+
+ADD FIELD "abom_user1" OF "atpubom" AS character 
+  DESCRIPTION "for customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 36
+  ORDER 140
+
+ADD FIELD "abom_user2" OF "atpubom" AS character 
+  DESCRIPTION "for customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 36
+  ORDER 150
+
+ADD TABLE "cent"
+  AREA "Schema Area"
+  DESCRIPTION "work center database"
+  DUMP-NAME "cent"
+
+ADD FIELD "cent_code" OF "cent" AS character 
+  DESCRIPTION "work center code"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "cent_name" OF "cent" AS character 
+  DESCRIPTION "work center name"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 48
+  ORDER 20
+
+ADD FIELD "cent_dept" OF "cent" AS character 
+  DESCRIPTION "work center department"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "cent_user1" OF "cent" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "cent_user2" OF "cent" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 36
+  ORDER 50
+
+ADD FIELD "cent_log1" OF "cent" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 7
+  SQL-WIDTH 1
+  ORDER 60
+
+ADD FIELD "cent_log2" OF "cent" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD TABLE "opt"
+  AREA "Schema Area"
+  DESCRIPTION "standard option"
+  DUMP-NAME "opt"
+
+ADD FIELD "opt_code" OF "opt" AS character 
+  DESCRIPTION "standard option code"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "opt_desc" OF "opt" AS character 
+  DESCRIPTION "standard option describe"
+  FORMAT "X(24)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 48
+  ORDER 20
+
+ADD FIELD "opt_work" OF "opt" AS character 
+  DESCRIPTION "work center"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "opt_log1" OF "opt" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 5
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "opt_log2" OF "opt" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 6
+  SQL-WIDTH 1
+  ORDER 50
+
+ADD FIELD "opt_user1" OF "opt" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "opt_user2" OF "opt" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD TABLE "part"
+  AREA "Schema Area"
+  DESCRIPTION "parts database"
+  DUMP-NAME "part"
+
+ADD FIELD "par_code" OF "part" AS character 
+  DESCRIPTION "parts code"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "par_cname" OF "part" AS character 
+  DESCRIPTION "parts Chinese describe"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "par_uname" OF "part" AS character 
+  DESCRIPTION "parts English describe"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "par_type" OF "part" AS character 
+  DESCRIPTION "parts type"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "par_part_type" OF "part" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "par_phantom" OF "part" AS logical 
+  DESCRIPTION "parts phantom"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 7
+  SQL-WIDTH 1
+  ORDER 60
+
+ADD FIELD "par_log1" OF "part" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "par_log2" OF "part" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 80
+
+ADD FIELD "par_user1" OF "part" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 36
+  ORDER 90
+
+ADD FIELD "par_user2" OF "part" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 36
+  ORDER 100
+
+ADD FIELD "par_group" OF "part" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD TABLE "scheplan"
+  AREA "Schema Area"
+  DESCRIPTION "production schedule plan"
+  DUMP-NAME "scheplan"
+
+ADD FIELD "sche_part" OF "scheplan" AS character 
+  DESCRIPTION "schedule part"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "sche_date" OF "scheplan" AS date 
+  DESCRIPTION "schedule date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "sche_customer" OF "scheplan" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "sche_serial" OF "scheplan" AS character 
+  DESCRIPTION "null for ATPU use"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "sche_complete" OF "scheplan" AS decimal 
+  DESCRIPTION "completed quantity"
+  FORMAT "->>,>>>,>>9.99,999"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 50
+
+ADD FIELD "sche_req" OF "scheplan" AS decimal 
+  DESCRIPTION "schedule requires quantity"
+  FORMAT "->>,>>>,>>9.999,999"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "sche_user1" OF "scheplan" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "sche_user2" OF "scheplan" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 36
+  ORDER 80
+
+ADD FIELD "sche_log1" OF "scheplan" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 10
+  SQL-WIDTH 1
+  ORDER 90
+
+ADD FIELD "sche_log2" OF "scheplan" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD TABLE "workorder"
+  AREA "Schema Area"
+  DESCRIPTION "work order database"
+  DUMP-NAME "workorde"
+
+ADD FIELD "woor_nbr" OF "workorder" AS character 
+  DESCRIPTION "work order number"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "woor_qty" OF "workorder" AS decimal 
+  DESCRIPTION "work order quantity"
+  FORMAT "->>,>>>,>>9.999,999"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 20
+
+ADD FIELD "woor_due_date" OF "workorder" AS date 
+  DESCRIPTION "work oder due date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "woor_status" OF "workorder" AS character 
+  DESCRIPTION "work order status"
+  FORMAT "X(1)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 2
+  ORDER 40
+
+ADD FIELD "woor_site" OF "workorder" AS character 
+  DESCRIPTION "work order site"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "woor_lot" OF "workorder" AS character 
+  DESCRIPTION "work order lot number"
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "woor_part" OF "workorder" AS character 
+  DESCRIPTION "work order parts code"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "woor_user1" OF "workorder" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 36
+  ORDER 80
+
+ADD FIELD "woor_user2" OF "workorder" AS character 
+  DESCRIPTION "for future customization"
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 36
+  ORDER 90
+
+ADD FIELD "woor_log1" OF "workorder" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "woor_log2" OF "workorder" AS logical 
+  DESCRIPTION "for future customization"
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 12
+  SQL-WIDTH 1
+  ORDER 110
+
+ADD TABLE "PBCATTBL"
+  TYPE SQL
+  AREA "Schema Area"
+  CAN-CREATE "Administrator,*"
+  CAN-DELETE "Administrator,*"
+  CAN-READ "Administrator,*"
+  DUMP-NAME "pbcattbl"
+
+ADD FIELD "PBT_TNAM" OF "PBCATTBL" AS character 
+  FORMAT "X(33)"
+  INITIAL ?
+  POSITION 2
+  SQL-WIDTH 66
+  CAN-WRITE "Administrator,*"
+  LENGTH 33
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "PBT_TID" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 20
+
+ADD FIELD "PBT_OWNR" OF "PBCATTBL" AS character 
+  FORMAT "X(33)"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 66
+  CAN-WRITE "Administrator,*"
+  LENGTH 33
+  ORDER 30
+  MANDATORY
+
+ADD FIELD "PBD_FHGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 40
+
+ADD FIELD "PBD_FWGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 6
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 50
+
+ADD FIELD "PBD_FITL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 7
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 60
+
+ADD FIELD "PBD_FUNL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 8
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 70
+
+ADD FIELD "PBD_FCHR" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 9
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 80
+
+ADD FIELD "PBD_FPTC" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 10
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 90
+
+ADD FIELD "PBD_FFCE" OF "PBCATTBL" AS character 
+  FORMAT "X(18)"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 36
+  CAN-WRITE "Administrator,*"
+  LENGTH 18
+  ORDER 100
+
+ADD FIELD "PBH_FHGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 110
+
+ADD FIELD "PBH_FWGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 120
+
+ADD FIELD "PBH_FITL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 14
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 130
+
+ADD FIELD "PBH_FUNL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 140
+
+ADD FIELD "PBH_FCHR" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 16
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 150
+
+ADD FIELD "PBH_FPTC" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 160
+
+ADD FIELD "PBH_FFCE" OF "PBCATTBL" AS character 
+  FORMAT "X(18)"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 36
+  CAN-WRITE "Administrator,*"
+  LENGTH 18
+  ORDER 170
+
+ADD FIELD "PBL_FHGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 180
+
+ADD FIELD "PBL_FWGT" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 20
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 190
+
+ADD FIELD "PBL_FITL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 21
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 200
+
+ADD FIELD "PBL_FUNL" OF "PBCATTBL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 22
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 210
+
+ADD FIELD "PBL_FCHR" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 23
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 220
+
+ADD FIELD "PBL_FPTC" OF "PBCATTBL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 24
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 230
+
+ADD FIELD "PBL_FFCE" OF "PBCATTBL" AS character 
+  FORMAT "X(18)"
+  INITIAL ?
+  POSITION 25
+  SQL-WIDTH 36
+  CAN-WRITE "Administrator,*"
+  LENGTH 18
+  ORDER 240
+
+ADD FIELD "PBT_CMNT" OF "PBCATTBL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 26
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 250
+
+ADD INDEX "PBCATT_X" ON "PBCATTBL" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "PBT_TNAM" ASCENDING 
+  INDEX-FIELD "PBT_OWNR" ASCENDING 
+
+ADD TABLE "PBCATCOL"
+  TYPE SQL
+  AREA "Schema Area"
+  CAN-CREATE "Administrator,*"
+  CAN-DELETE "Administrator,*"
+  CAN-READ "Administrator,*"
+  DUMP-NAME "pbcatcol"
+
+ADD FIELD "PBC_TNAM" OF "PBCATCOL" AS character 
+  FORMAT "X(33)"
+  INITIAL ?
+  POSITION 2
+  SQL-WIDTH 66
+  CAN-WRITE "Administrator,*"
+  LENGTH 33
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "PBC_TID" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 20
+
+ADD FIELD "PBC_OWNR" OF "PBCATCOL" AS character 
+  FORMAT "X(33)"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 66
+  CAN-WRITE "Administrator,*"
+  LENGTH 33
+  ORDER 30
+  MANDATORY
+
+ADD FIELD "PBC_CNAM" OF "PBCATCOL" AS character 
+  FORMAT "X(33)"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 66
+  CAN-WRITE "Administrator,*"
+  LENGTH 33
+  ORDER 40
+  MANDATORY
+
+ADD FIELD "PBC_CID" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 6
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 50
+
+ADD FIELD "PBC_LABL" OF "PBCATCOL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 7
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 60
+
+ADD FIELD "PBC_LPOS" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 8
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 70
+
+ADD FIELD "PBC_HDR" OF "PBCATCOL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 9
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 80
+
+ADD FIELD "PBC_HPOS" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 10
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 90
+
+ADD FIELD "PBC_JTFY" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 100
+
+ADD FIELD "PBC_MASK" OF "PBCATCOL" AS character 
+  FORMAT "X(31)"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 62
+  CAN-WRITE "Administrator,*"
+  LENGTH 31
+  ORDER 110
+
+ADD FIELD "PBC_CASE" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 120
+
+ADD FIELD "PBC_HGHT" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 14
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 130
+
+ADD FIELD "PBC_WDTH" OF "PBCATCOL" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 140
+
+ADD FIELD "PBC_PTRN" OF "PBCATCOL" AS character 
+  FORMAT "X(31)"
+  INITIAL ?
+  POSITION 16
+  SQL-WIDTH 62
+  CAN-WRITE "Administrator,*"
+  LENGTH 31
+  ORDER 150
+
+ADD FIELD "PBC_BMAP" OF "PBCATCOL" AS character 
+  FORMAT "X(1)"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 2
+  CAN-WRITE "Administrator,*"
+  LENGTH 1
+  ORDER 160
+
+ADD FIELD "PBC_INIT" OF "PBCATCOL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 170
+
+ADD FIELD "PBC_CMNT" OF "PBCATCOL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 19
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 180
+
+ADD FIELD "PBC_EDIT" OF "PBCATCOL" AS character 
+  FORMAT "X(31)"
+  INITIAL ?
+  POSITION 20
+  SQL-WIDTH 62
+  CAN-WRITE "Administrator,*"
+  LENGTH 31
+  ORDER 190
+
+ADD FIELD "PBC_TAG" OF "PBCATCOL" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 21
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 200
+
+ADD INDEX "PBCATC_X" ON "PBCATCOL" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "PBC_TNAM" ASCENDING 
+  INDEX-FIELD "PBC_OWNR" ASCENDING 
+  INDEX-FIELD "PBC_CNAM" ASCENDING 
+
+ADD TABLE "PBCATFMT"
+  TYPE SQL
+  AREA "Schema Area"
+  CAN-CREATE "Administrator,*"
+  CAN-DELETE "Administrator,*"
+  CAN-READ "Administrator,*"
+  DUMP-NAME "pbcatfmt"
+
+ADD FIELD "PBF_NAME" OF "PBCATFMT" AS character 
+  FORMAT "X(30)"
+  INITIAL ?
+  POSITION 2
+  SQL-WIDTH 60
+  CAN-WRITE "Administrator,*"
+  LENGTH 30
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "PBF_FRMT" OF "PBCATFMT" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 20
+
+ADD FIELD "PBF_TYPE" OF "PBCATFMT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 30
+
+ADD FIELD "PBF_CNTR" OF "PBCATFMT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 40
+
+ADD INDEX "PBCATF_X" ON "PBCATFMT" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "PBF_NAME" ASCENDING 
+
+ADD TABLE "PBCATVLD"
+  TYPE SQL
+  AREA "Schema Area"
+  CAN-CREATE "Administrator,*"
+  CAN-DELETE "Administrator,*"
+  CAN-READ "Administrator,*"
+  DUMP-NAME "pbcatvld"
+
+ADD FIELD "PBV_NAME" OF "PBCATVLD" AS character 
+  FORMAT "X(30)"
+  INITIAL ?
+  POSITION 2
+  SQL-WIDTH 60
+  CAN-WRITE "Administrator,*"
+  LENGTH 30
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "PBV_VALD" OF "PBCATVLD" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 20
+
+ADD FIELD "PBV_TYPE" OF "PBCATVLD" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 30
+
+ADD FIELD "PBV_CNTR" OF "PBCATVLD" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 40
+
+ADD FIELD "PBV_MSG" OF "PBCATVLD" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 6
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 50
+
+ADD INDEX "PBCATV_X" ON "PBCATVLD" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "PBV_NAME" ASCENDING 
+
+ADD TABLE "PBCATEDT"
+  TYPE SQL
+  AREA "Schema Area"
+  CAN-CREATE "Administrator,*"
+  CAN-DELETE "Administrator,*"
+  CAN-READ "Administrator,*"
+  DUMP-NAME "pbcatedt"
+
+ADD FIELD "PBE_NAME" OF "PBCATEDT" AS character 
+  FORMAT "X(30)"
+  INITIAL ?
+  POSITION 2
+  SQL-WIDTH 60
+  CAN-WRITE "Administrator,*"
+  LENGTH 30
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "PBE_EDIT" OF "PBCATEDT" AS character 
+  FORMAT "X(254)"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 508
+  CAN-WRITE "Administrator,*"
+  LENGTH 254
+  ORDER 20
+
+ADD FIELD "PBE_TYPE" OF "PBCATEDT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 30
+
+ADD FIELD "PBE_CNTR" OF "PBCATEDT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 40
+
+ADD FIELD "PBE_SEQN" OF "PBCATEDT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 6
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 50
+  MANDATORY
+
+ADD FIELD "PBE_FLAG" OF "PBCATEDT" AS integer 
+  FORMAT "->,>>>,>>>,>>9"
+  INITIAL ?
+  POSITION 7
+  SQL-WIDTH 4
+  CAN-WRITE "Administrator,*"
+  ORDER 60
+
+ADD FIELD "PBE_WORK" OF "PBCATEDT" AS character 
+  FORMAT "X(32)"
+  INITIAL ?
+  POSITION 8
+  SQL-WIDTH 64
+  CAN-WRITE "Administrator,*"
+  LENGTH 32
+  ORDER 70
+
+ADD INDEX "PBCATE_X" ON "PBCATEDT" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "PBE_NAME" ASCENDING 
+  INDEX-FIELD "PBE_SEQN" ASCENDING 
+
+ADD TABLE "saleiss"
+  AREA "Schema Area"
+  DESCRIPTION "sale issue record"
+  DUMP-NAME "saleiss"
+
+ADD FIELD "sale_nbr" OF "saleiss" AS character 
+  DESCRIPTION "sale order"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "sale_nbr"
+  POSITION 2
+  SQL-WIDTH 36
+  COLUMN-LABEL "sale_nbr"
+  ORDER 10
+
+ADD FIELD "sale_serial" OF "saleiss" AS character 
+  DESCRIPTION "serial number"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "sale_serial"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "sale_serial"
+  ORDER 20
+
+ADD FIELD "sale_prod_line" OF "saleiss" AS character 
+  DESCRIPTION "production line"
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "sale_prod_line"
+  POSITION 4
+  SQL-WIDTH 8
+  COLUMN-LABEL "sale_prod_line"
+  ORDER 30
+
+ADD FIELD "sale_qty_chg" OF "saleiss" AS decimal 
+  DESCRIPTION "issue quantity"
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "sale_qty_chg"
+  POSITION 5
+  SQL-WIDTH 25
+  COLUMN-LABEL "sale_qty_chg"
+  DECIMALS 10
+  ORDER 40
+
+ADD FIELD "sale_effdate" OF "saleiss" AS date 
+  DESCRIPTION "issue effective date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "sale_effdate"
+  POSITION 6
+  SQL-WIDTH 4
+  COLUMN-LABEL "sale_effdate"
+  ORDER 50
+
+ADD FIELD "sale_cust" OF "saleiss" AS character 
+  DESCRIPTION "sale customer"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "sale_cust"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "sale_cust"
+  ORDER 60
+
+ADD FIELD "sale_user1" OF "saleiss" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "sale_user2" OF "saleiss" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "sale_log1" OF "saleiss" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 10
+  SQL-WIDTH 1
+  ORDER 90
+
+ADD FIELD "sale_log2" OF "saleiss" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD TABLE "routing"
+  AREA "Schema Area"
+  DESCRIPTION "routing"
+  DUMP-NAME "routing"
+
+ADD FIELD "rout_routing" OF "routing" AS character 
+  DESCRIPTION "engine model"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "rout_routing"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "rout_std_op" OF "routing" AS character 
+  DESCRIPTION "standard option"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "rout_std_op"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "rout_wkctr" OF "routing" AS character 
+  DESCRIPTION "work center"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "rout_wkctr"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "rout_op" OF "routing" AS integer 
+  DESCRIPTION "actual option"
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "rout_op"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "rout_desc" OF "routing" AS character 
+  DESCRIPTION "option describe"
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "rout_desc"
+  POSITION 6
+  SQL-WIDTH 48
+  ORDER 50
+
+ADD TABLE "transfer"
+  AREA "Schema Area"
+  DESCRIPTION "picklist transfer"
+  DUMP-NAME "transfer"
+
+ADD FIELD "tran_nbr" OF "transfer" AS character 
+  DESCRIPTION "Picklist Number"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "list No"
+  POSITION 2
+  SQL-WIDTH 36
+  COLUMN-LABEL "list No"
+  ORDER 10
+
+ADD FIELD "tran_type" OF "transfer" AS character 
+  DESCRIPTION "picklist transfer type"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "type"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "type"
+  ORDER 20
+
+ADD FIELD "tran_qty_chg" OF "transfer" AS decimal 
+  DESCRIPTION "transfer quantity"
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "quantity"
+  POSITION 4
+  SQL-WIDTH 25
+  COLUMN-LABEL "quantity"
+  DECIMALS 10
+  ORDER 30
+
+ADD FIELD "tran_effdate" OF "transfer" AS date 
+  DESCRIPTION "Picklist transfer date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "date"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "date"
+  ORDER 40
+
+ADD TABLE "picklist"
+  AREA "Schema Area"
+  DESCRIPTION "Picklist"
+  DUMP-NAME "picklist"
+
+ADD FIELD "pick_dataset" OF "picklist" AS character 
+  DESCRIPTION "Picklist dataset"
+  FORMAT "X(12)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 24
+  ORDER 10
+
+ADD FIELD "Pick_line" OF "picklist" AS character 
+  DESCRIPTION "Picklist work center"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "pick_line"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "pick_line"
+  ORDER 20
+
+ADD FIELD "Pick_loc" OF "picklist" AS character 
+  DESCRIPTION "Picklist location"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Pick_loc"
+  POSITION 4
+  SQL-WIDTH 16
+  COLUMN-LABEL "Pick_loc"
+  ORDER 30
+
+ADD FIELD "Pick_lot" OF "picklist" AS character 
+  DESCRIPTION "Picklist serial"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Pick_lot"
+  POSITION 5
+  SQL-WIDTH 36
+  COLUMN-LABEL "Pick_lot"
+  ORDER 40
+
+ADD FIELD "Pick_nbr" OF "picklist" AS character 
+  DESCRIPTION "Picklist nbr"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Pick_nbr"
+  POSITION 6
+  SQL-WIDTH 36
+  COLUMN-LABEL "Pick_nbr"
+  ORDER 50
+
+ADD FIELD "Pick_ord_site" OF "picklist" AS character 
+  DESCRIPTION "Picklist order site"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Pick_ord_site"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "Pick_ord_site"
+  ORDER 60
+
+ADD FIELD "Pick_part" OF "picklist" AS character 
+  DESCRIPTION "Picklist part"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Pick_part"
+  POSITION 8
+  SQL-WIDTH 36
+  COLUMN-LABEL "Pick_part"
+  ORDER 70
+
+ADD FIELD "Pick_qty_all" OF "picklist" AS decimal 
+  DESCRIPTION "Picklist quantity"
+  FORMAT "->>>,>>9.9<<<<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "Pick_qty_chg" OF "picklist" AS decimal 
+  DESCRIPTION "Picklist quantity change"
+  FORMAT "->>>,>>9.9<<<<<<"
+  INITIAL "0"
+  LABEL "Pick_qty_chg"
+  POSITION 10
+  SQL-WIDTH 17
+  COLUMN-LABEL "Pick_qty_chg"
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "Pick_qty_pick" OF "picklist" AS decimal 
+  DESCRIPTION "Picklist quantity pick"
+  FORMAT "->>>,>>9.9<<<<<<"
+  INITIAL "0"
+  LABEL "Pick_qty_pick"
+  POSITION 11
+  SQL-WIDTH 17
+  COLUMN-LABEL "Pick_qty_pick"
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "Pick_qadc01" OF "picklist" AS character 
+  DESCRIPTION "Picklist No"
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Pick_qadc01"
+  POSITION 12
+  SQL-WIDTH 60
+  COLUMN-LABEL "pick_qadc01"
+  ORDER 110
+
+ADD TABLE "short_pklst"
+  AREA "Schema Area"
+  DESCRIPTION "shorttage"
+  DUMP-NAME "short_pk"
+
+ADD FIELD "short_site" OF "short_pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "short_site"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "short_site"
+  ORDER 10
+
+ADD FIELD "short_wkctr" OF "short_pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "short_wkctr"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "short_wkctr"
+  ORDER 20
+
+ADD FIELD "short_part" OF "short_pklst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "short_part"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "short_part"
+  ORDER 30
+
+ADD FIELD "short_assy" OF "short_pklst" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "short_assy"
+  POSITION 5
+  SQL-WIDTH 36
+  COLUMN-LABEL "short_assy"
+  ORDER 40
+
+ADD FIELD "short_qty" OF "short_pklst" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "short_wcdesc" OF "short_pklst" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "short_wcdesc"
+  POSITION 7
+  SQL-WIDTH 48
+  COLUMN-LABEL "short_wcdesc"
+  ORDER 60
+
+ADD FIELD "short_pknbr" OF "short_pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "short_pknbr"
+  POSITION 8
+  SQL-WIDTH 16
+  COLUMN-LABEL "short_pknbr"
+  ORDER 70
+
+ADD FIELD "short_deliv" OF "short_pklst" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "short_deliv"
+  POSITION 9
+  SQL-WIDTH 16
+  COLUMN-LABEL "short_deliv"
+  ORDER 80
+
+ADD TABLE "part1"
+  AREA "Schema Area"
+  DUMP-NAME "part1"
+
+ADD FIELD "par1_code" OF "part1" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "par1_cname" OF "part1" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "par1_uname" OF "part1" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "par1_type" OF "part1" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "par1_part_type" OF "part1" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "par1_phantom" OF "part1" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 7
+  SQL-WIDTH 1
+  ORDER 60
+
+ADD FIELD "par1_log1" OF "part1" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "par1_log2" OF "part1" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 80
+
+ADD FIELD "par1_user1" OF "part1" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 36
+  ORDER 90
+
+ADD FIELD "par1_user2" OF "part1" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 36
+  ORDER 100
+
+ADD FIELD "par1_group" OF "part1" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD TABLE "supply_part"
+  AREA "Schema Area"
+  DUMP-NAME "supply-p"
+
+ADD FIELD "su_supply" OF "supply_part" AS character 
+  DESCRIPTION "supply code"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "supply"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "supply"
+  ORDER 10
+
+ADD FIELD "su_name" OF "supply_part" AS character 
+  DESCRIPTION "supply name"
+  FORMAT "X(28)"
+  INITIAL ""
+  LABEL "name"
+  POSITION 3
+  SQL-WIDTH 56
+  COLUMN-LABEL "name"
+  ORDER 20
+
+ADD FIELD "su_part" OF "supply_part" AS character 
+  DESCRIPTION "parts number"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "parts"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "parts"
+  ORDER 30
+
+ADD FIELD "su_start" OF "supply_part" AS date 
+  DESCRIPTION "start date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "start"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "start"
+  ORDER 40
+
+ADD FIELD "su_end" OF "supply_part" AS date 
+  DESCRIPTION "end date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "end"
+  POSITION 6
+  SQL-WIDTH 4
+  COLUMN-LABEL "end"
+  ORDER 50
+
+ADD FIELD "su_part_name" OF "supply_part" AS character 
+  DESCRIPTION "part name"
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "part name"
+  POSITION 7
+  SQL-WIDTH 60
+  COLUMN-LABEL "part name"
+  ORDER 60
+
+ADD TABLE "xxpk_hist"
+  AREA "Schema Area"
+  LABEL "领料单需求历史记录"
+  DUMP-NAME "xxpk_his"
+
+ADD FIELD "xxpk_nbr" OF "xxpk_hist" AS character 
+  FORMAT "X(10)"
+  INITIAL ""
+  LABEL "领料单"
+  POSITION 2
+  SQL-WIDTH 20
+  ORDER 30
+
+ADD FIELD "xxpk_comp" OF "xxpk_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "子零件"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxpk_req_qty" OF "xxpk_hist" AS decimal 
+  FORMAT "->>,>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "需求量"
+  POSITION 4
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxpk_site" OF "xxpk_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpk_wkctr" OF "xxpk_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "工作中心"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxpk_par" OF "xxpk_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "父件"
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 70
+
+ADD FIELD "xxpk_um" OF "xxpk_hist" AS character 
+  FORMAT "X(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxpk_due_date" OF "xxpk_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "交货期"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "xxpk_op" OF "xxpk_hist" AS integer 
+  FORMAT ">>>>9"
+  INITIAL "0"
+  LABEL "工序"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxpk_mch" OF "xxpk_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "设备"
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxpk_start" OF "xxpk_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "开始日期"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxpk__chr01" OF "xxpk_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxpk__chr02" OF "xxpk_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxpk__dec01" OF "xxpk_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxpk__dec02" OF "xxpk_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxpk__dt01" OF "xxpk_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 17
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xxpk__dt02" OF "xxpk_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "xxpk__log01" OF "xxpk_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 19
+  SQL-WIDTH 1
+  ORDER 180
+
+ADD FIELD "xxpk__log02" OF "xxpk_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 20
+  SQL-WIDTH 1
+  ORDER 190
+
+ADD INDEX "xxpk_hist" ON "xxpk_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpk_site" ASCENDING 
+  INDEX-FIELD "xxpk_wkctr" ASCENDING 
+  INDEX-FIELD "xxpk_nbr" ASCENDING 
+  INDEX-FIELD "xxpk_comp" ASCENDING 
+  INDEX-FIELD "xxpk_par" ASCENDING 
+  INDEX-FIELD "xxpk_due_date" ASCENDING 
+  INDEX-FIELD "xxpk_op" ASCENDING 
+  INDEX-FIELD "xxpk_mch" ASCENDING 
+
+ADD TABLE "xxpn_rtn"
+  AREA "Schema Area"
+  LABEL "领料单退料"
+  DUMP-NAME "xxpn_rtn"
+
+ADD FIELD "xxpn_nbr" OF "xxpn_rtn" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  LABEL "新领料单"
+  POSITION 2
+  SQL-WIDTH 40
+  ORDER 50
+
+ADD FIELD "xxpn_old_nbr" OF "xxpn_rtn" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "原领料单"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "xxpn_trtype" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "交易类型"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxpn_old_trtype" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "原交易类型"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxpn_trdate" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "交易日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxpn_old_trdate" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "原交易日期"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxpn_effdate" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "生效日期"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xxpn_old_effdate" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "原生效日期"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxpn_act_loc" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "实退库位"
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxpn_old_loc" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "原库位"
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xxpn_lot" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "批序号"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxpn_trnbr" OF "xxpn_rtn" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "交易号"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "xxpn_part" OF "xxpn_rtn" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件号"
+  POSITION 14
+  SQL-WIDTH 36
+  ORDER 160
+
+ADD FIELD "xxpn_qty" OF "xxpn_rtn" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "数量"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "xxpn_old_qty" OF "xxpn_rtn" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "原数量"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 220
+
+ADD FIELD "xxpn_ref" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "参考号"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xxpn_site" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpn_serial" OF "xxpn_rtn" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "序号"
+  POSITION 19
+  SQL-WIDTH 36
+  ORDER 190
+
+ADD FIELD "xxpn_sojob" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "销售号"
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 230
+
+ADD FIELD "xxpn_um" OF "xxpn_rtn" AS character 
+  FORMAT "X(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "xxpn_del" OF "xxpn_rtn" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "不退"
+  POSITION 22
+  SQL-WIDTH 1
+  ORDER 240
+
+ADD FIELD "xxpn_wip" OF "xxpn_rtn" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "可用料库位"
+  POSITION 23
+  SQL-WIDTH 1
+  ORDER 250
+
+ADD FIELD "xxpn_ok" OF "xxpn_rtn" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "已完成"
+  POSITION 24
+  SQL-WIDTH 1
+  ORDER 260
+
+ADD FIELD "xxpn__chr01" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 25
+  SQL-WIDTH 16
+  ORDER 290
+
+ADD FIELD "xxpn__chr02" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 26
+  SQL-WIDTH 16
+  ORDER 300
+
+ADD FIELD "xxpn__dec01" OF "xxpn_rtn" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 27
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 310
+
+ADD FIELD "xxpn__dec02" OF "xxpn_rtn" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 320
+
+ADD FIELD "xxpn__log01" OF "xxpn_rtn" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 29
+  SQL-WIDTH 1
+  ORDER 330
+
+ADD FIELD "xxpn__log02" OF "xxpn_rtn" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 30
+  SQL-WIDTH 1
+  ORDER 340
+
+ADD FIELD "xxpn__dt01" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 350
+
+ADD FIELD "xxpn__dt02" OF "xxpn_rtn" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 360
+
+ADD FIELD "xxpn_tg_loc" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "对应库位"
+  POSITION 33
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxpn_userid" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "操作用户"
+  POSITION 34
+  SQL-WIDTH 16
+  ORDER 270
+
+ADD FIELD "xxpn__user" OF "xxpn_rtn" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "用户"
+  POSITION 35
+  SQL-WIDTH 16
+  ORDER 280
+
+ADD FIELD "xxpn_tg_trnbr" OF "xxpn_rtn" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "对应交易"
+  POSITION 36
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxpn_new_trnbr" OF "xxpn_rtn" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "新交易号"
+  POSITION 37
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD INDEX "xxpn_rtn" ON "xxpn_rtn" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "xxpn_site" ASCENDING 
+  INDEX-FIELD "xxpn_nbr" ASCENDING 
+  INDEX-FIELD "xxpn_trtype" ASCENDING 
+  INDEX-FIELD "xxpn_effdate" ASCENDING 
+  INDEX-FIELD "xxpn_act_loc" ASCENDING 
+  INDEX-FIELD "xxpn_part" ASCENDING 
+  INDEX-FIELD "xxpn_lot" ASCENDING 
+  INDEX-FIELD "xxpn_ref" ASCENDING 
+  INDEX-FIELD "xxpn_serial" ASCENDING 
+
+ADD INDEX "xxpn_old" ON "xxpn_rtn" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxpn_site" ASCENDING 
+  INDEX-FIELD "xxpn_old_nbr" ASCENDING 
+  INDEX-FIELD "xxpn_old_trdate" ASCENDING 
+  INDEX-FIELD "xxpn_old_trtype" ASCENDING 
+  INDEX-FIELD "xxpn_part" ASCENDING 
+  INDEX-FIELD "xxpn_lot" ASCENDING 
+  INDEX-FIELD "xxpn_ref" ASCENDING 
+  INDEX-FIELD "xxpn_serial" ASCENDING 
+  INDEX-FIELD "xxpn_trnbr" ASCENDING 
+  INDEX-FIELD "xxpn_del" ASCENDING 
+  INDEX-FIELD "xxpn_tg_loc" ASCENDING 
+  INDEX-FIELD "xxpn__user" ASCENDING 
+  INDEX-FIELD "xxpn_trdate" ASCENDING 
+
+ADD INDEX "xxpn_trnbr" ON "xxpn_rtn" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxpn_trnbr" ASCENDING 
+
+ADD TABLE "trhistory"
+  AREA "Schema Area"
+  DUMP-NAME "trhistor"
+
+ADD FIELD "trhi_nbr" OF "trhistory" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "order"
+  POSITION 2
+  SQL-WIDTH 36
+  COLUMN-LABEL "order"
+  ORDER 10
+
+ADD FIELD "trhi_trnbr" OF "trhistory" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "trasation"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "trasation"
+  ORDER 20
+
+ADD FIELD "trhi_line" OF "trhistory" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "trhi_prod_line" OF "trhistory" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "prod line"
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "prod line"
+  ORDER 40
+
+ADD FIELD "trhi_serial" OF "trhistory" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "serial"
+  POSITION 6
+  SQL-WIDTH 36
+  COLUMN-LABEL "serial"
+  ORDER 50
+
+ADD FIELD "trhi_qty_chg" OF "trhistory" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "change qty"
+  POSITION 7
+  SQL-WIDTH 25
+  COLUMN-LABEL "change qty"
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "trhi_effdate" OF "trhistory" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "effdate"
+  POSITION 8
+  SQL-WIDTH 4
+  COLUMN-LABEL "effdate"
+  ORDER 70
+
+ADD FIELD "trhi_addr" OF "trhistory" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "address"
+  POSITION 9
+  SQL-WIDTH 16
+  COLUMN-LABEL "address"
+  ORDER 80
+
+ADD FIELD "trhi_lot" OF "trhistory" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "receive ord"
+  POSITION 10
+  SQL-WIDTH 16
+  COLUMN-LABEL "receive ord"
+  ORDER 90
+
+ADD FIELD "trhi_type" OF "trhistory" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "type"
+  POSITION 11
+  SQL-WIDTH 16
+  COLUMN-LABEL "type"
+  ORDER 100
+
+ADD FIELD "trhi_par" OF "trhistory" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "part"
+  POSITION 12
+  SQL-WIDTH 36
+  COLUMN-LABEL "part"
+  ORDER 120
+
+ADD FIELD "trhi_cdesc" OF "trhistory" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "PartName"
+  POSITION 13
+  SQL-WIDTH 80
+  COLUMN-LABEL "PartName"
+  ORDER 130
+
+ADD FIELD "trhi_addr_name" OF "trhistory" AS character 
+  FORMAT "X(28)"
+  INITIAL ""
+  LABEL "AddrName"
+  POSITION 14
+  SQL-WIDTH 56
+  COLUMN-LABEL "AddrName"
+  ORDER 140
+
+ADD TABLE "xxbomc_ctrl"
+  AREA "Schema Area"
+  DESCRIPTION "BOM控制文件"
+  DUMP-NAME "xxbomc_c"
+
+ADD FIELD "xxbomc_part_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "零件地点"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxbomc_code_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Code地点"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxbomc_index1" OF "xxbomc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "索引"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD INDEX "xxbomc_index1" ON "xxbomc_ctrl" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxbomc_index1" ASCENDING 
+
+ADD TABLE "xxptmp_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "父零件－零件－供应商代码对照表"
+  DUMP-NAME "xxptmp_m"
+
+ADD FIELD "xxptmp_par" OF "xxptmp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "父零件"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxptmp_comp" OF "xxptmp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxptmp_site" OF "xxptmp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxptmp_cust" OF "xxptmp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "客户"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxptmp_vend" OF "xxptmp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "供应商"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxptmp_qty_per" OF "xxptmp_mstr" AS decimal 
+  FORMAT ">>,>>9.9<"
+  INITIAL "0"
+  LABEL "单位用量"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxptmp_rmks" OF "xxptmp_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 8
+  SQL-WIDTH 80
+  ORDER 70
+
+ADD INDEX "xxptmp_index1" ON "xxptmp_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxptmp_site" ASCENDING 
+  INDEX-FIELD "xxptmp_par" ASCENDING 
+  INDEX-FIELD "xxptmp_comp" ASCENDING 
+
+ADD TABLE "xxtl_det"
+  AREA "Schema Area"
+  DESCRIPTION "Transfer List"
+  DUMP-NAME "xxtl_det"
+
+ADD FIELD "xxtl_nbr" OF "xxtl_det" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "移仓单"
+  POSITION 2
+  SQL-WIDTH 32
+  ORDER 10
+
+ADD FIELD "xxtl_site" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxtl_effdate" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "生效日期"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxtl_part" OF "xxtl_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件"
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxtl_loc_fr" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "移出库位"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxtl_loc_to" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "车间库位"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxtl_qty_req" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "需求量"
+  POSITION 8
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 70
+
+ADD FIELD "xxtl_qty_tr" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "移仓量"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xxtl_date" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "xxtl_qty_pick" OF "xxtl_det" AS decimal 
+  FORMAT ">>,>>9.99"
+  INITIAL "0"
+  LABEL "待移仓量"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxtl_site1" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "移入地点"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxtl_status" OF "xxtl_det" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "状态"
+  POSITION 13
+  SQL-WIDTH 2
+  ORDER 120
+
+ADD FIELD "xxtl_type" OF "xxtl_det" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "类型"
+  POSITION 14
+  SQL-WIDTH 2
+  ORDER 130
+
+ADD FIELD "xxtl__chr" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "usr file"
+  POSITION 15
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 140
+
+ADD FIELD "xxtl__dte" OF "xxtl_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "usr field"
+  POSITION 16
+  SQL-WIDTH 90
+  EXTENT 5
+  ORDER 150
+
+ADD FIELD "xxtl_model" OF "xxtl_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "机型"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xxtl__dec" OF "xxtl_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "usr filed"
+  POSITION 18
+  SQL-WIDTH 110
+  EXTENT 5
+  DECIMALS 2
+  ORDER 170
+
+ADD INDEX "xxtl_index" ON "xxtl_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxtl_nbr" ASCENDING 
+  INDEX-FIELD "xxtl_part" ASCENDING 
+  INDEX-FIELD "xxtl_loc_fr" ASCENDING 
+  INDEX-FIELD "xxtl_loc_to" ASCENDING 
+
+ADD TABLE "xxvp_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Item vendor mapping master table"
+  DUMP-NAME "xxvp_mst"
+
+ADD FIELD "xxvp_part" OF "xxvp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件号"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxvp_vend" OF "xxvp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "供应商"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxvp_rmks" OF "xxvp_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 4
+  SQL-WIDTH 80
+  ORDER 30
+
+ADD INDEX "xxvp_part" ON "xxvp_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxvp_part" ASCENDING 
+  INDEX-FIELD "xxvp_vend" ASCENDING 
+
+ADD TABLE "xxppifla_un"
+  AREA "Schema Area"
+  LABEL "xxppifla_un"
+  DUMP-NAME "xxppifla"
+
+ADD FIELD "xxppifla_so" OF "xxppifla_un" AS character 
+  FORMAT "x(11)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 2
+  SQL-WIDTH 22
+  ORDER 10
+
+ADD FIELD "xxppifla_un" OF "xxppifla_un" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD TABLE "xxppiftr_un"
+  AREA "Schema Area"
+  LABEL "xxppiftr_un"
+  DUMP-NAME "xxppiftr"
+
+ADD FIELD "xxppiftr_so" OF "xxppiftr_un" AS character 
+  FORMAT "x(11)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 2
+  SQL-WIDTH 22
+  ORDER 10
+
+ADD FIELD "xxppiftr_bd" OF "xxppiftr_un" AS date 
+  FORMAT "99-99-9999"
+  INITIAL ?
+  LABEL "bld date"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxppiftr_flag" OF "xxppiftr_un" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Flag"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 30
+
+ADD FIELD "xxppiftr_un" OF "xxppiftr_un" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  LABEL "Unit Number"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD TABLE "xxppif_log"
+  AREA "Schema Area"
+  DUMP-NAME "xxppif"
+
+ADD FIELD "xxppif_tr_id" OF "xxppif_log" AS integer 
+  DESCRIPTION "Transaction ID"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Tran ID"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "xxppif_act_date" OF "xxppif_log" AS date 
+  DESCRIPTION "Action Date, Import or export date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Act Date"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxppif_act_time" OF "xxppif_log" AS character 
+  DESCRIPTION "Action Time, Import or export time."
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Act Time"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxppif_file" OF "xxppif_log" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "Deliver File"
+  POSITION 5
+  SQL-WIDTH 32
+  ORDER 40
+
+ADD FIELD "xxppif_msg" OF "xxppif_log" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "Error Msg"
+  POSITION 6
+  SQL-WIDTH 48
+  ORDER 50
+
+ADD FIELD "xxppif_tr_code" OF "xxppif_log" AS character 
+  DESCRIPTION "PPIF Transaction Code"
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "PPIF Code"
+  POSITION 7
+  SQL-WIDTH 8
+  ORDER 60
+
+ADD FIELD "xxppif_tr_date" OF "xxppif_log" AS date 
+  DESCRIPTION "PPIF Transaction Date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Tran Date"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxppif_part" OF "xxppif_log" AS character 
+  DESCRIPTION "Item Number"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 9
+  SQL-WIDTH 36
+  ORDER 80
+
+ADD FIELD "xxppif_bld_date" OF "xxppif_log" AS date 
+  DESCRIPTION "Shop Item Build Date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Bld Date"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxppif_qty_chg" OF "xxppif_log" AS decimal 
+  DESCRIPTION "Shop Order build qty or qty change"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty Chg"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxppif_content" OF "xxppif_log" AS character 
+  DESCRIPTION "1 Transaction Content"
+  FORMAT "X(100)"
+  INITIAL ""
+  LABEL "PPIF Content"
+  POSITION 12
+  SQL-WIDTH 200
+  ORDER 110
+
+ADD FIELD "xxppif__chr01" OF "xxppif_log" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxppif__log01" OF "xxppif_log" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 14
+  SQL-WIDTH 1
+  ORDER 130
+
+ADD FIELD "xxppif__dte01" OF "xxppif_log" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxppif_err" OF "xxppif_log" AS integer 
+  DESCRIPTION "Error Code"
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Err Code"
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 45
+
+ADD FIELD "xxppif__log02" OF "xxppif_log" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 17
+  SQL-WIDTH 1
+  ORDER 150
+
+ADD INDEX "xxppif_tr_id" ON "xxppif_log" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "xxppif_tr_id" ASCENDING 
+
+ADD INDEX "xxppif_act_date" ON "xxppif_log" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxppif_act_date" ASCENDING 
+
+ADD INDEX "xxppif_part" ON "xxppif_log" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxppif_part" ASCENDING 
+
+ADD INDEX "xxppif_tr_code" ON "xxppif_log" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxppif_tr_code" ASCENDING 
+
+ADD TABLE "xxexp_ctrl"
+  AREA "Schema Area"
+  LABEL "制造费用报表控制文件"
+  DUMP-NAME "xxexp_ct"
+
+ADD FIELD "xxexp_sales" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "销售收入分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "销售收入分析代码"
+  POSITION 3
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售收入分析代码"
+  ORDER 20
+
+ADD FIELD "xxexp_discount" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "销售折扣分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "销售折扣分析代码"
+  POSITION 4
+  SQL-WIDTH 16
+  COLUMN-LABEL "销售折扣分析代码"
+  ORDER 30
+
+ADD FIELD "xxexp_dir" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "输出目录"
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "输出目录"
+  POSITION 5
+  SQL-WIDTH 60
+  COLUMN-LABEL "输出目录"
+  ORDER 40
+
+ADD FIELD "xxexp_expense" OF "xxexp_ctrl" AS character 
+  DESCRIPTION "制造费用分析代码"
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "制造费用分析代码"
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "制造费用分析代码"
+  ORDER 50
+
+ADD TABLE "xxusr_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxusr_ms"
+
+ADD FIELD "xxusr_userid" OF "xxusr_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxusr_passwd" OF "xxusr_mstr" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 840
+  EXTENT 20
+  ORDER 20
+
+ADD INDEX "xxusr_userid" ON "xxusr_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxusr_userid" ASCENDING 
+
+ADD TABLE "wkacct"
+  AREA "Schema Area"
+  DUMP-NAME "wkacct"
+
+ADD FIELD "acct" OF "wkacct" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "descc" OF "wkacct" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 100
+  ORDER 20
+
+ADD FIELD "acurr" OF "wkacct" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "dbeg" OF "wkacct" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "dract" OF "wkacct" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "cract" OF "wkacct" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "dend" OF "wkacct" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "rptcurr" OF "wkacct" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD TABLE "gldetail"
+  AREA "Schema Area"
+  DUMP-NAME "gldetail"
+
+ADD FIELD "sosum" OF "gldetail" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "account" OF "gldetail" AS character 
+  FORMAT "X(15)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 30
+  ORDER 20
+
+ADD FIELD "detail" OF "gldetail" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 100
+  ORDER 30
+
+ADD FIELD "frsum" OF "gldetail" AS decimal 
+  FORMAT "->>,>>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "perriod" OF "gldetail" AS character 
+  FORMAT "X(10)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 20
+  ORDER 50
+
+ADD FIELD "dodate" OF "gldetail" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "pzhsum" OF "gldetail" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 40
+  ORDER 70
+
+ADD FIELD "des1" OF "gldetail" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 40
+  ORDER 80
+
+ADD FIELD "des2" OF "gldetail" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 40
+  ORDER 90
+
+ADD FIELD "des3" OF "gldetail" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 40
+  ORDER 100
+
+ADD FIELD "fdr1" OF "gldetail" AS decimal 
+  FORMAT "->>,>>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "fcr1" OF "gldetail" AS decimal 
+  FORMAT "->>,>>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "ljactive" OF "gldetail" AS decimal 
+  FORMAT "->>,>>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD INDEX "sosum" ON "gldetail" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "sosum" ASCENDING 
+
+ADD TABLE "qis_inspectresult"
+  AREA "Schema Area"
+  DUMP-NAME "qis_insp"
+  TABLE-TRIGGER "WRITE" NO-OVERRIDE PROCEDURE "\\Qadtemp\appeb2\mfggui\triggers\qis_trigger.p" CRC "4842" 
+
+ADD FIELD "id" OF "qis_inspectresult" AS integer 
+  FORMAT "->,>>>,>>>,>>>,>>>,>>>,>>9"
+  INITIAL "0"
+  POSITION 2
+  SQL-WIDTH 4
+  ORDER 10
+
+ADD FIELD "partid" OF "qis_inspectresult" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 100
+  ORDER 20
+
+ADD FIELD "partname" OF "qis_inspectresult" AS character 
+  FORMAT "X(200)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 400
+  ORDER 30
+
+ADD FIELD "partstatus" OF "qis_inspectresult" AS character 
+  FORMAT "X(10)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 20
+  ORDER 40
+
+ADD FIELD "suppliercode" OF "qis_inspectresult" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 100
+  ORDER 50
+
+ADD FIELD "suppliername" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 510
+  ORDER 60
+
+ADD FIELD "productline" OF "qis_inspectresult" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 40
+  ORDER 70
+
+ADD FIELD "eligiblenum" OF "qis_inspectresult" AS integer 
+  FORMAT "->,>>>,>>>,>>>,>>>,>>>,>>9"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "enterednum" OF "qis_inspectresult" AS integer 
+  FORMAT "->,>>>,>>>,>>>,>>>,>>>,>>9"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "enteringnum" OF "qis_inspectresult" AS integer 
+  FORMAT "->,>>>,>>>,>>>,>>>,>>>,>>9"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "qislastoperatedate" OF "qis_inspectresult" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "qadlastoperatedate" OF "qis_inspectresult" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "attribute1" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 510
+  ORDER 130
+
+ADD FIELD "attribute2" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 510
+  ORDER 140
+
+ADD FIELD "attribute3" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 510
+  ORDER 150
+
+ADD FIELD "attribute4" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 510
+  ORDER 160
+
+ADD FIELD "attribute5" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 510
+  ORDER 170
+
+ADD FIELD "attribute6" OF "qis_inspectresult" AS character 
+  FORMAT "X(255)"
+  INITIAL ""
+  POSITION 19
+  SQL-WIDTH 510
+  ORDER 180
+
+ADD TABLE "xxwobmfd_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmfd"
+
+ADD FIELD "xxwobmfd_site" OF "xxwobmfd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmfd_par" OF "xxwobmfd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Parent"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmfd_version" OF "xxwobmfd_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Version"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxwobmfd_comp" OF "xxwobmfd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Component Item Number"
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxwobmfd_op" OF "xxwobmfd_det" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 6
+  SQL-WIDTH 8
+  ORDER 50
+
+ADD FIELD "xxwobmfd_qty" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Quantity"
+  POSITION 7
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxwobmfd_userid" OF "xxwobmfd_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 9
+  SQL-WIDTH 24
+  ORDER 80
+
+ADD FIELD "xxwobmfd_date_mod" OF "xxwobmfd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxwobmfd_cost_tot" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Cost"
+  POSITION 11
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 100
+
+ADD FIELD "xxwobmfd_mtl_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Material Cost"
+  POSITION 20
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmfd_lbr_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Labor Cost"
+  POSITION 21
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmfd_bdn_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Burden Cost"
+  POSITION 22
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmfd_ovh_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Overhead Cost"
+  POSITION 23
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmfd_sub_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Subcon Cost"
+  POSITION 24
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmfd_mtl_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Material Cost"
+  POSITION 25
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmfd_lbr_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Labor Cost"
+  POSITION 26
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmfd_bdn_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Burden Cost"
+  POSITION 27
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmfd_ovh_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Overhead Cost"
+  POSITION 28
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmfd_sub_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Subcon Cost"
+  POSITION 29
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 290
+
+ADD INDEX "xxwobmfd_idx1" ON "xxwobmfd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwobmfd_site" ASCENDING 
+  INDEX-FIELD "xxwobmfd_par" ASCENDING 
+  INDEX-FIELD "xxwobmfd_version" ASCENDING 
+  INDEX-FIELD "xxwobmfd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmfd_op" ASCENDING 
+
+ADD INDEX "xxwobmfd_idx2" ON "xxwobmfd_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmfd_par" ASCENDING 
+  INDEX-FIELD "xxwobmfd_site" ASCENDING 
+  INDEX-FIELD "xxwobmfd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmfd_version" ASCENDING 
+
+ADD TABLE "xxwobmfm_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmfm"
+
+ADD FIELD "xxwobmfm_site" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmfm_part" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmfm_version" OF "xxwobmfm_mstr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Version"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxwobmfm_date_eff" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start Date"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxwobmfm_date_exp" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Expired Date"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxwobmfm_userid" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 15
+  SQL-WIDTH 24
+  ORDER 150
+
+ADD FIELD "xxwobmfm_date_mod" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 16
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xxwobmfm_time_mod" OF "xxwobmfm_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Time"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxwobmfm_bom" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "BOM Code"
+  POSITION 18
+  SQL-WIDTH 36
+  ORDER 180
+
+ADD FIELD "xxwobmfm_routing" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Routing Code"
+  POSITION 19
+  SQL-WIDTH 36
+  ORDER 190
+
+ADD FIELD "xxwobmfm_cost_tot" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Cost"
+  POSITION 20
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmfm_mtl_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Material Cost"
+  POSITION 21
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmfm_lbr_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Labor Cost"
+  POSITION 22
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmfm_bdn_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Burden Cost"
+  POSITION 23
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmfm_ovh_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Overhead Cost"
+  POSITION 24
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmfm_sub_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Subcon Cost"
+  POSITION 25
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmfm_mtl_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Material Cost"
+  POSITION 26
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmfm_lbr_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Labor Cost"
+  POSITION 27
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmfm_bdn_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Burden Cost"
+  POSITION 28
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmfm_ovh_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Overhead Cost"
+  POSITION 29
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 290
+
+ADD FIELD "xxwobmfm_sub_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Subcon Cost"
+  POSITION 30
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 300
+
+ADD INDEX "xxwobmfm_idx1" ON "xxwobmfm_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwobmfm_site" ASCENDING 
+  INDEX-FIELD "xxwobmfm_part" ASCENDING 
+  INDEX-FIELD "xxwobmfm_version" ASCENDING 
+
+ADD INDEX "xxwobmfm_idx2" ON "xxwobmfm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmfm_part" ASCENDING 
+  INDEX-FIELD "xxwobmfm_site" ASCENDING 
+  INDEX-FIELD "xxwobmfm_date_eff" ASCENDING 
+  INDEX-FIELD "xxwobmfm_version" ASCENDING 
+
+ADD TABLE "xxwobmvd_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvd"
+
+ADD FIELD "xxwobmvd_woid" OF "xxwobmvd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvd_comp" OF "xxwobmvd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmvd_op" OF "xxwobmvd_det" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxwobmvd_userid" OF "xxwobmvd_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 5
+  SQL-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxwobmvd_date_mod" OF "xxwobmvd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxwobmvd_bom_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Quantity"
+  POSITION 10
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxwobmvd_cwo_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Quantity"
+  POSITION 11
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "xxwobmvd_act_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Quantity"
+  POSITION 12
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxwobmvd_bom_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Amount"
+  POSITION 13
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "xxwobmvd_cwo_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Amount"
+  POSITION 14
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxwobmvd_act_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Amount"
+  POSITION 15
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxwobmvd_bom_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM UNIT"
+  POSITION 16
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxwobmvd_cwo_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO UNIT"
+  POSITION 17
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 170
+
+ADD FIELD "xxwobmvd_act_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT UNIT"
+  POSITION 18
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 180
+
+ADD FIELD "xxwobmvd_bom_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Cost"
+  POSITION 19
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 190
+
+ADD FIELD "xxwobmvd_cwo_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Cost"
+  POSITION 20
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 200
+
+ADD FIELD "xxwobmvd_act_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Cost"
+  POSITION 21
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "xxwobmvd_var_tot" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Var"
+  POSITION 22
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmvd_var_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Var"
+  POSITION 23
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmvd_bom_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM DETAIL"
+  POSITION 30
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxwobmvd_cwo_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO DETAIL"
+  POSITION 31
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 310
+
+ADD FIELD "xxwobmvd_act_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT DETAIL"
+  POSITION 32
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 320
+
+ADD INDEX "xxwobmvd_idx1" ON "xxwobmvd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwobmvd_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvd_op" ASCENDING 
+
+ADD INDEX "xxwobmvd_idx2" ON "xxwobmvd_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvd_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvd_op" ASCENDING 
+
+ADD TABLE "xxwobmvm_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvm"
+
+ADD FIELD "xxwobmvm_woid" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvm_site" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxwobmvm_part" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxwobmvm_date" OF "xxwobmvm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Date"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxwobmvm_line" OF "xxwobmvm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxwobmvm_userid" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 7
+  SQL-WIDTH 24
+  ORDER 60
+
+ADD FIELD "xxwobmvm_date_mod" OF "xxwobmvm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxwobmvm_rct_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Receipt Amt"
+  POSITION 20
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmvm_rct_qty" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Receipt Qty"
+  POSITION 21
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmvm_bom_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Cost"
+  POSITION 22
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmvm_bom_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Amount"
+  POSITION 23
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmvm_cwo_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Cost"
+  POSITION 24
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmvm_cwo_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Amount"
+  POSITION 25
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmvm_act_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Cost"
+  POSITION 26
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmvm_act_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Amount"
+  POSITION 27
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmvm_var_tot" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Variance Total"
+  POSITION 28
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmvm_var_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Var Detail"
+  POSITION 29
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 290
+
+ADD FIELD "xxwobmvm_bom_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM DETAIL"
+  POSITION 30
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxwobmvm_cwo_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Detail"
+  POSITION 31
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 310
+
+ADD FIELD "xxwobmvm_act_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Detail"
+  POSITION 32
+  SQL-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 320
+
+ADD INDEX "xxwobmvm_idx1" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwobmvm_woid" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx2" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvm_part" ASCENDING 
+  INDEX-FIELD "xxwobmvm_site" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+  INDEX-FIELD "xxwobmvm_line" ASCENDING 
+  INDEX-FIELD "xxwobmvm_woid" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx3" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvm_part" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx4" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvm_line" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx5" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvm_site" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx6" ON "xxwobmvm_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD TABLE "xxwobmvr_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvr"
+
+ADD FIELD "xxwobmvr_woid" OF "xxwobmvr_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvr_comp" OF "xxwobmvr_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmvr_qty" OF "xxwobmvr_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Quantity"
+  POSITION 4
+  SQL-WIDTH 20
+  DECIMALS 2
+  ORDER 30
+
+ADD FIELD "xxwobmvr_cost" OF "xxwobmvr_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "COW Quantity"
+  POSITION 5
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 40
+
+ADD FIELD "xxwobmvr_op" OF "xxwobmvr_det" AS integer 
+  FORMAT ">>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxwobmvr_userid" OF "xxwobmvr_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 7
+  SQL-WIDTH 24
+  ORDER 60
+
+ADD FIELD "xxwobmvr_date_mod" OF "xxwobmvr_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD INDEX "xxwobmvr_idx1" ON "xxwobmvr_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwobmvr_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvr_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvr_op" ASCENDING 
+  INDEX-FIELD "xxwobmvr_cost" ASCENDING 
+
+ADD INDEX "xxwobmvr_idx2" ON "xxwobmvr_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxwobmvr_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvr_woid" ASCENDING 
+
+ADD TABLE "xxtr_hist"
+  AREA "Schema Area"
+  DUMP-NAME "xxtr_his"
+
+ADD FIELD "xxtr_site" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxtr_part" OF "xxtr_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxtr_type" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxtr_key1" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key1"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxtr_key2" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key2"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxtr_key3" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key3"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxtr_trnbr" OF "xxtr_hist" AS integer 
+  FORMAT ">>>>>>>>>>"
+  INITIAL "0"
+  LABEL "TRNBR"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xxtr_idx0" ON "xxtr_hist" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxtr_trnbr" ASCENDING 
+
+ADD INDEX "xxtr_idx1" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+
+ADD INDEX "xxtr_idx1_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx2" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+
+ADD INDEX "xxtr_idx2_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx3" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+
+ADD INDEX "xxtr_idx3_part" ON "xxtr_hist" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD TABLE "xxrptmp_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "父零件－零件－新零件对照表"
+  DUMP-NAME "xxrptmp_"
+
+ADD FIELD "XXRPTMP_PAR" OF "xxrptmp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "父零件"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "XXRPTMP_COMP" OF "xxrptmp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "零件"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "XXRPTMP_RCOMP" OF "xxrptmp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "替换零件"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "XXRPTMP_START" OF "xxrptmp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "起始日期"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "XXRPTMP_EXPIRE" OF "xxrptmp_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "截至日期"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "XXRPTMP_SITE" OF "xxrptmp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "XXRPTMP_QTY_PER" OF "xxrptmp_mstr" AS integer 
+  FORMAT ">,>>>,>>9"
+  INITIAL "0"
+  LABEL "单位用量"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "XXRPTMP_RMKS" OF "xxrptmp_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "备注"
+  POSITION 9
+  SQL-WIDTH 80
+  ORDER 80
+
+ADD FIELD "xxrptmp_cmtindx" OF "xxrptmp_mstr" AS integer 
+  FORMAT ">,>>>,>>9"
+  INITIAL "0"
+  LABEL "comment index"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD INDEX "xxrptmp_mstr" ON "xxrptmp_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "XXRPTMP_PAR" ASCENDING 
+  INDEX-FIELD "XXRPTMP_COMP" ASCENDING 
+  INDEX-FIELD "XXRPTMP_RCOMP" ASCENDING 
+
+ADD INDEX "xxrptmp_par" ON "xxrptmp_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "XXRPTMP_PAR" ASCENDING 
+  INDEX-FIELD "XXRPTMP_COMP" ASCENDING 
+  INDEX-FIELD "XXRPTMP_RCOMP" ASCENDING 
+
+ADD INDEX "xxrptmp_rcomp" ON "xxrptmp_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "XXRPTMP_RCOMP" ASCENDING 
+  INDEX-FIELD "XXRPTMP_PAR" ASCENDING 
+  INDEX-FIELD "XXRPTMP_COMP" ASCENDING 
+
+ADD TABLE "xxsod_det"
+  AREA "Schema Area"
+  DESCRIPTION "SO-Component Detail"
+  DUMP-NAME "xxsod_de"
+
+ADD FIELD "xxsod_so" OF "xxsod_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "SO"
+  ORDER 10
+
+ADD FIELD "xxsod_flg" OF "xxsod_det" AS character 
+  DESCRIPTION "Process Flag."
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 3
+  SQL-WIDTH 2
+  COLUMN-LABEL "Flag"
+  ORDER 20
+
+ADD FIELD "xxsod_date" OF "xxsod_det" AS date 
+  DESCRIPTION "Submit Date."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Submit Date"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "Date"
+  ORDER 30
+
+ADD FIELD "xxsod_time" OF "xxsod_det" AS integer 
+  DESCRIPTION "Submit Time."
+  FORMAT ">>>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Time"
+  POSITION 5
+  SQL-WIDTH 4
+  COLUMN-LABEL "Time"
+  ORDER 40
+
+ADD FIELD "xxsod_rmks" OF "xxsod_det" AS character 
+  DESCRIPTION "Remarks."
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 6
+  SQL-WIDTH 100
+  COLUMN-LABEL "Remarks"
+  ORDER 50
+
+ADD FIELD "xxsod_user1" OF "xxsod_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "User Field1"
+  POSITION 7
+  SQL-WIDTH 60
+  COLUMN-LABEL "User Field1"
+  ORDER 60
+
+ADD FIELD "xxsod_user2" OF "xxsod_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "User Field2"
+  POSITION 8
+  SQL-WIDTH 60
+  COLUMN-LABEL "User Field2"
+  ORDER 70
+
+ADD FIELD "xxsod_dec1" OF "xxsod_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxsod_dec2" OF "xxsod_det" AS decimal 
+  FORMAT "->>,>>>,>>9.99<<<<"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD INDEX "xxsod_date" ON "xxsod_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxsod_date" ASCENDING 
+  INDEX-FIELD "xxsod_time" ASCENDING 
+  INDEX-FIELD "xxsod_so" ASCENDING 
+
+ADD INDEX "xxsod_flg" ON "xxsod_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxsod_date" ASCENDING 
+  INDEX-FIELD "xxsod_flg" ASCENDING 
+
+ADD INDEX "xxsod_so" ON "xxsod_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxsod_so" ASCENDING 
+  INDEX-FIELD "xxsod_flg" ASCENDING 
+
+ADD TABLE "xxbom2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Product Structure Master 2."
+  DUMP-NAME "xxbom2_m"
+
+ADD FIELD "xxbom2_parent" OF "xxbom2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Parent"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Parent"
+  ORDER 10
+
+ADD FIELD "xxbom2_chr01" OF "xxbom2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxbom2_chr02" OF "xxbom2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD INDEX "xxbom2_par" ON "xxbom2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxbom2_parent" ASCENDING 
+
+ADD TABLE "xxin2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Inventory Master 2."
+  DUMP-NAME "xxin2_ms"
+
+ADD FIELD "xxin2_part" OF "xxin2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Part"
+  ORDER 10
+
+ADD FIELD "xxin2_site" OF "xxin2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "Site"
+  ORDER 20
+
+ADD FIELD "xxin2_user1" OF "xxin2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "User Field"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxin2_qadc01" OF "xxin2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxin2_chr01" OF "xxin2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD INDEX "xxin2_part" ON "xxin2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxin2_part" ASCENDING 
+  INDEX-FIELD "xxin2_site" ASCENDING 
+
+ADD INDEX "xxin2_site" ON "xxin2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxin2_site" ASCENDING 
+  INDEX-FIELD "xxin2_part" ASCENDING 
+
+ADD TABLE "xxopm2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Standard Operation Master 2."
+  DUMP-NAME "xxopm2_m"
+
+ADD FIELD "xxopm2_desc" OF "xxopm2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Description"
+  ORDER 10
+
+ADD FIELD "xxopm2_wkctr" OF "xxopm2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Work Center"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "WC"
+  ORDER 20
+
+ADD FIELD "xxopm2_std_op" OF "xxopm2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "OP Code"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "OP Code"
+  ORDER 30
+
+ADD FIELD "xxopm2_chr01" OF "xxopm2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxopm2_chr02" OF "xxopm2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD INDEX "xxopm2_std_op" ON "xxopm2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxopm2_std_op" ASCENDING 
+
+ADD TABLE "xxptp2_det"
+  AREA "Schema Area"
+  DESCRIPTION "Item Planning Detail."
+  DUMP-NAME "xxptp2_d"
+
+ADD FIELD "xxptp2_part" OF "xxptp2_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Part"
+  ORDER 10
+
+ADD FIELD "xxptp2_site" OF "xxptp2_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  COLUMN-LABEL "Site"
+  ORDER 20
+
+ADD FIELD "xxptp2_bom_code" OF "xxptp2_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "BOM Code"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "BOM Code"
+  ORDER 30
+
+ADD FIELD "xxptp2_routing" OF "xxptp2_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Routing"
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "Routing"
+  ORDER 50
+
+ADD FIELD "xxptp2_ord_mult" OF "xxptp2_det" AS decimal 
+  FORMAT ">>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Ord Mult"
+  POSITION 7
+  SQL-WIDTH 17
+  COLUMN-LABEL "Ord Mult"
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxptp2_chr01" OF "xxptp2_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxptp2_phantom" OF "xxptp2_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Phantom"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD INDEX "xxptp2_part" ON "xxptp2_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxptp2_part" ASCENDING 
+  INDEX-FIELD "xxptp2_site" ASCENDING 
+
+ADD INDEX "xxptp2_site" ON "xxptp2_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxptp2_site" ASCENDING 
+  INDEX-FIELD "xxptp2_part" ASCENDING 
+
+ADD TABLE "xxpt2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Item Master 2."
+  DUMP-NAME "xxpt2_ms"
+
+ADD FIELD "xxpt2_part" OF "xxpt2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Item"
+  ORDER 10
+
+ADD FIELD "xxpt2_desc1" OF "xxpt2_mstr" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 3
+  SQL-WIDTH 100
+  COLUMN-LABEL "Description"
+  ORDER 20
+
+ADD FIELD "xxpt2_desc2" OF "xxpt2_mstr" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 4
+  SQL-WIDTH 100
+  COLUMN-LABEL "Description"
+  ORDER 30
+
+ADD FIELD "xxpt2_group" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Group"
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "Group"
+  ORDER 40
+
+ADD FIELD "xxpt2_part_type" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Part Type"
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "Part Type"
+  ORDER 50
+
+ADD FIELD "xxpt2_status" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "Status"
+  ORDER 60
+
+ADD FIELD "xxpt2_phantom" OF "xxpt2_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Phantom"
+  POSITION 8
+  SQL-WIDTH 1
+  COLUMN-LABEL "Phantom"
+  ORDER 70
+
+ADD FIELD "xxpt2_article" OF "xxpt2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Article"
+  POSITION 9
+  SQL-WIDTH 36
+  COLUMN-LABEL "Article"
+  ORDER 80
+
+ADD FIELD "xxpt2_prod_line" OF "xxpt2_mstr" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  LABEL "Product Line"
+  POSITION 10
+  SQL-WIDTH 40
+  COLUMN-LABEL "Prod Line"
+  ORDER 90
+
+ADD FIELD "xxpt2_chr01" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD FIELD "xxpt2_chr02" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxpt2_chr03" OF "xxpt2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD INDEX "xxpt2_part" ON "xxpt2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpt2_part" ASCENDING 
+
+ADD TABLE "xxrps2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Repetitive Production Schedule Master 2."
+  DUMP-NAME "xxrps2_m"
+
+ADD FIELD "xxrps2_part" OF "xxrps2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  COLUMN-LABEL "Part"
+  ORDER 10
+
+ADD FIELD "xxrps2_due_date" OF "xxrps2_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "Due Date"
+  ORDER 20
+
+ADD FIELD "xxrps2_rel_date" OF "xxrps2_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Release Date"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "Rel Date"
+  ORDER 30
+
+ADD FIELD "xxrps2_qty_req" OF "xxrps2_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Scheduled"
+  POSITION 5
+  SQL-WIDTH 17
+  COLUMN-LABEL "Qty Scheduled"
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "xxrps2_qty_comp" OF "xxrps2_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Completed"
+  POSITION 6
+  SQL-WIDTH 17
+  COLUMN-LABEL "Qty Completed"
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxrps2_site" OF "xxrps2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "Site"
+  ORDER 60
+
+ADD FIELD "xxrps2_line" OF "xxrps2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxrps2_chr01" OF "xxrps2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xxrps2_part" ON "xxrps2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxrps2_part" ASCENDING 
+  INDEX-FIELD "xxrps2_site" ASCENDING 
+  INDEX-FIELD "xxrps2_line" ASCENDING 
+  INDEX-FIELD "xxrps2_due_date" ASCENDING 
+
+ADD INDEX "xxrps2_site" ON "xxrps2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxrps2_site" ASCENDING 
+  INDEX-FIELD "xxrps2_part" ASCENDING 
+  INDEX-FIELD "xxrps2_line" ASCENDING 
+  INDEX-FIELD "xxrps2_due_date" ASCENDING 
+
+ADD TABLE "xxwc2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Work Center Master 2."
+  DUMP-NAME "xxwc2_ms"
+
+ADD FIELD "xxwc2_wkctr" OF "xxwc2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Parent"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxwc2_desc" OF "xxwc2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwc2_dept" OF "xxwc2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Department"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "Dept"
+  ORDER 30
+
+ADD FIELD "xxwc2_chr01" OF "xxwc2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxwc2_chr02" OF "xxwc2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxwc2_mch" OF "xxwc2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Machine"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 35
+
+ADD INDEX "xxwc2_wkctr" ON "xxwc2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwc2_wkctr" ASCENDING 
+  INDEX-FIELD "xxwc2_mch" ASCENDING 
+
+ADD TABLE "xxpp2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "XXPTMP_MSTR 2."
+  DUMP-NAME "xxpp2_ms"
+
+ADD FIELD "xxpp2_par" OF "xxpp2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxpp2_site" OF "xxpp2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxpp2_cust" OF "xxpp2_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxpp2_vend" OF "xxpp2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Vendor"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpp2_qty_per" OF "xxpp2_mstr" AS decimal 
+  FORMAT ">>,>>9.9<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxpp2_rmks" OF "xxpp2_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 7
+  SQL-WIDTH 80
+  ORDER 60
+
+ADD FIELD "xxpp2_comp" OF "xxpp2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Component"
+  POSITION 8
+  SQL-WIDTH 60
+  ORDER 15
+
+ADD INDEX "xxpp2_site" ON "xxpp2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpp2_site" ASCENDING 
+  INDEX-FIELD "xxpp2_par" ASCENDING 
+  INDEX-FIELD "xxpp2_comp" ASCENDING 
+
+ADD TABLE "xxbom_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Product Structure Master. (Increment for ATPU)"
+  DUMP-NAME "xxbom_ms"
+
+ADD FIELD "xxbom_parent" OF "xxbom_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Parent"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxbom_chr01" OF "xxbom_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxbom_flg" OF "xxbom_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 4
+  SQL-WIDTH 2
+  ORDER 30
+
+ADD FIELD "xxbom_chr02" OF "xxbom_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD INDEX "xxbom_par" ON "xxbom_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxbom_parent" ASCENDING 
+
+ADD TABLE "xxin_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Inventory Master. (Increment for ATPU)"
+  DUMP-NAME "xxin_mst"
+
+ADD FIELD "xxin_part" OF "xxin_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxin_site" OF "xxin_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxin_user1" OF "xxin_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "User Field"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxin_qadc01" OF "xxin_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxin_flg" OF "xxin_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 6
+  SQL-WIDTH 2
+  ORDER 50
+
+ADD FIELD "xxin_chr01" OF "xxin_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD INDEX "xxin_part" ON "xxin_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxin_part" ASCENDING 
+  INDEX-FIELD "xxin_site" ASCENDING 
+
+ADD INDEX "xxin_site" ON "xxin_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxin_site" ASCENDING 
+  INDEX-FIELD "xxin_part" ASCENDING 
+
+ADD TABLE "xxopm_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Standard Operation Master. (Increment for ATPU)"
+  DUMP-NAME "xxopm_ms"
+
+ADD FIELD "xxopm_desc" OF "xxopm_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxopm_wkctr" OF "xxopm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Work Center"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxopm_std_op" OF "xxopm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "OP Code"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "OP"
+  ORDER 30
+
+ADD FIELD "xxopm_chr01" OF "xxopm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxopm_flg" OF "xxopm_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 6
+  SQL-WIDTH 2
+  ORDER 50
+
+ADD FIELD "xxopm_chr02" OF "xxopm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD INDEX "xxopm_std_op" ON "xxopm_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxopm_std_op" ASCENDING 
+
+ADD INDEX "xxopm_desc" ON "xxopm_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxopm_desc" ASCENDING 
+  INDEX-FIELD "xxopm_std_op" ASCENDING 
+
+ADD TABLE "xxptp_det"
+  AREA "Schema Area"
+  DESCRIPTION "Item Planning Detail. (Increment for ATPU)"
+  DUMP-NAME "xxptp_de"
+
+ADD FIELD "xxptp_part" OF "xxptp_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxptp_site" OF "xxptp_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxptp_bom_code" OF "xxptp_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "BOM Code"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxptp_phantom" OF "xxptp_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Phantom"
+  POSITION 5
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "xxptp_routing" OF "xxptp_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Routing"
+  POSITION 6
+  SQL-WIDTH 36
+  ORDER 50
+
+ADD FIELD "xxptp_ord_mult" OF "xxptp_det" AS decimal 
+  FORMAT ">>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Order Multiple"
+  POSITION 7
+  SQL-WIDTH 17
+  COLUMN-LABEL "Ord Mult"
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxptp_flg" OF "xxptp_det" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 8
+  SQL-WIDTH 2
+  ORDER 70
+
+ADD FIELD "xxptp_chr01" OF "xxptp_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xxptp_part" ON "xxptp_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxptp_part" ASCENDING 
+  INDEX-FIELD "xxptp_site" ASCENDING 
+
+ADD INDEX "xxptp_site" ON "xxptp_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "xxptp_site" ASCENDING 
+  INDEX-FIELD "xxptp_part" ASCENDING 
+
+ADD TABLE "xxpt_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Item Master. (Increment for ATPU)"
+  DUMP-NAME "xxpt_mst"
+
+ADD FIELD "xxpt_part" OF "xxpt_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxpt_desc1" OF "xxpt_mstr" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 3
+  SQL-WIDTH 100
+  ORDER 20
+
+ADD FIELD "xxpt_desc2" OF "xxpt_mstr" AS character 
+  FORMAT "X(50)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 4
+  SQL-WIDTH 100
+  ORDER 30
+
+ADD FIELD "xxpt_group" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Group"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpt_part_type" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Part Type"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxpt_status" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxpt_phantom" OF "xxpt_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Phantom"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "xxpt_article" OF "xxpt_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Article"
+  POSITION 9
+  SQL-WIDTH 36
+  ORDER 80
+
+ADD FIELD "xxpt_prod_line" OF "xxpt_mstr" AS character 
+  FORMAT "X(20)"
+  INITIAL ""
+  LABEL "Product Line"
+  POSITION 10
+  SQL-WIDTH 40
+  ORDER 90
+
+ADD FIELD "xxpt_flg" OF "xxpt_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 11
+  SQL-WIDTH 2
+  ORDER 100
+
+ADD FIELD "xxpt_chr01" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxpt_chr02" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxpt_chr03" OF "xxpt_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD INDEX "xxpt_part" ON "xxpt_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpt_part" ASCENDING 
+
+ADD TABLE "xxrps_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Repetitive Production Schedule Master. (Increment for ATPU)"
+  DUMP-NAME "xxrps_ms"
+
+ADD FIELD "xxrps_part" OF "xxrps_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxrps_due_date" OF "xxrps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxrps_rel_date" OF "xxrps_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxrps_qty_req" OF "xxrps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Scheduled"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "xxrps_qty_comp" OF "xxrps_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Qty Completed"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxrps_site" OF "xxrps_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxrps_line" OF "xxrps_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxrps_flg" OF "xxrps_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 9
+  SQL-WIDTH 2
+  ORDER 80
+
+ADD FIELD "xxrps_chr01" OF "xxrps_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD INDEX "xxrps_part" ON "xxrps_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxrps_part" ASCENDING 
+  INDEX-FIELD "xxrps_site" ASCENDING 
+  INDEX-FIELD "xxrps_line" ASCENDING 
+  INDEX-FIELD "xxrps_due_date" ASCENDING 
+
+ADD INDEX "xxrps_site" ON "xxrps_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "xxrps_site" ASCENDING 
+  INDEX-FIELD "xxrps_part" ASCENDING 
+  INDEX-FIELD "xxrps_line" ASCENDING 
+  INDEX-FIELD "xxrps_due_date" ASCENDING 
+
+ADD TABLE "xxwc_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Work Center Master.  (Increment for ATPU)"
+  DUMP-NAME "xxwc_mst"
+
+ADD FIELD "xxwc_wkctr" OF "xxwc_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Parent"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxwc_desc" OF "xxwc_mstr" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 3
+  SQL-WIDTH 48
+  ORDER 20
+
+ADD FIELD "xxwc_dept" OF "xxwc_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Department"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxwc_chr01" OF "xxwc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxwc_flg" OF "xxwc_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 6
+  SQL-WIDTH 2
+  ORDER 50
+
+ADD FIELD "xxwc_chr02" OF "xxwc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxwc_mch" OF "xxwc_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Machine"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 35
+
+ADD INDEX "xxwc_wkctr" ON "xxwc_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxwc_wkctr" ASCENDING 
+  INDEX-FIELD "xxwc_mch" ASCENDING 
+
+ADD TABLE "xxpp_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "XXPTMP MASTER. (Increment for ATPU)"
+  DUMP-NAME "xxpp_mst"
+
+ADD FIELD "xxpp_par" OF "xxpp_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 2
+  SQL-WIDTH 60
+  ORDER 10
+
+ADD FIELD "xxpp_site" OF "xxpp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxpp_cust" OF "xxpp_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxpp_vend" OF "xxpp_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Vendor"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxpp_qty_per" OF "xxpp_mstr" AS decimal 
+  FORMAT ">>,>>9.9<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xxpp_rmks" OF "xxpp_mstr" AS character 
+  FORMAT "X(40)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 7
+  SQL-WIDTH 80
+  ORDER 60
+
+ADD FIELD "xxpp_flg" OF "xxpp_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 8
+  SQL-WIDTH 2
+  ORDER 70
+
+ADD FIELD "xxpp_comp" OF "xxpp_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Component"
+  POSITION 9
+  SQL-WIDTH 60
+  ORDER 15
+
+ADD INDEX "xxpp_site" ON "xxpp_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxpp_site" ASCENDING 
+  INDEX-FIELD "xxpp_par" ASCENDING 
+  INDEX-FIELD "xxpp_comp" ASCENDING 
+
+ADD TABLE "xxpkd_det"
+  AREA "Schema Area"
+  DESCRIPTION "Pick List Detail. (For ATPU ONLY)"
+  DUMP-NAME "xxpkd_de"
+
+ADD FIELD "xxpkd_so" OF "xxpkd_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 3
+  SQL-WIDTH 60
+  ORDER 20
+
+ADD FIELD "xxpkd_comp" OF "xxpkd_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Component"
+  POSITION 4
+  SQL-WIDTH 60
+  ORDER 30
+
+ADD FIELD "xxpkd_desc" OF "xxpkd_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 5
+  SQL-WIDTH 60
+  ORDER 40
+
+ADD FIELD "xxpkd_wkctr" OF "xxpkd_det" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Work Center"
+  POSITION 6
+  SQL-WIDTH 60
+  ORDER 50
+
+ADD FIELD "xxpkd_op" OF "xxpkd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "OP Code"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxpkd_qty" OF "xxpkd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<<<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "xxpkd_chr01" OF "xxpkd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxpkd_chr02" OF "xxpkd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD INDEX "xxpkd_s" ON "xxpkd_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "xxpkd_so" ASCENDING 
+
+ADD TABLE "xxph_hist"
+  AREA "Schema Area"
+  DUMP-NAME "xxph_his"
+
+ADD FIELD "xxph_date" OF "xxph_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Date"
+  POSITION 2
+  SQL-WIDTH 4
+  COLUMN-LABEL "Date"
+  ORDER 10
+
+ADD FIELD "xxph_time" OF "xxph_hist" AS integer 
+  FORMAT ">>>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Time"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "Time"
+  ORDER 20
+
+ADD FIELD "xxph_so" OF "xxph_hist" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "SO"
+  POSITION 4
+  SQL-WIDTH 60
+  COLUMN-LABEL "SO"
+  ORDER 30
+
+ADD FIELD "xxph_comp" OF "xxph_hist" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Component"
+  POSITION 5
+  SQL-WIDTH 60
+  COLUMN-LABEL "Component"
+  ORDER 40
+
+ADD FIELD "xxph_desc" OF "xxph_hist" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 6
+  SQL-WIDTH 60
+  ORDER 50
+
+ADD FIELD "xxph_wkctr" OF "xxph_hist" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 60
+  ORDER 60
+
+ADD FIELD "xxph_op" OF "xxph_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "OP Code"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxph_qty" OF "xxph_hist" AS decimal 
+  FORMAT "->>>,>>9.99<<<<"
+  INITIAL "0"
+  LABEL "Qty Per"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "xxph_chr01" OF "xxph_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 90
+
+ADD FIELD "xxph_chr02" OF "xxph_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 100
+
+ADD TABLE "xxqad_ctrl"
+  AREA "Schema Area"
+  DESCRIPTION "QAD-ATPU Control"
+  DUMP-NAME "xxqad_ct"
+
+ADD FIELD "xxqad_so" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  LABEL "SO-BOM"
+  POSITION 7
+  SQL-WIDTH 2
+  ORDER 10
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfggui\triggers\yyexbom.p" CRC "4597" 
+
+ADD FIELD "xxqad_basic1" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  LABEL "Basic Data"
+  POSITION 8
+  SQL-WIDTH 2
+  ORDER 20
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "yybasic1.p" CRC "15091" 
+
+ADD FIELD "xxqad_comp" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Completed"
+  POSITION 9
+  SQL-WIDTH 2
+  ORDER 30
+
+ADD FIELD "xxqad_chr01" OF "xxqad_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxqad_chr02" OF "xxqad_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxqad_basic2" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 2
+  ORDER 60
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic2.p" CRC "62776" 
+
+ADD FIELD "xxqad_basic3" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 2
+  ORDER 70
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic3.p" CRC "42637" 
+
+ADD FIELD "xxqad_basic4" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 2
+  ORDER 80
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic4.p" CRC "12759" 
+
+ADD FIELD "xxqad_basic5" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 2
+  ORDER 90
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic5.p" CRC "30182" 
+
+ADD FIELD "xxqad_basic6" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 2
+  ORDER 100
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic6.p" CRC "33594" 
+
+ADD FIELD "xxqad_basic7" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 2
+  ORDER 110
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic7.p" CRC "53339" 
+
+ADD FIELD "xxqad_basic8" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 2
+  ORDER 120
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic8.p" CRC "50494" 
+
+ADD FIELD "xxqad_basic9" OF "xxqad_ctrl" AS character 
+  FORMAT "X(1)"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 2
+  ORDER 130
+  FIELD-TRIGGER "ASSIGN" NO-OVERRIDE PROCEDURE "\\qadtemp\appeb2\mfgchui\triggers\yybasic9.p" CRC "58096" 
+
+ADD TABLE "xxad2_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Address Master 2. (FOR QAD ONLY)"
+  DUMP-NAME "xxad2_ms"
+
+ADD FIELD "xxad2_addr" OF "xxad2_mstr" AS character 
+  FORMAT "X(15)"
+  INITIAL ""
+  LABEL "Address"
+  POSITION 2
+  SQL-WIDTH 30
+  COLUMN-LABEL "Address"
+  ORDER 10
+
+ADD FIELD "xxad2_name" OF "xxad2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Name"
+  POSITION 3
+  SQL-WIDTH 60
+  COLUMN-LABEL "Name"
+  ORDER 20
+
+ADD FIELD "xxad2_line1" OF "xxad2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Line1"
+  POSITION 4
+  SQL-WIDTH 60
+  COLUMN-LABEL "Line1"
+  ORDER 30
+
+ADD FIELD "xxad2_line2" OF "xxad2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Line2"
+  POSITION 5
+  SQL-WIDTH 60
+  COLUMN-LABEL "Line2"
+  ORDER 40
+
+ADD FIELD "xxad2_city" OF "xxad2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "City"
+  POSITION 6
+  SQL-WIDTH 60
+  COLUMN-LABEL "City"
+  ORDER 50
+
+ADD FIELD "xxad2_state" OF "xxad2_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "State"
+  POSITION 7
+  SQL-WIDTH 60
+  COLUMN-LABEL "State"
+  ORDER 60
+
+ADD FIELD "xxad2_zip" OF "xxad2_mstr" AS character 
+  FORMAT "X(10)"
+  INITIAL ""
+  LABEL "ZIP Code"
+  POSITION 8
+  SQL-WIDTH 20
+  COLUMN-LABEL "ZIP"
+  ORDER 70
+
+ADD FIELD "xxad2_type" OF "xxad2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 9
+  SQL-WIDTH 16
+  COLUMN-LABEL "Type"
+  ORDER 80
+
+ADD FIELD "xxad2_attn" OF "xxad2_mstr" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "Attention"
+  POSITION 10
+  SQL-WIDTH 48
+  COLUMN-LABEL "Attn"
+  ORDER 90
+
+ADD FIELD "xxad2_phone" OF "xxad2_mstr" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "Telephone"
+  POSITION 11
+  SQL-WIDTH 32
+  COLUMN-LABEL "Telephone"
+  ORDER 100
+
+ADD FIELD "xxad2_chr01" OF "xxad2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xxad2_chr02" OF "xxad2_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD INDEX "xxad2_addr" ON "xxad2_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxad2_addr" ASCENDING 
+
+ADD TABLE "xxad_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Address Master. (Increment for ATPU)"
+  DUMP-NAME "xxad_mst"
+
+ADD FIELD "xxad_addr" OF "xxad_mstr" AS character 
+  FORMAT "X(15)"
+  INITIAL ""
+  LABEL "Address"
+  POSITION 2
+  SQL-WIDTH 30
+  COLUMN-LABEL "Addr"
+  ORDER 10
+
+ADD FIELD "xxad_name" OF "xxad_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Name"
+  POSITION 3
+  SQL-WIDTH 60
+  ORDER 20
+
+ADD FIELD "xxad_line1" OF "xxad_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Line1"
+  POSITION 4
+  SQL-WIDTH 60
+  ORDER 30
+
+ADD FIELD "xxad_line2" OF "xxad_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "Line2"
+  POSITION 5
+  SQL-WIDTH 60
+  ORDER 40
+
+ADD FIELD "xxad_city" OF "xxad_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "City"
+  POSITION 6
+  SQL-WIDTH 60
+  ORDER 50
+
+ADD FIELD "xxad_state" OF "xxad_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  LABEL "State"
+  POSITION 7
+  SQL-WIDTH 60
+  ORDER 60
+
+ADD FIELD "xxad_zip" OF "xxad_mstr" AS character 
+  FORMAT "X(10)"
+  INITIAL ""
+  LABEL "ZIP Code"
+  POSITION 8
+  SQL-WIDTH 20
+  COLUMN-LABEL "ZIP"
+  ORDER 70
+
+ADD FIELD "xxad_type" OF "xxad_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxad_attn" OF "xxad_mstr" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "Attention"
+  POSITION 10
+  SQL-WIDTH 48
+  ORDER 90
+
+ADD FIELD "xxad_phone" OF "xxad_mstr" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "Telephone"
+  POSITION 11
+  SQL-WIDTH 32
+  ORDER 100
+
+ADD FIELD "xxad_flg" OF "xxad_mstr" AS character 
+  FORMAT "X(1)"
+  INITIAL ""
+  LABEL "Flag"
+  POSITION 12
+  SQL-WIDTH 2
+  ORDER 110
+
+ADD FIELD "xxad_chr01" OF "xxad_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxad_chr02" OF "xxad_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD INDEX "xxad_addr" ON "xxad_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxad_addr" ASCENDING 
+
+ADD TABLE "XXCONFIG_MSTR"
+  AREA "Schema Area"
+  LABEL "XXCONFIG_MSTR"
+  FROZEN
+  DUMP-NAME "xxconfig"
+
+ADD FIELD "XXSO" OF "XXCONFIG_MSTR" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "XXSO"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "XXCONFIG" OF "XXCONFIG_MSTR" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "XXCONFIG"
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD TABLE "yyinv_mstr"
+  AREA "Schema Area"
+  LABEL "yyinv_mstr"
+  FROZEN
+  DUMP-NAME "yyinv_ms"
+
+ADD FIELD "yyinv_invpart" OF "yyinv_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "yyinv_invpart"
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yyinv_invpartname" OF "yyinv_mstr" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "yyinv_invpartname"
+  POSITION 3
+  SQL-WIDTH 48
+  ORDER 20
+
+ADD FIELD "yyinv_invprice" OF "yyinv_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "yyinv_invprice"
+  POSITION 4
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 30
+
+ADD FIELD "yyinv_invline" OF "yyinv_mstr" AS character 
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "yyinv_invline"
+  POSITION 5
+  SQL-WIDTH 8
+  ORDER 40
+
+ADD FIELD "yyinv_inv1080" OF "yyinv_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "yyinv_inv1080"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yyinv_inv720" OF "yyinv_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "yyinv_inv720"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "yyinv_inv360" OF "yyinv_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "yyinv_inv360"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yyinv_inv180" OF "yyinv_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "yyinv_inv180"
+  POSITION 9
+  SQL-WIDTH 4
+  ORDER 80
+
+ADD FIELD "yyinv_inv" OF "yyinv_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "yyinv_inv"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD TABLE "yywobmspt_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "BOM镜像后产品标准成本按元素主表成品/半成品BOM镜像后的标准成本按元素"
+  DUMP-NAME "yywobmsp"
+
+ADD FIELD "yywobmspt_site" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "地点"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yywobmspt_part" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yywobmspt_version" OF "yywobmspt_mstr" AS integer 
+  DESCRIPTION "镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "yywobmspt_elem" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "标准成本元素"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "yywobmspt_elem_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "yywobmspt_userid" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "修改人"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "yywobmspt_mod_date" OF "yywobmspt_mstr" AS date 
+  DESCRIPTION "修改日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yywobmspt_elem_tl_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yywobmspt_elem_ll_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD INDEX "yywobmspt_ver" ON "yywobmspt_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yywobmspt_site" ASCENDING 
+  INDEX-FIELD "yywobmspt_part" ASCENDING 
+  INDEX-FIELD "yywobmspt_version" ASCENDING 
+  INDEX-FIELD "yywobmspt_elem" ASCENDING 
+
+ADD TABLE "yywobmsptd_det"
+  AREA "Schema Area"
+  DESCRIPTION "BOM镜像后产品标准成本按元素明细表成品/半成品中每一个子件的BOM镜像后的标准成本按元素"
+  DUMP-NAME "yywobms1"
+
+ADD FIELD "yywobmsptd_site" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "地点"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yywobmsptd_part" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yywobmsptd_comp" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yywobmsptd_version" OF "yywobmsptd_det" AS integer 
+  DESCRIPTION "镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yywobmsptd_unit_qty" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "子件数量"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "yywobmsptd_elem" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "标准成本元素"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "yywobmsptd_elem_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, this level + lower level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yywobmsptd_userid" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "修改人"
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "yywobmsptd_mod_date" OF "yywobmsptd_det" AS date 
+  DESCRIPTION "修改日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD FIELD "yywobmsptd_elem_tl_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, this level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "yywobmsptd_elem_ll_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, lower level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD INDEX "yywobmsptd_ver" ON "yywobmsptd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yywobmsptd_site" ASCENDING 
+  INDEX-FIELD "yywobmsptd_part" ASCENDING 
+  INDEX-FIELD "yywobmsptd_comp" ASCENDING 
+  INDEX-FIELD "yywobmsptd_version" ASCENDING 
+  INDEX-FIELD "yywobmsptd_elem" ASCENDING 
+
+ADD TABLE "yyusrw_wkfl"
+  AREA "Schema Area"
+  DESCRIPTION "User Work Table"
+  DUMP-NAME "yyusrw_w"
+
+ADD FIELD "yyusrw_key1" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 80
+  ORDER 10
+
+ADD FIELD "yyusrw_key2" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 80
+  ORDER 20
+
+ADD FIELD "yyusrw_key3" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the second index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 80
+  ORDER 30
+
+ADD FIELD "yyusrw_key4" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the second index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 80
+  ORDER 40
+
+ADD FIELD "yyusrw_key5" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the third index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 80
+  ORDER 50
+
+ADD FIELD "yyusrw_key6" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the third index."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 80
+  ORDER 60
+
+ADD FIELD "yyusrw_charfld" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "Character fields available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 8
+  SQL-WIDTH 1230
+  EXTENT 15
+  ORDER 70
+
+ADD FIELD "yyusrw_decfld" OF "yyusrw_wkfl" AS decimal 
+  DESCRIPTION "Decimal fields available for user definition and use."
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 600
+  EXTENT 15
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "yyusrw_datefld" OF "yyusrw_wkfl" AS date 
+  DESCRIPTION "Date fields available for user definition and use."
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 10
+  SQL-WIDTH 72
+  EXTENT 4
+  ORDER 90
+
+ADD FIELD "yyusrw_user1" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "User field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  POSITION 11
+  SQL-WIDTH 80
+  ORDER 100
+
+ADD FIELD "yyusrw_user2" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "User field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  POSITION 12
+  SQL-WIDTH 80
+  ORDER 110
+
+ADD FIELD "yyusrw__qadc01" OF "yyusrw_wkfl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 80
+  ORDER 120
+
+ADD FIELD "yyusrw_logfld" OF "yyusrw_wkfl" AS logical 
+  DESCRIPTION "Logical fields available for user definition and use."
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 14
+  SQL-WIDTH 120
+  EXTENT 15
+  ORDER 130
+
+ADD FIELD "yyusrw_intfld" OF "yyusrw_wkfl" AS integer 
+  DESCRIPTION "Integer fields available for user definition and use."
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 330
+  EXTENT 15
+  ORDER 140
+
+ADD INDEX "yyusrw_index1" ON "yyusrw_wkfl" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yyusrw_key1" ASCENDING 
+  INDEX-FIELD "yyusrw_key2" ASCENDING 
+
+ADD INDEX "yyusrw_index2" ON "yyusrw_wkfl" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyusrw_key3" ASCENDING 
+  INDEX-FIELD "yyusrw_key4" ASCENDING 
+
+ADD INDEX "yyusrw_index3" ON "yyusrw_wkfl" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyusrw_key5" ASCENDING 
+  INDEX-FIELD "yyusrw_key6" ASCENDING 
+
+ADD TABLE "xxbs_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxbs_det"
+
+ADD FIELD "xxbs_bin" OF "xxbs_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "xxbs_date" OF "xxbs_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxbs_shelf" OF "xxbs_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD INDEX "xxbs_bin" ON "xxbs_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "xxbs_bin" ASCENDING 
+
+ADD TABLE "yyinvoth_det"
+  AREA "Schema Area"
+  DUMP-NAME "yyinvoth"
+
+ADD FIELD "yyinvoth_part" OF "yyinvoth_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yyinvoth_qty" OF "yyinvoth_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "yyinvoth_mark" OF "yyinvoth_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD TABLE "yyinvid_det"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间生产明细表
+成品/半成品各期间生产的子件投入量"
+  DUMP-NAME "yyinvid_"
+
+ADD FIELD "yyinvid_part" OF "yyinvid_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yyinvid_part_pl" OF "yyinvid_det" AS character 
+  DESCRIPTION "产品的产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yyinvid_comp" OF "yyinvid_det" AS character 
+  DESCRIPTION "子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "yyinvid_comp_pl" OF "yyinvid_det" AS character 
+  DESCRIPTION "子件的产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 8
+  ORDER 50
+
+ADD FIELD "yyinvid_year" OF "yyinvid_det" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "yyinvid_per" OF "yyinvid_det" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yyinvid_qty" OF "yyinvid_det" AS decimal 
+  DESCRIPTION "期间子件总投入量"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yyinvid_std_bom" OF "yyinvid_det" AS integer 
+  DESCRIPTION "期间标准成本对应的镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 4
+  ORDER 90
+
+ADD INDEX "yyinvid_perd_ptcp_y" ON "yyinvid_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yyinvid_year" DESCENDING 
+  INDEX-FIELD "yyinvid_per" DESCENDING 
+  INDEX-FIELD "yyinvid_part" ASCENDING 
+  INDEX-FIELD "yyinvid_comp" ASCENDING 
+
+ADD INDEX "yyinvid_perd_ptcp_p" ON "yyinvid_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyinvid_per" DESCENDING 
+  INDEX-FIELD "yyinvid_year" DESCENDING 
+  INDEX-FIELD "yyinvid_part" ASCENDING 
+  INDEX-FIELD "yyinvid_comp" ASCENDING 
+
+ADD INDEX "yyinvid_ptcp" ON "yyinvid_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyinvid_part_pl" ASCENDING 
+  INDEX-FIELD "yyinvid_part" ASCENDING 
+  INDEX-FIELD "yyinvid_comp_pl" ASCENDING 
+  INDEX-FIELD "yyinvid_comp" ASCENDING 
+  INDEX-FIELD "yyinvid_year" DESCENDING 
+  INDEX-FIELD "yyinvid_per" DESCENDING 
+
+ADD TABLE "yycsvard_det"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间发生成本差异明细表成品/半成品对应一原材料/半成品的差异"
+  DUMP-NAME "yycsvard"
+
+ADD FIELD "yycsvard_part" OF "yycsvard_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yycsvard_part_pl" OF "yycsvard_det" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yycsvard_comp" OF "yycsvard_det" AS character 
+  DESCRIPTION "子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 36
+  ORDER 40
+
+ADD FIELD "yycsvard_comp_pl" OF "yycsvard_det" AS character 
+  DESCRIPTION "子件产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 8
+  ORDER 50
+
+ADD FIELD "yycsvard_year" OF "yycsvard_det" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "yycsvard_per" OF "yycsvard_det" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yycsvard_variance" OF "yycsvard_det" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 880
+  EXTENT 22
+  DECIMALS 2
+  ORDER 100
+
+ADD INDEX "yycsvard_perd_ptcp_y" ON "yycsvard_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yycsvard_year" DESCENDING 
+  INDEX-FIELD "yycsvard_per" DESCENDING 
+  INDEX-FIELD "yycsvard_part" ASCENDING 
+  INDEX-FIELD "yycsvard_comp" ASCENDING 
+
+ADD INDEX "yycsvard_perd_ptcp_p" ON "yycsvard_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yycsvard_per" DESCENDING 
+  INDEX-FIELD "yycsvard_year" DESCENDING 
+  INDEX-FIELD "yycsvard_part" ASCENDING 
+  INDEX-FIELD "yycsvard_comp" ASCENDING 
+
+ADD INDEX "yycsvard_pl_y" ON "yycsvard_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yycsvard_year" DESCENDING 
+  INDEX-FIELD "yycsvard_per" DESCENDING 
+  INDEX-FIELD "yycsvard_part_pl" ASCENDING 
+
+ADD INDEX "yycsvard_ptcp" ON "yycsvard_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yycsvard_part" ASCENDING 
+  INDEX-FIELD "yycsvard_comp" ASCENDING 
+  INDEX-FIELD "yycsvard_year" DESCENDING 
+  INDEX-FIELD "yycsvard_per" DESCENDING 
+
+ADD TABLE "yypts_det"
+  AREA "Schema Area"
+  DESCRIPTION "零件替代关系表半成品/成品在MES系统中维护的零件替代关系表"
+  DUMP-NAME "yypts_de"
+
+ADD FIELD "yypts_part" OF "yypts_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yypts_comp" OF "yypts_det" AS character 
+  DESCRIPTION "标准子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yypts_sub_comp" OF "yypts_det" AS character 
+  DESCRIPTION "替代子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yypts_qty_per" OF "yypts_det" AS decimal 
+  DESCRIPTION "替代子件替代标准子件标准量的数量"
+  FORMAT ">>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "yypts_lot" OF "yypts_det" AS character 
+  DESCRIPTION "批号"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 36
+  ORDER 50
+
+ADD FIELD "yypts_group" OF "yypts_det" AS character 
+  DESCRIPTION "替代文件组"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 36
+  ORDER 60
+
+ADD FIELD "yypts_per" OF "yypts_det" AS integer 
+  FORMAT "99"
+  INITIAL "0"
+  LABEL "Per"
+  POSITION 8
+  SQL-WIDTH 4
+  COLUMN-LABEL "Per"
+  ORDER 80
+
+ADD FIELD "yypts_year" OF "yypts_det" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  LABEL "Year"
+  POSITION 9
+  SQL-WIDTH 4
+  COLUMN-LABEL "Year"
+  ORDER 90
+
+ADD INDEX "yypts_comp" ON "yypts_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yypts_year" DESCENDING 
+  INDEX-FIELD "yypts_per" DESCENDING 
+  INDEX-FIELD "yypts_part" ASCENDING 
+  INDEX-FIELD "yypts_comp" ASCENDING 
+  INDEX-FIELD "yypts_sub_comp" ASCENDING 
+
+ADD INDEX "yypts_sub_comp" ON "yypts_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yypts_year" DESCENDING 
+  INDEX-FIELD "yypts_per" DESCENDING 
+  INDEX-FIELD "yypts_part" ASCENDING 
+  INDEX-FIELD "yypts_sub_comp" ASCENDING 
+  INDEX-FIELD "yypts_comp" ASCENDING 
+
+ADD TABLE "yyactcs_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间发生量的实际成本主表
+成品/半成品各期间的实际成本"
+  DUMP-NAME "yyactcs_"
+
+ADD FIELD "yyactcs_part" OF "yyactcs_mstr" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yyactcs_part_pl" OF "yyactcs_mstr" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yyactcs_year" OF "yyactcs_mstr" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yyactcs_per" OF "yyactcs_mstr" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yyactcs_act_mtl" OF "yyactcs_mstr" AS decimal 
+  DESCRIPTION "期间总实际成本 - 材料"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "yyactcs_act_lbr" OF "yyactcs_mstr" AS decimal 
+  DESCRIPTION "期间总实际成本 - 人工"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yyactcs_act_mfg" OF "yyactcs_mstr" AS decimal 
+  DESCRIPTION "期间总实际成本 - 制造费用"
+  FORMAT " ->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yyactcs_act_adj" OF "yyactcs_mstr" AS decimal 
+  DESCRIPTION "期间总实际成本调整数"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD INDEX "yyactcs_year_part" ON "yyactcs_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yyactcs_year" DESCENDING 
+  INDEX-FIELD "yyactcs_per" DESCENDING 
+  INDEX-FIELD "yyactcs_part" ASCENDING 
+
+ADD INDEX "yyactcs_part" ON "yyactcs_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcs_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcs_part" ASCENDING 
+  INDEX-FIELD "yyactcs_year" DESCENDING 
+  INDEX-FIELD "yyactcs_per" DESCENDING 
+
+ADD INDEX "yyactcs_perd_part_p" ON "yyactcs_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcs_per" DESCENDING 
+  INDEX-FIELD "yyactcs_year" DESCENDING 
+  INDEX-FIELD "yyactcs_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcs_part" ASCENDING 
+
+ADD INDEX "yyactcs_perd_part_y" ON "yyactcs_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcs_year" DESCENDING 
+  INDEX-FIELD "yyactcs_per" DESCENDING 
+  INDEX-FIELD "yyactcs_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcs_part" ASCENDING 
+
+ADD TABLE "yyactcsd_det"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间发生量的实际成本明细表
+成品/半成品各期间的各子件的实际成本"
+  DUMP-NAME "yyactcsd"
+
+ADD FIELD "yyactcsd_part" OF "yyactcsd_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yyactcsd_part_pl" OF "yyactcsd_det" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yyactcsd_comp" OF "yyactcsd_det" AS character 
+  DESCRIPTION "子件"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 8
+  ORDER 40
+
+ADD FIELD "yyactcsd_comp_pl" OF "yyactcsd_det" AS character 
+  DESCRIPTION "子件产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 8
+  ORDER 50
+
+ADD FIELD "yyactcsd_year" OF "yyactcsd_det" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "yyactcsd_per" OF "yyactcsd_det" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yyactcsd_act_mtl" OF "yyactcsd_det" AS decimal 
+  DESCRIPTION "期间总实际成本 - 材料"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yyactcsd_act_lbr" OF "yyactcsd_det" AS decimal 
+  DESCRIPTION "期间总实际成本 - 人工"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "yyactcsd_act_mfg" OF "yyactcsd_det" AS decimal 
+  DESCRIPTION "期间总实际成本 - 制造费用"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD INDEX "yyactcsd_year_part" ON "yyactcsd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yyactcsd_year" DESCENDING 
+  INDEX-FIELD "yyactcsd_per" DESCENDING 
+  INDEX-FIELD "yyactcsd_part" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp" ASCENDING 
+
+ADD INDEX "yyactcsd_perd_ptcp_p" ON "yyactcsd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcsd_per" DESCENDING 
+  INDEX-FIELD "yyactcsd_year" DESCENDING 
+  INDEX-FIELD "yyactcsd_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_part" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp" ASCENDING 
+
+ADD INDEX "yyactcsd_perd_ptcp_y" ON "yyactcsd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcsd_year" DESCENDING 
+  INDEX-FIELD "yyactcsd_per" DESCENDING 
+  INDEX-FIELD "yyactcsd_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_part" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp" ASCENDING 
+
+ADD INDEX "yyactcsd_ptcp" ON "yyactcsd_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyactcsd_part_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_part" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp_pl" ASCENDING 
+  INDEX-FIELD "yyactcsd_comp" ASCENDING 
+  INDEX-FIELD "yyactcsd_year" DESCENDING 
+  INDEX-FIELD "yyactcsd_per" DESCENDING 
+
+ADD TABLE "yyvarated_det"
+  AREA "Schema Area"
+  DESCRIPTION "差异分摊率明细表
+差异分摊率明细"
+  DUMP-NAME "yyvarate"
+
+ADD FIELD "yyvarated_part_pl" OF "yyvarated_det" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 8
+  ORDER 20
+
+ADD FIELD "yyvarated_part" OF "yyvarated_det" AS character 
+  DESCRIPTION "零件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yyvarated_year" OF "yyvarated_det" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yyvarated_per" OF "yyvarated_det" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yyvarated_mtl_rate" OF "yyvarated_det" AS decimal 
+  DESCRIPTION "材料差异分摊率"
+  FORMAT "->>>,>>9.99"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "yyvarated_lbr_rate" OF "yyvarated_det" AS decimal 
+  DESCRIPTION "人工差异分摊率"
+  FORMAT "->>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yyvarated_mfg_rate" OF "yyvarated_det" AS decimal 
+  DESCRIPTION "制造费用差异分摊率"
+  FORMAT "->>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD INDEX "yyvarated_perd_part_y" ON "yyvarated_det" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yyvarated_year" DESCENDING 
+  INDEX-FIELD "yyvarated_per" DESCENDING 
+  INDEX-FIELD "yyvarated_part" ASCENDING 
+
+ADD INDEX "yyvarated_perd_part_p" ON "yyvarated_det" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yyvarated_per" DESCENDING 
+  INDEX-FIELD "yyvarated_year" DESCENDING 
+  INDEX-FIELD "yyvarated_part_pl" ASCENDING 
+  INDEX-FIELD "yyvarated_part" ASCENDING 
+
+ADD TABLE "yyinvo_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间出库按类型表成品/半成品/材料期间出库按出库类型不包括材料投放到下一个生产环节"
+  DUMP-NAME "yyinvo_m"
+
+ADD FIELD "yyinvo_part_pl" OF "yyinvo_mstr" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 8
+  ORDER 20
+
+ADD FIELD "yyinvo_part" OF "yyinvo_mstr" AS character 
+  DESCRIPTION "零件"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yyinvo_year" OF "yyinvo_mstr" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yyinvo_per" OF "yyinvo_mstr" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yyinvo_out_type" OF "yyinvo_mstr" AS character 
+  DESCRIPTION "出库类型（销售、改制、三包、试验、装机、其他计划外）"
+  FORMAT "x(12)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 24
+  ORDER 60
+
+ADD FIELD "yyinvo_qty" OF "yyinvo_mstr" AS decimal 
+  DESCRIPTION "出库数量"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yyinvo_reason" OF "yyinvo_mstr" AS character 
+  DESCRIPTION "原因"
+  FORMAT "x(10)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 20
+  ORDER 80
+
+ADD FIELD "yyinvo_sojob" OF "yyinvo_mstr" AS character 
+  DESCRIPTION "与出库相关的SO号"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 10
+  SQL-WIDTH 36
+  ORDER 90
+
+ADD INDEX "yyinvo_type" ON "yyinvo_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yyinvo_year" DESCENDING 
+  INDEX-FIELD "yyinvo_per" DESCENDING 
+  INDEX-FIELD "yyinvo_out_type" ASCENDING 
+  INDEX-FIELD "yyinvo_part" ASCENDING 
+
+ADD INDEX "yyinvo_perd_part" ON "yyinvo_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyinvo_year" DESCENDING 
+  INDEX-FIELD "yyinvo_per" DESCENDING 
+  INDEX-FIELD "yyinvo_part" ASCENDING 
+
+ADD TABLE "yylbrmfg_det"
+  AREA "Schema Area"
+  DESCRIPTION "半成品/成品人工费用、制造费用差异明细表"
+  DUMP-NAME "yylbrmfg"
+
+ADD FIELD "yylbrmfg_year" OF "yylbrmfg_det" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  LABEL "Year"
+  POSITION 2
+  SQL-WIDTH 4
+  COLUMN-LABEL "Year"
+  ORDER 10
+
+ADD FIELD "yylbrmfg_per" OF "yylbrmfg_det" AS integer 
+  FORMAT "99"
+  INITIAL "0"
+  LABEL "Per"
+  POSITION 3
+  SQL-WIDTH 4
+  COLUMN-LABEL "Per"
+  ORDER 20
+
+ADD FIELD "yylbrmfg_part" OF "yylbrmfg_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Part"
+  POSITION 4
+  SQL-WIDTH 36
+  COLUMN-LABEL "Part"
+  ORDER 30
+
+ADD FIELD "yylbrmfg_prod_line" OF "yylbrmfg_det" AS character 
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "Product line"
+  POSITION 5
+  SQL-WIDTH 8
+  COLUMN-LABEL "Product line"
+  ORDER 40
+
+ADD FIELD "yylbrmfg_cc" OF "yylbrmfg_det" AS character 
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "CC"
+  POSITION 6
+  SQL-WIDTH 8
+  COLUMN-LABEL "CC"
+  ORDER 50
+
+ADD FIELD "yylbrmfg_qty" OF "yylbrmfg_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Qty"
+  POSITION 7
+  SQL-WIDTH 4
+  COLUMN-LABEL "Quntity"
+  ORDER 60
+
+ADD FIELD "yylbrmfg_lbr_tl" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yylbrmfg_lbr_ll" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yylbrmfg_mfg_tl" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "yylbrmfg_mfg_ll" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "yylbrmfg_lbr_std" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "yylbrmfg_mfg_std" OF "yylbrmfg_det" AS decimal 
+  FORMAT "->>>,>>>,,>>9.99"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD INDEX "yylbrmfg_part" ON "yylbrmfg_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yylbrmfg_year" DESCENDING 
+  INDEX-FIELD "yylbrmfg_per" ASCENDING 
+  INDEX-FIELD "yylbrmfg_cc" ASCENDING 
+  INDEX-FIELD "yylbrmfg_part" ASCENDING 
+
+ADD INDEX "yylbrmfg_pl" ON "yylbrmfg_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yylbrmfg_year" DESCENDING 
+  INDEX-FIELD "yylbrmfg_per" DESCENDING 
+  INDEX-FIELD "yylbrmfg_prod_line" ASCENDING 
+
+ADD TABLE "yypbd_det"
+  AREA "Schema Area"
+  DUMP-NAME "yypbd_de"
+
+ADD FIELD "yypbd_part" OF "yypbd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yypbd_part_pl" OF "yypbd_det" AS character 
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "Product Line"
+  POSITION 3
+  SQL-WIDTH 8
+  ORDER 20
+
+ADD FIELD "yypbd_year" OF "yypbd_det" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  LABEL "Year"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "yypbd_per" OF "yypbd_det" AS integer 
+  FORMAT "99"
+  INITIAL "0"
+  LABEL "Period"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yypbd_qty" OF "yypbd_det" AS integer 
+  FORMAT "->,>>>,>>>,>>>,>>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yypbd_mtl_var" OF "yypbd_det" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Mtl Var"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "yypbd_lbr_var" OF "yypbd_det" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Lbr Var"
+  POSITION 8
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yypbd_mfg_var" OF "yypbd_det" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Mfg Var"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD INDEX "yypbd_year" ON "yypbd_det" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yypbd_year" DESCENDING 
+  INDEX-FIELD "yypbd_per" DESCENDING 
+  INDEX-FIELD "yypbd_part" ASCENDING 
+
+ADD INDEX "yypbd_part_pl" ON "yypbd_det" 
+  AREA "Schema Area"
+  INDEX-FIELD "yypbd_year" DESCENDING 
+  INDEX-FIELD "yypbd_per" DESCENDING 
+  INDEX-FIELD "yypbd_part_pl" ASCENDING 
+
+ADD TABLE "yyinvi_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间生产主表成品/半成品各期间的生产入库量，以及材料的采购入库，以及所有零件的计划外入库情况"
+  DUMP-NAME "yyinvi_m"
+
+ADD FIELD "yyinvi_part" OF "yyinvi_mstr" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yyinvi_part_pl" OF "yyinvi_mstr" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yyinvi_year" OF "yyinvi_mstr" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yyinvi_per" OF "yyinvi_mstr" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yyinvi_mfg_qty" OF "yyinvi_mstr" AS decimal 
+  DESCRIPTION "期间生产入库数"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 7
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "yyinvi_std_bom" OF "yyinvi_mstr" AS integer 
+  DESCRIPTION "期间标准成本对应的镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yyinvi_upl_qty" OF "yyinvi_mstr" AS decimal 
+  DESCRIPTION "期间计划外入库"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yyinvi_buy_qty" OF "yyinvi_mstr" AS decimal 
+  DESCRIPTION "期间采购入库"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "yyinvi_cyc_qty" OF "yyinvi_mstr" AS decimal 
+  DESCRIPTION "期间盘点调整"
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD INDEX "yyinvi_perd_part_y" ON "yyinvi_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yyinvi_year" DESCENDING 
+  INDEX-FIELD "yyinvi_per" DESCENDING 
+  INDEX-FIELD "yyinvi_part" ASCENDING 
+
+ADD INDEX "yyinvi_part" ON "yyinvi_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyinvi_part" ASCENDING 
+  INDEX-FIELD "yyinvi_year" DESCENDING 
+  INDEX-FIELD "yyinvi_per" DESCENDING 
+
+ADD INDEX "yyinvi_perd_part_p" ON "yyinvi_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyinvi_per" DESCENDING 
+  INDEX-FIELD "yyinvi_year" DESCENDING 
+  INDEX-FIELD "yyinvi_part" ASCENDING 
+
+ADD INDEX "yyinvi_year_pl" ON "yyinvi_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "yyinvi_year" DESCENDING 
+  INDEX-FIELD "yyinvi_per" DESCENDING 
+  INDEX-FIELD "yyinvi_part_pl" ASCENDING 
+  INDEX-FIELD "yyinvi_part" ASCENDING 
+
+ADD TABLE "yycsvar_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "产品期间发生成本差异主表材料,成品/半成品各个差异"
+  DUMP-NAME "yycsvar_"
+
+ADD FIELD "yycsvar_part" OF "yycsvar_mstr" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yycsvar_part_pl" OF "yycsvar_mstr" AS character 
+  DESCRIPTION "产品类"
+  FORMAT "x(4)"
+  INITIAL ""
+  POSITION 4
+  SQL-WIDTH 8
+  ORDER 30
+
+ADD FIELD "yycsvar_year" OF "yycsvar_mstr" AS integer 
+  DESCRIPTION "年份"
+  FORMAT "9999"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yycsvar_per" OF "yycsvar_mstr" AS integer 
+  DESCRIPTION "期间"
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yycsvar_pm_code" OF "yycsvar_mstr" AS character 
+  DESCRIPTION "制造/采购"
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 2
+  ORDER 80
+
+ADD FIELD "yycsvar_variance" OF "yycsvar_mstr" AS decimal 
+  FORMAT "->>>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 880
+  EXTENT 25
+  DECIMALS 2
+  ORDER 90
+
+ADD INDEX "yycsvar_perd_part_y" ON "yycsvar_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yycsvar_year" DESCENDING 
+  INDEX-FIELD "yycsvar_per" DESCENDING 
+  INDEX-FIELD "yycsvar_part" ASCENDING 
+
+ADD INDEX "yycsvar_part" ON "yycsvar_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yycsvar_part_pl" ASCENDING 
+  INDEX-FIELD "yycsvar_part" ASCENDING 
+  INDEX-FIELD "yycsvar_year" DESCENDING 
+  INDEX-FIELD "yycsvar_per" DESCENDING 
+
+ADD INDEX "yycsvar_perd_part_p" ON "yycsvar_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  INDEX-FIELD "yycsvar_per" DESCENDING 
+  INDEX-FIELD "yycsvar_year" DESCENDING 
+  INDEX-FIELD "yycsvar_part_pl" ASCENDING 
+  INDEX-FIELD "yycsvar_part" ASCENDING 
+
+ADD TABLE "zzwk"
+  AREA "Schema Area"
+  DUMP-NAME "zzwk"
+
+ADD FIELD "zzwksite" OF "zzwk" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "zzwknbr" OF "zzwk" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 36
+  ORDER 20
+
+ADD FIELD "zzwkduedate" OF "zzwk" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "zzwkqty" OF "zzwk" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD TABLE "yyinvpro_det"
+  AREA "Schema Area"
+  DUMP-NAME "yyinvpro"
+
+ADD FIELD "yyinvpro_part" OF "yyinvpro_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yyinvpro_qty" OF "yyinvpro_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "yyinvpro_date" OF "yyinvpro_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "yyinvpro_edn" OF "yyinvpro_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+.
+PSC
+cpstream=GB2312
+.
+0000158987
