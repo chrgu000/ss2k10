@@ -12,15 +12,20 @@ for each tmpbomn exclusive-lock:
     assign tbmn_sn = vi.
     assign vi = vi + 1.
 end.
-for each tmpbomn no-lock :
+for each tmpbomn no-lock:
+find first ps_mstr no-lock where ps_par = tbmn_par and ps_comp = tbmn_comp
+			 and ps_ref = tbmn_ref and ps_start = tbmn_start and tbmn_end = ps_end no-error.
+if available ps_mstr then do:
+	 next.
+end.
+if cloadfile then do:
 assign vfile = "xxbmld.p." + string(tbmn_sn,"9999999999").
 output to value(vfile + ".bpi").
     put unformat '"' tbmn_par '"' skip.
-    put unformat '"' tbmn_comp '" "" ' tbmn_start skip.
+    put unformat '"' tbmn_comp '" "' tbmn_ref '" ' tbmn_start skip.
     put unformat tbmn_qty_per ' - - ' tbmn_end ' - ' tbmn_scrp ' - - - - - - N' skip.
     put "." skip.
 output close.
-if cloadfile then do:
        batchrun = yes.
        input from value(vfile + ".bpi").
        output to value(vfile + ".bpo") keep-messages.
@@ -34,26 +39,25 @@ if cloadfile then do:
        input close.
        batchrun = no.
        find first code_mstr no-lock where
-              code_fldname = "Keep_Temp_WorkFile" and
-              code_value = "YES|OTHER" no-error.
-        if code_cmmt <> "Yes" then do:
-          os-delete value(vfile + ".bpi").
-          os-delete value(vfile + ".bpo").
+                  code_fldname = "KEEP_Temp_WorkFile" and
+                  code_value = "YES|OTHER" no-error.
+       if (available code_mstr and code_cmmt <> "Yes") or 
+       		not available code_mstr then do:
+             os-delete value(vfile + ".bpi").
+             os-delete value(vfile + ".bpo").
        end.
-end.
+       
+end.   /* if cloadfile then do: */
 end.
 
-if cloadfile then do:
-   for each tmpbomn exclusive-lock:
-       find first ps_mstr no-lock where ps_par = tbmn_par
-              and ps_comp = tbmn_comp and ps_ref = ""
-              and ps_start = tbmn_start and ps_end = tbmn_end no-error.
-       if available ps_mstr then do:
-          assign tbmn_chk = "OK".
-       end.
-       else do:
-          assign tbmn_chk = "CIM_LOAD Fail".
-       end.
-   end.
-end.  /*if cloadfile then do:*/
-
+for each tmpbomn exclusive-lock:
+    find first ps_mstr no-lock where ps_par = tbmn_par
+           and ps_comp = tbmn_comp and ps_ref = tbmn_ref
+           and ps_start = tbmn_start and ps_end = tbmn_end no-error.
+    if available ps_mstr then do:
+       assign tbmn_chk = "OK".
+    end.
+    else do:
+       assign tbmn_chk = "Fail".
+    end.
+end.

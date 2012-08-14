@@ -8,19 +8,16 @@
 {xxbmld.i}
 define variable vtax as character.
 define variable i as integer.
-define variable vpar like ps_par.
-define variable vold like ps_comp.
-define variable vnew like ps_comp.
 empty temp-table tmpbom no-error.
 i = 0.
 input from value(flhload).
 repeat:
   import unformat vtax no-error.
-  vpar = entry(1,vtax,",").
-  vold = entry(2,vtax,",").
-  vnew = entry(3,vtax,",").
+  vpar = entry(1,vtax,",") no-error.
+  vold = entry(2,vtax,",") no-error.
+  vnew = entry(3,vtax,",") no-error.
   if i > 0 then do:
-     if vold <> "" and vnew <> "" then do:
+     if vold <> "" then do:
         create tmpbom.
         assign tbm_par = vpar
                tbm_old = vold
@@ -30,7 +27,7 @@ repeat:
   i = i + 1.
 end.
 input close.
-
+i = 0.
 /*
 for each tmpbom exclusive-lock:
     if tbm_par <> "" then do:
@@ -62,62 +59,28 @@ for each tmpbom exclusive-lock:
     end.
 end.
 */
+assign i = 2.   /*del after commit*/
 
-for each tmpbom no-lock where tbm_par <> "":
-    for each ps_mstr no-lock where ps_par = tbm_par
-         and ps_comp = tbm_old
-         and ps_ref = ""
-         and (ps_start <= today - 1 or ps_start = ?)
-         and (ps_end >= today - 1 or ps_end = ?)
-          break by ps_comp by ps_end by ps_start:
-          if last-of(ps_comp) then do:
-             if ps_end >= today - 1 or ps_end = ? then do:
-                find first tmpbomn where tbmn_par = ps_par
-                                     and tbmn_comp = ps_comp no-error.
-                if not available tmpbomn then do:
-                  create tmpbomn.
-                  assign tbmn_par = ps_par
-                         tbmn_comp = ps_comp.
-                end.
-                assign tbmn_start = ps_start
-                       tbmn_qty_per = ps_qty_per
-                       tbmn_scrp = ps_scrp
-                       tbmn_end = today - 1.
-                find first tmpbomn where tbmn_par = ps_par
-                                     and tbmn_comp = tbm_new no-error.
-                 if not available tmpbomn then do:
-                   create tmpbomn.
-                   assign tbmn_par = ps_par
-                          tbmn_comp = tbm_new.
-                 end.
-                 assign tbmn_start = today
-                        tbmn_qty_per = ps_qty_per
-                        tbmn_scrp = ps_scrp.
-             end.
-          end.
-    end.
-end.
-
-for each tmpbom no-lock where tbm_par = "":
+for each tmpbom no-lock:
     for each ps_mstr no-lock use-index ps_comp
-       where ps_comp = tbm_old and ps_par <> ""
-         and ps_ref = ""
-         and (ps_start <= today - 1 or ps_start = ?)
-         and (ps_end >= today - 1 or ps_end = ?)
+       where ps_comp = tbm_old and (ps_par = tbm_par or tbm_par = "")
+         and (ps_start <= today - i or ps_start = ?)
+         and (ps_end >= today - i or ps_end = ?)
           break by ps_comp by ps_par by ps_end by ps_start:
           if last-of(ps_par) then do:
-             if ps_end >= today - 1 or ps_end = ? then do:
-                find first tmpbomn where tbmn_par = ps_par
-                                     and tbmn_comp = ps_comp no-error.
-                if not available tmpbomn then do:
-                  create tmpbomn.
-                  assign tbmn_par = ps_par
-                         tbmn_comp = ps_comp.
-                end.
-                assign tbmn_start = ps_start
-                       tbmn_qty_per = ps_qty_per
-                       tbmn_scrp = ps_scrp
-                       tbmn_end = today - 1.
+             find first tmpbomn where tbmn_par = ps_par
+                                  and tbmn_comp = ps_comp no-error.
+             if not available tmpbomn then do:
+               create tmpbomn.
+               assign tbmn_par = ps_par
+                      tbmn_comp = ps_comp.
+             end.
+             assign tbmn_ref = ps_ref
+                    tbmn_start = ps_start
+                    tbmn_qty_per = ps_qty_per
+                    tbmn_scrp = ps_scrp * 100
+                    tbmn_end = today - i.
+             if tbm_new <> "" then do:
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = tbm_new no-error.
                  if not available tmpbomn then do:
@@ -125,10 +88,10 @@ for each tmpbom no-lock where tbm_par = "":
                    assign tbmn_par = ps_par
                           tbmn_comp = tbm_new.
                  end.
-                 assign tbmn_start = today
+                 assign tbmn_start = today - i + 1
                         tbmn_qty_per = ps_qty_per
-                        tbmn_scrp = ps_scrp.
-             end.
+                        tbmn_scrp = ps_scrp * 100.
+              end.
           end.
     end.
 end.
