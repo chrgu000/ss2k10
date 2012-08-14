@@ -76,10 +76,10 @@
      define variable costsim1 like sc_sim.
      define variable part like pt_part.
      define variable part2 like pt_part.
-		 define variable v1 as character.
-		 define variable v2 as character.
-		 define variable v3 as character.
-		 define variable v4 as character.
+		 define variable v1 as character format "x(16)".
+		 define variable v2 as character format "x(16)".
+		 define variable v3 as character format "x(16)".
+		 define variable v4 as character format "x(16)".
 		 define variable qty as decimal.
 		 define variable amt as decimal.
 		 define variable i as integer.
