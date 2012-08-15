@@ -1,0 +1,648 @@
+ADD TABLE "xxtr_hist"
+  AREA "Schema Area"
+  DUMP-NAME "xxtr_his"
+
+ADD FIELD "xxtr_site" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxtr_part" OF "xxtr_hist" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxtr_type" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxtr_key1" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key1"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxtr_key2" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key2"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xxtr_key3" OF "xxtr_hist" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Key3"
+  POSITION 7
+  MAX-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxtr_trnbr" OF "xxtr_hist" AS integer 
+  FORMAT ">>>>>>>>>>"
+  INITIAL "0"
+  LABEL "TRNBR"
+  POSITION 8
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xxtr_domain" OF "xxtr_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 90
+
+ADD INDEX "xxtr_idx0" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxtr_domain" ASCENDING 
+  INDEX-FIELD "xxtr_trnbr" ASCENDING 
+
+ADD INDEX "xxtr_idx1" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_domain" ASCENDING 
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+
+ADD INDEX "xxtr_idx1_part" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_domain" ASCENDING 
+  INDEX-FIELD "xxtr_key1" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx2" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_domain" ASCENDING 
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+
+ADD INDEX "xxtr_idx2_part" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_site" ASCENDING 
+  INDEX-FIELD "xxtr_key2" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD INDEX "xxtr_idx3" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_domain" ASCENDING 
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+
+ADD INDEX "xxtr_idx3_part" ON "xxtr_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxtr_site" ASCENDING 
+  INDEX-FIELD "xxtr_key3" ASCENDING 
+  INDEX-FIELD "xxtr_part" ASCENDING 
+
+ADD TABLE "xxwobmvd_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvd"
+
+ADD FIELD "xxwobmvd_woid" OF "xxwobmvd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvd_comp" OF "xxwobmvd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmvd_op" OF "xxwobmvd_det" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxwobmvd_userid" OF "xxwobmvd_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 5
+  MAX-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxwobmvd_date_mod" OF "xxwobmvd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxwobmvd_bom_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Quantity"
+  POSITION 10
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxwobmvd_cwo_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Quantity"
+  POSITION 11
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "xxwobmvd_act_qty" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Quantity"
+  POSITION 12
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "xxwobmvd_bom_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Amount"
+  POSITION 13
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "xxwobmvd_cwo_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Amount"
+  POSITION 14
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "xxwobmvd_act_amt" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Amount"
+  POSITION 15
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xxwobmvd_bom_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM UNIT"
+  POSITION 16
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xxwobmvd_cwo_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO UNIT"
+  POSITION 17
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 170
+
+ADD FIELD "xxwobmvd_act_unit" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT UNIT"
+  POSITION 18
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 180
+
+ADD FIELD "xxwobmvd_bom_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Cost"
+  POSITION 19
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 190
+
+ADD FIELD "xxwobmvd_cwo_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Cost"
+  POSITION 20
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 200
+
+ADD FIELD "xxwobmvd_act_cost" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Cost"
+  POSITION 21
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 210
+
+ADD FIELD "xxwobmvd_var_tot" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Var"
+  POSITION 22
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmvd_var_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Var"
+  POSITION 23
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmvd_domain" OF "xxwobmvd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 24
+  MAX-WIDTH 16
+  ORDER 330
+
+ADD FIELD "xxwobmvd_bom_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM DETAIL"
+  POSITION 30
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxwobmvd_cwo_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO DETAIL"
+  POSITION 31
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 310
+
+ADD FIELD "xxwobmvd_act_det" OF "xxwobmvd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT DETAIL"
+  POSITION 32
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 320
+
+ADD INDEX "xxwobmvd_idx1" ON "xxwobmvd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxwobmvd_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvd_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvd_op" ASCENDING 
+
+ADD INDEX "xxwobmvd_idx2" ON "xxwobmvd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvd_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvd_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvd_op" ASCENDING 
+
+ADD TABLE "xxwobmvm_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvm"
+
+ADD FIELD "xxwobmvm_woid" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvm_site" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxwobmvm_part" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 4
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "xxwobmvm_date" OF "xxwobmvm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Date"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxwobmvm_line" OF "xxwobmvm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxwobmvm_userid" OF "xxwobmvm_mstr" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 7
+  MAX-WIDTH 24
+  ORDER 60
+
+ADD FIELD "xxwobmvm_date_mod" OF "xxwobmvm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxwobmvm_rct_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Receipt Amt"
+  POSITION 20
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmvm_rct_qty" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Receipt Qty"
+  POSITION 21
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmvm_bom_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Cost"
+  POSITION 22
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmvm_bom_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM Amount"
+  POSITION 23
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmvm_cwo_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Cost"
+  POSITION 24
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmvm_cwo_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Amount"
+  POSITION 25
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmvm_act_cost" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Cost"
+  POSITION 26
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmvm_act_amt" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Amount"
+  POSITION 27
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmvm_var_tot" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Variance Total"
+  POSITION 28
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmvm_var_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Var Detail"
+  POSITION 29
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 290
+
+ADD FIELD "xxwobmvm_bom_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "BOM DETAIL"
+  POSITION 30
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxwobmvm_cwo_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "CWO Detail"
+  POSITION 31
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 310
+
+ADD FIELD "xxwobmvm_act_det" OF "xxwobmvm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "ACT Detail"
+  POSITION 32
+  MAX-WIDTH 20
+  EXTENT 10
+  DECIMALS 5
+  ORDER 320
+
+ADD FIELD "xxwobmvm_domain" OF "xxwobmvm_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 33
+  MAX-WIDTH 16
+  ORDER 330
+
+ADD INDEX "xxwobmvm_idx1" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_woid" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx2" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_part" ASCENDING 
+  INDEX-FIELD "xxwobmvm_site" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+  INDEX-FIELD "xxwobmvm_line" ASCENDING 
+  INDEX-FIELD "xxwobmvm_woid" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx3" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_part" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx4" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_line" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx5" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_site" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD INDEX "xxwobmvm_idx6" ON "xxwobmvm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvm_date" ASCENDING 
+
+ADD TABLE "xxwobmvr_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmvr"
+
+ADD FIELD "xxwobmvr_woid" OF "xxwobmvr_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "WO ID"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmvr_comp" OF "xxwobmvr_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 3
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmvr_qty" OF "xxwobmvr_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Quantity"
+  POSITION 4
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 30
+
+ADD FIELD "xxwobmvr_cost" OF "xxwobmvr_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "COW Quantity"
+  POSITION 5
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 40
+
+ADD FIELD "xxwobmvr_op" OF "xxwobmvr_det" AS integer 
+  FORMAT ">>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xxwobmvr_userid" OF "xxwobmvr_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 7
+  MAX-WIDTH 24
+  ORDER 60
+
+ADD FIELD "xxwobmvr_date_mod" OF "xxwobmvr_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxwobmvr_domain" OF "xxwobmvr_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 9
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD INDEX "xxwobmvr_idx1" ON "xxwobmvr_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxwobmvr_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvr_woid" ASCENDING 
+  INDEX-FIELD "xxwobmvr_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvr_op" ASCENDING 
+  INDEX-FIELD "xxwobmvr_cost" ASCENDING 
+
+ADD INDEX "xxwobmvr_idx2" ON "xxwobmvr_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmvr_domain" ASCENDING 
+  INDEX-FIELD "xxwobmvr_comp" ASCENDING 
+  INDEX-FIELD "xxwobmvr_woid" ASCENDING 
+
+.
+PSC
+cpstream=cp936
+.
+0000014014
