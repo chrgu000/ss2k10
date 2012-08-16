@@ -12,6 +12,7 @@ for each tmpbomn exclusive-lock:
     assign tbmn_sn = vi.
     assign vi = vi + 1.
 end.
+vi = vi - 1.
 for each tmpbomn no-lock:
 find first ps_mstr no-lock where ps_par = tbmn_par and ps_comp = tbmn_comp
 			 and ps_ref = tbmn_ref and ps_start = tbmn_start and tbmn_end = ps_end no-error.
@@ -46,6 +47,7 @@ output close.
              os-delete value(vfile + ".bpi").
              os-delete value(vfile + ".bpo").
        end.
+       {pxmsg.i &MSGNUM=776 &MSGARG1=tbmn_sn &MSGARG2=vi &ERRORLEVEL=1}
        
 end.   /* if cloadfile then do: */
 end.
