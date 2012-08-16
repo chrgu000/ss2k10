@@ -2,7 +2,7 @@
 /*Last modified by: Kevin, 10/15/2003                */
 
          /* DISPLAY TITLE */
-         {mfdtitle.i "++ "} /*FN07*/
+{mfdtitle.i "120816.1"} 
 
 def var year like fcs_year.         
 def var site like si_site.
@@ -110,7 +110,7 @@ repeat:
     
     output stream fcsdel to value(fcsdelfile).
     
-    for each fcs_sum where fcs_year = year
+    for each fcs_sum where fcs_domain = global_domain and fcs_year = year
                        and fcs_site >= site and fcs_site <= site1
                        and fcs_part >= part and fcs_part <= part1
                        no-lock:

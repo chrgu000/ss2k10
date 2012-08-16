@@ -51,7 +51,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "120815.1"}
 
 define new shared variable due_date like sod_due_date.
 define new shared variable due_date1 like sod_due_date.
@@ -250,10 +250,12 @@ repeat:
          end.
       end.
 
-      find ad_mstr where ad_addr = comp_addr no-lock no-error.
+      find ad_mstr where ad_domain = global_domain 
+      			         and ad_addr = comp_addr no-lock no-error.
       if available ad_mstr then do:
 
-         find ls_mstr where ls_addr = ad_addr and ls_type = "company"
+         find ls_mstr where ls_domain = global_domain 
+         	and ls_addr = ad_addr and ls_type = "company"
          no-lock no-error.
 
          if not available ls_mstr and comp_addr <> "" then do:

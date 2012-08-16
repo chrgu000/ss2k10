@@ -156,7 +156,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 i = 1.
 pageno=1.
 
-for each  tr_hist no-lock where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
+for each  tr_hist no-lock where tr_domain = global_domain 
+								 and    (tr_nbr >= nbr) and (tr_nbr <= nbr1)
                  and    (tr_effdate >= eff_date)  and  (tr_effdate <= eff_date1)
                  and    (tr_so_job >= so_job) and (tr_so_job <= so_job1)
                  and    ((tr_type = "ISS-UNP") or (tr_type = "RCT-UNP"))
@@ -164,17 +165,17 @@ for each  tr_hist no-lock where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
                  and    (tr_site >= site1 and tr_site <= site2)            /*Jch*/
                  and (tr__log01 = no or not flag1) 
                  /* USE-INDEX tr_nbr_eff,
-/*judy 05/08/05*/     EACH IN_mstr WHERE IN_part = tr_part AND IN_site = tr_site 
+/*judy 05/08/05*/     EACH IN_mstr WHERE in_domain = global_domain and IN_part = tr_part AND IN_site = tr_site 
 /*judy 05/08/05*/           AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 USE-INDEX IN_part */
      break by tr_nbr  by tr_effdate by tr_part: 
 
     IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
-         FIND FIRST IN_mstr WHERE IN_part = tr_part AND IN_site = tr_site 
+         FIND FIRST IN_mstr WHERE in_domain = global_domain and IN_part = tr_part AND IN_site = tr_site 
          AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1  NO-LOCK NO-ERROR.
        IF NOT AVAIL IN_mstr THEN NEXT.
     END.
 
-     find first pt_mstr where pt_part = tr_part no-lock no-error.
+     find first pt_mstr where pt_domain = global_domain and pt_part = tr_part no-lock no-error.
      if available pt_mstr then do:
         if i=1 then do: 
             if tr__log02 = no then do:
@@ -188,7 +189,7 @@ for each  tr_hist no-lock where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
         end.
         if tr_type="ISS-UNP" THEN  QTY = 0 - tr_qty_loc.
              ELSE  QTY = TR_QTY_loc.
-          FIND FIRST IN_mstr WHERE IN_part = tr_part AND IN_site = tr_site  NO-LOCK NO-ERROR.   
+          FIND FIRST IN_mstr WHERE in_domain = global_domain and IN_part = tr_part AND IN_site = tr_site  NO-LOCK NO-ERROR.   
         display tr_part format "x(18)"   pt_desc2 format "x(22)"  " "
             QTY  " "   tr_effdate FORMAT "99/99/99" "  " tr_loc format "x(8)"  
   /*judy 05/08/0 5*/          /*pt_article*/
@@ -211,7 +212,8 @@ end.
  
 
 /*{mfphead.i}*/
-for each  tr_hist where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
+for each  tr_hist where tr_domain = global_domain 
+								 and    (tr_nbr >= nbr) and (tr_nbr <= nbr1)
                  and    (tr_effdate >= eff_date)  and  (tr_effdate <= eff_date1)
                  and    (tr_so_job >= so_job) and (tr_so_job <= so_job1)
                  and    ((tr_type = "ISS-UNP") or (tr_type = "RCT-UNP"))
@@ -222,7 +224,7 @@ for each  tr_hist where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
                       
  /*judy 05/08/05*/
  IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
-      FIND FIRST IN_mstr WHERE IN_part = tr_part AND IN_site = tr_site 
+      FIND FIRST IN_mstr WHERE in_domain = global_domain and IN_part = tr_part AND IN_site = tr_site 
            AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 USE-INDEX IN_part NO-LOCK NO-ERROR.
       IF NOT AVAIL IN_mstr THEN  NEXT.
  END.

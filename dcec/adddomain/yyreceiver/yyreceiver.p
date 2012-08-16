@@ -94,7 +94,7 @@ DEFINE VARIABLE F-a-title AS CHARACTER.
    RECT-FRAME:HEIGHT-PIXELS in frame a =
    FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
    RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.
-&UNDEFINE PP_FRAME_NAME	  
+&UNDEFINE PP_FRAME_NAME   
    /* SET EXTERNAL LABELS */
          setFrameLabels(frame a:handle).
 /*K0ZX*/ {wbrp01.i}
@@ -163,36 +163,47 @@ form "DCP-03-17-00-02 F002" skip(1)
    pageno = 1.
    i = 1.
    j = 1.
-   for each prh_hist no-lock  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_site >= site1)
-                                        and (prh_site <= site2)
-                                        and (prh_rcp_date >= date_from) 
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh__log01 = no or not flag1) 
-                                        and (prh_rcp_type <> "R")  USE-INDEX prh_receiver
-/*judy 05/07/28*//*  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
+   for each prh_hist no-lock  where prh_domain = global_domain 
+                               and (prh_nbr >= nbr_from) 
+                               and (prh_nbr <= nbr_to) 
+                               and (prh_receiver >= rcv_from) 
+                               and (prh_receiver <= rcv_to) 
+                               and (prh_vend >= sup_from) 
+                               and (prh_vend <= sup_to) 
+                               and (prh_site >= site1)
+                               and (prh_site <= site2)
+                               and (prh_rcp_date >= date_from) 
+                               and (prh_rcp_date <= date_to)
+                               and (prh__log01 = no or not flag1) 
+                               and (prh_rcp_type <> "R")  USE-INDEX prh_receiver
+/*judy 05/07/28*//*  EACH IN_mstr WHERE in_domain = global_domain and IN_part = prh_part AND IN_site = prh_site 
 /*judy 05/07/28*/     AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK  */
                                         break by prh_receiver by prh_line :
 IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
-	          and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
+             FIND FIRST in_mstr where in_domain = global_domain 
+                    and in_site = prh_site and in_part = prh_part
+            and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
   END.
 
-     find first tr_hist where tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
+     find first tr_hist where tr_domain = global_domain 
+            and tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line 
+            and tr_type="rct-po" and tr_lot=prh_receiver 
+            AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:
-        find first po_mstr where po_nbr=prh_nbr no-lock no-error.                             
-        find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-        find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
-        find first pt_mstr where pt_part = prh_part no-lock no-error.
-        find first ptp_det where ptp_part = prh_part /* and ptp_ins_rqd = no*/ and ptp_site >=site1 and ptp_site <= site2 no-lock no-error.
+        find first po_mstr where po_domain = global_domain 
+               and po_nbr=prh_nbr no-lock no-error.                             
+        find first ad_mstr where ad_domain = global_domain 
+               and ad_addr = prh_vend no-lock no-error.
+        find first pod_det where pod_domain = global_domain 
+               and pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
+        find first pt_mstr where pt_domain = global_domain 
+               and pt_part = prh_part no-lock no-error.
+        find first ptp_det where ptp_domain = global_domain 
+               and ptp_part = prh_part /* and ptp_ins_rqd = no*/ 
+               and ptp_site >=site1 and ptp_site <= site2 no-lock no-error.
         if available ptp_det and pod_type <>"S" and pod_type<>"M"  then DO:
            if  i = 1  then do:
              IF  prh__log01 = yes then 
@@ -200,14 +211,17 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
              ELSE
                 duplicate = "原本".
              DISP WITH FRAME B.
-/*judy 05/07/28*/ /*  find first in_mstr where in_part = prh_part no-lock no-error.*/
+/*judy 05/07/28*/ /*  find first in_mstr where in__domain = global_domain and 
+																 in_part = prh_part no-lock no-error.*/
              disp duplicate ad_name pageno  pdate prh_receiver prh_rcp_date prh_vend prh_nbr revision 
                    vend_phone po_due_date prh_ps_nbr  
 /*judy 05/07/28*/ /*  in__qadc01 @ pt_article*/
                   po_rmks at 1 with frame HEAD-b.                   
-             find first po_mstr where po_nbr = prh_nbr no-lock no-error.
+             find first po_mstr where po_domain = global_domain 
+                    and po_nbr = prh_nbr no-lock no-error.
              if available po_mstr and po_cmtindx <> 0 then DO:
-                   find first cmt_det where (cmt_indx = po_cmtindx ) no-lock no-error.
+                   find first cmt_det where cmt_domain = global_domain 
+                         and (cmt_indx = po_cmtindx ) no-lock no-error.
                    repeat:
                     if cmt_indx <> po_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -219,7 +233,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                       end.
                      find next cmt_det use-index cmt_ref no-lock no-error.                     
                     end.
-                /* find cmt_det where cmt_indx = po_cmtindx no-lock no-error.
+                /* find cmt_det where cmt_domain = global_domain 
+                    and cmt_indx = po_cmtindx no-lock no-error.
                  if available cmt_det and lookup("rc",cmt_print) > 0 then
                   do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
@@ -231,7 +246,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
              disp with frame e1.
            end.
            i = i + 1.
-          FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part NO-LOCK NO-ERROR.
+          FIND FIRST  in_mstr where in_domain = global_domain 
+                  and in_site = prh_site and in_part = prh_part NO-LOCK NO-ERROR.
 
            disp prh_part pt_desc2 format "x(20)" prh_rcp_date prh_rcvd format "->>>>>>>>9.999" 
                prh_ps_qty format "->>>>>>>>>9.999"  prh_line format ">>>>" prh_um format "x(2)" 
@@ -239,7 +255,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
 /*judy 05/07/28*/ in__qadc01 WHEN AVAIL IN_mstr   with no-box no-labels width 250 frame c1 down.
 
            if available pod_det and pod_cmtindx <>0 then do:
-                   find first cmt_det where (cmt_indx = pod_cmtindx  ) no-lock no-error.
+                   find first cmt_det where cmt_domain = global_domain 
+                         and (cmt_indx = pod_cmtindx  ) no-lock no-error.
                    repeat:
                     if cmt_indx <> pod_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -252,7 +269,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                      find next cmt_det use-index cmt_ref no-lock no-error.                     
                     end.
 
- /*              find cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
+ /*              find cmt_det where cmt_domain = global_domain 
+                  and cmt_indx = pod_cmtindx no-lock no-error.
                  if available cmt_det and lookup("rc",cmt_print) > 0 then
                  do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
@@ -288,35 +306,46 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
        with no-box side-labels width 180 frame wt2.    
     
   j = 1.    
-  for each prh_hist no-lock  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_rcp_date >= date_from) 
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh_rcp_type <> "R")
-                                        use-index prh_receiver  
+  for each prh_hist no-lock  where prh_domain = global_domain 
+                              and (prh_nbr >= nbr_from) 
+                              and (prh_nbr <= nbr_to) 
+                              and (prh_receiver >= rcv_from) 
+                              and (prh_receiver <= rcv_to) 
+                              and (prh_vend >= sup_from) 
+                              and (prh_vend <= sup_to) 
+                              and (prh_rcp_date >= date_from) 
+                              and (prh_rcp_date <= date_to)
+                              and (prh_rcp_type <> "R")
+                              use-index prh_receiver  
       /*,
-/*judy 05/07/28*/  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
-/*judy 05/07/28*/    AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK  */
+/*judy 05/07/28*/  EACH IN_mstr WHERE in_domain = global_domain 
+                    and IN_part = prh_part AND IN_site = prh_site 
+/*judy 05/07/28*/   AND in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK  */
                                         break by prh_receiver by prh_line:
 
       IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                /*   MESSAGE "AA" xxkeeper xxkeeper1.
                   PAUSE.*/
-                   FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
+                   FIND FIRST in_mstr where in_domain = global_domain 
+                          and in_site = prh_site and in_part = prh_part
                     and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
                    IF NOT AVAIL IN_mstr  THEN NEXT.
         END.
 
-     find first tr_hist where tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
+     find first tr_hist where tr_domain = global_domain 
+            and tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line 
+            and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 
+            AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:                                        
-           find first po_mstr where po_nbr=prh_nbr no-lock no-error.                            
-           find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-           find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line and pod_type="S" no-lock no-error.
-           find first pt_mstr where pt_part = prh_part no-lock no-error.           
+           find first po_mstr where po_domain = global_domain 
+                  and po_nbr=prh_nbr no-lock no-error.                            
+           find first ad_mstr where ad_domain = global_domain 
+                  and ad_addr = prh_vend no-lock no-error.
+           find first pod_det where pod_domain = global_domain 
+                  and pod_nbr = prh_nbr and pod_line = prh_line 
+                  and pod_type="S" no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain 
+                  and pt_part = prh_part no-lock no-error.           
            if (available pt_mstr)  and (available pod_det) then do:
               if  j = 1  then do:
                  if  prh__log01 = yes then               
@@ -327,9 +356,11 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                  disp duplicate  ad_name pageno pdate prh_receiver prh_rcp_date prh_vend prh_nbr revision
                    vend_phone po_due_date prh_ps_nbr 
                 /*judy 05/07/28*/ /*  pt_article  */ po_rmks at 1 with frame head-b.
-                 find first po_mstr where po_nbr = prh_nbr no-lock no-error.
+                 find first po_mstr where po_domain = global_domain 
+                        and po_nbr = prh_nbr no-lock no-error.
                  if available po_mstr and po_cmtindx <> 0 then DO:
-                  find first cmt_det where (cmt_indx = po_cmtindx  ) no-lock no-error.
+                  find first cmt_det where cmt_domain = global_domain 
+                        and (cmt_indx = po_cmtindx  ) no-lock no-error.
                   repeat:
                     if cmt_indx <> po_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -345,7 +376,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                  disp with frame e1.
               end.
               j = j + 1.
-              FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part NO-LOCK NO-ERROR.
+              FIND FIRST  in_mstr where in_domain = global_domain 
+                      and in_site = prh_site and in_part = prh_part NO-LOCK NO-ERROR.
               if available pt_mstr then 
                  disp prh_part pt_desc2 format "x(20)" prh_rcp_date prh_rcvd format "->>>>9.999" prh_ps_qty format "->>>>9.999"  
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr  "  "
@@ -355,7 +387,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date  tr_trnbr "零件号不存在"  " "
 /*judy 05/07/28*/ in__qadc01 WHEN AVAIL IN_mstr  with no-box no-labels width 250 frame cw4 down.
               if available pod_det  and pod_cmtindx <>0 then do:
-                 find first cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
+                 find first cmt_det where cmt_domain = global_domain 
+                        and cmt_indx = pod_cmtindx no-lock no-error.
                   repeat:
                     if cmt_indx <> pod_cmtindx then leave.                    
                     if available cmt_det and lookup("rv",cmt_print) > 0 then
@@ -390,33 +423,44 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
      "标注:M类型的入库单据" at 1      
        with no-box side-labels width 180 frame bM2.    
   j = 1.    
-  for each prh_hist no-lock  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_rcp_date >= date_from) 
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh_rcp_type <> "R")
-                                        use-index prh_receiver /*  ,
-/*judy 05/07/28*/  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
+  for each prh_hist no-lock  where prh_domain = global_domain 
+                              and (prh_nbr >= nbr_from) 
+                              and (prh_nbr <= nbr_to) 
+                              and (prh_receiver >= rcv_from) 
+                              and (prh_receiver <= rcv_to) 
+                              and (prh_vend >= sup_from) 
+                              and (prh_vend <= sup_to) 
+                              and (prh_rcp_date >= date_from) 
+                              and (prh_rcp_date <= date_to)
+                              and (prh_rcp_type <> "R")
+                              use-index prh_receiver /*  ,
+/*judy 05/07/28*/  EACH IN_mstr WHERE in_domain = global_domain 
+                    and IN_part = prh_part AND IN_site = prh_site 
 /*judy 05/07/28*/     AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK     */
                                         break by prh_receiver by prh_line:
 IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
-	          and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
+             FIND FIRST in_mstr where in_domain = global_domain 
+                    and in_site = prh_site and in_part = prh_part
+            and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
   END.
 
-     find first tr_hist where tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
+     find first tr_hist where tr_domain = global_domain 
+            and tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line 
+            and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 
+            AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:
-           find first po_mstr where po_nbr=prh_nbr no-lock no-error.                             
-           find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-           find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line and (pod_type="M" or pod_type="m") no-lock no-error.
-           find first pt_mstr where pt_part = prh_part no-lock no-error.           
+           find first po_mstr where po_domain = global_domain 
+                  and po_nbr=prh_nbr no-lock no-error.                             
+           find first ad_mstr where ad_domain = global_domain 
+                  and ad_addr = prh_vend no-lock no-error.
+           find first pod_det where pod_domain = global_domain 
+           			  and pod_nbr = prh_nbr and pod_line = prh_line 
+           			  and (pod_type="M" or pod_type="m") no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain 
+           			  and pt_part = prh_part no-lock no-error.           
            if (available pt_mstr)  and (available pod_det) then do:
               if  j = 1  then do:
                   if prh__log01 = yes then
@@ -427,9 +471,11 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                   disp duplicate ad_name pageno pdate prh_receiver prh_rcp_date prh_vend prh_nbr revision
                    vend_phone po_due_date prh_ps_nbr 
       /*judy 05/07/28*/ /*pt_article*/  po_rmks at 1 with frame head-b.
-                  find first po_mstr where po_nbr = prh_nbr no-lock no-error.
+                  find first po_mstr where po_domain = global_domain 
+                  			 and po_nbr = prh_nbr no-lock no-error.
                   if available po_mstr and po_cmtindx <> 0 then DO:
-                  find first cmt_det where cmt_indx = po_cmtindx  no-lock no-error.
+                  find first cmt_det where cmt_domain = global_domain 
+                  			 and cmt_indx = po_cmtindx  no-lock no-error.
                   repeat:
                     if cmt_indx <> po_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -441,7 +487,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                       end.
                      find next cmt_det use-index cmt_ref no-lock no-error.                     
                     end.                  
-            /*       find cmt_det where cmt_indx = po_cmtindx no-lock .
+            /*       find cmt_det where cmt_domain = global_domain 
+                      and cmt_indx = po_cmtindx no-lock .
                      if available cmt_det and lookup("rc",cmt_print) > 0 then
                         do k = 1 to 15 :
                          if  cmt_cmmt[k] <> "" then do :
@@ -453,7 +500,9 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                   disp with frame e1.
               end.
               j = j + 1.
-            FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part   NO-LOCK NO-ERROR.
+            FIND FIRST in_mstr where in_domain = global_domain 
+            			 and in_site = prh_site and in_part = prh_part 
+            			 NO-LOCK NO-ERROR.
               if available pt_mstr then 
                  disp prh_part pt_desc2 format "x(20)" prh_rcp_date prh_rcvd format "->>>>9.999" prh_ps_qty format "->>>>9.999" 
                          prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr  " "
@@ -463,7 +512,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                       prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr "零件号不存在"  
 /*judy 05/07/28*/ in__qadc01 WHEN AVAIL IN_mstr  with no-box no-labels width 250 frame cm4 down.
               if available pod_det  and pod_cmtindx <>0 then do:
-                  find first cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
+                  find first cmt_det where cmt_domain = global_domain 
+                  			 and cmt_indx = pod_cmtindx no-lock no-error.
                   repeat:
                     if cmt_indx <> pod_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -476,7 +526,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                      find next cmt_det use-index cmt_ref no-lock no-error.                     
                     end.                  
 
-   /*            find cmt_det where cmt_indx = pod_cmtindx no-lock.
+   /*            find cmt_det where cmt_domain = global_domain 
+   						    and cmt_indx = pod_cmtindx no-lock.
                  if available cmt_det and lookup("rc",cmt_print) > 0 then
               do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
@@ -513,39 +564,52 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
      skip "-------------------------------------------------------------------------------------------------"
      with no-box side-labels width 180 frame e6.     
   j = 1.    
-  for each prh_hist no-lock  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_site >= site1)
-                                        and (prh_site <= site2)
-                                        and (prh_site <> "dcec-b")
-                                        and (prh_site <> "dcec-c")
-                                        and (prh_rcp_date >= date_from) 
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh_rcp_type <> "R")
-                                        use-index prh_receiver /*,
-/*judy 05/07/28*/  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
+  for each prh_hist no-lock  where prh_domain = global_domain 
+  													  and (prh_nbr >= nbr_from) 
+                              and (prh_nbr <= nbr_to) 
+                              and (prh_receiver >= rcv_from) 
+                              and (prh_receiver <= rcv_to) 
+                              and (prh_vend >= sup_from) 
+                              and (prh_vend <= sup_to) 
+                              and (prh_site >= site1)
+                              and (prh_site <= site2)
+                              and (prh_site <> "dcec-b")
+                              and (prh_site <> "dcec-c")
+                              and (prh_rcp_date >= date_from) 
+                              and (prh_rcp_date <= date_to)
+                              and (prh_rcp_type <> "R")
+                              use-index prh_receiver /*,
+/*judy 05/07/28*/  EACH IN_mstr WHERE in_domain = global_domain 
+									  and IN_part = prh_part AND IN_site = prh_site 
 /*judy 05/07/28*/     AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK */ 
                                         break by prh_receiver by prh_line:
 IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
-	          and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
+             FIND FIRST in_mstr where in_domain = global_domain 
+             				and in_site = prh_site and in_part = prh_part
+            and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
   END.
-     find first tr_hist where tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="rct-po" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
+     find first tr_hist where tr_domain = global_domain and tr_part=prh_part 
+     			  and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="rct-po" 
+     			  and tr_lot=prh_receiver AND tr_userid>= userid1 
+     			  AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:
-           find first po_mstr where po_nbr=prh_nbr no-lock no-error.                             
-           find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-           find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
-           find first pt_mstr where pt_part = prh_part no-lock no-error.
-  /*judy 05/07/28*/ /*  find first in_mstr where in_part = prh_part no-lock no-error.*/
+           find first po_mstr where po_domain = global_domain 
+           			  and po_nbr=prh_nbr no-lock no-error.                             
+           find first ad_mstr where ad_domain = global_domain 
+           				and ad_addr = prh_vend no-lock no-error.
+           find first pod_det where pod_domain = global_domain 
+           			  and pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain 
+           			  and pt_part = prh_part no-lock no-error.
+  /*judy 05/07/28*/ /*  find first in_mstr where in_domain = global_domain 
+  														 and in_part = prh_part no-lock no-error.*/
  
-           find first ptp_det where ptp_part = prh_part and Ptp_site >= site1 and ptp_site <= site2 no-lock no-error.
+           find first ptp_det where ptp_domain = global_domain 
+           				and ptp_part = prh_part and Ptp_site >= site1 
+           				and ptp_site <= site2 no-lock no-error.
            
            if ((not(available pt_mstr)) or ((available ptp_det and ptp_INS_RQD = yes))) and pod_type <>"S" and pod_type<>"s" and pod_type <>"m" and pod_type<>"M" then do:
               if  j = 1  then do: 
@@ -558,9 +622,11 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                    vend_phone po_due_date prh_ps_nbr 
                     /*judy 05/07/28*/ /* in__qadc01 @ pt_article*/
                      po_rmks at 1 with frame head-b.
-                find first po_mstr where po_nbr = prh_nbr no-lock no-error.
+                find first po_mstr where po_domain = global_domain 
+                			 and po_nbr = prh_nbr no-lock no-error.
                 if available po_mstr and po_cmtindx <> 0 then DO:
-                  find first cmt_det where cmt_indx = po_cmtindx no-lock no-error.
+                  find first cmt_det where cmt_domain = global_domain 
+                  			 and cmt_indx = po_cmtindx no-lock no-error.
                   repeat:
                     if cmt_indx <> po_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -583,7 +649,9 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                 disp with frame e6.
               end.
               j = j + 1.
-              FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part   NO-LOCK NO-ERROR.
+              FIND FIRST in_mstr where in_domain = global_domain 
+              			 and in_site = prh_site and in_part = prh_part 
+              			 	   NO-LOCK NO-ERROR.
               if available pt_mstr then 
                  disp prh_part pt_desc2 format "x(20)" prh_rcp_date prh_rcvd format "->>>>9.999" prh_ps_qty format "->>>>9.999"  
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr " "
@@ -593,7 +661,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr "零件号不存在"
    /*judy 05/07/28*/ in__qadc01 WHEN AVAIL IN_mstr  with no-box no-labels width 250 frame c4 down.
               if available pod_det  and pod_cmtindx <>0 then do:
-                  find first cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
+                  find first cmt_det where cmt_domain = global_domain 
+                  			 and cmt_indx = pod_cmtindx no-lock no-error.
                   repeat:
                     if cmt_indx <> pod_cmtindx then leave.                    
                     if available cmt_det and lookup("rc",cmt_print) > 0 then
@@ -605,7 +674,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                       end.
                      find next cmt_det use-index cmt_ref no-lock no-error.                     
                     end.          
-      /*           find cmt_det where cmt_indx = pod_cmtindx no-lock.
+      /*           find cmt_det where cmt_domain = global_domain 
+      							and cmt_indx = pod_cmtindx no-lock.
                  if available cmt_det and lookup("rc",cmt_print) > 0 then
               do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
@@ -642,33 +712,43 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
      with no-box side-labels width 180 frame e5.     
       
   j = 1.    
-  for each prh_hist no-lock  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_rcp_date >= date_from)
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh_rcp_type = "R")
-                                        use-index prh_receiver /*,
-/*judy 05/07/28*/  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
+  for each prh_hist no-lock  where prh_domain = global_domain 
+  														and (prh_nbr >= nbr_from) 
+                              and (prh_nbr <= nbr_to) 
+                              and (prh_receiver >= rcv_from) 
+                              and (prh_receiver <= rcv_to) 
+                              and (prh_vend >= sup_from) 
+                              and (prh_vend <= sup_to) 
+                              and (prh_rcp_date >= date_from)
+                              and (prh_rcp_date <= date_to)
+                              and (prh_rcp_type = "R")
+                              use-index prh_receiver /*,
+/*judy 05/07/28*/  EACH IN_mstr WHERE in_domain = global_domain 
+									  and IN_part = prh_part AND IN_site = prh_site 
 /*judy 05/07/28*/     AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK  */
                                break by prh_receiver by prh_line:
 IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
-	          and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
+             FIND FIRST in_mstr where in_domain = global_domain 
+             				and in_site = prh_site and in_part = prh_part
+            and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
   END.
 
-     find first tr_hist where tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="iss-prv" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
+     find first tr_hist where tr_domain = global_domain 
+     				and tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line
+     			  and tr_type="iss-prv" and tr_lot=prh_receiver 
+     			  AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:
-           find first po_mstr where po_nbr=prh_nbr no-lock no-error.                             
-           find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-           find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
-           find first pt_mstr where pt_part = prh_part no-lock no-error.
+           find first po_mstr where po_domain = global_domain 
+           		    and po_nbr=prh_nbr no-lock no-error.                             
+           find first ad_mstr where ad_domain = global_domain 
+           				and ad_addr = prh_vend no-lock no-error.
+           find first pod_det where pod_domain = global_domain 
+           				and pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain 
+           				and pt_part = prh_part no-lock no-error.
               if  j = 1  then do:
                  if prh__log01 = yes then 
                    duplicate="**副本".
@@ -678,9 +758,11 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                  disp duplicate ad_name pageno pdate prh_receiver prh_rcp_date prh_vend prh_nbr revision
                    vend_phone po_due_date prh_ps_nbr 
                      /*judy 05/07/28*/ /*pt_article*/  po_rmks at 1 with frame head-b.
-                 find first po_mstr where po_nbr = prh_nbr no-lock no-error.
+                 find first po_mstr where po_domain = global_domain 
+                 				and po_nbr = prh_nbr no-lock no-error.
                  if available po_mstr and po_cmtindx <> 0 then DO:
-                    find first cmt_det where cmt_indx = po_cmtindx no-lock no-error.
+                    find first cmt_det where cmt_domain = global_domain 
+                    			 and cmt_indx = po_cmtindx no-lock no-error.
                     repeat:
                       if cmt_indx <> po_cmtindx then leave.                    
                     if available cmt_det and lookup("rv",cmt_print) > 0 then
@@ -697,7 +779,9 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
               end.
               j = j + 1.
               prhqty = 0 - prh_rcvd.
-              FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part   NO-LOCK NO-ERROR.
+              FIND FIRST in_mstr where in_domain = global_domain 
+              			 and in_site = prh_site and in_part = prh_part
+              			     NO-LOCK NO-ERROR.
               if available pt_mstr then 
                  disp prh_part pt_desc2 format "x(20)" prh_rcp_date prhqty format "->>>>>9.999" prh_ps_qty format "->>>>9.999"  
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr "  "
@@ -707,7 +791,8 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                         prh_line format ">>>>" prh_um format "x(2)" pod_due_date tr_trnbr "零件号不存在" 
   /*judy 05/07/28*/ in__qadc01  WHEN AVAIL IN_mstr  with no-box no-labels width 250 frame c6 down.
               if available pod_det  and pod_cmtindx <>0 then do:
-                 find first cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
+                 find first cmt_det where cmt_domain = global_domain 
+                 			  and cmt_indx = pod_cmtindx no-lock no-error.
                  repeat:
                  if cmt_indx <> pod_cmtindx then leave.                 
                  if available cmt_det and lookup("rv",cmt_print) > 0 then
@@ -743,23 +828,26 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
 
 /*Report-to-Window*/
 /*  if dev <> "terminal" then do: */
-      for each prh_hist  where (prh_nbr >= nbr_from) 
-                                        and (prh_nbr <= nbr_to) 
-                                        and (prh_receiver >= rcv_from) 
-                                        and (prh_receiver <= rcv_to) 
-                                        and (prh_vend >= sup_from) 
-                                        and (prh_vend <= sup_to) 
-                                        and (prh_rcp_date >= date_from) 
-                                        and (prh_rcp_date <= date_to)
-                                        and (prh__log01 = no or not flag1) USE-INDEX prh_receiver /*,
-/*judy 05/07/28*/  EACH IN_mstr WHERE IN_part = prh_part AND IN_site = prh_site 
+      for each prh_hist  where prh_domain = global_domain 
+      										and (prh_nbr >= nbr_from) 
+                          and (prh_nbr <= nbr_to) 
+                          and (prh_receiver >= rcv_from) 
+                          and (prh_receiver <= rcv_to) 
+                          and (prh_vend >= sup_from) 
+                          and (prh_vend <= sup_to) 
+                          and (prh_rcp_date >= date_from) 
+                          and (prh_rcp_date <= date_to)
+                          and (prh__log01 = no or not flag1) USE-INDEX prh_receiver /*,
+/*judy 05/07/28*/  EACH IN_mstr WHERE in_domain = global_domain 
+								    and IN_part = prh_part AND IN_site = prh_site 
 /*judy 05/07/28*/     AND  in__qadc01 >= keeper AND in__qadc01 <= keeper1 NO-LOCK*/  
                                         break by prh_receiver by prh_line:
   IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = prh_site and in_part = prh_part
-	          and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
+             FIND FIRST in_mstr where in_domain = global_domain 
+             			  and in_site = prh_site and in_part = prh_part
+            and in__qadc01 >= keeper and in__qadc01 <= keeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
   END.
                                         prh__log01 = yes.      

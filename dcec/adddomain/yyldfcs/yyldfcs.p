@@ -1,7 +1,7 @@
 /*yyldfc.p designed by Philips Li for forecast-loading by excel           03/31/08*/
 /*Last Modified by Philips Li              eco:phi002               04/29/08  */
 /*Last Modified by Philips Li              eco:phi003               05/06/08  */
-{mfdtitle.i "e+"}
+{mfdtitle.i "120816.1"}
 
 DEFINE VARIABLE src_file AS CHAR FORMAT "x(40)".
 DEFINE VARIABLE lg_file AS CHAR FORMAT "x(40)".
@@ -206,7 +206,8 @@ REPEAT:
             /*data checking*/
 
            /*site checking*/                
-          FIND FIRST si_mstr WHERE si_site = yyfcs_site NO-LOCK NO-ERROR.
+          FIND FIRST si_mstr WHERE si_domain = global_domain 
+          			 and si_site = yyfcs_site NO-LOCK NO-ERROR.
           IF NOT AVAIL si_mstr THEN DO:
               worksheet:Range(CHR(65 + colnum) + STRING(i)):VALUE = "地点不存在！". 
               isvalid = NO.
@@ -216,7 +217,8 @@ REPEAT:
 
            /*part not exist in pt_mstr*/
            IF isvalidline = YES THEN DO: 
-               FIND FIRST pt_mstr WHERE pt_part = yyfcs_part NO-LOCK NO-ERROR.
+               FIND FIRST pt_mstr WHERE pt_domain = global_domain 
+               				and pt_part = yyfcs_part NO-LOCK NO-ERROR.
                   IF NOT AVAIL pt_mstr THEN DO:
                   worksheet:Range(CHR(65 + colnum) + STRING(i)):VALUE = "零件号不在pt_mstr中！". 
                   isvalid = NO.
@@ -227,9 +229,11 @@ REPEAT:
 
            /*part state checking*/
            IF isvalidline THEN DO:  
-              FIND FIRST pt_mstr WHERE pt_part = yyfcs_part NO-LOCK NO-ERROR.
+              FIND FIRST pt_mstr WHERE pt_domain = global_domain 
+              			 and pt_part = yyfcs_part NO-LOCK NO-ERROR.
               IF AVAIL pt_mstr THEN DO:
-                  FIND FIRST isd_det WHERE isd_status MATCHES pt_status + "*" 
+                  FIND FIRST isd_det WHERE isd_domain = global_domain 
+                  			 and isd_status MATCHES pt_status + "*" 
                                      AND isd_tr_type = "add-fc" NO-LOCK NO-ERROR.
                   IF AVAIL isd_det THEN DO:
                       worksheet:Range(CHR(65 + colnum) + STRING(i)):VALUE = "该零件状态不允许预进行测操作！". 
@@ -385,7 +389,7 @@ REPEAT:
                  IF yyfcs_fcst2[k] = 0 THEN
                      PUT STREAM cim UNFORMATTED  "0 ".
                  ELSE
-                     PUT STREAM cim UNFORMATTED    yyfcs_fcst2[k] " ".
+                     PUT STREAM cim UNFORMATTED yyfcs_fcst2[k] " ".
                  
              END.
              PUT STREAM cim UNFORMATTED SKIP.

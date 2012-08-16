@@ -7,7 +7,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-/*GI32*/ {mfdtitle.i "E"}
+{mfdtitle.i "120816.1"}
 
 def var site like si_site.
 def var site1 like si_site.
@@ -134,7 +134,7 @@ repeat:
 
    /*search the template file*/
    /*if search("\\dcecssy006\dcec_erp\kevin\template\PO planning form template.xlt") = ? then do:*/
-  if search("\\qadtemp\appeb2\template\purchase\PO planning form template.xlt") = ? then do: 
+  if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt") = ? then do: 
       message "报表模板不存在!" view-as alert-box error.
       undo,retry.
    end.
@@ -147,16 +147,19 @@ repeat:
        delete xxwk.
     end. 
     
-    for each pod_det where (pod_site >= site and pod_site <= site1)
+    for each pod_det where pod_domain = global_domain 
+    									 and (pod_site >= site and pod_site <= site1)
                        and (pod_part >= part and pod_part <= part1) no-lock,
-        each po_mstr where po_nbr = pod_nbr
-                       and po_sched
+        each po_mstr where po_domain = global_domain 
+        							 and po_nbr = pod_nbr  and po_sched
                        and (po_vend >= vend and po_vend <= vend1) no-lock,
-        each pt_mstr where pt_part = pod_part no-lock,
-  /*phi      each ptp_det where ptp_site = pod_site
+        each pt_mstr where pt_domain = global_domain 
+        		 				   and pt_part = pod_part no-lock,
+  /*phi      each ptp_det where ptp_domain = global_domain 
+  										 and ptp_site = pod_site
                        and ptp_part = pt_part 
                        and (ptp_buyer >= buyer and ptp_buyer <= buyer1) no-lock,*/
-        each schd_det where schd_type = 4
+        each schd_det where schd_domain = global_domain and schd_type = 4
                      and schd_rlse_id = pod_curr_rlse_id[1] 
                        and schd_nbr = pod_nbr 
                        and schd_line = pod_line 
@@ -164,12 +167,14 @@ repeat:
                        and (schd_date >= start and schd_date <= start + 100) no-lock:              /*kevin*/
         /*break by ptp_buyer by po_vend:*/
   
-        FOR  each ptp_det where ptp_site = pod_site
-                       and ptp_part = pt_part 
+        FOR  each ptp_det where ptp_domain = global_domain
+        					     and ptp_site = pod_site  and ptp_part = pt_part 
                        and (ptp_buyer >= buyer and ptp_buyer <= buyer1) no-lock:
       
    
-/*phi*/ FIND FIRST code_mstr WHERE code_fldname = "ptp_buyer" AND code_value = ptp_buyer NO-LOCK NO-ERROR.
+/*phi*/ FIND FIRST code_mstr WHERE code_domain = global_domain 
+							 and code_fldname = "ptp_buyer"
+							 AND code_value = ptp_buyer NO-LOCK NO-ERROR.
         find first xxwk where xxwk.buyer = ptp_buyer
                          and xxwk.vend = po_vend
                          and xxwk.site = pod_site
@@ -202,15 +207,18 @@ repeat:
 
         RELEASE xxwk.
 
-        FOR each ptp_det where ptp_site = pod_site
+        FOR each ptp_det where ptp_domain = global_domain and ptp_site = pod_site
                        and ptp_part = pt_part no-lock:
-        FIND FIRST code_mstr WHERE code_fldname = "ptp_buyer" AND code_value = ptp_buyer NO-LOCK NO-ERROR.
+        FIND FIRST code_mstr WHERE code_domain = global_domain 
+        			 and code_fldname = "ptp_buyer" 
+        			 and code_value = ptp_buyer NO-LOCK NO-ERROR.
         IF AVAIL code_mstr THEN DO:
             tempbuyer = code_value.
             tempname = substr(code_cmmt,index(code_cmmt,",") + 1,length(code_cmmt,"raw") - index(code_cmmt,","),"raw").
             FIND FIRST code_mstr WHERE tempname = substr(code_cmmt,index(code_cmmt,",") + 1,length(code_cmmt,"raw") - index(code_cmmt,","),"raw") 
-                                       AND code_fldname = "ptp_buyer" AND code_value >= buyer AND code_value <= buyer1 
-                                       AND code_value <> tempbuyer NO-LOCK NO-ERROR.
+            											 and code_domain = global_domain
+                                   AND code_fldname = "ptp_buyer" AND code_value >= buyer AND code_value <= buyer1 
+                                   AND code_value <> tempbuyer NO-LOCK NO-ERROR.
             IF AVAIL code_mstr THEN DO:
        
             find first xxwk where xxwk.buyer = ptp_buyer
@@ -265,7 +273,7 @@ repeat:
                   
          /*Create a new workbook based on the template chExcel file */
          /*chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy006\dcec_erp\kevin\template\PO planning form template.xlt").*/
-        chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\appeb2\template\purchase\PO planning form template.xlt"). 
+        chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt"). 
          /* Set Excel Format Variable.*/
          iHeaderLine = 18.
          iLine = iHeaderLine + 1.
@@ -284,7 +292,8 @@ repeat:
            chExcelWorkbook:worksheets(1):cells(7,"V"):value = today.
            
            chExcelWorkbook:worksheets(1):cells(9,"D"):value = xxwk.vend.
-           find first ad_mstr where (ad_type = "supplier" or ad_type = "vendor")
+           find first ad_mstr where ad_domain = global_domain 
+           									  and (ad_type = "supplier" or ad_type = "vendor")
                               and ad_addr = xxwk.vend no-lock no-error.
            if available ad_mstr then do:
               chExcelWorkbook:worksheets(1):cells(10,"D"):value = ad_name.
@@ -294,16 +303,18 @@ repeat:
               chExcelWorkbook:worksheets(1):cells(15,"D"):value = ad_fax.
            end.
            
-           find vd_mstr where vd_addr = xxwk.vend no-lock no-error.
+           find vd_mstr where vd_domain = global_domain 
+           	and vd_addr = xxwk.vend no-lock no-error.
          if available vd_mstr then 
              chExcelWorkbook:worksheets(1):cells(16,"D"):value = vd_rmks.
            
-/*phi           find code_mstr where code_fldname = "ptp_buyer" and code_value = xxwk.buyer no-lock no-error.
+/*phi           find code_mstr where code_domain = global_domain and code_fldname = "ptp_buyer" and code_value = xxwk.buyer no-lock no-error.
            if available code_mstr then do:    */
                chExcelWorkbook:worksheets(1):cells(13,"V"):value = 
 /*phi          substr(code_cmmt,index(code_cmmt,",") + 1,length(code_cmmt,"raw") - index(code_cmmt,","),"raw").*/
 /*phi*/            xxwk.cname.   
-               find emp_mstr where emp_addr = xxwk.buyer no-lock no-error.
+               find emp_mstr where emp_domain = global_domain 
+               							   and emp_addr = xxwk.buyer no-lock no-error.
                if available emp_mstr then do:
                      chExcelWorkbook:worksheets(1):cells(14,"V"):value = emp_bs_phone. /* + ",转: " + emp_ext.*/ /*kevin*/
                      chExcelWorkbook:worksheets(1):cells(16,"V"):value = emp_line3.     

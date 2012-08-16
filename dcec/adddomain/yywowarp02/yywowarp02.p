@@ -50,9 +50,9 @@
 	 define workfile workorder field woor_part like wod_part
 	                         field woor_desc like pt_desc2
 	                         field woor_qty like wod_qty_req
-                                field woor_open_ref like wod_qty_req label "短缺量"
-                                field woor_all_pick like wod_qty_req label "备料量/领料量"
-                                field woor_op like wod_op .
+                           field woor_open_ref like wod_qty_req label "短缺量"
+                           field woor_all_pick like wod_qty_req label "备料量/领料量"
+                           field woor_op like wod_op .
 pageno = 1.	 
 /*judy*/
      define variable xxkeeper as char.
@@ -131,23 +131,23 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 procedure p-report: 
    {gpprtrpa.i  "printer" 200}
 
-
-
-
-    for each wo_mstr no-lock where (wo_nbr >= nbr and wo_nbr <= nbr1)
-    and (wo_lot = lot or lot = "") 
-    AND (wo_site = site OR site = "")  :
-          for  each wod_det where wod_lot = wo_lot
+    for each wo_mstr no-lock where wo_domain = global_domain 
+        and (wo_nbr >= nbr and wo_nbr <= nbr1)
+        and (wo_lot = lot or lot = "") 
+        AND (wo_site = site OR site = "")  :
+          for  each wod_det where wod_domain = global_domain and wod_lot = wo_lot
           and (wod_part >= part) and (wod_part <= part1 or part1 = "")
   	   no-lock break by wo_nbr by wod_lot by wod_part :	 
         IF NOT (xxkeeper =  " " AND  xxkeeper1 =  hi_char) THEN DO:
          /*   MESSAGE "AA" xxkeeper xxkeeper1.
             PAUSE.*/
-             FIND FIRST  in_mstr where in_site = wod_site and in_part = wod_part
+             FIND FIRST in_mstr where in_domain = global_domain 
+             				and in_site = wod_site and in_part = wod_part
 	          and in__qadc01 >= xxkeeper and in__qadc01 <= xxkeeper1 NO-LOCK NO-ERROR.
              IF NOT AVAIL IN_mstr  THEN NEXT.
         END.
-		  find pt_mstr where pt_part = wod_part no-lock no-error.
+		  find pt_mstr where pt_domain = global_domain 
+		                 and pt_part = wod_part no-lock no-error.
 		  find first workorder where woor_part = wod_part no-lock no-error.
 		  if available workorder then do:
 		    woor_qty=woor_qty + wod_qty_req.		    
@@ -194,9 +194,9 @@ procedure p-report:
 	      
 	       if line = 1 then do :
 		  desc1 = "".
-		  find pt_mstr where pt_part = wo_part no-lock no-error.
+		  find pt_mstr where pt_domain = global_domain and pt_part = wo_part no-lock no-error.
 		  if available pt_mstr then desc1 = pt_desc1.
-                display  "  页号:" pageno format ">>"  space(26) "DCEC加工单领料单物料发放清单" with width 132 no-labels frame bt01.
+                display  "  页号:" pageno format ">>>>>"  space(26) "DCEC加工单领料单物料发放清单" with width 132 no-labels frame bt01.
 		  display wo_nbr wo_lot wo_qty_ord wo_ord_date wo_part      
 		      wo_qty_comp wo_rel_date wo_qty_rjct wo_due_date
 		      wo_status wo_rmks with frame c side-labels  .
@@ -206,7 +206,8 @@ procedure p-report:
 	       end.
           /* MESSAGE site woor_part "BBB".
            PAUSE.*/
-              FIND FIRST  in_mstr where in_site = wo_site and in_part = woor_part NO-LOCK NO-ERROR. /* Modify by Zhang weihua 2004-09-28 */
+              FIND FIRST in_mstr where in_domain = global_domain 
+              			 and in_site = wo_site and in_part = woor_part NO-LOCK NO-ERROR. /* Modify by Zhang weihua 2004-09-28 */
              display space(8) woor_part woor_desc woor_qty  space(5)   in_user1 WHEN AVAIL in_mstr "  " /*judy051216*/
                          in__qadc01  WHEN AVAIL in_mstr WITH STREAM-IO NO-LABELS WIDTH 300 .
 	       down 1.
@@ -229,7 +230,7 @@ procedure p-report:
            for each workorder where woor_qty<0  :
 	       if line = 1 then do :
 		  desc1 = "".
-                display  "  页号:" pageno format ">>" space(24) "DCEC加工单领料单物料回收清单" with width 200  no-labels frame bt02.
+                display  "  页号:" pageno format ">>>>>" space(24) "DCEC加工单领料单物料回收清单" with width 200  no-labels frame bt02.
 		   display wo_nbr wo_lot wo_qty_ord wo_ord_date wo_part wo_qty_comp wo_rel_date  wo_qty_rjct wo_due_date
                  wo_status wo_rmks with frame c side-labels   .
   	         display "        零件号            零件名称                        回收量      库位       保管员          实际回收量" AT 1 with width 200 no-labels frame bt2.
@@ -239,7 +240,7 @@ procedure p-report:
 	       end.
 
 	       desc1 = "".
-              find in_mstr where in_site = wo_site and in_part = woor_part NO-LOCK NO-ERROR. /* Modify by Zhang weihua 2004-09-28 */
+              find in_mstr where in_domain = global_domain and in_site = wo_site and in_part = woor_part NO-LOCK NO-ERROR. /* Modify by Zhang weihua 2004-09-28 */
               display space(8) woor_part woor_desc woor_qty  space(5)  in_user1 WHEN AVAIL in_mstr "  "           /*judy051216*/
                   in__qadc01  WHEN AVAIL in_mstr WITH STREAM-IO no-labels WIDTH 300 . /* Modify by Zhang weihua 2004-09-28 */
 	       down 1.

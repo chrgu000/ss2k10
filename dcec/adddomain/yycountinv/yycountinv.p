@@ -189,7 +189,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
  /*D765*/
 
-	    for each tag_mstr exclusive where tag_nbr >= tag and tag_nbr <= tag1 AND tag_serial = ""
+	    for each tag_mstr exclusive where tag_domain = global_domain and tag_nbr >= tag and tag_nbr <= tag1 AND tag_serial = ""
 	    and (reprint_tags or tag_prt_dt = ?): /*F460*/
 	       tag_prt_dt = today.                /*F460*/
 
@@ -210,7 +210,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 		  site = tag_site.
 		  loc = tag_loc.
 		  part = tag_part.
-		  find pt_mstr where pt_part = tag_part no-lock no-error.
+		  find pt_mstr where pt_domain = global_domain and pt_part = tag_part no-lock no-error.
 		  if available pt_mstr then do:
 		     um = pt_um.
 /*F003               abc = pt_abc.  */
@@ -218,7 +218,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 		     desc2 = pt_desc2.
 /*bn083*/	     /*keeper = pt_article.*/ /*delete fm268*/
 		  end.
-/*F003*/          find in_mstr where in_part = tag_part and in_site = tag_site
+/*F003*/          find in_mstr where in_domain = global_domain and in_part = tag_part and in_site = tag_site
 /*F003*/          no-lock no-error.
 /*F003*/          if available in_mstr then abc = in_abc.
 

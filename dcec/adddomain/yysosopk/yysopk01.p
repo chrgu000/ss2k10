@@ -115,8 +115,8 @@ if lang1 = " " then
 /* FOR UPDATE = YES, LIMITING THE TRANSACTION SCOPE FOR ONE      */
 /* SO_MSTR RECORD AT A TIME AND MAINTAIN DATABASE INTEGRITY      */
 so_mstr_loop:
-for each so_mstr
-   where (so_nbr >= nbr and so_nbr <= nbr1)
+for each so_mstr where so_domain = global_domain
+     and (so_nbr >= nbr and so_nbr <= nbr1)
      and so_ship >= ship and so_ship <= ship1
      and so_stat = ""
      and so_print_pl = yes
@@ -127,12 +127,12 @@ for each so_mstr
    so_recno = recid(so_mstr).
 
    if can-find(first qad_wkfl
-      where qad_wkfl.qad_key2 = "CreditCard"
+      where qad_domain = global_domain and qad_wkfl.qad_key2 = "CreditCard"
       and qad_wkfl.qad_key1
       begins string(so_mstr.so_nbr,"x(8)"))
    then do:
       for each sod_det
-         where sod_nbr = so_nbr
+         where sod_domain = global_domain and sod_nbr = so_nbr
            and sod_site >= site and sod_site <= site1
            and sod_due_date >= due_date and sod_due_date <= due_date1
            and (sod_qty_ord - sod_qty_pick - sod_qty_ship) > 0
@@ -142,8 +142,8 @@ for each so_mstr
            and (sod_site <= site1 or site1 = "")
       no-lock:
 
-         for first qad_wkfl
-            where qad_key1 = string(so_nbr,"x(8)") + string(sod_line,"999")
+         for first qad_wkfl where qad_domain = global_domain 
+         			and qad_key1 = string(so_nbr,"x(8)") + string(sod_line,"999")
               and qad_key2 = "CreditCard"
               and qad_logfld[1]
               and qad_datefld[1] < today
@@ -154,7 +154,8 @@ for each so_mstr
                for first soc_ctrl no-lock:
                if soc_cr_hold then do:
 
-                  find somstr where so_recno = recid(somstr)
+                  find somstr where so_domain = global_domain 
+                   and so_recno = recid(somstr)
                      exclusive-lock no-wait no-error.
                   if locked(somstr) then
                      next so_mstr_loop.
@@ -170,7 +171,8 @@ for each so_mstr
 end.
 
    /* Skip SO if batch shipment is pending */
-   if can-find( qad_wkfl where qad_key1 = "sosois.p" + so_nbr
+   if can-find( qad_wkfl where qad_domain = global_domain
+   												 and qad_key1 = "sosois.p" + so_nbr
                            and qad_key2 = "BATCH" )
    then
       next so_mstr_loop.
@@ -181,12 +183,12 @@ end.
    if so_sched then do:
       oktouse = no.
 
-      for each sod_det no-lock
-         where (sod_nbr = so_nbr)
+      for each sod_det no-lock where sod_domain = global_domain
+           and (sod_nbr = so_nbr)
            and sod_sched
            and sod_site >= site and sod_site <= site1
            and sod_pickdate = ?
-           and can-find (sch_mstr where
+           and can-find (sch_mstr where sch_domain = global_domain and 
               sch_type = 3         and
               sch_nbr  = sod_nbr   and
               sch_line = sod_line  and
@@ -231,14 +233,15 @@ end.
       if not oktouse then next.
 
       termsdesc = "".
-      find ct_mstr where ct_code = so_cr_terms no-lock no-error.
+      find ct_mstr where ct_domain = global_domain and
+      		 ct_code = so_cr_terms no-lock no-error.
       if available ct_mstr then termsdesc = ct_desc.
 
       so_recno = recid(so_mstr).
       update billto = "".
       update shipto = "".
 
-      find ad_mstr where ad_addr = so_cust no-lock no-error.
+      find ad_mstr where ad_domain = global_domain and ad_addr = so_cust no-lock no-error.
       if available ad_mstr then do:
 
          assign
@@ -258,7 +261,8 @@ end.
             billto[6] = addr[6].
       end.
 
-      find ad_mstr where ad_addr = so_ship no-lock no-error.
+      find ad_mstr where ad_domain = global_domain 
+      		           and ad_addr = so_ship no-lock no-error.
       if available ad_mstr then do:
          assign
             addr[1] = ad_name
@@ -312,7 +316,7 @@ end.
                  sod_line sod_nbr sod_pickdate sod_qty_all sod_qty_ord
                  sod_qty_pick sod_qty_ship sod_rma_type sod_sched
                  sod_site)
-         where  sod_nbr      = so_nbr    and
+         where sod_domain = global_domain and sod_nbr      = so_nbr and
               ((sod_btb_type = "02"      and
                 not (so_fsm_type  = "SEO")) or
                 sod_btb_type = "03")  no-lock:
@@ -320,8 +324,8 @@ end.
       if available sod_det then
          next so_mstr_loop.
 
-      for each sod_det
-         where (sod_nbr = so_nbr)
+      for each sod_det where sod_domain = global_domain 
+      		 and (sod_nbr = so_nbr)
            and not sod_sched
            and sod_confirm
          no-lock by sod_site
@@ -378,7 +382,8 @@ end.
             if so_fsm_type = "RMA" then do:
                for first rmd_det
                   fields(rmd_line rmd_link rmd_nbr rmd_prefix rmd_qty_acp)
-                  where rmd_det.rmd_nbr    = sod_nbr
+                  where rmd_domain = global_domain 
+                    and rmd_det.rmd_nbr    = sod_nbr
                     and rmd_det.rmd_prefix = "C"
                     and rmd_det.rmd_line   = sod_line
                no-lock:
@@ -387,7 +392,8 @@ end.
                if available rmd_det and rmd_det.rmd_link <> 0 then
                   for first rma_mstr
                      fields( rma_ctype rma_nbr rma_prefix)
-                     where rma_nbr    = sod_nbr
+                     where rma_domain = global_domain 
+                       and rma_nbr    = sod_nbr
                        and rma_prefix = "C"
                   no-lock:
                   end. /* END OF FOR FIRST RMA_MSTR */
@@ -395,16 +401,17 @@ end.
                if available rma_mstr then
                   for first sv_mstr
                      fields(sv_code sv_shp_b4rtn sv_type)
-                     where sv_code = rma_ctype
+                     where sv_domain = global_domain and sv_code = rma_ctype
                        and sv_type = ""
                   no-lock:
                   end. /* END OF FOR FIRST SV_MSTR */
 
                if available sv_mstr and not sv_shp_b4rtn then
                   for first rmdreceipt
-                     fields(rmd_line rmd_link rmd_nbr
+                     fields(rmd_domain rmd_line rmd_link rmd_nbr
                             rmd_prefix rmd_qty_acp)
-                     where rmdreceipt.rmd_nbr    = sod_nbr
+                     where rmdreceipt.rmd_domain = global_domain 
+                     	 and rmdreceipt.rmd_nbr    = sod_nbr
                        and rmdreceipt.rmd_prefix = "C"
                        and rmdreceipt.rmd_line   = rmd_det.rmd_link
                   no-lock:
@@ -449,7 +456,8 @@ end.
 
             /* TRANSACTION IS ALREADY STARTED AT FOR EACH SO_MSTR LOOP*/
             do for somstr:
-               find somstr where so_recno = recid(somstr)
+               find somstr where so_domain = global_domain 
+               	and so_recno = recid(somstr)
                   exclusive-lock no-wait no-error.
                if (available somstr and not locked somstr) then
                   l_so_printpl = yes.
@@ -467,14 +475,16 @@ end.
       if not oktouse then next.
 
       termsdesc = "".
-      find ct_mstr where ct_code = so_cr_terms no-lock no-error.
+      find ct_mstr where ct_domain = global_domain
+       and ct_code = so_cr_terms no-lock no-error.
       if available ct_mstr then termsdesc = ct_desc.
 
       so_recno = recid(so_mstr).
       update billto = "".
       update shipto = "".
 
-      find ad_mstr where ad_addr = so_cust no-lock no-error.
+      find ad_mstr where ad_domain = global_domain 
+       and ad_addr = so_cust no-lock no-error.
       if available ad_mstr then do:
 
          assign
@@ -498,13 +508,15 @@ end.
          ENGINEER INSTEAD OF TO A SERVICE CALL'S CUSTOMER, PRINT THE
          ENGINEER'S ADDRESS (FROM HIS EMPLOYEE ADDRESS) AS THE SHIP-TO */
       if so_fsm_type = "SEO" and so_eng_code = so_ship then do:
-         find eng_mstr where eng_code = so_ship no-lock no-error.
+         find eng_mstr where eng_domain = global_domain 
+         	and eng_code = so_ship no-lock no-error.
          if available eng_mstr then
-            find ad_mstr where ad_addr = eng_address no-lock no-error.
+            find ad_mstr where ad_domain = global_domain 
+             and ad_addr = eng_address no-lock no-error.
       end.
       else
-         find ad_mstr where ad_addr = so_ship no-lock no-error.
-
+         find ad_mstr where ad_domain = global_domain 
+         	and ad_addr = so_ship no-lock no-error.
       if available ad_mstr then do:
          assign
             addr[1] = ad_name

@@ -28,7 +28,7 @@ def  shared temp-table xxwk
  define variable xxrouting as character .
  
  
- find si_mstr where si_site = xxsite no-lock no-error .
+ find si_mstr where si_domain = global_domain and si_site = xxsite no-lock no-error .
  if not available si_mstr or (si_db <> global_db) 
  then do: 
  ok_yn = no .
@@ -41,7 +41,8 @@ if return_int = 0
     then assign ok_yn = no
                 errmsg = "该地点无权访问" .
  end.   
- find first pt_mstr where pt_part = xxpart no-lock no-error .
+ find first pt_mstr where pt_domain = global_domain 
+ 			  and pt_part = xxpart no-lock no-error .
           if not available pt_mstr then
           do:
           ok_yn = no .
@@ -49,7 +50,8 @@ if return_int = 0
           end.
           else assign xxbomcode = pt_bom_code
                       xxrouting = pt_routing .
-find ptp_det where ptp_part = xxpart and ptp_site = xxsite no-lock no-error .
+find ptp_det where ptp_domain = global_domain and ptp_part = xxpart 
+						   and ptp_site = xxsite no-lock no-error .
 if available ptp_det then 
                     assign xxbomcode = ptp_bom_code
                            xxrouting = ptp_routing .
@@ -57,8 +59,10 @@ if xxbomcode = "" then xxbomcode = xxpart .
 if xxrouting = "" then xxrouting = xxpart .
  if xxbomcode <> "" then 
         do:
-        find first bom_mstr where bom_parent = xxbomcode no-lock no-error .
-        find first ps_mstr where ps_par = xxbomcode no-lock no-error .
+        find first bom_mstr where bom_domain = global_domain 
+        			 and bom_parent = xxbomcode no-lock no-error .
+        find first ps_mstr where ps_domain = global_domain 
+        		   and ps_par = xxbomcode no-lock no-error .
         if not available bom_mstr and not available ps_mstr then
             assign  ok_yn = no 
                     errmsg = "BOM不存在--" + xxbomcode .
@@ -66,18 +70,21 @@ if xxrouting = "" then xxrouting = xxpart .
         end.
 if xxrouting <> "" then 
         do:
-        find first ro_det where ro_routing = xxrouting no-lock no-error .
+        find first ro_det where ro_domain = global_domain 
+        			 and ro_routing = xxrouting no-lock no-error .
         if not available ro_det then 
           assign  ok_yn = no 
                     errmsg = "ROUTING不存在--" + xxrouting .
 
         end.
-  find first ln_mstr where ln_site = xxsite and ln_line = xxline no-lock no-error .
+  find first ln_mstr where ln_domain = global_domain 
+  			 and ln_site = xxsite and ln_line = xxline no-lock no-error .
   if not available ln_mstr then
               assign  ok_yn = no 
                     errmsg = "生产线不存在" .
 
- find first lnd_det where lnd_site = xxsite and lnd_line = xxline 
+ find first lnd_det where lnd_domain = global_domain 
+ 				and lnd_site = xxsite and lnd_line = xxline 
             and lnd_part = xxpart 
             and (lnd_start <= today or lnd_start = ? )
             and (lnd_expire >= today or lnd_expire = ?  ) no-lock no-error .
@@ -86,9 +93,9 @@ if xxrouting <> "" then
                     errmsg = "生产线零件对应关系不存在" .
 
 /*judy*/
-find first pt_mstr where pt_part = xxpart no-lock no-error .
+find first pt_mstr where pt_domain = global_domain and pt_part = xxpart no-lock no-error .
 IF AVAIL pt_mstr THEN DO:
-    FIND FIRST isd_det WHERE trim(substring(isd_status,1,8)) = TRIM(pt_status) 
+    FIND FIRST isd_det WHERE isd_domain = global_domain and trim(substring(isd_status,1,8)) = TRIM(pt_status) 
            AND isd_tr_type = "ADD-RE" NO-LOCK NO-ERROR.
     IF AVAIL isd_det THEN 
         assign ok_yn = no

@@ -17,7 +17,8 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-/*GI32*/ {mfdtitle.i "E"}
+/*GI32*/ 
+{mfdtitle.i "120815.1"}
 
 def var site like si_site.
 def var site1 like si_site.
@@ -178,7 +179,7 @@ repeat:
     
    /*search the template file*/   
 /* lb01   if search("E:\Project\DCEC\Customization(6702C.08)\supplier schedule template.xlt") = ? then do:*/
-  if search("\\qadtemp\appeb2\template\purchase\supplier schedule template.xlt") = ? then do: 
+  if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt") = ? then do: 
       message "报表模板不存在!" view-as alert-box error.
       undo,retry.
    end.
@@ -187,17 +188,18 @@ repeat:
        delete xxwk.
     end. 
     
-    for each pod_det where (pod_site >= site and pod_site <= site1)
+    for each pod_det where pod_domain = global_domain 
+    							     and (pod_site >= site and pod_site <= site1)
                        and (pod_part >= part and pod_part <= part1)
 /*hj01*/               AND (pod__chr01 >= v_zzk and pod__chr01 <= v_zzk1) no-lock,
-        each po_mstr where po_nbr = pod_nbr
+        each po_mstr where po_domain = global_domain and po_nbr = pod_nbr
                        and po_sched
                        and (po_vend >= vend and po_vend <= vend1) no-lock,
-        each pt_mstr where pt_part = pod_part no-lock,
-        each ptp_det where ptp_site = pod_site
+        each pt_mstr where pt_domain = global_domain and pt_part = pod_part no-lock,
+        each ptp_det where ptp_domain = global_domain and ptp_site = pod_site
                        and ptp_part = pt_part 
                        and (ptp_buyer >= buyer and ptp_buyer <= buyer1) no-lock,
-        each schd_det where schd_type = 4
+        each schd_det where schd_domain = global_domain and schd_type = 4
                      and schd_rlse_id = pod_curr_rlse_id[1] 
                        and schd_nbr = pod_nbr 
                        and schd_line = pod_line 
@@ -230,12 +232,12 @@ repeat:
 			/* lb01-- 计算月度需求数量 
 			本月到报表日期间的所有采购收货量 + 报表日到月底这段时间的MRP计划订货量。*/
 			xxwk.mqty = 0.
-			for each prh_hist no-lock where
+			for each prh_hist no-lock where prh_domain = global_domain and
 			prh_rcp_date >= mstart and prh_rcp_date <= mend
 			and prh_part = pod_part and prh_site = pod_site:
 				xxwk.mqty = xxwk.mqty + prh_rcvd.
 			end.
-			for each mrp_det no-lock where
+			for each mrp_det no-lock where mrp_domain = global_domain and
 			mrp_site = pod_site and mrp_part = pod_part 
 			and mrp_due_date >= today and mrp_due_date <= mend
 			and index(mrp_type,"demand") > 0:
@@ -243,8 +245,9 @@ repeat:
 			end.			
 			
 			/*供应商比例*/
-			find last qad_wkfl where qad_key1 = "poa_det" and
-      		qad_charfld[3] = pod_site and qad_charfld[2] = pod_part
+			find last qad_wkfl where qad_domain = global_domain 
+					and qad_key1 = "poa_det"
+      		and qad_charfld[3] = pod_site and qad_charfld[2] = pod_part
       		and qad_charfld[1] = pod_nbr 
       		and qad_datefld[1] <= mend 
       		no-lock no-error.
@@ -252,7 +255,7 @@ repeat:
 			
 			/*当月累计到货数量*/
 			xxwk.cumrctqty = 0.
-			for each prh_hist no-lock where
+			for each prh_hist no-lock where prh_domain = global_domain and
 			prh_rcp_date >= mstart and prh_rcp_date <= mend
 			and prh_part = pod_part and prh_site = pod_site
 			and prh_nbr = pod_nbr:
@@ -263,9 +266,8 @@ repeat:
         
         assign xxwk.qty_ord = xxwk.qty_ord + schd_discr_qty.
         
-        
-        
-        find in_mstr where in_site = xxwk.site and in_part = xxwk.part no-lock no-error.
+        find in_mstr where in_domain = global_domain 
+         and in_site = xxwk.site and in_part = xxwk.part no-lock no-error.
        if available in_mstr then assign xxwk.keeper = in__qadc01.
        
     end. /*for each pod_det, each ...*/
@@ -284,7 +286,7 @@ repeat:
 
          /*Create a new workbook based on the template chExcel file */
 /*         chExcelWorkbook = chExcelApplication:Workbooks:ADD("E:\Project\DCEC\Customization(6702C.08)\supplier schedule template.xlt").*/
-         chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\appeb2\template\purchase\supplier schedule template.xlt").
+         chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt").
          /* Set Excel Format Variable.*/
          iHeaderLine = 16.
          iLine = iHeaderLine + 1.
@@ -301,7 +303,7 @@ repeat:
            chExcelWorkbook:worksheets(1):cells(5,"AA"):value = start.
            chExcelWorkbook:worksheets(1):cells(7,"D"):value = xxwk.zzk.
            
-           find ad_mstr where ad_addr = xxwk.zzk and ad_type = "company" no-lock no-error.
+           find ad_mstr where ad_domain = global_domain and ad_addr = xxwk.zzk and ad_type = "company" no-lock no-error.
          if available ad_mstr then do:
              chExcelWorkbook:worksheets(1):cells(8,"D"):value = ad_name.
              chExcelWorkbook:worksheets(1):cells(9,"D"):value = ad_line1 + " / " + ad_zip.
@@ -311,12 +313,15 @@ repeat:
              chExcelWorkbook:worksheets(1):cells(14,"D"):value = ad_line3.
          end.
                               
-           find code_mstr where code_fldname = "ptp_buyer" and code_value = xxwk.buyer no-lock no-error.
+           find code_mstr where code_domain = global_domain 
+           	and code_fldname = "ptp_buyer" 
+           	and code_value = xxwk.buyer no-lock no-error.
            if available code_mstr then do:
                chExcelWorkbook:worksheets(1):cells(11,"AA"):value = 
                    substr(code_cmmt,index(code_cmmt,",") + 1,length(code_cmmt,"raw") - index(code_cmmt,","),"raw").
                
-               find emp_mstr where emp_addr = xxwk.buyer no-lock no-error.
+               find emp_mstr where emp_domain = global_domain 
+               	and emp_addr = xxwk.buyer no-lock no-error.
                if available emp_mstr then do:
                      chExcelWorkbook:worksheets(1):cells(12,"AA"):value = emp_bs_phone. /* + ",转: " + emp_ext.*/ /*kevin*/
                      chExcelWorkbook:worksheets(1):cells(14,"AA"):value = emp_line3.     
@@ -360,8 +365,9 @@ repeat:
              iLine = iHeaderLine + 1.
          END.
 
-           find first ad_mstr where (ad_type = "supplier" or ad_type = "vendor")
-                              and ad_addr = xxwk.vend no-lock no-error.
+           find first ad_mstr where ad_domain = global_domain 
+                 and (ad_type = "supplier" or ad_type = "vendor")
+                  and ad_addr = xxwk.vend no-lock no-error.
            if available ad_mstr then do:
                assign xxwk.vendname = ad_name.
            end.

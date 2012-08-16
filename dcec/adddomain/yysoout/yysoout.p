@@ -157,19 +157,21 @@ procedure p-report:
   i = 1.
  
 /*start of for each*/
-  for each tr_hist where (tr_effdate >= duedate_from)
-                         and (tr_effdate <= duedate_to)
-                         and (tr_part >= part_from)
-                         and (tr_part <= part_to)
-                         and (tr_nbr >= sonbr_from)
-                         and (tr_nbr <= sonbr_to)
-                         and (tr_line >= line_from)
-                         and (tr_line <= line_to)
-                         and (tr_site = site)
-                         and (tr_type = "iss-so"  or tr_type = "iss-fas")
-                         and ((not flag1) or tr__log02 = no)                         
-                         no-lock use-index tr_nbr_eff,
-       each in_mstr where (in_part = tr_part)
+  for each tr_hist where tr_domain = global_domain 
+  									and (tr_effdate >= duedate_from)
+                   and (tr_effdate <= duedate_to)
+                   and (tr_part >= part_from)
+                   and (tr_part <= part_to)
+                   and (tr_nbr >= sonbr_from)
+                   and (tr_nbr <= sonbr_to)
+                   and (tr_line >= line_from)
+                   and (tr_line <= line_to)
+                   and (tr_site = site)
+                   and (tr_type = "iss-so" or tr_type = "iss-fas")
+                   and ((not flag1) or tr__log02 = no)                         
+                   no-lock use-index tr_nbr_eff,
+       each in_mstr where in_domain = global_domain 
+       									 and (in_part = tr_part)
                          and in_site = tr_site                 
                          break  by tr_nbr by in__qadc01 by tr_part by tr_effdate by tr_serial
   			       with width 132 no-attr-space: 
@@ -177,14 +179,18 @@ procedure p-report:
     if available tr_hist then do:
       /*  MESSAGE "AA".
         PAUSE.*/
-         find first pt_mstr where pt_part = tr_part.
-      /*   find first in_mstr where in_part = tr_part and in_site = site.*/
+         find first pt_mstr where pt_domain = global_domain and pt_part = tr_part.
+      /*   find first in_mstr where in_domain = global_domain 
+      						and in_part = tr_part and in_site = site.*/
          if available(pt_mstr) then parttype = pt_lot_ser.
          else parttype = "".         
-         find first so_mstr where so_nbr = tr_nbr no-lock no-error.
+         find first so_mstr where so_domain = global_domain 
+         				and so_nbr = tr_nbr no-lock no-error.
          if available so_mstr then do:
-             find first sod_det where sod_nbr = tr_nbr and sod_line = tr_line no-lock no-error.
-             find first ad_mstr where ad_addr = so_cust no-lock no-error.
+             find first sod_det where sod_domain = global_domain 
+             			  and sod_nbr = tr_nbr and sod_line = tr_line no-lock no-error.
+             find first ad_mstr where ad_domain = global_domain 
+             			  and ad_addr = so_cust no-lock no-error.
              if available(sod_det) then soddet="Y".
              else soddet="N". 
              if  i = 1 then  do:
@@ -196,9 +202,12 @@ procedure p-report:
          END.
          else do:
              soddet="N".
-             find first ih_hist where ih_inv_nbr = tr_rmks no-lock no-error.
-             find first IDH_HIST where iDH_nbr = tr_NBR and iDH_line = tr_line no-lock no-error.
-             find first ad_mstr where ad_addr = ih_cust no-lock no-error.  
+             find first ih_hist where ih_domain = global_domain 
+             			  and ih_inv_nbr = tr_rmks no-lock no-error.
+             find first IDH_HIST where idh_domain = global_domain 
+             				and iDH_nbr = tr_NBR and iDH_line = tr_line no-lock no-error.
+             find first ad_mstr where ad_domain = global_domain 
+             				and ad_addr = ih_cust no-lock no-error.  
              if  i = 1 then  do:
                 if tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
@@ -223,7 +232,9 @@ procedure p-report:
                   with width 132 no-box frame f.     
          sum = sum + 1.                                      
          if pt_pm_code = "C" then do:
-            for each ps_mstr where ps_par = tr_part and  (pdate>=ps_start or ps_start=?) and (ps_end=? or ps_end>=pdate)
+            for each ps_mstr where ps_domain = global_domain 
+            		 and ps_par = tr_part and (pdate>=ps_start or ps_start=?) 
+            		 and (ps_end=? or ps_end>=pdate)
              no-lock:
                 if  i = 1 then  do:
                    if tr__log02 = No then duplicate = "原本".
@@ -234,7 +245,8 @@ procedure p-report:
                        display pageno duplicate ih_cust ih_nbr ad_name ih_ord_date ad_phone pdate ih_rmks with frame bih.
                 end.                 
                 i = i + 1.
-                find pt_mstr where pt_part = ps_comp no-lock no-error.
+                find pt_mstr where pt_domain = global_domain 
+                 and pt_part = ps_comp no-lock no-error.
                 qty_cri = qty * ps_qty_per.
                 disp ps_comp pt_desc2 tr_effdate space(32) qty_cri format "->>>>>>>" with no-box no-label width 132 frame c2 down.
                 disp "-----------------------------------------------------------------------------------------------------------------------"
@@ -268,7 +280,8 @@ procedure p-report:
 
 /* start of flag of printed */ 
   if dev = "printer" or dev="print-sm" or dev="PRNT88" or dev="PRNT80" or dev="printer" or dev="print-sm" then do:
-    for each tr_hist where (tr_effdate >= duedate_from)
+    for each tr_hist where tr_domain = global_domain 
+    										 and (tr_effdate >= duedate_from)
                          and (tr_effdate <= duedate_to)
                          and (tr_nbr >= sonbr_from)
                          and (tr_nbr <= sonbr_to)

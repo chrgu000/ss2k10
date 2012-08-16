@@ -161,7 +161,8 @@ procedure p-report:
    else month2 = string(month + 2) .
    pageno = 1.
    i = 1.
-   for each po_mstr no-lock where (po_nbr >= nbr_from) 
+   for each po_mstr no-lock where po_domain = global_domain
+   																		  and (po_nbr >= nbr_from) 
                                         and (po_nbr <= nbr_to) 
                                         and (po_vend >= sup_from) 
                                         and (po_vend <= sup_to) 
@@ -181,10 +182,12 @@ procedure p-report:
 /*G0Z4*/   signature-lbl to 78
 /*G0Z4*/ with STREAM-IO /*GUI*/  frame potrail1 no-labels no-box width 80.*/
 
-        find first code_mstr where code_fldname="po_buyer" and code_value=PO_buyer.
+        find first code_mstr where code_domain = global_domain and
+        				   code_fldname="po_buyer" and code_value=PO_buyer no-error.
         if available code_mstr then planner=code_cmmt .
                                else planner=po_buyer.
-        find first ad_mstr where ad_addr = po_bill no-lock no-error.
+        find first ad_mstr where ad_domain = global_domain 
+        			 and ad_addr = po_bill no-lock no-error.
 	    if available ad_mstr then do:
 	       addr[1] = trim(ad_name).
 	       addr[2] = trim(ad_line1).
@@ -200,7 +203,8 @@ procedure p-report:
 	       billto[5] = trim(addr[5]).
 	       billto[6] = trim(addr[6]).
 	    end.
-        find first ad_mstr where ad_addr = po_ship no-lock no-error.
+        find first ad_mstr where ad_domain = global_domain 
+        			 and ad_addr = po_ship no-lock no-error.
 	    if available ad_mstr then do:
 	       addr[1] = trim(ad_name).
 	       addr[2] = trim(ad_line1).
@@ -219,7 +223,8 @@ procedure p-report:
 	       shipto[5] = trim(addr[5]).
 	       shipto[6] = trim(addr[6]).
 	    end.
-        find first ad_mstr where ad_addr = po_vend no-lock no-error.
+        find first ad_mstr where ad_domain = global_domain
+        			 and ad_addr = po_vend no-lock no-error.
 	    if available ad_mstr then do:
 	       addr[1] = ad_name.
 	       addr[2] = ad_line1.
@@ -236,12 +241,14 @@ procedure p-report:
 	       vendor[5] = "ÓÊ±à£º" + trim(addr[5]).
 	       vendor[6] = trim(addr[6]).
            end.
-	 for each pod_det where pod_nbr = po_nbr no-lock use-index pod_nbr break by pod_nbr:
+	 for each pod_det where pod_domain = global_domain 
+	 		  and pod_nbr = po_nbr no-lock use-index pod_nbr break by pod_nbr:
            if  i = 1  then do:
 /*           disp po_rev po_nbr format "x(8)" po_ord_date format "99/99/99" po_vend format "x(8)" ad_name format "x(28)" ad_city format "x(20)" ad_state format "x(4)" ad_zip format "x(10)" ad_attn2 format "x(24)" ad_phone2 format "x(16)" ad_ext2 format "x(4)" ad_fax2 format "x(16)" with frame b.*/
              disp billto[1] po_rev pageno format ">>9" po_nbr po_ord_date po_vend shipto[1] vendor[1] shipto[2] vendor[2] shipto[5] vendor[5] planner ad_attn2 phone ad_phone2 ad_ext2 fax2 ad_fax2  fax1 with frame b.
              if  po_cmtindx <> 0 then DO:
-                 find cmt_det where cmt_indx = po_cmtindx no-lock no-error.
+                 find cmt_det where cmt_domain = global_domain 
+                  and cmt_indx = po_cmtindx no-lock no-error.
                  if available cmt_det and lookup("po",cmt_print) > 0 then
               do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
@@ -256,13 +263,15 @@ procedure p-report:
               disp  "        -------------------------------------------------------------------------------------"   with no-box side-labels width 210  frame f2.
               i = i + 12.
            end.
-           find first pt_mstr where pt_part = pod_part  no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain 
+           		    and pt_part = pod_part  no-lock no-error.
            if available pt_mstr then          
               disp "      " pod_line format ">>>"  space(2) pod_part FORMAT "X(18)" pt_desc2 format "x(20)" pod_due_date pod_qty_ord format ">>>>>9.<<<" with no-box no-labels width 210 frame b1 down.
            else
               disp "      " pod_line format ">>>" space(2) pod_part FORMAT "X(18)" pt_desc2 format "x(20)" pod_due_date pod_qty_ord format ">>>>>9.<<<" "Áã¼þºÅ²»´æÔÚ" with no-box no-labels width 210 frame b1 down.
            if  po_cmtindx <> 0 then DO:
-              find cmt_det no-lock where cmt_indx = pod_cmtindx no-error .
+              find cmt_det no-lock where cmt_domain = global_domain and
+                   cmt_indx = pod_cmtindx no-error .
               if available cmt_det and lookup("po",cmt_print) > 0 then
               do k = 1 to 15 :
                     if  cmt_cmmt[k] <> "" then do :
