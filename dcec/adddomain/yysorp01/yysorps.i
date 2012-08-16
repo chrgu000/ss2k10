@@ -7,13 +7,15 @@
 		break by {1}:
 			message string("Ð´ÈëEXCEL£¬Ê£Óà " + string(iTotalLine - iLine + 1)).
 			iLine = iLine + 1.
-			find cm_mstr no-lock where cm_addr = socust no-error.
-			find pt_mstr no-lock where pt_part = sopart no-error.
-			find in_mstr no-lock where in_part = sopart and in_site = zzsite no-error.
+			find cm_mstr no-lock where cm_domain = global_domain and cm_addr = socust no-error.
+			find pt_mstr no-lock where pt_domain = global_domain and pt_part = sopart no-error.
+			find in_mstr no-lock where in_domain = global_domain and in_part = sopart and in_site = zzsite no-error.
 			
 			if available pt_mstr then
-				find pl_mstr no-lock where pl_prod_line = pt_prod_line no-error. 
-		 	find first sp_mstr no-lock where sp_addr = soslspsn no-error.
+				find pl_mstr no-lock where pl_domain = global_domain and 
+					   pl_prod_line = pt_prod_line no-error. 
+		 	find first sp_mstr no-lock where sp_domain = global_domain and
+		 					   sp_addr = soslspsn no-error.
 			
 			chExcelWorkbook:Worksheets(1):Cells(iLine,1) = socust. 
 			chExcelWorkbook:Worksheets(1):Cells(iLine,2) = if available cm_mstr then cm_sort else "". 
@@ -60,24 +62,28 @@
 			end.
 
 			for each so_mstr no-lock
-			where so_nbr >= nbr and so_nbr <= nbr1
+			where so_domain = global_domain and so_nbr >= nbr and so_nbr <= nbr1
 			and so_cust = cmmstr.cm_addr 
 			and (so_slspsn[1] = slspsn or slspsn = "") 
 			use-index so_cust:
 				
-				find first sp_mstr no-lock where sp_addr = so_slspsn[1] no-error.
+				find first sp_mstr no-lock where sp_domain = global_domain and
+				           sp_addr = so_slspsn[1] no-error.
 
 				for each sod_det no-lock
-				where sod_nbr = so_nbr
+				where sod_domain = global_domain and sod_nbr = so_nbr
 				and sod_part >= part and sod_part <= part1
 			    and sod_cum_date[2] >= cumdate and sod_cum_date[2] <= cumdate1
 			    and sod_site >= site and sod_site <= site1
 			    and sod_qty_inv <> 0  :
 					
-					find pt_mstr where pt_part = sod_part no-lock no-error.
-					find in_mstr no-lock where in_part = sod_part and in_site = "DCEC-SV" no-error.
+					find pt_mstr where pt_domain = global_domain and 
+							 pt_part = sod_part no-lock no-error.
+					find in_mstr no-lock where in_domain = global_domain and 
+							 in_part = sod_part and in_site = "DCEC-SV" no-error.
 					if available pt_mstr then
-						find first pl_mstr no-lock where pl_prod_line = pt_prod_line no-error.
+						find first pl_mstr no-lock where pl_domain = global_domain and
+											 pl_prod_line = pt_prod_line no-error.
 					amt = sod_qty_inv * sod_price.
 	
 					iLine = iLine + 1.

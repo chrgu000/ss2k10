@@ -147,8 +147,8 @@ DEF VAR planner1 LIKE  ptp_buyer.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -262,7 +262,7 @@ l_msg2 = "* " + l_msg2.
    if as_of_date = ? then as_of_date = today.
 
    if c-application-mode <> 'web' then
-   
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -366,7 +366,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -380,14 +380,14 @@ define buffer trhist for tr_hist.
 
    {mfphead.i}
 
-   FORM /*GUI*/ 
+   FORM /*GUI*/
       header
 
       l_msg1
 
    with STREAM-IO /*GUI*/  frame pagefoot page-bottom width 132.
 
-   FORM /*GUI*/ 
+   FORM /*GUI*/
       header
 
       l_msg2
@@ -403,9 +403,10 @@ define buffer trhist for tr_hist.
    /*****************************************************************************
    /*F828*/    /*TEMPORARILY RE-CREATE ANY NON-PERMANENT LD_DET RECORDS*/
    /*F828*/    do transaction on error undo, retry:
-   /*F828*/       for each tr_hist where tr_effdate >= as_of_date no-lock:
-   /*F828*/          if not can-find(first ld_det where ld_site = tr_site
-   /*F828*/          and ld_loc = tr_loc and ld_part = tr_part)
+   /*F828*/       for each tr_hist where tr_domain = global_domain
+                       and tr_effdate >= as_of_date no-lock:
+   /*F828*/          if not can-find(first ld_det where ld_domain = global_domain
+                     and ld_site = tr_site and ld_loc = tr_loc and ld_part = tr_part)
    /*F828*/          then do:
    /*F828*/              create ld_det.
    /*F828*/              assign
@@ -425,11 +426,11 @@ define buffer trhist for tr_hist.
 
    mainforloop:
    for each pt_mstr
-         fields(pt_part pt_group pt_part_type pt_prod_line pt_vend
+         fields(pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
          pt_desc1 pt_desc2 pt_um)
       no-lock
-         where (pt_part >= part         and pt_part <= part1)
-
+         where pt_domain = global_domain
+         and  (pt_part >= part         and pt_part <= part1)
          and   (pt_prod_line >= line    and pt_prod_line <= line1)
          and   (pt_group  >= part_group and pt_group <= part_group1)
          and (pt_part_type >= part_type and pt_part_type <= part_type1)
@@ -437,7 +438,7 @@ define buffer trhist for tr_hist.
          , each in_mstr
          fields(in_part in_site in_abc in_cur_set in_gl_set
          in_qty_nonet in_qty_oh in_gl_cost_site)
-         where in_part  =  pt_part
+         where in_domain = global_domain and in_part  =  pt_part
          and   (in_abc  >= abc  and in_abc  <= abc1)
          and   (in_site >= site and in_site <= site1)
       no-lock
@@ -453,8 +454,8 @@ define buffer trhist for tr_hist.
       end.
 
       for first ptp_det
-         fields(ptp_part ptp_site ptp_vend ptp_buyer)
-         where ptp_part = pt_part and ptp_site = in_site
+         fields(ptp_domain ptp_part ptp_site ptp_vend ptp_buyer)
+         where ptp_domain = global_domain and ptp_part = pt_part and ptp_site = in_site
          use-index ptp_part no-lock:
       end. /* FOR FIRST PTP_DET */
 
@@ -487,7 +488,7 @@ define buffer trhist for tr_hist.
             /*READ LOCATION DETAIL TO DETERMINE CONSIGNMENT QUANTITIES */
             if using_cust_consignment or using_supplier_consignment then
             for each ld_det no-lock
-                  where ld_part = in_part
+                  where ld_domain = global_domain and ld_part = in_part
                   and ld_site = in_site:
 
                non_consign_qoh = non_consign_qoh +
@@ -572,12 +573,12 @@ define buffer trhist for tr_hist.
             /*BACK OFF TR_HIST SINCE AS_OF_DATE*/
 
             for each tr_hist
-                  fields(tr_part tr_effdate tr_site tr_loc
+                  fields(tr_domain tr_part tr_effdate tr_site tr_loc
                   tr_ship_type tr_qty_loc tr_bdn_std tr_lbr_std
                   tr_mtl_std tr_ovh_std tr_price tr_status
                   tr_nbr tr_line
                   tr_sub_std tr_trnbr tr_type tr_rmks)
-                  where tr_part = pt_part
+                  where tr_domain = global_domain and tr_part = pt_part
                   and tr_effdate > as_of_date
                   and tr_site = in_site
                   and tr_effdate <> ?
@@ -591,8 +592,8 @@ define buffer trhist for tr_hist.
                   next.
 
                for first is_mstr
-                  fields(is_status is_nettable)
-                  where is_status = tr_status
+                  fields(is_domain is_status is_nettable)
+                  where is_domain = global_domain and is_status = tr_status
           no-lock:
                end. /* FOR FIRST IS_MSTR */
 
@@ -609,7 +610,8 @@ define buffer trhist for tr_hist.
                then do:
                   for first trhist
                      fields(tr_trnbr tr_qty_loc)
-                     where trhist.tr_trnbr = integer(tr_hist.tr_rmks)
+                     where trhist.tr_domain = global_domain
+                       and trhist.tr_trnbr = integer(tr_hist.tr_rmks)
                      no-lock:
 
                         l_cust_adj_qoh = trhist.tr_qty_loc.
@@ -706,9 +708,9 @@ define buffer trhist for tr_hist.
                and (neg_qty or total_qty_oh >= 0) then do:
 
                for first pl_mstr
-                  fields(pl_prod_line pl_desc pl_inv_acct
+                  fields(pl_domain pl_prod_line pl_desc pl_inv_acct
                   pl_inv_sub pl_inv_cc)
-                  where  pl_prod_line = pt_prod_line no-lock:
+                  where pl_domain = global_domain and pl_prod_line = pt_prod_line no-lock:
                end. /* FOR FIRST PL_MSTR */
 
                if pl-printed = no and (neg_qty or total_qty_oh >= 0)
@@ -739,7 +741,7 @@ define buffer trhist for tr_hist.
                      first-prod = yes.
                end.
 
-               FORM /*GUI*/ 
+               FORM /*GUI*/
                   header         skip (1)
 
                   getTermLabel("PRODUCT_LINE",30) + ": " +
@@ -841,7 +843,7 @@ define buffer trhist for tr_hist.
             acc  @ ext_std WITH STREAM-IO /*GUI*/ .
       end.
 
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
    end.
@@ -849,7 +851,8 @@ define buffer trhist for tr_hist.
    /*****************************************************************************/
    /*****************************************************************************
    /*F828*/       /*DELETE TEMPORARY LD_DET RECORDS*/
-   /*F828*/       for each ld_det where ld_ref = fill("#",20) + mfguser:
+   /*F828*/       for each ld_det where ld_domain = global_domain
+                       and ld_ref = fill("#",20) + mfguser:
    /*F828*/          delete ld_det.
    /*F828*/       end.
    /*F828*/    end.  /*do transaction*/
@@ -858,7 +861,7 @@ define buffer trhist for tr_hist.
    ******************************************************************************/
 
    /* REPORT TRAILER */
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/

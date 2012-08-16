@@ -2,7 +2,7 @@
 /* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
 /* V1                 Developped: 07/19/01      BY: Kang Jian          */
 
-{mfdtitle.i}
+{mfdtitle.i "120816.1"}
 define temp-table soqry field soqry_cust like so_cust
                         field soqry_name like pt_desc2
                          field soqry_nbr like so_nbr
@@ -128,11 +128,13 @@ procedure p-report:
   {gpprtrpa.i  "window" 132}                               
   pageno = 1.
   i = 1.
-  for each so_mstr no-lock where so_nbr >= sonbr_from and so_nbr <= sonbr_to  
+  for each so_mstr no-lock where so_domain = global_domain 
+  											 and so_nbr >= sonbr_from and so_nbr <= sonbr_to  
                          /*and (so_ord_date >= indate_from) and (so_ord_date <= indate_to)*/
                          and so_cust >= cust and so_cust <= cust1
                          use-index so_nbr ,
-       each sod_det no-lock where sod_nbr = so_nbr 
+       each sod_det no-lock where sod_domain = global_domain 
+       								   and sod_nbr = so_nbr 
                          and (sod_due_date >= duedate_from)
                          and (sod_due_date <= duedate_to)
                          and (sod_site >= site1)
@@ -153,8 +155,8 @@ procedure p-report:
       soqry_site=sod_site.
       soqry_rmks=so_rmks.
       soqry_short=sod_qty_ord - sod_qty_ship.         
-      find first pt_mstr where pt_part=sod_part.
-      if available pt_mstr then  soqry_name = pt_desc2 .
+      find first pt_mstr where pt_domain = global_domain and pt_part=sod_part no-error.
+      if available pt_mstr then soqry_name = pt_desc2 .
   end.             
  
 /*start of for each*/

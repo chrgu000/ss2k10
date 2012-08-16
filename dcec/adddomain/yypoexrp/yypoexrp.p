@@ -2,7 +2,7 @@
 /* Load receipt and output 5.13.5 to excel       	*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "ao+"}
+{mfdtitle.i "120816.1"}
 
 def var iError as integer.
 
@@ -121,8 +121,7 @@ repeat with frame a:
             ASSIGN xxwk_rc = string(chExcelWorkbook:Worksheets(1):Cells(iRow,"A"):value) 
                 xxwk_line = INT(chExcelWorkbook:Worksheets(1):Cells(iRow,"B"):value)
                 xxwk_nbr = INT(chExcelWorkbook:Worksheets(1):Cells(iRow,"C"):value) .
-             
-            FIND FIRST prh_hist NO-LOCK WHERE prh_receiver = xxwk_rc NO-ERROR .
+            FIND FIRST prh_hist NO-LOCK WHERE prh_domain = global_domain and prh_receiver = xxwk_rc NO-ERROR .
             IF NOT AVAIL prh_hist THEN DO: 
                 iError = iError + 1 .
                 msg_file = string(TODAY) + " " + string(TIME,"HH:MM") + 
@@ -160,8 +159,8 @@ repeat with frame a:
 
     FOR EACH xxwk BREAK BY xxwk_rc :
         IF FIRST-OF(xxwk_rc) THEN DO:
-            FOR EACH prh_hist FIELDS(prh_receiver prh_line) 
-                NO-LOCK WHERE prh_receiver = xxwk_rc 
+            FOR EACH prh_hist FIELDS(prh_domain prh_receiver prh_line) 
+                NO-LOCK WHERE prh_domain = global_domain and prh_receiver = xxwk_rc 
                 USE-INDEX prh_receiver :
                 CREATE xxwk1.
                 ASSIGN xxwk1_rc = prh_receiver
@@ -178,14 +177,13 @@ repeat with frame a:
 
     FIND FIRST xxwk1 NO-ERROR .
     IF NOT AVAIL xxwk1 THEN DO:
-        MESSAGE "没有任何匹配此导入文件的系统收货记录,可能是导入文件有误,请检查! "   .
+        MESSAGE "没有任何匹配此导入文件的系统收货记录,可能是导入文件有误,请检查!"   .
         NEXT mainloop .
     END.
 
     SecondLoop:
     REPEAT:
         foutputfile = substring(finputfile,1,length(finputfile) - 4) + "rp.xls" .
-     
         if rdate = low_date then rdate = ?. 
         if rdate1 = hi_date then rdate1 = today. 
         if vendor1 = hi_char then vendor1 = "".
@@ -262,8 +260,9 @@ repeat with frame a:
     
         FOR EACH xxwk1 :
             for EACH prh_hist no-lock
-                where  (prh_rcp_date >= rdate and prh_rcp_date <= rdate1
-                or  (prh_rcp_date = ? and rdate = low_date))
+                where prh_domain = global_domain 
+                 and (prh_rcp_date >= rdate and prh_rcp_date <= rdate1
+                     or  (prh_rcp_date = ? and rdate = low_date))
                 and (prh_vend >= vendor and prh_vend <= vendor1)
                 and (prh_part >= part and prh_part <= part1)
                 and (prh_site >= site and prh_site <= site1)
@@ -275,7 +274,8 @@ repeat with frame a:
                 and (uninv_only = no  /* Non-Vouchered Receipts Only = NO */
                        or
                      (uninv_only   and  /* Non-Vouchered Receipts Only = YES */
-                        not can-find (first pvo_mstr no-lock where
+                        not can-find (first pvo_mstr no-lock where 
+                        		pvo_domain = global_domain and
                             pvo_lc_charge         = ""                 and
                             pvo_internal_ref_type = "07"		 and
                             pvo_internal_ref      = prh_receiver       and

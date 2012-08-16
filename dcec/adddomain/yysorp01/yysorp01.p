@@ -2,7 +2,7 @@
 /* 8.5 F03 LAST MODIFIED BY LONG BO 2004/07/01				*/
 /*cj* 08/26/05 add customer type field*/
 
-/*GN61*/ {mfdtitle.i "d+ "}
+{mfdtitle.i "120816.1"}
 
 def var nbr			like so_nbr.
 def var nbr1		like so_nbr.

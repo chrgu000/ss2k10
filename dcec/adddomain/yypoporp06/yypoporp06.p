@@ -41,7 +41,7 @@
 /******************************************************************************/
 /*cj* 08/26/05 add po receipt age info*/
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "120816.1"}
 {cxcustom.i "POPORP06.P"}
 
 define variable ers-only         like mfc_logical           no-undo.

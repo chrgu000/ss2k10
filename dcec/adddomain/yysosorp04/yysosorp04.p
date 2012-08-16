@@ -30,7 +30,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "++ "}  /*FL44*/
+{mfdtitle.i "120816.1"}
 
 define variable addr like tr_addr.
 define variable addr1 like tr_addr.
@@ -195,7 +195,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 	    HAS BEEN SELECTED FOR THE REPORT, PRODUCT LINE OR PART */
 /*G2FC*/ l_report_ok         = no.
 
-   for each tr_hist where (tr_part >= part and tr_part <= part1)
+   for each tr_hist where tr_domain = global_domain 
+   and (tr_part >= part and tr_part <= part1)
    and (tr_prod_line >= prod_line and tr_prod_line <= prod_line1)
    and (tr_effdate >= trdate and tr_effdate <= trdate1)
    and (tr_addr >= addr and tr_addr <= addr1)
@@ -207,7 +208,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 	 or (tr_curr = base_rpt))
 /*FU52** use-index tr_eff_trnbr no-lock, **/
 /*FU52*/ use-index tr_eff_trnbr no-lock
-/*FU52** each cm_mstr where cm_addr = tr_addr                            **/
+/*FU52** each cm_mstr where cm_domain = global_domain and cm_addr = tr_addr **/
 /*FU52**      and (cm_region >= region and cm_region <= region1) no-lock **/
    break by tr_prod_line by tr_part by tr_effdate with frame b width 132 no-box:
 
@@ -231,8 +232,10 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*FU52*/ /* Check customer region (if customers in this db) */
 /*FU52*/ if (region > "" or region1 < hi_char)
 /*H0PF** /*FU52*/    and can-find(first cm_mstr) then do:*/
-/*H0PF*/    and can-find(first cm_mstr where cm_addr >= "") then do:
-/*FU52*/    find cm_mstr where cm_addr = tr_addr no-lock no-error.
+/*H0PF*/    and can-find(first cm_mstr where cm_domain = global_domain 
+												   and cm_addr >= "") then do:
+/*FU52*/    find cm_mstr where cm_domain = global_domain 
+												   and cm_addr = tr_addr no-lock no-error.
 /*FU52*/    region_chk = (available cm_mstr
 /*FU52*/                  and cm_region >= region and cm_region <= region1).
 /*FU52*/ end.
@@ -244,7 +247,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*G2FC*/ if l_first_prod_line and region_chk then do:
 /*G2FC*/ /* CHECK FOR FIRST VALID RECORD FOR THIS PRDUCT LINE */
 /*G2FC*/    l_first_prod_line  = no.
-	    find pl_mstr where pl_prod_line = tr_prod_line no-lock no-error.
+	    find pl_mstr where pl_domain = global_domain 
+	     and pl_prod_line = tr_prod_line no-lock no-error.
 	    if available pl_mstr then do:
 	       desc2 = pl_desc.
 	       if page-size - line-counter < 3 then page.
@@ -280,13 +284,15 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
  * /*FL44*/    /* cost from sod_det or idh_hist                          */ *
  * /*FL44*/    if tr_ship_type = "M" then do:                               *
  * /*FL44*/       find first sod_det                                        *
- * /*FL44*/          where sod_part = tr_part and  sod_nbr = tr_nbr         *
+ * /*FL44*/          where sod_domain = global_domain 
+ 											 and sod_part = tr_part and  sod_nbr = tr_nbr         *
  * /*FL44*/          and tr_line  = sod_line no-lock no-error.              *
  * /*FL44*/       if available sod_det then                                 *
  * /*FL44*/          unit_cost = sod_std_cost.                              *
  * /*FL44*/       if not available sod_det then                             *
  * /*FL44*/          find first idh_hist                                    *
- * /*FL44*/             where idh_part = tr_part and idh_inv_nbr = tr_rmks  *
+ * /*FL44*/             where idh_domain = global_domain 
+ 									        and idh_part = tr_part and idh_inv_nbr = tr_rmks  *
  * /*FL44*/             and idh_line = tr_line no-lock no-error.            *
  * /*FL44*/             if available idh_hist then                          *
  * /*FL44*/                unit_cost = idh_std_cost.                        *
@@ -317,11 +323,13 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 /*FU52*/ end. /* If region for this line is valid */
 
-	 find pt_mstr where pt_part = tr_part no-lock no-wait no-error.
+	 find pt_mstr where pt_domain = global_domain 
+	 			          and pt_part = tr_part no-lock no-wait no-error.
 
 	 if not summary then do:
 	    name = "".
-	    find ad_mstr where ad_addr = tr_addr no-lock no-wait no-error.
+	    find ad_mstr where ad_domain = global_domain 
+	    		           and ad_addr = tr_addr no-lock no-wait no-error.
 	    if available ad_mstr then name = ad_name.
 
 /*G2FC**    if first-of(tr_part)  then do: */
