@@ -7,7 +7,7 @@
 /* V6 caculate the amount for iss-tr  03/09/02 By:kangjian  var:qty_iss_tr,amt_iss_tr,prod_iss_tr,sum_iss_tr */
 /* V7 caculate the amount for iss-tr  03/09/02 By:kangjian  var: 213管理不善报废 214索赔范围的报废 */
 /* V7 caculate the amount for iss-tr  26/04/03 By:Zhang weihua  var: 增加其他废品报废*/
-{mfdtitle.i } 
+{mfdtitle.i "120816.1"} 
 
 define variable pr_detail like mfc_logical label "输出明细到文件'c:\detailrp.txt'" initial no.
 
@@ -218,15 +218,23 @@ lineno=0.
 
 sum_iss_unp = 0.
 sum_iss_so = 0.
-for each pt_mstr no-lock where pt_prod_line >= line and pt_prod_line <= line1 and pt_part <= part1 and pt_part >= part and pt_article >= keeper and pt_article <= keeper1
+for each pt_mstr no-lock where pt_domain = global_domain 
+		 and pt_prod_line >= line and pt_prod_line <= line1 
+		 and pt_part <= part1 and pt_part >= part 
+		 and pt_article >= keeper and pt_article <= keeper1
 	 and pt_site >= site and pt_site <= site1
-	 ,each in_mstr no-lock where in_part = pt_part and in_site >=site and in_site <=site1
+	 ,each in_mstr no-lock where in_domain = global_domain 
+	 	 and in_part = pt_part and in_site >=site and in_site <=site1
 	  break by pt_prod_line by pt_part:
     if first-of (pt_prod_line) then do:
          lineno = lineno + 1.
          if lineno<>1 then page.
-         find pl_mstr where pl_prod_line = pt_prod_line no-lock no-error.
-         pldesc = pl_desc.
+         find pl_mstr where pl_domain = global_domain 
+          and pl_prod_line = pt_prod_line no-lock no-error.
+         assign pldesc = "".
+         if available pl_mstr then do:
+         		pldesc = pl_desc.
+         end.
          if pr_detail = no then do:
             display date date1 with frame b.
             display pt_prod_line pldesc no-label with width 132 frame c side-labels STREAM-IO.
@@ -318,7 +326,9 @@ amt_cst=0.
 
 
 /* 统计套件销售出库情况 */
-for each tr_hist no-lock where tr_part=pt_part and tr_type="iss-fas" and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_type="iss-fas" 
+		 and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	qty_iss_fas = qty_iss_fas - tr_qty_loc.
 	amt_iss_fas = amt_iss_fas - round (tr_qty_loc * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_bdn_std + tr_sub_std),2).
 end. 
@@ -327,7 +337,9 @@ prod_iss_fas = prod_iss_fas + amt_iss_fas.
 sum_iss_fas = sum_iss_fas + amt_iss_fas. 
 
 /* 统计销售出库情况 */
-for each tr_hist no-lock where tr_part=pt_part and (tr_type="iss-so" and tr_ship_type<>"m") and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and (tr_type="iss-so" and tr_ship_type<>"m") 
+		 and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	qty_iss_so = qty_iss_so - tr_qty_loc.
 	amt_iss_so = amt_iss_so - round (tr_qty_loc * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_bdn_std + tr_sub_std),2).
 end.
@@ -337,7 +349,9 @@ sum_iss_so = sum_iss_so + amt_iss_so .
 
 
 /* 统计第一阶段计划外入库 */
-for each tr_hist where tr_part=pt_part and tr_type ="iss-UNP" and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_type ="iss-UNP" 
+		 and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	if	tr_so_job = "201" then do:
 		qty_iss_unp201 = qty_iss_unp201 - tr_qty_loc.
 		amt_iss_unp201 = amt_iss_unp201 - round (tr_qty_loc * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_bdn_std + tr_sub_std),2).
@@ -422,7 +436,9 @@ prod_iss_215 =prod_iss_215 + amt_iss_unp215. /*zwh*/
 prod_iss_299 = prod_iss_299 + amt_iss_unp299.
 prod_iss = prod_iss + prod_iss_unp + prod_iss_so .
 /* 统计第一阶段生产消耗出库 */
-for each tr_hist where tr_part=pt_part and tr_type ="iss-wo" and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_type ="iss-wo" 
+		 and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	qty_iss_wo = qty_iss_wo - tr_qty_loc.
 	amt_iss_wo = amt_iss_wo - round (tr_qty_loc * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_bdn_std + tr_sub_std),2).
 	if substring(tr_nbr,1,1)="S" then do:
@@ -444,7 +460,9 @@ sum_iss_pl = sum_iss_pl + amt_iss_pl.
 
 
 /* 统计第一阶段生产发料出库 */
-for each tr_hist where tr_part=pt_part and tr_type ="iss-tr" and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist where tr_domain = global_domain 
+	   and tr_part=pt_part and tr_type ="iss-tr" 
+	   and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	qty_iss_tr = qty_iss_tr - tr_qty_loc.
 	amt_iss_tr = amt_iss_tr - round (tr_qty_loc * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_bdn_std + tr_sub_std),2).
 end.
@@ -453,7 +471,9 @@ sum_iss_tr = sum_iss_tr + amt_iss_tr.
 
 
 /*标准成本调整*/
-for each tr_hist where tr_part=pt_part and tr_type ="cst-adj" and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
+for each tr_hist where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_type ="cst-adj" 
+		 and tr_effdate>=date and tr_effdate<=date1 and tr_site=in_site:
 	amt_cst = amt_cst + tr_price * tr_loc_begin.
 end.
 prod_cst=prod_cst + amt_cst.

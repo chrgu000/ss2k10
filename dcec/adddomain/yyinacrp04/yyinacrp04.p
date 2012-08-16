@@ -6,7 +6,7 @@
 
 /*           Last MOD: 06/30/05          BY: Judy Liu       cj       */
 
-{mfdtitle.i } 
+{mfdtitle.i "120816.1"} 
 def var qty_iss_so as integer format "->>>>>>>>>>>9".
 def var qty_iss_unp as integer format "->>>>>>>>>>>9".
 def var qty_iss_tr as integer format "->>>>>>>>>>>9".
@@ -44,8 +44,8 @@ define variable part like pt_part.
 define variable part1 like pt_part.
 define variable line like pt_prod_line.
 define variable line1 like pt_prod_line.
-define variable date like tr_effdate label "起止日期".
-define variable date1 like tr_effdate.
+define variable dte like tr_effdate label "起止日期".
+define variable dte1 like tr_effdate.
 define variable keeper like pt_article.
 define variable keeper1 like pt_article.
 define variable site like pt_site.
@@ -57,8 +57,8 @@ def var qty_rct_tr  as integer format "->>>>>>>>>>>9".
 
 form         
 skip(1)
-     date           label "起始日期  "   at 48
-     date1          label "终止日期  " at 48
+     dte           label "起始日期  "   at 48
+     dte1          label "终止日期  " at 48
      skip(1) 
      with no-box side-labels width 180 frame b.
 
@@ -76,8 +76,8 @@ skip(1)
 	     line1          label {t001.i} colon 49
 	     part           colon 18
 	     part1          label {t001.i} colon 49 skip
-             date            colon 18
-             date1           label {t001.i} colon 49 skip
+             dte            colon 18
+             dte1           label {t001.i} colon 49 skip
 	     keeper            label "保管员" colon 18
 	     keeper1           label {t001.i} colon 49 SKIP 
 /*judy 06/30/05*/  planer COLON 18
@@ -112,11 +112,11 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /*GUI*/ procedure p-enable-ui:
 
 	     if part1 = hi_char then part1 = "".
-             if line1 = hi_char then line1 = "".
+       if line1 = hi_char then line1 = "".
 	     if keeper1 = hi_char then keeper1 = "".
 	     if site1 = hi_char then site1 = "".
-	     if date = low_date then date = ?.
-	     if date1 = hi_date then date1 = ?.
+	     if dte = low_date then dte = ?.
+	     if dte1 = hi_date then dte1 = ?.
 /*judy 06/30/05*/  IF planer1 = hi_char THEN planer1 = "".
 
  
@@ -132,8 +132,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 	     {mfquoter.i part   }
 	     {mfquoter.i part1   }
-	     {mfquoter.i date   }
-	     {mfquoter.i date1   }
+	     {mfquoter.i dte   }
+	     {mfquoter.i dte1   }
 	     {mfquoter.i keeper   }
 	     {mfquoter.i keeper1   }
 	     {mfquoter.i site   }
@@ -146,8 +146,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 	     if  line1 = "" then line1 = hi_char.
 	     if  keeper1 = "" then keeper1 = hi_char.
 	     if  site1 = "" then site1 = hi_char.
-	     if  date = ? then date = low_date.
-	     if  date1 = ? then date1 = hi_date.
+	     if  dte = ? then dte = low_date.
+	     if  dte1 = ? then dte1 = hi_date.
 /*judy 06/30/05*/  IF planer1 = "" THEN planer1 = hi_char.
 	     
     /* SELECT PRINTER */
@@ -160,30 +160,35 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 {mfphead.i}
 lineno=0.
 
- for each pt_mstr no-lock where pt_prod_line >= line and pt_prod_line <= line1 
+ for each pt_mstr no-lock where pt_domain = global_domain 
+ 							and pt_prod_line >= line and pt_prod_line <= line1 
               and pt_part <= part1 and pt_part >= part  /*and pt_article >= keeper 
               and pt_article <= keeper1  and pt_site >= site and pt_site <= site1 */
               use-index pt_prod_part,
-         EACH IN_mstr WHERE IN_part = pt_part AND IN_site >= site
+         EACH IN_mstr WHERE in_domain = global_domain 
+         		     and IN_part = pt_part AND IN_site >= site
                  AND IN_site <= site1 AND
                  (in__qadc01 >= keeper AND  in__qadc01 <= keeper1) NO-LOCK ,
-          EACH  ptp_det WHERE ptp_part = pt_part AND ptp_site = IN_site 
+          EACH  ptp_det WHERE ptp_domain = global_domain 
+          	 and ptp_part = pt_part AND ptp_site = IN_site 
              AND ptp_buyer >= planer AND ptp_buyer <= planer1
                  break by pt_prod_line with width 255 no-box:
  
     if first-of (pt_prod_line) then do:
        lineno = lineno + 1.
        if lineno<>1 then page. 
-              find pl_mstr where pl_prod_line = pt_prod_line no-lock no-error.
+              find pl_mstr where pl_domain = global_domain 
+               and pl_prod_line = pt_prod_line no-lock no-error.
        pldesc = pl_desc.
-       display date date1 with frame b.
+       display dte dte1 with frame b.
        display pt_prod_line pldesc no-label with width 132 frame c side-labels STREAM-IO.
        PUT "零件号" AT 1 "零件名称" AT 19 "单位" AT 45 "ABC" AT 49 "默认库位" AT 59 "保管员" AT 69 
            "期初库存" TO 94 "盘盈/盘亏" TO 109 "采购入库" TO 124 "计划外入库" TO 139 "采购退货" TO 154     
            "完工入库" TO 169 "本期入库合计" TO 184 "生产出库" TO 199 "计划外出库" TO 214 
            "销售出库" TO 229 "本期出库合计" TO 244  "移出数量" TO 259   "移入数量"  TO 274   "期末库存"TO 285 SKIP .
     end.
-    /*find in_mstr where pt_part=in_part and in_site=pt_site no-lock no-error.
+    /*find in_mstr where in_domain = global_domain
+    	 and pt_part=in_part and in_site=pt_site no-lock no-error.
     if not available(in_mstr) then disp " 1.4.16中未维护：" pt_part pt_site.*/
 
 
@@ -225,12 +230,18 @@ qty_rct_wo2=0.
 qty_iss_prv2=0.
 qty_rct_tr=0.
 
-/*judy 06/30/05*/ /*for each ld_det no-lock where ld_part = pt_part:*/
-/*judy 06/30/05*/  for each ld_det no-lock where ld_part = pt_part  AND ld_site = in_site USE-INDEX ld_part_loc:
+/*judy 06/30/05*/ /*for each ld_det no-lock where ld_domain = global_domain 
+												 and ld_part = pt_part:*/
+/*judy 06/30/05*/  for each ld_det no-lock where ld_domain = global_domain 
+											  and ld_part = pt_part  AND ld_site = in_site 
+									 USE-INDEX ld_part_loc:
  qty = qty + ld_qty_oh.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and substring(tr_type,1,3)="ISS" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+	   and tr_part=pt_part and tr_site=in_site 
+	   and substring(tr_type,1,3)="ISS" 
+	   and tr_effdate>=dte and tr_effdate<=dte1:
 if tr_type="ISS-SO" then
 qty_iss_so=qty_iss_so + tr_qty_chg.
 else if tr_type="ISS-WO" then
@@ -244,7 +255,9 @@ qty_iss_mv=qty_iss_mv + tr_qty_chg. */
 end.
 qty_issue=absolute(qty_iss_so + qty_iss_unp + qty_iss_wo ).
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and substring(tr_type,1,3)="ISS" and tr_effdate>date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site 
+		 and substring(tr_type,1,3)="ISS" and tr_effdate>dte1:
 if tr_type="ISS-SO" then
 qty_iss_so2=qty_iss_so2 + tr_qty_chg.
 else if tr_type="ISS-WO" then
@@ -258,60 +271,80 @@ qty_iss_mv2=qty_iss_mv2 + tr_qty_chg.
 end.
 qty_issue2=absolute(qty_iss_so2 + qty_iss_unp2 + qty_iss_wo2 ).
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site AND  tr_type="TAG-CNT" and tr_effdate>date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site 
+		 AND tr_type="TAG-CNT" and tr_effdate>dte1:
 qty_tag_cnt2=qty_tag_cnt2 + tr_qty_chg.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site AND ( tr_type="TAG-CNT" OR tr_type BEGINS "cyc")  and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site 
+		 AND ( tr_type="TAG-CNT" OR tr_type BEGINS "cyc")  
+		 and tr_effdate>=dte and tr_effdate<=dte1:
 qty_tag_cnt=qty_tag_cnt + tr_qty_chg.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and tr_type="RCT-PO" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site and tr_type="RCT-PO" 
+		 and tr_effdate>=dte and tr_effdate<=dte1:
 qty_rct_po = qty_rct_po + tr_qty_chg.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and tr_type="iss-prv" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site and tr_type="iss-prv" 
+		 and tr_effdate>=dte and tr_effdate<=dte1:
 qty_iss_prv = qty_iss_prv + tr_qty_chg.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and tr_type ="RCT-UNP" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site and tr_type ="RCT-UNP" 
+		 and tr_effdate>=dte and tr_effdate<=dte1:
 qty_rct_unp = qty_rct_unp + tr_qty_chg.
 end.
 
 /*Kang Jian*/
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and tr_type ="RCT-WO" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site and tr_type ="RCT-WO" 
+		 and tr_effdate>=dte and tr_effdate<=dte1:
 qty_rct_wo = qty_rct_wo + tr_qty_chg.
 end.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and tr_type ="rct-tr" and tr_effdate>=date and tr_effdate<=date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+	   and tr_part=pt_part and tr_site=in_site and tr_type ="rct-tr" 
+	   and tr_effdate>=dte and tr_effdate<=dte1:
 qty_rct_tr = qty_rct_tr + tr_qty_chg.
 end.
 
 qty_receive=qty_rct_po + qty_rct_unp + qty_rct_wo + qty_iss_prv.
 
-for each tr_hist no-lock where tr_part=pt_part and tr_site=in_site and (TR_TYPE="ISS-PRV" OR tr_type="RCT-PO" or tr_type="RCT-UNP" or tr_type="RCT-WO") and tr_effdate>date1:
+for each tr_hist no-lock where tr_domain = global_domain 
+		 and tr_part=pt_part and tr_site=in_site 
+		 and (TR_TYPE="ISS-PRV" OR tr_type="RCT-PO" or tr_type="RCT-UNP" or tr_type="RCT-WO") 
+		 and tr_effdate>dte1:
 qty_receive2 = qty_receive2 + tr_qty_chg.
 end.
 
 /*judy*/
    qty_end = qty.
    qty_init = qty.
-    for each tr_hist  where tr_part = pt_part
-                            and tr_effdate > date1 and tr_site = in_site
-                            and tr_effdate <> ? 
-                            and tr_qty_loc <> 0
-                            and tr_ship_type = ""
-                         NO-LOCK USE-INDEX tr_part_eff:
+    for each tr_hist  where tr_domain = global_domain 
+    		 and tr_part = pt_part
+         and tr_effdate > dte1 and tr_site = in_site
+         and tr_effdate <> ? 
+         and tr_qty_loc <> 0
+         and tr_ship_type = ""
+         NO-LOCK USE-INDEX tr_part_eff:
                          qty_end = qty_end -  tr_qty_loc.
                       END.
     
     /*qty_end = qty - qty_tag_cnt2 + qty_issue2 - qty_receive2.*/
     
     /*qty_init = qty_end - qty_tag_cnt + qty_issue  - qty_receive.*/
-       for each tr_hist where tr_part = pt_part
-                            and tr_effdate > DATE - 1 and tr_site = in_site
-                            and tr_effdate <> ? and tr_qty_loc <> 0
-                            and tr_ship_type = ""
+       for each tr_hist where tr_domain = global_domain 
+       			and tr_part = pt_part
+            and tr_effdate > dte - 1 and tr_site = in_site
+            and tr_effdate <> ? and tr_qty_loc <> 0
+            and tr_ship_type = ""
                          NO-LOCK USE-INDEX tr_part_eff:
                          qty_init  = qty_init  - tr_qty_loc.
                       END.
@@ -346,8 +379,8 @@ end procedure.
 
 
 
-/*judy 06/30/05*/ /*/*GUI*/ {mfguirpb.i &flds=" site site1 line line1 part part1 date date1 keeper keeper1  "} */ /*Drive the Report*/
-/*judy 06/30/05*/ /*GUI*/ {mfguirpb.i &flds=" site site1 line line1 part part1 date date1 keeper keeper1 planer planer1"}  /*Drive the Report*/
+/*judy 06/30/05*/ /*/*GUI*/ {mfguirpb.i &flds=" site site1 line line1 part part1 dte dte1 keeper keeper1  "} */ /*Drive the Report*/
+/*judy 06/30/05*/ /*GUI*/ {mfguirpb.i &flds=" site site1 line line1 part part1 dte dte1 keeper keeper1 planer planer1"}  /*Drive the Report*/
 /*judy 06/30/05*/ /*{mfreset.i}*/
 
 

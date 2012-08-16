@@ -3,7 +3,7 @@
 /* V1                 Developped: 05/09/01      BY: Kang Jian          */
 /* Rev: eb2+ sp7      Last Modified: 05/06/26      BY: judy Liu         */
 	  
-      {mfdtitle.i} 
+{mfdtitle.i "120816.1"} 
 	  define variable cur_nbr like tr_nbr.
 	  define variable nbr like tr_nbr.
 	  define variable part like tr_part.
@@ -154,13 +154,14 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 i = 1.
 pageno=page_start.
 
-for each  tr_hist where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
-                and    (tr_part >= part) and (tr_part <= part1)
-                 and    (tr_effdate >= eff_date)  and  (tr_effdate <= eff_date1)
-                 and    (tr_so_job >= so_job) and (tr_so_job <= so_job1)
-                 and    (tr_type = "ISS-UNP")
-                 and    (tr_site >= site1 and tr_site <= site2)
-                 and    (tr_rmks>=so_rmks) and (tr_rmks<=so_rmks1)
+for each  tr_hist where tr_domain = global_domain
+                 and  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
+                 and  (tr_part >= part) and (tr_part <= part1)
+                 and  (tr_effdate >= eff_date)  and  (tr_effdate <= eff_date1)
+                 and  (tr_so_job >= so_job) and (tr_so_job <= so_job1)
+                 and  (tr_type = "ISS-UNP")
+                 and  (tr_site >= site1 and tr_site <= site2)
+                 and  (tr_rmks>=so_rmks) and (tr_rmks<=so_rmks1)
                  and  (pageno<=page_end) 
             use-index tr_nbr 
             break by tr_nbr: 
@@ -170,7 +171,8 @@ for each  tr_hist where  (tr_nbr >= nbr) and (tr_nbr <= nbr1)
 
   /* find first tr_hist where tr_nbr = cur_nbr*/
  
-     find first pt_mstr where pt_part = tr_part no-lock no-error.
+     find first pt_mstr where pt_domain = global_domain 
+     			  and pt_part = tr_part no-lock no-error.
      if available pt_mstr then do:
        issue = 0 - tr_qty_chg.
        display tr_part pt_desc2 tr_site pt_um issue "        " tr_loc tr_so_job tr_rmks with no-box no-labels width 250 frame c down.          

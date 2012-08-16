@@ -7,7 +7,7 @@
 
 
          /* DISPLAY TITLE */
-       {mfdtitle.i "f+"}
+{mfdtitle.i "120816.1"}
 
 define variable part like wo_part.			/* assemble part    */
 define variable wodpart like wod_part.
@@ -89,7 +89,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
      /* DISPLAY */
    	view frame a.
    	
-   	find first code_mstr no-lock where code_fldname = "xx-rssld-dir" and code_value = global_userid no-error.
+   	find first code_mstr no-lock where code_domain = global_domain 
+   			   and code_fldname = "xx-rssld-dir" and code_value = global_userid no-error.
    	if available code_mstr then
 		finputfile = code_cmmt.
 
@@ -162,13 +163,15 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 			
 			ponbr = string(chExcelWorkbook:Worksheets(1):Cells(iRow,"AE"):value).
 			poline = (chExcelWorkbook:Worksheets(1):Cells(iRow,"AG"):value).
-			find first scx_ref no-lock where scx_po = ponbr and scx_line = poline no-error.
+			find first scx_ref no-lock where scx_domain = global_domain 
+					   and scx_po = ponbr and scx_line = poline no-error.
 			if not available scx_ref then do:
 				put stream outputfile "日程不存在，EXCEL行：" + string(iRow) at 1 format "x(60)".
 				iError = iError + 1.
 				next.
 			end.
-			find first pod_det no-lock where pod_nbr = ponbr and pod_line = poline no-error.
+			find first pod_det no-lock where pod_domain = global_domain 
+						 and pod_nbr = ponbr and pod_line = poline no-error.
 			if not available pod_det then do:
 				put stream outputfile "采购项不存在，EXCEL行：" + string(iRow) at 1 format "x(60)".
 				iError = iError + 1.
@@ -186,7 +189,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 				next.
 			end.
 			
-			find first sch_mstr where sch_type = 4
+			find first sch_mstr where sch_domain = global_domain 
+									and sch_type = 4
 						      and sch_nbr = scx_order 
 						      and sch_line = scx_line
 						      and sch_rlse_id = pod_curr_rlse_id[1] no-lock no-error.
@@ -241,7 +245,7 @@ Procedure tran_rss_cimload:
               output to value(ponbrline).
               
               put 
-                    '"' xxwk_ponbr '"' "- - -" xxwk_line skip 
+                    '"' xxwk_ponbr '"' "- - - " xxwk_line skip 
                     "-" skip 
                     "-" skip
                     xxwk_date SKIP
@@ -266,10 +270,7 @@ Procedure tran_rss_cimload:
                              
         end. /*for each */
            
-        
-            
-           OS-COMMAND notepad  value(msg_file) .
-           
+           OS-COMMAND silent notepad value(msg_file) .
            os-delete value(msg_file) . 
 
 

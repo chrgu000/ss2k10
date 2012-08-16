@@ -3,7 +3,7 @@
 /*Revision: 8.5f    Last modified: 12/23/2003   By: Kevin, change qty_pick = 0 to qty_pick = qty_req*/
 /*Revision: eb2+sp7 retrofit by tao fengqin   06/22/2005   */
 /*display the title*/
-{mfdtitle.i "f+"}
+{mfdtitle.i "120816.1"}
 
 def var site like si_site.
 def var sidesc like si_desc.
@@ -43,7 +43,8 @@ repeat:
 
        update site with frame a editing:
             if frame-field = "site" then do:
-                {mfnp.i si_mstr site si_site site si_site si_site}
+                {mfnp.i si_mstr site " si_domain = global_domain and si_site "
+                			 site si_site si_site}
                 if recno <> ? then do:
                     disp si_site @ site si_desc @ sidesc with frame a.    
                 end.
@@ -55,7 +56,7 @@ repeat:
        end.       
               
        /*verify the input site*/ 
-       find si_mstr no-lock where si_site = site no-error.
+       find si_mstr no-lock where si_domain = global_domain and si_site = site no-error.
        if not available si_mstr or (si_db <> global_db) then do:
           if not available si_mstr then msg-nbr = 708.
           else msg-nbr = 5421.
@@ -137,12 +138,13 @@ repeat:
          
          if ok_yn then do:
               for each xxwk no-lock:
-                   find xxtl_det where xxtl_nbr = xxwk.data[1] and
+                   find xxtl_det where xxtl_domain = global_domain and
+                                       xxtl_nbr = xxwk.data[1] and
                                        xxtl_part = xxwk.data[4] and
                                        xxtl_loc_fr = xxwk.data[5] and
                                        xxtl_loc_to = xxwk.data[6] no-error.
                    if not available xxtl_det then do:
-                          create xxtl.
+                          create xxtl. xxtl_domain = global_domain.
                           assign xxtl_nbr = xxwk.data[1]
                                  xxtl_site = xxwk.data[2]                          
                                  xxtl_effdate = date(inte(substr(xxwk.data[3],6,2)),inte(substr(xxwk.data[3],9,2)),
@@ -171,7 +173,7 @@ repeat:
                      xxwk.error with width 255 stream-io.
          end.
          output close.
-         
+os-command silent notepad.exe value(msg_file).         
 Procedure transferlist_check_upload:               
         ok_yn = yes.
         for each xxwk:
@@ -189,21 +191,24 @@ Procedure transferlist_check_upload:
                  leave.
             end.
             
-            find pt_mstr where pt_part = xxwk.data[4] no-lock no-error.
+            find pt_mstr where pt_domain = global_domain 
+             and pt_part = xxwk.data[4] no-lock no-error.
             if not available pt_mstr then do:
                  assign xxwk.error = "零件号不存在".
                  ok_yn = no.
                  next.
             end.
             
-            find loc_mstr where loc_site = site and loc_loc = xxwk.data[5] no-lock no-error.
+            find loc_mstr where loc_domain = global_domain 
+             and loc_site = site and loc_loc = xxwk.data[5] no-lock no-error.
             if not available loc_mstr then do:
                assign xxwk.error = "库位 " + site + "," + xxwk.data[5] + " 不存在".
                ok_yn = no.
                next.
             end.
 
-            find loc_mstr where loc_site = site and loc_loc = xxwk.data[6] no-lock no-error.
+            find loc_mstr where loc_domain = global_domain and loc_site = site 
+             and loc_loc = xxwk.data[6] no-lock no-error.
             if not available loc_mstr then do:
                assign xxwk.error = "库位 " + site + "," + xxwk.data[6] + " 不存在".
                ok_yn = no.
