@@ -10,7 +10,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "120817.1"}
 
 DEFINE VARIABLE v_part1  LIKE pt_part.
 DEFINE VARIABLE v_part2  LIKE pt_part.
@@ -91,9 +91,11 @@ REPEAT:
     IF v_group2 = hi_char THEN v_group2 = "".
 
     UPDATE 
-        v_site VALIDATE(CAN-FIND(FIRST si_mstr WHERE si_site = v_site), "Please input site data...")
+        v_site VALIDATE(CAN-FIND(FIRST si_mstr WHERE si_domain = global_domain 
+        			 and si_site = v_site), "Please input site data...")
         v_part1 
-        v_date WHEN CAN-FIND(FIRST CODE_mstr WHERE CODE_fldname = "yywobmfmbd" AND CODE_value = "DATE")
+        v_date WHEN CAN-FIND(FIRST CODE_mstr WHERE code_domain = global_domain 
+        		   and CODE_fldname = "yywobmfmbd" AND CODE_value = "DATE")
         v_chkcwo
         v_keepver
         v_dispdet
@@ -150,16 +152,19 @@ END PROCEDURE.
 PROCEDURE xxpro-bud-ttx9:
     DEFINE VARIABLE v_pm_code AS CHAR.
     FOR EACH pt_mstr NO-LOCK 
-        WHERE pt_part >= v_part1 AND pt_part <= v_part2
+        WHERE pt_domain = global_domain 
+        AND   pt_part >= v_part1 AND pt_part <= v_part2
         AND   pt_prod_line >= v_line1 AND pt_prod_line <= v_line2
         AND   pt_part_type >= v_type1 AND pt_prod_line <= v_type2
         AND   pt_group >= v_group1 AND pt_group <= v_group2:
 
         v_pm_code = "".
         /*check in_mstr*/
-        FIND FIRST IN_mstr WHERE IN_part = pt_part AND IN_site = v_site NO-LOCK NO-ERROR.
+        FIND FIRST IN_mstr WHERE in_domain = global_domain 
+        			 and IN_part = pt_part AND IN_site = v_site NO-LOCK NO-ERROR.
         IF NOT AVAILABLE IN_mstr THEN NEXT.
-        FIND FIRST ptp_det WHERE ptp_part = pt_part AND ptp_site = v_site NO-LOCK NO-ERROR.
+        FIND FIRST ptp_det WHERE ptp_domain = global_domain 
+        		   and ptp_part = pt_part AND ptp_site = v_site NO-LOCK NO-ERROR.
         IF AVAILABLE ptp_det THEN v_pm_code = ptp_pm_code.
         ELSE v_pm_code = pt_pm_code.
         IF lookup(v_pm_code, "P,D") > 0 THEN NEXT.
@@ -204,7 +209,9 @@ PROCEDURE xxpro-report:
     IF v_dispdet = YES THEN DO:
         PUT UNFORMATTED "复制零件明细" AT 1 FILL("*", 40) SKIP.
         FOR EACH ttx9 WHERE ttx9_chk_cwo = NO AND ttx9_chk_bom = NO:
-            FOR EACH xxwobmfm_mstr WHERE xxwobmfm_part = ttx9_part AND xxwobmfm_site = ttx9_site AND xxwobmfm_version = ttx9_version:
+            FOR EACH xxwobmfm_mstr WHERE xxwobmfm_domain = global_domain and 
+            				 xxwobmfm_part = ttx9_part AND xxwobmfm_site = ttx9_site AND 
+            				 xxwobmfm_version = ttx9_version:
                 DISP 
                     xxwobmfm_part      label "零件"   
                     xxwobmfm_site      label "地点"   
@@ -223,7 +230,8 @@ PROCEDURE xxpro-report:
                     xxwobmfm_sub_ll    LABEL "底层外包"  
                     with FRAME b WIDTH 200 SIDE-LABELS 5 COLUMN STREAM-IO.
                 FOR EACH xxwobmfd_det 
-                    WHERE xxwobmfd_par = xxwobmfm_part
+                    WHERE xxwobmfd_domain = global_domain 
+                    and xxwobmfd_par = xxwobmfm_part
                     AND xxwobmfd_site = xxwobmfm_site
                     AND xxwobmfd_version = xxwobmfm_version:
                     DISP 

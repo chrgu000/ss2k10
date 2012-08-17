@@ -168,7 +168,7 @@ form
 mainloop :
 repeat:
 /*GUI*/ if global-beam-me-up then undo, leave.
-find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
+find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.                /*kevin,11/06/2003*/
             if not available xxbomc_ctrl then do:
                 message "错误:BOM控制文件还未生成,请首先维护BOM控制文件!" view-as alert-box error.
                 leave.
@@ -184,14 +184,15 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
      assign sel-yn = no.                        /*kevin*/
        assign msg_file = "c:\bmvdcperror.txt".      /*kevin,12/23/2003*/
        /*********tfq added begin*****************/
-        set site1 part1 VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_part = INPUT part1), "零件号不存在")  /*judy*/
-                  site2 part2 VALIDATE (CAN-FIND(FIRST pt_mstr WHERE pt_part = INPUT part2), "零件号不存在")
+        set site1 part1 VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part1), "零件号不存在")  /*judy*/
+                  site2 part2 VALIDATE (CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part2), "零件号不存在")
               with frame a editing:
        /******tfq added end********************/
     
         /*added by kevin,10/23/2003*/
                if frame-field = "site1" then do:
-                  {mfnp.i si_mstr site1 si_site site1 si_site si_site}
+                  {mfnp.i si_mstr site1 " si_domain = global_domain and si_site "
+                  				site1 si_site si_site}
                   if recno <> ? then do:
                       disp si_site @ site1 si_desc @ sidesc1 with frame a.
                   end.
@@ -202,10 +203,10 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
          then do:
             /* FIND NEXT/PREVIOUS RECORD - ALL BOM_MSTR'S ARE
             VALID FOR "SOURCE" */
-            /*{mfnp.i bom_mstr part1 bom_parent part1
+            /*{mfnp.i bom_mstr part1 " bom_domain = global_domain and bom_parent " part1
                bom_parent bom_parent}judy*/
-              {mfnp.i pt_mstr part1 pt_part part1
-                 pt_part pt_part}
+              {mfnp.i pt_mstr part1 " pt_domain = global_domain and pt_part "
+              			  part1 pt_part pt_part}
 
 
             if recno <> ?
@@ -222,7 +223,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 
                if bom-type <> fsm_c
                then do:
-                  find pt_mstr where pt_part = bom_parent
+                  find pt_mstr where pt_domain = global_domain and pt_part = bom_parent
                   no-lock no-error.
 
                   if available pt_mstr then
@@ -247,7 +248,8 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
          end.   /* if frame-field = "part1" */
         /**********tfq added begin*********************/
         else if frame-field = "site2" then do:
-                  {mfnp.i si_mstr site2 si_site site2 si_site si_site}
+                  {mfnp.i si_mstr site2 " si_domain = global_domain and si_site "
+                  			  site2 si_site si_site}
                   if recno <> ? then do:
                       disp si_site @ site2 si_desc @ sidesc2 with frame a.
                   end.    
@@ -260,9 +262,9 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 
             /* FIND NEXT/PREVIOUS RECORD - BOMS TO DISPLAY DEPEND
                IN THE INPUT BOM-TYPE PARAMETER */
-            {mfnp05.i bom_mstr bom_fsm_type "bom_fsm_type = bom-type "
-               bom_parent "input part2"}
-
+           {mfnp05.i bom_mstr bom_fsm_type " bom_mstr.bom_domain =
+                       global_domain and bom_fsm_type  = bom-type "
+                          bom_parent "input part2"}
             if recno <> ?
             then do:
 
@@ -278,7 +280,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 
                if bom-type <> fsm_c
                then do:
-                  find pt_mstr no-lock where pt_part = bom_parent
+                  find pt_mstr no-lock where pt_domain = global_domain and pt_part = bom_parent
                   no-error.
                   if available pt_mstr
                   then do:
@@ -315,7 +317,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 /**************************************tfq added begin************************/
 
             /*added by kevin,10/23/2003 for verify site1*/
-                 find si_mstr no-lock where si_site = site1 no-error.
+                 find si_mstr no-lock where si_domain = global_domain and si_site = site1 no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
                      if not available si_mstr then msg-nbr = 708.
                      else msg-nbr = 5421.
@@ -346,7 +348,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 /*J034*/          end.
 
                 /*added by kevin,10/23/2003 for verify site2*/
-                 find si_mstr no-lock where si_site = site2 no-error.
+                 find si_mstr no-lock where si_domain = global_domain and si_site = site2 no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
                      if not available si_mstr then msg-nbr = 708.
                      else msg-nbr = 5421.
@@ -385,12 +387,12 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
       end.
 
     /*judy*/
-               FIND FIRST ptp_det WHERE ptp_part = part2 AND ptp_site = site2 NO-LOCK NO-ERROR.
+               FIND FIRST ptp_det WHERE ptp_domain = global_domain and ptp_part = part2 AND ptp_site = site2 NO-LOCK NO-ERROR.
                IF AVAIL ptp_det AND ptp_bom_code <> "" THEN xxpart2 = ptp_bom_code.
                ELSE xxpart2 = part2.
     /*judy*/
         
-        find first ps_mstr where ps_par = /*part2*/ xxpart2 and ps__chr01 = site2 no-lock no-error .
+        find first ps_mstr where ps_domain = global_domain and ps_par = /*part2*/ xxpart2 and ps__chr01 = site2 no-lock no-error .
         if  not available ps_mstr then
         do:
         message "地点: " + input site2 + " 与产品结构: " + input part2 + " 不匹配" 
@@ -399,7 +401,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
          undo, retry.
         end.
       if bom-type = fsm_c and
-         can-find(pt_mstr where pt_part = part2)
+         can-find(pt_mstr where pt_domain = global_domain and pt_part = part2)
       then do:
          /* SSM STRUCTURE CODE CANNOT EXIST IN ITEM MASTER */
          {pxmsg.i &MSGNUM=7494 &ERRORLEVEL=3}
@@ -421,13 +423,13 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 
 
  /*judy*/ 
-      FIND FIRST ptp_det WHERE ptp_site = site1 AND ptp_part = part1 NO-LOCK NO-ERROR.
+      FIND FIRST ptp_det WHERE ptp_domain = global_domain and ptp_site = site1 AND ptp_part = part1 NO-LOCK NO-ERROR.
       IF AVAIL ptp_det AND  ptp_bom_code <> "" THEN  xxpart1 = ptp_bom_code.
       ELSE xxpart1 = part1.
                       
 /*judy*/
 
-      find bom_mstr no-lock where bom_parent = /*part1 judy*/  xxpart1 no-error.
+      find bom_mstr no-lock where bom_domain = global_domain and bom_parent = /*part1 judy*/  xxpart1 no-error.
       if available bom_mstr then
       assign
          /* judy part1*/ xxpart1    = bom_parent
@@ -444,7 +446,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
          {pxmsg.i &MSGNUM=263 &ERRORLEVEL=3} /* FORMULA CONTROLLED */
          undo, retry.
       end.
-      find first ps_mstr no-lock where  ps_par = /*part1judy*/  xxpart1
+      find first ps_mstr no-lock where ps_domain = global_domain and ps_par = /*part1judy*/  xxpart1
          and  ps_ps_code = "J" no-error.
       if available ps_mstr
       then do:
@@ -453,7 +455,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
          undo, retry.
       end.
 
-      if not can-find (first ps_mstr where ps_par = /*part1 judy*/ xxpart1)
+      if not can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part1 judy*/ xxpart1)
       then do:
          /* NO BILL OF MATERIAL EXISTS */
          {pxmsg.i &MSGNUM=100 &ERRORLEVEL=3 &MSGARG1="""("" + part1 + "")"""}
@@ -461,7 +463,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
       end.
 /*********************tfq added begin****************************************/
 /*added by kevin, 11/12/2003*/
-               if can-find (first ps_mstr where ps_par = /*part1 judy*/ xxpart1 and ps__chr01 <> input site1) then do:
+               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part1 judy*/ xxpart1 and ps__chr01 <> input site1) then do:
                      message "地点: " + input site1 + " 与产品结构: " + input part1 + " 不匹配" 
                              view-as alert-box error.
                      next-prompt site1 with frame a.
@@ -469,7 +471,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
                end.
 
                        
-               if can-find (first ps_mstr where ps_par = /*part2 judy*/ xxpart2 and ps__chr01 <> input site2) then do:
+               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part2 judy*/ xxpart2 and ps__chr01 <> input site2) then do:
                      message "地点: " + input site2 + " 与产品结构: " + input part2 + " 不匹配" 
                              view-as alert-box error.
                      next-prompt site2 with frame a.
@@ -481,7 +483,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
       (IF AVAILABLE).  FOR SERVICE BOM'S, USE ONLY BOM_MSTR. */
       if bom-type <> fsm_c
       then do:
-         find pt_mstr where pt_part = part1 no-lock no-error.
+         find pt_mstr where pt_domain = global_domain and pt_part = part1 no-lock no-error.
          if available pt_mstr
          then do:
             if desc1 = ""
@@ -558,7 +560,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 
       if bom-type <> fsm_c
       then do:
-         find pt_mstr where pt_part = part2 no-lock no-error.
+         find pt_mstr where pt_domain = global_domain and pt_part = part2 no-lock no-error.
          if available pt_mstr then do:
 
             if desc3 = "" then
@@ -600,7 +602,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
       hide frame b.
 
       find first ps_mstr no-lock
-         where  ps_par = /*part2 judy*/ xxpart2
+         where ps_domain = global_domain and ps_par = /*part2 judy*/ xxpart2
          and  ps_ps_code = "J" no-error.
       if available ps_mstr
       then do:
@@ -625,7 +627,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 /**********tfq deleted begin**************
 /*marked by kevin, 11/12/2003
       yn = yes.
-      if can-find (first ps_mstr where ps_par = part2)
+      if can-find (first ps_mstr where ps_domain = global_domain and ps_par = part2)
       then do:
          /* PART NUMBER HAS EXISTING BILL OF MATERIAL */
          {pxmsg.i &MSGNUM=200 &ERRORLEVEL=2 &MSGARG1="""("" + part2 + "")"""}
@@ -637,7 +639,7 @@ find first xxbomc_ctrl no-lock no-error.                /*kevin,11/06/2003*/
 /***********tfq added begin**********************************/
 
 /*added by kevin, 11/12/2003
-               if can-find (first ps_mstr where ps_par = part2) then do:
+               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = part2) then do:
                 /*tfq  {mfmsg02.i 200 3 """("" + part2 + "")""" }    */
                 /*tfq*/ {pxmsg.i
                &MSGNUM=200
@@ -717,7 +719,7 @@ end added by kevin, 11/12/2003*/
             pause .
             undo mainloop , retry mainloop .
             end.
-            for each usrw_wkfl where usrw_key1 = "bmvdcp" and usrw_key3 = mfguser :
+            for each usrw_wkfl where usrw_domain = global_domain and usrw_key1 = "bmvdcp" and usrw_key3 = mfguser :
             delete usrw_wkfl .
             end.
             define variable i as integer .
@@ -725,7 +727,7 @@ end added by kevin, 11/12/2003*/
             for each pkdet :
             i = i + 1 .
             
-/*judy*/    FIND FIRST usrw_wkfl WHERE usrw_key1 = "bmvdcp"AND usrw_key3 = mfguser
+/*judy*/    FIND FIRST usrw_wkfl WHERE usrw_domain = global_domain and usrw_key1 = "bmvdcp"AND usrw_key3 = mfguser
                     AND usrw_charfld[1] = pkpart NO-ERROR.
             IF NOT AVAIL usrw_wkfl THEN DO:
                 create usrw_wkfl .
@@ -750,7 +752,7 @@ end added by kevin, 11/12/2003*/
                     usrw_decfld[1] = pkqty .*/
 /*judy*/
                     
-            find xxptmp_mstr where xxptmp_par = part1 and xxptmp_comp = usrw_charfld[1] no-lock no-error .
+            find xxptmp_mstr where xxptmp_domain = global_domain and xxptmp_par = part1 and xxptmp_comp = usrw_charfld[1] no-lock no-error .
             if available xxptmp_mstr then
                     do:
                     usrw_charfld[2] = xxptmp_vend .
@@ -758,7 +760,7 @@ end added by kevin, 11/12/2003*/
                     usrw_charfld[4] = xxptmp_rmk .
                     usrw_key2 = "A-" + string(i,"999") + mfguser .
                     usrw_key6 = "*"  .
-                    FIND FIRST AD_MSTR  WHERE ad_addr = xxptmp_vend and ad_coc_reg = "" no-lock no-error .
+                    FIND FIRST AD_MSTR  WHERE ad_domain = global_domain and ad_addr = xxptmp_vend and ad_coc_reg = "" no-lock no-error .
                     if available ad_mstr then usrw_charfld[5]  = "y" .
                                          else usrw_charfld[5] = "N" .
                     end.       
@@ -766,7 +768,7 @@ end added by kevin, 11/12/2003*/
             
         if sel-yn then do:  
         /***********tfq deleted begin********
-        for each  usrw_wkfl where usrw_key1 = "bmvdcp" and usrw_key3 = mfguser no-lock:
+        for each  usrw_wkfl where usrw_domain = global_domain and usrw_key1 = "bmvdcp" and usrw_key3 = mfguser no-lock:
                  display usrw_key6 no-label format "x(2)" 
                     usrw_charfld[1] no-label  FORMAT "X(16)" 
                     usrw_charfld[2] no-label FORMAT "X(8)"
@@ -786,7 +788,7 @@ end added by kevin, 11/12/2003*/
                {swselect.i
                   &detfile      = usrw_wkfl
                   &detkey = "where"
-                  &searchkey = "usrw_key1 = xxserchkey and usrw_key3 = mfguser  "
+                  &searchkey = " usrw_domain = global_domain and usrw_key1 = xxserchkey and usrw_key3 = mfguser  "
                   &scroll-field = usrw_wkfl.usrw_key6
                   &framename    = "c"
                   &framesize    = 10
@@ -843,7 +845,7 @@ end added by kevin, 11/12/2003*/
            put "part" format "x(17)"  "qty_per" format "x(13)" "vendor" format "x(9)" "customer" format "x(9)" "comment" format "x(8)" skip
                 "目标子零件" format "x(17)"   "单位用量" format "x(13)" "源供应商" format "x(9)"  "客户" format "x(9)"  "备注" format "x(8)" skip 
                "---------------- ------------ -------- -------- --------------------" skip .
-           for each  usrw_wkfl where usrw_key1 = "bmvdcp" and usrw_key6  = "*" and usrw_key3 = mfguser no-lock:
+           for each  usrw_wkfl where usrw_domain = global_domain and usrw_key1 = "bmvdcp" and usrw_key6  = "*" and usrw_key3 = mfguser no-lock:
             display usrw_charfld[1] no-label  FORMAT "X(16)" 
                     STRING(usrw_decfld[1],"->>>>>9.99<<<")  FORMAT "X(12)"
                     usrw_charfld[2] no-label FORMAT "X(8)"
@@ -857,8 +859,8 @@ end added by kevin, 11/12/2003*/
    if yn = no
       then undo MAINLOOP, retry MAINLOOP.
      /*  end.       */
-         for each  usrw_wkfl where usrw_key1 = "bmvdcp" and usrw_key6  = "*" and usrw_key3 = mfguser: 
-         find first xxptmp_mstr where xxptmp_par = part2 and xxptmp_site = site2 
+         for each  usrw_wkfl where usrw_domain = global_domain and usrw_key1 = "bmvdcp" and usrw_key6  = "*" and usrw_key3 = mfguser: 
+         find first xxptmp_mstr where xxptmp_domain = global_domain and xxptmp_par = part2 and xxptmp_site = site2 
          and xxptmp_comp = usrw_charfld[1] no-error .
          if not available xxptmp_mstr then 
          create xxptmp_mstr .

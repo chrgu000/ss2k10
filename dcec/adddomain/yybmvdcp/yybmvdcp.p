@@ -34,7 +34,7 @@
 /* REVISION: 8.5   LAST MODIFIED: 10/21/03      BY: Kevin                 */
 /*******tfq retofit on eb2+sp2 2005/07/01                                 */
 /* DISPLAY TITLE */
-{mfdtitle.i "2+ "}
+{mfdtitle.i "120817.1"}
 
 /*tfq define variable bom-type like bom_fsm_type initial "". */
 /*tfq*/ define new shared variable bom-type like bom_fsm_type initial "". 

@@ -52,7 +52,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "b+ "}
+{mfdtitle.i "120816.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -190,7 +190,8 @@ repeat:
 
             IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO: 
                 xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
-                FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = xxpart NO-LOCK NO-ERROR.
+                FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
+                           pt_part = xxpart NO-LOCK NO-ERROR.
                 IF AVAIL pt_mstr THEN  display
                      pt_desc1 @ desc1
                      with frame a.
@@ -215,7 +216,7 @@ repeat:
 
             for first ecm_mstr
                fields(ecm_domain ecm_eff_date ecm_nbr)
-               where recid(ecm_mstr) = recno
+               where ecm_domain = global_domain and recid(ecm_mstr) = recno
                no-lock:
             end. /* FOR FIRST ecm_mstr */
 
@@ -262,7 +263,7 @@ repeat:
          fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                 pt_part pt_phantom pt_um)
          use-index pt_part
-         where pt_domain = golbal_domain and pt_part = parent  
+         where pt_domain = global_domain and pt_part = parent  
          no-lock:
       end. /* FOR FIRST pt_mstr */
 
@@ -549,7 +550,7 @@ PROCEDURE process_report:
       fields (pt_domain pt_bom_code pt_desc1 pt_desc2
       pt_iss_pol  pt_part  pt_phantom pt_um)
       no-lock
-      where pt_domain = global_doman and pt_part = comp:
+      where pt_domain = global_domain and pt_part = comp:
    end. /* FOR FIRST pt_mstr */
 
    if available pt_mstr
@@ -648,7 +649,7 @@ PROCEDURE process_report:
 /*judy*/      
       IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO: 
              xxpart = SUBSTRING(ps_comp, 1,LENGTH(ps_comp) - 2) .  /*judy*/
-                    FIND FIRST pt_mstr WHERE pt_domain = global_doman and
+                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and
                                pt_part = xxpart NO-LOCK NO-ERROR.
                     IF AVAIL pt_mstr THEN desc1 = pt_desc1.
                    /* MESSAGE "aa" xxpart desc1.

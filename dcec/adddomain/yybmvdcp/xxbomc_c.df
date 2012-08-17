@@ -1,0 +1,48 @@
+ADD TABLE "xxbomc_ctrl"
+  AREA "Schema Area"
+  DESCRIPTION "BOM控制文件"
+  DUMP-NAME "xxbomc_c"
+
+ADD FIELD "xxbomc_part_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "零件地点"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxbomc_code_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Code地点"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxbomc_index1" OF "xxbomc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "索引"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxbomc_domain" OF "xxbomc_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD INDEX "xxbomc_index1" ON "xxbomc_ctrl" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxbomc_domain" ASCENDING 
+  INDEX-FIELD "xxbomc_index1" ASCENDING 
+
+.
+PSC
+cpstream=cp936
+.
+0000000881

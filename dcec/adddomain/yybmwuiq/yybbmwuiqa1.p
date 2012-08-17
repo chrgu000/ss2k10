@@ -35,7 +35,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-     {mfdtitle.i "b+ "}   /*FL07*/
+{mfdtitle.i "120817.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -135,15 +135,19 @@ o_char:ADD-LAST("非O","非O") .
 
            if frame-field = "parent" then do:
           /* FIND NEXT/PREVIOUS RECORD */
-					{mfnp.i ps_mstr parent  " ps_mstr.ps_domain = global_domain  and ps_comp "  parent ps_comp ps_comp}
+          {mfnp.i ps_mstr parent " ps_mstr.ps_domain = global_domain
+                                   and ps_comp " parent ps_comp ps_comp}
+
           if recno <> ? then do:
              parent = ps_comp.
              desc1 = "".
 
-             find pt_mstr where pt_domain = global_domain and pt_part = parent no-lock no-error.
+             find pt_mstr where pt_domain = global_domain and 
+             		  pt_part = parent no-lock no-error.
              if available pt_mstr then desc1 = pt_desc1.
 /*G265*/             if not available pt_mstr then do:
-/*G265*/                find bom_mstr no-lock where bom_domain = global_domain and bom_parent = parent
+/*G265*/                find bom_mstr no-lock where bom_domain = global_domain 
+												 and bom_parent = parent
 /*G265*/                no-error.
 /*G265*/                if available bom_mstr then desc1 = bom_desc.
 /*G265*/             end.
@@ -170,10 +174,12 @@ o_char:ADD-LAST("非O","非O") .
         um = "".
 
 /*G265*/    assign parent.
-        find pt_mstr use-index pt_part where pt_domain = global_domain and pt_part = parent
+        find pt_mstr use-index pt_part where pt_domain = global_domain 
+         and pt_part = parent
         no-lock no-error.
         if not available pt_mstr then do:
-/*G265*/       find bom_mstr no-lock where bom_domain = global_domain and bom_parent = parent no-error.
+/*G265*/       find bom_mstr no-lock where bom_domain = global_domain and 
+									  bom_parent = parent no-error.
 /*G265*/       if not available bom_mstr then do:
           hide message no-pause.
           {mfmsg.i 17 3}
@@ -211,7 +217,8 @@ o_char:ADD-LAST("非O","非O") .
             maxlevel  = min(maxlevel,99)
             level     = 1.
 
-        find first ps_mstr use-index ps_comp where ps_domain = global_domain and ps_comp = comp
+        find first ps_mstr use-index ps_comp where ps_domain = global_domain 
+        			 and ps_comp = comp
         no-lock no-error.
         repeat:
 /*G265      with frame heading:  */
@@ -263,10 +270,12 @@ o_char:ADD-LAST("非O","非O") .
           repeat:
              level = level - 1.
              if level < 1 then leave.
-             find ps_mstr where recid(ps_mstr) = record[level]
+             find ps_mstr where ps_domain = global_domain 
+             	        and recid(ps_mstr) = record[level]
              no-lock no-error.
              comp = ps_comp.
-             find next ps_mstr use-index ps_comp where ps_domain = global_domain and ps_comp = comp
+             find next ps_mstr use-index ps_comp where ps_domain = global_domain 
+             			 and ps_comp = comp
              no-lock no-error.
              if available ps_mstr then leave.
           end.
@@ -283,7 +292,8 @@ o_char:ADD-LAST("非O","非O") .
           xxstatus = "".       /*judy*/
           phantom = no.
 /*hj01*/    yn = NO .
-          find pt_mstr where pt_domain = global_domain and pt_part = ps_par no-lock no-error.
+          find pt_mstr where pt_domain = global_domain and 
+          		 pt_part = ps_par no-lock no-error.
           if available pt_mstr then do:
              desc1 = pt_desc1.
              um = pt_um.
@@ -307,9 +317,11 @@ o_char:ADD-LAST("非O","非O") .
 /*--hj01*/
           end.
 /*G265*/          else do:
-/*GG68/*G265*/       find bom_mstr no-lock where bom_domain = global_domain and bom_parent = ps_comp   */
+/*GG68/*G265*/       find bom_mstr no-lock where bom_domain = global_domain 
+											and bom_parent = ps_comp   */
 /*GG68/*G265*/       no-error.                                          */
-/*GG68*/             find bom_mstr no-lock where bom_domain = global_domain and bom_parent = ps_par no-error.
+/*GG68*/             find bom_mstr no-lock where bom_domain = global_domain and
+									        bom_parent = ps_par no-error.
 /*G265*/             if available bom_mstr then
 /*G265*/             assign um = bom_batch_um
 /*G265*/                 desc1 = bom_desc.
@@ -380,7 +392,8 @@ o_char:ADD-LAST("非O","非O") .
           if (level < maxlevel or maxlevel = 0 ) /*hj01*/ AND yn = NO then do:
              comp = ps_par.
              level = level + 1.
-             find first ps_mstr use-index ps_comp where ps_domain = global_domain and ps_comp = comp
+             find first ps_mstr use-index ps_comp where ps_domain = global_domain 
+             				and ps_comp = comp
              no-lock no-error.
 
 /*J3J4*/        if not available ps_mstr then
@@ -391,7 +404,8 @@ o_char:ADD-LAST("非O","非O") .
 
           end.
           else do:
-             find next ps_mstr use-index ps_comp where ps_domain = global_domain and ps_comp = comp
+             find next ps_mstr use-index ps_comp where ps_domain = global_domain 
+             			 and ps_comp = comp
              no-lock no-error.
 
 /*J3J4*/        if not available ps_mstr then
@@ -403,7 +417,8 @@ o_char:ADD-LAST("非O","非O") .
           end.
            end.
            else do:
-          find next ps_mstr use-index ps_comp where ps_domain = global_domain and ps_comp = comp
+          find next ps_mstr use-index ps_comp where ps_domain = global_domain 
+          			and ps_comp = comp
           no-lock no-error.
            end.
         end.
@@ -427,28 +442,32 @@ o_char:ADD-LAST("非O","非O") .
 /*J3J4*/    if l_next = yes then do:
 /*J3J4*/       for first ptp_det
 /*J3J4*/          fields(ptp_domain ptp_bom_code ptp_part)
-/*J3J4*/          where ptp_det.ptp_domain = global_domain and ptp_det.ptp_bom_code = comp
+/*J3J4*/          where ptp_domain = global_domain and 
+											  ptp_det.ptp_bom_code = comp
 /*J3J4*/       no-lock : end. /* FOR FIRST PTP_DET */
 /*J3J4*/       if available ptp_det then do:
 /*J3J4*/          l_nextptp = yes.
 /*J3J4*/          for first ptmstr1
 /*J3J4*/             fields(pt_domain pt_bom_code pt_desc1 pt_desc2
 /*J3J4*/                    pt_iss_pol pt_part pt_phantom pt_status)
-/*J3J4*/             where ptmstr1.pt_domain = global_domain and ptmstr1.pt_part = ptp_part
+/*J3J4*/             where ptmstr1.pt_domain = global_domain and 
+                           ptmstr1.pt_part = ptp_part
 /*J3J4*/          no-lock : end. /* FOR FIRST PTMSTR1 */
 /*J3J4*/       end. /* IF AVAILABLE PTP_DET */
 /*J3J4*/       else
 /*J3J4*/          for first ptmstr1
 /*J3J4*/             fields(pt_domain pt_bom_code pt_desc1 pt_desc2
 /*J3J4*/                    pt_iss_pol pt_part pt_phantom pt_status)
-/*J3J4*/             where ptmstr1.pt_domain = global_domain and ptmstr1.pt_bom_code = comp
+/*J3J4*/             where ptmstr1.pt_domain = global_domain and 
+													 ptmstr1.pt_bom_code = comp
 /*J3J4*/          no-lock : end. /* FOR FIRST PTMSTR1 */
 
 /*J3J4*/       for first psmstr
 /*J3J4*/          fields(ps_domain ps_comp ps_end ps_lt_off ps_par
 /*J3J4*/                 ps_ps_code ps_qty_per ps_qty_per_b
 /*J3J4*/                 ps_qty_type ps_ref ps_scrp_pct ps_start ps_rmks)
-/*J3J4*/          where psmstr.ps_domain = global_domain and psmstr.ps_par = comp
+/*J3J4*/          where psmstr.ps_domain = global_domain and 
+											  psmstr.ps_par = comp
 /*J3J4*/       no-lock : end. /* FOR FIRST PSMSTR */
 /*J3J4*/       if available psmstr then
 /*J3J4*/          assign
@@ -460,16 +479,19 @@ o_char:ADD-LAST("非O","非O") .
 /*J3J4*/          fields(ps_domain ps_comp ps_end ps_lt_off ps_par
 /*J3J4*/                 ps_ps_code ps_qty_per ps_qty_per_b
 /*J3J4*/                 ps_qty_type ps_ref ps_scrp_pct ps_start ps_rmks)
-/*J3J4*/          where recid(psmstr) = l_psrecid
+/*J3J4*/          where psmstr.ps_domain = global_domain and
+								  recid(psmstr) = l_psrecid
 /*J3J4*/       no-lock : end. /* FOR FIRST PSMSTR */
 /*J3J4*/       find next ptp_det
-/*J3J4*/          where ptp_det.ptp_domain = global_domain and ptp_det.ptp_bom_code = psmstr.ps_par
+/*J3J4*/          where ptp_domain = global_domain and 
+										    ptp_det.ptp_bom_code = psmstr.ps_par
 /*J3J4*/       no-lock no-error.
 /*J3J4*/       if available ptp_det then do:
 /*J3J4*/          for first ptmstr1
 /*J3J4*/             fields(pt_domain pt_bom_code pt_desc1 pt_desc2
 /*J3J4*/                    pt_iss_pol pt_part pt_phantom pt_status)
-/*J3J4*/             where ptmstr1.pt_domain = global_domain and ptmstr1.pt_part = ptp_part
+/*J3J4*/             where ptmstr1.pt_domain = global_domain and 
+											     ptmstr1.pt_part = ptp_part
 /*J3J4*/          no-lock : end. /* FOR FIRST PTMSTR1 */
 /*J3J4*/       end. /* IF AVAIL PTP_DET */
 /*J3J4*/       else do:
@@ -478,15 +500,18 @@ o_char:ADD-LAST("非O","非O") .
 /*J3J4*/             for first ptmstr1
 /*J3J4*/             fields(pt_domain pt_bom_code pt_desc1 pt_desc2
 /*J3J4*/                    pt_iss_pol pt_part pt_phantom pt_status)
-/*J3J4*/                where ptmstr1.pt_domain = global_domain and ptmstr1.pt_bom_code = psmstr.ps_par
+/*J3J4*/                where ptmstr1.pt_domain = global_domain 
+													and ptmstr1.pt_bom_code = psmstr.ps_par
 /*J3J4*/             no-lock : end. /* FOR FIRST PTMSTR1 */
 /*J3J4*/             l_nextptp = no.
 /*J3J4*/          end. /* IF L_NEXTPTP = YES */
 /*J3J4*/          else do:
 /*J3J4*/             find next ptmstr1
-/*J3J4*/                where ptmstr1.pt_domain = global_domain and ptmstr1.pt_bom_code = psmstr.ps_par
+/*J3J4*/                where ptmstr1.pt_domain = global_domain and
+														  ptmstr1.pt_bom_code = psmstr.ps_par
 /*J3J4*/                and not(can-find (first ptp_det
-/*J3J4*/                        where ptp_domain = global_domain and ptp_part = pt_part and
+/*J3J4*/                        where ptp_domain = global_domain and 
+																			ptp_part = pt_part and
 /*J3J4*/                        ptp_bom_code = ptmstr1.pt_bom_code))
 /*J3J4*/             no-lock no-error.
 /*J3J4*/             l_nextptp = no.
@@ -504,35 +529,42 @@ o_char:ADD-LAST("非O","非O") .
 /*J3J4*/          fields(ps_domain ps_comp ps_end ps_lt_off ps_par
 /*J3J4*/                 ps_ps_code ps_qty_per ps_qty_per_b
 /*J3J4*/                 ps_qty_type ps_ref ps_scrp_pct ps_start ps_rmks)
-/*J3J4*/             where ps_mstr.ps_domain = global_domain and ps_mstr.ps_comp = ptmstr1.pt_part use-index ps_comp
+/*J3J4*/             where ps_mstr.ps_domain = global_domain and
+													 ps_mstr.ps_comp = ptmstr1.pt_part use-index ps_comp
 /*J3J4*/          no-lock : end. /* FOR FIRST PS_MSTR */
 /*J3J4*/          if available ps_mstr then do:
 /*J3J4*/                comp = ptmstr1.pt_part.
 /*J3J4*/                leave bomloop1.
 /*J3J4*/          end. /* if available ps_mstr */
 /*J3J4*/          else if not available ps_mstr then do:
-/*J3J4*/             find next  ptp_det where ptp_det.ptp_domain = global_domain and ptp_det.ptp_bom_code = comp
+/*J3J4*/             find next ptp_det where ptp_det.ptp_domain = global_domain 
+													 and ptp_det.ptp_bom_code = comp
 /*J3J4*/             no-lock no-error.
 /*J3J4*/                if available ptp_det then do:
 /*J3J4*/                   find next ptmstr1
-/*J3J4*/                      where ptmstr1.pt_domain = global_domain and ptmstr1.pt_part = ptp_part
+/*J3J4*/                      where ptmstr1.pt_domain = global_domain and
+																	  ptmstr1.pt_part = ptp_part
 /*J3J4*/                   no-lock no-error.
 /*J3J4*/                end. /* IF AVAIL PTP_DET */
 /*J3J4*/                else  do:
 /*J3J4*/                   find next ptmstr1
-/*J3J4*/                      where ptmstr1.pt_domain = global_domain and ptmstr1.pt_bom_code = comp
+/*J3J4*/                      where ptmstr1.pt_domain = global_domain and 
+															      ptmstr1.pt_bom_code = comp
 /*J3J4*/                   no-lock no-error.
 /*J3J4*/                   if not available ptmstr1 then do:
 /*J3J4*/                      for first psmstr
-/*J3J4*/                         fields(ps_comp ps_end ps_lt_off ps_par
+/*J3J4*/                         fields(ps_domain ps_comp ps_end ps_lt_off ps_par
 /*J3J4*/                                ps_ps_code ps_qty_per ps_qty_per_b
 /*J3J4*/                                ps_qty_type ps_ref ps_scrp_pct ps_start ps_rmks)
-/*J3J4*/                         where recid(psmstr) = l_psrecid
+/*J3J4*/                         where psmstr.ps_domain = global_domain and 
+																 recid(psmstr) = l_psrecid
 /*J3J4*/                      no-lock : end. /* FOR FIRST PSMSTR */
 /*J3J4*/                      find next ptmstr1
-/*J3J4*/                         where ptmstr1.pt_domain = global_domain and ptmstr1.pt_bom_code = psmstr.ps_par
+/*J3J4*/                         where ptmstr1.pt_domain = global_domain and 
+																			 ptmstr1.pt_bom_code = psmstr.ps_par
 /*J3J4*/                         and not(can-find (first ptp_det
-/*J3J4*/                                 where ptp_domain = global_domain and ptp_part = pt_part and
+/*J3J4*/                                 where ptp_domain = global_domain and 
+																						   ptp_part = pt_part and
 /*J3J4*/                                 ptp_bom_code = ptmstr1.pt_bom_code))
 /*J3J4*/                      no-lock no-error.
 /*J3J4*/                   end. /* IF NOT AVAILABLE PTMSTR1 */

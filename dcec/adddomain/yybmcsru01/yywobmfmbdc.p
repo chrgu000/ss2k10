@@ -50,14 +50,16 @@ DEFINE VARIABLE v_pm_code AS CHAR.
               comp = parent
               maxlevel = min(maxlevel,99).
 
-            FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = inp-part NO-LOCK NO-ERROR.
+            FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
+            					 pt_part = inp-part NO-LOCK NO-ERROR.
             IF NOT AVAILABLE pt_mstr THEN LEAVE.
 
             ASSIGN v_pm_code = pt_pm_code.
 
 
 /*N027*/    /* COMBINED FOLLOWING ASSIGNMENTS */
-            find ptp_det no-lock where ptp_domain = global_domain and ptp_part = parent AND ptp_site = site no-error.
+            find ptp_det no-lock where ptp_domain = global_domain and 
+            		 ptp_part = parent AND ptp_site = site no-error.
             if available ptp_det then
                 assign comp    = if ptp_bom_code <> "" then ptp_bom_code
                                                        else ptp_part
@@ -94,12 +96,14 @@ define input parameter comp like ps_comp no-undo.
 define input parameter level as integer no-undo.
            /*DETAIL FORM */
 
-find pt_mstr no-lock where pt_domain = global_domain and pt_part = comp no-error.
+find pt_mstr no-lock where pt_domain = global_domain and
+		 pt_part = comp no-error.
 /*J3J4*/ if available pt_mstr and pt_bom_code <> "" then
 /*J3J4*/    comp = pt_bom_code.
 
 open query q_ps_mstr for each ps_mstr use-index ps_parcomp
-     where ps_domain = global_domain and ps_par = comp and ps_ps_code <> "J" no-lock.
+     where ps_domain = global_domain and ps_par = comp and 
+     			 ps_ps_code <> "J" no-lock.
 
 get first q_ps_mstr no-lock.
 
@@ -120,7 +124,8 @@ repeat while avail ps_mstr:
     ASSIGN v_pm_code = "".
 
 
-    find pt_mstr where pt_domain = global_domain and pt_part = ps_comp no-lock no-error.
+    find pt_mstr where pt_domain = global_domain and 
+    		 pt_part = ps_comp no-lock no-error.
     if available pt_mstr then do:
       assign um = pt_um
              desc1 = pt_desc1
@@ -129,7 +134,8 @@ repeat while avail ps_mstr:
       v_pm_code = pt_pm_code.
     end.
     else do:
-      find bom_mstr no-lock where bom_domain = global_domain and bom_parent = ps_comp no-error.
+      find bom_mstr no-lock where bom_domain = global_domain and
+      		 bom_parent = ps_comp no-error.
       if available bom_mstr then
         assign um = bom_batch_um
                desc1 = bom_desc.
@@ -137,7 +143,8 @@ repeat while avail ps_mstr:
 
     assign bom_code = ps_comp.
 
-    find ptp_det no-lock where ptp_domain = global_domain and ptp_part = ps_comp
+    find ptp_det no-lock where ptp_domain = global_domain 
+    	   and ptp_part = ps_comp
          and ptp_site = site no-error.
     if available ptp_det
     then assign iss_pol = ptp_iss_pol

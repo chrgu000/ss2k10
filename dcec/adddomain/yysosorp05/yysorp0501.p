@@ -234,7 +234,7 @@ assign
    ext_line_charge = 0
    pages = 0.
 
-for each so_mstr where (so_nbr >= nbr)
+for each so_mstr where so_domain = global_domain and (so_nbr >= nbr)
    and (so_nbr <= nbr1)
    and (so_cust >= cust)
    and (so_cust <= cust1)
@@ -254,7 +254,7 @@ no-lock by so_nbr with frame b no-box:
    /* DO LOOP ADDED TO SKIP LOCKED SO_MSTR RECORDS */
    do for somstr:
 
-      find somstr where so_recno = recid(somstr)
+      find somstr where so_domain = global_domain and so_recno = recid(somstr)
       exclusive-lock no-wait no-error.
 
       if (available somstr and not locked somstr) then
@@ -277,7 +277,8 @@ no-lock by so_nbr with frame b no-box:
       end.
 
       /* DETERMINE CURRENCY DISPLAY AMERICAN OR EUROPEAN  */
-      find rnd_mstr where rnd_rnd_mthd = rndmthd no-lock no-error.
+      find rnd_mstr where rnd_domain = global_domain and 
+      		 rnd_rnd_mthd = rndmthd no-lock no-error.
       if not available rnd_mstr then do:
          {pxmsg.i &MSGNUM=863 &ERRORLEVEL=4}
          /* ROUND METHOD RECORD NOT FOUND */
@@ -309,7 +310,8 @@ no-lock by so_nbr with frame b no-box:
 
    first_line = yes.
    termsdesc = "".
-   find ct_mstr where ct_code = so_cr_terms no-lock no-error.
+   find ct_mstr where ct_domain = global_domain and 
+   			ct_code = so_cr_terms no-lock no-error.
    if available ct_mstr then termsdesc = ct_desc.
 
    so_recno = recid(so_mstr).
@@ -318,7 +320,7 @@ no-lock by so_nbr with frame b no-box:
       billto = ""
       shipto = "".
 
-   find ad_mstr where ad_addr = so_cust
+   find ad_mstr where ad_domain = global_domain and ad_addr = so_cust
    no-lock no-wait no-error.
 
    if available ad_mstr then do:
@@ -342,7 +344,7 @@ no-lock by so_nbr with frame b no-box:
 /*judy 07/06/05*/        billfax = ad_fax.
    end.
 
-   find ad_mstr where ad_addr = so_ship
+   find ad_mstr where ad_domain = global_domain and ad_addr = so_ship
    no-lock no-wait no-error.
 
    if available ad_mstr then do:
@@ -368,10 +370,11 @@ no-lock by so_nbr with frame b no-box:
 
    
    /* GET VAT REG NO AND COUNTRY CODE FOR SHIP-TO */
-   find ad_mstr where ad_addr = so_ship no-lock no-wait no-error.
+   find ad_mstr where ad_domain = global_domain and 
+   			ad_addr = so_ship no-lock no-wait no-error.
    if available ad_mstr then do:
       if ad_pst_id = "" then do:
-         find ad_mstr where ad_addr = so_bill
+         find ad_mstr where ad_domain = global_domain and ad_addr = so_bill
          no-lock no-wait no-error.
          if available ad_mstr then do:
             {gpvteprg.i}
@@ -388,7 +391,8 @@ no-lock by so_nbr with frame b no-box:
 
    resale = "".
  
-   find cm_mstr where cm_addr = so_cust no-lock no-error.
+   find cm_mstr where cm_domain = global_domain and 
+   		  cm_addr = so_cust no-lock no-error.
    if available cm_mstr then resale = cm_resale.
 
  
@@ -432,7 +436,7 @@ no-lock by so_nbr with frame b no-box:
       vatreg
       skip.
 
- /*judy 07/06/05*/     find first ad_mstr no-lock where
+ /*judy 07/06/05*/     find first ad_mstr no-lock where ad_domain = global_domain and
  /*judy 07/06/05*/     ad_addr = so_slspsn[1] and ad_type = "SLSPRSN" no-error.
  /*judy 07/06/05*/     if available ad_mstr then
   /*judy 07/06/05*/        	assign
@@ -493,8 +497,8 @@ no-lock by so_nbr with frame b no-box:
       et_ext_price_total = 0
       ext_price_total = 0.
      
-   for each sod_det where sod_nbr = so_nbr
-                  and not sod_sched
+   for each sod_det where sod_domain = global_domain 
+   	    and sod_nbr = so_nbr and not sod_sched
    no-lock by sod_nbr by sod_line:
  
  
@@ -522,7 +526,7 @@ no-lock by so_nbr with frame b no-box:
       {etdcrg.i so_curr}
 
       desc1 = sod_desc.
-      find pt_mstr where pt_part = sod_part
+      find pt_mstr where pt_domain = global_domain and pt_part = sod_part
       no-lock no-wait no-error.
 
       if available pt_mstr then do:
@@ -586,9 +590,8 @@ no-lock by so_nbr with frame b no-box:
 
          line_charge_total = 0.
 
-         for each sodlc_det where
-            sodlc_order = sod_nbr and
-            sodlc_ord_line = sod_line
+         for each sodlc_det where sodlc_domain = global_domain and
+            sodlc_order = sod_nbr and sodlc_ord_line = sod_line
          no-lock break by sodlc_order:
 
             if sodlc_one_time and sodlc_times_charged > 0 then
@@ -610,7 +613,8 @@ no-lock by so_nbr with frame b no-box:
                   ext_price_total = ext_price_total + ext_line_charge
                   line_total = line_total + ext_line_charge.
 
-               for first trl_mstr where trl_code = sodlc_trl_code
+               for first trl_mstr where trl_domain = global_domain and 
+               					 trl_code = sodlc_trl_code
                no-lock: end.
 
                if available trl_mstr then do:
@@ -663,9 +667,8 @@ no-lock by so_nbr with frame b no-box:
       *******************************************/
 
       if print_options and
-         can-find(first sob_det
-                  where sob_nbr = so_nbr and
-                        sob_line = sod_line)
+         can-find(first sob_det where sob_domain = global_domain 
+                    and sob_nbr = so_nbr and sob_line = sod_line)
       then do:
 
          /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
@@ -678,8 +681,8 @@ no-lock by so_nbr with frame b no-box:
             &confg_disc="no"
             &command="~{so05e01.i~}"}
 
-         find first sob_det where sob_nbr = sod_nbr
-                              and sob_line = sod_line
+         find first sob_det where sob_domain = global_domain 
+         				and sob_nbr = sod_nbr and sob_line = sod_line
          no-lock no-error.
 
          /* NEW STYLE sob_det CONTAIN A
@@ -698,13 +701,14 @@ no-lock by so_nbr with frame b no-box:
 
          pm_code = pt_pm_code.
 
-         find ptp_det where ptp_part = sod_part and ptp_site = sod_site
+         find ptp_det where ptp_domain = global_domain and 
+         			ptp_part = sod_part and ptp_site = sod_site
          no-lock no-error.
          if available ptp_det then
             pm_code = ptp_pm_code.
          if pm_code = "C" and
-            not can-find(first sob_det where sob_nbr  = sod_nbr and
-                                             sob_line = sod_line)
+            not can-find(first sob_det where sob_domain = global_domain and 
+                sob_nbr  = sod_nbr and sob_line = sod_line)
          then do:
             {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
                &part=sod_part

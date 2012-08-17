@@ -21,7 +21,7 @@ ro_std_op 标准工序
 
 opm_mstr 标准工序数据表
 opm_std_op 标准工序 */
-{mfdtitle.i}
+{mfdtitle.i "120817.1"}
 define workfile bom1 field bom1_par like ps_par
                      field bom1_op like ps_op
                      field bom1_i as integer.
@@ -98,14 +98,16 @@ bom1_par = bom1.
 bom1_i = 0.
 do level = 0 to 99 :
     for each bom1 where bom1_i = level :
-        for each ps_mstr where ps_par = bom1_par use-index ps_par no-lock:
+        for each ps_mstr where ps_domain = global_domain and 
+        				 ps_par = bom1_par use-index ps_par no-lock:
             create bom2.
             bom2_par = ps_comp.
             bom2_op = ps_op.
             bom2_start = ps_start.
             bom2_end = ps_end.
             bom2_i = level + 1.
-            find pt_mstr where pt_part = ps_comp no-lock no-error .
+            find pt_mstr where pt_domain = global_domain and
+            		 pt_part = ps_comp no-lock no-error .
             if available pt_mstr then do:
                  bom2_pt_pm_code = pt_pm_code.
                bom2_pt_iss_pol = pt_iss_pol.
@@ -125,7 +127,8 @@ do level = 0 to 99 :
 end.
 for each bom2 :    
     if bom2_op <> 0 then do:
-       find first ro_det where ro_routing = bom1 and ro_op = bom2_op no-lock no-error .
+       find first ro_det where ro_domain = global_domain and 
+       			ro_routing = bom1 and ro_op = bom2_op no-lock no-error .
        if available ro_det then do:
         bom2_ro_op = ro_op.
         bom2_std_op = ro_std_op.

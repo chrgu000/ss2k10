@@ -1,10 +1,13 @@
 {mfdeclre.i}
 
+
 DEFINE INPUT  PARAMETER inp-part AS CHAR.
 DEFINE INPUT  PARAMETER inp-bomcode AS CHAR.
 DEFINE INPUT  PARAMETER inp-site AS CHAR.
 DEFINE INPUT  PARAMETER inp-date AS DATE.
 DEFINE OUTPUT PARAMETER inp-version AS INTEGER.
+
+
 
 {gpxpld01.i "new shared"}
 define new shared workfile pkdet no-undo
@@ -26,6 +29,7 @@ RUN xxpro-get-lastversion (INPUT inp-part, INPUT inp-site, INPUT inp-date, OUTPU
 RUN xxpro-bud-bom (INPUT inp-part, INPUT inp-bomcode, INPUT inp-site, INPUT inp-date, INPUT-OUTPUT inp-version).
 
 
+
 /*-----------------------------------------------------*/
 PROCEDURE xxpro-bud-bom:
     DEFINE INPUT PARAMETER p_part AS CHAR.
@@ -40,8 +44,8 @@ PROCEDURE xxpro-bud-bom:
     eff_date = p_date.
 
     p_version = p_version + 1.
-    FIND FIRST xxwobmfm_mstr WHERE xxwobmfm_domain = global_domain
-    		AND xxwobmfm_part = p_part 
+    FIND FIRST xxwobmfm_mstr WHERE xxwobmfm_domain = global_domain 
+    		and xxwobmfm_part = p_part 
         AND xxwobmfm_site = p_site
         AND xxwobmfm_version = p_version
         NO-LOCK NO-ERROR.
@@ -79,7 +83,7 @@ PROCEDURE xxpro-bud-bom:
                             OUTPUT xxwobmfm_sub_ll
                             ).
 
-    FOR EACH xxwobmfd_det WHERE xxwobmfm_domain = global_domain 
+    FOR EACH xxwobmfd_det WHERE xxwobmfd_domain = global_domain 
     		and xxwobmfd_par = xxwobmfm_part
         AND xxwobmfd_site    = xxwobmfm_site
         AND xxwobmfd_version = xxwobmfm_version:
@@ -89,8 +93,8 @@ PROCEDURE xxpro-bud-bom:
     /* 镜像明细 Added by James Duan */
 
         /* get cost set */
-	find first in_mstr where in_domain = global_domain and in_part = p_part 
-			   and in_site = p_site no-lock no-error.
+	find first in_mstr where in_domain = global_domain and 
+						 in_part = p_part and in_site = p_site no-lock no-error.
 	v_costset = (if available in_mstr and in_gl_set <> "" then in_gl_set else "STANDARD").
 
 	for each spt_det no-lock where spt_domain = global_domain and spt_site = p_site
@@ -138,7 +142,7 @@ PROCEDURE xxpro-bud-bom:
         
         FIND FIRST xxwobmfd_det 
             WHERE xxwobmfd_domain = global_domain 
-            AND xxwobmfd_par   = xxwobmfm_part
+            and xxwobmfd_par   = xxwobmfm_part
             AND xxwobmfd_site    = xxwobmfm_site
             AND xxwobmfd_version = xxwobmfm_version
             AND xxwobmfd_comp    = pkpart
@@ -158,12 +162,12 @@ PROCEDURE xxpro-bud-bom:
         ASSIGN xxwobmfd_qty  = xxwobmfd_qty + pkqty.
 
 	/* 加入镜像明细 Added by James Duan */
-		for each spt_det no-lock where spt_domain = global_domain
-			and spt_site = p_site
+		for each spt_det no-lock where spt_domain = global_domain 
+		  and spt_site = p_site
 			and spt_sim = v_costset
 			and spt_part = pkpart
 			by spt_element:
-			find first yywobmsptd_det where yywobmsptd_domain = global_domain
+			find first yywobmsptd_det where yywobmsptd_domain = global_domain 
 			  and yywobmsptd_site    = p_site 
 				and yywobmsptd_part = p_part 
 				and yywobmsptd_comp    = pkpart 
@@ -190,8 +194,8 @@ PROCEDURE xxpro-bud-bom:
     END.
     /* 输入镜像明细日志 */
     	
-    FOR EACH xxwobmfd_det WHERE xxwobmfd_domain = global_domain
-        AND xxwobmfd_par = xxwobmfm_part
+    FOR EACH xxwobmfd_det WHERE xxwobmfd_domain = global_domain 
+    		and xxwobmfd_par = xxwobmfm_part
         AND xxwobmfd_site    = xxwobmfm_site
         AND xxwobmfd_version = xxwobmfm_version:
         /*RUN xxpro-get-cost-tot (INPUT xxwobmfd_comp, INPUT xxwobmfd_site, INPUT p_date, INPUT no, OUTPUT xxwobmfd_cost_tot).*/
@@ -226,8 +230,7 @@ PROCEDURE xxpro-get-lastversion:
     DEFINE VARIABLE v_bomdate AS DATE.
 
     IF p_version = ? THEN p_version = 0.
-    FIND LAST xxwobmfm_mstr WHERE xxwobmfm_domain = global_domain
-    		AND xxwobmfm_part = p_part
+    FIND LAST xxwobmfm_mstr WHERE xxwobmfm_domain = global_domain and xxwobmfm_part = p_part
         AND xxwobmfm_site = p_site
         USE-INDEX xxwobmfm_idx1
         NO-LOCK NO-ERROR.

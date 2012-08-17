@@ -1,6 +1,6 @@
 /*zzbmpsrp01 for product structure report by op or by work center*/
 
-/*GN61*/ {mfdtitle.i "d+ "}
+{mfdtitle.i "120817.1"}
 
 def var parent like bom_parent.
 def var op like opm_std_op.
@@ -60,14 +60,16 @@ repeat:
    if op1 = "" then op1 = hi_char.
    if wkctr1 = "" then wkctr1 = hi_char.
    
-   find bom_mstr where bom_parent = parent no-lock no-error.
+   find bom_mstr where bom_domain = global_domain and 
+   			bom_parent = parent no-lock no-error.
    if not available bom_mstr then do:
         message "该产品结构代码不存在,请重新输入!" view-as alert-box error.
         next-prompt parent with frame a.
         undo,retry.
    end.
 
-   find first ps_mstr use-index ps_parcomp where ps_par = parent
+   find first ps_mstr use-index ps_parcomp where ps_domain = global_domain 
+   			  and ps_par = parent
    no-lock no-error.
    if not available ps_mstr then do:
         message "该父零件无产品结构,请重新输入!" view-as alert-box error.
@@ -92,10 +94,12 @@ repeat:
 		  repeat:
 		     level = level - 1.
 		     if level < 1 then leave.
-		     find ps_mstr where recid(ps_mstr) = record[level]
+		     find ps_mstr where ps_domain = global_domain and 
+		     							recid(ps_mstr) = record[level]
 		     no-lock no-error.
 		     comp = ps_par.
-		     find next ps_mstr use-index ps_parcomp where ps_par = comp
+		     find next ps_mstr use-index ps_parcomp where ps_domain = global_domain 
+		     			 and ps_par = comp
 		     no-lock no-error.
 		     if available ps_mstr then leave.
 		  end.
@@ -106,8 +110,10 @@ repeat:
 	       (ps_start = ? or ps_start <= effdate)
 	       and (ps_end = ? or effdate <= ps_end)) then do:
 
-                find pt_mstr where pt_part = ps_comp no-lock no-error.
-                find ptp_det where ptp_site = ps__chr01 and ptp_part = ps_comp no-lock no-error.
+                find pt_mstr where pt_domain = global_domain and
+                		 pt_part = ps_comp no-lock no-error.
+                find ptp_det where ptp_domain = global_domain and
+                		 ptp_site = ps__chr01 and ptp_part = ps_comp no-lock no-error.
                 
                 if available pt_mstr and 
                 ((available ptp_det and not ptp_phantom)
@@ -124,11 +130,13 @@ repeat:
                              xxwk.op = ps_op
                              xxwk.qty = ps_qty_per /*cj*/ * xqty[level] .
                       
-                      find first opm_mstr where opm_std_op = string(ps_op) no-lock no-error.
+                      find first opm_mstr where opm_domain = global_domain 
+                      		   and opm_std_op = string(ps_op) no-lock no-error.
                       if available opm_mstr then do:
                             assign xxwk.wkctr = opm_wkctr.
                             
-                            find wc_mstr where wc_wkctr = opm_wkctr and wc_mch = opm_mch no-lock no-error.
+                            find wc_mstr where wc_domain = global_domain and
+                            		 wc_wkctr = opm_wkctr and wc_mch = opm_mch no-lock no-error.
                             if available wc_mstr then
                                    assign xxwk.wcdesc = wc_desc.
                       end. 
@@ -144,16 +152,19 @@ repeat:
 		     comp = ps_comp.
 		     level = level + 1.
 /*cj*/       xqty[level] = ps_qty_per * xqty[level - 1] .
-		     find first ps_mstr use-index ps_parcomp where ps_par = comp
+		     find first ps_mstr use-index ps_parcomp where ps_domain = global_domain 
+		     				and ps_par = comp
 		     no-lock no-error.
 		  end.
 		  else do:
-		     find next ps_mstr use-index ps_parcomp where ps_par = comp
+		     find next ps_mstr use-index ps_parcomp where ps_domain = global_domain 
+		     			 and ps_par = comp
 		     no-lock no-error.
 		  end.
 	       end.
 	       else do:
-		  find next ps_mstr use-index ps_parcomp where ps_par = comp
+		  find next ps_mstr use-index ps_parcomp where ps_domain = global_domain 
+		  			and ps_par = comp
 		  no-lock no-error.
 	       end.
    
@@ -163,7 +174,8 @@ repeat:
        where (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1)
        break by xxwk.wkctr by xxwk.comp:
-       find first pt_mstr where pt_part = xxwk.comp no-lock no-error .
+       find first pt_mstr where pt_domain = global_domain 
+       				and pt_part = xxwk.comp no-lock no-error .
         disp xxwk.parent label "机型" xxwk.wkctr xxwk.wcdesc label "工作中心描述"
                xxwk.comp xxwk.desc2 label "子零件描述"              
              xxwk.ref label "参考" xxwk.qty label "用量"  xxwk.op label "工序" xxwk.sdate xxwk.edate pt_status 

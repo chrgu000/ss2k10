@@ -2,7 +2,7 @@
 /*Last modified: 11/18/2003, By: Kevin, Atos Origin*/
 
          /* DISPLAY TITLE */
-         {mfdtitle.i "++ "} /*FN07*/
+{mfdtitle.i "120817.1"}
 
 def var site like si_site.
 def var site1 like si_site.
@@ -66,13 +66,15 @@ repeat:
     {mfselbpr.i "printer" 132}
     {mfphead.i}
 
-    for each xxptmp_mstr where (xxptmp_site >= site and xxptmp_site <= site1) and
-                               (xxptmp_par >= par and xxptmp_par <= par1) and
-                               (xxptmp_comp >= comp and xxptmp_comp <= comp1) and
-                               (xxptmp_vend >= vend and xxptmp_vend <= vend1) and
-                               (xxptmp_cust >= cust and xxptmp_cust <= cust1)
-                         no-lock:
-            FIND FIRST pt_mstr WHERE pt_part = xxptmp_par NO-LOCK NO-ERROR.
+    for each xxptmp_mstr where xxptmp_domain = global_domain and
+            (xxptmp_site >= site and xxptmp_site <= site1) and
+            (xxptmp_par >= par and xxptmp_par <= par1) and
+            (xxptmp_comp >= comp and xxptmp_comp <= comp1) and
+            (xxptmp_vend >= vend and xxptmp_vend <= vend1) and
+            (xxptmp_cust >= cust and xxptmp_cust <= cust1)
+     no-lock:
+            FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
+            					 pt_part = xxptmp_par NO-LOCK NO-ERROR.
             disp xxptmp_site xxptmp_par pt_status WHEN AVAIL pt_mstr xxptmp_comp xxptmp_vend
                  xxptmp_rmks xxptmp_qty xxptmp_cust 
                  with width 132 stream-io.

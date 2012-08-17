@@ -82,7 +82,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "120817.1"}
 {cxcustom.i "SOSORP05.P"}
 
 define new shared variable cust  like so_cust.
@@ -290,8 +290,7 @@ repeat:
    do:
 
       /* Validate discount print options */
-      find first lngd_det where
-             lngd_dataset     = c-lngd-dataset
+      find first lngd_det where lngd_dataset     = c-lngd-dataset
          and lngd_field       = "det_disc_prnt"
          and lngd_lang        = global_user_lang
          and lngd_translation = disc_det
@@ -306,8 +305,7 @@ repeat:
       end.
       disc_det_key = lngd_key1.
 
-      find first lngd_det where
-             lngd_dataset     = c-lngd-dataset
+      find first lngd_det where lngd_dataset     = c-lngd-dataset
          and lngd_field       = "det_disc_prnt"
          and lngd_lang        = global_user_lang
          and lngd_translation = disc_sum
@@ -333,11 +331,11 @@ repeat:
 
       if comp_addr <> "" then do:
 
-         find ad_mstr where ad_addr = comp_addr no-lock no-error.
-
+         find ad_mstr where ad_domain = global_domain and 
+         		 ad_addr = comp_addr no-lock no-error.
          if available ad_mstr then do:
-
-            find ls_mstr where ls_addr = ad_addr and ls_type = "company"
+            find ls_mstr where ls_domain = global_domain and 
+            		 ls_addr = ad_addr and ls_type = "company"
             no-lock no-error.
 
             if not available ls_mstr then do:
