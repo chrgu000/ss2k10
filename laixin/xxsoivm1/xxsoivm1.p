@@ -97,7 +97,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "1200509.1"}
+{mfdtitle.i "120820.1"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -278,6 +278,7 @@ repeat on error undo, retry:
 
    view frame a.
    HIDE FRAME w.
+   clear frame match_maintenance.
    HIDE FRAME match_maintenance.
    update
       xxrqmnbr
