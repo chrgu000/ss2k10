@@ -16,6 +16,7 @@ define {1} shared temp-table tmpic
        fields tic_sub  as character /* like trgl_dr_sub */
        fields tic_cc   like trgl_dr_cc
        fields tic_proj like wo_proj
+       fields tic_sn as integer
        fields tic_chk as character format "x(30)".
 
 FUNCTION getMsg RETURNS character(inbr as integer):
@@ -24,7 +25,7 @@ FUNCTION getMsg RETURNS character(inbr as integer):
     Parameters:  <none>
     Notes:
   -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = "TW" and msg_nbr = inbr no-error.
+  find first msg_mstr no-lock where msg_lang = global_user_lang and msg_nbr = inbr no-error.
   if available msg_mstr then do:
       return msg_desc.
   end.

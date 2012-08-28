@@ -20,11 +20,11 @@ for each xxro exclusive-lock where xxro_chk = "" by xxro_sn:
                  + "." + string(xxro_sn,"9999999").
     output to value(vfile + ".bpi").
     put unformat '"' xxro_routing '" ' xxro_op ' ' xxro_start skip.
+    put unformat '"' xxro_wkctr '" "' xxro_mch '"' skip.
     find first pt_mstr no-lock where pt_part = xxro_routing no-error.
     if available pt_mstr then do:
        put '-' skip.
     end.
-    put unformat '"' xxro_wkctr '" "' xxro_mch '"' skip.
     put unformat '"' xxro_desc '" - - - - - - - - - '.
     put unformat xxro_run ' - ' xxro_start ' ' xxro_end.
     put unformat ' - - - - - N' skip.
