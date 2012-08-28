@@ -21,7 +21,7 @@
 /*a-flag*: 20110304 */ /* update from : 1.std_cost 2.pc_list 3.po 4.voucher */
 /*a-flag*: 20110415 */ /* remove 1.27, copy all element of standard cost,   */
 
-     {mfdtitle.i "120808.1"}
+     {mfdtitle.i "120828.0"}
      {pxmaint.i}
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -76,13 +76,13 @@
      define variable costsim1 like sc_sim.
      define variable part like pt_part.
      define variable part2 like pt_part.
-		 define variable v1 as character format "x(16)".
-		 define variable v2 as character format "x(16)".
-		 define variable v3 as character format "x(16)".
-		 define variable v4 as character format "x(16)".
-		 define variable qty as decimal.
-		 define variable amt as decimal.
-		 define variable i as integer.
+     define variable v1 as character format "x(16)".
+     define variable v2 as character format "x(16)".
+     define variable v3 as character format "x(16)".
+     define variable v4 as character format "x(16)".
+     define variable qty as decimal.
+     define variable amt as decimal.
+     define variable i as integer.
 /*A0304*/
 define var v_from as integer format "9" no-undo.
 define temp-table temp1
@@ -153,10 +153,10 @@ define var v_tax_env like po_tax_env.
 *A0304*/
 
             v_from    colon 30  label "UPDATE_METHOD" /*A0304*/
-            v1 				colon 35 no-label skip /*A0304*/
-            v2				colon 35 no-label skip /*A0304*/
-            v3				colon 35 no-label skip /*A0304*/
-            v4				colon 35 no-label skip /*A0304*/
+            v1        colon 35 no-label skip /*A0304*/
+            v2        colon 35 no-label skip /*A0304*/
+            v3        colon 35 no-label skip /*A0304*/
+            v4        colon 35 no-label skip /*A0304*/
            xxuse_rct  colon 30 skip /*A0304*/
            xxuse_pct  colon 30 skip /*A0304*/
 
@@ -181,13 +181,13 @@ define var v_tax_env like po_tax_env.
          with frame det2 width 170 no-attr-space.
 
 assign v1 = "1." + getTermLabel("STANDARD_COST",16)
-       v2 = "2." + getTermLabel("PRICE_LIST",16) 
-       v3 = "3." + getTermLabel("PRICE_ORDER",16)  
+       v2 = "2." + getTermLabel("PRICE_LIST",16)
+       v3 = "3." + getTermLabel("PRICE_ORDER",16)
        v4 = "4." + getTermLabel("DR",16).
 
 display v1 v2 v3 v4 with frame a.
 
-				
+
 mainloop:
 repeat:
 
@@ -211,7 +211,7 @@ repeat:
     with frame a.
 
 /*A0304*/
-if v_from < 1 or v_from > 4 then do: 
+if v_from < 1 or v_from > 4 then do:
     {mfmsg.i 7765 3}
     undo,retry.
 end.
@@ -412,14 +412,15 @@ then do:
                 use-index pc_part
                 where pc_part = a-part
                 and (pc_start <= eff_date)
-                and (pc_amt_type = "L" or pc_amt_type = "P" )
+                and (pc_expir >= eff_date or pc_expir = ?)
+                and (pc_amt_type = "L" or pc_amt_type = "P")
                 no-lock
-                break by pc_part by pc_curr by pc_um by pc_list by pc_start :
+                break by pc_part by pc_start by pc_amt[1]:
 
                 v_base_amt = 0.
-								assign qty = 0.
-								assign amt = 0.
-                if last-of(pc_list) then do:
+                assign qty = 0.
+                assign amt = 0.
+                if last-of(pc_part) then do:
                     if pc_um <> a-um then do:
                         v_um1  = pc_um .
                         v_um2  = a-um .
@@ -453,18 +454,18 @@ then do:
                     end.
                     else v_r2       = 1.
 
-										if pc_amt_type = "L" then do:
-                    	 v_base_amt = pc_amt[1] * v_conv * v_r2 .
-									  end.
-									  else do:
-									  		 do i = 1 to 15:
-									  		 		assign qty = qty + pc_min_qty[i]
-									  		 					 amt = amt + pc_amt[i] * v_conv * v_r2 * pc_min_qty[i].
-									  		 end.
-									  		 if qty <> 0 then do:
-									  		 		v_base_amt = (amt / qty).
-									  		 end.
-								    end.
+                    if pc_amt_type = "L" then do:
+                       v_base_amt = pc_amt[1] * v_conv * v_r2 .
+                    end.
+                    else do:
+                         do i = 1 to 15:
+                            assign qty = qty + pc_min_qty[i]
+                                   amt = amt + pc_amt[i] * v_conv * v_r2 * pc_min_qty[i].
+                         end.
+                         if qty <> 0 then do:
+                            v_base_amt = (amt / qty).
+                         end.
+                    end.
                     find first ad_mstr where ad_addr = pc_list and ad_type = "supplier" no-lock no-error.
                     if avail ad_mstr then do:
                         {pxrun.i &PROC='getTaxEnvironment'
@@ -501,7 +502,7 @@ then do:
                                t1_amt    = v_base_amt
                                t1_start  = pc_start
                                t1_days = if pc_expir = ? then hi_date - pc_start else pc_expir - pc_start
-                               t1_from   =  pc_list + "@"
+                               t1_from   = pc_user1 + "@" + pc_list + "@"
                                          + pc_curr + "@"
                                          + pc_prod_line + "@"
                                          + pc_um + "@"
@@ -513,7 +514,7 @@ then do:
                         assign
                                t1_amt    = v_base_amt
                                t1_start  = pc_start
-                               t1_from   =  pc_list + "@"
+                               t1_from   = pc_user1 + "@" + pc_list + "@"
                                          + pc_curr + "@"
                                          + pc_prod_line + "@"
                                          + pc_um + "@"
@@ -685,7 +686,7 @@ then do:
                 spt_cst_tl
                 new_cost
                 xxtmp_podate
-                xxtmp_ponbr
+                xxtmp_ponbr  format "x(14)"
                 xxtmp_poqty.
         down 1 .
         spt_cst_tl = new_cost.
