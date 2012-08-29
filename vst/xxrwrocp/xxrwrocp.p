@@ -1,4 +1,4 @@
-/* rwrocp.p - COPY ROUTING                                              */
+/* copy from rwrocp.p - COPY ROUTING                                      */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                  */
 /* All rights reserved worldwide.  This is an unpublished work.         */
 /* $Revision: 1.11.1.5 $                                                     */
@@ -39,6 +39,9 @@
 /* REVISION: ADM     LAST MODIFIED: 06/03/04  BY: *Derek Chu (ADM)       */
 /*                   - control QUOT part# by quot user list              */
 
+/* REVEISION:zy     LAST MODIFIED: 06/03/04  BY: *Zhang Yun (zy)        */
+/*                  - only effective data can be copyed                 */
+
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -51,8 +54,8 @@
 /* Note: Changes made here may also be necessary in fsrocp.p */
 
 /* DISPLAY TITLE */
-/*ADM {mfdtitle.i "2+ "} */
-/*ADM*/ {mfdtitle.i "2+d"}
+{mfdtitle.i "120829.1"}
+{xxloaddata.i}
 {pxmaint.i}
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -183,30 +186,30 @@ repeat:
          undo,retry .
       end. /* if return-value <> {&SUCCESS-RESULT} */
 
-/**ADM Check "TO", for quotuser or non-quotuser*/ 
-         if isquotuser then do:
-	    if substr(part2,1,4) <> "QUOT" then do:
+/**ADM Check "TO", for quotuser or non-quotuser*/
+         if isquotuser and not batchrun then do:
+      if substr(part2,1,4) <> "QUOT" then do:
                if global_user_lang = "tw" then
-		  compmsg ="您只可處理 QUOT 的物料.".
-	       else
-	          compmsg ="You only allow to process QUOT Part#".
-	       {mfmsg03.i 2685 1 compmsg """" """"}
+      compmsg = getmsg(8900).
+         else
+            compmsg = getmsg(8900).
+         {mfmsg03.i 2685 1 compmsg """" """"}
                next-prompt part2 with frame a.
-	       undo,retry.
-	    end.
+         undo,retry.
+      end.
           end.
-	  else do:
-	    if substr(part2,1,4) = "QUOT" then do:
+    else do:
+      if substr(part2,1,4) = "QUOT" then do:
                if global_user_lang = "tw" then
-		  compmsg ="只有 QUOT USER 可處理 QUOT 的物料.".
-	       else
-		  compmsg ="Only QUOT USER allow to process QUOT Part#".
-	       {mfmsg03.i 2685 1 compmsg """" """"}
+      compmsg = getmsg(8901).
+         else
+      compmsg = getmsg(8901).
+         {mfmsg03.i 2685 1 compmsg """" """"}
                next-prompt part2 with frame a.
-	       undo,retry.
-	    end.
-	  end.
-/**ADM*/ 
+         undo,retry.
+      end.
+    end.
+/**ADM*/
 
       assign
          desc1 = ""
@@ -277,7 +280,9 @@ repeat:
    end.    /* do on error */
 
    for each ro_from where ro_routing = part1 and ro_op >= op1
-         and (ro_op <= op2 or op2 = 0) by ro_op
+         and (ro_op <= op2 or op2 = 0)
+/*a2*/   and ro_start <= today
+/*a2*/   and (ro_end >= today or ro_end = ?) by ro_op
       with frame b width 80 no-attr-space:
 
       for first ro_det
