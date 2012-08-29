@@ -91,7 +91,9 @@ repeat:
           {mfmsg.i 5935 1}
      end.
      else do:
-         {gprun.i ""xxrold1.p""}
+         if cloadfile then do:
+            {gprun.i ""xxrold1.p""}
+         end.
      end.
      for each xxro exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */

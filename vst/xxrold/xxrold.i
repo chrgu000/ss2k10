@@ -19,19 +19,3 @@ define {1} shared temp-table xxro
        fields xxro_sn as integer
        fields xxro_chk as character format "x(40)"
        index xxro_def is primary xxro_routing xxro_op xxro_start.
-
-FUNCTION getMsg RETURNS character(inbr as integer):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = "TW"
-         and msg_nbr = inbr no-error.
-  if available msg_mstr then do:
-      return msg_desc.
-  end.
-  else do:
-      return string(inbr).
-  end.
-END FUNCTION. /*FUNCTION getMsg*/

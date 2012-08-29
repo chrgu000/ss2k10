@@ -6,32 +6,30 @@
 
 {mfdeclre.i}
 {xxrold.i}
+{xxloaddata.i}
 define variable vfile as character.
 define variable clearwkfl as logical initial yes no-undo.
 define variable j as integer.
+DEFINE STREAM xp.
 
-find first code_mstr no-lock where code_fldname = "Keep_Temp_WorkFile"
-       and code_value = "YES|OTHER" and code_cmmt = "YES" no-error.
-if available code_mstr then do:
-    assign clearwkfl = no.
-end.
+assign clearwkfl = deltmpfile().
 for each xxro exclusive-lock where xxro_chk = "" by xxro_sn:
     assign vfile = "xxrold.p." + string(today,"9999-99-99")
                  + "." + string(xxro_sn,"9999999").
-    output to value(vfile + ".bpi").
-    put unformat '"' xxro_routing '" ' xxro_op ' ' xxro_start skip.
-    put unformat '"' xxro_wkctr '" "' xxro_mch '"' skip.
+    output STREAM xp to value(vfile + ".bpi").
+    put STREAM xp unformat '"' xxro_routing '" ' xxro_op ' ' xxro_start skip.
+    put STREAM xp unformat '"' xxro_wkctr '" "' xxro_mch '"' skip.
     find first pt_mstr no-lock where pt_part = xxro_routing no-error.
     if available pt_mstr then do:
-       put '-' skip.
+       put STREAM xp '-' skip.
     end.
-    put unformat '"' xxro_desc '" - - - - - - - - - '.
-    put unformat xxro_run ' - ' xxro_start ' ' xxro_end.
-    put unformat ' - - - - - N' skip.
-    put unformat '-' skip.
-    output close.
+    put STREAM xp unformat '"' xxro_desc '" - - - - - - - - - '.
+    put STREAM xp unformat xxro_run ' - ' xxro_start ' ' xxro_end.
+    put STREAM xp unformat ' - - - - - N' skip.
+    put STREAM xp unformat '-' skip.
+    output STREAM xp close.
 
-    if cloadfile then do:
+
 /*     {pxmsg.i &MSGNUM=776 &MSGARG1=xxro_sn &MSGARG2=i &ERRORLEVEL=1}       */
        batchrun = yes.
        input from value(vfile + ".bpi").
@@ -62,5 +60,4 @@ for each xxro exclusive-lock where xxro_chk = "" by xxro_sn:
           os-delete value(vfile + ".bpi").
           os-delete value(vfile + ".bpo").
        end.
-    end.
 end.
