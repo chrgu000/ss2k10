@@ -54,7 +54,7 @@
 /* Note: Changes made here may also be necessary in fsrocp.p */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120829.1"}
+{mfdtitle.i "120829.0"}
 {xxloaddata.i}
 {pxmaint.i}
 
@@ -281,7 +281,6 @@ repeat:
 
    for each ro_from where ro_routing = part1 and ro_op >= op1
          and (ro_op <= op2 or op2 = 0)
-/*a2*/   and ro_start <= today
 /*a2*/   and (ro_end >= today or ro_end = ?) by ro_op
       with frame b width 80 no-attr-space:
 
