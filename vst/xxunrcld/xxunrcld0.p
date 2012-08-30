@@ -5,7 +5,9 @@
 /* REVISION END                                                              */
 
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+{mfdeclre.i}
 {xxunrcld.i}
+{xxloaddata.i}
 define variable txt as character.
 empty temp-table tmpic no-error.
 input from value(flhload).

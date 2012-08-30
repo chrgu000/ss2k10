@@ -85,7 +85,7 @@ repeat:
    {gprun.i ""xxbmdld0.p""}
 
      if not can-find(first tmpbom) then do:
-          {mfmsg.i 5935 1}
+          {mfmsg.i 1310 1}
      end.
      else do:
           {gprun.i ""xxbmdld1.p""}

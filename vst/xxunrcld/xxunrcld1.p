@@ -5,6 +5,7 @@
 /* REVISION END                                                              */
 {mfdeclre.i}
 {xxunrcld.i}
+{xxloaddata.i}
 define variable vfile as character.
 define variable trrecid as recid.
 assign vfile = "xxunrcld.p." + string(today,"99999999") + '.' + string(time).

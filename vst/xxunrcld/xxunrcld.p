@@ -9,7 +9,7 @@
 {mfdtitle.i "120704.1"}
 {xxunrcld.i "new"}
 {gpcdget.i "UT"}
-
+{xxloaddata.i}
 form
    skip(1)
    flhload colon 14  view-as fill-in size 40 by 1 skip(1)
@@ -89,7 +89,7 @@ repeat:
    {gprun.i ""xxunrcld0.p""}
 
      if not can-find(first tmpic) then do:
-          {mfmsg.i 5935 1}
+          {mfmsg.i 1310 1}
      end.
      else do:
              {gprun.i ""xxunrcld1.p""}

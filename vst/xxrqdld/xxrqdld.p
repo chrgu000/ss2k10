@@ -88,7 +88,7 @@ repeat:
    {gprun.i ""xxrqdld0.p""}
 
      if not can-find(first xxrqd) then do:
-          {mfmsg.i 5935 1}
+          {mfmsg.i 1310 1}
      end.
      else do:
      			assign oldId = global_userid.

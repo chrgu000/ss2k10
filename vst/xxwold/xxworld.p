@@ -88,7 +88,7 @@ repeat:
    {gprun.i ""xxworld0.p""}
 
      if not can-find(first xxwoload) then do:
-          {mfmsg.i 5935 1}
+          {mfmsg.i 1310 1}
      end.
      else do:
              {gprun.i ""xxwold1.p""}
