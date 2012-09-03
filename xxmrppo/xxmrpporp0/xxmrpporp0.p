@@ -7,6 +7,7 @@
 /* T类型PO增加一个调整量不显示在报表上                              /*629*/  */
 /* 订货量圆整成订单倍数                                             /*630*/  */
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
+/* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
 {mfdtitle.i "120719.1"}
 
@@ -794,14 +795,16 @@ repeat:
 /*630*/                 assign tpoqty = tpoqty + pt_ord_mult - tpoqty mod pt_ord_mult .
 /*630*/             end.
 /*630*/          end.
-                 export delimiter "~011"
-                       tpo_nbr tpo_vend tpo_part tpoqty
-                       tpo_due tpo_type tpoqtys
-                       if first-of(tpo_part) then tpopo else 0
-                       if first-of(tpo_part) then tpotpo else 0
-/*629*                 if first-of(tpo_part) then adjqty else 0               */
-                       weekday(tpo_due) - 1
-                       tpo_rule0 areaDesc.
+/*831*/					 if first-of(tpo_part) or tpopo > 0 then
+                    export delimiter "~011"
+                          tpo_nbr tpo_vend tpo_part tpoqty
+                          tpo_due tpo_type tpoqtys
+                          if first-of(tpo_part) then tpopo else 0
+                          if first-of(tpo_part) then tpotpo else 0
+/*629*                    if first-of(tpo_part) then adjqty else 0            */
+                          weekday(tpo_due) - 1
+                          tpo_rule0 areaDesc.
+/*831*/          end.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
                             no-error.
                  if available tmp_po1 then do:
