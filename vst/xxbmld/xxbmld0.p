@@ -51,9 +51,10 @@ end.
 empty temp-table tmpbomn no-error.
 for each tmpbom no-lock:
     for each ps_mstr no-lock where ps_par = tbm_par
-          and ps_comp = tbm_old and tbm_old <> "" and ps_ref = ""
+          and ps_comp = tbm_old and tbm_old <> ""
           and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?) break by ps_comp by ps_end by ps_start:
+          and (ps_end >= today or ps_end = ?) 
+    break by ps_comp by ps_end by ps_start:
           if last-of(ps_comp) then do:
              if ps_end > today or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
@@ -71,9 +72,10 @@ for each tmpbom no-lock:
     end.
 
     for each ps_mstr no-lock where ps_par = tbm_par
-          and ps_comp = tbm_new and tbm_new <> "" and ps_ref = ""
+          and ps_comp = tbm_new and tbm_new <> ""
           and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?) break by ps_comp by ps_end by ps_start:
+          and (ps_end >= today or ps_end = ?) 
+    break by ps_comp by ps_end by ps_start:
           if last-of(ps_comp) then do:
              if ps_end > today or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
