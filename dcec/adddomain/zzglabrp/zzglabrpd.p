@@ -35,8 +35,9 @@
 
       /* CYCLE THROUGH THE ACCOUNT COMBINATION MASTER FILE */
             for each asc_mstr
-/*J240*/    fields (asc_acc asc_sub asc_cc)
-            where asc_acc >= acc and asc_acc <= acc1 and
+/*J240*/    fields (asc_domain asc_acc asc_sub asc_cc)
+            where asc_domain = global_domain and 
+            			asc_acc >= acc and asc_acc <= acc1 and
                   asc_sub >= sub and asc_sub <= sub1 and
                   asc_cc >= ctr and asc_cc <= ctr1
                   no-lock break by asc_acc by asc_sub
@@ -75,7 +76,8 @@
 /*J2Z5*/     /* ADDED FIELDS glc_end glc_start glc_year IN FIELDS LIST */
              for each cal
 /*J240*/     fields (cal.glc_per cal.glc_end cal.glc_start cal.glc_year)
-             where cal.glc_year = yr and cal.glc_per >= per and
+             where cal_domain = global_domain and
+             			 cal.glc_year = yr and cal.glc_per >= per and
                    cal.glc_per <= per1 no-lock
                    break by cal.glc_per:
            assign
