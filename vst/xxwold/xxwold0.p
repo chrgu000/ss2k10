@@ -5,13 +5,21 @@
 /* REVISION END                                                              */
 
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+{mfdeclre.i}
 {xxwold.i}
+{xxloaddata.i}
 define variable txt as character.
 define variable vdte as character.
+define variable j as integer.
 empty temp-table xxwoload no-error.
+assign j = 0.
 input from value(flhload).
 repeat:
     import unformat txt.
+    j = j + 1.
+    if j = 1 then do:
+    	 next.
+    end.
     find first xxwoload exclusive-lock where xxwo_lot = trim(entry(1,txt,",")) no-error.
     if not available xxwoload then do:
        create xxwoload.
@@ -20,7 +28,8 @@ repeat:
     find first wo_mstr no-lock where wo_lot = xxwo_lot no-error.
     if available wo_mstr then do:
     	 assign xxwo_orel_date = wo_rel_date
-    	 			  xxwo_odue_date = wo_due_date.
+    	 			  xxwo_odue_date = wo_due_date
+    	 			  xxwo_ostat = wo_stat.
     end.
     assign vdte = trim(entry(2,txt,",")).
     if vdte = "" or vdte = "-" then do:
@@ -40,6 +49,7 @@ repeat:
                                 integer(substring(vdte,4,2)),
                          2000 + integer(substring(vdte,7,2))) no-error.
     end.
+    assign xxwo_stat = trim(entry(4,txt,",")).
 end.
 input close.
 
@@ -70,7 +80,7 @@ for each xxwoload exclusive-lock:
             assign xxwo_chk = getMsg(5123).
             /* WORK ORDER TYPE IS CUMULATIVE */
          end.
-         if wo_status = "C" or wo_status = "P" then do:
+         if wo_status = "C" or wo_status = "X" then do:
             assign xxwo_chk = getMsg(19).
          end.
          if xxwo_rel_date > xxwo_due_date then do:

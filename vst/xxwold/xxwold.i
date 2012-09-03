@@ -12,20 +12,7 @@ define {1} shared temp-table xxwoload no-undo
        fields xxwo_rel_date like wo_rel_date
        fields xxwo_odue_date like wo_due_date
        fields xxwo_due_date like wo_due_date
+       fields xxwo_ostat like wo_stat
+       fields xxwo_stat like wo_stat
        fields xxwo_chk as character format "x(40)"
        index xxwo_lot xxwo_lot.
-
-FUNCTION getMsg RETURNS character(inbr as integer):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = "TW" and msg_nbr = inbr no-error.
-  if available msg_mstr then do:
-      return msg_desc.
-  end.
-  else do:
-      return "ERROR.".
-  end.
-END FUNCTION. /*FUNCTION getMsg*/
