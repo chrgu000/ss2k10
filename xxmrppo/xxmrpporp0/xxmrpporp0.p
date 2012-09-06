@@ -9,7 +9,7 @@
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "120719.1"}
+{mfdtitle.i "120906.0"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -494,7 +494,6 @@ repeat:
        end.
    end.
 
-
    for each tmp_tmd no-lock break by tm_part by tm_month by tm_edate:
        if first-of(tm_edate) then do:
           qtytemp = tm_qty.
@@ -538,7 +537,7 @@ repeat:
           end.
    end.
 
-   /*如下2月有计划则产生数量为0的记录*/
+   /* 如下2月有计划则产生数量为0的记录 */
    assign duef = date(month(due),28,year(due)) + 5.
    assign duef = date(month(duef),1,year(duef)).
    assign duet = duef + 65.
@@ -795,16 +794,18 @@ repeat:
 /*630*/                 assign tpoqty = tpoqty + pt_ord_mult - tpoqty mod pt_ord_mult .
 /*630*/             end.
 /*630*/          end.
-/*831*/					 if first-of(tpo_part) or tpopo > 0 then
+/*831*/          if tpoqty > 0 or tpo_fut then do: /*仅显示数量不为0或有预示量的*/
                     export delimiter "~011"
-                          tpo_nbr tpo_vend tpo_part tpoqty
-                          tpo_due tpo_type tpoqtys
-                          if first-of(tpo_part) then tpopo else 0
-                          if first-of(tpo_part) then tpotpo else 0
-/*629*                    if first-of(tpo_part) then adjqty else 0            */
-                          weekday(tpo_due) - 1
-                          tpo_rule0 areaDesc.
-/*831*/          end.
+                           tpo_nbr tpo_vend tpo_part tpoqty
+                           tpo_due tpo_type tpoqtys
+                           if first-of(tpo_part) then tpopo else 0
+                           if first-of(tpo_part) then tpotpo else 0
+/*629*                     if first-of(tpo_part) then adjqty else 0          */
+                           weekday(tpo_due) - 1
+                           tpo_rule0 areaDesc
+/*                         tpo_fut                                           */
+                            .
+/*831*/          end. /* if first-of(tpo_part) or tpoqty > 0 then do: */
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
                             no-error.
                  if available tmp_po1 then do:
@@ -813,8 +814,8 @@ repeat:
                     else assign tp1_apo = 0.
                  end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
-            end.
-         end.
+            end.  /*if last-of(tpo_due) then do:*/
+         end. /*for each tmp_po no-lock*/
 
 end.      /*if detsum else do:    */
 /* REPORT TRAILER  */
