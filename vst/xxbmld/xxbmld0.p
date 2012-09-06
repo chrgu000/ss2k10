@@ -58,8 +58,8 @@ for each tmpbom no-lock:
           if last-of(ps_comp) then do:
              if ps_end > today or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
-                                      and tbmn_comp = ps_comp
-                                      and tbmn_start = ps_start no-error.
+                                     and tbmn_comp = ps_comp
+                                     and tbmn_start = ps_start no-error.
                 if not available tmpbomn then do:
                   create tmpbomn.
                   assign tbmn_par = ps_par
