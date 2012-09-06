@@ -76,7 +76,7 @@
 /*J2Z5*/     /* ADDED FIELDS glc_end glc_start glc_year IN FIELDS LIST */
              for each cal
 /*J240*/     fields (cal.glc_per cal.glc_end cal.glc_start cal.glc_year)
-             where cal_domain = global_domain and
+             where cal.glc_domain = global_domain and
              			 cal.glc_year = yr and cal.glc_per >= per and
                    cal.glc_per <= per1 no-lock
                    break by cal.glc_per:
