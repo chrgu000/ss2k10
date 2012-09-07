@@ -6,7 +6,7 @@
 
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120710.1"}
+{mfdtitle.i "120907.1"}
 {xxbmld.i "new"}
 {gpcdget.i "UT"}
 
@@ -90,9 +90,13 @@ repeat:
      else do:
              {gprun.i ""xxbmld1.p""}
      end.
-     for each tmpbomn exclusive-lock with width 320 frame c:
+     for each tmpbom no-lock with width 320 frame c:
+     	   setFrameLabels(frame c:handle).
+     	   display tmpbom.
+     end.
+     for each tmpbomn exclusive-lock with width 320 frame d:
       /* SET EXTERNAL LABELS */
-      setFrameLabels(frame c:handle).
+      setFrameLabels(frame d:handle).
          display tmpbomn.
      end.
    {mfrtrail.i}

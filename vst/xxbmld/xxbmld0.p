@@ -16,7 +16,8 @@ repeat:
 end.
 input close.
 
-find first msg_mstr no-lock where msg_nbr = 231 and msg_lang = global_user_lang no-error.
+find first msg_mstr no-lock where msg_nbr = 231
+       and msg_lang = global_user_lang no-error.
 for each tmpbom exclusive-lock:
     if tbm_par = "" then do:
        delete tmpbom.
@@ -53,7 +54,7 @@ for each tmpbom no-lock:
     for each ps_mstr no-lock where ps_par = tbm_par
           and ps_comp = tbm_old and tbm_old <> ""
           and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?) 
+          and (ps_end >= today or ps_end = ?)
     break by ps_comp by ps_end by ps_start:
           if last-of(ps_comp) then do:
              if ps_end > today or ps_end = ? then do:
@@ -70,38 +71,42 @@ for each tmpbom no-lock:
              end.
           end.
     end.
-
-    for each ps_mstr no-lock where ps_par = tbm_par
-          and ps_comp = tbm_new and tbm_new <> ""
-          and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?) 
-    break by ps_comp by ps_end by ps_start:
-          if last-of(ps_comp) then do:
-             if ps_end > today or ps_end = ? then do:
-                find first tmpbomn where tbmn_par = ps_par
-                                    and tbmn_comp = ps_comp
-                                    and tbmn_start = ps_start no-error.
-                if not available tmpbomn then do:
-                  create tmpbomn.
-                  assign tbmn_par = ps_par
-                         tbmn_comp = ps_comp.
-                end.
-                assign tbmn_start = ps_start
-                       tbmn_end = today
-                       tbmn_qty_per = ps_qty_per
-                       tbmn_scrp = ps_scrp_pct.
-             end.
-             find first tmpbomn where tbmn_par = ps_par
-                                  and tbmn_comp = ps_comp
-                                  and tbmn_start = today + 1 no-error.
-              if not available tmpbomn then do:
-                create tmpbomn.
-                assign tbmn_par = ps_par
-                       tbmn_comp = ps_comp.
-              end.
-              assign tbmn_start = today + 1
-                     tbmn_qty_per = tbm_qty_per
-                     tbmn_scrp = tbm_scrp.
-          end.
-    end.
+    if tbm_new <> "" then do:
+       if can-find(first ps_mstr no-lock where ps_par = tbm_par
+                     and ps_comp = tbm_new) then do:
+	        for each ps_mstr no-lock where ps_par = tbm_par
+	              and ps_comp = tbm_new
+	              and (ps_start <= today or ps_start = ?)
+	              and (ps_end >= today or ps_end = ?)
+	        break by ps_comp by ps_end by ps_start:
+	              if last-of(ps_comp) then do:
+	                 if ps_end > today or ps_end = ? then do:
+	                    find first tmpbomn where tbmn_par = ps_par
+	                                        and tbmn_comp = ps_comp
+	                                        and tbmn_start = ps_start no-error.
+	                    if not available tmpbomn then do:
+	                      create tmpbomn.
+	                      assign tbmn_par = ps_par
+	                             tbmn_comp = ps_comp.
+	                    end.
+	                    assign tbmn_start = ps_start
+	                           tbmn_end = today
+	                           tbmn_qty_per = ps_qty_per
+	                           tbmn_scrp = ps_scrp_pct.
+	                 end.  /* if ps_end > today or ps_end = ? then do: */
+	              end. /*  if last-of(ps_comp) then do: */
+	        end. /* for each ps_mstr no-lock */
+       end. /* if can-find(first ps_mstr ) */
+       find first tmpbomn where tbmn_par = tbm_par
+              and tbmn_comp = tbm_new
+              and tbmn_start = today + 1 no-error.
+       if not available tmpbomn then do:
+                 create tmpbomn.
+                 assign tbmn_par = tbm_par
+                       tbmn_comp = tbm_new.
+       end.
+       assign tbmn_start = today + 1
+              tbmn_qty_per = tbm_qty_per
+              tbmn_scrp = tbm_scrp.
+   end. /* if tbm_new <> "" and  ... */
 end.
