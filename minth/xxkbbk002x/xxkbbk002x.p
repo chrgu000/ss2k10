@@ -40,7 +40,7 @@
 *********** end tx01*************/
 
    /* DISPLAY TITLE */
-         {mfdtitle.i "120529.1 "}
+         {mfdtitle.i "120905.1 "}
 
 /*mage   define variable d_qty as integer label "差异数量" .
    define variable compkb_qty as integer label "完成看板数量" .
@@ -1062,8 +1062,8 @@ end.
              if  xkb_kb_raim_qty >  compkb_qty then  do:
                  find first rflotd_det where  rflotd_domain     = global_domain
        and rflotd_mstr_id  = ssbc1
-                   and rflotd_comp_id  = xkb_kb_lock exclusive-lock no-error.
-
+/*ss - 120905     and rflotd_comp_id  = xkb_kb_lock no-lock no-error.  */
+/*ss - 120905 */  and rflotd_comp_id  = xkb_kb_lock exclusive-lock no-error.
        if not available  rflotd_det then do:
            create rflotd_det .
      assign

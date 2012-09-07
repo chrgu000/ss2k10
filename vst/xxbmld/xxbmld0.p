@@ -8,7 +8,9 @@
 {xxbmld.i}
 define variable vtax as character.
 define variable verr as character.
+define variable vi as integer.
 empty temp-table tmpbom no-error.
+assign vi = 0.
 input from value(flhload).
 repeat:
   create tmpbom.
@@ -19,7 +21,7 @@ input close.
 find first msg_mstr no-lock where msg_nbr = 231
        and msg_lang = global_user_lang no-error.
 for each tmpbom exclusive-lock:
-    if tbm_par = "" then do:
+    if tbm_par = "" or tbm_par >= "ZZZZZZZZZ" then do:
        delete tmpbom.
        next.
     end.
@@ -67,7 +69,9 @@ for each tmpbom no-lock:
                          tbmn_comp = ps_comp.
                 end.
                 assign tbmn_start = ps_start
-                       tbmn_end = today.
+                       tbmn_end = today
+	                     tbmn_qty_per = ps_qty_per
+	                     tbmn_scrp = ps_scrp_pct.
              end.
           end.
     end.
