@@ -33,7 +33,7 @@
 /* A-flag *A1105* */
 
      /* DISPLAY TITLE */
- {mfdtitle.i "120912.1"} /*FM27*/
+ {mfdtitle.i "120912.0"} /*FM27*/
  {pxmaint.i}
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -69,12 +69,12 @@ define variable line1 like pt_prod_line no-undo.
 define variable ext_std as decimal label {&ppptrp07_p_9}
 format "->>>,>>>,>>9.99" no-undo.
 
-define variable neg_qty           like mfc_logical initial yes             
+define variable neg_qty           like mfc_logical initial yes
 label {&ppptrp07_p_6} no-undo.
 define variable total_qty_oh      like in_qty_oh  no-undo.
-define variable net_qty           like mfc_logical initial yes             
+define variable net_qty           like mfc_logical initial yes
 label {&ppptrp07_p_2} no-undo.
-define variable inc_zero_qty      like mfc_logical initial no              
+define variable inc_zero_qty      like mfc_logical initial no
 label {&ppptrp07_p_7} no-undo.
 define variable parts_printed     as   integer    no-undo.
 define variable locations_printed as   integer    no-undo.
@@ -82,17 +82,19 @@ define variable as_of_date        like tr_effdate no-undo.
 define variable tr_recno      as   recid        no-undo.
 define variable trrecno       as   recid        no-undo.
 define variable std_as_of     like glxcst       no-undo.
-define variable part_group        like pt_group     no-undo.           
-define variable part_group1       like pt_group     no-undo.           
-define variable part_type         like pt_part_type no-undo.           
-define variable part_type1        like pt_part_type no-undo.           
+define variable part_group        like pt_group     no-undo.
+define variable part_group1       like pt_group     no-undo.
+define variable part_type         like pt_part_type no-undo.
+define variable part_type1        like pt_part_type no-undo.
 define variable cst_date      like tr_effdate   no-undo.
-define variable zero_cost         like mfc_logical initial yes             
+define variable zero_cost         like mfc_logical initial yes
 label {&ppptrp07_p_3} no-undo.
 
 define variable l_msg1 as character format "x(64)" no-undo.
 define variable l_msg2 as character format "x(64)" no-undo.
 
+/*120912.0*/ define variable t_acct          like pld_inv_acct.
+/*120912.0*/ define variable t_sub            like pld_inv_sub.
 
 define variable loc_ext_std  like ext_std     no-undo.
 define variable site_ext_std like ext_std     no-undo.
@@ -119,8 +121,6 @@ define variable l_avail_stat like mfc_logical no-undo.
             field t_sct_abc       like in_abc
             field t_sct_std_as_of like std_as_of
             field t_part_type     like pt_part_type  /*adm1*/
-/*120912.1 */  field t_acct          like pld_inv_acct
-/*120912.1 */  field t_sub				    like pld_inv_sub
             index t_sct is primary unique
             t_sct_part.
 
@@ -191,10 +191,10 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
             site1          label {t001.i} colon 49
             loc            colon 15
             loc1           label {t001.i} colon 49
-            part_group     colon 15                                     
-            part_group1    label {t001.i} colon 49 skip                 
-            part_type      colon 15                                     
-            part_type1     label {t001.i} colon 49 skip(1)              
+            part_group     colon 15
+            part_group1    label {t001.i} colon 49 skip
+            part_type      colon 15
+            part_type1     label {t001.i} colon 49 skip(1)
             as_of_date     colon 35
             neg_qty        colon 35 skip
             net_qty        colon 35
@@ -227,14 +227,14 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
             if abc1 = hi_char then abc1 = "".
             if site1 = hi_char then site1 = "".
             if loc1 = hi_char then loc1 = "".
-            if part_group1 = hi_char then part_group1 = "".             
-            if part_type1 = hi_char then part_type1 = "".               
+            if part_group1 = hi_char then part_group1 = "".
+            if part_type1 = hi_char then part_type1 = "".
             if as_of_date = ? then as_of_date = today.
 
     if c-application-mode <> 'web' then
                update part part1 line line1 vend vend1 abc abc1 site site1
                loc loc1
-               part_group part_group1 part_type part_type1                 
+               part_group part_group1 part_type part_type1
                as_of_date
                neg_qty
                net_qty
@@ -263,10 +263,10 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                {mfquoter.i site1  }
                {mfquoter.i loc    }
                {mfquoter.i loc1   }
-               {mfquoter.i part_group  }                   
-               {mfquoter.i part_group1 }                   
-               {mfquoter.i part_type}                      
-               {mfquoter.i part_type1}                     
+               {mfquoter.i part_group  }
+               {mfquoter.i part_group1 }
+               {mfquoter.i part_type}
+               {mfquoter.i part_type1}
                {mfquoter.i as_of_date}
                {mfquoter.i neg_qty}
                {mfquoter.i net_qty}
@@ -279,8 +279,8 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                if abc1 = "" then abc1 = hi_char.
                if site1 = "" then site1 = hi_char.
                if loc1 = "" then loc1 = hi_char.
-               if part_group1 = "" then part_group1 = hi_char.             
-               if part_type1 = "" then part_type1 = hi_char.               
+               if part_group1 = "" then part_group1 = hi_char.
+               if part_type1 = "" then part_type1 = hi_char.
                if as_of_date = ? then as_of_date = today.
     end.
 
@@ -373,13 +373,6 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                     t_sct_abc       = in_abc
                     t_sct_std_as_of = std_as_of
                     t_part_type     = pt_part_type. /*adm1*/
-/*120912.1 */       find first pld_det no-lock where pld_prodline = pt_prod_line
-/*120912.1 */       	     and pld_site = pt_site and pld_loc = pt_loc no-error.
-/*120912.1 */       if available pld_det then do:
-/*120912.1 */       	 assign t_acct = pld_inv_acct
-/*120912.1 */       	 				t_sub = pld_inv_sub.
-/*120912.1 */       end.
-
               end. /* IF NOT AVAILABLE T_SCT */
 
               for each ld_det
@@ -454,7 +447,7 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                     break by t_lddet_loc by t_lddet_part
                     with frame b width 200:
 
-                    /* SET EXTERNAL LABELS 
+                    /* SET EXTERNAL LABELS
                     setFrameLabels(frame b:handle).*/
 
                     if first-of(t_lddet_loc) then
@@ -489,27 +482,41 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                            ext_std     = 0
                            ext_std     = round(t_lddet_qty * t_sct_std_as_of, 2)
                            loc_ext_std = loc_ext_std + ext_std.
- 
+/*120912.1 */    assign t_acct = ""
+/*120912.1 */          t_sub = "".
+/*120912.1 */    find first pld_det no-lock where pld_prodline = pt_prod_line
+/*120912.1 */           and pld_site = in_site and pld_loc = t_lddet_loc
+/*120912.1 */    no-error.
+/*120912.1 */    if available pld_det then do:
+/*120912.1 */       assign t_acct = pld_inv_acct
+/*120912.1 */              t_sub = pld_inv_sub.
+/*120912.1 */    end.
+/*120912.1 */    else do:
+/*120912.1 */         find first pl_mstr no-lock where
+/*120912.1 */              pl_prod_line = pt_prod_line no-error.
+/*120912.1 */         if available pl_mstr then do:
+/*120912.1 */            assign t_acct = pl_inv_acct
+/*120912.1 */                   t_sub = pl_inv_sub.
+/*120912.1 */         end.
+/*120912.1 */    end.
+
                  display
-                        in_site                              
-                        t_lddet_loc                          
-                        t_lddet_part                         
-                        t_sct_desc1 + " " +  t_sct_desc2 format "x(49)" @ pt_desc1  
-                        pt_draw                                               
-                        t_sct_abc                                             
-                        t_lddet_qty                                           
-                        t_sct_um                                              
-                        t_sct_std_as_of                                       
-                        ext_std                                               
-                        t_part_type                                           
-/*120912.1*/            t_acct                                                
-/*120912.1*/            t_sub           
-                         .  /*A11105*/                   
-                           
-                           
+                        in_site
+                        t_lddet_loc
+                        t_lddet_part
+                        t_sct_desc1 + " " +  t_sct_desc2 format "x(49)" @ pt_desc1
+                        pt_draw
+                        t_sct_abc
+                        t_lddet_qty
+                        t_sct_um
+                        t_sct_std_as_of
+                        ext_std
+                        t_part_type
+/*120912.1*/            t_acct
+/*120912.1*/            t_sub
+                         .  /*A11105*/
+
                         down.
-
-
 
                         parts_printed = parts_printed + 1.
                      end. /* IF T_LDDET_QTY > 0 ... */
