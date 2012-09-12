@@ -59,7 +59,6 @@ for each tmpbom exclusive-lock:
     end.
 end.
 */
-assign i = 2.   /*del after commit*/
 
 for each tmpbom no-lock:
     for each ps_mstr no-lock use-index ps_comp
@@ -79,7 +78,7 @@ for each tmpbom no-lock:
                     tbmn_start = ps_start
                     tbmn_qty_per = ps_qty_per
                     tbmn_scrp = ps_scrp * 100
-                    tbmn_end = today - i.
+                    tbmn_end = today.
              if tbm_new <> "" then do:
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = tbm_new no-error.
@@ -88,7 +87,7 @@ for each tmpbom no-lock:
                    assign tbmn_par = ps_par
                           tbmn_comp = tbm_new.
                  end.
-                 assign tbmn_start = today - i + 1
+                 assign tbmn_start = today + 1
                         tbmn_qty_per = ps_qty_per
                         tbmn_scrp = ps_scrp * 100.
               end.

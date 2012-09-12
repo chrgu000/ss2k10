@@ -42,7 +42,8 @@ for each tmpbom exclusive-lock:
               tbmn_comp = tbm_old
               tbmn_chk = tbm_old + msg_desc.
     end.
-    if not can-find(first pt_mstr no-lock where pt_part = tbm_new) and
+    if tbm_new <> "" and
+       not can-find(first pt_mstr no-lock where pt_part = tbm_new) and
        not can-find(first bom_mstr no-lock where bom_parent = tbm_new) then do:
        assign tbm_chk = tbm_new + msg_desc.
        create tmpbomn.
@@ -57,22 +58,22 @@ for each tmpbom no-lock:
           and ps_comp = tbm_old and tbm_old <> ""
           and (ps_start <= today or ps_start = ?)
           and (ps_end >= today or ps_end = ?)
-    break by ps_comp by ps_end by ps_start:
+    break by ps_comp by ps_start by ps_end:
           if last-of(ps_comp) then do:
-             if ps_end > today or ps_end = ? then do:
                 find first tmpbomn where tbmn_par = ps_par
                                      and tbmn_comp = ps_comp
+                                     and tbmn_ref = ps_ref
                                      and tbmn_start = ps_start no-error.
                 if not available tmpbomn then do:
                   create tmpbomn.
                   assign tbmn_par = ps_par
-                         tbmn_comp = ps_comp.
+                         tbmn_comp = ps_comp
+                         tbmn_ref = ps_ref.
                 end.
                 assign tbmn_start = ps_start
                        tbmn_end = today
 	                     tbmn_qty_per = ps_qty_per
 	                     tbmn_scrp = ps_scrp_pct.
-             end.
           end.
     end.
     if tbm_new <> "" then do:
@@ -82,22 +83,22 @@ for each tmpbom no-lock:
 	              and ps_comp = tbm_new
 	              and (ps_start <= today or ps_start = ?)
 	              and (ps_end >= today or ps_end = ?)
-	        break by ps_comp by ps_end by ps_start:
+	        break by ps_comp by ps_start by ps_end :
 	              if last-of(ps_comp) then do:
-	                 if ps_end > today or ps_end = ? then do:
 	                    find first tmpbomn where tbmn_par = ps_par
 	                                        and tbmn_comp = ps_comp
+	                                        and tbmn_ref = ps_ref
 	                                        and tbmn_start = ps_start no-error.
 	                    if not available tmpbomn then do:
 	                      create tmpbomn.
 	                      assign tbmn_par = ps_par
-	                             tbmn_comp = ps_comp.
+	                             tbmn_comp = ps_comp
+	                             tbmn_ref = ps_ref.
 	                    end.
 	                    assign tbmn_start = ps_start
 	                           tbmn_end = today
 	                           tbmn_qty_per = ps_qty_per
 	                           tbmn_scrp = ps_scrp_pct.
-	                 end.  /* if ps_end > today or ps_end = ? then do: */
 	              end. /*  if last-of(ps_comp) then do: */
 	        end. /* for each ps_mstr no-lock */
        end. /* if can-find(first ps_mstr ) */
