@@ -38,7 +38,8 @@ FORM /*GUI*/
     v_intaxin        colon 20  label "上载数据金额含税"  
     v_infixrd        colon 20  label "上载数据调整差异"  
     v_inpost         colon 20  label "上载数据自动过帐"
-    usrw_decfld[1]   colon 20  label "调整及过帐容差"    format ">>9.999" skip(1)
+    usrw_decfld[1]   colon 20  label "调整及过帐容差"    format ">>9.999"
+    v_max_amt        colon 38  label "开票金额限制"     skip(1)
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
 
  DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
@@ -100,6 +101,7 @@ repeat  with frame a:
         v_infixrd
         v_inpost  
         usrw_decfld[1] 
+        v_max_amt
       with frame a.
     end.
   end. 
@@ -129,7 +131,7 @@ repeat  with frame a:
            
            usrw_decfld[1] = 0
            usrw_decfld[2] = 0
-           usrw_decfld[1] = 0.
+           usrw_decfld[3] = v_max_amt.
   end.
 /*
   subloopa:
@@ -164,6 +166,7 @@ repeat  with frame a:
         v_infixrd
         v_inpost  
         usrw_decfld[1]  
+        v_max_amt
       with frame a.
 
   subloopa:
@@ -183,7 +186,8 @@ repeat  with frame a:
         v_intaxin          
         v_infixrd          
         v_inpost      
-        usrw_decfld[1]  
+        usrw_decfld[1]
+        v_max_amt  
     go-on(F5 ctrl-d) with frame a.
 
      
@@ -289,7 +293,7 @@ repeat  with frame a:
                                            + string(month(v_name_date[2]),"99")
                                            + string(day(v_name_date[2]),"99").
     overlay(usrw_charfld[5],11,8) = v_itemkind.
-    	
+    
  
     hide frame a no-pause.
 
@@ -354,7 +358,7 @@ repeat  with frame a:
     overlay(usrw_charfld[10],61,60) = v_box[2].
     overlay(usrw_charfld[10],121,60) = v_box[3].
     overlay(usrw_charfld[10],181,60) = v_box[4].
-    overlay(usrw_charfld[10],241,60) = v_box[5]. 
+    overlay(usrw_charfld[10],241,60) = v_box[5].
 /*
     update    
         v_gtax_ip    
@@ -369,7 +373,7 @@ repeat  with frame a:
     overlay(usrw_charfld[9],41,20) = v_gtax_pw.
     overlay(usrw_charfld[9],61,60) = v_gtax_inbox.
     overlay(usrw_charfld[9],121,60) = v_gtax_otbox.
-
+	  usrw_decfld[3]  = v_max_amt.
     hide frame b no-pause.
 /*    hide frame c no-pause.
 */
@@ -393,6 +397,7 @@ repeat  with frame a:
         v_infixrd
         v_inpost 
         usrw_decfld[1]  
+        v_max_amt
     with frame a.
 
   end.
@@ -400,7 +405,3 @@ repeat  with frame a:
 
 end.   /* for repeat */
 status input.
-
-
-
-
