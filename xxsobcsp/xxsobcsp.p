@@ -163,22 +163,20 @@ do on error undo, return error on endkey undo, return error:
     EMPTY TEMP-TABLE tt2.
 
     xbuyer = "*" + buyer + "*".
-    FOR EACH xxsod_det NO-LOCK WHERE     
-                                         xxsod_cust >= cust
-                                         AND xxsod_cust <= cust1
-                                         AND date(int(entry(2,xxsod_due_date1,"-")),int(ENTRY(3,xxsod_due_date1,"-")),int(ENTRY(1,xxsod_due_date1, "-"))) >= v_due_date
-                                         AND date(int(entry(2,xxsod_due_date1,"-")),int(ENTRY(3,xxsod_due_date1,"-")),int(ENTRY(1,xxsod_due_date1, "-"))) <= v_due_date1
-                                         AND xxsod_due_time >= v_time 
-                                         AND xxsod_due_time <= v_time1
-                                         ,EACH cp_mstr WHERE cp_cust = xxsod_cust AND cp_cust_part = xxsod_part 
-                                          AND cp_user1 = prt_color
-                                          NO-LOCK
-                                         ,EACH pt_mstr WHERE pt_part = cp_part AND pt_buyer MATCHES  xbuyer 
-                                               AND (pt_drwg_loc = model OR model = "") 
-                                         AND 
-                                            pt_part >= part
-                                         AND   pt_part <= part1 
-                                         NO-LOCK:
+    FOR EACH xxsod_det NO-LOCK WHERE  xxsod_cust >= cust AND xxsod_cust <= cust1
+        AND date(int(entry(2,xxsod_due_date1,"-")),int(ENTRY(3,xxsod_due_date1,"-")),int(ENTRY(1,xxsod_due_date1, "-"))) >= v_due_date
+        AND date(int(entry(2,xxsod_due_date1,"-")),int(ENTRY(3,xxsod_due_date1,"-")),int(ENTRY(1,xxsod_due_date1, "-"))) <= v_due_date1
+        AND xxsod_due_time >= v_time 
+        AND xxsod_due_time <= v_time1
+        ,EACH cp_mstr WHERE cp_cust = xxsod_cust AND cp_cust_part = xxsod_part 
+         AND cp_user1 = prt_color
+         NO-LOCK
+        ,EACH pt_mstr WHERE pt_part = cp_part AND pt_buyer MATCHES  xbuyer 
+              AND (pt_drwg_loc = model OR model = "") 
+        AND 
+           pt_part >= part
+        AND   pt_part <= part1 
+        NO-LOCK:
                  /*
 
                  DISP 
@@ -286,6 +284,11 @@ do on error undo, return error on endkey undo, return error:
                 
             END. /*FOR EACH xxsod_det*/
 
+/***
+for each tt1 with frame x width 360:
+		display tt1.
+end.
+****/
 
             i = 0.
 
