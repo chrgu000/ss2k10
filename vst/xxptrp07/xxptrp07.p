@@ -33,7 +33,7 @@
 /* A-flag *A1105* */
 
      /* DISPLAY TITLE */
- {mfdtitle.i "120912.0"} /*FM27*/
+ {mfdtitle.i "120917.1"} /*FM27*/
  {pxmaint.i}
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -94,7 +94,7 @@ define variable l_msg1 as character format "x(64)" no-undo.
 define variable l_msg2 as character format "x(64)" no-undo.
 
 /*120912.0*/ define variable t_acct          like pld_inv_acct.
-/*120912.0*/ define variable t_sub            like pld_inv_sub.
+/*120912.0*/ define variable t_sub           like pld_inv_sub.
 
 define variable loc_ext_std  like ext_std     no-undo.
 define variable site_ext_std like ext_std     no-undo.
@@ -135,7 +135,7 @@ define variable l_avail_stat like mfc_logical no-undo.
          /* PROCEDURE TO FIND THE INVENTORY STATUS IN TEMP TABLE T_STAT   */
          /* IF NOT AVAILABLE THEN SEARCH IN IS_MSTR, THIS AVOIDS MULTIPLE */
          /* SCANNING OF IS_MSTR                                           */
-
+define buffer ptx for pt_mstr.
  PROCEDURE ck_status:
 
     define input  parameter pr_status     like is_status   no-undo.
@@ -330,22 +330,22 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
               and   (in_site >= site and in_site <= site1)
               and   (in_abc  >= abc  and in_abc  <= abc1 ),
               each pt_mstr
-              fields(pt_part pt_group pt_part_type pt_prod_line pt_vend
-                     pt_desc1 pt_desc2 pt_um)
+              fields(pt_mstr.pt_part pt_mstr.pt_group pt_mstr.pt_part_type pt_mstr.pt_prod_line pt_mstr.pt_vend
+                     pt_mstr.pt_desc1 pt_mstr.pt_desc2 pt_mstr.pt_um)
               no-lock
-              where pt_part = in_part
-              and   (pt_group     >= part_group and pt_group     <= part_group1)
-              and   (pt_part_type >= part_type  and pt_part_type <= part_type1)
-              and   (pt_prod_line >= line       and pt_prod_line <= line1)
+              where pt_mstr.pt_part = in_part
+              and   (pt_mstr.pt_group     >= part_group and pt_mstr.pt_group     <= part_group1)
+              and   (pt_mstr.pt_part_type >= part_type  and pt_mstr.pt_part_type <= part_type1)
+              and   (pt_mstr.pt_prod_line >= line       and pt_mstr.pt_prod_line <= line1)
               and   (can-find(first ptp_det use-index ptp_part
-                              where ptp_part  = pt_part
+                              where ptp_part  = pt_mstr.pt_part
                               and   ptp_site  = in_site
                               and   (ptp_vend >= vend and ptp_vend <= vend1))
                     or
                     (not can-find(first ptp_det use-index ptp_part
-                                  where ptp_part  = pt_part
+                                  where ptp_part  = pt_mstr.pt_part
                                   and   ptp_site  = in_site)
-                     and   (pt_vend  >= vend and pt_vend  <= vend1)))
+                     and   (pt_mstr.pt_vend  >= vend and pt_mstr.pt_vend  <= vend1)))
               break by in_site by in_part with frame b width 200:
 
               /* SET EXTERNAL LABELS */
@@ -367,18 +367,18 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                  create t_sct.
                  assign
                     t_sct_part      = in_part
-                    t_sct_desc1     = pt_desc1
-                    t_sct_desc2     = pt_desc2
-                    t_sct_um        = pt_um
+                    t_sct_desc1     = pt_mstr.pt_desc1
+                    t_sct_desc2     = pt_mstr.pt_desc2
+                    t_sct_um        = pt_mstr.pt_um
                     t_sct_abc       = in_abc
                     t_sct_std_as_of = std_as_of
-                    t_part_type     = pt_part_type. /*adm1*/
+                    t_part_type     = pt_mstr.pt_part_type. /*adm1*/
               end. /* IF NOT AVAILABLE T_SCT */
 
               for each ld_det
                  fields(ld_part ld_site ld_loc ld_qty_oh ld_status)
                  no-lock
-                 where ld_part = pt_part
+                 where ld_part = pt_mstr.pt_part
                  and   ld_site = in_site
                  and   (ld_loc >= loc and ld_loc <= loc1):
 
@@ -410,7 +410,7 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                         tr_qty_loc tr_bdn_std tr_lbr_std tr_mtl_std tr_ovh_std
                         tr_price tr_status tr_sub_std tr_trnbr tr_type)
                  no-lock
-                 where tr_part     = pt_part
+                 where tr_part     = pt_mstr.pt_part
                  and   tr_effdate  > as_of_date
                  and   tr_site     = in_site
                  and   (tr_loc     >= loc and tr_loc <= loc1)
@@ -482,30 +482,34 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                            ext_std     = 0
                            ext_std     = round(t_lddet_qty * t_sct_std_as_of, 2)
                            loc_ext_std = loc_ext_std + ext_std.
-/*120912.1 */    assign t_acct = ""
-/*120912.1 */          t_sub = "".
-/*120912.1 */    find first pld_det no-lock where pld_prodline = pt_prod_line
-/*120912.1 */           and pld_site = in_site and pld_loc = t_lddet_loc
-/*120912.1 */    no-error.
-/*120912.1 */    if available pld_det then do:
-/*120912.1 */       assign t_acct = pld_inv_acct
-/*120912.1 */              t_sub = pld_inv_sub.
-/*120912.1 */    end.
-/*120912.1 */    else do:
-/*120912.1 */         find first pl_mstr no-lock where
-/*120912.1 */              pl_prod_line = pt_prod_line no-error.
-/*120912.1 */         if available pl_mstr then do:
-/*120912.1 */            assign t_acct = pl_inv_acct
-/*120912.1 */                   t_sub = pl_inv_sub.
-/*120912.1 */         end.
-/*120912.1 */    end.
-
+/*120912.1 */
+                  assign t_acct = ""
+                         t_sub = "".
+                  find first ptx no-lock where ptx.pt_part = t_lddet_part no-error.
+                  if avail ptx then do:
+                     find first pld_det no-lock where pld_prodline = ptx.pt_prod_line
+                            and pld_site = in_site and pld_loc = t_lddet_loc
+                     no-error.
+                     if available pld_det then do:
+                        assign t_acct = pld_inv_acct
+                               t_sub = pld_inv_sub.
+                     end.
+                  end.
+                  if t_acct = "" then do:
+                       find first pl_mstr no-lock where
+                            pl_prod_line = pt_mstr.pt_prod_line no-error.
+                       if available pl_mstr then do:
+                          assign t_acct = pl_inv_acct
+                                 t_sub = pl_inv_sub.
+                       end.
+                 end.
+/*120912.1 */
                  display
                         in_site
                         t_lddet_loc
                         t_lddet_part
-                        t_sct_desc1 + " " +  t_sct_desc2 format "x(49)" @ pt_desc1
-                        pt_draw
+                        t_sct_desc1 + " " +  t_sct_desc2 format "x(49)" @ pt_mstr.pt_desc1
+                        pt_mstr.pt_draw
                         t_sct_abc
                         t_lddet_qty
                         t_sct_um
