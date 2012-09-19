@@ -494,15 +494,15 @@ as_of_date neg_qty  net_qty inc_zero_qty   zero_cost" &frm = "a"}
                         assign t_acct = pld_inv_acct
                                t_sub = pld_inv_sub.
                      end.
-                  end.
-                  if t_acct = "" then do:
+                     else do:
                        find first pl_mstr no-lock where
-                            pl_prod_line = pt_mstr.pt_prod_line no-error.
+                            pl_prod_line = ptx.pt_prod_line no-error.
                        if available pl_mstr then do:
                           assign t_acct = pl_inv_acct
                                  t_sub = pl_inv_sub.
                        end.
-                 end.
+                     end.
+                  end.
 /*120912.1 */
                  display
                         in_site
