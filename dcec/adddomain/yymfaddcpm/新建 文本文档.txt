@@ -1,0 +1,7 @@
+                                                                
+FOR EACH CODE_mstr NO-LOCK WHERE CODE_value = "ͼƬ�嵥":       
+    DISPLAY CODE_mstr.                                          
+END.                                                            
+FOR EACH CODE_mstr NO-LOCK WHERE CODE_fldname = "xx-image-list":
+    DISPLAY CODE_mstr.                                          
+END.                                                            

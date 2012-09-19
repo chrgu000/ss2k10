@@ -4,7 +4,6 @@
 
 /* DISPLAY TITLE */
  {mfdtitle.i "zz "}
-
 define variable v_yn1        like mfc_logical initial no.
 define buffer   bbusrwwkfl   for usrw_wkfl.
 
@@ -17,7 +16,7 @@ define var      j            as integer.
 /* DISPLAY SELECTION FORM */
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
-
+assign v_max_amt = 11000000.
 FORM /*GUI*/ 
             
 	RECT-FRAME       AT ROW 1 COLUMN 1.25
@@ -111,8 +110,10 @@ repeat  with frame a:
              usrw_key2 = input usrw_key2
        no-lock no-error.
   if not available usrw_wkfl then do:
+  
+  
     {mfmsg.i 1 1}
-    create usrw_wkfl. usrw_domain = global_domain .
+    create usrw_wkfl. usrw_domain = global_domain.
     assign usrw_key1 = "GOLDTAX-CTRL"
            usrw_key2 = input usrw_key2
            usrw_charfld[3] = "YYNN"
