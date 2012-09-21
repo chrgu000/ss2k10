@@ -1,4 +1,4 @@
-/* GUI CONVERTED from yyglout.p (converter v1.78) Thu Sep 20 16:17:10 2012 */
+/* GUI CONVERTED from yyglout.p (converter v1.78) Thu Sep 20 19:04:07 2012 */
 /* yyglout.p - GL REPORT                                                      */
 /*V8:ConvertMode=FullGUIReport                                                */
 /*-Revision end---------------------------------------------------------------*/
@@ -113,7 +113,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 
 
-   {mfphead2.i}
+  /* {mfphead2.i} */
 
    for each  gltr_hist no-lock where gltr_domain = global_domain and
              gltr_eff_dt >= effdate and gltr_eff_dt <= effdate2 and
@@ -122,18 +122,15 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    use-index gltr_eff_dt with frame b width 80 no-attr-space:
                 /* SET EXTERNAL LABELS */
                 setFrameLabels(frame b:handle).
-                
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-         /*G348*/
+   /*             {mfrpchk.i}         G348*/
 
       display gltr_eff_dt gltr_ref gltr_user gltr_tr_type WITH STREAM-IO /*GUI*/ .
 
    end.
    
-/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
-
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
+{mfreset.i}
+  /* {mftrl080.i} */
 end.
 
 /*K1D1*/ {wbrp04.i &frame-spec = a}

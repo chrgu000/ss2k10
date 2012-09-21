@@ -51,7 +51,7 @@ repeat:
 
    /* SELECT PRINTER */
    {mfselprt.i "printer" 80}
-   {mfphead2.i}
+  /* {mfphead2.i} */
 
    for each  gltr_hist no-lock where gltr_domain = global_domain and
              gltr_eff_dt >= effdate and gltr_eff_dt <= effdate2 and
@@ -60,12 +60,13 @@ repeat:
    use-index gltr_eff_dt with frame b width 80 no-attr-space:
                 /* SET EXTERNAL LABELS */
                 setFrameLabels(frame b:handle).
-                {mfrpchk.i}         /*G348*/
+   /*             {mfrpchk.i}         G348*/
 
       display gltr_eff_dt gltr_ref gltr_user gltr_tr_type.
 
    end.
-   {mftrl080.i}
+   {mfreset.i}
+  /* {mftrl080.i} */
 end.
 
 /*K1D1*/ {wbrp04.i &frame-spec = a}
