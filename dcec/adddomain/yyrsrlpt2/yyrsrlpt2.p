@@ -16,6 +16,8 @@ DEF VAR v_fname2     AS CHAR.
 DEF VAR v_description LIKE ad_name EXTENT 5.
 
 DEF VAR v_ponbr       LIKE po_nbr.
+DEF VAR v_part1       like pt_part.
+DEF VAR v_part2       like pt_part.
 DEF VAR v_date       AS DATE.
 DEF VAR v_ship_fr       LIKE po_vend.
 DEF VAR v_ship_to       LIKE po_site.
@@ -98,6 +100,7 @@ FORM
     v_ponbr    LABEL "订单"          COLON 20
     v_ship_fr  LABEL "供应商"        COLON 20  v_description[1] NO-LABEL SKIP
     v_ship_to  LABEL "收货地点"      COLON 20  v_description[2] NO-LABEL SKIP
+    v_part1    colon 20   v_part2 label "TO"
     v_buyer    LABEL "采购员"        COLON 20
     v_list_net  LABEL "显示未结数量" COLON 20
     v_list_fp   LABEL "状态(空/P/F)"  FORMAT "x(1)" COLON 20
@@ -236,16 +239,15 @@ END PROCEDURE.
 PROCEDURE xxpro-input:
     DEF OUTPUT PARAMETER p_sys_status AS CHAR.
     p_sys_status = "".
-
     v_description = "".
     UPDATE
         v_ponbr
+        v_part1
+        v_part2
         v_buyer
-
         v_list_net
         v_list_fp
         v_list_zero
-
         v_noexport
         v_releaseid
         v_datefmt
@@ -503,6 +505,7 @@ PROCEDURE xxpro-build:
         FOR EACH pod_det NO-LOCK
             WHERE pod_domain = global_domain and pod_nbr = po_nbr /*AND pod_site = v_ship_to*/
             AND pod_sched = YES
+            AND pod_part >= v_part1 AND (pod_part <= v_part2 or v_part2 = "")
             /*AND (pod_start_eff[1] >= TODAY OR pod_start_eff[1] = ?)
             AND (pod_end_eff[1] >= TODAY OR pod_end_eff[1] = ?)*/
             :
