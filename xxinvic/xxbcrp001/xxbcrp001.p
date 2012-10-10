@@ -5,7 +5,6 @@
 /* SS - 110322.1  By: Roger Xiao */ /* 拆分库位和过道库位,区分是减震器SA还是转向器PS */
 /* SS - 110326.1  By: Roger Xiao */  /*托号用流水号xxship_case2,不用原发票托号xxship_case,以缩减条码长度 */
 /* SS - 110408.1  By: Roger Xiao */  /*xxinv_mstr 存在一个发票号对应多个供应商的情况 */
-/*日供发票导入后打印的标签上显示的日期不是到货日期 */
 /*-Revision end---------------------------------------------------------------*/
 
 
@@ -29,10 +28,8 @@ define var v_ln        like xxship_line no-undo .
 define var v_ln1       like xxship_line no-undo .
 define var v_tt        like xxship_case no-undo .
 define var v_tt1       like xxship_case no-undo .
-define var v_shpart    like xxship_part2 no-undo.
-define var v_shpart1   like xxship_part2 no-undo.
-define var v_vendpart  like vp_vend_part no-undo .
-define var v_vendpart1 like vp_vend_part no-undo .
+define var v_shpart  like vp_vend_part no-undo .
+define var v_shpart1 like vp_vend_part no-undo .
 define var v_yn1       as logical no-undo .
 
 define new shared temp-table tempcase   /*记录每个托的收货库位*/
@@ -51,10 +48,8 @@ FORM
     v_ln1       colon 49 label {t001.i}
     v_tt        colon 20
     v_tt1       colon 49 label {t001.i}
-    v_shpart    colon 20 label "图号" format "x(18)"
-    v_shpart1   colon 49 label {t001.i} format "x(18)"
-    v_vendpart  colon 20 label "供应商图号" format "x(22)"
-    v_vendpart1 colon 49 label {t001.i}     format "x(22)"
+    v_shpart  colon 20 label "图号" format "x(22)"
+    v_shpart1 colon 49 label {t001.i}     format "x(22)"
     skip(1)
     /*v_yn1             colon 20 label "包含未收货项次"*/
     skip(3)
@@ -65,8 +60,7 @@ setFrameLabels(frame a:handle).
 mainloop:
 repeat:
     if v_inv1         = hi_char then v_inv1       = "".
-    if v_vendpart1    = hi_char then v_vendpart1  = "".
-    if v_shpart1      = hi_char then v_shpart1    = "".
+    if v_shpart1    = hi_char then v_shpart1  = "".
     if v_vend1        = hi_char then v_vend1      = "".
 
     for each tempcase : delete tempcase . end.
@@ -74,14 +68,13 @@ repeat:
     update
         vend
         v_inv
+
         v_ln
         v_ln1
         v_tt
         v_tt1
         v_shpart
         v_shpart1
-        v_vendpart
-        v_vendpart1
 
     with frame a.
 
@@ -96,8 +89,7 @@ repeat:
 
     if v_vend1       = "" then v_vend1       = hi_char.
     if v_inv1        = "" then v_inv1        = hi_char.
-    if v_vendpart1   = "" then v_vendpart1   = hi_char.
-    if v_shpart1     = "" then v_shpart1 = hi_char.
+    if v_shpart1   = "" then v_shpart1   = hi_char.
     if v_ln1         = 0  then v_ln1  = 999999 .
     if v_tt1         = 0  then v_tt1  = 999999 .
 
@@ -119,7 +111,6 @@ repeat:
             and xxship_line >= v_ln and xxship_line <= v_ln1
             and xxship_case >= v_tt and xxship_case <= v_tt1
             and xxship_part2 >= v_shpart and xxship_part2 <= v_shpart1
-            and xxship_part >= v_vendpart and xxship_part <= v_vendpart1
             and (xxship_rcvd_effdate <> ? ) /*or v_yn1 )
         no-lock*/ :
 
