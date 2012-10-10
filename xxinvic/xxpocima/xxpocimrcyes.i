@@ -92,7 +92,7 @@ assign vtrrecid = current-value(tr_sq01).
         assign
             xxship_rcvd_qty     = xxship_rcvd_qty + usrw_decfld[1]
             xxship_rcvd_effdate = tr_effdate
-            xxship_rcvd_date    = tr_date
+            xxship_rcvd_date    = v_rctdate
             xxship__chr02       = tr_loc
             xxship_rcvd_loc     = ""  /*在条码打印时分配*/
             .

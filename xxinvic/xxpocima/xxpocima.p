@@ -17,10 +17,13 @@
 		 1.PN开头的是为新产品的单，新产品收货无PN的订单则需新增PO
 		 1.P开头的是为量产的单，量产收货无PN的订单则需新增PO
 */
+/* ss - 121010.1 BY:ZY
+	 到货日期为指定的日期不是tr_date
+*/
 /*-Revision end---------------------------------------------------------------*/
 
 
-{mfdtitle.i "120705.1"}
+{mfdtitle.i "121010.1"}
 
 /*定义变量*/
 Define variable Eoutputstatment AS CHARACTER FORMAT "x(200)".

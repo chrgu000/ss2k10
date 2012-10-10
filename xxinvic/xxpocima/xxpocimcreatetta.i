@@ -63,7 +63,7 @@
                            and pod_site = pott_site
                            and pod_qty_ord > pod_qty_rcvd
                            AND (( SUBSTRING(pod_nbr,1,1) = "P" AND substring(pott_order_type,1,1) = "Z") OR
-                                ( SUBSTRING(pod_nbr,1,1) = "N" AND substring(pott_order_type,1,1) = "R") OR
+                                ( SUBSTRING(pod_nbr,1,2) = "PN" AND substring(pott_order_type,1,1) = "R") OR
                                 ( SUBSTRING(pod_nbr,1,1) = "Z" AND substring(pott_order_type,1,1) = "Z") OR
                                 ( SUBSTRING(pod_nbr,1,1) = "R" AND substring(pott_order_type,1,1) = "R") )
                            NO-LOCK by pod_nbr BY pod_line:
@@ -81,11 +81,11 @@
                   tt1a_curr     = po_curr
                   tt1a_line     = pod_line /*   订单项   */
                   tt1a_vend     = po_vend /* 供应商 */
-                tt1a_fix_rate = if po_fix_rate = yes then "Y" else "N"
-                tt1a_openqty  = tmp_qty  /* PO未收量   */
-                tt1a_qty      = tmp_qty
-                tt1a_part     = pod_part  /* ERP图号 */
-                tt1a_site     = pod_site /* 地点 */
+                  tt1a_fix_rate = if po_fix_rate = yes then "Y" else "N"
+                  tt1a_openqty  = tmp_qty  /* PO未收量   */
+                  tt1a_qty      = tmp_qty
+                  tt1a_part     = pod_part  /* ERP图号 */
+                  tt1a_site     = pod_site /* 地点 */
                   tt1a_loc      = if avail pt_mstr then pt_loc else ""  /* 默认库位 */
                   tt1a_shipno   = pott_shipno
                   tt1a_lot      = pott_lot
@@ -98,19 +98,19 @@
                 create tt1a .
         assign tt1a_nbr       = pod_nbr /* 订单 */
                tt1a_curr      = po_curr
-             tt1a_line      = pod_line /*   订单项   */
-             tt1a_vend      = po_vend /* 供应商 */
-             tt1a_fix_rate  = if po_fix_rate = yes then "Y" else "N"
-             tt1a_openqty   = pott_qty - (tmp_order_qty - tmp_qty)  /* PO未收量   */
-             tt1a_qty       = pott_qty - (tmp_order_qty - tmp_qty)
-             tt1a_part      = pod_part  /* ERP图号 */
-             tt1a_site      = pod_site /* 地点 */
-             tt1a_loc       = if avail pt_mstr then pt_loc else ""  /* 默认库位 */
-             tt1a_shipno    = pott_shipno
-             tt1a_lot       = pott_lot
-             tt1a_vendpart  = pott_part_vend
-             tt1a_rcvddate = pott_rcvddate
-             tt1a_rmks      = "存在相应PO"
+               tt1a_line      = pod_line /*   订单项   */
+               tt1a_vend      = po_vend /* 供应商 */
+               tt1a_fix_rate  = if po_fix_rate = yes then "Y" else "N"
+               tt1a_openqty   = pott_qty - (tmp_order_qty - tmp_qty)  /* PO未收量   */
+               tt1a_qty       = pott_qty - (tmp_order_qty - tmp_qty)
+               tt1a_part      = pod_part  /* ERP图号 */
+               tt1a_site      = pod_site /* 地点 */
+               tt1a_loc       = if avail pt_mstr then pt_loc else ""  /* 默认库位 */
+               tt1a_shipno    = pott_shipno
+               tt1a_lot       = pott_lot
+               tt1a_vendpart  = pott_part_vend
+               tt1a_rcvddate = pott_rcvddate
+               tt1a_rmks      = "存在相应PO"
                        .
                 leave.
       end.
@@ -163,21 +163,21 @@
       create tt1a .
       assign tt1a_nbr      = tmp_ponbr /* 订单 */
              tt1a_curr     = pott_curr
-           tt1a_line     = jj /*   订单项   */
-           tt1a_vend     = pott_vend /* 供应商 */
-           tt1a_fix_rate = ""
-           tt1a_openqty  = pott_qty  /*   未决量   */
-           tt1a_qty      = pott_qty
-           tt1a_part     = tmp_part /* 图号 */
-           tt1a_site     = pott_site /* 地点 */
-           tt1a_loc      = pott_loc  /* 默认库位 */
-           tt1a_shipno   = pott_shipno
+             tt1a_line     = jj /*   订单项   */
+             tt1a_vend     = pott_vend /* 供应商 */
+             tt1a_fix_rate = ""
+             tt1a_openqty  = pott_qty  /*   未决量   */
+             tt1a_qty      = pott_qty
+             tt1a_part     = tmp_part /* 图号 */
+             tt1a_site     = pott_site /* 地点 */
+             tt1a_loc      = pott_loc  /* 默认库位 */
+             tt1a_shipno   = pott_shipno
              tt1a_lot      = pott_lot
-           tt1a_vendpart = pott_part_vend
-                   tt1a_rcvddate = pott_rcvddate
-                   tt1a_type     = "1"
-                   tt1a_cost     = pott_cost
-           tt1a_rmks     = "不存在相应PO,新增PO"
+             tt1a_vendpart = pott_part_vend
+             tt1a_rcvddate = pott_rcvddate
+             tt1a_type     = "1"
+             tt1a_cost     = pott_cost
+             tt1a_rmks     = "不存在相应PO,新增PO"
                    .
       end. /* if tmp_flagt = "" then do: */
     end. /* for each pott: */
