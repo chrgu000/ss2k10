@@ -7,13 +7,10 @@
 {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
-
-
 DEFINE SHARED VARIABLE file_name AS CHARACTER FORMAT "x(50)".
 DEFINE SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
 DEFINE SHARED VARIABLE fn_i AS CHARACTER.
 DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
-
 
    DEFINE SHARED TEMP-TABLE xxso
        FIELD xxso_nbr LIKE so_nbr
@@ -58,7 +55,12 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
           PUT UNFORMATTED "." SKIP.
        end.
    END.
-   OUTPUT CLOSE .
+   OUTPUT CLOSE.
+
+   FIND LAST tr_hist WHERE tr_domain = GLOBAL_domain NO-LOCK NO-ERROR.
+   if available tr_hist then do:
+   		assign v_tr_trnbr = tr_trnbr .
+   end.
 
    batchrun = yes.
    INPUT FROM VALUE(fn_i + ".bpi").
@@ -69,8 +71,9 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
    batchrun = NO.
 
  FOR EACH xxso1:
-     if can-find (first tr_hist use-index tr_nbr_eff
+     if can-find (first tr_hist use-index tr_trnbr
        WHERE tr_domain = global_domain
+         AND tr_trnbr >= v_tr_trnbr
          AND tr_nbr = xxso1_nbr
          AND tr_effdate = xxso1_effdate
          AND tr_line = xxso1_line
@@ -78,7 +81,6 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
          AND tr_loc = xxso1_loc
          AND tr_serial = xxso1_lot
          AND tr_qty_loc = - xxso1_lot_qty
-         AND tr_trnbr > v_tr_trnbr
          AND tr_type = "ISS-SO" )
      THEN DO:
          xxso1_error = "导入成功".
