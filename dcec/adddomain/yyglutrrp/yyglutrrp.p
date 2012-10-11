@@ -23,7 +23,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "f "}
+{mfdtitle.i "120912.1"}
 
 	  define variable ref like glt_ref.
 	  define variable ref1 like glt_ref.

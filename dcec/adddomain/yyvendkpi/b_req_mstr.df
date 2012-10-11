@@ -1,0 +1,170 @@
+ADD TABLE "b_req_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "b_req_wk"
+
+ADD FIELD "b_req_part" OF "b_req_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  SQL-WIDTH 36
+  ORDER 10
+
+ADD FIELD "b_req_qty_req" OF "b_req_mstr" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 20
+
+ADD FIELD "b_req_ln_loc" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "b_req_due_date" OF "b_req_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "b_req_qty_iss" OF "b_req_mstr" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "b_req_site" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "b_req_staff" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "b_req_vend" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "b_req_id" OF "b_req_mstr" AS character 
+  FORMAT "X(30)"
+  INITIAL ""
+  SQL-WIDTH 60
+  ORDER 90
+
+ADD FIELD "b_req_qty_rct" OF "b_req_mstr" AS decimal 
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "b_req_add_date" OF "b_req_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "b_req_add_time" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "b_req_due_time" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "b_req_po" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "b_req_userid" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "b_req_rct_date" OF "b_req_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  SQL-WIDTH 4
+  ORDER 160
+
+ADD FIELD "b_req_rct_time" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 170
+  
+ADD FIELD "b_req_domain" OF "b_req_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD INDEX "b_req_id_part" ON "b_req_mstr" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "b_req_id" ASCENDING 
+  INDEX-FIELD "b_req_po" ASCENDING 
+  INDEX-FIELD "b_req_part" ASCENDING 
+
+ADD INDEX "b_req_due" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_due_date" ASCENDING 
+
+ADD INDEX "b_req_due_part" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_due_date" ASCENDING 
+  INDEX-FIELD "b_req_part" ASCENDING 
+
+ADD INDEX "b_req_id" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_id" ASCENDING 
+
+ADD INDEX "b_req_id_due" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_id" ASCENDING 
+  INDEX-FIELD "b_req_due_date" ASCENDING 
+
+ADD INDEX "b_req_id_vend" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_id" ASCENDING 
+  INDEX-FIELD "b_req_vend" ASCENDING 
+
+ADD INDEX "b_req_part" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_part" ASCENDING 
+
+ADD INDEX "b_req_staff_id" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_staff" ASCENDING 
+  INDEX-FIELD "b_req_id" ASCENDING 
+
+ADD INDEX "b_req_vend" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_vend" ASCENDING 
+
+ADD INDEX "b_req_vend_part" ON "b_req_mstr" 
+  AREA "Schema Area"
+  INDEX-FIELD "b_req_vend" ASCENDING 
+  INDEX-FIELD "b_req_part" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003499
+
