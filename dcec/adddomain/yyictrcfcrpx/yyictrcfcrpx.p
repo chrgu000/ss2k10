@@ -1,11 +1,11 @@
 /*yyictrcfcrp01.p for report the transaction of the items during a period*/
 /*Last modified: 02/03/2004, By: Kevin, to cancel the 'loc' criteria*/
 /*Last modified: 08/16/2012, By: Henri                              */
-/*Last modified: 08/19/2012, By: zy                                 */
 /*cj*convertion to eb2*/
 
-/* DISPLAY TITLE  */
-{mfdtitle.i "20120819"}
+/* DISPLAY TITLE 
+{mfdtitle.i "e+ "} */
+{mfdtitle.i "20120816"}
 
 def var effdate like tr_effdate.
 def var effdate1 like tr_effdate.
@@ -28,8 +28,8 @@ def var site1 like si_site.
 def var keeper as char label "保管员".
 def var keeper1 as char.
 
-DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
-     LABEL "Suppress Zero"
+DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes 
+     LABEL "Suppress Zero" 
      VIEW-AS TOGGLE-BOX
      SIZE 13 BY 1.39 NO-UNDO.
 
@@ -56,8 +56,7 @@ def var issso like tr_qty_loc.
 def var isswo like tr_qty_loc.
 def var invadj like tr_qty_loc.
 def var oth like tr_qty_loc.
-def var cnvd like tr_qty_loc.
-def var cncs like tr_qty_loc.
+
 def var cst like tr_qty_loc.
 def var edqty_amt like tr_qty_loc.
 
@@ -78,7 +77,7 @@ Form
  group1 colon 22        group2 colon 49 label {t001.i}
  part colon 22          part1 colon 49 label {t001.i}
 /* site colon 22          site1 colon 49 label {t001.i} */
-/*cj*/ loc colon 22           loc1 colon 49 label {t001.i}
+/*cj*/ loc colon 22           loc1 colon 49 label {t001.i} 
  keeper colon 22        keeper1 colon 49 label {t001.i} skip(1)
  yn_zero colon 22  label "抑制为零数据" yn_total colon 49 LABEL "地点汇总"
  SKIP(.4)  /*GUI*/
@@ -104,10 +103,10 @@ repeat:
     if site1 = hi_char then site1 = "".
 /*cj*/    if loc1 = hi_char then loc1 = "".
     if keeper1 = hi_char then keeper1 = "".
-
+    
     update site site1 effdate effdate1 line line1 type type1 group1 group2 part part1 /*site site1*/
            /*cj*/ loc loc1 keeper keeper1 yn_zero yn_total with frame a.
-
+    
     if effdate = ? then effdate = low_date.
     if effdate1 = ? then effdate1 = hi_date.
     if line1 = "" then line1 = hi_char.
@@ -117,7 +116,7 @@ repeat:
    if site1 = "" then site1 = hi_char.
 /*cj*/    if loc1 = "" then loc1 = hi_char.
     if keeper1 = "" then keeper1 = hi_char.
-
+    
                  find si_mstr no-lock where si_domain = global_domain and si_site = site no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
                      if not available si_mstr then msg-nbr = 708.
@@ -130,7 +129,7 @@ repeat:
 
                      undo, retry.
                  end.
-
+   
                 {gprun.i ""gpsiver.p""
                 "(input si_site, input recid(si_mstr), output return_int)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
@@ -144,27 +143,27 @@ repeat:
     /* USER DOES NOT HAVE */
 /*J034*/                                /* ACCESS TO THIS SITE*/
 /*J034*/             undo,retry.
-/*J034*/          end.
-
-
+/*J034*/          end.               
+    
+    
     {mfselbpr.i "printer" 132}
-
+        
     status input "Waiting for report process...".
-
-    disp effdate column-label "起始日期" format "9999/99/99"
+    
+    disp effdate column-label "起始日期" format "9999/99/99" 
          effdate1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
  IF yn_total = YES THEN DO:
 
-
-    for each in_mstr WHERE in_domain = global_domain and
-                           (in_site >= site and in_site <= site1) and
-                           (in_part >= part and in_part <= part1) and
+        
+    for each in_mstr WHERE in_domain = global_domain and  
+                           (in_site >= site and in_site <= site1) and 
+                           (in_part >= part and in_part <= part1) and 
                            (in__qadc01 >= keeper and in__qadc01 <= keeper1) no-lock,
-        each pt_mstr where pt_part = in_part and pt_domain = global_domain and
+        each pt_mstr where pt_part = in_part and pt_domain = global_domain and 
                            (pt_prod_line >= line and pt_prod_line <= line1) and
                            (pt_part_type >= type and pt_part_type <= type1) and
                            (pt_group >= group1 and pt_group <= group2) no-lock:
-
+        
         edqty = 0.
         bgqty = 0.
         inqty = 0.
@@ -179,24 +178,19 @@ repeat:
        issso = 0.
        isswo = 0.
        invadj = 0.
-       cnvd = 0.
-       cncs = 0.
        oth = 0.
-
+               
         edqty = in_qty_oh + in_qty_nonet.
-
+        
         for each tr_hist no-lock where tr_domain = global_domain and tr_part = pt_part
                  and tr_site = in_site and tr_effdate >= effdate
                  and tr_ship_type = ""
                  and (tr_qty_loc <> 0 or tr_type = "cst-adj")
                  /*cj*/ and (tr_loc >= loc and tr_loc <= loc1):
-
+            
           if tr_effdate >= effdate and tr_effdate <= effdate1 then do:
              if tr_type = "rct-po" then rctpo = rctpo + tr_qty_loc.
-             else if tr_type = "rct-tr" then do:
-              if tr_rmks = "" then rcttr = rcttr + tr_qty_loc.
-              								else cncs = cncs + tr_qty_loc.
-             end.
+             else if tr_type = "rct-tr" then rcttr = rcttr + tr_qty_loc.
              else if tr_type = "rct-unp" then rctunp = rctunp + tr_qty_loc.
              else if tr_type = "rct-wo" then rctwo = rctwo + tr_qty_loc.
              else if tr_type = "iss-prv" then isspo = isspo - tr_qty_loc.
@@ -204,48 +198,44 @@ repeat:
              else if tr_type = "iss-unp" then issunp = issunp - tr_qty_loc.
              else if tr_type = "iss-so" then issso = issso - tr_qty_loc.
              else if tr_type = "iss-wo" then isswo = isswo - tr_qty_loc.
-             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
+             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt") 
                   then invadj = invadj + tr_qty_loc.
-             else if tr_type = "cn-rct" then cnvd = cnvd + tr_qty_loc.
              else oth = oth + tr_qty_loc.
           end.
-
+            
             if tr_effdate <= effdate1 then do:
-                if tr_type begins "Iss" then
-                    outqty = outqty - tr_qty_loc.
+                if tr_type begins "Iss" then  
+                    outqty = outqty - tr_qty_loc. 
                 if tr_type begins "rct" then
                     inqty = inqty + tr_qty_loc.
-            end. /* if tr_effdate */
+            end. /* if tr_effdate */           
             else if tr_qty_loc <> 0 then
                 edqty = edqty - tr_qty_loc.
         end. /* for each tr_hist */
-
+           
         /*bgqty = max(0, edqty - inqty + outqty ).*/
        bgqty = edqty - inqty + outqty.
 
         if (yn_zero and (edqty <> 0 or bgqty <> 0 or rctpo <> 0 or rcttr <> 0 or rctunp <> 0 or rctwo <> 0
-          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0
-          or isswo <> 0 or invadj <> 0 or oth <> 0))
+          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0 
+          or isswo <> 0 or invadj <> 0 or oth <> 0)) 
            or not yn_zero then do:
-
+           
            {gpsct03.i &cost=sct_cst_tot}
-
+           
            edqty_amt = edqty * glxcst.
-
+           
            disp pt_part pt_desc2 pt_prod_line pt_abc in__qadc01 label "保管员"
               in_user1 label "缺省库位" bgqty label "期初库存"
-              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库"
-              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
-              issunp label "计划外出库" issso label "销售出库"
-              isswo label "加工单出库" invadj label "盘点调整"
-              cnvd label "供应商寄售"
-              cncs label "客户寄售"
-              oth label "其他"
+              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库" 
+              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库" 
+              issunp label "计划外出库" issso label "销售出库" 
+              isswo label "加工单出库" invadj label "盘点调整" oth label "其他"
               edqty label "期末库存" glxcst edqty_amt label "期末库存金额" with width 300 stream-io.
-
+                        
         end.
-
-    end. /*for each in_mstr,each pt_mstr*/
+                           
+    end. /*for each in_mstr,each pt_mstr*/                            
  END.
 
 
@@ -257,19 +247,19 @@ repeat:
   IF yn_total = NO THEN DO:
    FOR EACH si_mstr WHERE si_domain = global_domain and si_site >= site AND si_site <= site1 NO-LOCK.
 
-
-    for each in_mstr WHERE in_domain = global_domain and IN_site = si_site and
-                           (in_part >= part and in_part <= part1) and
+        
+    for each in_mstr WHERE in_domain = global_domain and IN_site = si_site and 
+                           (in_part >= part and in_part <= part1) and 
                            (in__qadc01 >= keeper and in__qadc01 <= keeper1) no-lock,
         each pt_mstr where pt_domain = global_domain and pt_part = in_part and
                            (pt_prod_line >= line and pt_prod_line <= line1) and
                            (pt_part_type >= type and pt_part_type <= type1) and
                            (pt_group >= group1 and pt_group <= group2) no-lock:
-
-       edqty = 0.
-       bgqty = 0.
-       inqty = 0.
-       outqty =0.
+        
+        edqty = 0.
+        bgqty = 0.
+        inqty = 0.
+        outqty =0.
        rctpo = 0.
        rcttr = 0.
        rctunp = 0.
@@ -280,25 +270,20 @@ repeat:
        issso = 0.
        isswo = 0.
        invadj = 0.
-       cnvd = 0.
-       cncs = 0.
        oth = 0.
-
+               
         edqty = in_qty_oh + in_qty_nonet.
-
-        for each tr_hist no-lock where tr_domain = global_domain
+        
+        for each tr_hist no-lock where tr_domain = global_domain 
                  and tr_part = pt_part
                  and tr_site = in_site and tr_effdate >= effdate
                  and tr_ship_type = ""
                  and (tr_qty_loc <> 0 or tr_type = "cst-adj")
                  /*cj*/ and (tr_loc >= loc and tr_loc <= loc1):
-
+            
           if tr_effdate >= effdate and tr_effdate <= effdate1 then do:
              if tr_type = "rct-po" then rctpo = rctpo + tr_qty_loc.
-             else if tr_type = "rct-tr" then do:
-              if tr_rmks = "" then rcttr = rcttr + tr_qty_loc.
-              								else cncs = cncs + tr_qty_loc.
-             end.
+             else if tr_type = "rct-tr" then rcttr = rcttr + tr_qty_loc.
              else if tr_type = "rct-unp" then rctunp = rctunp + tr_qty_loc.
              else if tr_type = "rct-wo" then rctwo = rctwo + tr_qty_loc.
              else if tr_type = "iss-prv" then isspo = isspo - tr_qty_loc.
@@ -306,55 +291,51 @@ repeat:
              else if tr_type = "iss-unp" then issunp = issunp - tr_qty_loc.
              else if tr_type = "iss-so" then issso = issso - tr_qty_loc.
              else if tr_type = "iss-wo" then isswo = isswo - tr_qty_loc.
-             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
+             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt") 
                   then invadj = invadj + tr_qty_loc.
-             else if tr_type = "cn-rct" then cnvd = cnvd + tr_qty_loc.
              else oth = oth + tr_qty_loc.
           end.
-
+            
             if tr_effdate <= effdate1 then do:
-                if tr_type begins "Iss" then
-                    outqty = outqty - tr_qty_loc.
+                if tr_type begins "Iss" then  
+                    outqty = outqty - tr_qty_loc. 
                 if tr_type begins "rct" then
                     inqty = inqty + tr_qty_loc.
-            end. /* if tr_effdate */
+            end. /* if tr_effdate */           
             else if tr_qty_loc <> 0 then
                 edqty = edqty - tr_qty_loc.
         end. /* for each tr_hist */
-
+           
         /*bgqty = max(0, edqty - inqty + outqty ).*/
        bgqty = edqty - inqty + outqty.
 
         if (yn_zero and (edqty <> 0 or bgqty <> 0 or rctpo <> 0 or rcttr <> 0 or rctunp <> 0 or rctwo <> 0
-          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0
-          or isswo <> 0 or invadj <> 0 or oth <> 0))
+          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0 
+          or isswo <> 0 or invadj <> 0 or oth <> 0)) 
            or not yn_zero then do:
-
+           
            {gpsct03.i &cost=sct_cst_tot}
-
+           
            edqty_amt = edqty * glxcst.
-
+           
            disp pt_part pt_desc2 si_site pt_prod_line pt_abc in__qadc01 label "保管员"
               in_user1 label "缺省库位" bgqty label "期初库存"
-              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库"
-              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
-              issunp label "计划外出库" issso label "销售出库"
-              isswo label "加工单出库" invadj label "盘点调整"
-              cnvd label "供应商寄售"
-              cncs label "客户寄售"
-              oth label "其他"
+              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库" 
+              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库" 
+              issunp label "计划外出库" issso label "销售出库" 
+              isswo label "加工单出库" invadj label "盘点调整" oth label "其他"
               edqty label "期末库存" glxcst edqty_amt label "期末库存金额" with width 300 stream-io.
-
+                        
         end.
-
-    end. /*for each in_mstr,each pt_mstr*/
+                           
+    end. /*for each in_mstr,each pt_mstr*/  
 
      END. /*site*/
  END.
 
     {mfreset.i}
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
+    
     status input.
-
+    
 end. /*repeat*/
