@@ -32,14 +32,18 @@
 
 {mfdtitle.i "121008.1"}
 
-{yy000200.i "new"}
+
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
+/* 过期物料列表 */
+DEFINE variable v_Exp_item_key as character initial "yy000201.p.exp.item".
+/* 过期库存 */
+DEFINE variable v_Exp_in_key as character initial "yy000201.p.exp.in".
 
-DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO.
-DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO.
-DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO.
-DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO.
+DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO INITIAL "dcec-b".
+DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO INITIAL "dcec-c".
+DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO INITIAL "1".
+DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO INITIAL "2".
 DEFINE VARIABLE v_pline1 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_pline2 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_type1 LIKE pt_part_type NO-UNDO.
@@ -48,8 +52,30 @@ DEFINE VARIABLE v_group1 LIKE pt_group NO-UNDO.
 DEFINE VARIABLE v_group2 LIKE pt_group NO-UNDO.
 DEFINE VARIABLE v_effdate AS DATE INITIAL TODAY.
 DEFINE VARIABLE v_days AS INTEGER NO-UNDO INITIAL 365.
+DEFINE VARIABLE v_ditem like mfc_logical NO-UNDO.
 define new shared variable v_rptfmt like mfc_logical
-   label "1-stdout/2-browseout" format "1-stdout/2-browseout" initial yes.
+   label "1-stdout/2-browseout" format "1-stdout/2-browseout".
+
+ DEFINE TEMP-TABLE xtplink
+    FIELDS xtp_part LIKE pt_part LABEL "零件号"
+    FIELDS xtp_site  AS CHARACTER LABEL "地点"
+    FIELDS xtp_desc1 LIKE pt_desc1 COLUMN-LABEL "描述(中文)"
+    FIELDS xtp_desc2 LIKE pt_desc1 COLUMN-LABEL "描述(英文)"
+    FIELDS xtp_line AS INTEGER LABEL "项"
+    FIELDS xtp_buyer LIKE pt_buyer
+    FIELDS xtp_cst LIKE sct_cst_tot
+    FIELDS xtp_qty_oh LIKE IN_qty_oh LABEL "当前库存量"
+    FIELDS xtp_amt_oh AS DECIMAL FORMAT "->>>>>>>>9.9<<<<<<<" LABEL "当前库存值"
+    FIELDS xtp_amt AS DECIMAL FORMAT "->>>>>>>>9.9<<<<<<<" LABEL "准备计提金额"
+    FIELDS xtp_last_stat AS LOGICAL LABEL "上次判定结果"
+    FIELDS xtp_rmks AS CHARACTER FORMAT "x(40)" LABEL "说明"
+     INDEX xtp_part_site IS PRIMARY xtp_part xtp_site
+     INDEX xtp_site_part xtp_site xtp_part.
+
+
+    DEF VAR h-tt AS HANDLE.
+    h-tt = TEMP-TABLE xtplink:HANDLE.
+
 
 FORM /*GUI*/
 
@@ -90,25 +116,7 @@ repeat:
     IF v_pline2 = hi_char THEN v_pline2 = "".
     IF v_type2 = hi_char THEN v_type2 = "".
     IF v_group2 = hi_char THEN v_group2 = "".
-/*    if c-application-mode <> 'web' then                            */
-/*       prompt-for si_site with frame a                             */
-/*    editing:                                                       */
-/*                                                                   */
-/*       if frame-field = "si_site" then do:                         */
-/*                                                                   */
-/*          /* FIND NEXT/PREVIOUS RECORD */                          */
-/*          {mfnp.i si_mstr si_site si_site si_site si_site si_site} */
-/*                                                                   */
-/*          if recno <> ? then display si_site si_desc with frame a. */
-/*          recno = ?.                                               */
-/*       end.                                                        */
-/*       else do:                                                    */
-/*          status input.                                            */
-/*          readkey.                                                 */
-/*          apply lastkey.                                           */
-/*       end.                                                        */
-/*    end.                                                           */
-/*    status input.                                                  */
+
    DISPLAY v_effdate v_days WITH FRAME a.
    UPDATE v_site1 v_site2 v_part1 v_part2 v_pline1 v_pline2 v_type1 v_type2
           v_group1 v_group2 v_days v_rptfmt WITH FRAME a.
@@ -129,7 +137,9 @@ repeat:
       hide frame b.
 
    end.
-   for each usrw_wkfl exclusive-lock where usrw_key1 = vkey1:
+   EMPTY TEMP-TABLE xtplink NO-ERROR.
+   for each usrw_wkfl exclusive-lock where
+           (usrw_key1 = v_Exp_item_key OR usrw_key1 = v_Exp_in_key):
        delete usrw_wkfl.
    end.
    FOR EACH IN_mstr NO-LOCK WHERE IN_site >= v_site1 AND IN_site <= v_site2
@@ -137,64 +147,111 @@ repeat:
        EACH pt_mstr NO-LOCK WHERE pt_part = IN_part
         AND pt_prod_line >= v_pline1 AND pt_prod_line <= v_pline2
         AND pt_part_type >= v_type1 AND pt_part_type <= v_type2
-        AND pt_group >= v_group1 AND pt_group <= v_group2:
-       FIND first tr_hist NO-LOCK WHERE tr_part = pt_part
-              and tr_effdate >= v_effdate - v_days
-              AND (tr_type = "ISS-SO" or tr_type = "ISS-WO" or
-                   tr_type = "ISS-UNP" or tr_type = "ISS-FAS")
-       use-index tr_part_eff NO-ERROR.
-       IF not available tr_hist do:
-          find first usrw_wkfl no-lock where usrw_key1 = vkey1
-                 and usrw_key2 = pt_part no-error.
-          if not available usrw_wkfl then do:
-             create usrw_wkfl.
-             assign usrw_key1 = vkey1
-                    usrw_key2 = in_part.
-          end.
-       end.
+        AND pt_group >= v_group1 AND pt_group <= v_group2
+       BREAK BY IN_part BY IN_site:
+       IF FIRST-OF(IN_part) THEN DO:
+           ASSIGN v_ditem = FALSE.
+           FIND first tr_hist NO-LOCK WHERE tr_part = pt_part
+                  and tr_effdate >= v_effdate - v_days
+                  AND (tr_type = "ISS-SO" or tr_type = "ISS-WO" or
+                       tr_type = "ISS-UNP" or tr_type = "ISS-FAS")
+           use-index tr_part_eff NO-ERROR.
+           IF not available tr_hist THEN do:
+               FIND FIRST xtplink EXCLUSIVE-LOCK WHERE xtp_part = pt_part NO-ERROR.
+               IF NOT AVAILABLE xtplink THEN DO:
+                  {gpsct03.i &cost=sct_cst_tot}
+                   create usrw_wkfl.
+                   assign usrw_key1 = v_Exp_item_key
+                          usrw_key2 = in_part
+                          usrw_decfld[1] = glxcst.
+                   v_ditem = TRUE.
+               END.
+           end.
+       END. /* IF FIRST-OF(IN_part) THEN DO: */
+       IF v_ditem THEN DO:
+           find first xtplink exclusive-lock where xtp_part = in_part
+                  and xtp_site = in_site no-error.
+           if not available xtplink then do:
+              CREATE xtplink.
+              ASSIGN xtp_part = in_part
+                     xtp_site = in_site.
+           end.
+           ASSIGN xtp_cst = glxcst
+                  xtp_desc1 = pt_desc2
+                  xtp_desc2 = pt_desc1
+                  xtp_buyer = pt_buyer
+                  xtp_qty_oh = IN_qty_oh
+                  xtp_amt_oh = glxcst  * IN_qty_oh
+                  xtp_amt =  glxcst  * IN_qty_oh
+                  xtp_last_stat = YES WHEN substring(IN_user2,1,1) = "Y"
+                  xtp_rmks = SUBSTRING(IN_user2,3).
+                  .
+
+           FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE  usrw_key1 = v_Exp_in_key
+                  AND usrw_key2 = in_site + "@" + in_part NO-ERROR.
+           IF NOT AVAILABLE usrw_wkfl THEN DO:
+               CREATE usrw_wkfl.
+               ASSIGN usrw_key1 = v_Exp_in_key
+                      usrw_key2 = in_site + "@" + in_part.
+           END.
+               ASSIGN usrw_key3 = IN_part
+                      usrw_key4 = IN_site
+                      usrw_charfld[1] = pt_desc2
+                      usrw_charfld[2] = pt_desc1
+                      usrw_charfld[3] = pt_buyer
+                      usrw_decfld[1] = glxcst
+                      usrw_decfld[2] = IN_qty_oh
+                      usrw_decfld[3] = glxcst * IN_qty_oh
+                      usrw_logfld[1] = YES WHEN substring(IN_user2,1,1) = "Y"
+                      usrw_charfld[4] = SUBSTRING(IN_user2,3).
+       END.
    END.
-/*                                                                                                    */
-/*    /* OUTPUT DESTINATION SELECTION */                                                              */
-/*    {gpselout.i &printType = "terminal"                                                             */
-/*                &printWidth = 80                                                                    */
-/*                &pagedFlag = " "                                                                    */
-/*                &stream = " "                                                                       */
-/*                &appendToFile = " "                                                                 */
-/*                &streamedOutputToTerminal = " "                                                     */
-/*                &withBatchOption = "no"                                                             */
-/*                &displayStatementType = 1                                                           */
-/*                &withCancelMessage = "yes"                                                          */
-/*                &pageBottomMargin = 6                                                               */
-/*                &withEmail = "yes"                                                                  */
-/*                &withWinprint = "yes"                                                               */
-/*                &defineVariables = "yes"}                                                           */
-/* /*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2. */
-/*                                                                                                    */
-/*                                                                                                    */
-/*    for each si_mstr NO-LOCK WHERE si_site >= v_site1 AND  si_site <= v_site2  WITH FRAME c down:   */
-/*                                                                                                    */
-/*       /* SET EXTERNAL LABELS */                                                                    */
-/*       setFrameLabels(frame b:handle).                                                              */
-/*                                                                                                    */
-/*                                                                                                    */
-/* /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/                                                          */
-/*                                                                                                    */
-/*                                                                                                    */
-/*       display                                                                                      */
-/*          si_site                                                                                   */
-/*          si_desc                                                                                   */
-/*          si_entity                                                                                 */
-/*          si_status                                                                                 */
-/*          si_auto_loc                                                                               */
-/*          si_db WITH STREAM-IO /*GUI*/ .                                                            */
-/*                                                                                                    */
-/*    end.                                                                                            */
-/*                                                                                                    */
-/*    {mfreset.i}                                                                                     */
-/* /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/                                                          */
+   IF v_rptfmt = FALSE THEN
+     RUN value(lc(global_user_lang) + "\yy\yyut2browse.p") (INPUT-OUTPUT TABLE-HANDLE h-tt,
+                                         INPUT "yy000201",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "",
+                                         INPUT "").
+
+/*                                                                          */
+/*    /* OUTPUT DESTINATION SELECTION */                                    */
+   {gpselout.i &printType = "terminal"
+               &printWidth = 220
+               &pagedFlag = " "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "no"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 6
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
+
+   for each xtplink NO-LOCK WITH FRAME c WIDTH 220 down:
+
+      /* SET EXTERNAL LABELS */
+      setFrameLabels(frame b:handle).
+
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+
+      DISPLAY xtplink WITH STREAM-IO /*GUI*/ .
+   end.
+
+   {mfreset.i}
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 /*                                                                                                    */
 /*    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}                                                               */
 /*                                                                                                    */
 end.
 
 {wbrp04.i &frame-spec = a}
+
