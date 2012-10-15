@@ -66,6 +66,7 @@ REPEAT:
     
     IF v_date = ? THEN v_date = TODAY.
     DISPLAY v_date WITH FRAME a.
+b
 
     FIND FIRST pt_mstr WHERE  /* *SS-20120919.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = v_part NO-LOCK NO-ERROR.
     IF NOT AVAILABLE pt_mstr THEN UNDO, NEXT.

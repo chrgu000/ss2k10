@@ -1,0 +1,71 @@
+ADD TABLE "xxpower_det"
+  AREA "REFERENCE"
+  DUMP-NAME "xxpower_det"
+
+ADD FIELD "xxpower_value" OF "xxpower_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Value"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxpower_fr" OF "xxpower_det" AS integer 
+  FORMAT ">,>>>,>>9"
+  INITIAL "0"
+  LABEL "Fr"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxpower_to" OF "xxpower_det" AS integer 
+  FORMAT ">,>>>,>>9"
+  INITIAL "0"
+  LABEL "To"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxpower_domain" OF "xxpower_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 6
+  MAX-WIDTH 16
+  ORDER 60
+  MANDATORY
+
+ADD FIELD "xxpower_line" OF "xxpower_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  POSITION 8
+  MAX-WIDTH 2
+  ORDER 20
+
+ADD FIELD "xxpower_dttm" OF "xxpower_det" AS datetime 
+  FORMAT "99-99-9999 HH:MM:SS.SSS"
+  INITIAL ?
+  POSITION 14
+  MAX-WIDTH 8
+  ORDER 50
+
+ADD INDEX "xxpower_value" ON "xxpower_det" 
+  AREA "REFERENCE_IDX"
+  PRIMARY
+  INDEX-FIELD "xxpower_value" ASCENDING 
+  INDEX-FIELD "xxpower_domain" ASCENDING 
+  INDEX-FIELD "xxpower_line" ASCENDING 
+  INDEX-FIELD "xxpower_fr" ASCENDING 
+  INDEX-FIELD "xxpower_to" ASCENDING 
+
+ADD INDEX "xxpower_dttm" ON "xxpower_det" 
+  AREA "REFERENCE_IDX"
+  INDEX-FIELD "xxpower_value" DESCENDING 
+  INDEX-FIELD "xxpower_dttm" DESCENDING 
+
+.
+PSC
+cpstream=CP936
+.
+0000001423

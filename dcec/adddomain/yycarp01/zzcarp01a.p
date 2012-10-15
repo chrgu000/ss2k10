@@ -39,10 +39,10 @@ form
 	                  usrw_wkfl
 	                  usrw_index1              
 	                  usrw_key2
-	                  " usrw_key2 usrw_key4 usrw_decfld[1] "
+	                  "usrw_key2 usrw_key4 usrw_decfld[1]"
 					  usrw_key2
 					  c
-					  "usrw_domain = global_domain and usrw_key1 = nbr and usrw_key3 = ""ORDER-TEST-DET"" "				
+					  "usrw_key1 = nbr and usrw_key3 = ""ORDER-TEST-DET"""				
 	                  8808
 	                  yes
 	               }
@@ -69,7 +69,7 @@ form
 	/*/*GUI*/ if global-beam-me-up then undo, leave.*/               /*eyes*/
 	
 	/*GA32*/             if recno = ? then do:
-	/*GA32*/                create usrw_wkfl. usrw_domain = global_domain .
+	/*GA32*/                create usrw_wkfl.
 	
 	                        display usrw_key2 with frame c.
 	
@@ -79,20 +79,18 @@ form
 	                        display usrw_key2 with frame c.
 	/*GA32*/                delete usrw_wkfl.
 	
-	/*GA32*/                find first usrw_wkfl where usrw_domain = global_domain 
-																 and usrw_key1 = nbr and usrw_key2 = input usrw_key2
-																 and usrw_key3 = "ORDER-TEST-DET" 
-							 					  no-lock no-error.
+	/*GA32*/                find first usrw_wkfl where usrw_key1 = nbr and usrw_key3 = "ORDER-TEST-DET" 
+							and	 usrw_key2 = input usrw_key2 no-lock no-error.
 	/*GA32*/                if available usrw_wkfl then do:
 	/*GA32*/                   recno = recid(usrw_wkfl).
 	/*GA32*/                end.
 	/*GA32*/                else do:
-	/*GA32*/                   	create usrw_wkfl. usrw_domain = global_domain.
+	/*GA32*/                   	create usrw_wkfl.
 	/*GA32*/                   	assign usrw_key1  = nbr
 									   usrw_key2		= input usrw_key2
 									   usrw_key3		=  "ORDER-TEST-DET".
 							end.
-	 						find pt_mstr where pt_domain = global_domain and pt_part = usrw_key2 no-lock no-error.
+	 						find pt_mstr where pt_part = usrw_key2 no-lock no-error.
 	  						if not available pt_mstr then do:
 	  							message "零件不存在，请重新输入" view-as alert-box.
 	  							next-prompt usrw_key2 with frame c.

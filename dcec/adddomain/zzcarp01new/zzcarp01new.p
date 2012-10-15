@@ -7,7 +7,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "E"}
+/*GI32*/ {mfdtitle.i "E"}
 
 
 /* DEFINITION */
@@ -91,9 +91,9 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 /*FS95*/             {mfnp06.i
 				yyusrw_wkfl
 				yyusrw_index1
-				" yyusrw_domain = global_domain and  yyusrw_key2 = ""ORDER-TEST-MSTR"""
+				"yyusrw_key2 = ""ORDER-TEST-MSTR"""
 				yyusrw_key1
-				"input yyusrw_key1 "
+				"input yyusrw_key1"
 				yes
 				yes }
 
@@ -115,13 +115,12 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 			
 			display nbr @ yyusrw_key1 with frame a. 
 		
-			find yyusrw_wkfl where yyusrw_domain = global_domain 
-			 and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR" 
-			 exclusive-lock no-error.
+			find yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR" 
+			exclusive-lock no-error.
 			if not available yyusrw_wkfl then do :
 				{mfmsg.i 1 1}
 				new_wkfl = yes.
-				create yyusrw_wkfl. yyusrw_domain = global_domain.
+				create yyusrw_wkfl.
 				assign yyusrw_key1  = nbr
 				       yyusrw_key2  = "ORDER-TEST-MSTR"
 				       yyusrw_key3  = "ORDER-TEST-MSTR".
@@ -175,12 +174,10 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 					del-yn = yes.
 					{mfmsg01.i 11 1 del-yn}
 					if del-yn then do:
-						for each yyusrw_wkfl where yyusrw_domain = global_domain and 
-									   yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
+						for each yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
 							delete yyusrw_wkfl. /*detail*/
 						end.
-						for each yyusrw_wkfl where yyusrw_domain = global_domain and 
-										 yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
+						for each yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
 							delete yyusrw_wkfl.
 						end.
 						clear frame a.		

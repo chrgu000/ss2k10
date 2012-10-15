@@ -4,17 +4,17 @@
   LAST MODIFIED BY *phi*              Philips Li 2008-4-11
 ------------------------------------------------------------------------------------*/
 	
-define NEW shared workfile pkdet no-undo
-        field pkpart like ps_comp
-        field pkop as integer
-                          format ">>>>>9"
-        field pkstart like pk_start
-        field pkend like pk_end
-        field pkqty like pk_qty
-        field pkbombatch like bom_batch
+define NEW shared workfile pkdet no-undo
+        field pkpart like ps_comp
+        field pkop as integer
+                          format ">>>>>9"
+        field pkstart like pk_start
+        field pkend like pk_end
+        field pkqty like pk_qty
+        field pkbombatch like bom_batch
         field pkltoff like ps_lt_off
         FIELD pkdate1 LIKE pk_start.
-define new shared variable transtype as character format "x(4)".
+define new shared variable transtype as character format "x(4)".
 define new shared variable errmsg as integer .
 transtype = "BM" . 
 
@@ -26,9 +26,8 @@ transtype = "BM" .
         DELETE pkdet.
         END.
 	
-	for each yyusrw_wkfl no-lock where yyusrw_domain = global_domain 
-			 and yyusrw_key1 = nbr 
-	     and yyusrw_key3 = "ORDER-TEST-DET" BREAK by yyusrw_key2 by yyusrw_datefld[1]:
+	for each yyusrw_wkfl no-lock where yyusrw_key1 = nbr 
+	and yyusrw_key3 = "ORDER-TEST-DET" BREAK by yyusrw_key2 by yyusrw_datefld[1]:
 
          if first-of(yyusrw_key2) then do:
 		assign
@@ -41,17 +40,17 @@ transtype = "BM" .
 
                 date1 = yyusrw_datefld[1].
 
-       {gprun.i ""zzbmpkiqbnew.p"" "(input comp,
-                               INPUT site,
+       {gprun.i ""zzbmpkiqbnew.p"" "(input comp,
+                               INPUT site,
                                INPUT TODAY,
                                INPUT date1)"}
            end.
 
-
+
          for each pkdet BREAK BY pkpart BY pkdate1 :
-              message yyusrw_key2 yyusrw_datefld[1] pkpart pkdate1.  
-              find pt_mstr where pt_domain = global_domain and pt_part = pkpart no-lock no-error.
-				find ptp_det where ptp_domain = global_domain and  ptp_site = site  and ptp_part = pkpart  no-lock no-error.
+              message yyusrw_key2 yyusrw_datefld[1] pkpart pkdate1.  
+              find pt_mstr where pt_part = pkpart no-lock no-error.
+				find ptp_det where ptp_site = site  and ptp_part = pkpart  no-lock no-error.
 		
 				if available pt_mstr 
 	/*				((available ptp_det and not ptp_phantom)

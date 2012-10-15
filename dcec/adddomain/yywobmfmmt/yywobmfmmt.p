@@ -1,6 +1,7 @@
 /* xxxxcode.p  - cab gen code maintenance                             */
 /* VER:          DATED:2001-03-13     BY:James Zou     MARK:AOCAB001 */
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/16/12  ECO: *SS-20120816.1*   */
+/* $Revision:eb21sp12  $ BY: Cosesa Yang            DATE: 09/06/12  ECO: *SS-20120906.1*   */
 
 /* DISPLAY TITLE */
 {mfdtitle.i "120816.1"}
@@ -70,21 +71,25 @@ repeat:
     UPDATE v_part v_site with frame f-a editing:
         if frame-field = "v_part" then do:
             /* FIND NEXT/PREVIOUS RECORD */
-            {mfnp05.i pt_mstr pt_part
-                      "yes = yes"
+	    /*SS-20120906.1-B*/
+            {mfnp05.i pt_mstr pt_part "pt_mstr.pt_domain = global_domain"
+                      ""yes""
                       pt_part
                       "input v_part"}
+             /*SS-20120906.1-E*/
             if recno <> ? then do:
                 display pt_part @ v_part pt_desc1 @ v_desc with frame f-a.
             end. /* IF RECNO <> ? */
         END.
         ELSE IF frame-field = "v_site" then do:
             /* FIND NEXT/PREVIOUS RECORD */
-            {mfnp05.i si_mstr si_site
-                      "yes = yes"
+	    /*SS-20120906.1-B*/
+            {mfnp05.i si_mstr si_site "si_mstr.si_domain = global_domain"
+                      ""yes""
                       si_site
                       "input v_site"}
-            if recno <> ? then do:
+            /*SS-20120906.1-E*/
+	    if recno <> ? then do:
                 display si_site @ v_site with frame f-a.
             end. /* IF RECNO <> ? */
         END.
@@ -116,7 +121,8 @@ repeat:
 
         { yywobmfmmta.i
           &file = "xxwobmfm_mstr"
-          &where = "where (xxwobmfm_part = v_part
+          &where = "where (xxwobmfm_mstr.xxwobmfm_domain = global_domain and
+	  xxwobmfm_part = v_part
                       AND  xxwobmfm_site = v_site)"
           &frame = "f-b"
           &fieldlist = "
@@ -140,17 +146,17 @@ repeat:
           &midchoose  = "color mesages"
           &predisplay = "~ run xxpro-m-predisplay. ~ "
           &updkey     = "M"
-          &updcode    = "~ run xxpro-m-update. ~"
+          &updcode    = "~ run xxpro-m-update. ~ "
           &inskey     = "A"
-          &inscode    = "~ run xxpro-m-add. ~"
+          &inscode    = "~ run xxpro-m-add. ~ "
           &delkey     = "D"
-          &delcode    = "~ run xxpro-m-delete. ~"
+          &delcode    = "~ run xxpro-m-delete. ~ "
           &key1       = "Enter"
-          &code1    = "~ run xxpro-m-detail. ~"
+          &code1    = "~ run xxpro-m-detail. ~ "
           &key2       = "C"
-          &code2    = "~ run xxpro-m-compare. ~"
+          &code2    = "~ run xxpro-m-compare. ~ "
           &key3       = "V"
-          &code3    = "~ run xxpro-m-varchk. ~"
+          &code3    = "~ run xxpro-m-varchk. ~ "
         }
 
     end. /*MAIN BLOCK */
@@ -238,7 +244,11 @@ PROCEDURE xxpro-m-add.
        WITH FRAME f-c.
 
        find first xxwobmfm_mstr 
-           where xxwobmfm_part = v_part
+           where
+	   /*SS-20120906.1-B*/
+	   xxwobmfm_mstr.xxwobmfm_domain = global_domain
+	   /*SS-20120906.1-E*/
+	   and xxwobmfm_part = v_part
            and xxwobmfm_site = v_site
            AND xxwobmfm_version = input frame f-c xxwobmfm_version
        no-lock no-error.
@@ -249,6 +259,7 @@ PROCEDURE xxpro-m-add.
        end.
        create xxwobmfm_mstr.
        assign
+ 	/*SS-20120906.1-B*/       xxwobmfm_domain = global_domain
            xxwobmfm_part = v_part
            xxwobmfm_site = v_site
            xxwobmfm_version  = input frame f-c xxwobmfm_version
@@ -290,7 +301,11 @@ PROCEDURE xxpro-m-delete.
     no-error.
     message "Confirm delete the record?" update v_confirm.
     if v_confirm and available xxwobmfm_mstr then  do:
-        FOR EACH xxwobmfd_det WHERE xxwobmfd_par = xxwobmfm_part
+        FOR EACH xxwobmfd_det WHERE 
+	   /*SS-20120906.1-B*/
+	   xxwobmfd_det.xxwobmfd_domain = global_domain
+	   /*SS-20120906.1-E*/
+	    AND xxwobmfd_par = xxwobmfm_part
             AND xxwobmfd_site    = xxwobmfm_site
             AND xxwobmfd_version = xxwobmfm_version:
             DELETE xxwobmfd_det.
@@ -358,7 +373,11 @@ END PROCEDURE.
 PROCEDURE xxpro-access-check:
     DEFINE OUTPUT PARAMETER p_accessok AS LOGICAL.
     p_accessok = NO.
-    FIND FIRST CODE_mstr WHERE CODE_fldname = "xxwobmfmmt" AND CODE_value = GLOBAL_userid NO-LOCK NO-ERROR.
+    FIND FIRST CODE_mstr WHERE 
+    /*SS-20120906.1-B*/
+    CODE_mstr.CODE_domain = global_domain
+    /*SS-20120906.1-E*/
+    AND CODE_fldname = "xxwobmfmmt" AND CODE_value = GLOBAL_userid NO-LOCK NO-ERROR.
     IF AVAILABLE CODE_mstr THEN p_accessok = YES.
 END PROCEDURE.
 
@@ -375,7 +394,11 @@ PROCEDURE xxpro-m-varchk.
         v_caltot = 0
         v_partot = 0.
     FOR EACH xxwobmfd_det NO-LOCK 
-        WHERE xxwobmfd_par = xxwobmfm_part
+        WHERE 
+	/*SS-20120906.1-B*/
+              xxwobmfd_det.xxwobmfd_domain = global_domain
+        /*SS-20120906.1-E*/
+	AND   xxwobmfd_par = xxwobmfm_part
         AND   xxwobmfd_site = xxwobmfm_site
         AND   xxwobmfd_version = xxwobmfm_version:
         ASSIGN v_caltot = v_caltot + xxwobmfd_cost_tot * xxwobmfd_qty.

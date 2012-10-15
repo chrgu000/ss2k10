@@ -63,9 +63,17 @@ END PROCEDURE.
 /*-----------------------------------------------------*/
 PROCEDURE xxpro-report:
     FOR EACH ttx1:
-        FIND FIRST pt_mstr WHERE pt_part = ttx1_par NO-LOCK NO-ERROR.
+        FIND FIRST pt_mstr WHERE 
+	/*SS-20120906.1-B*/
+         pt_mstr.pt_domain = global_domain
+        /*SS-20120906.1-E*/
+	AND pt_part = ttx1_par NO-LOCK NO-ERROR.
         IF AVAILABLE pt_mstr THEN ASSIGN ttx1_desc_p = pt_desc1 + pt_desc2.
-        FIND FIRST pt_mstr WHERE pt_part = ttx1_comp NO-LOCK NO-ERROR.
+        FIND FIRST pt_mstr WHERE
+	/*SS-20120906.1-B*/
+         pt_mstr.pt_domain = global_domain
+        /*SS-20120906.1-E*/
+	AND pt_part = ttx1_comp NO-LOCK NO-ERROR.
         IF AVAILABLE pt_mstr THEN ASSIGN ttx1_desc_c = pt_desc1 + pt_desc2.
         IF ttx1_v1_qty <> ttx1_v2_qty THEN ASSIGN
             ttx1_diffflag = ttx1_diffflag + (IF ttx1_diffflag = "" THEN "" ELSE ",") + "Á¿²î".
@@ -82,7 +90,11 @@ PROCEDURE xxpro-bud-version1:
     DEFINE INPUT PARAMETER p_site AS CHAR.
     DEFINE INPUT PARAMETER p_version AS INTEGER.
 
-    FIND FIRST xxwobmfm_mstr WHERE xxwobmfm_part = p_part
+    FIND FIRST xxwobmfm_mstr WHERE 
+        /*SS-20120906.1-B*/
+         xxwobmfm_mstr.xxwobmfm_domain = global_domain
+        /*SS-20120906.1-E*/
+	AND xxwobmfm_part = p_part
         AND xxwobmfm_site = p_site
         AND xxwobmfm_version = p_version
         NO-LOCK NO-ERROR.
@@ -111,7 +123,11 @@ PROCEDURE xxpro-bud-version1:
             ttx1_v1_sub_ll = xxwobmfm_sub_ll 
           .
         FOR EACH xxwobmfd_det  NO-LOCK
-            WHERE xxwobmfd_par = p_part
+            WHERE 
+	    /*SS-20120906.1-B*/
+            xxwobmfd_det.xxwobmfd_domain = global_domain
+            /*SS-20120906.1-E*/
+	    AND xxwobmfd_par = p_part
             AND   xxwobmfd_site = p_site
             AND   xxwobmfd_version = xxwobmfm_version:
             FIND FIRST ttx1 WHERE ttx1_par = xxwobmfd_par AND ttx1_comp = xxwobmfd_comp NO-ERROR.
@@ -145,7 +161,11 @@ PROCEDURE xxpro-bud-version2:
     DEFINE INPUT PARAMETER p_site AS CHAR.
     DEFINE INPUT PARAMETER p_version AS INTEGER.
 
-    FIND FIRST xxwobmfm_mstr WHERE xxwobmfm_part = p_part
+    FIND FIRST xxwobmfm_mstr WHERE 
+        /*SS-20120906.1-B*/
+        xxwobmfm_mstr.xxwobmfm_domain = global_domain
+        /*SS-20120906.1-E*/
+	AND xxwobmfm_part = p_part
         AND xxwobmfm_site = p_site
         AND xxwobmfm_version = p_version
         NO-LOCK NO-ERROR.
@@ -174,7 +194,11 @@ PROCEDURE xxpro-bud-version2:
             ttx1_v2_sub_ll = xxwobmfm_sub_ll 
             .
         FOR EACH xxwobmfd_det  NO-LOCK
-            WHERE xxwobmfd_par = p_part
+            WHERE 
+	    /*SS-20120906.1-B*/
+            xxwobmfd_det.xxwobmfd_domain = global_domain
+            /*SS-20120906.1-E*/
+	    AND   xxwobmfd_par = p_part
             AND   xxwobmfd_site = p_site
             AND   xxwobmfd_version = xxwobmfm_version:
             FIND FIRST ttx1 WHERE ttx1_par = xxwobmfd_par AND ttx1_comp = xxwobmfd_comp NO-ERROR.

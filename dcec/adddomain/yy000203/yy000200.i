@@ -1,1 +1,0 @@
-﻿define {1} shared variable vkey1 as character initial "YY000203.p.usrwkey1".

@@ -92,13 +92,13 @@ pop-tit = "Components Detail, Version:" + STRING(v_version).
           &prompt     = "xxwobmfd_comp"
           &index      = "use-index xxwobmfd_idx1"
           &midchoose  = "color mesages"
-          &predisplay = "~ run xxpro-m-predisplay. ~ "
+          &predisplay = " ~ run xxpro-m-predisplay. ~ "
           &updkey     = "M"
-          &updcode    = "~ run xxpro-m-update. ~"
+          &updcode    = " ~ run xxpro-m-update. ~ "
           &inskey     = "A"
-          &inscode    = "~ run xxpro-m-add. ~"
+          &inscode    = "~ run xxpro-m-add. ~ "
           &delkey     = "D"
-          &delcode    = "~ run xxpro-m-delete. ~"
+          &delcode    = " ~ run xxpro-m-delete. ~ "
         }
 
     end. /*MAIN BLOCK */
@@ -184,7 +184,11 @@ PROCEDURE xxpro-m-add.
        WITH FRAME f-c.
 
        find first xxwobmfd_det 
-           where xxwobmfd_par   = v_part
+           where
+	   /*SS-20120906.1-B*/
+              xxwobmfd_det.xxwobmfd_domain = global_domain
+           /*SS-20120906.1-E*/
+	   AND xxwobmfd_par   = v_part
            and xxwobmfd_site    = v_site
            AND xxwobmfd_version = v_version
            AND xxwobmfd_comp    = input frame f-c xxwobmfd_comp
@@ -197,6 +201,7 @@ PROCEDURE xxpro-m-add.
        end.
        create xxwobmfd_det.
        assign
+/*SS-20120906.1-B*/    xxwobmfd_domain = global_domain
            xxwobmfd_par      = v_part
            xxwobmfd_site     = v_site
            xxwobmfd_version  = v_version
@@ -258,7 +263,11 @@ PROCEDURE xxpro-recal-m.
 
 
     FOR EACH xxwobmfd_det NO-LOCK
-        WHERE xxwobmfd_par = xxwobmfm_part
+        WHERE 
+	  /*SS-20120906.1-B*/
+              xxwobmfd_det.xxwobmfd_domain = global_domain
+          /*SS-20120906.1-E*/
+	  AND xxwobmfd_par = xxwobmfm_part
           AND xxwobmfd_site    = xxwobmfm_site
           AND xxwobmfd_version = xxwobmfm_version:
         ASSIGN 
@@ -289,6 +298,10 @@ END PROCEDURE.
 PROCEDURE xxpro-access-check:
     DEFINE OUTPUT PARAMETER p_accessok AS LOGICAL.
     p_accessok = NO.
-    FIND FIRST CODE_mstr WHERE CODE_fldname = "xxwobmfmmt" AND CODE_value = GLOBAL_userid NO-LOCK NO-ERROR.
+    FIND FIRST CODE_mstr WHERE 
+    /*SS-20120906.1-B*/
+     CODE_mstr.CODE_domain = global_domain
+    /*SS-20120906.1-E*/
+    AND CODE_fldname = "xxwobmfmmt" AND CODE_value = GLOBAL_userid NO-LOCK NO-ERROR.
     IF AVAILABLE CODE_mstr THEN p_accessok = YES.
 END PROCEDURE.

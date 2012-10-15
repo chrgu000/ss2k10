@@ -91,7 +91,7 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 /*FS95*/             {mfnp06.i
 				usrw_wkfl
 				usrw_index1
-				"usrw_domain = global_domain and usrw_key2 = ""ORDER-TEST-MSTR"""
+				"usrw_key2 = ""ORDER-TEST-MSTR"""
 				usrw_key1
 				"input usrw_key1"
 				yes
@@ -115,12 +115,12 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 			
 			display nbr @ usrw_key1 with frame a. 
 		
-			find usrw_wkfl where usrw_domain = global_domain and usrw_key1 = nbr and 
-					 usrw_key2 = "ORDER-TEST-MSTR" exclusive-lock no-error.
+			find usrw_wkfl where usrw_key1 = nbr and usrw_key2 = "ORDER-TEST-MSTR" 
+			exclusive-lock no-error.
 			if not available usrw_wkfl then do :
 				{mfmsg.i 1 1}
 				new_wkfl = yes.
-				create usrw_wkfl. usrw_domain = global_domain.
+				create usrw_wkfl.
 				assign usrw_key1  = nbr
 				       usrw_key2  = "ORDER-TEST-MSTR"
 				       usrw_key3  = "ORDER-TEST-MSTR".
@@ -174,12 +174,10 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 					del-yn = yes.
 					{mfmsg01.i 11 1 del-yn}
 					if del-yn then do:
-						for each usrw_wkfl where usrw_domain = global_domain and 
-										 usrw_key1 = nbr and usrw_key3 = "ORDER-TEST-DET":
+						for each usrw_wkfl where usrw_key1 = nbr and usrw_key3 = "ORDER-TEST-DET":
 							delete usrw_wkfl. /*detail*/
 						end.
-						for each usrw_wkfl where usrw_domain = global_domain and 
-										 usrw_key1 = nbr and usrw_key2 = "ORDER-TEST-MSTR":
+						for each usrw_wkfl where usrw_key1 = nbr and usrw_key2 = "ORDER-TEST-MSTR":
 							delete usrw_wkfl.
 						end.
 						clear frame a.		
