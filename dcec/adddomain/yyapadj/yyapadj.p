@@ -8,6 +8,7 @@
  @Todo: 
  @History: 
 **/
+{mfdtitle.i "121001.1"}
 
 DEF VAR baseamt LIKE ckd_amt .
 DEF VAR amt1 LIKE vo_base_applied LABEL "Ö§¸¶½ð¶î".
@@ -18,7 +19,6 @@ DEF TEMP-TABLE xx
     FIELD xx_ref LIKE vo_ref 
     FIELD xx_amt LIKE vo_base_applied .
 
-{mfdtitle.i}
 
 UPDATE vend WITH FRAME a SIDE-LABELS THREE-D .
 

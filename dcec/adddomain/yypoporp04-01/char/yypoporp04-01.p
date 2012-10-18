@@ -1,4 +1,3 @@
-/* GUI CONVERTED from yypoporp04-01.p (converter v1.78) Tue Oct 16 18:54:59 2012 */
 /* poporp04.p - PURCHASE ORDER HISTORY DETAIL                           */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                  */
 /* All rights reserved worldwide.  This is an unpublished work.         */
@@ -34,15 +33,6 @@
 /******************************************************************************/
 
 /* DISPLAY TITLE */
-
-/*GUI global preprocessor directive settings */
-&GLOBAL-DEFINE PP_PGM_RP TRUE
-&GLOBAL-DEFINE PP_ENV_GUI TRUE
-
-
-/*GUI preprocessor directive settings */
-&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-
 {mfdtitle.i "2+ "}
 
 define variable mc-error-number like msg_nbr no-undo.
@@ -80,16 +70,8 @@ qty_rcd = getTermLabel("QTY_RECEIVED_EXCEEDS_QTY_OPEN", 51).
 
 {gprunpdf.i "mcpl" "p"}
 
-
-/*GUI preprocessor Frame A define */
-&SCOPED-DEFINE PP_FRAME_NAME A
-
-FORM /*GUI*/ 
-   
- RECT-FRAME       AT ROW 1.4 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
- SKIP(.1)  /*GUI*/
-part           colon 20
+form
+   part           colon 20
    part1          label {t001.i} colon 49
    trdate         colon 20
    trdate1        label {t001.i} colon 49
@@ -102,30 +84,7 @@ part           colon 20
    use_tot        colon 20
    summary        colon 20 skip
    base_rpt       colon 20 skip
- SKIP(.4)  /*GUI*/
-with frame a side-labels attr-space width 80 NO-BOX THREE-D /*GUI*/.
-
- DEFINE VARIABLE F-a-title AS CHARACTER.
- F-a-title = &IF DEFINED(GPLABEL_I)=0 &THEN
-   &IF (DEFINED(SELECTION_CRITERIA) = 0)
-   &THEN " Selection Criteria "
-   &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
-   getTermLabel("SELECTION_CRITERIA", 25).
-&ENDIF.
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
-  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
-  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
-
-/*GUI preprocessor Frame A undefine */
-&UNDEFINE PP_FRAME_NAME
-
-
+with frame a side-labels attr-space width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -134,12 +93,7 @@ find first gl_ctrl no-lock no-error.
 
 {wbrp01.i}
 
-
-/*GUI*/ {mfguirpa.i true "printer" 132 " " " " " "  }
-
-/*GUI repeat : */
-/*GUI*/ procedure p-enable-ui:
-
+repeat:
    if part1 = hi_char then part1 = "".
    if addr1 = hi_char then addr1 = "".
    if ord1 = hi_char then ord1 = "".
@@ -149,13 +103,21 @@ find first gl_ctrl no-lock no-error.
 
    if c-application-mode <> "WEB"
    then
-      
-run p-action-fields (input "display").
-run p-action-fields (input "enable").
-end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
-
-/*GUI*/ procedure p-report-quote:
-
+      update
+         part
+         part1
+         trdate
+         trdate1
+         addr
+         addr1
+         ord
+         ord1
+         site
+         site1
+         use_tot
+         summary
+         base_rpt
+   with frame a.
 
    /* CURRENCY CODE VALIDATION */
    if base_rpt <> ""
@@ -166,7 +128,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
       if mc-error-number <> 0
       then do:
          {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=3} /* INVALID CURRENCY */
-         /*GUI NEXT-PROMPT removed */
+         next-prompt base_rpt.
          next.
       end.
    end.
@@ -204,30 +166,31 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   
-/*GUI*/ end procedure. /* p-report-quote */
-/*GUI - Field Trigger Section */
-
-/*GUI MFSELxxx removed*/
-/*GUI*/ procedure p-report:
-/*GUI*/   {gpprtrpa.i "printer" 132 " " " " " " " " }
-/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
-find first gl_ctrl no-lock no-error.
-
-
-
+   {gpselout.i &printType = "printer"
+               &printWidth = 132
+               &pagedFlag = " "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "yes"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 6
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
 
    {mfphead.i}
 
-   FORM /*GUI*/  header
+   form header
       skip(1)
-   with STREAM-IO /*GUI*/  frame a1 page-top width 132.
+   with frame a1 page-top width 132.
    view frame a1.
 
-   FORM /*GUI*/  header
+   form header
       "* -"
       qty_rcd no-label
-   with STREAM-IO /*GUI*/  frame footer page-bottom width 132.
+   with frame footer page-bottom width 132.
 
    view frame footer.
 
@@ -437,7 +400,7 @@ find first gl_ctrl no-lock no-error.
             if page-size - line-counter < 4
             then
                page.
-            display WITH STREAM-IO /*GUI*/ .
+            display.
 
             put
                {gplblfmt.i
@@ -493,7 +456,7 @@ find first gl_ctrl no-lock no-error.
             disp_curr
    /*         base_price column-label "Unit Price"
             ext_price            
-            std_var    */ WITH STREAM-IO /*GUI*/ .
+            std_var    */.
 
          if last-of(tr_part)
          then do:
@@ -507,7 +470,7 @@ find first gl_ctrl no-lock no-error.
                accum total by tr_part (tr_qty_loc) @ tr_qty_loc
  /*              accum total by tr_part (ext_price) @ ext_price
                accum total by tr_part (std_var) @ std_var   */
-            with frame b STREAM-IO /*GUI*/ .
+            with frame b.
          end.
 
          if last(tr_part)
@@ -518,7 +481,7 @@ find first gl_ctrl no-lock no-error.
             underline ext_price std_var.
 
             display
-               getTermLabel("REPORT_TOTAL",16) + ":" @ name WITH STREAM-IO /*GUI*/ .
+               getTermLabel("REPORT_TOTAL",16) + ":" @ name.
      /*          accum total  (ext_price) @ ext_price    
                accum total  (std_var) @ std_var.         */
          end.  
@@ -535,25 +498,25 @@ find first gl_ctrl no-lock no-error.
                page.
             display
                tr_part
-            with frame c down width 132 STREAM-IO /*GUI*/ .
+            with frame c down width 132.
             if available pt_mstr
             then
                display
                   pt_um
                   pt_desc1
-               with frame c STREAM-IO /*GUI*/ .
+               with frame c.
             display
                (accum total by tr_part (tr_qty_loc)) @ tr_qty_loc
                column-label "Qty Rcvd"
      /*          accum total by tr_part (ext_price) @ ext_price
                accum total by tr_part (std_var) @ std_var    */
-            with frame c down width 132 STREAM-IO /*GUI*/ .
+            with frame c down width 132.
             if available pt_mstr and pt_desc2 <> ""
             then do:
                down 1 with frame c.
                display
                   pt_desc2 @ pt_desc1
-               with frame c STREAM-IO /*GUI*/ .
+               with frame c.
             end.
          end.
 
@@ -568,22 +531,13 @@ find first gl_ctrl no-lock no-error.
                getTermLabel("REPORT_TOTAL",16) + ":" @ pt_desc1
     /*           accum total  (ext_price) @ ext_price
                accum total  (std_var) @ std_var   */
-            with frame c STREAM-IO /*GUI*/ .
+            with frame c.
          end.
       end. /* summary */
-      
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-
+      {mfrpchk.i}
    end. /* FOR EACH */
    /* REPORT TRAILER  */
-   
-/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
-
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
+   {mfrtrail.i}
 end.
 
 {wbrp04.i &frame-spec = a}
-
-/*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" part part1 trdate trdate1 addr addr1 ord ord1 site site1 use_tot summary base_rpt "} /*Drive the Report*/

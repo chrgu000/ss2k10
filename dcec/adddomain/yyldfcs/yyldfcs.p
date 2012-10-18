@@ -370,7 +370,7 @@ REPEAT:
   
     /************************************************************/
        FOR EACH yyfcs_mstr WHERE yyfcs_mfguser = mfguser NO-LOCK: 
-         PUT STREAM cim UNFORMATTED  "@@BATCHLOAD fcfsmt01.p" SKIP. 
+/*         PUT STREAM cim UNFORMATTED  "@@BATCHLOAD fcfsmt01.p" SKIP.   */
          PUT STREAM cim UNFORMATTED """" yyfcs_part """"  " " """" yyfcs_site """" " " year1 SKIP.
 
          REPEAT k = 1 TO 52:
@@ -380,9 +380,9 @@ REPEAT:
                  PUT STREAM cim UNFORMATTED  yyfcs_fcst1[k] " ".
          END.
          PUT STREAM cim UNFORMATTED SKIP.
-         PUT STREAM cim UNFORMATTED "@@end" SKIP.
+/*         PUT STREAM cim UNFORMATTED "@@end" SKIP.                         */
          IF istwoyears THEN DO:
-             PUT STREAM cim UNFORMATTED  "@@BATCHLOAD fcfsmt01.p" SKIP. 
+/*           PUT STREAM cim UNFORMATTED  "@@BATCHLOAD fcfsmt01.p" SKIP.     */
              PUT STREAM cim UNFORMATTED """" yyfcs_part """"  " " """" yyfcs_site """" " " year2 SKIP.
 
              REPEAT k = 1 TO 52:
@@ -393,14 +393,28 @@ REPEAT:
                  
              END.
              PUT STREAM cim UNFORMATTED SKIP.
-             PUT STREAM cim UNFORMATTED "@@end" SKIP.
+/*             PUT STREAM cim UNFORMATTED "@@end" SKIP.     */
          END.
        END.  
 
     /************************************************************/
     OUTPUT STREAM cim CLOSE .
     
-   
+ batchrun = yes.
+ input from value(cim_file).
+ output to value(cim_file + ".bpo") keep-messages.
+ hide message no-pause.
+ cimrunprogramloop:
+ do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+    {gprun.i ""fcfsmt01.p""}
+ end.
+ hide message no-pause.
+ output close.
+ input close.
+ batchrun = no.
+ 
+    
+/*   
     /*loading*/
    {gprun.i ""yymgbdld.p"" 
         "(input cim_file,
@@ -413,7 +427,7 @@ REPEAT:
           input tid,
           input lg_file,
           OUTPUT err)"}   
-    
+*/    
     OS-DELETE VALUE(cim_file).
     
     MESSAGE "导入成功!" VIEW-AS ALERT-BOX .

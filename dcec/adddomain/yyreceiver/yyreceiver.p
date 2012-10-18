@@ -5,7 +5,7 @@
 /* V9   Developped:02/14/03  BY:Kang Jian ** cmt_det choice and display** */
 /*Revision: Eb2 + sp7       Last modified: 07/28/2005             By: Judy Liu   */
 
-{mfdtitle.i}
+{mfdtitle.i "121002.1"}
 def var nbr as char .
 def var receiver as char.
 def var pageno     as integer. /***Ò³ºÅ***/.

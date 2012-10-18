@@ -109,7 +109,7 @@ space(1)
    v_site1 COLON 20 v_site2 COLON 40 LABEL {t001.i}
    v_part1 COLON 20 v_part2 COLON 40 LABEL {t001.i}
    v_pline1 COLON 20 v_pline2 COLON 40 LABEL {t001.i}
-   v_type1 COLON 20 v_type2 COLON 40 LABEL {t001.i}
+   v_type1 COLON 20  v_type2 COLON 40 LABEL {t001.i}
    v_group1 COLON 20 v_group2 COLON 40 LABEL {t001.i}
    v_effdate COLON 20
    v_days COLON 20
@@ -125,8 +125,6 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
-
-
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -189,7 +187,7 @@ repeat:
                    tr_site = in_site and
                   (tr_type = "ISS-SO" or tr_type = "ISS-WO" or
                    tr_type = "ISS-UNP" or tr_type = "ISS-FAS"):
-               assign vqty = vqty - tr_qty_loc.
+               assign v_qty = v_qty - tr_qty_loc.
           end.
 
  /*H0S0*/       qty_oh = 0.
@@ -223,7 +221,6 @@ repeat:
  /*G1SP*/           qty_1 = max(0,(qty_oh - qty_x - totuse
 /*FT81*/                  + if not avguse_yn then ordqty else 0)).
 
-/*FT81*/          if qty_1 = 0 and qty_x = 0 then leave inblock.
 
                   /*FIND UNIT COST TO USE*/
                   {gpsct03.i &cost=sct_cst_tot}
@@ -235,18 +232,30 @@ repeat:
               ASSIGN xtp_part = in_part
                      xtp_site = in_site.
            end.
-           ASSIGN xtp_cst = glxcst
-                  xtp_desc1 = pt_desc2
+           ASSIGN xtp_desc1 = pt_desc2
                   xtp_desc2 = pt_desc1
                   xtp_buyer = pt_buyer
-                  xtp_qty_oh = IN_qty_oh
-                  xtp_amt_oh = glxcst  * IN_qty_oh
-                  xtp_amt =  glxcst  * IN_qty_oh
-                  xtp_last_stat = YES WHEN substring(IN_user2,1,1) = "Y"
+                  xtp_cst = glxcst
+                  xtp_qty_oh = qty_oh
+                  xtp_amt_oh = glxcst  * qty_oh
+                  xtp_l6u = v_qty
+                  xtp_n6u = qty_oh + totuse - qty_1
+                  xtp_n1u = vqty + qty_oh + totuse - qty_l
+                  xtp_n1q = qty_oh - (vqty + qty_oh + totuse - qty_l)
+                  xtp_nla = (qty_oh - (vqty + qty_oh + totuse - qty_l)) * glxcst
+                  xtp_n2u = (vqty + qty_oh + totuse - qty_l) * 2
+                  xtp_n2q = qty_oh - (vqty + qty_oh + totuse - qty_l) * 2
+                  xtp_n2a =(qty_oh - (vqty + qty_oh + totuse - qty_l) * 2) * glxcst 
+                  xtp_last_stat = YES WHEN substring(IN_user2,2,1) = "Y"
                   xtp_rmks = SUBSTRING(IN_user2,3).
                   .
        END.
    END.
+   for each xtplink exclusive-lock:
+   		 if xtp_n2q < 0 then assign xtp_n2q = 0.
+   		 if xtp_n1q < 0 then delete xtplink.
+   		 xtp_amt = xtp_n2a + (xtp_nla - xtp_n2a) * 0.5.
+   end.
    IF v_rptfmt = FALSE THEN
      RUN value(lc(global_user_lang) + "\yy\yyut2browse.p") (INPUT-OUTPUT TABLE-HANDLE h-tt,
                                          INPUT "yy000201",

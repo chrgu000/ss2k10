@@ -6,7 +6,7 @@
 /*Revision: Eb2 + sp7       Last modified: 07/28/2005             By: Judy Liu   */
 /*Revision: QAD2012SE       Last modified: 08/16/2012             By: Henri Zhu  */
 
-{mfdtitle.i}
+{mfdtitle.i "121002.1"}
 def var nbr as char .
 def var receiver as char.
 def var pageno     as integer. /***Ò³ºÅ***/.

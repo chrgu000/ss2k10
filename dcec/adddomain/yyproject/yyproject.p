@@ -1,3 +1,9 @@
+/* GUI CONVERTED from yyproject.p (converter v1.78) Tue Oct 16 17:58:39 2012 */
+/* yyproject.p - yyoroject.p                                                 */
+/*V8:ConvertMode=Maintenance                                                 */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
+/* REVISION END                                                              */
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/16/12  ECO: *SS-20120816.1*   */
 
 {mfdtitle.i "120816.1"}
@@ -19,31 +25,56 @@ DEFINE NEW SHARED VARIABLE chExcelApplication AS COM-HANDLE.
 DEFINE NEW SHARED VARIABLE chExcelWorkbook AS COM-HANDLE.
 
 
-FORM
-    part1        LABEL "零件号" COLON 20 part2        LABEL "To" COLON 55
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+    
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+part1        LABEL "零件号" COLON 20 part2        LABEL "To" COLON 55
     date1        LABEL "需求日期" COLON 20  date2     LABEL "To" COLON 55
     shipfrmsite1 LABEL "发运地" COLON 20 shipfrmsite2 LABEL "To" COLON 55
     shiptosite1  LABEL "发送到" COLON 20 shiptosite2  LABEL "To" COLON 55
 
-    WITH FRAME  a SIDE-LABELS WIDTH 80 ATTR-SPACE NO-BOX THREE-D.
+     SKIP(.4)  /*GUI*/
+WITH FRAME  a SIDE-LABELS WIDTH 80 ATTR-SPACE NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
 
 
 REPEAT:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+    
+    if part2 = hi_char then part2 = "".
+    if date1 = low_date then date1 = ?.
+    if date2 = hi_date then date2 = ?.
+    if shipfrmsite2 = hi_char then shipfrmsite2 = "".
+    if shiptosite2 = hi_char then shiptosite2 = "".
     
     /*{mfselprt.i "printer" 132}*/
-    IF part1 = hi_char THEN part1 = "".
-    IF part2 = "" THEN part2 = hi_char.
-
-    IF date1 = hi_date THEN date1 = low_date.
-    IF date2 = low_date THEN date2 = hi_date.
-
-    IF shipfrmsite1 = hi_char THEN shipfrmsite1 = "".
-    IF shipfrmsite2 = "" THEN shipfrmsite2 = hi_char.
-    IF shiptosite1 = hi_char  THEN shiptosite1 = "".
-    IF shiptosite2 = "" THEN shiptosite2 = hi_char.
-
+    
     UPDATE part1 part2 date1 date2 shipfrmsite1 shipfrmsite2 shiptosite1 shiptosite2 WITH FRAME a.
 
+		if part2 = "" then part2 = hi_char.
+		if date1 = ? then date1 = low_date.
+		if date2 = ? then date2 = hi_date.
+		if shipfrmsite2 = "" then shipfrmsite2 = hi_char.
+		if shiptosite2 = "" then shiptosite2 = hi_char.
+		
     IF SEARCH("\\qadtemp\appeb2\template\DRPship.xlt") = ? THEN DO: 
  /* *SS-20120816.1*    IF SEARCH("d:\DRPship11.xltx") = ? THEN DO: */
       MESSAGE "报表模板不存在!" VIEW-AS ALERT-BOX ERROR.
@@ -148,4 +179,6 @@ REPEAT:
 {mfgrptrm.i} /*Report-to-Window*/
 */
 END.
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 

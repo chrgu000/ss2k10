@@ -53,7 +53,7 @@ define variable del-yn like mfc_logical initial no.
  * Record is deleted only when the value of this variable
  * Is set to "X" */
 define variable batchdelete as character format "x(1)" no-undo.
-
+/*SS-20120830.1*   */ /*tfq*/  define variable msg-nbr as integer .
 /* DISPLAY SELECTION FORM */
 
 /*GUI preprocessor Frame A define */
@@ -165,7 +165,8 @@ find wc_mstr using  wc_wkctr and wc_mch where wc_mstr.wc_domain = global_domain
          wc_mch.
    end.
 
-   else if wc_fsm_type = "FSM" then do:
+   else do:
+     if wc_fsm_type = "FSM" then do:
       {pxmsg.i &MSGNUM=7485 &ERRORLEVEL=2}
       /* THIS IS A SERVICE WORK CENTER */
    end.
@@ -184,7 +185,7 @@ find wc_mstr using  wc_wkctr and wc_mch where wc_mstr.wc_domain = global_domain
                               si_site = wc__chr01 no-error.
              if not available si_mstr or (si_db <> global_db) then do:
                  if not available si_mstr then msg-nbr = 708.
-                 else msg-nbr = 5421.
+                 else  msg-nbr = 5421.
            /*TFQ*/      {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3}
                  /*TFQ {mfmsg.i msg-nbr 3}*/
                  undo, retry.
@@ -201,7 +202,7 @@ find wc_mstr using  wc_wkctr and wc_mch where wc_mstr.wc_domain = global_domain
 /*J034*/             undo,retry.
 /*J034*/          end.             
           end. /*if wc__chr01 <> ""*/
-/* tfq */ end.
+/* tfq */ end.  /* else do:*/
 /****end added by kevin*/
 
    recno = recid(wc_mstr).

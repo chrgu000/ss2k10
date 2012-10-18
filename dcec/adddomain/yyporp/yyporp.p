@@ -3,7 +3,7 @@
 /* V1                 Developped: 07/14/01      BY: Kang Jian          */
 /* V7 Developped:07/17/02 By:kang jian **select planner£»print planner'name defined Generalized Codes Maintenance describe***/
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu         */
-{mfdtitle.i}
+{mfdtitle.i "121004.1"}
 	 define  variable billto as character
 	    format "x(38)" extent 6.
 	 define  variable vendor as character

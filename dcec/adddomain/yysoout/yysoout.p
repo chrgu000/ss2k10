@@ -3,7 +3,7 @@
 /* V1                 Developped: 07/19/01      BY: Kang Jian          */
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu         */
 	  
-{mfdtitle.i}
+{mfdtitle.i "121002.1"}
 
 /*start of define the value */
 def var parttype as char.
