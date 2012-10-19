@@ -5,11 +5,10 @@
 /*LB01 TABLE HEADER*/
 
 
-/* define variable v_sum  like cst_tl. */
-define variable v_sum as decimal.
+define variable v_sum  /* like cst_tl */  as decimal /*ss2012-8-21 */.
 
-find first code_mstr no-lock where code_domain = global_domain and 
-					 code_fldname = "zz-gt-ctrl"
+find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/
+code_fldname = "zz-gt-ctrl"
 and code_value = "header" no-error.
 
 if available code_mstr then 
@@ -17,8 +16,8 @@ if available code_mstr then
 else
 	put stream soivdat "SJJK0101~~~~销售单据传入".
 
-find first code_mstr no-lock where code_domain = global_domain and 
-					 code_fldname = "zz-gt-ctrl"
+find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/
+code_fldname = "zz-gt-ctrl"
 and code_value = "line header" no-error.
 
 if available code_mstr then 
@@ -86,8 +85,9 @@ for each wkgtm
   end.
 
   find first so_mstr 
-       where so_domain = global_domain and so_nbr = substring(wkgtm_ref,4,8) 
-       exclusive-lock no-error.
+       where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/
+       so_nbr = substring(wkgtm_ref,4,8) 
+       no-error.
   if available so_mstr then do: 
     so_to_inv = no.
   /*  so_user1  = "D" + substring(wkgtm_ref,3)). lb01*/

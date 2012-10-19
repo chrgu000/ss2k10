@@ -4,7 +4,7 @@
 /*V8:ConvertMode=Maintenance                                            */
 /* REVISION: 1.0    LAST MODIFIED: 09/03/2009     BY: Leo Zhou          *CLZ*/
 /*ss2012-8-15 Éý¼¶*/
-{mfdtitle.i}
+{mfdtitle.i "121017.1"}
 
 def var v_year   as int format ">>>9".
 def var v_period as int format ">9".

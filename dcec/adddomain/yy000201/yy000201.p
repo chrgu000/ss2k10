@@ -40,10 +40,10 @@ DEFINE variable v_Exp_item_key as character initial "yy000201.p.exp.item".
 /* ¹ýÆÚ¿â´æ */
 DEFINE variable v_Exp_in_key as character initial "yy000201.p.exp.in".
 
-DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO INITIAL "dcec-b".
-DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO INITIAL "dcec-c".
-DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO INITIAL "1".
-DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO INITIAL "2".
+DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO.
+DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO.
+DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO.
+DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO.
 DEFINE VARIABLE v_pline1 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_pline2 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_type1 LIKE pt_part_type NO-UNDO.
@@ -83,11 +83,11 @@ FORM /*GUI*/
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
 space(1)
-   v_site1 COLON 20 v_site2 COLON 40 LABEL {t001.i}
-   v_part1 COLON 20 v_part2 COLON 40 LABEL {t001.i}
-   v_pline1 COLON 20 v_pline2 COLON 40 LABEL {t001.i}
-   v_type1 COLON 20 v_type2 COLON 40 LABEL {t001.i}
-   v_group1 COLON 20 v_group2 COLON 40 LABEL {t001.i}
+   v_site1 COLON 20 v_site2 COLON 48 LABEL {t001.i}
+   v_part1 COLON 20 v_part2 COLON 48 LABEL {t001.i}
+   v_pline1 COLON 20 v_pline2 COLON 48 LABEL {t001.i}
+   v_type1 COLON 20 v_type2 COLON 48 LABEL {t001.i}
+   v_group1 COLON 20 v_group2 COLON 48 LABEL {t001.i}
    v_effdate COLON 20
    v_days COLON 20
    v_rptfmt COLON 20 SKIP(1)
@@ -103,7 +103,11 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
 
-
+   EMPTY TEMP-TABLE xtplink NO-ERROR.
+   for each usrw_wkfl exclusive-lock where usrw_domain = global_domain and
+           (usrw_key1 = v_Exp_item_key OR usrw_key1 = v_Exp_in_key):
+       delete usrw_wkfl.
+   end.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -137,21 +141,20 @@ repeat:
       hide frame b.
 
    end.
-   EMPTY TEMP-TABLE xtplink NO-ERROR.
-   for each usrw_wkfl exclusive-lock where
-           (usrw_key1 = v_Exp_item_key OR usrw_key1 = v_Exp_in_key):
-       delete usrw_wkfl.
-   end.
-   FOR EACH IN_mstr NO-LOCK WHERE IN_site >= v_site1 AND IN_site <= v_site2
+
+   FOR EACH IN_mstr NO-LOCK WHERE in_domain = global_domain
+        AND IN_site >= v_site1 AND IN_site <= v_site2
         AND IN_part >= v_part1 AND IN_part <= v_part2,
-       EACH pt_mstr NO-LOCK WHERE pt_part = IN_part
+       EACH pt_mstr NO-LOCK WHERE pt_domain = global_domain
+        AND pt_part = IN_part
         AND pt_prod_line >= v_pline1 AND pt_prod_line <= v_pline2
         AND pt_part_type >= v_type1 AND pt_part_type <= v_type2
         AND pt_group >= v_group1 AND pt_group <= v_group2
        BREAK BY IN_part BY IN_site:
        IF FIRST-OF(IN_part) THEN DO:
            ASSIGN v_ditem = FALSE.
-           FIND first tr_hist NO-LOCK WHERE tr_part = pt_part
+           FIND first tr_hist NO-LOCK WHERE tr_domain = global_domain
+           				and tr_part = pt_part
                   and tr_effdate >= v_effdate - v_days
                   AND (tr_type = "ISS-SO" or tr_type = "ISS-WO" or
                        tr_type = "ISS-UNP" or tr_type = "ISS-FAS")
@@ -160,7 +163,7 @@ repeat:
                FIND FIRST xtplink EXCLUSIVE-LOCK WHERE xtp_part = pt_part NO-ERROR.
                IF NOT AVAILABLE xtplink THEN DO:
                   {gpsct03.i &cost=sct_cst_tot}
-                   create usrw_wkfl.
+                   create usrw_wkfl. usrw_domain = global_domain.
                    assign usrw_key1 = v_Exp_item_key
                           usrw_key2 = in_part
                           usrw_decfld[1] = glxcst.
@@ -187,10 +190,11 @@ repeat:
                   xtp_rmks = SUBSTRING(IN_user2,3).
                   .
 
-           FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE  usrw_key1 = v_Exp_in_key
+           FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = global_domain
+                  AND usrw_key1 = v_Exp_in_key
                   AND usrw_key2 = in_site + "@" + in_part NO-ERROR.
            IF NOT AVAILABLE usrw_wkfl THEN DO:
-               CREATE usrw_wkfl.
+               CREATE usrw_wkfl. usrw_domain = global_domain.
                ASSIGN usrw_key1 = v_Exp_in_key
                       usrw_key2 = in_site + "@" + in_part.
            END.
@@ -206,7 +210,7 @@ repeat:
                       usrw_charfld[4] = SUBSTRING(IN_user2,3).
        END.
    END.
-   IF v_rptfmt = FALSE THEN
+
      RUN value(lc(global_user_lang) + "\yy\yyut2browse.p") (INPUT-OUTPUT TABLE-HANDLE h-tt,
                                          INPUT "yy000201",
                                          INPUT "",

@@ -236,12 +236,15 @@ for each pt_mstr no-lock where pt_domain = global_domain
          		pldesc = pl_desc.
          end.
          if pr_detail = no then do:
-            display date date1 with frame b.
+         disp date column-label "起始日期" format "9999/99/99"
+             date1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
+
             display pt_prod_line pldesc no-label with width 132 frame c side-labels STREAM-IO.
          end.
          else do:
             output to "c:\detailrp.txt" append.
-           display date date1 with frame b.
+         disp date column-label "起始日期" format "9999/99/99"
+             date1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
             display pt_prod_line pldesc no-label with width 132 frame c side-labels STREAM-IO.         
               put "零件号" at 1
 	     ";零件名称" at 19 ";本期销售" at 50 	";金额" at 64 	";计划外合计" at 69 ";金额" at 89

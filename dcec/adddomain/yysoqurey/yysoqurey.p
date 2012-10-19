@@ -89,6 +89,7 @@ if duedate_from  = low_date then duedate_from = ?.
 if duedate_to    = hi_date  then duedate_to = ?.
 if indate_from = low_date then indate_from = ?.
 if indate_to = hi_date then indate_to = ?.
+if site2 = hi_char then site2 = "".
      
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
@@ -116,6 +117,7 @@ if duedate_from  = ?   then duedate_from = low_date.
 if duedate_to    = ?   then duedate_to = hi_date.
 if indate_from  = ?   then indate_from = low_date. 
 if indate_to    = ?   then indate_to = hi_date.
+if site2 = ""   then site2 = hi_char.
 /*end check the validity of soqry preference*/
 end procedure. 
 /*end procedure of p-report-quote*/

@@ -23,7 +23,7 @@
 
 DEFINE shared VARIABLE v-userid     LIKE usr_userid.
 DEFINE shared VARIABLE v-userpd     LIKE usr_passwd.
-DEFINE shared VARIABLE v-usergp     LIKE usr_group.
+DEFINE shared VARIABLE v-usergp     as character.
 
 	  passlist = "".
 	  can_do_menu = yes.

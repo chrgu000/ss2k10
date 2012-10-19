@@ -36,4 +36,3 @@ define {1} shared variable v_name_def   as character extent 5.
 define {1} shared variable v_name_seq   as integer   extent 5.
 define {1} shared variable v_name_date  as date      extent 5.
 
-define {1} shared variable gdinvmaxamt as decimal. 

@@ -38,7 +38,7 @@ FORM /*GUI*/
     v_infixrd        colon 20  label "上载数据调整差异"  
     v_inpost         colon 20  label "上载数据自动过帐"
     usrw_decfld[1]   colon 20  label "调整及过帐容差"    format ">>9.999"
-    v_max_amt        colon 38  label "开票金额限制"     skip(1)
+    v_max_amt        colon 48  label "开票金额限制"     skip(1)
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
 
  DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
@@ -177,6 +177,7 @@ repeat  with frame a:
 
     set  /*update *  LB01*/
         usrw_key4
+        usrw_charfld[4]
         usrw_charfld[1]
         v_p01
         v_p02
@@ -213,7 +214,7 @@ repeat  with frame a:
       next-prompt usrw_key4 with frame a.
       undo subloopa, retry.
     end.
-    
+
     /* lb01
     find first ad_mstr where ad_domain = global_domain and 
     					 ad_addr = v_itemgtax no-lock no-error.

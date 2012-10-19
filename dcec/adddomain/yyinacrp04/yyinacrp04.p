@@ -180,7 +180,10 @@ lineno=0.
               find pl_mstr where pl_domain = global_domain 
                and pl_prod_line = pt_prod_line no-lock no-error.
        pldesc = pl_desc.
-       display dte dte1 with frame b.
+       
+    disp dte column-label "起始日期" format "9999/99/99"
+         dte1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
+
        display pt_prod_line pldesc no-label with width 132 frame c side-labels STREAM-IO.
        PUT "零件号" AT 1 "零件名称" AT 19 "单位" AT 45 "ABC" AT 49 "默认库位" AT 59 "保管员" AT 69 
            "期初库存" TO 94 "盘盈/盘亏" TO 109 "采购入库" TO 124 "计划外入库" TO 139 "采购退货" TO 154     

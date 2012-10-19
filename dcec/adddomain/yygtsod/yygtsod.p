@@ -3,7 +3,7 @@
 
 /* VERSION 	LAST MODIFIED    2004-08-30 11:07    	*LB01*	LONG BO		  */
 /*ss2012-8-16 Éý¼¶*/
-
+{mfdtitle.i "121017.1"}
 define stream   soivdat.
 
 define new shared variable v_curr    like so_curr .
@@ -50,8 +50,6 @@ define new shared variable inv_date like ar_date.
 
 find first gl_ctrl no-lock no-error.
 
-/* DISPLAY TITLE */
-{mfdtitle.i "zz "}
     
 v_dt = today.
 
