@@ -6,9 +6,6 @@ DEFINE VAR v_flag like mfc_logical initial no EXTENT 2.
 DEFINE VAR v_cmmt LIKE in_user2 .
 
 
-
-
-
 FORM /*GUI*/ 
             
  RECT-FRAME       AT ROW 1 COLUMN 1.25
@@ -38,9 +35,10 @@ REPEAT with frame a:
       editing:
          if frame-field = "in_part" then do:
             /* Next/prev thru 'non-service' boms */
-            {mfnp05.i in_mstr in_part " in_mstr.in_domain = global_domain"
-                in_part "input in_part"}
-
+/*            {mfnp05.i in_mstr in_part " in_mstr.in_domain = global_domain and input in_part"
+                in_part "input in_part"} */
+         {mfnp.i in_mstr in_part  " in_domain = global_domain and in_part
+         "  in_part in_part in_part}
 	    if recno <> ? then do:
 	        find first pt_mstr where pt_mstr.pt_domain = global_domain 
 		                     and pt_part =  in_part no-lock no-error.
@@ -61,7 +59,7 @@ REPEAT with frame a:
 
          if frame-field = "in_site" then do:
             /* Next/prev thru 'non-service' boms */
-            {mfnp05.i in_mstr in_part " in_mstr.in_domain = global_domain and in_part = input in_part"
+            {mfnp05.i in_mstr in_part " in_mstr.in_domain = global_domain and input in_part "
                 in_site "input in_site"}
 
             if recno <> ? then do:

@@ -152,17 +152,17 @@
           RECT-FRAME       AT ROW 1.4 COLUMN 1.25
 				  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
 				  SKIP(.1)  /*GUI*/
-             entity   colon 25 entity1 colon 50 label {t001.i}
-             cname    colon 25
-             acc      colon 25 acc1    colon 50 label {t001.i}
-             sub      colon 25 sub1    colon 50 label {t001.i}
-             ctr      colon 25 ctr1    colon 50 label {t001.i}
-             begdt    colon 25 enddt   colon 50 label {t001.i}
-             subflag  colon 25
-             ccflag   colon 25
+             entity   colon 20 entity1 colon 50 label {t001.i}
+             cname    colon 20
+             acc      colon 20 acc1    colon 50 label {t001.i}
+             sub      colon 20 sub1    colon 50 label {t001.i}
+             ctr      colon 20 ctr1    colon 50 label {t001.i}
+             begdt    colon 20 enddt   colon 50 label {t001.i}
+             subflag  colon 20
+             ccflag   colon 20
 /*L00M*/     skip(1)
-             rpt_curr colon 25
-/*L01W*/     et_report_curr colon 25
+             rpt_curr colon 20
+/*L01W*/     et_report_curr colon 20
 /*L00M*ADD SECTION*/
 /*L01W*      et_report_txt to 25 no-label     */
 /*L01W*      space(0) et_report_curr no-label */

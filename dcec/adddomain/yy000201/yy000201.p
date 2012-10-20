@@ -52,6 +52,7 @@ DEFINE VARIABLE v_group1 LIKE pt_group NO-UNDO.
 DEFINE VARIABLE v_group2 LIKE pt_group NO-UNDO.
 DEFINE VARIABLE v_effdate AS DATE INITIAL TODAY.
 DEFINE VARIABLE v_days AS INTEGER NO-UNDO INITIAL 365.
+DEFINE VARIABLE v_costflag like mfc_logical no-undo initial yes.
 DEFINE VARIABLE v_ditem like mfc_logical NO-UNDO.
 define new shared variable v_rptfmt like mfc_logical
    label "1-stdout/2-browseout" format "1-stdout/2-browseout".
@@ -90,6 +91,7 @@ space(1)
    v_group1 COLON 20 v_group2 COLON 48 LABEL {t001.i}
    v_effdate COLON 20
    v_days COLON 20
+   v_costflag colon 20
    v_rptfmt COLON 20 SKIP(1)
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -123,9 +125,9 @@ repeat:
 
    DISPLAY v_effdate v_days WITH FRAME a.
    UPDATE v_site1 v_site2 v_part1 v_part2 v_pline1 v_pline2 v_type1 v_type2
-          v_group1 v_group2 v_days v_rptfmt WITH FRAME a.
+          v_group1 v_group2 v_days v_costflag v_rptfmt WITH FRAME a.
    {wbrp06.i &command = prompt-for &fields = " v_site1 v_site2 v_part1 v_part2
-          v_pline1 v_pline2 v_type1 v_type2 v_group1 v_group2 v_days v_rptfmt"
+          v_pline1 v_pline2 v_type1 v_type2 v_group1 v_group2 v_days v_costflag v_rptfmt"
              &frm = "a"}
 
    if (c-application-mode <> 'web') or

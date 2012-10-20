@@ -43,10 +43,10 @@ DEFINE variable v_Exp_in_key as character initial "yy000201.p.exp.in".
 &SCOPED-DEFINE yy000203_p_1 "Expired Qty"
 &SCOPED-DEFINE yy000203_p_2 "Ending Qty"
 
-DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO INITIAL "dcec-b".
-DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO INITIAL "dcec-c".
-DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO INITIAL "1".
-DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO INITIAL "2".
+DEFINE VARIABLE v_site1 LIKE si_site NO-UNDO.
+DEFINE VARIABLE v_site2 LIKE si_site NO-UNDO.
+DEFINE VARIABLE v_part1 LIKE pt_part NO-UNDO.
+DEFINE VARIABLE v_part2 LIKE pt_part NO-UNDO.
 DEFINE VARIABLE v_pline1 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_pline2 LIKE pt_prod_line NO-UNDO.
 DEFINE VARIABLE v_type1 LIKE pt_part_type NO-UNDO.
@@ -109,11 +109,11 @@ FORM /*GUI*/
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
 space(1)
-   v_site1 COLON 20 v_site2 COLON 40 LABEL {t001.i}
-   v_part1 COLON 20 v_part2 COLON 40 LABEL {t001.i}
-   v_pline1 COLON 20 v_pline2 COLON 40 LABEL {t001.i}
-   v_type1 COLON 20  v_type2 COLON 40 LABEL {t001.i}
-   v_group1 COLON 20 v_group2 COLON 40 LABEL {t001.i}
+   v_site1 COLON 20 v_site2 COLON 44 LABEL {t001.i}
+   v_part1 COLON 20 v_part2 COLON 44 LABEL {t001.i}
+   v_pline1 COLON 20 v_pline2 COLON 44 LABEL {t001.i}
+   v_type1 COLON 20  v_type2 COLON 44 LABEL {t001.i}
+   v_group1 COLON 20 v_group2 COLON 44 LABEL {t001.i}
    v_effdate COLON 20
    v_days COLON 20
    v_rptfmt COLON 20 SKIP(1)
@@ -187,7 +187,7 @@ repeat:
                  v_qty = 0
                  ordqty = 0
                  totuse = 0.
-          for each tr_hist no-lock use-index tr_part_eff where 
+          for each tr_hist no-lock use-index tr_part_eff where
           				 tr_domain = global_domain and
                    tr_part = in_part and
                    tr_effdate >= v_effdate - 182 and
@@ -199,12 +199,12 @@ repeat:
 
  /*H0S0*/       qty_oh = 0.
 
-/*FT81*/       for each ld_det no-lock where ld_domain = global_domain 
+/*FT81*/       for each ld_det no-lock where ld_domain = global_domain
                and ld_part = in_part
 /*FT81*/       and ld_site = in_site
-/*G1SP        and ld_loc >= loc and ld_loc <= loc1                        
+/*G1SP        and ld_loc >= loc and ld_loc <= loc1
 /*FT81*/       and (ld_status >= stat and ld_status <= stat1):*/  :
-/*G2H8* /*FT81*/       each is_mstr no-lock where is_domain = global_domain 
+/*G2H8* /*FT81*/       each is_mstr no-lock where is_domain = global_domain
 												and is_status = ld_status: */
                   if ld_expire <> ? and ld_expire < today
                      then qty_x = qty_x + ld_qty_oh.
@@ -217,10 +217,10 @@ repeat:
 /*  if avguse_yn then totuse = (date1 - today) * in_avg_iss. */
 
                   for each mrp_det no-lock
-/*FT81*/          where mrp_domain = global_domain 
+/*FT81*/          where mrp_domain = global_domain
                   and mrp_site = in_site and mrp_part = in_part
 /*FT81*/          and (mrp_type begins "SUPPLY" or mrp_type = "DEMAND")
-                  and mrp_due_date <= today + 180:                              
+                  and mrp_due_date <= today + 180:
                       if mrp_type = "SUPPLY"
 /*FT81*/                 or (mrp_type = "SUPPLYF")
 /*FT81*/                 or (mrp_type = "SUPPLYP")
@@ -228,13 +228,12 @@ repeat:
                       else if mrp_type = "DEMAND" /* and not avguse_yn */
                          then totuse =  totuse + mrp_qty.
                   end.
- /*G1SP*/           qty_1 = max(0,(qty_oh - qty_x - totuse 
-/*FT81                 + if not avguse_yn then ordqty else 0)).   */ 
+ /*G1SP*/           qty_1 = max(0,(qty_oh - qty_x - totuse
+/*FT81                 + if not avguse_yn then ordqty else 0)).   */
 													+ ordqty)).
 
                   /*FIND UNIT COST TO USE*/
                   {gpsct03.i &cost=sct_cst_tot}
-
            find first xtplink exclusive-lock where xtp_part = in_part
                   and xtp_site = in_site no-error.
            if not available xtplink then do:
@@ -255,16 +254,18 @@ repeat:
                   xtp_n1a = (qty_oh - (v_qty + qty_oh + totuse - qty_1)) * glxcst
                   xtp_n2u = (v_qty + qty_oh + totuse - qty_1) * 2
                   xtp_n2q = qty_oh - (v_qty + qty_oh + totuse - qty_1) * 2
-                  xtp_n2a =(qty_oh - (v_qty + qty_oh + totuse - qty_1) * 2) * glxcst 
+                  xtp_n2a =(qty_oh - (v_qty + qty_oh + totuse - qty_1) * 2) * glxcst
                   xtp_last_stat = YES WHEN substring(IN_user2,2,1) = "Y"
-                  xtp_rmks = SUBSTRING(IN_user2,3).
+                  xtp_rmks = SUBSTRING(IN_user2,3)
                   .
-       END.
+         end. /*  IF not v_ditem THEN DO: */
    END.
    for each xtplink exclusive-lock:
    		 if xtp_n2q < 0 then assign xtp_n2q = 0.
-   		 if xtp_n1q < 0 then delete xtplink.
    		 xtp_amt = xtp_n2a + (xtp_n1a - xtp_n2a) * 0.5.
+   		 if xtp_n1q < 0 then do:
+   		 		delete xtplink.
+   		 end.
    end.
    IF v_rptfmt = FALSE THEN
      RUN value(lc(global_user_lang) + "\yy\yyut2browse.p") (INPUT-OUTPUT TABLE-HANDLE h-tt,
@@ -283,7 +284,7 @@ repeat:
 /*                                                                          */
 /*    /* OUTPUT DESTINATION SELECTION */                                    */
    {gpselout.i &printType = "terminal"
-               &printWidth = 220
+               &printWidth = 420
                &pagedFlag = " "
                &stream = " "
                &appendToFile = " "
@@ -296,21 +297,19 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
 
-   for each xtplink NO-LOCK WITH FRAME c WIDTH 220 down:
+   for each xtplink NO-LOCK WITH FRAME c WIDTH 420 down:
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
-
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-
       DISPLAY xtplink WITH STREAM-IO /*GUI*/ .
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
    end.
 
    {mfreset.i}
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-/*                                                                                                    */
-/*    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}                                                               */
-/*                                                                                                    */
+/*                                                                          */
+/*    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}                                     */
+/*                                                                          */
 end.
 
 {wbrp04.i &frame-spec = a}
