@@ -7,7 +7,7 @@
    IF INDEX(cp_user2,":") <> 0 THEN
    DISPLAY ENTRY(  2 , cp_user2 , ":") */
 
-{mfdtitle.i "111206.1"}
+{mfdtitle.i "121022.1"}
 
 DEFINE VARIABLE buyer LIKE pt_buyer INITIAL "4RSA".
 DEFINE VARIABLE xbuyer LIKE pt_buyer .
@@ -26,6 +26,7 @@ DEFINE VARIABLE option_list AS CHARACTER FORMAT "x(1)" INITIAL "1".
 DEFINE VARIABLE i AS INTEGER.
 DEFINE VARIABLE j AS INTEGER.
 DEFINE VARIABLE n AS INTEGER.
+DEFINE VARIABLE vqty LIKE pt_ship_wt.
 
 
 DEFINE TEMP-TABLE tt1
@@ -366,6 +367,36 @@ do on error undo, return error on endkey undo, return error:
 
                 END.
                 ELSE DO:
+                		assign vqty = tt1_qty_ord.
+                		do while vqty > 0:
+									     i = i + 1.
+                       CREATE tt2.
+                       ASSIGN tt2_id = i
+                           tt2_part = tt1_part
+                           tt2_color = tt1_color
+                           tt2_title = tt1_title
+                           tt2_cust_part = tt1_cust_part
+                           tt2_desc1 = tt1_desc1
+                           tt2_desc2 = tt1_desc2
+                           tt2_per_qty = tt1_per_qty
+                           /* ss - 111130.1 -b */
+                           tt2_style = tt1_style
+                           tt2_grade = tt1_grade
+                           /* ss - 111130.1 -e */
+                           tt2_qty_ord = min(tt1_per_qty,vqty)
+                           tt2_addr = tt1_addr
+                           tt2_ship_date = tt1_ship_date
+                           tt2_load_date = tt1_load_date
+                           tt2_load_time = tt1_load_time
+                           tt2_plan = tt1_plan
+                           tt2_model_zy = tt1_model_zy
+                           tt2_sy = tt1_sy
+                           tt2_soil = tt1_soil.  
+                       assign vqty = vqty - tt1_per_qty.
+                	  end.
+                END.
+/***********************************************************************               
+                ELSE DO:
                    IF TRUNCATE(tt1_qty_ord / tt1_per_qty,0) <
                       tt1_qty_ord / tt1_per_qty THEN DO:
                        n = TRUNCATE(tt1_qty_ord / tt1_per_qty,0) + 1.
@@ -425,6 +456,7 @@ do on error undo, return error on endkey undo, return error:
                        END.
                    END.
                 END.
+*******************************************************************/                
             END.
 
             IF option_list = "1" THEN DO:
