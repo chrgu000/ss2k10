@@ -1,11 +1,6 @@
-/* GUI CONVERTED from yypcso.p (converter v1.78) Mon Oct 22 19:46:32 2012 */
 /* yypcso.p - yypcso.p                                                       */
 /*V8:ConvertMode=Report                                                      */
 /* REVISION END                                                              */
-
-
-/*GUI preprocessor directive settings */
-&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
 {mfdtitle.i "121017.1"}
 def var vend like pc_list.
@@ -24,16 +19,7 @@ def temp-table sotmp
     field sotmp_comp like pt_part
     field sotmp_par like pt_part
     index indx01 sotmp_comp sotmp_par.    
-
-/*GUI preprocessor Frame A define */
-&SCOPED-DEFINE PP_FRAME_NAME A
-
-FORM /*GUI*/  vend part  with frame a WIDTH 80 /*GUI*/ THREE-D /*GUI*/.
-
-/*GUI preprocessor Frame A undefine */
-&UNDEFINE PP_FRAME_NAME
-
-
+form vend part  with frame a.
 
 repeat:
 update vend part eff_date with frame a.
@@ -53,7 +39,7 @@ for each pt_mstr where /*ss2012-8-16 b*/ pt_mstr.pt_domain = global_domain and /
     end.
 end.
 for each item_tmp no-lock:
-disp item_tmp WITH STREAM-IO /*GUI*/ .
+disp item_tmp.
 end.
 for each item_tmp no-lock:
     comp = item_part.
@@ -61,13 +47,11 @@ for each item_tmp no-lock:
 end.
 
 for each sotmp where  no-lock:
-    disp sotmp WITH STREAM-IO /*GUI*/ .
+    disp sotmp.
 end.
 empty temp-table item_tmp.
 empty temp-table sotmp.
       {mfreset.i}
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
       {mfgrptrm.i}
 end.
 
