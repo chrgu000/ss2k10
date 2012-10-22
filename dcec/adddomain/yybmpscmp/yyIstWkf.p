@@ -103,7 +103,7 @@ define shared work-table mybomcmp
 					mybomcmp.bqty2 = mybomcmp.bqty2 + ps_qty_per.
 			end.
 			else do:
-				create mybomcmp.
+				create mybomcmp. 
 				assign
 					mybomcmp.bcomp = ps_comp
 					mybomcmp.bdesc = ddesc.

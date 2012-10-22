@@ -26,7 +26,7 @@ CREATE WINDOW hwindow1
          MAX-WIDTH          = 116.36
          VIRTUAL-HEIGHT     = 33.82
          VIRTUAL-WIDTH      = 116.36
-         RESIZE             = yes
+         RESIZE             = no
          SCROLL-BARS        = no
          STATUS-AREA        = no
          BGCOLOR            = ?

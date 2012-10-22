@@ -29,39 +29,36 @@
      cleanup will occur on deletion of the procedure. */
 
 CREATE WIDGET-POOL.
-
 /* ***************************  Definitions  ************************** */
 
 /* Parameters Definitions ---                                           */
-
-/* Local Variable Definitions ---                                       */
+{mfdeclre.i} /*GUI moved to top.*/      
+{gplabel.i} 
+/* EXTERNAL LABEL INCLUDE *//* Local Variable Definitions ---                                       */
 
 DEFINE INPUT-OUTPUT PARAMETER TABLE-HANDLE hTempTable.
-DEFINE INPUT PARAMETER inp_key       AS CHAR.
-DEFINE INPUT PARAMETER inp_where     AS CHAR.
-DEFINE INPUT PARAMETER inp_sortby    AS CHAR.
-DEFINE INPUT PARAMETER inp_bwstitle  AS CHAR.
-DEFINE INPUT PARAMETER inp_prgfld    AS CHAR.
-DEFINE INPUT PARAMETER inp_prgname   AS CHAR.
-DEFINE INPUT PARAMETER inp_prglabel  AS CHAR.
-DEFINE INPUT PARAMETER inp_modfld    AS CHAR.
-DEFINE INPUT PARAMETER inp_user1     AS CHAR.
-DEFINE INPUT PARAMETER inp_user2     AS CHAR.  /*for count warning*/
-DEFINE INPUT PARAMETER inp_user3     AS CHAR.  /*for color*/
+DEFINE INPUT PARAMETER inp_key       AS CHARACTER.
+DEFINE INPUT PARAMETER inp_where     AS CHARACTER.
+DEFINE INPUT PARAMETER inp_sortby    AS CHARACTER.
+DEFINE INPUT PARAMETER inp_bwstitle  AS CHARACTER.
+DEFINE INPUT PARAMETER inp_prgfld    AS CHARACTER.
+DEFINE INPUT PARAMETER inp_prgname   AS CHARACTER.
+DEFINE INPUT PARAMETER inp_prglabel  AS CHARACTER.
+DEFINE INPUT PARAMETER inp_modfld    AS CHARACTER.
+DEFINE INPUT PARAMETER inp_user1     AS CHARACTER.
+DEFINE INPUT PARAMETER inp_user2     AS CHARACTER.  /*for count warning*/
+DEFINE INPUT PARAMETER inp_user3     AS CHARACTER.  /*for color*/
 
-
-{mfdeclre.i} /*GUI moved to top.*/
-{gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
 DEFINE VARIABLE bh AS HANDLE NO-UNDO.
 DEFINE VARIABLE bf AS HANDLE NO-UNDO.
 DEFINE VARIABLE hq AS HANDLE NO-UNDO.
 DEFINE VARIABLE iCounter AS INTEGER NO-UNDO.
-DEFINE VARIABLE hBrowse         AS HANDLE    NO-UNDO.
-DEFINE VARIABLE hbutton1         AS HANDLE    NO-UNDO.
-DEFINE VARIABLE hbutton2         AS HANDLE    NO-UNDO.
-DEFINE VARIABLE hbutton3         AS HANDLE    NO-UNDO.
-DEFINE VARIABLE hbutton4         AS HANDLE    NO-UNDO.
+DEFINE VARIABLE hBrowse  AS HANDLE NO-UNDO.
+DEFINE VARIABLE hbutton1 AS HANDLE NO-UNDO.
+DEFINE VARIABLE hbutton2 AS HANDLE NO-UNDO.
+DEFINE VARIABLE hbutton3 AS HANDLE NO-UNDO.
+DEFINE VARIABLE hbutton4 AS HANDLE NO-UNDO.
 
 /* Browse Column Handle */
 DEFINE VARIABLE bcHandle AS HANDLE NO-UNDO.
@@ -89,7 +86,7 @@ DEFINE TEMP-TABLE ttx
 
 DEFINE VAR   v_genhan_chk AS LOGICAL NO-UNDO.
 v_genhan_chk = NO.
-RUN xxpro-genhan (OUTPUT v_genhan_chk).
+RUN xxpro-genhan (OUTPUT v_genhan_chk).   
 IF v_genhan_chk = NO THEN LEAVE.
 
 RUN xxpro-initial.
@@ -146,13 +143,13 @@ DEFINE FRAME DEFAULT-FRAME
 IF SESSION:DISPLAY-TYPE = "GUI":U THEN
   CREATE WINDOW c-win ASSIGN
          HIDDEN             = YES
-         TITLE              = inp_bwstitle
-         HEIGHT             = 26
-         WIDTH              = 80
-         MAX-HEIGHT         = 26
-         MAX-WIDTH          = 80
-         VIRTUAL-HEIGHT     = 26
-         VIRTUAL-WIDTH      = 80
+         TITLE              = "Êý¾Ýä¯ÀÀ"
+         HEIGHT             = 38
+         WIDTH              = 148
+         MAX-HEIGHT         = 38
+         MAX-WIDTH          = 148
+         VIRTUAL-HEIGHT     = 38
+         VIRTUAL-WIDTH      = 148
          RESIZE             = yes
          SCROLL-BARS        = no
          STATUS-AREA        = no
@@ -200,6 +197,11 @@ END.
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
+ON ENTRY OF C-Win /* <insert window title> */
+DO:
+  APPLY "WINDOW-RESIZED" TO c-win.
+END.
+
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL c-win c-win
 ON WINDOW-CLOSE OF c-win /* Browse Window */
@@ -212,6 +214,16 @@ END.
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
+
+ON WINDOW-RESIZED OF c-win 
+DO:
+  FRAME DEFAULT-FRAME:WIDTH = c-win:WIDTH NO-ERROR.
+  FRAME DEFAULT-FRAME:VIRTUAL-WIDTH-CHARS = c-win:WIDTH NO-ERROR.
+  hBrowse:WIDTH = c-win:WIDTH - 0.4 NO-ERROR.
+  FRAME DEFAULT-FRAME:HEIGHT= c-win:HEIGHT NO-ERROR.
+  FRAME DEFAULT-FRAME:VIRTUAL-HEIGHT-CHARS = c-win:HEIGHT NO-ERROR.
+  hBrowse:HEIGHT = c-win:HEIGHT - 1.64 NO-ERROR.
+END.
 
 &UNDEFINE SELF-NAME
 
@@ -320,8 +332,8 @@ CREATE BUTTON hbutton4
 CREATE BROWSE hBrowse
     ASSIGN X         = 1
            Y         = 25
-           WIDTH     = 79
-           DOWN      = 20
+           WIDTH     = 147
+           DOWN      = 33
            QUERY     = hq
            FRAME     = FRAME DEFAULT-FRAME:HANDLE
            READ-ONLY = FALSE
@@ -447,8 +459,8 @@ PROCEDURE xxpro-genhan :
     DEF VAR v_customlic AS CHAR.
     DEF VAR v_genhanchk AS CHAR.
 
-    p_outresult = NO.
-
+    p_outresult = YES.
+/*
     FIND FIRST pin_mstr WHERE pin_product = "MFG/PRO" NO-LOCK NO-ERROR.
     IF NOT AVAILABLE pin_mstr THEN LEAVE.
 
@@ -474,7 +486,7 @@ PROCEDURE xxpro-genhan :
                   + substring(ENCODE(v_genhanlic[1] + v_genhanlic[2]),1,8).
 
     IF v_genhanchk = v_customlic THEN p_outresult = YES.
-
+*/
 END PROCEDURE.
 
 /* _UIB-CODE-BLOCK-END */

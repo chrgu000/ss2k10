@@ -71,8 +71,8 @@ repeat:
 	 if	frame-field	= "parent1"	then do:
 	   /* FIND NEXT/PREVIOUS RECORD	- ALL BOM_MSTR'S ARE
 		  VALID	FOR	"SOURCE" */
-	   {mfnp.i bom_mstr	parent1	bom_parent parent1
-			   bom_parent bom_parent}
+	   {mfnp.i bom_mstr	parent1	" bom_domain = global_domain and bom_parent " 
+	   				 parent1 bom_parent bom_parent}
 	   if recno	<> ? then do:
 		  assign
 			parent1	= bom_parent
@@ -94,8 +94,8 @@ repeat:
 
 	   /* FIND NEXT/PREVIOUS RECORD	- BOMS TO DISPLAY DEPEND
 	   IN THE INPUT	BOM-TYPE PARAMETER */
-	   {mfnp.i bom_mstr	parent2	bom_parent parent2
-			   bom_parent bom_parent}
+	   {mfnp.i bom_mstr	parent2 "bom_domain = global_domain and	bom_parent "
+	   				 parent2 bom_parent bom_parent}
 
 	   if recno	<> ? then do:
 		  assign
