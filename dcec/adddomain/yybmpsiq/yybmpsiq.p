@@ -52,7 +52,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "120816.1"}
+{mfdtitle.i "121022.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -88,7 +88,7 @@ define variable desc1 like pt_desc1.
 define variable um like pt_um.
 define variable phantom like mfc_logical format "yes" label {&bmpsiq_p_4}.
 define variable iss_pol like pt_iss_pol format {&bmpsiq_p_1}.
-/*judy*/  DEFINE VARIABLE xxstatus LIKE pt_status .   
+/*judy*/  DEFINE VARIABLE xxstatus LIKE pt_status .
 define variable lvl as character format "x(7)" label {&bmpsiq_p_6}.
 define variable ecmnbr like ecm_nbr label {&bmpsiq_p_2}.
 define variable ecmid     like wo_lot.
@@ -97,28 +97,37 @@ define shared variable global_recid as recid.
 define variable rev like pt_rev.
 define variable relation like mfc_logical.
 DEFINE VARIABLE xxpart LIKE pt_part.  /*judy*/
-
+/*hj01*/ DEFINE VARIABLE o_char AS CHAR FORMAT "x(3)" INIT "ALL" LABEL "零件状态".
+/*hj01*/ DEFINE VARIABLE yn AS LOG .
 eff_date = today.
 
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
 parent  colon 23
    desc1   colon 44 no-label
-   um      colon 74 no-label
+   um      colon 74 NO-LABEL
    eff_date   colon 13 label {&bmpsiq_p_3}
    maxlevel   colon 31
    rev        colon 51
+/*hj01*/ o_char  COLON 68.4 /* VIEW-AS COMBO-BOX LIST-ITEM-PAIRS "ALL" ,"ALL" INNER-LINES 8 */
    ecmnbr     colon 13
    ecmid      colon 31
-   dbase      colon 51
+   dbase      colon 51 SKIP(1)
+    "**零件状态只能是已有零件状态(代表只显示选定状态的零件),或ALL(代表所有状态),或!O(代表非O)**" AT 10 SKIP(1)
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
+
+/* FOR EACH qad_wkfl NO-LOCK where qad_key1 = "PT_STATUS" :
+    o_char:ADD-LAST(qad_key2,qad_key2).
+END.
+o_char:ADD-LAST("非O","非O") . */
+
 
  DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -129,8 +138,6 @@ with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
 
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
-
-
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -149,6 +156,9 @@ repeat:
          eff_date
          maxlevel
          rev
+/*hj01*/ o_char VALIDATE(o_char = "ALL" OR o_char = "!O" OR
+                         CAN-FIND(qad_wkfl NO-LOCK where qad_domain = global_domain and qad_key1 = "PT_STATUS" AND o_char = qad_key2),
+                         "零件状态输入错误,请重新输入!" )
          ecmnbr
          ecmid
          dbase
@@ -158,9 +168,9 @@ repeat:
       if frame-field = "parent"
       then do:
          /* NEXT/PREV THRU 'NON-SERVICE' BOMS */
-         {mfnp05.i bom_mstr bom_fsm_type " bom_mstr.bom_domain = global_domain
-         and bom_fsm_type  = """" "
+         {mfnp05.i bom_mstr bom_fsm_type "bom_fsm_type = """" "
             bom_parent "input parent"}
+
          if recno <> ?
          then do:
             parent = bom_parent.
@@ -173,7 +183,7 @@ repeat:
 
             if bom_desc = ""  /*OR SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" */
             then do:
-               
+
                for first pt_mstr
                   fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                          pt_part pt_phantom pt_um)
@@ -188,15 +198,15 @@ repeat:
                      with frame a.
             end.
 
-            IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO: 
+            IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO:
                 xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
-                FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
+                FIND FIRST pt_mstr WHERE pt_domain = global_domain and
                            pt_part = xxpart NO-LOCK NO-ERROR.
                 IF AVAIL pt_mstr THEN  display
                      pt_desc1 @ desc1
                      with frame a.
 
-            END. 
+            END.
 
 
             recno = ?.
@@ -206,8 +216,8 @@ repeat:
       if frame-field = "ecmnbr"
       then do:
          global_recid = ?.
-            {mfnp05.i ecm_mstr ecm_mstr
-            " ecm_mstr.ecm_domain = global_domain and (ecm_eff_date  <> ?)"
+         {mfnp05.i ecm_mstr ecm_mstr
+            "(ecm_eff_date <> ?)"
             ecm_nbr "input ecmnbr"}
          if global_recid <> ?
          then do:
@@ -215,8 +225,8 @@ repeat:
             recno = global_recid.
 
             for first ecm_mstr
-               fields(ecm_domain ecm_eff_date ecm_nbr)
-               where ecm_domain = global_domain and recid(ecm_mstr) = recno
+               fields(ecm_eff_date ecm_nbr)
+               where recid(ecm_mstr) = recno
                no-lock:
             end. /* FOR FIRST ecm_mstr */
 
@@ -257,13 +267,13 @@ repeat:
 
       assign
          desc1 = ""
-         um = "". 
+         um = "".
 
       for first pt_mstr
          fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                 pt_part pt_phantom pt_um)
          use-index pt_part
-         where pt_domain = global_domain and pt_part = parent  
+         where pt_domain = global_domain and pt_part = parent
          no-lock:
       end. /* FOR FIRST pt_mstr */
 
@@ -303,7 +313,7 @@ repeat:
             um = pt_um
             desc1 = pt_desc1
             parent = pt_part.
-      
+
 
       if not available pt_mstr
       and not available bom_mstr
@@ -324,30 +334,28 @@ repeat:
 
          undo, retry.
       end.
-   
-
 
       display
          parent
          desc1
          um
          with frame a.
-/*judy*/      
-      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO: 
+/*judy*/
+      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO:
                     xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
-                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
-                               pt_part = xxpart NO-LOCK NO-ERROR.
+                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and
+                    					 pt_part = xxpart NO-LOCK NO-ERROR.
                     IF AVAIL pt_mstr THEN   DISP pt_desc1 @ desc1 WITH FRAME a.
-      END. 
+      END.
 
       for first pt_mstr
          fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                 pt_part pt_phantom pt_um)
          use-index pt_part
-         where pt_domain = global_domain and pt_part = parent  
+         where pt_domain = global_domain and pt_part = parent
          no-lock:
       end. /* FOR FIRST pt_mstr */
-/*judy*/  
+/*judy*/
 
       hide frame heading no-pause.
       clear frame heading all no-pause.
@@ -361,9 +369,9 @@ repeat:
       if (ecmnbr + ecmid + dbase) <> ""
       then do:
          for first ecm_mstr
-            fields(ecm_domain ecm_eff_date ecm_nbr)
+            fields (ecm_domain ecm_eff_date ecm_nbr)
             where ecm_domain = global_domain and
-                  ecm_nbr = string(ecmnbr,"x(8)") +
+                     ecm_nbr = string(ecmnbr,"x(8)") +
                             string(ecmid,"x(8)") +
                             string(dbase,"x(8)")
             no-lock:
@@ -459,18 +467,18 @@ repeat:
                 pt_bom_code
              else
                 pt_part.
-/*judy*/      
-      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO: 
+/*judy*/
+      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO:
              xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
-                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and 
-                    					 pt_part = xxpart NO-LOCK NO-ERROR.
+                    FIND FIRST pt_mstr WHERE pt_domain = global_domain
+                    			 and pt_part = xxpart NO-LOCK NO-ERROR.
                     IF AVAIL pt_mstr THEN desc1 = pt_desc1.
       END.
       for first pt_mstr
          fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                 pt_part pt_phantom pt_um)
          use-index pt_part
-         where pt_domain = global_domain and pt_part = parent  
+         where pt_domain = global_domain and pt_part = parent
          no-lock:
       end. /* FOR FIRST pt_mstr */
 /*judy*/
@@ -490,21 +498,21 @@ repeat:
          pt_desc2 @ desc1 WITH STREAM-IO /*GUI*/ .
       down with frame heading.
    end. /* IF AVAILABLE pt_mstr ... */
-/*judy*/      
-      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO: 
+/*judy*/
+      IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO:
              xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
                     FIND FIRST pt_mstr WHERE pt_domain = global_domain and
-                              pt_part = xxpart NO-LOCK NO-ERROR.
-                    IF AVAIL pt_mstr THEN DO:  
+                    					 pt_part = xxpart NO-LOCK NO-ERROR.
+                    IF AVAIL pt_mstr THEN DO:
                         display
                            pt_desc2 @ desc1
                          with frame heading  STREAM-IO /*GUI*/ .
                           down 1 with frame heading.
                 END.
-                       
-      END. 
- 
-/*judy*/  
+
+      END.
+
+/*judy*/
 
    if comp <> parent
    then do with frame heading:
@@ -569,7 +577,7 @@ PROCEDURE process_report:
    then
       return.
 
-   FORM /*GUI*/ 
+   FORM /*GUI*/
       lvl
       ps_comp
       desc1
@@ -579,7 +587,7 @@ PROCEDURE process_report:
       ps_ps_code
       iss_pol
 /*judy*/
-      xxstatus 
+      xxstatus
       ps_rmks   COLUMN-LABEL "随机带!走  件" FORMAT "x(1)"
 /*judy*/
    with STREAM-IO /*GUI*/  frame heading  width 100 no-attr-space.
@@ -588,7 +596,7 @@ PROCEDURE process_report:
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame heading:handle).
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
 
@@ -604,7 +612,7 @@ PROCEDURE process_report:
              xxstatus = ""      /*judy*/
             phantom = no.
 
-
+/*hj01*/ yn = NO .
          for first pt_mstr
             fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
                    pt_part pt_phantom pt_um pt_status)   /*judy*/
@@ -620,6 +628,21 @@ PROCEDURE process_report:
                iss_pol = pt_iss_pol
                 xxstatus = pt_status  /*judy*/
                phantom = pt_phantom.
+/*hj01--*/
+            CASE o_char :
+                WHEN "!O" THEN DO:
+                    IF pt_status <> "o" THEN yn = NO .
+                    ELSE yn = YES .
+                END.
+                WHEN "ALL" THEN DO:
+                    yn = NO.
+                END.
+                OTHERWISE DO:
+                    IF pt_status = o_char THEN yn = NO .
+                    ELSE yn = YES .
+                END.
+            END.
+/*--hj01*/
          end.
          else do:
             for first bom_mstr
@@ -646,12 +669,29 @@ PROCEDURE process_report:
             and available pt_mstr and pt_desc2 > ""
          then
             down 1 with frame heading.
-/*judy*/      
-      IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO: 
+/*judy*/
+      IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO:
              xxpart = SUBSTRING(ps_comp, 1,LENGTH(ps_comp) - 2) .  /*judy*/
-                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and
-                               pt_part = xxpart NO-LOCK NO-ERROR.
-                    IF AVAIL pt_mstr THEN desc1 = pt_desc1.
+                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = xxpart
+                         NO-LOCK NO-ERROR.
+                    IF AVAIL pt_mstr THEN do:
+                        ASSIGN desc1 = pt_desc1 /*hj01*/ xxstatus = pt_status .
+/*hj01--*/
+                    CASE o_char :
+                        WHEN "!O" THEN DO:
+                            IF pt_status <> "o" THEN yn = NO .
+                            ELSE yn = YES .
+                        END.
+                        WHEN "ALL" THEN DO:
+                            yn = NO.
+                        END.
+                        OTHERWISE DO:
+                            IF pt_status = o_char THEN yn = NO .
+                            ELSE yn = YES .
+                        END.
+                    END.
+/*--hj01*/
+                    END.
                    /* MESSAGE "aa" xxpart desc1.
                     PAUSE. */
       END.
@@ -662,6 +702,9 @@ PROCEDURE process_report:
             no-lock:
          end. /* FOR FIRST pt_mstr */
 /*judy*/
+
+
+/*hj01*/ IF yn = NO THEN DO:
 
          display
             lvl
@@ -685,27 +728,29 @@ PROCEDURE process_report:
                with frame heading  STREAM-IO /*GUI*/ .
             down 1 with frame heading.
          end.
-/*judy*/      
-      IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO: 
+
+
+/*judy*/
+      IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO:
              xxpart = SUBSTRING(ps_comp, 1,LENGTH(ps_comp) - 2) .  /*judy*/
                FIND FIRST pt_mstr WHERE pt_domain = global_domain and
-                          pt_part = xxpart NO-LOCK NO-ERROR.
-                    IF AVAIL pt_mstr THEN DO:  
+               					  pt_part = xxpart NO-LOCK NO-ERROR.
+                    IF AVAIL pt_mstr   THEN DO:
                         display
                            pt_desc2 @ desc1
                          with frame heading  STREAM-IO /*GUI*/ .
                           down 1 with frame heading.
                 END.
-                       
-      END. 
- 
-/*judy*/  
+
+      END.
+ /*hj01*/ END.  /*IF yn = NO*/
+/*judy*/
 
          if level < maxlevel
          or maxlevel = 0
          then do:
 
-            run process_report (input ps_comp, input level + 1).
+/*hj01*/ IF yn = NO THEN  run process_report (input ps_comp, input level + 1).
             get next q_ps_mstr no-lock.
          end.
          else do:
