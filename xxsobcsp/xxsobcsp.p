@@ -42,9 +42,10 @@ DEFINE TEMP-TABLE tt1
     FIELD tt1_per_qty LIKE pt_ship_wt
     FIELD tt1_title AS CHARACTER
     FIELD tt1_model_zy AS CHARACTER
-    FIELD tt1_sy AS CHARACTER
+    FIELD tt1_sy AS CHARACTER.
+    /*
     INDEX index1 tt1_cust tt1_cust_part.
-
+		*/
 
 DEFINE TEMP-TABLE tt2 
     FIELD tt2_id   LIKE tr_trnbr
@@ -205,9 +206,10 @@ do on error undo, return error on endkey undo, return error:
                 PUT SKIP.
                 */
 
-                FIND FIRST tt1 WHERE tt1_cust = xxsod_cust AND tt1_cust_part = xxsod_part AND tt1_ship_date = xxsod_due_date1 AND tt1_ship_time = xxsod_due_time1
-                    NO-ERROR.
-                IF NOT AVAIL tt1 THEN DO:
+/*             FIND FIRST tt1 WHERE tt1_cust = xxsod_cust AND tt1_cust_part = xxsod_part                      */
+/*                              AND tt1_ship_date = xxsod_due_date1 AND tt1_ship_time = xxsod_due_time1       */
+/*                 NO-ERROR.                                                                                  */
+/*             IF NOT AVAIL tt1 THEN DO:                                                                      */
                     CREATE tt1.
                     ASSIGN
                         tt1_cust = xxsod_cust
@@ -278,10 +280,10 @@ do on error undo, return error on endkey undo, return error:
 
 
 
-                END.
-                ELSE DO:
-                    tt1_qty_ord = tt1_qty_ord + xxsod_qty_ord.
-                END.
+/*                END.                                                    */
+/*                ELSE DO:                                                */
+/*                    tt1_qty_ord = tt1_qty_ord + xxsod_qty_ord.          */
+/*                END.                                                    */
                 
             END. /*FOR EACH xxsod_det*/
 
