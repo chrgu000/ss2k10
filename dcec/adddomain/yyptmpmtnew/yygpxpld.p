@@ -75,7 +75,7 @@ define shared temp-table xxpk_det
 /*G656*/ define variable assy_op like ps_op no-undo.
 
      if pkdel then do:
-        {mfdel.i pk_det "where pk_user = mfguser"}
+        {mfdel.i pk_det "where pk_domain = global_domain and pk_user = mfguser"}
       end.
         
      hide message no-pause.
@@ -88,7 +88,7 @@ end.
 /*N0CD**   no-lock no-error.                                               */
 
 /*N0CD*/ for first ps_mstr
-/*N0CD*/    fields(ps_comp ps_end ps_group ps_lt_off ps_op ps_par ps_process
+/*N0CD*/    fields(ps_domain ps_comp ps_end ps_group ps_lt_off ps_op ps_par ps_process
 /*N0CD*/           ps_ps_code ps_qty_per ps_qty_per_b ps_qty_type ps_scrp_pct
 /*N0LT** /*N0CD*/  ps_start) */
 /*N0LT*/           ps_ref ps_start)
@@ -100,7 +100,7 @@ end.
      if available ps_mstr then do:
 /*N0CD** find bom_mstr no-lock where bom_parent = xpldcomp no-error.  */
 /*N0CD*/ for first bom_mstr
-/*N0CD*/    fields(bom_batch bom_batch_um bom_parent)
+/*N0CD*/    fields(bom_domain bom_batch bom_batch_um bom_parent)
 /*N0CD*/    where /*ss2012-8-21 b*/ bom_domain = global_domain and /*ss2012-8-21 e*/ bom_parent = xpldcomp  no-lock:
 /*N0CD*/ end. /* FOR FIRST BOM_MSTR */
 
@@ -122,7 +122,7 @@ end.
 /*N0CD**  find ps_mstr where recid(ps_mstr) = record[level]  */
 /*N0CD**  no-lock no-error.                                  */
 /*N0CD*/  for first ps_mstr
-/*N0CD*/     fields(ps_comp ps_end ps_group ps_lt_off ps_op ps_par ps_process
+/*N0CD*/     fields(ps_domain ps_comp ps_end ps_group ps_lt_off ps_op ps_par ps_process
 /*N0CD*/            ps_ps_code ps_qty_per ps_qty_per_b ps_qty_type ps_scrp_pct
 /*N0CD*/            ps_start)
 /*N0CD*/     where /*ss2012-8-21 b*/ ps_domain = global_domain and /*ss2012-8-21 e*/ recid(ps_mstr) = record[level] no-lock:
@@ -171,7 +171,7 @@ end.
 
 /*N0CD**   find pt_mstr where pt_part = ps_comp no-lock no-error.  */
 /*N0CD*/   for first pt_mstr
-/*N0CD*/      fields(pt_bom_code pt_iss_pol pt_loc pt_part pt_phantom pt_um)
+/*N0CD*/      fields(pt_domain pt_bom_code pt_iss_pol pt_loc pt_part pt_phantom pt_um)
 /*N0CD*/      where /*ss2012-8-21 b*/  pt_domain = global_domain and /*ss2012-8-21 e*/ pt_part = ps_comp  no-lock:
 /*N0CD*/   end. /* FOR FIRST PT_MSTR */
 
@@ -179,7 +179,7 @@ end.
 /*N0CD**      find ptp_det no-lock where ptp_part = ps_comp  */
 /*N0CD**      and ptp_site = xpldsite no-error.              */
 /*N0CD*/      for first ptp_det
-/*N0CD*/         fields(ptp_bom_code ptp_iss_pol ptp_part ptp_phantom
+/*N0CD*/         fields(ptp_domain ptp_bom_code ptp_iss_pol ptp_part ptp_phantom
 /*N0CD*/                ptp_site)
 /*N0CD*/         where /*ss2012-8-21 b*/ ptp_domain = global_domain  and /*ss2012-8-21 e*/ ptp_part = ps_comp and
 /*N0CD*/               ptp_site = xpldsite no-lock:
@@ -239,7 +239,7 @@ end.
 /*N0CD**    find bom_mstr no-lock where bom_parent = xpldcomp  */
 /*N0CD**    no-error.                                          */
 /*N0CD*/    for first bom_mstr
-/*N0CD*/       fields(bom_batch bom_batch_um bom_parent)
+/*N0CD*/       fields(bom_domain bom_batch bom_batch_um bom_parent)
 /*N0CD*/       where /*ss2012-8-21 b*/ bom_domain = global_domain and /*ss2012-8-21 e*/ bom_parent = xpldcomp no-lock:
 /*N0CD*/    end. /* FOR FIRST BOM_MSTR */
 
@@ -320,7 +320,7 @@ end.
 /*N0CD**     find first ps_mstr use-index ps_parcomp   */
 /*N0CD**     where ps_par = xpldcomp no-lock no-error. */
 /*N0CD*/     for first ps_mstr
-/*N0CD*/        fields(ps_comp ps_end ps_group ps_lt_off ps_op ps_par
+/*N0CD*/        fields(ps_domain ps_comp ps_end ps_group ps_lt_off ps_op ps_par
 /*N0CD*/               ps_process ps_ps_code ps_qty_per ps_qty_per_b
 /*N0LT** /*N0CD*/      ps_qty_type ps_scrp_pct ps_start) */
 /*N0LT*/               ps_qty_type ps_ref ps_scrp_pct ps_start)
@@ -339,7 +339,7 @@ end.
            else do:
           if ps_ps_code = ""
 /*G1DF*              and ps_qty_per <> 0                               */
-             and can-find (pt_mstr where pt_part = ps_comp)
+             and can-find (pt_mstr where pt_domain = global_domain and pt_part = ps_comp)
              and (iss_pol or incl_nopk)
           then do:
              find first pk_det exclusive-lock
@@ -417,7 +417,7 @@ end.
                 else do:
 /*L0VK*/        /* END ADD SECTION */
 
-                   create pk_det.
+                   create pk_det. pk_domain = global_domain.
                    assign pk_user      = mfguser
                           pk_part      = ps_comp
 /*G656*/                  /* pk_reference = string(assy_op) */

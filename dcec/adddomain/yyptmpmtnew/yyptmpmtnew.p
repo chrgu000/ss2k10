@@ -4,7 +4,7 @@
          /* DISPLAY TITLE */
 
 /*ss2012-8-21 升级*/
-         {mfdtitle.i "++ "} /*FN07*/
+{mfdtitle.i "121022.1"}
 
 def var site like si_site.
 def var sidesc like si_desc.
@@ -88,7 +88,7 @@ repeat:
     
     update site part with frame a editing:
         if frame-field = "site" then do:
-            {mfnp.i si_mstr site si_site site si_site si_site}
+            {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
             if recno <> ? then do:
                 disp si_site @ site si_desc @ sidesc with frame a.
             end.
@@ -104,11 +104,7 @@ repeat:
                      if not available si_mstr then msg-nbr = 708.
                      else msg-nbr = 5421.
                  /*tfq    {mfmsg.i msg-nbr 3} */
-                  {pxmsg.i
-               &MSGNUM=msg-nbr
-               &ERRORLEVEL=3
-                         }
-
+                  {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
                      undo, retry.
                  end.
    
@@ -118,10 +114,7 @@ repeat:
 
 /*J034*/          if return_int = 0 then do:
 /*J034*/      /*tfq       {mfmsg.i 725 3} */
- {pxmsg.i
-               &MSGNUM=725
-               &ERRORLEVEL=3
-                           }
+								 {pxmsg.i &MSGNUM=725  &ERRORLEVEL=3 }
     /* USER DOES NOT HAVE */
 /*J034*/                                /* ACCESS TO THIS SITE*/
 /*J034*/             undo,retry.
@@ -159,10 +152,10 @@ repeat:
   do on error undo, retry:
      
      prompt-for xxptmp_comp with frame b editing:
-        {mfnp05.i xxptmp_mstr xxptmp_index1 "xxptmp_site = site and xxptmp_par = part"
+        {mfnp05.i xxptmp_mstr xxptmp_index1 "xxptmp_domain = global_domain and xxptmp_site = input site and xxptmp_par = input part"
                   xxptmp_comp "input xxptmp_comp"}
         if recno <> ? then do:
-            find pt_mstr where pt_part = xxptmp_comp no-lock no-error.
+            find pt_mstr where pt_domain = global_domain and  pt_part = xxptmp_comp no-lock no-error.
             if available pt_mstr then do:
                 compdesc1 = pt_desc1.
                 compdesc2 = pt_desc2.
@@ -184,11 +177,7 @@ repeat:
 					no-lock no-error.
      if not available pt_mstr then do:
         /*tfq {mfmsg.i 16 3}*/
-         {pxmsg.i
-               &MSGNUM=16
-               &ERRORLEVEL=3
-                          }
-
+         {pxmsg.i  &MSGNUM=16  &ERRORLEVEL=3 }
         undo,retry.
      end.
  /*tfq added begin for bom validation****/
@@ -196,14 +185,8 @@ repeat:
     find first pkdet where pkpart = input xxptmp_comp   no-lock no-error .
     if not available pkdet 
     then  do:
-    {pxmsg.i
-               &MSGTEXT= ""BOM不存在。。。。。。""
-               &ERRORLEVEL=3
-                          }
-
+       {pxmsg.i  &MSGTEXT= ""BOM不存在。。。。。。"" &ERRORLEVEL=3 }
         undo,retry.
-
-   
     end.
     /*tfq added end for bom validation****/
      global_part = input xxptmp_comp.
@@ -213,7 +196,7 @@ repeat:
                                   xxptmp_comp = input xxptmp_comp no-error.
      if not available xxptmp_mstr then do:
         status input "Create new record!".
-        create xxptmp_mstr.
+        create xxptmp_mstr. xxptmp_domain = global_domain.
         assign xxptmp_site = site
                xxptmp_par = part
                xxptmp_comp = input xxptmp_comp

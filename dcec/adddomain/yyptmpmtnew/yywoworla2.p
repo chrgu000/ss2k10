@@ -88,7 +88,7 @@ hide message no-pause.
 
 for each pk_det exclusive-lock where /*ss2012-8-21 b*/ pk_det.pk_domain = global_domain and /*ss2012-8-21 e*/ pk_user = mfguser :
    find first pkwkfl where pkrecid = recid(pk_det).
-   create pkdet.
+   create pkdet.  pk_det.pk_domain = global_domain .
    assign
       pkpart = pk_part
       pkstart = pk_start
