@@ -30,8 +30,7 @@ define {1} shared temp-table tmpbomn
        fields tbmn_qty_per like ps_qty_per
        fields tbmn_scrp as decimal
        fields tbmn_sn as integer
-       fields tbmn_chk as character format "x(40)"
-       index tbmn_par_comp is primary tbmn_par tbmn_comp.
+       fields tbmn_chk as character format "x(40)".
 
 FUNCTION getMsg RETURNS character(inbr as integer):
  /* -----------------------------------------------------------
