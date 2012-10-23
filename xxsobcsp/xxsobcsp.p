@@ -42,7 +42,8 @@ DEFINE TEMP-TABLE tt1
     FIELD tt1_per_qty LIKE pt_ship_wt
     FIELD tt1_title AS CHARACTER
     FIELD tt1_model_zy AS CHARACTER
-    FIELD tt1_sy AS CHARACTER.
+    FIELD tt1_sy AS CHARACTER
+    FIELD tt1_soil AS CHARACTER.
     /*
     INDEX index1 tt1_cust tt1_cust_part.
 		*/
@@ -61,6 +62,7 @@ DEFINE TEMP-TABLE tt2
     FIELD tt2_plan AS CHARACTER
     FIELD tt2_model_zy AS CHARACTER
     FIELD TT2_SY AS CHARACTER
+    FIELD tt2_soil AS CHARACTER
     INDEX index1 tt2_id tt2_part.
 
 v_due_date = TODAY.
@@ -230,6 +232,7 @@ do on error undo, return error on endkey undo, return error:
 
                         tt1_per_qty = pt_ship_wt
                         tt1_title = pt__chr01
+                        tt1_soil = pt__chr09
                         tt1_color = cp_user1.
 
                         IF pt_buyer MATCHES "*4RPS*" THEN DO:
@@ -317,7 +320,8 @@ end.
                        tt2_load_time = tt1_load_time
                        tt2_plan = tt1_plan
                        tt2_model_zy = tt1_model_zy
-                       tt2_sy = tt1_sy.
+                       tt2_sy = tt1_sy
+                       tt2_soil = tt1_soil.
                 END.
                 ELSE DO:
                 		assign vqty = tt1_qty_ord.
@@ -336,7 +340,8 @@ end.
                            tt2_load_time = tt1_load_time
                            tt2_plan = tt1_plan
                            tt2_model_zy = tt1_model_zy
-                           tt2_sy = tt1_sy.     
+                           tt2_sy = tt1_sy
+                           tt2_soil = tt1_soil.     
                     assign vqty = vqty - tt1_per_qty.
                 	  end.
                 END.
