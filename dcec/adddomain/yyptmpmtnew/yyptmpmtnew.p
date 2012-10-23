@@ -40,7 +40,7 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-site colon 25           sidesc no-label at 45
+/* site colon 25           sidesc no-label at 45 */
 part colon 25     pardesc1 no-label at 45
                         pardesc2 no-label at 45 
           SKIP(.4)  /*GUI*/
@@ -86,42 +86,43 @@ repeat:
     custname = "".
     
     
-    update site part with frame a editing:
-        if frame-field = "site" then do:
-            {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
-            if recno <> ? then do:
-                disp si_site @ site si_desc @ sidesc with frame a.
-            end.
-        end.
-        else do:
-            readkey.
-            apply lastkey.
-        end.
-    end.
-
-                 find si_mstr no-lock where /*ss2012-8-21 b*/ si_mstr.si_domain = global_domain and /*ss2012-8-21 e*/ si_site = site no-error.
-                 if not available si_mstr or (si_db <> global_db) then do:
-                     if not available si_mstr then msg-nbr = 708.
-                     else msg-nbr = 5421.
-                 /*tfq    {mfmsg.i msg-nbr 3} */
-                  {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
-                     undo, retry.
-                 end.
-   
-                {gprun.i ""gpsiver.p""
-                "(input si_site, input recid(si_mstr), output return_int)"}
-/*GUI*/ if global-beam-me-up then undo, leave.
-
-/*J034*/          if return_int = 0 then do:
-/*J034*/      /*tfq       {mfmsg.i 725 3} */
-								 {pxmsg.i &MSGNUM=725  &ERRORLEVEL=3 }
-    /* USER DOES NOT HAVE */
-/*J034*/                                /* ACCESS TO THIS SITE*/
-/*J034*/             undo,retry.
-/*J034*/          end.
-                  disp si_site @ site si_desc @ sidesc with frame a.
-                      
-     
+    update part with frame a.
+/* editing:
+*         if frame-field = "site" then do:
+*             {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
+*             if recno <> ? then do:
+*                 disp si_site @ site si_desc @ sidesc with frame a.
+*             end.
+*         end.
+*         else do:
+*             readkey.
+*             apply lastkey.
+*         end.
+*     end.
+* 
+*                  find si_mstr no-lock where /*ss2012-8-21 b*/ si_mstr.si_domain = global_domain and /*ss2012-8-21 e*/ si_site = site no-error.
+*                  if not available si_mstr or (si_db <> global_db) then do:
+*                      if not available si_mstr then msg-nbr = 708.
+*                      else msg-nbr = 5421.
+*                  /*tfq    {mfmsg.i msg-nbr 3} */
+*                   {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
+*                      undo, retry.
+*                  end.
+*    
+*                 {gprun.i ""gpsiver.p""
+*                 "(input si_site, input recid(si_mstr), output return_int)"}
+* /*GUI*/ if global-beam-me-up then undo, leave.
+* 
+* /*J034*/          if return_int = 0 then do:
+* /*J034*/      /*tfq       {mfmsg.i 725 3} */
+* 								 {pxmsg.i &MSGNUM=725  &ERRORLEVEL=3 }
+*     /* USER DOES NOT HAVE */
+* /*J034*/                                /* ACCESS TO THIS SITE*/
+* /*J034*/             undo,retry.
+* /*J034*/          end.
+*                   disp si_site @ site si_desc @ sidesc with frame a.
+*                       
+*   */
      find pt_mstr where /*ss2012-8-21 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-21 e*/ pt_part = part no-lock no-error.
      if not available pt_mstr then do:
         /*tfq {mfmsg.i 16 3}*/
@@ -132,7 +133,8 @@ repeat:
 
         next-prompt part with frame a.
         undo,retry.
-     end.
+     end.                
+     assign site = pt_site.
      disp pt_part @ part pt_desc1 @ pardesc1 pt_desc2 @ pardesc2 with frame a.
 
 /*F089*/    b-loop:
@@ -141,8 +143,8 @@ repeat:
      transtype = "BM" . 
         
         {gprun.i ""yybmpkiqa.p"" "(input part,
-                               INPUT site,
-                               INPUT eff_date)"}
+                                   INPUT site,
+                                   INPUT eff_date)"}
             if errmsg <> 0 then do:
             {mfmsg.i errmsg 3}
             pause .
@@ -152,7 +154,7 @@ repeat:
   do on error undo, retry:
      
      prompt-for xxptmp_comp with frame b editing:
-        {mfnp05.i xxptmp_mstr xxptmp_index1 "xxptmp_domain = global_domain and xxptmp_site = input site and xxptmp_par = input part"
+        {mfnp05.i xxptmp_mstr xxptmp_index1 "xxptmp_domain = global_domain and xxptmp_site = site and xxptmp_par = part"
                   xxptmp_comp "input xxptmp_comp"}
         if recno <> ? then do:
             find pt_mstr where pt_domain = global_domain and  pt_part = xxptmp_comp no-lock no-error.
@@ -257,10 +259,7 @@ repeat:
         if available ad_mstr then vendname = ad_name.
         else do:
             /*TFQ {mfmsg.i 2 3}*/
-             {pxmsg.i
-               &MSGNUM=2
-               &ERRORLEVEL=3
-                            }
+             { pxmsg.i &MSGNUM=2 &ERRORLEVEL=3 }
 
             next-prompt xxptmp_vend with frame b.
             undo,retry.
@@ -281,10 +280,7 @@ repeat:
       /*  
         else do:
           /*TFQ  {mfmsg.i 3 3} */
-           {pxmsg.i
-               &MSGNUM=3
-               &ERRORLEVEL=3
-                          }
+           {pxmsg.i &MSGNUM=3 &ERRORLEVEL=3 }
 
             next-prompt xxptmp_cust with frame b.
             undo,retry.            

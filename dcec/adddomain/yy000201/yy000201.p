@@ -125,9 +125,10 @@ repeat:
 
    DISPLAY v_effdate v_days WITH FRAME a.
    UPDATE v_site1 v_site2 v_part1 v_part2 v_pline1 v_pline2 v_type1 v_type2
-          v_group1 v_group2 v_days v_costflag v_rptfmt WITH FRAME a.
+          v_group1 v_group2 v_effdate v_days v_costflag v_rptfmt WITH FRAME a.
    {wbrp06.i &command = prompt-for &fields = " v_site1 v_site2 v_part1 v_part2
-          v_pline1 v_pline2 v_type1 v_type2 v_group1 v_group2 v_days v_costflag v_rptfmt"
+          v_pline1 v_pline2 v_type1 v_type2 v_group1 v_group2 v_effdate 
+          v_days v_costflag v_rptfmt"
              &frm = "a"}
 
    if (c-application-mode <> 'web') or

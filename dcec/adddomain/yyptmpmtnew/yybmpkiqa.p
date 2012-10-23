@@ -25,7 +25,7 @@
         field pkstart like pk_start
         field pkend like pk_end
         field pkqty like pk_qty
-       field pkbombatch like bom_batch
+        field pkbombatch like bom_batch
         field pkltoff like ps_lt_off.
         /*****tfq exploded to not phontom item**************/
         define temp-table xxtmp1_wkfl 
