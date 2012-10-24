@@ -67,9 +67,6 @@
 /* REVISION: 20120831.1      LAST MODIFIED: 08/31/2012   BY: Henri Zhu        */
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-/*
-{mfdtitle.i "2+ "}
-*/
 {mfdtitle.i "20120831.1"}
 
 {cxcustom.i "GLDABRP.P"}
@@ -492,6 +489,7 @@ repeat:
          not l_show_hidden and
          (code <> "" or code1 <> hi_char) then
          if not can-find(first gltr_hist where
+            gltr_domain   = global_domain and
             gltr_acc      = asc_acc and
             gltr_sub      = asc_sub and
             gltr_ctr      = asc_cc  and
@@ -680,8 +678,8 @@ PROCEDURE get-current-entity:
    define output parameter l-return-value as logical.
 
    l-return-value = true.
-   for first en_mstr fields (en_name en_entity)
-   no-lock where en_entity = current_entity:
+   for first en_mstr fields (en_domain en_name en_entity)
+   no-lock where en_domain = global_domain and en_entity = current_entity:
    end.
    if not available en_mstr then do:
       {pxmsg.i &MSGNUM=3059 &ERRORLEVEL=3} /* NO PRIMARY ENTITY DEFINED */
@@ -702,7 +700,7 @@ PROCEDURE get-retained-earnings:
 
    l-return-value = true.
    for first co_ctrl
-      fields (co_pl co_ret co_use_cc co_use_sub)
+      fields (co_domain co_pl co_ret co_use_cc co_use_sub)
       where co_domain = global_domain
    no-lock:
    end.

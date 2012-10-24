@@ -103,7 +103,7 @@ repeat:
  MainBlock:
     do on error undo,leave on endkey undo,leave:
          for first xxpower_det no-lock :
-	 end.
+	       end.
         { yywobmfmmta.i
           &file = "xxpower_det"
           &where = "where (xxpower_det.xxpower_domain = global_domain and
