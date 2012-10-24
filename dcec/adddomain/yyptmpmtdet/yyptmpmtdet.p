@@ -25,7 +25,7 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-site           colon 25 sdesc no-label colon 42
+   /* site           colon 25 sdesc no-label colon 42 */
    part           colon 25 desc1 no-label colon 42
                            desc2 no-label colon 42
    xxptmp_comp    colon 25 desca no-label colon 42
@@ -56,23 +56,11 @@ setFrameLabels(frame a:handle).
 view frame a.
 repeat with frame a:
 /*GUI*/ if global-beam-me-up then undo, leave.
-
-
-   prompt-for site part editing:
-
-      /* FIND NEXT/PREVIOUS RECORD */
-      if frame-field = "site" then do:
-         {mfnp.i si_mstr site " si_domain = global_domain and si_site "
-                 site si_site si_site}
-         if recno <> ? then do:
-            assign site = si_site.
-            display site
-                    si_desc @ sdesc.
-         end.
-      end.
-      else if frame-field = "part" then do:
-         {mfnp01.i xxptmp_mstr part xxptmp_par site
-                 " xxptmp_mstr.xxptmp_domain = global_domain and xxptmp_site "
+   prompt-for part editing:
+       if frame-field = "part" then do:
+         {mfnp01.i xxptmp_mstr part   
+                 " xxptmp_mstr.xxptmp_domain = global_domain and xxptmp_par "
+                   part xxptmp_par
                    xxptmp_index1}
 
          if recno <> ? then do:
@@ -115,12 +103,16 @@ repeat with frame a:
            apply lastkey.
       end.
    end.
-   assign site part.
+   assign part.
    /* ADD/MOD/DELETE  */
+   find first pt_mstr no-lock where pt_domain = global_domain and pt_part = part
+   			no-error.
+   if available pt_mstr then do:
+   		assign site = pt_site.
+   end.
    if not can-find (first si_mstr no-lock where si_domain = global_domain and
       si_site = site) or site = "" then do:
       {mfmsg.i 708 3}
-       next-prompt site.
        undo,retry.
    end.
     {gprun.i ""gpsiver.p""
@@ -131,7 +123,6 @@ repeat with frame a:
    then do:
       /* USER DOES NOT HAVE ACCESS TO THIS SITE*/
       {pxmsg.i &MSGNUM=725 &ERRORLEVEL=3}
-       next-prompt site.
        undo,retry.
    end.
    if not can-find(first pt_mstr no-lock where pt_domain = global_domain and
@@ -192,8 +183,7 @@ repeat with frame a:
        end.
        recno = recid(rsn_ref).
 
-       display xxptmp_site @ site
-               xxptmp_par @ part
+       display xxptmp_par @ part
                xxptmp_comp
                xxptmp_vend
                xxptmp_qty_per

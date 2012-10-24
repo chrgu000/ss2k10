@@ -106,10 +106,6 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 &UNDEFINE PP_FRAME_NAME
 
    EMPTY TEMP-TABLE xtplink NO-ERROR.
-   for each usrw_wkfl exclusive-lock where usrw_domain = global_domain and
-           (usrw_key1 = v_Exp_item_key OR usrw_key1 = v_Exp_in_key):
-       delete usrw_wkfl.
-   end.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
@@ -144,7 +140,10 @@ repeat:
       hide frame b.
 
    end.
-
+   for each usrw_wkfl exclusive-lock where usrw_domain = global_domain and
+           (usrw_key1 = v_Exp_item_key OR usrw_key1 = v_Exp_in_key):
+       delete usrw_wkfl.
+   end.
    FOR EACH IN_mstr NO-LOCK WHERE in_domain = global_domain
         AND IN_site >= v_site1 AND IN_site <= v_site2
         AND IN_part >= v_part1 AND IN_part <= v_part2,

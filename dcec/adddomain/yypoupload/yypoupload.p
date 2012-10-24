@@ -6,7 +6,7 @@
 
 /*display the title*/
 {mfdtitle.i "120815.1"}
-
+{gpcdget.i "UT"}
 def var site like si_site.
 def var sidesc like si_desc.
 def var src_file as char format "x(40)".

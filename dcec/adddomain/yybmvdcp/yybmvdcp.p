@@ -1,7 +1,7 @@
 /* bmpscp.p - BILL OF MATERIAL COPY                                           */
 /* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.6.1.4 $                                                         */
+/* $Revision: 1.6.1.4 $                                                       */
 /*V8:ConvertMode=Maintenance                                                  */
 /* REVISION: 2.0      LAST MODIFIED: 05/01/87   BY: EMB                       */
 /* REVISION: 2.0      LAST MODIFIED: 09/02/87   BY: EMB                       */

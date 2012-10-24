@@ -18,3 +18,7 @@ DEF {1} SHARED VAR vd1 LIKE ap_vend .
 DEF {1} SHARED VAR efdt LIKE ap_effdate .
 DEF {1} SHARED VAR efdt1 LIKE ap_effdate .
 DEF {1} SHARED VARIAB base_rpt LIKE ap_curr.
+/* ss - 121010.1 - B */ 
+define {1} SHARED variable user_id like gltr_user.    
+define {1} SHARED variable user_id1 like gltr_user. 
+/* ss - 121010.1 - E */ 

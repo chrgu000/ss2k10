@@ -122,11 +122,11 @@ form
 RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-   site1        colon 30  sidesc1 no-label at 52                     /*kevin*/
+/*   site1        colon 30  sidesc1 no-label at 52                     kevin*/
    part1          colon 30
    desc1          no-label at 52
    um1            colon 30
-   site2        colon 30  sidesc2 no-label at 52                     /*kevin*/   
+/*   site2        colon 30  sidesc2 no-label at 52                     kevin*/   
    part2          colon 30
    desc3          no-label at 52
    um2            colon 30
@@ -184,22 +184,22 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
      assign sel-yn = no.                        /*kevin*/
        assign msg_file = "c:\bmvdcperror.txt".      /*kevin,12/23/2003*/
        /*********tfq added begin*****************/
-        set site1 part1 VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part1), "零件号不存在")  /*judy*/
-                  site2 part2 VALIDATE (CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part2), "零件号不存在")
+        set part1 VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part1), "零件号不存在")  /*judy*/
+            part2 VALIDATE (CAN-FIND(FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = INPUT part2), "零件号不存在")
               with frame a editing:
        /******tfq added end********************/
     
-        /*added by kevin,10/23/2003*/
-               if frame-field = "site1" then do:
-                  {mfnp.i si_mstr site1 " si_domain = global_domain and si_site "
-                  				site1 si_site si_site}
-                  if recno <> ? then do:
-                      disp si_site @ site1 si_desc @ sidesc1 with frame a.
-                  end.
-                  recno = ?.
-               end. /*frame-field = "site1"*/
-          /*tfq*/ else if frame-field = "part1"        
-        /*tfq if frame-field = "part1"  */
+    /*    /*added by kevin,10/23/2003*/                                                  */
+    /*           if frame-field = "site1" then do:                                       */
+    /*              {mfnp.i si_mstr site1 " si_domain = global_domain and si_site "      */
+    /*              				site1 si_site si_site}                                       */
+    /*              if recno <> ? then do:                                               */
+    /*                  disp si_site @ site1 si_desc @ sidesc1 with frame a.             */
+    /*              end.                                                                 */
+    /*              recno = ?.                                                           */
+    /*           end. /*frame-field = "site1"*/                                          */
+    /*      /*tfq*/ else if frame-field = "part1"                                        */
+        if frame-field = "part1"   
          then do:
             /* FIND NEXT/PREVIOUS RECORD - ALL BOM_MSTR'S ARE
             VALID FOR "SOURCE" */
@@ -213,7 +213,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
             then do:
 
                assign
-/*judy*/
+/*judy*/        	 site1 = pt_site
                    part1 = pt_part
                    desc1 = pt_desc2
                    um1 = pt_um.
@@ -246,17 +246,17 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
             recno = ?.
 
          end.   /* if frame-field = "part1" */
-        /**********tfq added begin*********************/
-        else if frame-field = "site2" then do:
-                  {mfnp.i si_mstr site2 " si_domain = global_domain and si_site "
-                  			  site2 si_site si_site}
-                  if recno <> ? then do:
-                      disp si_site @ site2 si_desc @ sidesc2 with frame a.
-                  end.    
-                  recno = ?.
-               end. /*if frame-field = "site2"*/
-               
-        /*************tfq added end*********************/
+/**********tfq added begin********************* 
+ *    else if frame-field = "site2" then do:
+ *              {mfnp.i si_mstr site2 " si_domain = global_domain and si_site "
+ *              			  site2 si_site si_site}
+ *              if recno <> ? then do:
+ *                  disp si_site @ site2 si_desc @ sidesc2 with frame a.
+ *              end.    
+ *              recno = ?.
+ *           end. /*if frame-field = "site2"*/
+ *           
+ *   *************tfq added end*********************/
          else if frame-field = "part2"
          then do:
 
@@ -284,6 +284,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
                   no-error.
                   if available pt_mstr
                   then do:
+                  	 site2 = pt_site.
                      part2 = pt_part.
                      if bom_desc = "" then
                         desc3 = pt_desc2.                          /*added by kevin*/
@@ -314,7 +315,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
             apply lastkey.
          end.
       end.  /* editing */
-/**************************************tfq added begin************************/
+/**************************************tfq added begin************************
 
             /*added by kevin,10/23/2003 for verify site1*/
                  find si_mstr no-lock where si_domain = global_domain and si_site = site1 no-error.
@@ -330,7 +331,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
                      undo, retry.
                  end.
             
-            if available si_mstr then disp si_site @ site1 si_desc @ sidesc1 with frame a.
+        /*    if available si_mstr then disp si_site @ site1 si_desc @ sidesc1 with frame a. */
                     
                 {gprun.i ""gpsiver.p""
                 "(input si_site, input recid(si_mstr), output return_int)"}
@@ -343,7 +344,6 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
                &ERRORLEVEL=3
                            }
                     /* ACCESS TO THIS SITE*/
-                     next-prompt site1.
 /*J034*/             undo,retry.
 /*J034*/          end.
 
@@ -358,11 +358,10 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
                &ERRORLEVEL=3
                            }
 
-                     next-prompt site2.
                      undo, retry.
                  end.
             
-            if available si_mstr then disp si_site @ site2 si_desc @ sidesc2 with frame a.
+   /*        if available si_mstr then disp si_site @ site2 si_desc @ sidesc2 with frame a. */
                     
                 {gprun.i ""gpsiver.p""
                 "(input si_site, input recid(si_mstr), output return_int)"}
@@ -378,7 +377,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
                      next-prompt site2.
 /*J034*/             undo,retry.
 /*J034*/          end.
-/********************tfq added end*******************************************/
+********************tfq added end*******************************************/
       if part2 = ""
       then do:
          {pxmsg.i &MSGNUM=40 &ERRORLEVEL=3}     /* BLANK NOT ALLOWED */
@@ -395,7 +394,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
         find first ps_mstr where ps_domain = global_domain and ps_par = /*part2*/ xxpart2 and ps__chr01 = site2 no-lock no-error .
         if  not available ps_mstr then
         do:
-        message "地点: " + input site2 + " 与产品结构: " + input part2 + " 不匹配" 
+        message "地点: " + site2 + " 与产品结构: " + input part2 + " 不匹配" 
                              view-as alert-box error.
         next-prompt part2 with frame a.
          undo, retry.
@@ -463,18 +462,18 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
       end.
 /*********************tfq added begin****************************************/
 /*added by kevin, 11/12/2003*/
-               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part1 judy*/ xxpart1 and ps__chr01 <> input site1) then do:
-                     message "地点: " + input site1 + " 与产品结构: " + input part1 + " 不匹配" 
+               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part1 judy*/ xxpart1 and ps__chr01 <> site1) then do:
+                     message "地点: " + site1 + " 与产品结构: " + input part1 + " 不匹配" 
                              view-as alert-box error.
-                     next-prompt site1 with frame a.
+                    /* next-prompt site1 with frame a. */
                      undo,retry.
                end.
 
                        
-               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part2 judy*/ xxpart2 and ps__chr01 <> input site2) then do:
-                     message "地点: " + input site2 + " 与产品结构: " + input part2 + " 不匹配" 
+               if can-find (first ps_mstr where ps_domain = global_domain and ps_par = /*part2 judy*/ xxpart2 and ps__chr01 <> site2) then do:
+                     message "地点: " + site2 + " 与产品结构: " + input part2 + " 不匹配" 
                              view-as alert-box error.
-                     next-prompt site2 with frame a.
+                   /*  next-prompt site2 with frame a. */
                      undo,retry.
                end.     
 /*end added by kevin, 11/12/2003*/
@@ -709,7 +708,7 @@ end added by kevin, 11/12/2003*/
         
         /*{gprun.i ""yybmpkiqa.p"" "(input part2, judy*/
           {gprun.i ""yybmpkiqa.p"" "(input xxpart2,
-                               INPUT site2,
+                                input site2,
                                INPUT eff_date)"}
              /* FOR EACH pkdet:
                   DISP pkdet.

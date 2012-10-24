@@ -23,46 +23,76 @@ DEF VAR peramt AS DEC .
 DEF VAR baseamt LIKE ckd_amt .
 DEF VAR amt0 LIKE ckd_amt .
 
-FIND FIRST ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ap_mstr.ap_domain = global_domain and ap_batch >= bh AND ap_batch <=bh1
+FIND FIRST ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+    ap_mstr.ap_domain = global_domain 
+    and ap_batch >= bh AND ap_batch <=bh1
     AND ap_date >= dt AND ap_date <= dt1
     AND ap_vend = vend
     AND ap_effdate >= efdt AND ap_effdate <= efdt1
-    AND (ap_curr = base_rpt OR base_rpt = "") NO-ERROR .
+    AND (ap_curr = base_rpt OR base_rpt = "")     
+    /* ss - 121010.1 - b */     
+    and
+    can-find(first gltr_hist where gltr_domain = global_domain and gltr_batch = ap_batch 
+    and gltr_user >= user_id and gltr_user <= user_id1)     
+    /* ss - 121010.1 - e */    
+    
+    NO-ERROR .
 
 IF AVAILABLE ap_mstr THEN startdt = ap_effdate .
 
-FIND LAST ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ap_mstr.ap_domain = global_domain and ap_batch >= bh AND ap_batch <=bh1
+FIND LAST ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+    ap_mstr.ap_domain = global_domain 
+    and ap_batch >= bh AND ap_batch <=bh1
     AND ap_date >= dt AND ap_date <= dt1
     AND ap_vend = vend
     AND ap_effdate >= efdt AND ap_effdate <= efdt1
-    AND (ap_curr = base_rpt OR base_rpt = "") NO-ERROR .
+    AND (ap_curr = base_rpt OR base_rpt = "")
+    /* ss - 121010.1 - b */     
+    and
+    can-find(first gltr_hist where gltr_domain = global_domain and gltr_batch = ap_batch 
+    and gltr_user >= user_id and gltr_user <= user_id1)     
+    /* ss - 121010.1 - e */  
+    NO-ERROR .
 
 IF AVAILABLE ap_mstr THEN enddt = ap_effdate .
 
 peramt = 0 .
-FOR EACH ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ap_mstr.ap_domain = global_domain and ap_batch >= bh AND ap_batch <=bh1
+FOR EACH ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+	  ap_mstr.ap_domain = global_domain 
+	  and ap_batch >= bh AND ap_batch <=bh1
     AND ap_date >= dt AND ap_date <= dt1
     AND ap_vend = vend
     AND ap_effdate >= efdt AND ap_effdate <= efdt1
     AND (ap_curr = base_rpt OR base_rpt = "") :
 
     IF ap_type = "RV" THEN NEXT .
-
+    /* ss - 121010.1 - b */ 
+    find first gltr_hist where gltr_domain = global_domain 
+    and gltr_batch = ap_batch no-lock no-error.
+    if not (avail gltr_hist and gltr_user >= user_id and gltr_user <= user_id1) then next.
+    /* ss - 121010.1 - e */ 
     amt0 = 0 .
 
     IF ap_type = "VO" THEN DO :
-        FIND vo_mstr WHERE /* *SS-20120815.1* */ vo_mstr.vo_domain = global_domain and vo_ref = ap_ref NO-LOCK .
+        FIND vo_mstr WHERE /* *SS-20120815.1* */ 
+        vo_mstr.vo_domain = global_domain and vo_ref = ap_ref NO-LOCK .
         IF NOT vo_confirmed THEN NEXT .
         amt0 = ap_base_amt .
-        FIND CODE_mstr NO-LOCK WHERE /* *SS-20120815.1* */ CODE_mstr.CODE_domain = global_domain and CODE_fldname = ("ap_adjust" + ap_vend) AND CODE_value = ap_ref NO-ERROR .
+        FIND CODE_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+        CODE_mstr.CODE_domain = global_domain 
+        and CODE_fldname = ("ap_adjust" + ap_vend) AND CODE_value = ap_ref NO-ERROR .
         IF AVAILABLE CODE_mstr THEN amt0 = amt0 + DEC(CODE_cmmt) .
     END.
 
     IF ap_type = "CK" THEN DO :
-        FIND ck_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ck_mstr.Ck_domain = global_domain and ck_ref = ap_ref AND ck_status <> "void" NO-ERROR .
+        FIND ck_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+        ck_mstr.Ck_domain = global_domain 
+        and ck_ref = ap_ref AND ck_status <> "void" NO-ERROR .
         IF NOT AVAILABLE ck_mstr THEN NEXT .
-        FOR EACH ckd_det NO-LOCK WHERE /* *SS-20120815.1* */ ckd_det.ckd_domain = global_domain and ckd_ref = ap_ref :
-            FIND vo_mstr NO-LOCK WHERE /* *SS-20120815.1* */ vo_mstr.vo_domain = global_domain and vo_ref = ckd_voucher NO-ERROR .
+        FOR EACH ckd_det NO-LOCK WHERE /* *SS-20120815.1* */ 
+        	ckd_det.ckd_domain = global_domain and ckd_ref = ap_ref :
+            FIND vo_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+            vo_mstr.vo_domain = global_domain and vo_ref = ckd_voucher NO-ERROR .
             IF AVAILABLE vo_mstr THEN DO :
                 IF ckd_amt = 0 THEN baseamt = 0 .
                 ELSE DO :
@@ -79,29 +109,41 @@ FOR EACH ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ap_mstr.ap_domain = global_
 END. 
 
 endamt = 0 .
-FOR EACH ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ap_mstr.ap_domain = global_domain and ap_batch <=bh1
+FOR EACH ap_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+	  ap_mstr.ap_domain = global_domain and ap_batch <=bh1
     AND ap_date <= dt1
     AND ap_vend = vend
     AND ap_effdate <= efdt1
     AND (ap_curr = base_rpt OR base_rpt = "") :
 
     IF ap_type = "RV" THEN NEXT .
-
+    /* ss - 121010.1 - b */ 
+    find first gltr_hist where gltr_domain = global_domain 
+    and gltr_batch = ap_batch no-lock no-error.
+    if not (avail gltr_hist and gltr_user >= user_id and gltr_user <= user_id1) then next.
+    /* ss - 121010.1 - e */ 
     amt0 = 0 .
 
     IF ap_type = "VO" THEN DO :
-        FIND vo_mstr WHERE /* *SS-20120815.1* */ vo_mstr.vo_domain = global_domain and  vo_ref = ap_ref NO-LOCK .
+        FIND vo_mstr WHERE /* *SS-20120815.1* */ 
+        vo_mstr.vo_domain = global_domain and  vo_ref = ap_ref NO-LOCK .
         IF NOT vo_confirmed THEN NEXT .
         amt0 = ap_base_amt .
-        FIND CODE_mstr NO-LOCK WHERE /* *SS-20120815.1* */ CODE_mstr.CODE_domain = global_domain and CODE_fldname = ("ap_adjust" + ap_vend) AND CODE_value = ap_ref NO-ERROR .
+        FIND CODE_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+        CODE_mstr.CODE_domain = global_domain and 
+        CODE_fldname = ("ap_adjust" + ap_vend) AND CODE_value = ap_ref NO-ERROR .
         IF AVAILABLE CODE_mstr THEN amt0 = amt0 + DEC(CODE_cmmt) .
     END.
 
     IF ap_type = "CK" THEN DO :
-        FIND ck_mstr NO-LOCK WHERE /* *SS-20120815.1* */ ck_mstr.ck_domain = global_domain and ck_ref = ap_ref AND ck_status <> "void" NO-ERROR .
+        FIND ck_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+        ck_mstr.ck_domain = global_domain and 
+        ck_ref = ap_ref AND ck_status <> "void" NO-ERROR .
         IF NOT AVAILABLE ck_mstr THEN NEXT .
-        FOR EACH ckd_det NO-LOCK WHERE /* *SS-20120815.1* */ ckd_det.ckd_domain = global_domain and ckd_ref = ap_ref :
-            FIND vo_mstr NO-LOCK WHERE /* *SS-20120815.1* */ vo_mstr.vo_domain = global_domain and vo_ref = ckd_voucher NO-ERROR .
+        FOR EACH ckd_det NO-LOCK WHERE /* *SS-20120815.1* */ 
+        	ckd_det.ckd_domain = global_domain and ckd_ref = ap_ref :
+            FIND vo_mstr NO-LOCK WHERE /* *SS-20120815.1* */ 
+            vo_mstr.vo_domain = global_domain and vo_ref = ckd_voucher NO-ERROR .
             IF AVAILABLE vo_mstr THEN DO :
                 IF ckd_amt = 0 THEN baseamt = 0 .
                 ELSE DO :
