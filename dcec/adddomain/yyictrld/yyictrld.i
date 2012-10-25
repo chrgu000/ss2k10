@@ -24,5 +24,4 @@ define {1} shared temp-table xic
     fields xic_tloc    like ld_loc
     fields xic_tlot    like ld_lot
     FIELDS xic_sn      AS   INTEGER
-    fields xic_chk     as character format "x(40)"
-    .
+    fields xic_chk     as character format "x(40)".

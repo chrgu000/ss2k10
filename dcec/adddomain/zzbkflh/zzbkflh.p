@@ -29,10 +29,15 @@ input file layout:
     23. ²Î¿¼ºÅ              x(8)
 ******************end comments************************************/
 
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
 
-
-/*{mfdtitle.i}   */
-{mfdeclre.i}
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
 
 /*G1MN*/ {gpglefv.i}
 
@@ -657,8 +662,8 @@ for each list where list.filename <> "" no-lock:
      /*create the header format*/
      find first xxwk no-lock no-error.
      put stream bkflh "~"" at 1 xxwk.emp "~"".
-     /*tfq*/  put stream bkflh  string(day(xxwk.effdate),"99") format "99" at 1
-    /*tfq*/   "/"  string(month(xxwk.effdate),"99") format "99"  "/"  substring(string(year(xxwk.effdate)),3,2) format "99"  .
+     /*tfq*/  put stream bkflh  string(month(xxwk.effdate),"99") format "99" at 1
+    /*tfq*/   "/"  string(day(xxwk.effdate),"99") format "99"  "/"  substring(string(year(xxwk.effdate)),3,2) format "99"  .
      /*tfq*/     put stream bkflh  " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"".
      /*tfq put stream bkflh xxwk.effdate at 1 " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"". */
       put stream bkflh "~"" at 1 xxwk.par "~" " xxwk.lastop " ~"" xxwk.line "~"".
@@ -670,6 +675,7 @@ for each list where list.filename <> "" no-lock:
      /*create the detail components issue format*/
       put stream bkflh "-" at 1.             /*added by kevin,for batch*/
       for each xxwk where xxwk.comp <> "" no-lock:
+          put stream bkflh  skip "." skip.
           /* put stream bkflh "-" at 1.  judy*/           /* added by kevin,for batch*/            put stream bkflh "~"" at 1 xxwk.comp "~" " xxwk.compop.
            put stream bkflh xxwk.qty_iss at 1 " N " "~"" xxwk.site "~"" " ~"" xxwk.comploc "~""
                              " ~"" xxwk.complot "~"" " ~"" xxwk.compref "~"".

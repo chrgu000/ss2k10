@@ -29,7 +29,7 @@
      cleanup will occur on deletion of the procedure. */
 
 CREATE WIDGET-POOL.
-{mfdeclre.i}
+{mfdtitle.i "121025.1"}
 /* ***************************  Definitions  ************************** */
 
 /* Parameters Definitions ---                                           */
@@ -62,7 +62,7 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES xic
 
 /* Definitions for BROWSE brList                                        */
-&Scoped-define FIELDS-IN-QUERY-brList xic_nbr xic_part xic_desc xic_qty_req xic_qty_ld xic_qty_tr xic_fsite xic_floc xic_flot xic_tsite xic_tloc xic_tlot xic_chk xic_sn   
+&Scoped-define FIELDS-IN-QUERY-brList xic_nbr xic_part xic_desc xic_qty_req xic_qty_ld xic_qty_tr xic_fsite xic_floc xic_flot xic_tsite xic_tloc xic_tlot xic_chk   
 &Scoped-define ENABLED-FIELDS-IN-QUERY-brList xic_qty_tr   
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH xic
@@ -76,7 +76,7 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brList}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS tnLoad fiFile hbtnOpen brList 
+&Scoped-Define ENABLED-OBJECTS fiFile hbtnOpen tnLoad brList 
 &Scoped-Define DISPLAYED-OBJECTS fiFile 
 
 /* Custom List Definitions                                              */
@@ -144,7 +144,6 @@ DEFINE BROWSE brList
       xic_tloc    COLUMN-LABEL '移入库位'
       xic_tlot    COLUMN-LABEL '移入批次'
       xic_chk     COLUMN-LABEL '状态'
-      xic_sn
       ENABLE xic_qty_tr
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -154,11 +153,11 @@ DEFINE BROWSE brList
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     btnChk AT ROW 1.53 COL 70.4
-     tnLoad AT ROW 1.53 COL 81.4
-     btnGenCimFile AT ROW 1.53 COL 87.5
      fiFile AT ROW 1.58 COL 5.1 COLON-ALIGNED
      hbtnOpen AT ROW 1.58 COL 59.4
+     tnLoad AT ROW 1.53 COL 81.4
+     btnChk AT ROW 1.53 COL 70.4
+     btnGenCimFile AT ROW 1.53 COL 87.5
      brList AT ROW 3.21 COL 2
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
          SIDE-LABELS NO-UNDERLINE THREE-D 
@@ -219,8 +218,8 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* SETTINGS FOR WINDOW wWin
   VISIBLE,,RUN-PERSISTENT                                               */
 /* SETTINGS FOR FRAME fMain
-   FRAME-NAME                                                           */
-/* BROWSE-TAB brList hbtnOpen fMain */
+   FRAME-NAME Custom                                                    */
+/* BROWSE-TAB brList btnGenCimFile fMain */
 ASSIGN 
        brList:POPUP-MENU IN FRAME fMain             = MENU POPUP-MENU-brList:HANDLE
        brList:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
@@ -347,8 +346,12 @@ DO:
 
     ASSIGN fifile.
     if fifile = "" then do:
-         message "请先装入文件!" view-as alert-box.
+         message "请先装入文件!" view-as alert-box error.
          leave.
+    end.
+    if search(fifile) = ? then do:
+                message "文件为找到！" view-as alert-box error.
+                leave.
     end.
     find first usrw_wkfl EXCLUSIVE-LOCK where usrw_domain = global_domain
            and usrw_key1 = "yyictrld.p.parameter"
@@ -664,12 +667,12 @@ DO:
 
          batchrun = yes.
          input from value(vfile + ".bpi").
-         output to value(vfile + ".bpo").
+         output to value(vfile + ".bpo") keep-messages.
          {gprun.i ""iclotr04.p""}
+         hide message no-pause.
          output close.
          input close.
          batchrun = no.
-
 
          FIND FIRST tr_hist NO-LOCK WHERE tr_domain = GLOBAL_domain AND tr_trnbr >= integer(trrecid)
                 AND tr_nbr = xic_nbr AND tr_part = xic_part AND tr_site = xic_fsite
@@ -685,6 +688,8 @@ DO:
          IF AVAILABLE tr_hist THEN DO:
              ASSIGN xic_chk = xic_chk + " / RCT-TR:[" + trim(string(tr_trnbr,">>>>>>>>>>>>>9")) + "]".
          END.
+         os-delete value(vfile + ".bpi") no-error.
+         os-delete value(vfile + ".bpo") no-error.
     END.
     SESSION:SET-WAIT-STATE ("").
     IF CAN-FIND(FIRST xic) THEN brlist:REFRESH() IN FRAME fmain.
@@ -707,14 +712,14 @@ END.
 /* Include custom  Main Block code for SmartWindows. */
 
 SESSION:SET-WAIT-STATE ("").
-{src/adm2/windowmn.i}
+find first usrw_wkfl no-lock where usrw_domain = global_domain
+       and usrw_key1 = "yyictrld.p.parameter"
+       and usrw_key2 = "parameter" no-error.
+IF AVAILABLE usrw_wkfl THEN DO:
+      assign fifile =  usrw_charfld[1].
+END.
 
- find first usrw_wkfl no-lock where usrw_domain = global_domain
-           and usrw_key1 = "yyictrld.p.parameter"
-           and usrw_key2 = "parameter" no-error.
-    IF AVAILABLE usrw_wkfl THEN DO:
-          assign fifile =  usrw_charfld[1].
-    END.
+{src/adm2/windowmn.i}
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -767,7 +772,7 @@ PROCEDURE enable_UI :
 ------------------------------------------------------------------------------*/
   DISPLAY fiFile 
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE tnLoad fiFile hbtnOpen brList 
+  ENABLE fiFile hbtnOpen tnLoad brList 
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.

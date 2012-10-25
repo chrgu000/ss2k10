@@ -33,6 +33,17 @@ else if xxppif__dte01 <= ps_start then ps_start = xxppif__dte01   */
 /* Last change by Wilber 05/14/2008    indentify the t-code pdsco pdsao sosao sasco          *W009*/
 /* Last change by Wilber 05/21/2008    process when xxppif__chr01 < ps_start and ps_start < today         *W010*/
 /* Last change by Wilber 05/22/2008    delete the 2039 error of pdsao and differ pdsio and pdsco        *W011*/
+session:date-format = 'ymd'.
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+
 { xxppifdef.i }
 def var item_type as inte.
 def var item_status as char.

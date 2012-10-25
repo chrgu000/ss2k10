@@ -63,8 +63,8 @@
 
 /*V8:ConvertMode=Maintenance                                                  */
 
-{mfdtitle.i "120815.1"}
-{cxcustom.i "yyREBKFL.P"}
+{mfdtitle.i "121025.1"}
+{cxcustom.i "yyrebkfl.P"}
 
 {gldydef.i new}
 {gldynrm.i new}
@@ -144,7 +144,7 @@ end. /* IF is_wiplottrace_enabled() */
 /* DO NOT RUN PROGRAM UNLESS QAD_WKFL RECORDS HAVE */
 /* BEEN CONVERTED SO THAT QAD_KEY2 HAS NEW FORMAT  */
 if can-find(first qad_wkfl
-   where qad_domain = global_domain and qad_key1 = "rpm_mstr")
+   where qad_key1 = "rpm_mstr")
 then do:
 
    {pxmsg.i &MSGNUM=5126 &ERRORLEVEL=3}
@@ -159,12 +159,12 @@ end. /* if can-find(first qad_wkfl... */
 eff_date = today.
 
 for first gl_ctrl
-no-lock where gl_domain = global_domain:
+no-lock:
 end. /* FOR FIRST gl_ctrl */
 
 for first clc_ctrl
    fields(clc_lotlevel)
-no-lock where clc_domain = global_domain:
+no-lock:
 end. /* FOR FIRST clc_ctrl */
 
 if not available clc_ctrl
@@ -173,7 +173,7 @@ then do:
    {gprun.i ""gpclccrt.p""}
    for first clc_ctrl
       fields(clc_lotlevel)
-   no-lock where clc_domain = global_domain:
+   no-lock:
    end. /* FOR FIRST clc_ctrl */
 end. /* IF NOT AVAILABLE clc_ctrl */
 
@@ -280,10 +280,10 @@ repeat:
       else do:
          display cumwo_lot @ wo_lot with frame a.
          for first wo_mstr
-            fields(wo_domain wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
+            fields(wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
                    wo_lot_next wo_lot_rcpt wo_part wo_rctstat wo_status
                    wo_rctstat_active wo_rel_date wo_routing wo_site)
-            where wo_domain = global_domain and wo_lot = cumwo_lot
+            where wo_lot = cumwo_lot
          no-lock:
          end. /* FOR FIRST wo_mstr */
 
@@ -296,9 +296,9 @@ repeat:
       end. /* ELSE DO */
 
       for first wr_route
-         fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+         fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                 wr_part wr_run wr_wkctr)
-         where wr_domain = global_domain and wr_lot = cumwo_lot
+         where wr_lot = cumwo_lot
          and wr_op    = op
       no-lock:
       end. /* FOR FIRST wr_route */
@@ -382,39 +382,39 @@ repeat:
          mch   = wr_mch.
 
       for first wc_mstr
-         fields(wc_domain wc_dept wc_desc wc_mch wc_wkctr)
-         where wc_domain = global_domain and wc_wkctr = wkctr
+         fields(wc_dept wc_desc wc_mch wc_wkctr)
+         where wc_wkctr = wkctr
            and wc_mch   = mch
       no-lock:
       end. /* FOR FIRST wc_mstr */
 
       dept = wc_dept.
       for first dpt_mstr
-         fields(dpt_domain dpt_dept dpt_desc)
-         where dpt_domain = global_domain and dpt_dept = wc_dept
+         fields(dpt_dept dpt_desc)
+         where dpt_dept = wc_dept
       no-lock:
       end. /* FOR FIRST dpt_mstr */
 
       for first wo_mstr
-         fields(wo_domain wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
+         fields(wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
                 wo_lot_next wo_lot_rcpt wo_part wo_rctstat wo_status
                 wo_rctstat_active wo_rel_date wo_routing wo_site)
-         where wo_domain = global_domain and wo_lot = cumwo_lot
+         where wo_lot = cumwo_lot
       no-lock: /* FOR FIRST wo_mstr */
       end. /* FOR FIRST wo_mstr */
 
       for first pt_mstr
-         fields(pt_domain pt_desc1 pt_loc pt_lot_ser pt_part pt_rctwo_active
+         fields(pt_desc1 pt_loc pt_lot_ser pt_part pt_rctwo_active
                 pt_rctwo_status pt_site pt_um)
-         where pt_domain = global_domain and pt_part = wo_part
+         where pt_part = wo_part
       no-lock:
       end. /* FOR FIRST pt_mstr */
 
       um = pt_um.
 
       for first ea_mstr
-         fields(ea_domain ea_desc ea_earn ea_type)
-         where ea_domain = global_domain and ea_type = "1"
+         fields(ea_desc ea_earn ea_type)
+         where ea_type = "1"
       no-lock:
       end. /* FOR FIRST ea_mstr */
 
@@ -465,20 +465,20 @@ repeat:
       do with frame bkfl1 on error undo, retry:
 
          for first wr_route
-            fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+            fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                    wr_part wr_run wr_wkctr)
-            where wr_domain = global_domain and wr_lot = cumwo_lot
+            where wr_lot = cumwo_lot
               and wr_op  = op
          no-lock:
          end. /* FOR FIRST wr_route */
 
          for each sr_wkfl exclusive-lock
-            where sr_domain = global_domain and sr_userid = mfguser:
+            where sr_userid = mfguser:
             delete sr_wkfl.
          end. /* FOR EACH sr_wkfl */
 
          for each pk_det exclusive-lock
-            where pk_domain = global_domain and pk_user = mfguser:
+            where pk_user = mfguser:
             delete pk_det.
          end. /* FOR EACH pk_det */
 
@@ -555,9 +555,9 @@ repeat:
          then do:
 
             for first wr_route
-               fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+               fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                       wr_part wr_run wr_wkctr)
-               where wr_domain = global_domain and wr_lot = cumwo_lot
+               where wr_lot = cumwo_lot
                  and wr_op > op
             no-lock:
             end. /* FOR FIRST wr_route */
@@ -585,8 +585,7 @@ repeat:
                                            input dont_zero_unissuable,
                                            input wkctr,
                                            output rejected,
-                                           output lotserials_req)"
-                  }
+                                           output lotserials_req)"}
  
 
  
@@ -760,8 +759,8 @@ repeat:
 
                do for reject_to_wr_route:
                   for first reject_to_wr_route
-                     fields (wr_domain wr_lot wr_op wr_wkctr wr_mch)
-                     where wr_domain  = global_domain and wr_lot = cumwo_lot
+                     fields (wr_lot wr_op wr_wkctr wr_mch)
+                     where wr_lot = cumwo_lot
                        and wr_op  = to_op
                      no-lock:
                   end. /* FOR FIRST reject_to_wr_route */
@@ -863,9 +862,9 @@ repeat:
          then do:
 
             for first wr_route
-               fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone
+               fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone
                       wr_op wr_part wr_run wr_wkctr)
-               where wr_domain = global_domain and wr_lot = cumwo_lot
+               where wr_lot = cumwo_lot
                  and wr_op > op
             no-lock:
             end. /* FOR FIRST wr_route */
@@ -874,17 +873,17 @@ repeat:
             then do:
 
                for first wo_mstr
-                  fields(wo_domain wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
+                  fields(wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
                          wo_lot_next wo_lot_rcpt wo_part wo_rctstat wo_status
                          wo_rctstat_active wo_rel_date wo_routing wo_site)
-                  where wo_domain = global_domain and wo_lot = cumwo_lot
+                  where wo_lot = cumwo_lot
                no-lock:
                end. /* FOR FIRST wo_mstr */
 
                for first pt_mstr
-                  fields(pt_domain pt_desc1 pt_loc pt_lot_ser pt_part pt_rctwo_active
+                  fields(pt_desc1 pt_loc pt_lot_ser pt_part pt_rctwo_active
                          pt_rctwo_status pt_site pt_um)
-                  where pt_domain = global_domain and pt_part = wo_part
+                  where pt_part = wo_part
                no-lock:
                end. /* FOR FIRST pt_mstr */
 
@@ -949,7 +948,7 @@ repeat:
 
                else do:
                   do transaction:
-                     create sr_wkfl. sr_domain = global_domain.
+                     create sr_wkfl.
 
                      assign
                         sr_userid = mfguser
@@ -983,9 +982,9 @@ repeat:
                      then do:
 
                         for first in_mstr
-                           fields(in_domain in_part in_site
+                           fields(in_part in_site
                               in_rctwo_active in_rctwo_status)
-                           no-lock where in_domain = global_domain and in_part = wo_part
+                           no-lock where in_part = wo_part
                                      and in_site = wo_site:
                         end. /* FOR FIRST in_mstr */
                         if available in_mstr
@@ -1055,7 +1054,7 @@ repeat:
                   in h_wiplottrace_procs.
 
                for each sr_wkfl no-lock
-                     where sr_domain  = global_domain and sr_userid = mfguser and sr_lineid = "+" + part
+                     where sr_userid = mfguser and sr_lineid = "+" + part
                      break by sr_lotser by sr_ref:
                   accumulate sr_qty (sub-total by sr_ref).
 
@@ -1125,19 +1124,19 @@ repeat:
          end. /* IF is_wiplottrace_enabled() AND ... */
 
          for first wo_mstr
-            fields(wo_domain wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
+            fields(wo_assay wo_due_date wo_expire wo_grade wo_loc wo_lot
                    wo_lot_next wo_lot_rcpt wo_part wo_rctstat wo_status
                    wo_rctstat_active wo_rel_date wo_routing wo_site)
-            where wo_domain = global_domain and wo_lot = cumwo_lot
+            where wo_lot = cumwo_lot
          no-lock:
          end. /* FOR FIRST wo_mstr */
 
          wo_recno = recid(wo_mstr).
 
          for first wr_route
-            fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+            fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                    wr_part wr_run wr_wkctr)
-            where wr_domain = global_domain and wr_lot = cumwo_lot
+            where wr_lot = cumwo_lot
               and wr_op  = op
          no-lock:
          end. /* FOR FIRST wr_route */
@@ -1164,7 +1163,7 @@ repeat:
          /* TO CHECK THE CUMULATIVE ORDER IS NOT CLOSED */
          /* DURING USER INTERFACE                       */
          if can-find(wo_mstr
-            where wo_domain = global_domain and wo_lot    = cumwo_lot
+            where  wo_lot    = cumwo_lot
             and   wo_status  = "C"
             no-lock)
          then do:
@@ -1178,7 +1177,7 @@ repeat:
          /* TO CHECK THE CUMULATIVE ORDER IS NOT EXPIRED */
          /* DURING USER INTERFACE                        */
          if not can-find(wo_mstr
-            where wo_domain = global_domain and wo_lot   = cumwo_lot
+            where wo_lot   = cumwo_lot
             and  (eff_date >= wo_rel_date or wo_rel_date = ?)
             and  (eff_date <= wo_due_date or wo_due_date = ?)
             no-lock)
@@ -1280,9 +1279,9 @@ pause .
 ***/
       do transaction:
          for first wr_route
-            fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+            fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                    wr_part wr_run wr_wkctr)
-            where wr_domain = global_domain and wr_lot = cumwo_lot
+            where wr_lot = cumwo_lot
               and wr_op  = op
          no-lock:
          end. /* FOR FIRST wr_route */
@@ -1349,10 +1348,10 @@ pause .
       /* ONLY EXECUTE WAREHOUSE INTERFACE CODE IF WAREHOUSING  */
       /* INTERFACE IS ACTIVE                                   */
 
-      if can-find(first whl_mstr where whl_domain = global_domain and whl_act = true no-lock)
+      if can-find(first whl_mstr where whl_act = true no-lock)
       then do:
 
-         for each sr_wkfl where sr_domain = global_domain and sr_userid = mfguser no-lock:
+         for each sr_wkfl where sr_userid = mfguser no-lock:
 
             /* CREATE A TE_MSTR RECORD */
 
@@ -1379,9 +1378,9 @@ pause .
       then do:
 
          for first wr_route
-            fields(wr_domain wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
+            fields(wr_auto_lbr wr_desc wr_lot wr_mch wr_milestone wr_op
                    wr_part wr_run wr_wkctr)
-            where wr_domain = global_domain and wr_lot = cumwo_lot
+            where wr_lot = cumwo_lot
               and wr_op > op
          no-lock:
          end. /* FOR FIRST wr_route */
@@ -1427,7 +1426,7 @@ pause .
             then
             do transaction:
                find wo_mstr
-                  where wo_domain = global_domain and wo_lot = cumwo_lot exclusive-lock.
+                  where wo_lot = cumwo_lot exclusive-lock.
                if available wo_mstr
                   and not wo_lot_rcpt
                then

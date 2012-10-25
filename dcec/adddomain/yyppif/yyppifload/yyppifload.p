@@ -1,5 +1,14 @@
 /* Last change by Wilber 03/20/2008  solve the new QAD item problem    SO *W001*/
+session:date-format = 'ymd'.
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
 
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
 
 { xxppifdef.i }       
 def buffer xxppif_buff for xxppif_log.

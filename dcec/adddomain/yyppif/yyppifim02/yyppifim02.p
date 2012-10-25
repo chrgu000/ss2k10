@@ -10,6 +10,16 @@
 /* Last change by Wilber 03/21/2008  mantainence 1.4.17 whenever PDIA or PDIC    SO *W001*/
 /* Last change by Wilber 03/24/2008        *W002*/
 /* Last change by Wilber 03/31/2008        *W003*/
+session:date-format = 'ymd'.
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
 
 { xxppifdef.i }   
 def var item_type as char.
