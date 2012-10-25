@@ -63,7 +63,7 @@ CREATE WIDGET-POOL.
 
 /* Definitions for BROWSE brList                                        */
 &Scoped-define FIELDS-IN-QUERY-brList xic_nbr xic_part xic_desc xic_qty_req xic_qty_ld xic_qty_tr xic_fsite xic_floc xic_flot xic_tsite xic_tloc xic_tlot xic_chk xic_sn   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brList   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brList xic_qty_tr   
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH xic
 &Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH xic.
@@ -116,10 +116,10 @@ DEFINE BUTTON tnLoad
      LABEL "装入" 
      SIZE 9 BY 1.21.
 
-DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U INITIAL "D:~\ss~\trunk~\cummins~\dcec~\adddomain~\yyictrld~\data.csv" 
+DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U 
      LABEL "文件" 
      VIEW-AS FILL-IN 
-     SIZE 40 BY 1 NO-UNDO.
+     SIZE 51.9 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
@@ -132,19 +132,20 @@ DEFINE BROWSE brList
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brList wWin _FREEFORM
   QUERY brList DISPLAY
       xic_nbr     COLUMN-LABEL '调拨单号'
-xic_part    COLUMN-LABEL '料号'
-xic_desc    COLUMN-LABEL '描述'
-xic_qty_req COLUMN-LABEL '计划调拨'
-xic_qty_ld  COLUMN-LABEL '库存量'
-xic_qty_tr  COLUMN-LABEL '调拨量'
-xic_fsite   COLUMN-LABEL '移出地点'
-xic_floc    COLUMN-LABEL '移出库位'
-xic_flot    COLUMN-LABEL '移出批次'
-xic_tsite   COLUMN-LABEL '移入地点'
-xic_tloc    COLUMN-LABEL '移入库位'
-xic_tlot    COLUMN-LABEL '移入批次'
-xic_chk     COLUMN-LABEL '状态'
-xic_sn
+      xic_part    COLUMN-LABEL '料号'
+      xic_desc    COLUMN-LABEL '描述'
+      xic_qty_req COLUMN-LABEL '计划调拨'
+      xic_qty_ld  COLUMN-LABEL '库存量'
+      xic_qty_tr  COLUMN-LABEL '调拨量'
+      xic_fsite   COLUMN-LABEL '移出地点'
+      xic_floc    COLUMN-LABEL '移出库位'
+      xic_flot    COLUMN-LABEL '移出批次'
+      xic_tsite   COLUMN-LABEL '移入地点'
+      xic_tloc    COLUMN-LABEL '移入库位'
+      xic_tlot    COLUMN-LABEL '移入批次'
+      xic_chk     COLUMN-LABEL '状态'
+      xic_sn
+      ENABLE xic_qty_tr
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
     WITH NO-ROW-MARKERS SEPARATORS SIZE 125.5 BY 34.63 ROW-HEIGHT-CHARS .68 FIT-LAST-COLUMN.
@@ -153,11 +154,11 @@ xic_sn
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     btnChk AT ROW 1.53 COL 59
-     tnLoad AT ROW 1.53 COL 70
+     btnChk AT ROW 1.53 COL 70.4
+     tnLoad AT ROW 1.53 COL 81.4
      btnGenCimFile AT ROW 1.53 COL 87.5
      fiFile AT ROW 1.58 COL 5.1 COLON-ALIGNED
-     hbtnOpen AT ROW 1.58 COL 48
+     hbtnOpen AT ROW 1.58 COL 59.4
      brList AT ROW 3.21 COL 2
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
          SIDE-LABELS NO-UNDERLINE THREE-D 
@@ -182,7 +183,7 @@ DEFINE FRAME fMain
 IF SESSION:DISPLAY-TYPE = "GUI":U THEN
   CREATE WINDOW wWin ASSIGN
          HIDDEN             = YES
-         TITLE              = "库存调拨(yyictrld.p)"
+         TITLE              = "DCEC-库存转移-批次导入(yyictrld.p)"
          HEIGHT             = 37.32
          WIDTH              = 126.9
          MAX-HEIGHT         = 39.95
@@ -191,7 +192,7 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
          VIRTUAL-WIDTH      = 146.2
          RESIZE             = yes
          SCROLL-BARS        = no
-         STATUS-AREA        = no
+         STATUS-AREA        = yes
          BGCOLOR            = ?
          FGCOLOR            = ?
          THREE-D            = yes
@@ -260,7 +261,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH xic.
 
 &Scoped-define SELF-NAME wWin
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON END-ERROR OF wWin /* 库存调拨(yyictrld.p) */
+ON END-ERROR OF wWin /* DCEC-库存转移-批次导入(yyictrld.p) */
 OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
   /* This case occurs when the user presses the "Esc" key.
      In a persistently run window, just ignore this.  If we did not, the
@@ -273,7 +274,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-CLOSE OF wWin /* 库存调拨(yyictrld.p) */
+ON WINDOW-CLOSE OF wWin /* DCEC-库存转移-批次导入(yyictrld.p) */
 DO:
   /* This ADM code must be left here in order for the SmartWindow
      and its descendents to terminate properly on exit. */
@@ -286,7 +287,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-RESIZED OF wWin /* 库存调拨(yyictrld.p) */
+ON WINDOW-RESIZED OF wWin /* DCEC-库存转移-批次导入(yyictrld.p) */
 DO:
     FRAME fmain:WIDTH = wWin:WIDTH NO-ERROR.
     FRAME fmain:VIRTUAL-WIDTH-CHARS = wWin:WIDTH NO-ERROR.
@@ -336,20 +337,31 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL fiFile wWin
 ON RETURN OF fiFile IN FRAME fMain /* 文件 */
 DO:
-    
+
     DEFINE VARIABLE vchk AS CHARACTER FORMAT "x(40)" NO-UNDO.
     DEFINE VARIABLE vdesc LIKE pt_desc1 NO-UNDO.
     DEFINE VARIABLE vsn   AS INTEGER INITIAL 0.
+    DEFINE VARIABLE v_qty_req LIKE ld_qty_oh.
     DEFINE VARIABLE v_qty_ld LIKE ld_qty_oh.
     DEFINE VARIABLE v_qty_tr LIKE ld_qty_oh.
-    
+
     ASSIGN fifile.
     if fifile = "" then do:
          message "请先装入文件!" view-as alert-box.
+         leave.
     end.
+    find first usrw_wkfl EXCLUSIVE-LOCK where usrw_domain = global_domain
+           and usrw_key1 = "yyictrld.p.parameter"
+           and usrw_key2 = "parameter" no-error.
+    if not available usrw_wkfl then do:
+             create usrw_wkfl. usrw_domain = global_domain.
+             assign usrw_key1 = "yyictrld.p.parameter"
+                    usrw_key2 = "parameter".
+        end.
+        assign usrw_charfld[1] = fifile.
 EMPTY TEMP-TABLE xim NO-ERROR.
 EMPTY TEMP-TABLE xic NO-ERROR.
- 
+
     ASSIGN vsn = 0.
     IF search(fifile) <>  ? THEN DO:
         Input FROM VALUE(fifile).
@@ -369,7 +381,7 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                                  NO-ERROR.
         END.
         INPUT CLOSE.
- 
+
 
     assign vsn = 0.
     FOR EACH xim NO-LOCK:
@@ -378,54 +390,57 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                vsn = vsn + 1
                v_qty_ld = 0
                v_qty_tr = 0.
-        IF xim_nbr = "" OR xim_part = '' OR xim_part >= "ZZZZZ" THEN DO:
-           DELETE xim.
-           NEXT.
-        END.
+         IF xim_nbr = "" OR xim_part = '' OR xim_part >= "ZZZZZ" THEN DO:
+            DELETE xim.
+            NEXT.
+         END.
+         FIND FIRST pt_mstr NO-LOCK WHERE pt_domain = GLOBAL_domain AND pt_part = xim_part NO-ERROR.
+         IF AVAILABLE pt_mstr THEN DO:
+            IF GLOBAL_user_lang = "ch" THEN DO:
+                ASSIGN vdesc = pt_desc2.
+            END.
+            ELSE DO:
+                ASSIGN vdesc = pt_desc1.
+            END.
+         END.
+         ELSE DO:
+             vchk = "料号不存在".
+         END.
+         if vchk = "" then do:
+            FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_fsite NO-ERROR.
+            IF NOT AVAILABLE si_mstr THEN DO:
+                ASSIGN vchk = "地点" + xim_fsite + "不存在".
+                NEXT.
+            END.
+            ELSE DO:
+                FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_fsite AND loc_loc = xim_floc NO-ERROR.
+                IF NOT AVAILABLE loc_mstr THEN DO:
+                    ASSIGN vchk = "库位" + xim_fsite + " : " + xim_floc + "不存在".
+                    NEXT.
+                END.
+            END.
+         end. /* if vchk = "" then do: */
+         if vchk = "" then do:
+            FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_tsite NO-ERROR.
+            IF NOT AVAILABLE si_mstr THEN DO:
+                ASSIGN vchk = "地点" + xim_tsite + "不存在".
+                NEXT.
+            END.
+            ELSE DO:
+                FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_tsite AND loc_loc = xim_tloc NO-ERROR.
+                IF NOT AVAILABLE loc_mstr THEN DO:
+                    ASSIGN vchk = "库位" + xim_tsite + " : " + xim_tloc + "不存在".
+                    NEXT.
+                END.
+            END.
+         end. /* if vchk = "" then do: */
+
+
         IF xim_flot <> "" THEN DO:
              IF xim_tlot = "" THEN DO:
                  ASSIGN xim_tlot = xim_flot.
              END.
-             FIND FIRST pt_mstr NO-LOCK WHERE pt_domain = GLOBAL_domain AND pt_part = xim_part NO-ERROR.
-             IF AVAILABLE pt_mstr THEN DO:
-                IF GLOBAL_user_lang = "ch" THEN DO:
-                    ASSIGN vdesc = pt_desc2.
-                END.
-                ELSE DO:
-                    ASSIGN vdesc = pt_desc1.
-                END.
-             END.
-             ELSE DO:
-                 vchk = "料号不存在".
-             END.
-             if vchk = "" then do:
-                FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_fsite NO-ERROR.
-                IF NOT AVAILABLE si_mstr THEN DO:
-                    ASSIGN vchk = "地点" + xim_fsite + "不存在".
-                    NEXT.
-                END.
-                ELSE DO:
-                    FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_fsite AND loc_loc = xim_floc NO-ERROR.
-                    IF NOT AVAILABLE loc_mstr THEN DO:
-                        ASSIGN vchk = "库位" + xim_fsite + " : " + xim_floc + "不存在".
-                        NEXT.
-                    END.
-                END.
-             end. /* if vchk = "" then do: */
-             if vchk = "" then do:
-                FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_tsite NO-ERROR.
-                IF NOT AVAILABLE si_mstr THEN DO:
-                    ASSIGN vchk = "地点" + xim_tsite + "不存在".
-                    NEXT.
-                END.
-                ELSE DO:
-                    FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_tsite AND loc_loc = xim_tloc NO-ERROR.
-                    IF NOT AVAILABLE loc_mstr THEN DO:
-                        ASSIGN vchk = "库位" + xim_tsite + " : " + xim_tloc + "不存在".
-                        NEXT.
-                    END.
-                END.
-             end. /* if vchk = "" then do: */
+
              if vchk = "" then do:
                 FIND FIRST ld_det NO-LOCK WHERE ld_domain = GLOBAL_domain AND ld_site = xim_fsite AND ld_loc = xim_floc
                        AND ld_part = xim_part AND ld_lot = xim_flot NO-ERROR.
@@ -433,7 +448,7 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                     ASSIGN v_qty_ld = ld_qty_oh.
                 END.
                 IF xim_qty_req >= v_qty_ld THEN ASSIGN v_qty_tr = v_qty_ld .
-                                             ELSE ASSIGN v_qty_tr = xim_qty_req.
+                                           ELSE ASSIGN v_qty_tr = xim_qty_req.
                 IF v_qty_tr = 0 THEN DO:
                     ASSIGN vchk = "库存不足".
                 END.
@@ -455,25 +470,72 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                      xic_chk     = vchk.
 
         END. /* IF xim_flot <> "" THEN DO: */
-        ELSE DO:
-/*               create xic.                      */
-/*              assign  xic_nbr     = xim_nbr     */
-/*                      xic_part    = xim_part    */
-/*                      xic_desc    = vdesc       */
-/*                      xic_qty_req = xim_qty_req */
-/*                      xic_qty_ld  = v_qty_ld    */
-/*                      xic_qty_tr  = v_qty_tr    */
-/*                      xic_fsite   = xim_fsite   */
-/*                      xic_floc    = xim_floc    */
-/*                      xic_flot    = xim_flot    */
-/*                      xic_tsite   = xim_tsite   */
-/*                      xic_tloc    = xim_tloc    */
-/*                      xic_tlot    = xim_tlot    */
-/*                      xic_sn      = vsn         */
-/*                      xic_chk     = vchk.       */
+        ELSE DO:  /* IF xim_flot <> "" THEN DO: else*/
+             ASSIGN v_qty_req = xim_qty_req.
+             if can-find(first ld_det NO-LOCK WHERE ld_domain = GLOBAL_domain AND ld_site = xim_fsite AND ld_loc = xim_floc
+                  AND ld_part = xim_part and ld_qty_oh > 0) then do:
+                FOR EACH ld_det NO-LOCK WHERE ld_domain = GLOBAL_domain AND ld_site = xim_fsite AND ld_loc = xim_floc
+                     AND ld_part = xim_part and ld_qty_oh > 0:
+                     assign vsn = vsn + 1.
+                        if v_qty_req >= ld_qty_oh then do:
+                                       create xic.
+                                       assign  xic_nbr     = xim_nbr
+                                               xic_part    = xim_part
+                                               xic_desc    = vdesc
+                                               xic_qty_req = ld_qty_oh
+                                               xic_qty_ld  = ld_qty_oh
+                                               xic_qty_tr  = ld_qty_oh
+                                               xic_fsite   = xim_fsite
+                                               xic_floc    = xim_floc
+                                               xic_flot    = ld_lot
+                                               xic_tsite   = xim_tsite
+                                               xic_tloc    = xim_tloc
+                                               xic_tlot    = ld_lot
+                                               xic_sn      = vsn
+                                               xic_chk     = vchk.
+                                        v_qty_req = v_qty_req - ld_qty_oh.
+                       end.
+                       else do:
+                           create xic.
+                                       assign  xic_nbr     = xim_nbr
+                                               xic_part    = xim_part
+                                               xic_desc    = vdesc
+                                               xic_qty_req = v_qty_req
+                                               xic_qty_ld  = ld_qty_oh
+                                               xic_qty_tr  = v_qty_req
+                                               xic_fsite   = xim_fsite
+                                               xic_floc    = xim_floc
+                                               xic_flot    = ld_lot
+                                               xic_tsite   = xim_tsite
+                                               xic_tloc    = xim_tloc
+                                               xic_tlot    = ld_lot
+                                               xic_sn      = vsn
+                                               xic_chk     = vchk.
+                                 leave.
+                       end.
+                END. /* for each ld */
+                if xic_qty_req > xic_qty_tr then assign xic_chk = "库存不足".
+           end.
+           else do:
+                        assign vsn = vsn + 1.
+                         create xic.
+               assign  xic_nbr     = xim_nbr
+                       xic_part    = xim_part
+                       xic_desc    = vdesc
+                       xic_qty_req = v_qty_req
+                       xic_qty_ld  = 0
+                       xic_qty_tr  = 0
+                       xic_fsite   = xim_fsite
+                       xic_floc    = xim_floc
+                       xic_flot    = xim_flot
+                       xic_tsite   = xim_tsite
+                       xic_tloc    = xim_tloc
+                       xic_tlot    = xim_tlot
+                       xic_sn      = vsn
+                       xic_chk     = "库存不足".
+           end.
         END. /* else xim_flot <> "" THEN DO: */
     END.
-
 
     OPEN QUERY brlist FOR EACH xic .
     brList:REFRESH().
@@ -481,9 +543,6 @@ EMPTY TEMP-TABLE xic NO-ERROR.
  END.
 
 END.
-
-/* _UIB-CODE-BLOCK-END */
-&ANALYZE-RESUME
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -649,6 +708,13 @@ END.
 
 SESSION:SET-WAIT-STATE ("").
 {src/adm2/windowmn.i}
+
+ find first usrw_wkfl no-lock where usrw_domain = global_domain
+           and usrw_key1 = "yyictrld.p.parameter"
+           and usrw_key2 = "parameter" no-error.
+    IF AVAILABLE usrw_wkfl THEN DO:
+          assign fifile =  usrw_charfld[1].
+    END.
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME

@@ -99,9 +99,6 @@
 
 /* DISPLAY TITLE */
 
-/*
-{mfdtitle.i "2+ "}
-*/
 {mfdtitle.i "121010.1"}
 
 {cxcustom.i "ICINTR.P"}
@@ -156,7 +153,7 @@ define new shared variable trans_conv like sod_um_conv.
 define new shared variable lotref like sr_ref format "x(8)" no-undo.
 define new shared variable tr_recno as recid.
 
-define shared variable transtype as character format "x(7)".
+define new shared variable transtype as character format "x(7)".
 
 define variable lotum as character.
 define variable dr_desc like ac_desc format "x(23)".

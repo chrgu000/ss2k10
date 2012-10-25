@@ -32,7 +32,7 @@ input file layout:
 
 
 /*{mfdtitle.i}   */
-{mfdeclre.i "new"}
+{mfdeclre.i}
 
 /*G1MN*/ {gpglefv.i}
 
