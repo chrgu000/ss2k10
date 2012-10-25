@@ -114,7 +114,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 {mfphead.i}
 
 for each ld_det where ld_domain = global_domain and ld_qty_frz <> 0,
-		each pt_mstr where ld_domain = global_domain
+		each pt_mstr where pt_domain = global_domain
     and pt_part = ld_part
     and pt_prod_line >= line and pt_prod_line <= line1
     and pt_part <= part1 and pt_part >= part and pt_article >= keeper

@@ -143,9 +143,9 @@ FORM /*GUI*/
 		where  /* *SS-20120906.1*   */ glc_cal.glc_domain = global_domain and  glc_start <= today and glc_end >= today 
 		no-error.
 		if available glc_cal then
-			find prev glc_cal no-lock no-error.
+			find prev glc_cal no-lock where glc_domain = global_domain no-error.
 		else
-			find last glc_cal no-lock no-error.
+			find last glc_cal no-lock where glc_domain = global_domain no-error.
 				
 		if not available glc_cal then do:
 			message "◊‹’ »’¿˙¥ÌŒÛ".

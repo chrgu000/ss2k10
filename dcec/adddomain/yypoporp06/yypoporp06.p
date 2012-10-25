@@ -1,8 +1,7 @@
+/* GUI CONVERTED from poporp06.p (converter v1.78) Wed Nov 29 01:53:58 2006 */
 /* poporp06.p - PURCHASE ORDER RECEIPTS REPORT                                */
-/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
+/* Copyright 1986-2006 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.8.3.10 $                                                       */
-/*V8:ConvertMode=FullGUIReport                                                */
 /* REVISION: 4.0     LAST MODIFIED: 03/15/88    BY: FLM       */
 /* REVISION: 4.0     LAST MODIFIED: 02/12/88    BY: FLM *A175**/
 /* REVISION: 4.0     LAST MODIFIED: 11/01/88    BY: FLM *A508**/
@@ -30,28 +29,42 @@
 /* REVISION: 9.1     LAST MODIFIED: 08/13/00   BY: *N0KQ* Mark Brown          */
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Revision: 1.8.3.7    BY: Jean Miller        DATE: 05/14/02  ECO: *P05V*  */
-/* Revision: 1.8.3.8    BY: Narathip W.        DATE: 05/04/03  ECO: *P0R5*  */
-/* Revision: 1.8.3.9    BY: Deepak Rao         DATE: 05/29/03  ECO: *P0T9*  */
-/* $Revision: 1.8.3.10 $   BY: Manish Dani        DATE: 01/27/04  ECO: *P1LD*  */
+/* Revision: 1.8.3.8.1.1  BY: Narathip W.        DATE: 05/04/03  ECO: *P0R5*  */
+/* Revision: 1.8.3.8.1.2  BY: Deepak Rao         DATE: 07/31/03  ECO: *P0T9*  */
+/* Revision: 1.8.3.8.1.3  BY: Manish Dani        DATE: 01/27/04  ECO: *P1LD*  */
+/* $Revision: 1.8.3.8.1.4 $           BY: Abhishek Jha       DATE: 11/29/06  ECO: *P5FC*  */
+/* Revision: QAD2011  BY: Jordan Lin        DATE: 24/10/12  ECO: *SS -20121024.1  */
+
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-/*cj* 08/26/05 add po receipt age info*/
+/*V8:ConvertMode=FullGUIReport                                                */
 
-{mfdtitle.i "120816.1"}
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
+{mfdtitle.i "121024.1"}
 {cxcustom.i "POPORP06.P"}
 
-define variable ers-only         like mfc_logical           no-undo.
+define variable ers-only like mfc_logical no-undo.
 define variable l_use_sup_cnsg   like mfc_logical           no-undo.
 define variable l_sup_cnsg_desc  as   character             no-undo.
 define variable supplier_consign as   character
    label "Supplier Consigned" no-undo.
 define variable l_sup_cnsg_code  as   character initial "1" no-undo.
+define variable l_inc_log        like mfc_logical           no-undo.
 
-/*cj*/ {yypoporp06.i new}
+/*SS -20121024.1  {poporp06.i new} */
+/*SS -20121024.1  */ /*cj*/ {yypoporp06.i new}
 {&POPORP06-P-TAG9}
 
 /* PICK UP DEFAULTS FROM THE LNGD_DET FILED */
@@ -79,8 +92,16 @@ define variable l_sup_cnsg_code  as   character initial "1" no-undo.
             &mnemonic = supplier_consign
             &label    = l_sup_cnsg_desc}
 
-form
-   rdate            colon 15
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+   
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+rdate            colon 15
    rdate1           label "To" colon 49 skip
    vendor           colon 15
    vendor1          label "To" colon 49 skip
@@ -95,26 +116,60 @@ form
    sel_inv          colon 20
    sel_sub          colon 20
    ers-only         colon 20 label "ERS Items Only"
-   sel_mem          colon 20 /*cj*/ det COLON 49 SKIP
-   uninv_only       colon 20 /*cj*/ "帐龄天数：" AT 52 SKIP
-   supplier_consign colon 20 /*cj*/ age[1] COLON 49 LABEL "1" SKIP
-   use_tot          colon 20 /*cj*/ age[2] COLON 49 LABEL "2" SKIP
-   show_sub         colon 20 /*cj*/ age[3] COLON 49 LABEL "3" SKIP
-   base_rpt         colon 20 /*cj*/ age[4] COLON 49 LABEL "4" SKIP
-   sort_by          colon 20 label "Sort By"
+   sel_mem          colon 20   /*cj*/ det COLON 49 SKIP             
+   uninv_only       colon 20   /*cj*/ "帐龄天数：" AT 52 SKIP       
+   supplier_consign colon 20   /*cj*/ age[1] COLON 49 LABEL "1" SKIP
+   use_tot          colon 20   /*cj*/ age[2] COLON 49 LABEL "2" SKIP
+   show_sub         colon 20   /*cj*/ age[3] COLON 49 LABEL "3" SKIP
+   base_rpt         colon 20   /*cj*/ age[4] COLON 49 LABEL "4" SKIP
+   l_inc_log        colon 49 label "Include Logistics"
+   sort_by          colon 20  label "Sort By"
    sort_by_desc     colon 49 no-label
-with frame a side-labels width 80 ATTR-SPACE THREE-D .
+ SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = &IF DEFINED(GPLABEL_I)=0 &THEN
+   &IF (DEFINED(SELECTION_CRITERIA) = 0)
+   &THEN " Selection Criteria "
+   &ELSE {&SELECTION_CRITERIA}
+   &ENDIF 
+&ELSE 
+   getTermLabel("SELECTION_CRITERIA", 25).
+&ENDIF.
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
 {&POPORP06-P-TAG2}
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-
+    IF age[1] = 0 AND age[2] = 0 AND age[3] = 0 AND age[4] = 0 THEN DO :
+        age[1] = 30 .
+        age[2] = 60 .
+        age[3] = 90 .
+        age[4] = 120 .
+    END.
 display
    sort_by_desc
 with frame a.
 
 {wbrp01.i}
-repeat:
+
+/*GUI*/ {mfguirpa.i true "printer" 132 " " " " " "  }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
 
    {&POPORP06-P-TAG3}
    if rdate = low_date then rdate = ?.
@@ -125,35 +180,22 @@ repeat:
    if pj1   = hi_char then pj1 = "".
    if to_ps_nbr = hi_char then to_ps_nbr = "".
 
-    IF age[1] = 0 AND age[2] = 0 AND age[3] = 0 AND age[4] = 0 THEN DO :
-        age[1] = 30 .
-        age[2] = 60 .
-        age[3] = 90 .
-        age[4] = 120 .
-    END.
-
    if c-application-mode <> 'web' then
-   update
-      {&POPORP06-P-TAG4}
-      rdate rdate1 vendor vendor1 part part1 site site1
-      pj pj1
-      fr_ps_nbr to_ps_nbr
-      sel_inv sel_sub
-      ers-only
-      sel_mem uninv_only
-      supplier_consign
-      use_tot show_sub base_rpt
-      sort_by
-/*cj*/ det age[1] age[2] age[3] age[4]
-   with frame a.
+   
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
 
    {&POPORP06-P-TAG5}
    {wbrp06.i &command = update
       &fields = " rdate rdate1 vendor vendor1 part part1
         site site1 pj pj1 fr_ps_nbr to_ps_nbr
         sel_inv sel_sub  ers-only sel_mem uninv_only
-        use_tot show_sub base_rpt  sort_by
-/*cj*/  det age[1] age[2] age[3] age[4]"
+        use_tot show_sub base_rpt l_inc_log sort_by 
+	/*cj*/  det age[1] age[2] age[3] age[4]"
       &frm = "a"}
 
    {&POPORP06-P-TAG6}
@@ -177,8 +219,8 @@ repeat:
          then
             return.
          else
-            next-prompt supplier_consign with frame a.
-         undo , retry.
+            /*GUI NEXT-PROMPT removed */
+         /*GUI UNDO removed */ RETURN ERROR.
       end. /* IF NOT valid_mnemonic */
 
       /* GET CODES FROM lngd_det FOR MNEMONICS */
@@ -199,8 +241,8 @@ repeat:
          /* Invalid Mnemonic sort_by */
          {pxmsg.i &MSGNUM=3169 &ERRORLEVEL=3 &MSGARG1=sort_by}
          if c-application-mode = 'web' then return.
-         else next-prompt sort_by with frame a.
-         undo , retry.
+         else /*GUI NEXT-PROMPT removed */
+         /*GUI UNDO removed */ RETURN ERROR.
       end.
 
       /* GET CODES FROM lngd_det FOR MNEMONICS */
@@ -214,7 +256,7 @@ repeat:
       display sort_by_desc with frame a.
 
       {&POPORP06-P-TAG7}
-      bcdparm = ""      .
+      bcdparm = "".
       {mfquoter.i rdate           }
       {mfquoter.i rdate1          }
       {mfquoter.i vendor          }
@@ -236,14 +278,15 @@ repeat:
       {mfquoter.i use_tot         }
       {mfquoter.i show_sub        }
       {mfquoter.i base_rpt        }
+      {mfquoter.i l_inc_log       }
       {mfquoter.i sort_by         }
+      {&POPORP06-P-TAG8}
 /*cj*/{mfquoter.i det             }
 /*cj*/{mfquoter.i age[1]          }
 /*cj*/{mfquoter.i age[2]          }
 /*cj*/{mfquoter.i age[3]          }
 /*cj*/{mfquoter.i age[4]          }
 
-      {&POPORP06-P-TAG8}
 
       if rdate = ? then rdate = low_date.
       if rdate1 = ? then rdate1 = today.
@@ -255,55 +298,52 @@ repeat:
 
    end.
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "printer"
-               &printWidth = 132
-               &pagedFlag = " "
-               &stream = " "
-               &appendToFile = " "
-               &streamedOutputToTerminal = " "
-               &withBatchOption = "yes"
-               &displayStatementType = 1
-               &withCancelMessage = "yes"
-               &pageBottomMargin = 6
-               &withEmail = "yes"
-               &withWinprint = "yes"
-               &defineVariables = "yes"}
+   
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i "printer" 132 " " " " " " " " }
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+
+
+
    {mfphead.i}
 
    oldcurr = "".
    loopb:
    do on error undo , leave:
-/*cj*/   IF det = NO THEN do :
       if sort_by_code = "1" then do on error undo , leave loopb:
          {gprun.i ""poporp6a.p""
                   "(input ers-only,
-                    input l_sup_cnsg_code)" }
+                    input l_sup_cnsg_code,
+                    input l_inc_log)" }
       end.
       if sort_by_code = "2" then do on error undo , leave loopb:
          {gprun.i ""poporp6b.p""
                   "(input ers-only,
-                    input l_sup_cnsg_code)" }
+                    input l_sup_cnsg_code,
+                    input l_inc_log)" }
       end.
       if sort_by_code = "3" then do on error undo , leave loopb:
          {gprun.i ""poporp6c.p""
                   "(input ers-only,
-                    input l_sup_cnsg_code)" }
+                    input l_sup_cnsg_code,
+                    input l_inc_log)" }
       end.
    end.
-/*cj*add*beg*/   
-   ELSE DO :
-        {gprun.i ""yypoporp6d.p""                 
-             "(input ers-only,
-              input l_sup_cnsg_code)" }
-   END.
-/*cj*add*end*/
-   END. /*loopb*/
 
-   {mfrtrail.i}
+   
+/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+
    hide message no-pause.
    {pxmsg.i &MSGNUM=9 &ERRORLEVEL=1}
 end.
 
-/*V8-*/
-{wbrp04.i &frame-spec = a}
 /*V8+*/
+
+/*GUI*/ end procedure. /*p-report*/
+/*GUI*/ {mfguirpb.i &flds=" {&POPORP06-P-TAG4} rdate rdate1 vendor vendor1 part part1 site site1 pj pj1 fr_ps_nbr to_ps_nbr sel_inv sel_sub ers-only sel_mem uninv_only supplier_consign use_tot show_sub base_rpt l_inc_log sort_by det age[1] age[2] age[3] age[4] "} /*Drive the Report*/

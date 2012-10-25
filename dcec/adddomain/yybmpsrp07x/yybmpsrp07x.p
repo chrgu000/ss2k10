@@ -141,7 +141,7 @@ repeat:
                              xxwk.edate = ps_end
                              xxwk.op = ps_op
                              xxwk.qty = ps_qty_per
-                             /*xxwk.wvend = IF AVAIL ptp_det THEN ptp_vend ELSE ""*/
+                             xxwk.wvend = IF AVAIL ptp_det THEN ptp_vend ELSE ""
                              xxwk.pmcode = IF AVAIL ptp_det THEN ptp_pm_code ELSE ""
                              xxwk.par = ps_par
                              xxwk.bomcode = IF AVAIL ptp_det THEN ptp_bom_code ELSE ""
@@ -155,9 +155,9 @@ repeat:
                             if available wc_mstr then
                                    assign xxwk.wcdesc = wc_desc.
 
-                           /* FIND ad_mstr WHERE ad_add = ptp_vend  no-lock no-error.
+                            FIND ad_mstr WHERE ad_domain = global_domain and ad_add = ptp_vend  no-lock no-error.
                             if available ad_mstr then
-                                   ASSIGN xxwk.wadname =ad_name.*/
+                                   ASSIGN xxwk.wadname =ad_name.
                       end. 
 
                /* end.*/        

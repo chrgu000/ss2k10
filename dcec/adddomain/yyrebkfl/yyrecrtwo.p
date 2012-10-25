@@ -131,7 +131,7 @@ define new shared temp-table xxpk_det
 /*************tfq added end******************************************/
 
 for first clc_ctrl
-   fields (clc_relot_rcpt)
+   fields (clc_domain clc_relot_rcpt)
    no-lock where clc_domain = global_domain:
 end. /* FOR FIRST CLC_CTRL */
 
@@ -784,7 +784,7 @@ end.
 for each  xxpk_det where xxpk_user = mfguser :
 delete xxpk_det .
 end.
-for each pk_det where pk_user = mfguser :
+for each pk_det where pk_domain = global_domain and pk_user = mfguser :
   find first zzpk_det where zzpk_user = pk_user
                         and zzpk_part = pk_part 
                         and zzpk_reference = pk_reference no-error .
@@ -826,7 +826,7 @@ for each zzpk_det where zzpk_user = mfguser :
 
 /**********tfq added end***************/
 
-      for each pk_det exclusive-lock where pk_user = mfguser:
+      for each pk_det exclusive-lock where pk_domain = global_domain and pk_user = mfguser:
        /**********tfq added begin***********************************/
          find first wr_route where wr_domain = global_domain and wr_nbr = wo_nbr
                     and  wr_lot = wo_lot

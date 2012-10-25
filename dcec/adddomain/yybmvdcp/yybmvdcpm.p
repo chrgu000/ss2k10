@@ -513,7 +513,7 @@ find first xxbomc_ctrl no-lock where xxbomc_domain = global_domain no-error.    
          um1
       with frame a.
 
-      find bom_mstr no-lock where bom_parent = /*part2 judy*/ xxpart2 no-error.
+      find bom_mstr no-lock where bom_domain = global_domain and bom_parent = /*part2 judy*/ xxpart2 no-error.
       if available bom_mstr
       then do:
 

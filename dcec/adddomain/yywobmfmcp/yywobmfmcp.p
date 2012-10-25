@@ -59,14 +59,13 @@ setFrameLabels(frame a:handle).
 {wbrp01.i}
 REPEAT:
     UPDATE 
-        v_part VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_part = v_part), "请输入零件号")
-        v_site VALIDATE(CAN-FIND(FIRST si_mstr WHERE si_site = v_site), "请输入地点")
+        v_part VALIDATE(CAN-FIND(FIRST pt_mstr WHERE pt_domain=global_domain and pt_part = v_part), "请输入零件号")
+        v_site VALIDATE(CAN-FIND(FIRST si_mstr WHERE si_domain=global_domain and si_site = v_site), "请输入地点")
         v_date 
         WITH FRAME a.
     
     IF v_date = ? THEN v_date = TODAY.
     DISPLAY v_date WITH FRAME a.
-b
 
     FIND FIRST pt_mstr WHERE  /* *SS-20120919.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = v_part NO-LOCK NO-ERROR.
     IF NOT AVAILABLE pt_mstr THEN UNDO, NEXT.

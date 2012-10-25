@@ -149,7 +149,7 @@ if avail in_mstr then do:
      gl_site = in_gl_cost_site.
  end.
  if l_gl_set = "" then do:
-	find  first icc_ctrl no-lock no-error.
+	find  first icc_ctrl no-lock where icc_domain = global_domain no-error.
 	if available icc_ctrl then
 		l_gl_set = icc_gl_set.
  end.  

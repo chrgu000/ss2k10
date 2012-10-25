@@ -18,8 +18,10 @@ function f-getpoprice returns DECIMAL
 
     v_out_results = 0.
 
-    FIND FIRST pod_det WHERE pod_nbr = v_inp_ponbr AND pod_line = v_inp_poln NO-LOCK NO-ERROR.
-    FIND FIRST po_mstr WHERE po_nbr = v_inp_ponbr NO-LOCK NO-ERROR.
+    FIND FIRST pod_det WHERE pod_domain = global_domain and 
+    					 pod_nbr = v_inp_ponbr AND pod_line = v_inp_poln NO-LOCK NO-ERROR.
+    FIND FIRST po_mstr WHERE po_domain = global_domain and
+    				   po_nbr = v_inp_ponbr NO-LOCK NO-ERROR.
 
     IF AVAILABLE pod_det AND AVAILABLE po_mstr THEN DO:
         v_out_results = pod_pur_cost. 
@@ -27,7 +29,8 @@ function f-getpoprice returns DECIMAL
             for last pc_mstr
             fields(pc_amt pc_amt_type pc_curr pc_expire pc_list
             pc_min_qty pc_part pc_prod_line pc_start pc_um)
-            where pc_list      = pod_pr_list           and
+            where pc_domain    = global_domain and
+            		  pc_list      = pod_pr_list           and
                   pc_part      = pod_part              and
                   pc_um        = pod_um                and
                   (pc_start    <= v_inp_effdt or pc_start = ?)  and
@@ -64,7 +67,8 @@ function f-getpartdata returns CHARACTER
     v_out_results = "".
 
 
-    FIND FIRST pt_mstr WHERE pt_mstr.pt_part = v_inp_part NO-LOCK NO-ERROR.
+    FIND FIRST pt_mstr WHERE pt_domain = global_domain and
+    					 pt_mstr.pt_part = v_inp_part NO-LOCK NO-ERROR.
     IF AVAILABLE pt_mstr THEN DO:
         CASE v_inp_fld:
             WHEN "pt_desc1"     THEN ASSIGN v_out_results = pt_desc1.
@@ -110,7 +114,8 @@ function f-getaddata returns CHARACTER
     v_out_results = "".
 
 
-    FIND FIRST ad_mstr WHERE ad_mstr.ad_addr = v_inp_addr NO-LOCK NO-ERROR.
+    FIND FIRST ad_mstr WHERE ad_domain = global_domain and
+    				   ad_mstr.ad_addr = v_inp_addr NO-LOCK NO-ERROR.
     IF AVAILABLE ad_mstr THEN DO:
         CASE v_inp_fld:
             WHEN "name"         THEN ASSIGN v_out_results = ad_name.
@@ -158,8 +163,10 @@ function f-getsoprice returns DECIMAL
 
     v_out_results = 0.
 
-    FIND FIRST sod_det WHERE sod_nbr = v_inp_sonbr AND sod_line = v_inp_soln NO-LOCK NO-ERROR.
-    FIND FIRST so_mstr WHERE so_nbr = v_inp_sonbr NO-LOCK NO-ERROR.
+    FIND FIRST sod_det WHERE sod_domain = global_domain and 
+    				   sod_nbr = v_inp_sonbr AND sod_line = v_inp_soln NO-LOCK NO-ERROR.
+    FIND FIRST so_mstr WHERE so_domain = global_domain and
+               so_nbr = v_inp_sonbr NO-LOCK NO-ERROR.
 
     IF AVAILABLE sod_det AND AVAILABLE so_mstr THEN DO:
         v_out_results = sod_price.
@@ -167,9 +174,10 @@ function f-getsoprice returns DECIMAL
             for last pc_mstr
             fields(pc_amt pc_amt_type pc_curr pc_expire pc_list
             pc_min_qty pc_part pc_prod_line pc_start pc_um)
-            where pc_list      = sod_pr_list           and
-                  pc_part      = sod_part              and
-                  pc_um        = sod_um                and
+            where pc_domain    = global_domain and
+                  pc_list      = sod_pr_list   and
+                  pc_part      = sod_part      and
+                  pc_um        = sod_um        and
                   (pc_start    <= v_inp_effdt or pc_start = ?)  and
                   (pc_expire   >= v_inp_effdt or pc_expire = ?) and
                   pc_curr      = so_curr                        and
@@ -200,9 +208,9 @@ function f-howareyou returns LOGICAL
 
     DEF VAR v_out_results AS LOGICAL.
 
-    v_out_results = NO.
+    v_out_results = yes.
 
-/*check lic and expire date*/
+/*check lic and expire date
 FIND FIRST pin_mstr WHERE pin_product = "MFG/PRO" NO-LOCK NO-ERROR.
 IF AVAILABLE pin_mstr THEN do:
     if pin_control1 = "QMJJ0"
@@ -220,7 +228,7 @@ END.
 IF v_out_results = YES THEN DO:
     IF v_welcome <> "HAHA" THEN v_out_results = NO.
 END.
-
+*/
 
 
     RETURN v_out_results.

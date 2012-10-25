@@ -28,7 +28,7 @@ DEF TEMP-TABLE outacc
 DEF TEMP-TABLE outcc
     FIELD out_cc LIKE acd_cc .
 
-FIND FIRST xxexp_ctrl NO-LOCK NO-ERROR .
+FIND FIRST xxexp_ctrl where xxexp_domain = global_domain NO-LOCK NO-ERROR .
 
 cc0 = "" .
 

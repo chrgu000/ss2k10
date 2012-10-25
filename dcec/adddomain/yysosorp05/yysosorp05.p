@@ -178,7 +178,7 @@ setFrameLabels(frame a:handle).
 
 {cclc.i} /* DETERMINE IF CONTAINER AND LINE CHARGES ARE ENABLED */
 
-find first soc_ctrl no-lock no-error.
+find first soc_ctrl no-lock where soc_domain = global_domain no-error.
 comp_addr = soc_company.
 
 {&SOSORP05-P-TAG3}

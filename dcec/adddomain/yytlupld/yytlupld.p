@@ -178,7 +178,8 @@ Procedure transferlist_check_upload:
         ok_yn = yes.
         for each xxwk:
             
-            find first xxtl_det where xxtl_nbr = xxwk.data[1] no-lock no-error.
+            find first xxtl_det where xxtl_domain = global_domain and
+            				   xxtl_nbr = xxwk.data[1] no-lock no-error.
             if available xxtl_det then do:
                  assign xxwk.error = "ÒÆ²Öµ¥ÒÑ´æÔÚ".
                  ok_yn = no.

@@ -148,7 +148,7 @@ for each t_all_data exclusive-lock:
    delete t_all_data.
 end. /* FOR EACH t_all_data */
 
-find first soc_ctrl no-lock no-error.
+find first soc_ctrl no-lock where soc_domain = global_domain no-error.
 if available soc_ctrl then
    all_only = soc_pick.
 include_partial = no.

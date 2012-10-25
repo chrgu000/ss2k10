@@ -157,7 +157,8 @@ and (acd_year < year(effdate) or acd_year = year(effdate) and acd_per < month(ef
  create accpj_sum.
  accpj_acc = acd_acc.
  accpj_project = acd_project.
-      find first pj_mstr where trim(pj_project) = trim(accpj_project) no-lock no-error.
+      find first pj_mstr where pj_domain = global_domain and
+      		  trim(pj_project) = trim(accpj_project) no-lock no-error.
       if available pj_mstr then
         accpj_pjdesc = pj_desc.
       else
@@ -202,7 +203,7 @@ for each accpj_sum break by accpj_acc:
          pjdesc = pj_desc.
       else
          pjdesc="".
-      find ac_mstr no-lock where ac_code = accpj_acc no-error.
+      find ac_mstr no-lock where ac_domain = global_domain and ac_code = accpj_acc no-error.
       accname = ac_desc.
       acccode = accpj_acc.
       pjcode = accpj_project.

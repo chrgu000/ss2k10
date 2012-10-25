@@ -65,7 +65,7 @@ DO iCounter = 1 TO bh:NUM-FIELDS:
         tt2_name  = STRING(bf:NAME)
         tt2_select = YES.
 END.
-FIND FIRST usrw_wkfl WHERE usrw_key1 = "xxut2"  AND usrw_key2 = inp_key NO-LOCK NO-ERROR.
+FIND FIRST usrw_wkfl WHERE usrw_domain = global_domain and usrw_key1 = "xxut2"  AND usrw_key2 = inp_key NO-LOCK NO-ERROR.
 IF AVAILABLE usrw_wkfl AND usrw_charfld[1] <> "" THEN DO:
     FOR EACH tt2:
         IF LOOKUP(STRING(tt2_seq), usrw_charfld[1]) = 0 THEN tt2_select = NO.
@@ -167,9 +167,9 @@ PROCEDURE xxpro-update:
         p-list1 = p-list1 + "," + STRING(tt2_seq).
     END.
     IF p-list1 <> "" THEN p-list1 = SUBSTRING(p-list1,2).
-    FIND FIRST usrw_wkfl WHERE usrw_key1 = "xxut2" AND usrw_key2 = inp_key NO-ERROR.
+    FIND FIRST usrw_wkfl WHERE usrw_domain = global_domain and usrw_key1 = "xxut2" AND usrw_key2 = inp_key NO-ERROR.
     IF NOT AVAILABLE usrw_wkfl THEN DO:
-        CREATE usrw_wkfl.
+        CREATE usrw_wkfl. usrw_domain = global_domain.
         ASSIGN usrw_key1 = "xxut2" 
                usrw_key2 = inp_key.
     END.

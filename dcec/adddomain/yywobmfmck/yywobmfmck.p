@@ -210,7 +210,7 @@ PROCEDURE xxpro-bud-ttx9:
                 IF NOT AVAILABLE ttt1 THEN DO:
                     CREATE ttt1.
                     ASSIGN ttt1_woid = v_id.
-                    FIND FIRST wo_mstr WHERE wo_lot = ttt1_woid NO-LOCK NO-ERROR.
+                    FIND FIRST wo_mstr WHERE wo_domain = global_domain and wo_lot = ttt1_woid NO-LOCK NO-ERROR.
                     IF NOT AVAILABLE wo_mstr THEN NEXT.
                     ASSIGN 
                         ttt1_part = wo_part
@@ -262,7 +262,8 @@ PROCEDURE xxpro-chk-bom:
     DEFINE OUTPUT PARAMETER p_ok  AS LOGICAL.
     p_ok = NO.
     FIND LAST xxwobmfm_mstr 
-        WHERE xxwobmfm_part = p_part 
+        WHERE xxwobmfm_domain = global_domain 
+        AND xxwobmfm_part = p_part 
         AND xxwobmfm_site = p_site 
         AND xxwobmfm_date_eff <= p_date 
         USE-INDEX xxwobmfm_idx2

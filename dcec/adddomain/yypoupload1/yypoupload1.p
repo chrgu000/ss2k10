@@ -156,7 +156,7 @@ repeat:
              END.
 
              IF trim(sonbr) <> "" AND trim(soduedate) <> "" AND soqty <> 0 THEN DO:
-               create zzwk .
+               create zzwk . zzwk_domain = global_domain.
                     zzwksite = TRIM(site).
                     zzwknbr = trim(sonbr).
                     zzwkduedate = DATE(soduedate).
@@ -183,7 +183,8 @@ repeat:
              END.
          END.
 
-     FOR EACH zzwk NO-LOCK where zzwksite = SITE and zzwkduedate >= today GROUP BY zzwknbr BY zzwkduedate:
+     FOR EACH zzwk NO-LOCK where zzwk_domain = global_domain and
+     				  zzwksite = SITE and zzwkduedate >= today GROUP BY zzwknbr BY zzwkduedate:
 
             IF first-of(zzwkduedate) THEN DO:
                n = 0.

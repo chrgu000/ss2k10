@@ -10,7 +10,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "121025.1"}
 
 define variable lupdate		like mfc_logical.
 
@@ -244,7 +244,7 @@ repeat :
 		end.
 		
 		for each ttpbd_det no-lock where ttpbd_commt <> "本期料差未计算":
-			find first pt_mstr where pt_part = ttpbd_part no-lock no-error.
+			find first pt_mstr where pt_domain = global_domain and pt_part = ttpbd_part no-lock no-error.
 			if not avail pt_mstr then next.
 						
 			/* 下期期初库存,差异 */
@@ -252,7 +252,7 @@ repeat :
 				and yypbd_per = nxtper 
 				and yypbd_part = ttpbd_part no-error.
 			if not avail yypbd_det then do:
-				create yypbd_det.
+				create yypbd_det. yypbd_domain = global_domain.
 				assign 
 				    yypbd_part = ttpbd_part
 				    yypbd_year = nxtyear

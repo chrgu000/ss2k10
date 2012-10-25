@@ -96,7 +96,7 @@ REPEAT:
        FIND FIRST ptp_det WHERE /* *SS-20120816.1*   */ ptp_det.ptp_domain = global_domain and ptp_site = dsd_shipsite AND ptp_part = dsd_part NO-LOCK NO-ERROR.
        IF AVAIL ptp_det THEN v_buyer = ptp_buyer. ELSE v_buyer = "".
        
-       FIND FIRST pt_mstr WHERE pt_part = dsd_part NO-LOCK NO-ERROR.
+       FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = dsd_part NO-LOCK NO-ERROR.
        IF AVAIL pt_mstr THEN DO: 
            v_desc1 = pt_desc1.
            v_desc2 = pt_desc2.
@@ -107,10 +107,6 @@ REPEAT:
            v_desc2 = "".
            v_prod_line = "".
        END.
-
-
-
-
      
     i = i + 1.
     FIND LAST pod_det WHERE /* *SS-20120816.1*   */ pod_det.pod_domain = global_domain and pod_site = dsd_shipsite AND pod_part = dsd_part AND (pod_due_date= ? OR pod_due_date > TODAY) AND pod_status <> "C"  NO-LOCK NO-ERROR.

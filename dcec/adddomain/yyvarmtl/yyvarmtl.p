@@ -11,9 +11,7 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-/*
-{mfdtitle.i "2+ "}
-*/
+
 {mfdtitle.i "20120814"}
 
 DEFINE VARIABLE part		LIKE pt_part.
@@ -381,7 +379,7 @@ PROCEDURE yypro-cal-var:
 	  and yyinvi_year = theyear and yyinvi_per = theper
 		and yyinvi_part = ttvarmtl_part no-lock no-error.
 	if available yyinvi_mstr then do:
-		if can-find(first code_mstr where code_fldname = "sub_line" and code_value = yyinvi_part_pl no-lock) then
+		if can-find(first code_mstr where code_domain = global_domain and code_fldname = "sub_line" and code_value = yyinvi_part_pl no-lock) then
 			assign ttvarmtl_pcqty = min(yyinvi_mfg_qty,yyinvi_buy_qty) + yyinvi_upl_qty .
 		else
 			assign ttvarmtl_pcqty = yyinvi_mfg_qty + yyinvi_upl_qty + yyinvi_buy_qty.

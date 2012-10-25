@@ -1132,7 +1132,8 @@ for each tx2d_det
 
                   if available prh_hist then do:
                      for first pvo_mstr no-lock
-                        where pvo_order = prh_nbr
+                        where pvo_domain = global_domain
+                        and   pvo_order = prh_nbr
                         and   pvo_internal_ref = tx2d_nbr
                         and   pvo_line = tx2d_line:
                      end. /* for first pvo_mstr */

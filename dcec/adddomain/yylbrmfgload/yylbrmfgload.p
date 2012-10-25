@@ -13,8 +13,6 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-/*
-{mfdtitle.i "2+ "} */
 {mfdtitle.i "20120816"}
 
 def var v_part	 like pt_part.
@@ -348,7 +346,8 @@ PROCEDURE yypro-cal-var:
 	if p_line = "6" then do:
 		put "计算产品以6开头分摊率" skip.
 		put "----------------------------------------------------" skip.
-		for each yylbrmfg_det where yylbrmfg_year = v_year
+		for each yylbrmfg_det where yylbrmfg_domain = global_domain 
+			and yylbrmfg_year = v_year
 			and yylbrmfg_per = v_period
 			and yylbrmfg_prod_line begins "6"
 			use-index yylbrmfg_pl

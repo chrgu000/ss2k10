@@ -55,7 +55,7 @@ REPEAT:
        DELETE xxwkso.
    END.
 
-   FOR EACH tr_hist WHERE  /* *SS-20120817.1*   */ tr_hist.tr_domain = global_domain and  tr_type = "iss-wo" AND tr_effdate >= bedate AND tr_effdate <= eddate AND tr_part =itpart USE-INDEX tr_type BREAK BY tr_lot .
+   FOR EACH tr_hist WHERE tr_hist.tr_domain = global_domain and  tr_type = "iss-wo" AND tr_effdate >= bedate AND tr_effdate <= eddate AND tr_part =itpart USE-INDEX tr_type BREAK BY tr_lot .
     IF FIRST-OF (tr_lot) THEN partsum =0.
     partsum= partsum + tr_qty_loc.
     IF LAST-OF(tr_lot) THEN do:
@@ -67,11 +67,11 @@ REPEAT:
    END.
 
    FOR EACH xxwkpt.
-    FOR EACH tr_hist WHERE  /* *SS-20120817.1*   */ tr_hist.tr_domain = global_domain and tr_type ="rct-wo" AND  tr_effdate >= bedate AND tr_effdate <=eddate AND tr_lot = xxwkpt.lot USE-INDEX tr_type BREAK BY tr_lot. 
+    FOR EACH tr_hist WHERE tr_hist.tr_domain = global_domain and tr_type ="rct-wo" AND  tr_effdate >= bedate AND tr_effdate <=eddate AND tr_lot = xxwkpt.lot USE-INDEX tr_type BREAK BY tr_lot. 
         IF FIRST-OF (tr_lot) THEN sosum =0.
         sosum= sosum + tr_qty_loc.
         IF LAST-OF(tr_lot) THEN do:
-           FIND FIRST ps_mstr WHERE /* *SS-20120817.1*   */ ps_mstr.ps_domain = global_domain and ps_comp = tr_part OR SUBSTRING(ps_comp , 1 , LENGTH(ps_comp) - 2) = tr_part NO-LOCK NO-ERROR.
+           FIND FIRST ps_mstr WHERE ps_mstr.ps_domain = global_domain and ps_comp = tr_part OR SUBSTRING(ps_comp , 1 , LENGTH(ps_comp) - 2) = tr_part NO-LOCK NO-ERROR.
            IF AVAIL ps_mstr THEN v_power = ps_par.
            ELSE v_power = "".
            CREATE xxwkso.

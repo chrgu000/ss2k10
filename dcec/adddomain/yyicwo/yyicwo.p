@@ -4,7 +4,7 @@
 /*V8:ConvertMode=Maintenance                                            */
 /* REVISION: 1.0    LAST MODIFIED: 09/03/2009     BY: Leo Zhou          *CLZ*/
 /*ss2012-8-15 升级*/
-{mfdtitle.i "121017.1"}
+{mfdtitle.i "121217.1"}
 
 def var v_year   as int format ">>>9".
 def var v_period as int format ">9".
@@ -92,7 +92,7 @@ repeat:
 	  part1
 	  v_update with frame a.
    if part1 = "" then part1 = hi_char.
-   find first glc_cal where /*ss2012-8-15 b*/ glc_cal.glc_domain = global_domain AND /*ss2012-8-15 e*/ glc_year = v_year and glc_per = v_period
+   find first glc_cal where glc_cal.glc_domain = global_domain AND glc_year = v_year and glc_per = v_period
 			no-lock no-error.
    if not avail glc_cal then do:
       message "错误：财务期间不存在，请检查后重新输入. " view-as alert-box error.
@@ -221,12 +221,12 @@ end.  /*main-loop*/
 
 procedure crt-rct-mstr:
     for each two no-lock:
-        find first yyinvi_mstr where yyinvi_year = v_year
+        find first yyinvi_mstr where yyinvi_domain = global_domain and yyinvi_year = v_year
 	     and yyinvi_per = v_period 
 	     and yyinvi_part = two_part no-error.
 	if not avail yyinvi_mstr then do:
 	   /*	
-	   find first code_mstr where code_fldname = "so site" and two_part begins code_value no-lock no-error.
+	   find first code_mstr where code_domain = global_domain and code_fldname = "so site" and two_part begins code_value no-lock no-error.
 	   if avail code_mstr then v_site = code_cmmt.
 	   else assign v_site = "dcec-c".
 	   */
@@ -251,7 +251,7 @@ procedure crt-rct-mstr:
 				 no-lock no-error.
 		   end.
 	   end.
-	   create yyinvi_mstr.
+	   create yyinvi_mstr. yyinvi_domain = global_domain.
 	   assign yyinvi_year = v_year
 	          yyinvi_per  = v_period
 		  yyinvi_part = two_part
@@ -272,7 +272,7 @@ procedure crt-rct-mstr:
                
 	       find first pt_mstr where /*ss2012-8-15 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-15 e*/ pt_part = wod_part
 						no-lock no-error.
-	       create yyinvid_det.
+	       create yyinvid_det. yyinvid_domain = global_domain.
 	       assign yyinvid_year = v_year
 	              yyinvid_per  = v_period
 		      yyinvid_part = two_part
@@ -309,7 +309,7 @@ procedure crt-var-det:
 		    and yycsvard_part = two_part
 		    and yycsvard_comp = xxwobmvd_det.xxwobmvd_comp no-error.
 	       if not avail yycsvard_det then do:
-	          create yycsvard_det.
+	          create yycsvard_det. yycsvard_domain = global_domain.
 	          assign yycsvard_year    = v_year
 		         yycsvard_per     = v_period
 		         yycsvard_part    = two_part
@@ -349,7 +349,8 @@ procedure crt-var-det:
 						for each bttt where bttt.ttt_wolot = ttt.ttt_wolot
 							and bttt.ttt_part = two_part
 							and bttt.ttt_flag <> ttt.ttt_flag :
-							find first yypts_det where yypts_year = v_year
+							find first yypts_det where yypts_domain = global_domain
+							  and yypts_year = v_year
 								and yypts_per = v_period
 								and yypts_part = two_part 
 								and yypts_comp = ttt.ttt_comp 
@@ -478,7 +479,7 @@ procedure crt-var-mstr:
 							  find first ptp_det where /*ss2012-8-15 b*/ ptp_det.ptp_domain = global_domain and /*ss2012-8-15 e*/ ptp_part = two_part and ptp_site begins "dcec-" 
 												no-lock no-error.
 							  
-							  create yycsvar_mstr.
+							  create yycsvar_mstr. yycsvar_domain = global_domain.
 							  assign yycsvar_year = v_year
 								 yycsvar_per  = v_period
 								 yycsvar_part = two_part
@@ -506,7 +507,7 @@ procedure crt-var-mstr:
 		      find first ptp_det where /*ss2012-8-15 b*/ ptp_det.ptp_domain  = global_domain and /*ss2012-8-15 e*/ ptp_part = two_part and ptp_site begins "dcec-"
 								 no-lock no-error.
 		      
-		      create yycsvar_mstr.
+		      create yycsvar_mstr. yycsvar_domain = global_domain.
 		      assign yycsvar_year = v_year
 			     yycsvar_per  = v_period
 			     yycsvar_part = two_part

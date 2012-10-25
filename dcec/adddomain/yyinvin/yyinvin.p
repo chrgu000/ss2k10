@@ -1,5 +1,5 @@
 /*yyinvin.p - 当期材料入库，半成品/成品计划外入库计算 */
-/*			只算RCT-PO - ISS-PRV和RCT-UNP */
+/*      只算RCT-PO - ISS-PRV和RCT-UNP */
 /* Author: James Duan *DATE:2009-09-10*               */
 /*ss2012-8-16 升级*/
 /*GUI global preprocessor directive settings */
@@ -10,33 +10,33 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "121018.1"}
 
-define variable lupdate		like mfc_logical.
+define variable lupdate   like mfc_logical.
 
-define variable theyear		like yyinvi_year.
-define variable theper		like yyinvi_per.
+define variable theyear   like yyinvi_year.
+define variable theper    like yyinvi_per.
 
-define variable per_start	like glc_start.
-define variable per_end		like glc_end.
-define variable bomversion	like yyinvi_std_bom.	
-define variable v_pmcode	like pt_pm_code. 
+define variable per_start like glc_start.
+define variable per_end   like glc_end.
+define variable bomversion  like yyinvi_std_bom.
+define variable v_pmcode  like pt_pm_code.
 define temp-table ttinvi_mstr
-	fields ttinvi_part like yyinvi_part label "零件"
-	fields ttinvi_part_pl like yyinvi_part_pl  label "产品类"
-	fields ttinvi_year like yyinvi_year label "年"
-	fields ttinvi_per like yyinvi_per label "期间"
-	fields ttinvi_upl_qty like yyinvi_upl_qty label "计划外入库"
-	fields ttinvi_buy_qty like yyinvi_buy_qty label "采购入库"
-	index ttinvi_part IS PRIMARY UNIQUE ttinvi_part.
+  fields ttinvi_part like yyinvi_part label "零件"
+  fields ttinvi_part_pl like yyinvi_part_pl  label "产品类"
+  fields ttinvi_year like yyinvi_year label "年"
+  fields ttinvi_per like yyinvi_per label "期间"
+  fields ttinvi_upl_qty like yyinvi_upl_qty label "计划外入库"
+  fields ttinvi_buy_qty like yyinvi_buy_qty label "采购入库"
+  index ttinvi_part IS PRIMARY UNIQUE ttinvi_part.
 
 theyear = year(today).
 theper = month(today).
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -51,7 +51,7 @@ F-a-title = "当期材料入库，半成品/成品计划外入库计算".
 RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
 RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
                  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
-                 RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", 
+                 RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ",
                  RECT-FRAME-LABEL:FONT).
 RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
 RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
@@ -67,127 +67,130 @@ setFrameLabels(frame a:handle).
 
 repeat:
 
-	update 
-	theyear theper lupdate
-	with frame a.
+  update
+  theyear theper lupdate
+  with frame a.
 
-	find glc_cal where /*ss2012-8-16 b*/ glc_cal.glc_domain = global_domain and /*ss2012-8-16 e*/ glc_year = theyear and glc_per = theper
-					no-lock no-error.
+  find glc_cal where /*ss2012-8-16 b*/ glc_cal.glc_domain = global_domain and /*ss2012-8-16 e*/ glc_year = theyear and glc_per = theper
+          no-lock no-error.
 
-	if available glc_cal then do:
-		per_start = glc_start.
-		per_end = glc_end.
-	end.
-	else do:
-		message "财务期间未定义!" view-as alert-box.
-		next.
-	end. /* if not avail glc_cal */
-	/* OUTPUT DESTINATION SELECTION */
-	{gpselout.i &printType = "terminal"
-		       &printWidth = 80
-		       &pagedFlag = " "
-		       &stream = " "
-		       &appendToFile = " "
-		       &streamedOutputToTerminal = " "
-		       &withBatchOption = "no"
-		       &displayStatementType = 1
-		       &withCancelMessage = "yes"
-		       &pageBottomMargin = 6
-		       &withEmail = "yes"
-		       &withWinprint = "yes"
-		       &defineVariables = "yes"}
-	/*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+  if available glc_cal then do:
+    per_start = glc_start.
+    per_end = glc_end.
+  end.
+  else do:
+    message "财务期间未定义!" view-as alert-box.
+    next.
+  end. /* if not avail glc_cal */
+  /* OUTPUT DESTINATION SELECTION */
+  {gpselout.i &printType = "terminal"
+           &printWidth = 80
+           &pagedFlag = " "
+           &stream = " "
+           &appendToFile = " "
+           &streamedOutputToTerminal = " "
+           &withBatchOption = "no"
+           &displayStatementType = 1
+           &withCancelMessage = "yes"
+           &pageBottomMargin = 6
+           &withEmail = "yes"
+           &withWinprint = "yes"
+           &defineVariables = "yes"}
+  /*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
 
-	/*GUI*/ 
-	{mfguichk.i } /*Replace mfrpchk*/
+  /*GUI*/
+  {mfguichk.i } /*Replace mfrpchk*/
 
-	theyear = glc_year.
-	theper = glc_per.
+  theyear = glc_year.
+  theper = glc_per.
 
-	for each tr_hist no-lock where /*ss2012-8-16 b*/ tr_hist.tr_domain = global_domain and /*ss2012-8-16 e*/
-		(tr_type = "RCT-PO" or tr_type = "RCT-UNP" or tr_type = "ISS-PRV") and 
-		tr_effdate >= per_start and
-		tr_effdate <= per_end 
-		use-index tr_type:
+  for each tr_hist no-lock where /*ss2012-8-16 b*/ tr_hist.tr_domain = global_domain and /*ss2012-8-16 e*/
+    (tr_type = "RCT-PO" or tr_type = "RCT-UNP" or tr_type = "ISS-PRV") and
+    tr_effdate >= per_start and
+    tr_effdate <= per_end
+    use-index tr_type:
 
-		find ttinvi_mstr where 
-			ttinvi_part = tr_part and
-			ttinvi_year = theyear and
-			ttinvi_per = theper
-			no-lock no-error.
+    find ttinvi_mstr where
+      ttinvi_part = tr_part and
+      ttinvi_year = theyear and
+      ttinvi_per = theper
+      no-lock no-error.
 
-		if available ttinvi_mstr then do:
-			if tr_type = "RCT-PO" or tr_type = "ISS-PRV" then do:
-				ttinvi_buy_qty = ttinvi_buy_qty + tr_qty_loc.
-			end.
-			else if tr_type = "RCT-UNP" then 
-				ttinvi_upl_qty = ttinvi_upl_qty + tr_qty_loc.
-		end. /* if avail ttinvi_mstr */
-		else do:
-			create ttinvi_mstr.
-			assign  ttinvi_part = tr_part
-				ttinvi_year = theyear
-				ttinvi_per  = theper
-				ttinvi_part_pl = tr_prod_line.
-			if tr_type = "RCT-PO" or tr_type = "ISS-PRV" then do:
-				ttinvi_buy_qty = tr_qty_loc.
-			end.
-			else if tr_type = "RCT-UNP" then 
-				ttinvi_upl_qty = tr_qty_loc.
-		end. /* if not avail ttinvi_mstr */
+    if available ttinvi_mstr then do:
+      if tr_type = "RCT-PO" or tr_type = "ISS-PRV" then do:
+        ttinvi_buy_qty = ttinvi_buy_qty + tr_qty_loc.
+      end.
+      else if tr_type = "RCT-UNP" then
+        ttinvi_upl_qty = ttinvi_upl_qty + tr_qty_loc.
+    end. /* if avail ttinvi_mstr */
+    else do:
+      create ttinvi_mstr.
 
-	end. /* for each tr_hist */
+      assign  ttinvi_part = tr_part
+        ttinvi_year = theyear
+        ttinvi_per  = theper
+        ttinvi_part_pl = tr_prod_line.
+      if tr_type = "RCT-PO" or tr_type = "ISS-PRV" then do:
+        ttinvi_buy_qty = tr_qty_loc.
+      end.
+      else if tr_type = "RCT-UNP" then
+        ttinvi_upl_qty = tr_qty_loc.
+    end. /* if not avail ttinvi_mstr */
 
-	for each ttinvi_mstr no-lock:
-		display 
-			ttinvi_mstr
-		with width 132 STREAM-IO /*GUI*/ .
-	end.
+  end. /* for each tr_hist */
 
-	if lupdate then do:
+  for each ttinvi_mstr no-lock:
+    display
+      ttinvi_mstr
+    with width 132 STREAM-IO /*GUI*/ .
+  end.
 
-		for each ttinvi_mstr no-lock:
-			find first ptp_det where ptp_part = ttinvi_part no-lock no-error.
-			find first pt_mstr where pt_part = ttinvi_part no-lock no-error.
-			if avail ptp_det then assign v_pmcode = ptp_pm_code.
-			else if avail pt_mstr then assign v_pmcode = pt_pm_code.
-			else next.
-			if v_pmcode = "M" then do:
-				find last yywobmspt_mstr where yywobmspt_part = ttinvi_part no-lock no-error.
-				if not avail yywobmspt_mstr then do:
-					put ttinvi_part "必须先做镜像！" skip.
-					next.
-				end.
-				assign bomversion = yywobmspt_version. 
-			end.
-			
-			find first yyinvi_mstr where /*ss2012-8-16 b*/ yyinvi_mstr.yyinvi_domain = global_domain and /*ss2012-8-16 e*/ yyinvi_year = ttinvi_year
-				and yyinvi_per = ttinvi_per
-				and yyinvi_part = ttinvi_part no-error.
-			if not avail yyinvi_mstr then do:
-				create yyinvi_mstr.
-				assign 
-				    yyinvi_part_pl = ttinvi_part_pl
-				    yyinvi_part = ttinvi_part
-				    yyinvi_year = ttinvi_year
-				    yyinvi_per = ttinvi_per.
-			end. /* if not avail yyinvi_mstr */
-			assign
-			    yyinvi_std_bom = bomversion    
-			    yyinvi_upl_qty = ttinvi_upl_qty
-			    yyinvi_buy_qty = ttinvi_buy_qty.
-			
-		
-		end. /* for each ttinvi_mstr */
-	end. /* if lupdate */
+  if lupdate then do:
 
-	empty temp-table ttinvi_mstr.
-			
-	{mfguitrl.i} /*Replace mfrtrail*/
-	{mfgrptrm.i} /*Report-to-Window*/
+    for each ttinvi_mstr no-lock:
+      find first ptp_det where ptp_domain = global_domain and ptp_part = ttinvi_part no-lock no-error.
+      find first pt_mstr where pt_domain = global_domain and pt_part = ttinvi_part no-lock no-error.
+      if avail ptp_det then assign v_pmcode = ptp_pm_code.
+      else if avail pt_mstr then assign v_pmcode = pt_pm_code.
+      else next.
+      if v_pmcode = "M" then do:
+        find last yywobmspt_mstr where yywobmspt_domain = global_domain and
+                  yywobmspt_part = ttinvi_part no-lock no-error.
+        if not avail yywobmspt_mstr then do:
+          put ttinvi_part "必须先做镜像！" skip.
+          next.
+        end.
+        assign bomversion = yywobmspt_version.
+      end.
 
-	{wbrp04.i &frame-spec = a}
+      find first yyinvi_mstr where /*ss2012-8-16 b*/ yyinvi_mstr.yyinvi_domain = global_domain and /*ss2012-8-16 e*/ yyinvi_year = ttinvi_year
+        and yyinvi_per = ttinvi_per
+        and yyinvi_part = ttinvi_part no-error.
+      if not avail yyinvi_mstr then do:
+        create yyinvi_mstr.
+        assign
+            yyinvi_domain = global_domain
+            yyinvi_part_pl = ttinvi_part_pl
+            yyinvi_part = ttinvi_part
+            yyinvi_year = ttinvi_year
+            yyinvi_per = ttinvi_per.
+      end. /* if not avail yyinvi_mstr */
+      assign
+          yyinvi_std_bom = bomversion
+          yyinvi_upl_qty = ttinvi_upl_qty
+          yyinvi_buy_qty = ttinvi_buy_qty.
+
+
+    end. /* for each ttinvi_mstr */
+  end. /* if lupdate */
+
+  empty temp-table ttinvi_mstr.
+
+  {mfguitrl.i} /*Replace mfrtrail*/
+  {mfgrptrm.i} /*Report-to-Window*/
+
+  {wbrp04.i &frame-spec = a}
 end. /* repeat */
 
-/*GUI*/ 
+/*GUI*/
 {wbrp04.i &frame-spec = a}

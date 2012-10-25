@@ -48,7 +48,7 @@ define new shared variable inv_date like ar_date.
 {zzgtsodc.i "new"}
 {zzgtos01.i}
 
-find first gl_ctrl no-lock no-error.
+find first gl_ctrl no-lock where gl_domain = global_domain no-error.
 
     
 v_dt = today.

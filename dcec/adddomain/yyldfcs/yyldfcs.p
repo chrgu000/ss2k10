@@ -5,7 +5,7 @@
 
 DEFINE VARIABLE src_file AS CHAR FORMAT "x(40)".
 DEFINE VARIABLE lg_file AS CHAR FORMAT "x(40)".
-DEFINE VARIABLE cim_file AS CHAR FORMAT "x(40)" INIT "c:\appeb2\mywrk\fcsloading.cim".
+DEFINE VARIABLE cim_file AS CHAR FORMAT "x(40)".
 DEFINE VARIABLE j AS INT NO-UNDO.
 DEFINE VARIABLE START LIKE ro_start EXTENT 52 NO-UNDO.
 DEFINE VARIABLE colnum AS INT.
@@ -122,7 +122,7 @@ REPEAT:
        
      
 
-       FOR EACH fcs_sum:
+       FOR EACH fcs_sum exclusive-lock where fcs_domain = global_domain:
            DELETE fcs_sum.
        END.
        CREATE "Excel.Application" excelapp.
@@ -366,6 +366,7 @@ REPEAT:
        year1 = year1 + 2000.
        year2 = year2 + 2000.
       /*creating cim format*/
+       assign cim_file = "fcscimload".
        OUTPUT STREAM cim TO VALUE(cim_file) NO-ECHO .
   
     /************************************************************/
@@ -427,9 +428,10 @@ REPEAT:
           input tid,
           input lg_file,
           OUTPUT err)"}   
-*/    
-    OS-DELETE VALUE(cim_file).
     
+    OS-DELETE VALUE(cim_file) no-error.
+    os-DELETE VALUE(cim_file + ".bpo") no-error.
+ */   
     MESSAGE "导入成功!" VIEW-AS ALERT-BOX .
    /* END. /*if the data is valid*/
     ELSE 

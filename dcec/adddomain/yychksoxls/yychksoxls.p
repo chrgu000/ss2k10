@@ -1,5 +1,5 @@
 /*yychksoxls.p designed by Philips Li for so-loading checking           07/04/08*/
-{mfdtitle.i "e+"}
+{mfdtitle.i "121015.1"}
 
 DEFINE VARIABLE sonbr LIKE so_nbr.
 DEFINE VARIABLE cust LIKE so_cust.
@@ -104,7 +104,7 @@ REPEAT:
 
        sonbr =  worksheet:cells(i,1):TEXT.
        IF sonbr = "" THEN DO:
-           FIND FIRST soc_ctrl NO-LOCK NO-ERROR.
+           FIND FIRST soc_ctrl NO-LOCK where soc_domain = global_domain NO-ERROR.
            IF AVAIL soc_ctrl THEN
                sonbr = soc_so_pre + STRING(soc_so).
            isnewso = YES.

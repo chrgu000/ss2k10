@@ -464,10 +464,10 @@ PROCEDURE xxpro-genhan :
     FIND FIRST pin_mstr WHERE pin_product = "MFG/PRO" NO-LOCK NO-ERROR.
     IF NOT AVAILABLE pin_mstr THEN LEAVE.
 
-    FIND FIRST usrw_wkfl WHERE usrw_key1 = "ghtools" AND usrw_key2 = "001" NO-LOCK NO-ERROR.
-    IF AVAILABLE usrw_wkfl AND usrw_user1 <> "" THEN v_genhanflag = usrw_user1.
+    FIND FIRST usrw_wkfl WHERE usrw_domain = global_domain and usrw_key1 = "ghtools" AND usrw_key2 = "001" NO-LOCK NO-ERROR.
+    IF AVAILABLE usrw_wkfl and usrw_user1 <> "" THEN v_genhanflag = usrw_user1.
     ELSE LEAVE.
-    FIND FIRST qad_wkfl WHERE qad_key1 = "ghtools" AND qad_key2 = "001" NO-LOCK NO-ERROR.
+    FIND FIRST qad_wkfl WHERE qad_domain = global_domain and qad_key1 = "ghtools" AND qad_key2 = "001" NO-LOCK NO-ERROR.
     IF AVAILABLE qad_wkfl AND qad_user1 <> "" THEN v_customlic = qad_user1.
     ELSE LEAVE.
 

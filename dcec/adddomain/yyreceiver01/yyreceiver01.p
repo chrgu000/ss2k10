@@ -251,7 +251,7 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
                           down 1.
                        end.
                       end.
-                     find next cmt_det use-index cmt_ref no-lock no-error.                     
+                     find next cmt_det use-index cmt_ref no-lock where cm_domain = global_domain no-error.                     
                     end.
 
  /*              find cmt_det where cmt_indx = pod_cmtindx no-lock no-error.
@@ -672,10 +672,10 @@ IF NOT (keeper =  " " AND  keeper1 =  hi_char) THEN DO:
 
      find first tr_hist where tr_domain = global_domain and tr_part=prh_part and tr_nbr=prh_nbr and tr_line=prh_line and tr_type="iss-prv" and tr_lot=prh_receiver AND tr_userid>= userid1 AND tr_userid<=userid2 no-lock no-error.
      if available tr_hist then do:
-           find first po_mstr where po_nbr=prh_nbr no-lock no-error.                             
-           find first ad_mstr where ad_addr = prh_vend no-lock no-error.
-           find first pod_det where pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
-           find first pt_mstr where pt_part = prh_part no-lock no-error.
+           find first po_mstr where po_domain = global_domain and po_nbr=prh_nbr no-lock no-error.                             
+           find first ad_mstr where ad_domain = global_domain and ad_addr = prh_vend no-lock no-error.
+           find first pod_det where pod_domain = global_domain and pod_nbr = prh_nbr and pod_line = prh_line no-lock no-error.
+           find first pt_mstr where pt_domain = global_domain and pt_part = prh_part no-lock no-error.
               if  j = 1  then do:
                  if prh__log01 = yes then 
                    duplicate="**¸±±¾".

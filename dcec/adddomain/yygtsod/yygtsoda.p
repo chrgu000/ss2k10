@@ -2,7 +2,7 @@
 /*                                                                        */
 /*  LAST MODIFIED   DATE: 2004-08-30 11:13  BY: *LB01*  LONG BO ATOS ORIGIN */
 /*  LAST MODIFIED   DATE: 2008-04-7         BY: *frk* Frank Sun ATOS ORIGIN */
-
+{mfdeclre.i}
 define TEMP-TABLE sodet like sod_det.  /*2004-09-01 13:18*/
 define buffer sodet2 for sodet.
 define variable gdinvmaxamt as decimal initial 11000000. /*一千一百万*/
@@ -44,7 +44,7 @@ define variable k as integer.
 
 {zzgt002.i}
 {zzgtsodc.i}
-{mfdeclre.i}
+
 inv_date = today.
 
 for each so_mstr
@@ -83,7 +83,7 @@ for each so_mstr
 
 
   /*check bill to*/
-  find first ad_mstr where ad_mstr.ad_domain = global_domian and ad_addr = so_bill
+  find first ad_mstr where ad_domain = global_domain and ad_addr = so_bill
              no-lock no-error.
   if not available ad_mstr then do:
     wkgtm_status = "X".
@@ -91,7 +91,7 @@ for each so_mstr
     next.
   end.
   /*check gold-tax info.*/
-  find first ad_mstr where /*ss2012-8-16 b*/ ad_mstr.ad_domain = global_domian and /*ss2012-8-16 e*/ ad_type = "c/s_bank"
+  find first ad_mstr where ad_domain = global_domain and ad_type = "c/s_bank"
             and ad__chr01 = so_bill no-lock no-error.
   if not available ad_mstr then do:
     wkgtm_status = "X".
@@ -184,8 +184,7 @@ for each so_mstr
            where /*ss2012-8-16 b*/ trl_mstr.trl_domain = global_domain and /*ss2012-8-16 e*/ trl_code = so_trl2_cd
            no-lock no-error.
       if available trl_mstr then do:
-        find first vt_mstr
-             where /*ss2012-8-16 b*/ vt_mstr.vt_domain = global_domain and /*ss2012-8-16 e*/ vt_class = trl_taxc
+        find first vt_mstr where vt_class = trl_taxc
         no-lock no-error.
         if available vt_mstr then do:
           if vt_tax_pct <> 0 then do:
@@ -340,7 +339,7 @@ for each so_mstr
       */
       if sodet2.sod_taxable then do:
         find first vt_mstr
-           where /*ss2012-8-16 b*/ vt_mstr.vt_domain = global_domain and /*ss2012-8-16 e*/ vt_class = sodet2.sod_taxc
+           where vt_class = sodet2.sod_taxc
         no-lock no-error.
         if available vt_mstr then wkgtd_taxpct = vt_tax_pct / 100.
       end.

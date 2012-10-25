@@ -1141,7 +1141,7 @@ repeat:
             and ptp_bom_code <> l_old_bom_code
             then do:
                for first pt_mstr
-               where  pt_part = ptp_part
+               where pt_domain = global_domain and pt_part = ptp_part
                no-lock:
                   if available pt_mstr
                   then do:
@@ -1151,7 +1151,7 @@ repeat:
                end. /*FOR FIRST pt_mstr*/
 
                for first isd_det
-                  where isd_status  = l_pt_status
+                  where isd_domain = global_domain and isd_status  = l_pt_status
                   and   isd_tr_type = "ADD-PS"
                no-lock:
                end. /*FOR FIRST isd_det*/

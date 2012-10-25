@@ -5,7 +5,7 @@
 /*Revision: eb2+sp7   Last modified: 08/23/2005   By: judy liu*/
 
 /*display the title*/
-{mfdtitle.i "f+"}
+{mfdtitle.i "121025.1"}
 
 def var site as char format "x(20)".
 def var site_file as char format "x(40)".
@@ -76,7 +76,7 @@ repeat:
        /******************main loop********************/
        /******************input the external transfer list data into a stream**************/
 
-      FOR EACH yyinvoth_det:
+      FOR EACH yyinvoth_det where yyinvoth_domain = global_domain:
           DELETE yyinvoth_det.
       END.
 
@@ -95,7 +95,7 @@ repeat:
                     somark = excelsheetmain:cells(i,3):TEXT.     
             
            IF trim(sonbr) <> "" AND trim(somark) <> "" AND soqty <> 0 THEN DO:
-               create  yyinvoth_det .
+               create  yyinvoth_det . yyinvoth_domain = global_domain.
                     yyinvoth_part = TRIM(sonbr). 
                     yyinvoth_qty = soqty.
                     yyinvoth_mark = TRIM(somark).

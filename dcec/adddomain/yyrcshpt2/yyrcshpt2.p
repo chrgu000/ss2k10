@@ -318,7 +318,7 @@ FORM
     v_ship_to    LABEL "货物发往"     COLON 15
     SKIP(1)
     v_sender     LABEL "公司地址"     COLON 15
-                 VALIDATE(CAN-FIND(FIRST ad_mstr WHERE ad_addr = v_sender), "请输入公司地址码")
+                 VALIDATE(CAN-FIND(FIRST ad_mstr WHERE ad_domain = global_domain and ad_addr = v_sender), "请输入公司地址码")
     SKIP
     SKIP(.4)  /*GUI*/
     WITH FRAME a SIDE-LABELS WIDTH 80 NO-BOX THREE-D.
@@ -633,7 +633,7 @@ PROCEDURE xxpro-post-process:
             IF AVAILABLE so_mstr THEN ASSIGN 
                 xxwk1_payterm = so_cr_terms
                 xxwk1_curr    = so_curr.
-            FIND FIRST pt_mstr WHERE pt_part = xxwk2_part NO-LOCK NO-ERROR.
+            FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = xxwk2_part NO-LOCK NO-ERROR.
             IF AVAILABLE pt_mstr THEN ASSIGN
                 xxwk1_org = pt__chr03.
         END.

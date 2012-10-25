@@ -28,11 +28,12 @@ def temp-table sotmp
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/  vend part  with frame a WIDTH 80 /*GUI*/ THREE-D /*GUI*/.
+FORM /*GUI*/  vend part eff_date  with frame a WIDTH 80 /*GUI*/ THREE-D /*GUI*/.
 
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
 
+setFrameLabels(frame a:handle).
 
 
 repeat:
@@ -79,7 +80,7 @@ procedure extent_bom:
     input_precomp = precomp.
     for first pt_mstr where /*ss2012-8-16 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-16 e*/ pt_part = precomp no-lock: end.
     if not avail pt_mstr then do:
-       for first pt_mstr where pt_part + "ZZ" = precomp no-lock: end.
+       for first pt_mstr where pt_domain = global_domain and pt_part + "ZZ" = precomp no-lock: end.
     end.
     if avail pt_mstr and (pt_prod_line begins "2" or pt_prod_line begins "7") then do:
        find sotmp where sotmp_comp = comp and sotmp_par = precomp no-lock no-error.

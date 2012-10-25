@@ -65,7 +65,7 @@
 /* REVISION: eb2+sp7    LAST MODIFIED: 2005/06/20           BY: *tfq* Tao fengqin      */
 /* SCHEDULED ORDER MAINT */
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "121025.1"}
 /* Clear anything displayed by mftitle if api mode*/
 {mfaititl.i}
 {cxcustom.i "RSPOMT.P"}
@@ -166,7 +166,7 @@ with frame set_tax row 8 centered overlay side-labels NO-BOX THREE-D /*GUI*/.
 setFrameLabels(frame set_tax:handle).
 
 if no then
-   for first pod_det no-lock:
+   for first pod_det no-lock where pod_domain = global_domain:
 end.
 
 /*tfq {rsordfrm.i} */
@@ -188,9 +188,9 @@ repeat:
    /* DO NOT RETRY WHEN PROCESSING API REQUEST */
    if retry and c-application-mode = "API" then
       undo mainloop, return.
-   for first poc_ctrl no-lock:
+   for first poc_ctrl no-lock where poc_domain = global_domain:
    end.
-   for first iec_ctrl no-lock:
+   for first iec_ctrl no-lock where iec_domain = global_domain:
    end.
 
    pocmmts = poc_hcmmts.
@@ -211,11 +211,11 @@ repeat:
          editing:
             if frame-field = "po_nbr"
             then do:
-               {mfnp05.i po_mstr po_nbr "po_sched" po_nbr "input po_nbr"}
+               {mfnp05.i po_mstr po_nbr "po_domain = global_domain and po_sched" po_nbr "input po_nbr"}
 
                if recno <>  ?
                then do:
-                  for first ad_mstr where ad_addr = po_vend no-lock:
+                  for first ad_mstr where ad_domain = global_domain and ad_addr = po_vend no-lock:
                   end.
 
                   display
@@ -227,7 +227,7 @@ repeat:
             else
                if frame-field = "po_vend"
                then do:
-               {mfnp05.i vd_mstr vd_addr yes vd_addr "input po_vend"}
+               {mfnp05.i vd_mstr vd_addr " vd_domain = global_domain and yes" vd_addr "input po_vend"}
 
                if recno <> ?
                then do:
@@ -404,8 +404,12 @@ repeat:
            (c-application-mode = "API" and ttPurchaseOrder.nbr = ? and
                        poTrans = "GETPONUM")
          then do transaction:
-            {mfnctrlc.i poc_ctrl poc_po_pre
+            {mfnctrlc.i  "poc_ctrl.poc_domain = global_domain"
+               "poc_ctrl.poc_domain"
+               "po_mstr.po_domain = global_domain"
+               poc_ctrl poc_po_pre
                poc_po_nbr po_mstr po_nbr ponbr}
+              
             for first poc_ctrl no-lock:
             end.
             if c-application-mode <> "API" then

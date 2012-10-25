@@ -43,7 +43,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "121025.1"}
 
 define variable mc-error-number like msg_nbr no-undo.
 
@@ -84,8 +84,8 @@ qty_rcd = getTermLabel("QTY_RECEIVED_EXCEEDS_QTY_OPEN", 51).
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -110,8 +110,8 @@ with frame a side-labels attr-space width 80 NO-BOX THREE-D /*GUI*/.
    &IF (DEFINED(SELECTION_CRITERIA) = 0)
    &THEN " Selection Criteria "
    &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
+   &ENDIF
+&ELSE
    getTermLabel("SELECTION_CRITERIA", 25).
 &ENDIF.
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -149,7 +149,7 @@ find first gl_ctrl no-lock no-error.
 
    if c-application-mode <> "WEB"
    then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -204,7 +204,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -232,7 +232,8 @@ find first gl_ctrl no-lock no-error.
    view frame footer.
 
    for each tr_hist
-      where (tr_part >= part and tr_part <= part1)
+      where tr_domain = global_domain
+        and (tr_part >= part and tr_part <= part1)
         and (tr_effdate >= trdate and tr_effdate <= trdate1)
         and (tr_addr >= addr and tr_addr <= addr1)
         and (tr_site >= site and tr_site <= site1)
@@ -326,8 +327,8 @@ find first gl_ctrl no-lock no-error.
       end.
 
       for first pod_det
-         fields(pod_line pod_nbr pod_op pod_wo_lot)
-         where pod_nbr  = tr_nbr
+         fields(pod_domain pod_line pod_nbr pod_op pod_wo_lot)
+         where pod_domain = global_domain and pod_nbr  = tr_nbr
          and   pod_line = tr_line
          no-lock:
       end. /* FOR FIRST pod_det */
@@ -335,16 +336,16 @@ find first gl_ctrl no-lock no-error.
       if available pod_det
       then do:
          for first wo_mstr
-            fields(wo_lot wo_routing)
-            where wo_lot = pod_wo_lot
+            fields(wo_domain wo_lot wo_routing)
+            where wo_domain = global_domain and wo_lot = pod_wo_lot
             no-lock:
          end. /* FOR FIRST wo_mstr */
 
          if available wo_mstr
          then do:
             for first ro_det
-               fields(ro_end ro_op ro_routing ro_start ro_sub_cost)
-               where (ro_routing = if wo_routing <> ""
+               fields(ro_domain ro_end ro_op ro_routing ro_start ro_sub_cost)
+               where ro_domain = global_domain and (ro_routing = if wo_routing <> ""
                                    then
                                       wo_routing
                                    else
@@ -419,14 +420,14 @@ find first gl_ctrl no-lock no-error.
       accumulate std_var (total by tr_part).
 
       find pt_mstr
-         where pt_part = tr_part
+         where pt_domain = global_domain and pt_part = tr_part
          no-lock no-wait no-error.
 
       if not summary
       then do:
          name = "".
          find ad_mstr
-            where ad_addr = tr_addr
+            where ad_domain = global_domain and ad_addr = tr_addr
             no-lock no-wait no-error.
          if available ad_mstr
          then
@@ -492,7 +493,7 @@ find first gl_ctrl no-lock no-error.
             overcvd    no-label
             disp_curr
    /*         base_price column-label "Unit Price"
-            ext_price            
+            ext_price
             std_var    */ WITH STREAM-IO /*GUI*/ .
 
          if last-of(tr_part)
@@ -519,9 +520,9 @@ find first gl_ctrl no-lock no-error.
 
             display
                getTermLabel("REPORT_TOTAL",16) + ":" @ name WITH STREAM-IO /*GUI*/ .
-     /*          accum total  (ext_price) @ ext_price    
+     /*          accum total  (ext_price) @ ext_price
                accum total  (std_var) @ std_var.         */
-         end.  
+         end.
       end.  /* NOT summary */
 
       if summary
@@ -571,12 +572,12 @@ find first gl_ctrl no-lock no-error.
             with frame c STREAM-IO /*GUI*/ .
          end.
       end. /* summary */
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
    end. /* FOR EACH */
    /* REPORT TRAILER  */
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/

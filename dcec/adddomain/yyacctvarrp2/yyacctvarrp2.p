@@ -1,7 +1,7 @@
 
 /* DISPLAY TITLE */
 
-{mfdtitle.i "f+"}
+{mfdtitle.i "20121024.1"}
 
 DEF VARIABLE v_acct LIKE glt_acct.
 DEF VARIABLE v_date1 LIKE glt_effdate.
@@ -118,7 +118,7 @@ PROCEDURE xxpro-bud:
         DELETE xxwk2.
     END.
     FOR EACH gltr_hist NO-LOCK 
-        WHERE gltr_entity = v_entity
+        WHERE gltr_domain = global_domain and gltr_entity = v_entity
         AND gltr_acc      = v_acct
         AND gltr_eff_dt >= v_date1 AND gltr_eff_dt <= v_date2
         USE-INDEX gltr_ind1:
@@ -141,7 +141,7 @@ PROCEDURE xxpro-bud:
         IF xxwk1_ref BEGINS "WO" THEN DO:
             FOR FIRST op_hist FIELDS (op_trnbr op_part)
                 use-index op_trnbr 
-                where op_trnbr = integer(xxwk1_doc)
+                where op_domain = global_domain and op_trnbr = integer(xxwk1_doc)
                 NO-LOCK: END.
             IF AVAILABLE op_hist THEN DO:
                 xxwk1_part = op_part.
@@ -161,12 +161,12 @@ PROCEDURE xxpro-bud:
         ELSE IF xxwk1_ref BEGINS "IC" THEN DO:
             FOR FIRST tr_hist FIELDS (tr_trnbr tr_lot)
                 use-index tr_trnbr
-                where tr_trnbr = integer(xxwk1_doc)
+                where tr_domain = global_domain and tr_trnbr = integer(xxwk1_doc)
                 NO-LOCK: END.
             IF AVAILABLE tr_hist THEN DO:
-                FOR FIRST wo_mstr FIELDS (wo_lot wo_part)
+                FOR FIRST wo_mstr FIELDS (wo_domain wo_lot wo_part)
                     use-index wo_lot
-                    where wo_lot = tr_lot
+                    where wo_domain = global_domain and wo_lot = tr_lot
                     NO-LOCK: END.
                 IF AVAILABLE wo_mstr THEN DO:
                     xxwk1_part = wo_part.
@@ -198,7 +198,7 @@ PROCEDURE xxpro-bud:
         IF NOT AVAILABLE xxwk2 THEN DO:
             CREATE xxwk2.
             ASSIGN xxwk2_part = xxwk1_part.
-            FIND FIRST pt_mstr WHERE pt_part = xxwk2_part NO-LOCK NO-ERROR.
+            FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = xxwk2_part NO-LOCK NO-ERROR.
             IF AVAILABLE pt_mstr THEN ASSIGN xxwk2_desc = pt_desc1.
         END.
         CASE xxwk1_type:

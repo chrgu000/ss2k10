@@ -232,13 +232,13 @@ setFrameLabels(frame set_tax:handle).
 using_supplier_consignment = consignment.
 
 for first poc_ctrl
-   fields(poc_ers_proc poc_hcmmts poc_insp_loc poc_lcmmts)
-   no-lock:
+   fields(poc_domain poc_ers_proc poc_hcmmts poc_insp_loc poc_lcmmts)
+   no-lock where poc_domain = global_domain:
 end. /* FOR FIRST poc_ctrl */
 
 for first icc_ctrl
-   fields(icc_cur_cost icc_cur_set icc_gl_set)
-   no-lock:
+   fields(icc_domain icc_cur_cost icc_cur_set icc_gl_set)
+   no-lock where icc_domain = global_domain:
 end. /* FOR FIRST icc_ctrl */
 
 /* VALIDATE IF LOGISTICS ACCOUNTING IS TURNED ON */

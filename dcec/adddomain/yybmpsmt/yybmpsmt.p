@@ -526,7 +526,8 @@ ptp_pm_code <> "C")) then do:
          &ERRORLEVEL = {&INFORMATION-RESULT}
       }
  /* *SS-20120824.1*  -b  */
-/*cj*/ FIND bom_mstr WHERE bom_parent = INPUT ps_par EXCLUSIVE-LOCK .
+/*cj*/ FIND bom_mstr WHERE bom_domain = global_domain and
+					  bom_parent = INPUT ps_par EXCLUSIVE-LOCK .
      assign bom__chr01 = site.                    /*kevin*/
  /* *SS-20120824.1*  -e */
 

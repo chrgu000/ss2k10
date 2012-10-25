@@ -64,7 +64,7 @@ define variable l_first_nbr    as logical no-undo.
 define variable mc-error-number like msg_nbr no-undo.
 define variable o_disp_line1   as character format "x(80)" no-undo.
 define variable o_disp_line2   as character format "x(80)" no-undo.
-find first gl_ctrl no-lock no-error.
+find first gl_ctrl no-lock where gl_domain = global_domain no-error.
 define variable poders as character format "x(2)" no-undo.
 
 define variable vouchered_qty like pvo_vouchered_qty no-undo.

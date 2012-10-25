@@ -15,7 +15,7 @@ def var v_lbr like yywobmspt_elem_cost init 0.
 def var v_ovh like yywobmspt_elem_cost init 0.
 def var v_costset as char.
 def var v_costsite like pt_site.
-find first pt_mstr where pt_part = v_part no-lock no-error.
+find first pt_mstr where pt_domain = global_domain and pt_part = v_part no-lock no-error.
 if not avail pt_mstr then do:
    v_mtl_cost = v_cost.
    return.

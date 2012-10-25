@@ -151,7 +151,7 @@ for each so_mstr where so_domain = global_domain
 
             if available(qad_wkfl)
             then do:
-               for first soc_ctrl no-lock:
+               for first soc_ctrl no-lock where soc_domain = global_domain:
                if soc_cr_hold then do:
 
                   find somstr where so_domain = global_domain 
