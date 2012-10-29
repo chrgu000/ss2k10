@@ -2,7 +2,7 @@
 /*Last modified: 11/18/2003, By: Kevin, Atos Origin*/
 /*eb2+sp7 retrofit, By: tao fengqin, Atos Origin eco *tfq* */
          /* DISPLAY TITLE */
-{mfdtitle.i "120122.1"} /*FN07*/
+         {mfdtitle.i "++ "} /*FN07*/
 
 def var site like si_site.
 def var sidesc like si_desc.
@@ -193,7 +193,11 @@ repeat:
     find first pkdet where pkpart = input xxptmp_comp   no-lock no-error .
     if not available pkdet 
     then  do:
-    {pxmsg.i &MSGTEXT= ""BOM音贋壓。。。。。。""  &ERRORLEVEL=3 }
+    {pxmsg.i
+               &MSGTEXT= ""BOM音贋壓。。。。。。""
+               &ERRORLEVEL=3
+                          }
+
         undo,retry.
 
    

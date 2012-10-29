@@ -82,8 +82,8 @@ repeat:
  DO TRANSACTION ON ERROR UNDO, LEAVE:
 
 
-     if src_file = "" then src_file = "c:\b.xls".
-     if msg_file = "" then msg_file = "c:\schlog.txt".
+     if src_file = "" then src_file = "d:\b.xls".
+     if msg_file = "" then msg_file = "d:\schlog.txt".
      /*judy*/
      IF xxyear = 0 THEN  xxyear = year(today).
      IF xxmonth = 0 THEN xxmonth = MONTH(TODAY).
@@ -284,7 +284,7 @@ Procedure schedule_check_upload:
              do:
 
                    outfile = xxwk1_site + xxwk1_line + xxwk1_part .
-                 output to value(outfile) .
+                 output to value(outfile).
 
                      put '"' + TRIM(xxwk1_part) + '"' +
                ' "' + TRIM(xxwk1_site) + '"' +

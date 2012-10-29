@@ -1,3 +1,4 @@
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20121022.1*   */
 
         {mfdeclre.i}
         DEFINE INPUT PARAMETER part LIKE ps_par .

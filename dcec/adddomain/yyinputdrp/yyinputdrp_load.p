@@ -17,7 +17,7 @@ define   variable c2  as char .
 
 
 
-DEFINE new shared TEMP-TABLE tmp_det no-undo
+DEFINE shared TEMP-TABLE tmp_det no-undo
     FIELD tmp_req_nbr LIKE drp_req_nbr   /*申请号*/
     FIELD tmp_nbr LIKE dss_nbr
     FIELD tmp_part LIKE ds_part            /*零件号*/
@@ -28,7 +28,7 @@ DEFINE new shared TEMP-TABLE tmp_det no-undo
     FIELD tmp_shipsite LIKE dss_shipsite   /*发运地*/
     FIELD tmp_trloc LIKE pt_loc           /*在途库位*/
     FIELD tmp_xls_line LIKE drp_req_nbr   /*excel行号*/  
-    FIELD tmp_err char                    /*导入报错*/  
+    FIELD tmp_err as char                    /*导入报错*/  
      index tmp_index is primary tmp_req_nbr .
 
 loadloop:
@@ -39,16 +39,16 @@ loadloop:
 	usection = TRIM ("c:\upload.in") .
 	output to value( trim(usection) ) .
 
-       for each tmp_det no-lock:
+       for each tmp_det no-lock BREAK by tmp_nbr by tmp_req_nbr :
             if FIRST(tmp_nbr) then do:
-               	put trim(tmp_nbr) +  trim(tmp_shipsite)  skip.
-		put trim(tmp_rec_site) skip.
-		put trim(string(tmp_req_date)) + trim(string(tmp_req_date)) + trim(string(tmp_due_date)) + "ok " skip.
+               	put trim(tmp_nbr) + " " +  trim(tmp_shipsite)  FORMAT "x(50)" skip.
+		put trim(tmp_rec_site) FORMAT "x(50)" skip.
+		put trim(string(tmp_req_date)) + " "+ trim(string(tmp_req_date)) + " "+ trim(string(tmp_due_date)) + " ok " FORMAT "x(50)" skip.
 	    end.
-            put trim(tmp_req_nbr)  skip.
-            put trim(tmp_part)  skip.
-            put trim(tmp_qty_ord)  skip.
-            put "- - - " + trim(tmp_trloc)  skip.
+            put string(tmp_req_nbr) FORMAT "x(50)" skip.
+            put trim(tmp_part) FORMAT "x(50)"  skip.
+            put string(tmp_qty_ord) FORMAT "x(50)"  skip.
+            put "- - - " + trim(tmp_trloc) FORMAT "x(100)"  skip.
             put "-"  skip.
             
 	    if last(tmp_nbr) then do:

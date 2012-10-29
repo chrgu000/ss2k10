@@ -16,6 +16,7 @@
 /* Revision: 1.10.1.15    BY: Vivek Gogte       DATE: 11/11/02  ECO: *N1YX* */
 /* $Revision: 1.10.1.17 $      BY: Rajesh Lokre      DATE: 05/19/03  ECO: *N240* */
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/20/12  ECO: *SS-20120821.1*   */
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
 
 
 /******************************************************************************/
@@ -116,7 +117,10 @@ DEFINE VARIABLE chExcelWorkbook AS COM-HANDLE.
 CREATE "Excel.Application" chExcelApplication.
 
 /*Create a new workbook based on the template chExcel file */
-chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\mfgguitest\template\fa-temp.xls").
+
+/*  *SS-20121023.1*   chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\mfgguitest\template\fa-temp.xls"). */
+/*  *SS-20121023.1*  */ chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\fa-temp.xls").  
+
 define buffer fabd for fabd_det .
 define buffer fabd1 for fabd_det .
 /* TEMPORARY TABLE FOR TRANSFER DETAILS OF THE ASSET */

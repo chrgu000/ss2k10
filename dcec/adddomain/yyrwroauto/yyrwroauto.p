@@ -1,9 +1,10 @@
 /*yyrwroauto.p for generate the routing based on bom automatically*/
 /*Last modified by: Kevin, 11/09/2003                */
 /*eb2+sp7 retrofit:tao fengqin *tfq* 11/09/2003                */
+/* $Revision:qad2011  $ BY: Jordan Lin            DATE: 10/25/12  ECO:  *SS-20121025.1*   */
 
          /* DISPLAY TITLE */
-         {mfdtitle.i "++ "} /*FN07*/
+         {mfdtitle.i "121025.1"} /*FN07*/
 
 def var site like si_site.
 def var sidesc like si_desc.
@@ -20,7 +21,7 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
- site colon 22 sidesc no-label
+ /* *SS-20121025.1* site  colon 22 sidesc no-label  */
  parent colon 22       parent1 colon 45 label {t001.i}
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
@@ -36,49 +37,53 @@ repeat:
     sidesc = "".
     
     if parent1 = hi_char then parent1 = "".
-    
-    update site parent parent1 with frame a editing:
-        if frame-field = "site" then do:
-            {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
-            if recno <> ? then 
-                disp si_site @ site si_desc @ sidesc with frame a.
-        end.    
-        else do:
-            readkey.
-            apply lastkey.
-        end.
-    end.
-                    
-         find si_mstr no-lock where si_domain = global_domain 
-          and si_site = site no-error.
-         if not available si_mstr or (si_db <> global_db) then do:
-             if not available si_mstr then msg-nbr = 708.
-             else msg-nbr = 5421.
-             /*tfq {mfmsg.i msg-nbr 3} */
-             {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
-             undo, retry.
-         end.
-         
-         disp si_site @ site si_desc @ sidesc with frame a.
-            
-                {gprun.i ""gpsiver.p""
-                "(input si_site, input recid(si_mstr), output return_int)"}
-/*GUI*/ if global-beam-me-up then undo, leave.
+  /* *SS-20121025.1*   -b */   
+/*
+ *   update site parent parent1 with frame a editing:
+ *        if frame-field = "site" then do:
+ *            {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
+ *            if recno <> ? then 
+ *                disp si_site @ site si_desc @ sidesc with frame a.
+ *        end.    
+ *        else do:
+ *            readkey.
+ *            apply lastkey.
+ *        end.
+ *    end.
+ *                    
+ *         find si_mstr no-lock where si_domain = global_domain 
+ *          and si_site = site no-error.
+ *         if not available si_mstr or (si_db <> global_db) then do:
+ *             if not available si_mstr then msg-nbr = 708.
+ *             else msg-nbr = 5421.
+ *             /*tfq {mfmsg.i msg-nbr 3} */
+ *             {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
+ *             undo, retry.
+ *         end.
+ *         
+ *         disp si_site @ site si_desc @ sidesc with frame a.
+ *            
+ *                {gprun.i ""gpsiver.p""
+ *                "(input si_site, input recid(si_mstr), output return_int)"}
+ * /*GUI*/ if global-beam-me-up then undo, leave.
+ *
+ * /*J034*/          if return_int = 0 then do:
+ * /*J034*/             /*tfq {mfmsg.i 725 3}  */
+ * {pxmsg.i
+ *               &MSGNUM=725
+ *              &ERRORLEVEL=3
+ *                         }  /* USER DOES NOT HAVE */
+ * /*J034*/                                /* ACCESS TO THIS SITE*/
+ *  /*J034*/             undo,retry.
+ * /*J034*/          end.
+ */
+  update parent parent1 with frame a.
 
-/*J034*/          if return_int = 0 then do:
-/*J034*/             /*tfq {mfmsg.i 725 3}  */
-{pxmsg.i
-               &MSGNUM=725
-               &ERRORLEVEL=3
-                         }  /* USER DOES NOT HAVE */
-/*J034*/                                /* ACCESS TO THIS SITE*/
-/*J034*/             undo,retry.
-/*J034*/          end.
-
-	     bcdparm = "".
-	     {mfquoter.i site     }
-	     {mfquoter.i parent   }
-	     {mfquoter.i parent1  }
+   /* *SS-20121025.1* -e  */
+ 	     bcdparm = "".
+  /* *SS-20121025.1*	     {mfquoter.i site     }    */
+ 	     {mfquoter.i parent   }
+ 	     {mfquoter.i parent1  }
 	     
 	     if parent1 = "" then parent1 = hi_char.
 	     	     
@@ -87,7 +92,7 @@ repeat:
     {mfphead.i}
 
     Do transaction:        
-    for each bom_mstr where bom_domain = global_domain and bom__chr01 = site 
+    for each bom_mstr where bom_domain = global_domain /* *SS-20121025.1*  and bom__chr01 = site  */
                             and (bom_parent >= parent and bom_parent <= parent1) no-lock:
         
         rmks = "".
@@ -102,7 +107,7 @@ repeat:
        if not pt_prod_line begins "7" and pt_part_type <> "58" and not pt_group begins "58" then next.
         /*end added by kevin,11/09/2003*/
         
-        find first ps_mstr where ps_domain = global_domain and ps__chr01 = bom__chr01 and ps_par = bom_parent no-lock no-error.
+        find first ps_mstr where ps_domain = global_domain /* *SS-20121025.1*  and ps__chr01 = bom__chr01   */ and ps_par = bom_parent no-lock no-error.
         if not available ps_mstr then next.
 
         /*verify the routing record, if existing then next*/
@@ -135,7 +140,7 @@ repeat:
               
               record[level] = recid(ps_mstr).
         
-          find first ptp_det where ptp_domain = global_domain and ptp_site = site and ptp_part = ps_comp no-lock no-error.
+          find first ptp_det where ptp_domain = global_domain  /* *SS-20121025.1*   and ptp_site = site */ and ptp_part = ps_comp no-lock no-error.
           if available ptp_det and ptp_phantom = no and ps_op <> 0 then do:
                     
               find first ro_det where ro_domain = global_domain and ro_routing = bom_parent and ro_op = ps_op no-error.

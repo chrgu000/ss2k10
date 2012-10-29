@@ -21,6 +21,7 @@
 /* {8} = Message number for the status line                 */
 /* {9} = Read with exclusive-lock (Y/N)                  */  /*G1DT*/
 /* {10} =Field to select records by (eg pt_date)                     */  /*G1DT*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 
          /* sw_key used to tell which record to highlight */
          define variable sw_key   as character  initial ? no-undo.
@@ -37,7 +38,7 @@
             recno24 = 0.
          end.
 
-         {gpstat.i
+         {yygpstat.i
             &stat={8}
             &type="default"
          }

@@ -3,6 +3,8 @@
 /*LAST MODIFIED BY *LB01*             LONG BO   2004-7-14                            
   LAST MODIFIED BY *phi*             Philips Li 2008-4-11
 ------------------------------------------------------------------------------------*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
+
 	 {mfdeclre.i}
 
 	def  shared var y# as integer.
@@ -89,7 +91,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
 
 	/*地点*/ 
-	find first yyusrw_wkfl no-lock where yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR"
+	find first yyusrw_wkfl no-lock where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR"
 	and yyusrw_key3 = "ORDER-TEST-MSTR" no-error.
 	site = "DCEC-C".
 	if available yyusrw_wkfl then
@@ -125,14 +127,14 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 		down 1 with frame d.
 			
 		/*库存量 */
-		find first in_mstr no-lock where in_part = xxpart 
+		find first in_mstr no-lock where in_mstr.in_domain = global_domain and in_part = xxpart 
 		and in_site = site no-error.
 		if available in_mstr then do:
 			xxqtyoh = in_qty_oh .
 		end.
 		
 		/*采/制 提前期 安全量 安全库存 计划员 供应商*/
-		find first ptp_det no-lock where
+		find first ptp_det no-lock where ptp_det.ptp_domain = global_domain and 
 		ptp_part = xxpart and ptp_site = site no-error.
 		if available ptp_det then do:
 			assign
@@ -144,7 +146,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 			xxvend     	= ptp_vend.
 		end.
 		
-		find first pt_mstr no-lock where
+		find first pt_mstr no-lock where pt_mstr.pt_domain = global_domain and 
 		pt_part = xxpart no-error.
 		if available pt_mstr then do:
 			assign
@@ -155,12 +157,12 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 		end.
 	
         /*第三方库存*/
-        FOR EACH yyinvoth_det NO-LOCK WHERE yyinvoth_part = xxpart:
+        FOR EACH yyinvoth_det NO-LOCK WHERE yyinvoth_det.yyinvoth_domain = global_domain and yyinvoth_part = xxpart:
             xxinvothqty = xxinvothqty + yyinvoth_qty.
         END.
 
 /*		/*收货量*/
-		for each prh_hist no-lock where
+		for each prh_hist no-lock where prh_hist.prh_domain = global_domain and 
 		prh_rcp_date >= mstart and prh_rcp_date <= today
 		and prh_part = xxpart
 		and prh_site = site:
@@ -169,9 +171,9 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 		
 		/*日程量*/
 		for each pod_det no-lock
-		where pod_part = xxpart,
+		where pod_det.pod_domain = global_domain and pod_part = xxpart,
 		each schd_det no-lock
-		where schd_type = 4
+		where schd_det.schd_domain = global_domain and schd_type = 4
 		and schd_nbr = pod_nbr and schd_line = pod_line
 		and schd_rlse_id = pod_curr_rlse_id[1]
 		and schd_date = today:
@@ -179,7 +181,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 		end.	
 */
 		/*MRP量*/
-		for each mrp_det no-lock where
+		for each mrp_det no-lock where mrp_det.mrp_domain = global_domain and 
 		mrp_site = site and mrp_part = xxpart 
 		and mrp_due_date  < mstart
 		and index(mrp_type,"demand") > 0:
@@ -189,17 +191,17 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 /*		/*月度计划*/
 		xxmsg = "警告：未找到月度计划".
 		for each pod_det no-lock
-		where pod_part = xxpart
+		where pod_det.pod_domain = global_domain and  pod_part = xxpart
 		and pod_site = site,
 		
 		last /*each*/ sch_mstr no-lock
-		where sch_cr_date = effdate
+		where sch_mstr.sch_domain = global_domain and sch_cr_date = effdate
 		and sch_type = 4
 		and sch_nbr = pod_nbr and sch_line = pod_line
 		use-index sch_cr_date,
 		
 		each schd_det no-lock
-		where schd_type = 4
+		where schd_det.schd_domain = global_domain and schd_type = 4
 		and schd_nbr = pod_nbr and schd_line = pod_line
 		and schd_rlse_id = sch_rlse_id /*rsid*/
 		and schd_date >= mstart and schd_date < mend:
@@ -226,11 +228,11 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 	chExcelWorkbook:Worksheets(1):Cells(iRow,2) = "零件描述".
 	chExcelWorkbook:Worksheets(1):Cells(iRow,3) = "数量".
 
-	for each yyusrw_wkfl no-lock where
+	for each yyusrw_wkfl no-lock where  yyusrw_wkfl.yyusrw_domain = global_domain and 
 	yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
 		iRow = iRow + 1.
 		chExcelWorkbook:Worksheets(1):Cells(iRow,1) = yyusrw_key2.
-		find pt_mstr no-lock where pt_part = yyusrw_key2 no-error.
+		find pt_mstr no-lock where pt_mstr.pt_domain = global_domain and pt_part = yyusrw_key2 no-error.
 		chExcelWorkbook:Worksheets(1):Cells(iRow,2) = if available pt_mstr then pt_desc1 else "".
 		chExcelWorkbook:Worksheets(1):Cells(iRow,3) = yyusrw_decfld[1].
     end.
@@ -302,10 +304,10 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 		chExcelWorkbook:Worksheets(1):Cells(iRow,iCol) = xxvend     .   	iCol = iCol + 1. 
 	/*	chExcelWorkbook:Worksheets(1):Cells(iRow,iCol) = xxmsg	    .   	iCol = iCol + 1.    */
 
-                find pkdetnew where pkpartnew = xxpart no-lock no-error.  
-/*phi*/         chExcelWorkbook:Worksheets(1):Cells(iRow,iCol) = pkparnew  	    .   	iCol = iCol + 1.    
+          /*      find pkdetnew where pkpartnew = xxpart no-lock no-error.  
+/*phi*/         chExcelWorkbook:Worksheets(1):Cells(iRow,iCol) = pkparnew  	    .    */	iCol = iCol + 1.    
                           
-        for each mrp_det NO-LOCK WHERE mrp_part = xxpart AND mrp_type ='DEMAND' AND mrp_due_date >= mstart AND mrp_due_date <= mend and mrp_site =site break by mrp_due_date:
+        for each mrp_det NO-LOCK WHERE  mrp_det.mrp_domain = global_domain and mrp_part = xxpart AND mrp_type ='DEMAND' AND mrp_due_date >= mstart AND mrp_due_date <= mend and mrp_site =site break by mrp_due_date:
 
               IF first-of(mrp_due_date) THEN DO:
                 mrpqty1 = 0.
@@ -321,8 +323,8 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
         iCol = iCol + 1. 
     
-        for each pod_det no-lock where pod_part = xxpart,
-		    each schd_det no-lock where schd_type = 4 and schd_nbr = pod_nbr and schd_line = pod_line and schd_rlse_id = pod_curr_rlse_id[1] 
+        for each pod_det no-lock where pod_det.pod_domain = global_domain and pod_part = xxpart,
+		    each schd_det no-lock where schd_det.schd_domain = global_domain and schd_type = 4 and schd_nbr = pod_nbr and schd_line = pod_line and schd_rlse_id = pod_curr_rlse_id[1] 
             AND schd_date >= mstart and schd_date <= mend break by schd_date:
 
 	     IF first-of(schd_date) THEN DO:
@@ -351,7 +353,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
         iCol = iCol + 1. 
 
-           FOR EACH yyinvpro_det NO-LOCK WHERE yyinvpro_part = xxpart and yyinvpro_edn = today BREAK BY yyinvpro_date:
+           FOR EACH yyinvpro_det NO-LOCK WHERE yyinvpro_det.yyinvpro_domain = global_domain and yyinvpro_part = xxpart and yyinvpro_edn = today BREAK BY yyinvpro_date:
 
              IF FIRST-OF(yyinvpro_date) THEN DO:
                  mrpqty3 = 0.

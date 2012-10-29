@@ -11,6 +11,8 @@
 /* Revision: 1.9.1.7    BY: Vinod Nair        DATE: 12/21/01  ECO: *M1N8*   */
 /* $Revision: 1.9.1.8 $    BY: Rajesh Lokre          DATE: 05/19/03  ECO: *N240*  */
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/20/12  ECO: *SS-20120821.1*   */
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
+
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -27,7 +29,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "120821.1"}
+{mfdtitle.i "121023.1"}
 
 /* DEFINE LOCAL VARIABLES */
 define variable l-entity     like fa_entity   no-undo.

@@ -37,7 +37,7 @@ FORM
     xxpower_line      COLUMN-LABEL "序号"
     xxpower_fr        COLUMN-LABEL "自"
     xxpower_to        COLUMN-LABEL "至"
-    with row 12 width 80 overlay center  frame F-C title xxpwaction.
+    with row 12 width 80 overlay center  frame F-C title xxpwaction DOWN.
 setFrameLabels(frame F-C:handle).
  
 mainloop:     
@@ -103,7 +103,7 @@ repeat:
  MainBlock:
     do on error undo,leave on endkey undo,leave:
          for first xxpower_det no-lock :
-	       end.
+	 end.
         { yywobmfmmta.i
           &file = "xxpower_det"
           &where = "where (xxpower_det.xxpower_domain = global_domain and
@@ -115,7 +115,7 @@ repeat:
                           xxpower_to
                        "
           &prompt     = "xxpower_line"
-	  &index      = "USE-INDEX xxpower_dttm"
+	  &index      = "USE-INDEX xxpower_value"
           &midchoose  = "color messages"
           &predisplay = "~ run xxpro-m-predisplay. ~ "
 	  &inskey     = "A"
@@ -149,6 +149,7 @@ PROCEDURE xxpro-m-update.
     find xxpower_det where recid(xxpower_det) = w-rid[Frame-line(F-B)]
     no-error.
      update xxpwaction = "修改".
+    clear frame F-C ALL no-pause.
     display
         xxpower_line
 	xxpower_fr
@@ -204,11 +205,6 @@ PROCEDURE xxpro-m-add.
 	   end.
      end.
 
-       if input xxpower_fr > input xxpower_to then do:
-          message "自值>至值，请重新输入！".
-	  NEXT-PROMPT xxpower_fr.
-	  undo,retry. 
-       end.
 
        find first xxpower_det where xxpower_det.xxpower_domain = global_domain
 	and xxpower_value = codeValue and input xxpower_line = xxpower_line 

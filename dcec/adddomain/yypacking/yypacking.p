@@ -1,7 +1,8 @@
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/16/12  ECO: *SS-20120817.1*   */
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
 
 
-{mfdtitle.i "120817.1"}
+{mfdtitle.i "121023.1"}
 DEFINE VAR part1 LIKE pt_part.
 DEFINE VAR part2 LIKE pt_part.
 DEFINE VAR date1 LIKE dsd_per_date.
@@ -42,9 +43,8 @@ REPEAT:
     IF shiptosite2 = "" THEN shiptosite2 = hi_char.
 
 
-
- /* *SS-20120817.1*       IF SEARCH("\\qadtemp\appeb2\template\packingnotes.xlt") = ? THEN DO:  */ 
-    IF SEARCH("D:\packingnotes.xlt") = ? THEN DO: 
+/* *SS-20121023.1*    IF SEARCH("\\qadtemp\appeb2\template\packingnotes.xlt") = ? THEN DO:   */
+/* *SS-20121023.1*  */ IF SEARCH("\\dcecssy046\template\packingnotes.xlt") = ? THEN DO:   
 
       MESSAGE "报表模板不存在!" VIEW-AS ALERT-BOX ERROR.
       UNDO,RETRY.
@@ -53,8 +53,8 @@ REPEAT:
     i = 5.
 
     CREATE "Excel.Application" chExcelApplication.
- /* *SS-20120817.1*       chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\appeb2\template\packingnotes.xlt"). */ 
-    chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\packingnotes.xlt").
+/* *SS-20121023.1*    chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\appeb2\template\packingnotes.xlt").  */  
+/* *SS-20121023.1*   */   chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\packingnotes.xlt"). 
 
 
    MESSAGE "开始计算，并写入EXCEL表格中" VIEW-AS ALERT-BOX. 

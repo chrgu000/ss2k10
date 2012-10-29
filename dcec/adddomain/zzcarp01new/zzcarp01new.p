@@ -2,12 +2,13 @@
 /*																*/
 /*	合同评审报表												*/
 /*	FUNCTION - 输入成品和数量，计算库存和计划是否满足需要		*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 
          /* DISPLAY TITLE */
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-/*GI32*/ {mfdtitle.i "E"}
+/*GI32*/ {mfdtitle.i "120919.1"}
 
 
 /* DEFINITION */
@@ -91,7 +92,7 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 /*FS95*/             {mfnp06.i
 				yyusrw_wkfl
 				yyusrw_index1
-				"yyusrw_key2 = ""ORDER-TEST-MSTR"""
+				"yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key2 = ""ORDER-TEST-MSTR"""
 				yyusrw_key1
 				"input yyusrw_key1"
 				yes
@@ -115,13 +116,14 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 			
 			display nbr @ yyusrw_key1 with frame a. 
 		
-			find yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR" 
+			find yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR" 
 			exclusive-lock no-error.
 			if not available yyusrw_wkfl then do :
 				{mfmsg.i 1 1}
 				new_wkfl = yes.
 				create yyusrw_wkfl.
-				assign yyusrw_key1  = nbr
+				assign yyusrw_domain = global_domain 
+				       yyusrw_key1  = nbr
 				       yyusrw_key2  = "ORDER-TEST-MSTR"
 				       yyusrw_key3  = "ORDER-TEST-MSTR".
 			end.                           
@@ -174,10 +176,10 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 					del-yn = yes.
 					{mfmsg01.i 11 1 del-yn}
 					if del-yn then do:
-						for each yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
+						for each yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
 							delete yyusrw_wkfl. /*detail*/
 						end.
-						for each yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
+						for each yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
 							delete yyusrw_wkfl.
 						end.
 						clear frame a.		

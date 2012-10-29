@@ -3,6 +3,7 @@
 /*LAST MODIFIED BY *LB01*             LONG BO   2004-7-14                            
   LAST MODIFIED BY *phi*              Philips Li 2008-4-11
 ------------------------------------------------------------------------------------*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20121022.1*   */
 	
 define NEW shared workfile pkdet no-undo
         field pkpart like ps_comp

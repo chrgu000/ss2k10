@@ -11,7 +11,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "121018.1"}
 
 define variable lupdate		like mfc_logical.
 
@@ -198,6 +198,7 @@ repeat:
 			if not avail yyinvo_mstr then do:
 				create yyinvo_mstr.
 				assign 
+				    yyinvo_mstr.yyinvo_domain = global_domain
 				    yyinvo_part = ttinvo_part
 				    yyinvo_year = ttinvo_year
 				    yyinvo_per = ttinvo_per

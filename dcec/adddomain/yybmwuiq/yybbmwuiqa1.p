@@ -1,3 +1,4 @@
+
 /* GUI CONVERTED from bmwuiqa.p (converter v1.75) Sun Aug 13 21:23:46 2000 */
 /* bmwuiqa.p - WHERE-USED INQUIRY                                       */
 /* Copyright 1986-2000 QAD Inc., Carpinteria, CA, USA.                  */
@@ -300,7 +301,8 @@ o_char:ADD-LAST("·ÇO","·ÇO") .
              iss_pol = pt_iss_pol.
              xxstatus = pt_status.   /*judy*/
              phantom = pt_phantom.
-/*hj01--*/  
+/*hj01--*/  yn = yes.
+
             CASE o_char :
                 WHEN "!O" THEN DO:          
                     IF pt_status <> "o" THEN yn = NO .

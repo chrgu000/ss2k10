@@ -1,9 +1,3 @@
-/* yytoexcel.p - procedureDesc                                                 */
-/*V8:ConvertMode=Maintenance                                                 */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
-/* REVISION END                                                              */
-
 /*output temptable to excel*/
 
 DEFINE INPUT PARAMETER TABLE-HANDLE hTempTable.

@@ -1,3 +1,4 @@
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 
         {mfdeclre.i}
         DEFINE INPUT PARAMETER part LIKE ps_par .
@@ -54,7 +55,7 @@
     repeat:                 
         comp = part.
 /*G234*/    /* Added section*/
-        find ptp_det no-lock where ptp_part = part
+        find ptp_det no-lock where ptp_det.ptp_domain = global_domain and ptp_part = part
         and ptp_site = site no-error.
         if available ptp_det then do:
 /*J020*/       if index("1234",ptp_joint_type) > 0 then do:
@@ -91,7 +92,7 @@
 /*G1JF*/          by pkop :
                 pkqty1 = pkqty * qty .
        
-           find pt_mstr where pt_part = pkpart no-lock no-error.
+           find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = pkpart no-lock no-error.
 /*G1JF*/       accumulate pkqty1 (total by pkop).
 
 /*G1JF*/       if last-of(pkop) then do:
@@ -109,7 +110,7 @@
         and (pkstart = ? or pkstart <= eff_date)
 /*H100*/    and (pkend = ? or eff_date <= pkend)
 /*H100*/    and ((op = pkop) or (op = 0))) :
-        find first ptp_det where ptp_part = pkpart and ptp_site = site no-lock no-error .
+        find first ptp_det where ptp_det.ptp_domain = global_domain and ptp_part = pkpart and ptp_site = site no-lock no-error .
         if available ptp_det then
         do:
                 if ptp_pm_code <> "P" then

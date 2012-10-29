@@ -9,11 +9,12 @@
 DEFINE VARIABLE v_site_to like ad_addr.
 DEFINE VARIABLE v_req_date as DATE .
 DEFINE VARIABLE v_trloc like pt_loc.
-DEFINE VARIABLE v_path AS CHAR FORMAT "x(40)".
+DEFINE VARIABLE v_path AS CHAR FORMAT "x(24)".
 DEFINE VARIABLE v_site_from like ad_addr.
-DEFINE VARIABLE v_end_date like DATE.
+DEFINE VARIABLE v_end_date as DATE.
 DEFINE VARIABLE v_max_line AS INT.
-DEFINE VARIABLE v_sheet like INT.
+DEFINE VARIABLE v_sheet as char FORMAT "x(24)" .
+DEFINE VARIABLE i AS INT.
 
 define new shared  variable errstr as char no-undo .
 
@@ -37,7 +38,7 @@ DEFINE new shared TEMP-TABLE tmp_det no-undo
     FIELD tmp_shipsite LIKE dss_shipsite   /*发运地*/
     FIELD tmp_trloc LIKE pt_loc           /*在途库位*/
     FIELD tmp_xls_line LIKE drp_req_nbr   /*excel行号*/  
-    FIELD tmp_err char                    /*导入报错*/  
+    FIELD tmp_err as char                    /*导入报错*/  
      index tmp_index is primary tmp_req_nbr .
 
  
@@ -47,19 +48,19 @@ FORM /*GUI*/
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
 
- v_site_to    COLON 12 LABEL "需求地"
- v_site_from  COLON 60 LABEL "发运地"    SKIP
- v_req_date   COLON 12 LABEL " 需求日"
- v_end_date   COLON 60 LABEL "截止日"    SKIP
- v_trloc      COLON 12 LABEL " 在途库位"
- v_max_line   COLON 60 LABEL "最大项"    SKIP
- v_path       COLON 12 LABEL " 文件名称"
- v_sheet      COLON 60 LABEL "工作簿"       SKIP
+ v_site_to    COLON 15 LABEL "需求地"
+ v_site_from  COLON 50 LABEL "发运地"    SKIP
+ v_req_date   COLON 15 LABEL " 需求日"
+ v_end_date   COLON 50 LABEL "截止日"    SKIP
+ v_trloc      COLON 15 LABEL " 在途库位"
+ v_max_line   COLON 50 LABEL "最大项"    SKIP
+ v_path       COLON 15 LABEL " 文件名称"
+ v_sheet      COLON 50 LABEL "工作簿"       SKIP(1)
 
-   "模板的格式为分销单号、零件号、数量 "  AT 10 SKIP
+   "模板的格式为分销单号、零件号、数量 "  AT 20 SKIP
           
     SKIP(.4)  /*GUI*/
-WITH FRAME a SIDE-LABELS WIDTH 80 ATTR-SPACE NO-BOX THREE-D /*GUI*/.
+WITH FRAME a SIDE-LABELS WIDTH 80 ATTR-SPACE  THREE-D /*GUI*/.
 
  DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -75,24 +76,27 @@ REPEAT:
    
  DO TRANSACTION ON ERROR UNDO, LEAVE:   
 
-     isvalid = YES.
-     istwoyears = NO.
-     FOR EACH yyfcs_mstr WHERE yyfcs_mfguser = mfguser:
-         DELETE yyfcs_mstr.
-     END.
+     find first drp_ctrl where drp_ctrl.drp_domain = global_domain no-lock no-ERROR .
+     if not available drp_ctrl then do:
+         MESSAGE "错误:请维护DRP控制文件!" VIEW-AS ALERT-BOX ERROR.
+	 UNDO.
+     end.
+     else v_max_line = drp_req_nbr +  1.
 
-     FOR EACH yyhlp_mstr WHERE yyhlp_mfguser = mfguser:
-         DELETE yyhlp_mstr.
-     END.
+     v_site_from = "DCEC-SV".
+     v_req_date = today.
+     v_end_date =  today + 7 .
+     v_sheet = "sheet1" .
+     v_path = "c:\inputDRP.xls".
 
-      UPDATE  v_site_to    VALIDATE(INPUT v_site_to > "" ,"请输入需求地")
-	      v_site_from  VALIDATE(INPUT v_site_from > "" ,"请输入发运地")
-	      v_req_date   VALIDATE(INPUT v_site_to <> ? ,"请输入需求日")
-	      v_end_date   VALIDATE(INPUT v_end_date <> ? ,"请输入截止日")
-	      v_trloc      VALIDATE(INPUT v_end_date > "" ,"请输入在途库位")
-	      v_max_line   VALIDATE(INPUT v_max_line > 1 ,"行号小于等于1是不允许的")
-      	      v_path       VALIDATE(INPUT v_end_date > "" ,"请输入文件名称")
-      	      v_sheet     with frame a.
+      UPDATE  v_site_to    VALIDATE(can-find( first si_mstr where si_mstr.si_domain = global_domain and si_site = v_site_to) ,"地点不存在")
+	      v_site_from  VALIDATE(can-find( first si_mstr where si_mstr.si_domain = global_domain and si_site = v_site_from) ,"地点不存在")
+	      v_req_date   VALIDATE(v_req_date <> ? ,"请输入需求日")
+	      v_end_date   VALIDATE(v_end_date <> ? ,"请输入截止日")
+	      v_trloc      VALIDATE(can-find( first loc_mstr where loc_mstr.loc_domain = global_domain and loc_loc = v_trloc) ,"库位不存在")
+	      v_max_line   VALIDATE(v_max_line <> ""  ,"最大申请号不能为空")
+      	      v_path       VALIDATE(v_path <> "" ,"请输入文件名称")
+      	      v_sheet      VALIDATE(v_sheet <> "" ,"请输入工作薄") with frame a.
       
       
        IF SEARCH(v_path) = ? THEN DO:
@@ -118,36 +122,33 @@ REPEAT:
        worksheet = excelapp:worksheets(v_sheet).
        i = 2. 
 
-       colnum = 0.
 
       /*导数据到临时表*/
        REPEAT:
 
-             MESSAGE "导入成功!" VIEW-AS ALERT-BOX .
-          if TRIM(worksheet:cells(i ,2)) = "" then LEAVE.
-
+          if TRIM(worksheet:cells(i ,2):text) = "" then LEAVE.
           CREATE  tmp_det.
           assign 
-	     tmp_req_nbr  = v_max_line + 1
-             tmp_nbr      = TRIM(string(worksheet:cells(i ,1))) 
-             tmp_part     =  TRIM(string(worksheet:cells(i ,2))) 
-             tmp_qty_ord  =  DECIMAL(TRIM(worksheet:cells(i ,3))) 
-             tmp_req_date =  dss_due_date
+	     tmp_req_nbr  = v_max_line 
+             tmp_nbr      = TRIM(string(worksheet:cells(i ,1):text)) 
+             tmp_part     =  TRIM(string(worksheet:cells(i ,2):text)) 
+             tmp_qty_ord  =  DECIMAL(TRIM(worksheet:cells(i ,3):text)) 
+             tmp_req_date =  v_req_date
              tmp_due_date =  v_end_date 
              tmp_rec_site =  v_site_to 
              tmp_shipsite =  v_site_from 
              tmp_trloc    =  v_trloc 
              tmp_xls_line =  i. 
+           if not can-find(FIRST pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = tmp_part )
+	       then do: 
+	          tmp_err = "零件号不存在！".
+                  worksheet:cells(i ,8)  = "零件号不存在！".
+	       end.
 
           v_max_line = v_max_line + 1.
           i = i + 1.
        end. /*REPEAT:*/
        
-       for each tmp_det:
-           if not can-find(FIRST pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = tmp_part )
-	       then tmp_err = "零件号不存在！".
-
-       end. /*for each tmp_det*/
 
 
          /* 检查无错误，导入！*/
@@ -168,12 +169,18 @@ REPEAT:
           UNDO, RETRY.
      end.
 
+
+     find first drp_ctrl where drp_ctrl.drp_domain = global_domain  no-ERROR .
+     if  available drp_ctrl then do:
+        drp_req_nbr = v_max_line.
+     end.
+
     
     MESSAGE "导入成功!" VIEW-AS ALERT-BOX .
 
 
 
-    excelworkbook:saveas(src_file , , , , , , 1) . 
+    excelworkbook:saveas(v_path , , , , , , 1) . 
     excelapp:VISIBLE = FALSE .
     excelworkbook:CLOSE(FALSE).
     excelapp:QUIT.

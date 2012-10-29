@@ -42,7 +42,7 @@ form
 	                  "usrw_key2 usrw_key4 usrw_decfld[1]"
 					  usrw_key2
 					  c
-					  "usrw_key1 = nbr and usrw_key3 = ""ORDER-TEST-DET"""				
+					  "usrw_wkfl.usrw_domain = global_domain and usrw_key1 = nbr and usrw_key3 = ""ORDER-TEST-DET"""				
 	                  8808
 	                  yes
 	               }
@@ -70,7 +70,7 @@ form
 	
 	/*GA32*/             if recno = ? then do:
 	/*GA32*/                create usrw_wkfl.
-	
+	                        usrw_domain = global_domain.
 	                        display usrw_key2 with frame c.
 	
 	/*GA32*/                prompt-for usrw_key2 with frame c.
@@ -79,14 +79,14 @@ form
 	                        display usrw_key2 with frame c.
 	/*GA32*/                delete usrw_wkfl.
 	
-	/*GA32*/                find first usrw_wkfl where usrw_key1 = nbr and usrw_key3 = "ORDER-TEST-DET" 
+	/*GA32*/                find first usrw_wkfl where usrw_wkfl.usrw_domain = global_domain and usrw_key1 = nbr and usrw_key3 = "ORDER-TEST-DET" 
 							and	 usrw_key2 = input usrw_key2 no-lock no-error.
 	/*GA32*/                if available usrw_wkfl then do:
 	/*GA32*/                   recno = recid(usrw_wkfl).
 	/*GA32*/                end.
 	/*GA32*/                else do:
 	/*GA32*/                   	create usrw_wkfl.
-	/*GA32*/                   	assign usrw_key1  = nbr
+	/*GA32*/                   	assign usrw_domain = global_domain usrw_key1  = nbr
 									   usrw_key2		= input usrw_key2
 									   usrw_key3		=  "ORDER-TEST-DET".
 							end.

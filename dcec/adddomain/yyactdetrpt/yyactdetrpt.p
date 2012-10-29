@@ -137,7 +137,7 @@ REPEAT:
     find first glc_cal where /*2012-8-14 b*/  glc_cal.glc_domain = global_domain and /*ss2012-8-14 e*/ glc_year = iyear and glc_per = iper 
 							no-lock no-error.
 		if not avail glc_cal then do:
-			find first glc_cal where glc_domain = global_domain and today >= glc_start and today <= glc_end no-lock no-error.
+			find first glc_cal where today >= glc_start and today <= glc_end no-lock no-error.
 				if not avail glc_cal then do:
 					message "总账期间未定义!" view-as alert-box.
 				end.

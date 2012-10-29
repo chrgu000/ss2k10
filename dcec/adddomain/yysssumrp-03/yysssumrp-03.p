@@ -1,13 +1,14 @@
 /*yysssumrp.p for 零件需求预测汇总报表打印（也即采购计划单打印），writed by Kevin,2003/11*/
 /*Last modified: 01/14/2004, By: Kevin for adding the tolerance according to Zhaotao*/
 /*Last modified: 08/04/2008, By: Philips for merging excel of the same person but different buyer*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
 
          /* DISPLAY TITLE */
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "120816.1"}
+{mfdtitle.i "121023.1"}
 
 def var site like si_site.
 def var site1 like si_site.
@@ -134,7 +135,8 @@ repeat:
 
    /*search the template file*/
    /*if search("\\dcecssy006\dcec_erp\kevin\template\PO planning form template.xlt") = ? then do:*/
-  if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt") = ? then do: 
+/* *SS-20121023.1*   if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt") = ? then do:   */ 
+/* *SS-20121023.1*  */ if search("\\dcecssy046\template\purchase\PO planning form template.xlt") = ? then do:    
       message "报表模板不存在!" view-as alert-box error.
       undo,retry.
    end.
@@ -273,7 +275,8 @@ repeat:
                   
          /*Create a new workbook based on the template chExcel file */
          /*chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy006\dcec_erp\kevin\template\PO planning form template.xlt").*/
-        chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt"). 
+/* *SS-20121023.1*         chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\PO planning form template.xlt").  */ 
+/* *SS-20121023.1*    */      chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\purchase\PO planning form template.xlt").  
          /* Set Excel Format Variable.*/
          iHeaderLine = 18.
          iLine = iHeaderLine + 1.

@@ -135,7 +135,7 @@ for each bom2 :
        end.
     end.
 end.
-display space(15) "BOM中未定义工序的零件" with STREAM-IO no-attr-space down.
+display space(15) "BOM中未定义工序的零件  " with STREAM-IO no-attr-space down.
 for each bom2 where bom2_op = 0:
    display bom2_par bom2_op bom2_start bom2_end with STREAM-IO no-attr-space down.
    if line-count + 4 > page-size then page.

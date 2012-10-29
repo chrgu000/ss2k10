@@ -6,6 +6,9 @@ DEFINE VAR v_flag like mfc_logical initial no EXTENT 2.
 DEFINE VAR v_cmmt LIKE in_user2 .
 
 
+
+
+
 FORM /*GUI*/ 
             
  RECT-FRAME       AT ROW 1 COLUMN 1.25

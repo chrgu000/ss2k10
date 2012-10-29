@@ -37,7 +37,7 @@
             recno24 = 0.
          end.
 
-         {gpstat.i
+         {yygpstat.i
             &stat={8}
             &type="default"
          }

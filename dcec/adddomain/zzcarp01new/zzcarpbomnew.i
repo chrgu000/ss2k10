@@ -3,6 +3,7 @@
 /*LAST MODIFIED BY *LB01*             LONG BO   2004-7-14                            
   LAST MODIFIED BY *phi*              Philips Li 2008-4-11
 ------------------------------------------------------------------------------------*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 	
 define NEW shared workfile pkdet no-undo
         field pkpart like ps_comp
@@ -26,7 +27,7 @@ transtype = "BM" .
         DELETE pkdet.
         END.
 	
-	for each yyusrw_wkfl no-lock where yyusrw_key1 = nbr 
+	for each yyusrw_wkfl no-lock where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr 
 	and yyusrw_key3 = "ORDER-TEST-DET" BREAK by yyusrw_key2 by yyusrw_datefld[1]:
 
          if first-of(yyusrw_key2) then do:
@@ -49,8 +50,8 @@ transtype = "BM" .
 
          for each pkdet BREAK BY pkpart BY pkdate1 :
               message yyusrw_key2 yyusrw_datefld[1] pkpart pkdate1.  
-              find pt_mstr where pt_part = pkpart no-lock no-error.
-				find ptp_det where ptp_site = site  and ptp_part = pkpart  no-lock no-error.
+              find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = pkpart no-lock no-error.
+				find ptp_det where ptp_det.ptp_domain = global_domain and ptp_site = site  and ptp_part = pkpart  no-lock no-error.
 		
 				if available pt_mstr 
 	/*				((available ptp_det and not ptp_phantom)

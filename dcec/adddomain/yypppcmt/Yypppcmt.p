@@ -141,12 +141,18 @@ FORM /*GUI*/
 list_label     to 29 pt_price base_curr
    disp-stock-um  to 65 pt_um  at 68
    /*V8+*/
-        
+   /*     
    disp-total-this-level-gl    at 7
    glxcst_tl                   at 31
    base_curr1 disp-site-col    at 57 pt_site at 68
    disp-total-gl-cost          at 9
-   glxcst                      at 31 base_curr2   
+   glxcst                      at 31 base_curr2  
+   */
+   disp-total-this-level-gl    to 29
+   glxcst_tl                   to 46
+   base_curr1 disp-site-col    to 65 pt_site
+   disp-total-gl-cost          to 29
+   glxcst                      to 46 base_curr2
    /*V8+*/
         
    qty_label[1]   at  2 amt_label[1] at 11
@@ -565,7 +571,7 @@ repeat with frame a:
             pc_prod_line
             pc_part
             pc_um
-            pc_start.
+            pc_start .
 
          display
             list_label

@@ -1,9 +1,3 @@
-/* yydisppur.p - yydisppur.p                                                 */
-/*V8:ConvertMode=Report                                                      */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: cxx                        */
-/* REVISION END                                                              */
-
 {mfdtitle.i "20121009"}
 define variable duedate like po_due_date.
 define variable duedate1 like po_due_date.
@@ -78,7 +72,7 @@ repeat:
 		delete yyyy.
 	end.
 
-	find first glc_cal where glc_start <= today and today <= glc_end and glc_domain = global_domain
+	find first glc_cal where glc_domain = global_domain and glc_start <= today and today <= glc_end 
 						and glc_year = year(today)
 						no-lock no-error.
 		mon = glc_per.
@@ -106,8 +100,8 @@ repeat:
 	do i = 1 to mon:
 			startdate = ?.
 			enddate = ?.
-		find first glc_cal where glc_per = i and glc_year = year(today)
-							and glc_domain = global_domain  no-lock no-error.
+		find first glc_cal where glc_domain = global_domain and glc_per = i and glc_year = year(today)
+							  no-lock no-error.
 			if available glc_cal then do:
 				startdate = glc_start.
 				enddate = glc_end.
@@ -118,11 +112,13 @@ repeat:
 			end.
 
 
-		for each prh_hist where startdate <= prh_rcp_date and prh_rcp_date <= enddate
+		for each prh_hist where prh_hist.prh_domain = global_domain
+							and startdate <= prh_rcp_date and prh_rcp_date <= enddate
 							and site <= prh_site and prh_site <= site1
 							no-lock:
 
-			find first pt_mstr where pt_part = prh_part and pt_prod_line >= prodline and pt_prod_line <= prodline1 no-lock no-error.		
+			find first pt_mstr where pt_mstr.pt_domain = global_domain
+								and pt_part = prh_part and pt_prod_line >= prodline and pt_prod_line <= prodline1 no-lock no-error.		
 				IF not available pt_mstr then next.
 											
 			find first xx where xxpart  = prh_part no-lock no-error.
@@ -139,7 +135,8 @@ repeat:
 
 		end. /*for each prh_hist*/
 
-		for each po_mstr where startdate <= po_due_date and po_due_date <= enddate and po_domain = global_domain
+		for each po_mstr where po_domain = global_domain
+							and startdate <= po_due_date and po_due_date <= enddate 
 							no-lock:
 
 			if po_sched = yes then do:
@@ -175,23 +172,23 @@ repeat:
 				end. /*for each scx_ref */   
 				*************************************************/
 
-				for each scx_ref where scx_order = po_nbr and scx_domain = global_domain no-lock:	
+				for each scx_ref where scx_domain = global_domain and scx_order = po_nbr  no-lock:	
 					for each sch_mstr where sch_mstr.sch_domain = global_domain no-lock,
-						each schd_det where schd_type = sch_type
+						each schd_det where schd_domain = global_domain
+						and schd_type = sch_type
 						and schd_nbr = sch_nbr
 						and schd_line = sch_line
-						and schd_rlse_id = sch_rlse_id
-						and schd_domain = global_domain
+						and schd_rlse_id = sch_rlse_id						
 						and startdate <= schd_date and schd_date <= enddate
 						no-lock:
 
-							find first pt_mstr where pt_part = scx_part and pt_domain = global_domain
+							find first pt_mstr where pt_domain = global_domain and pt_part = scx_part 
 											and prodline <= pt_prod_line and pt_prod_line <= prodline1
 											no-lock no-error.
 								if not available pt_mstr then next.
 							
-							find first pod_det where pod_nbr = sch_nbr and pod_line = sch_line 
-												and pod_domain = global_domain
+							find first pod_det where pod_det.pod_domain = global_domain
+												and pod_nbr = sch_nbr and pod_line = sch_line 
 												and pod_curr_rlse_id[(sch_type - 3)] = sch_rlse_id no-lock no-error.
 							if available pod_det then do:
 								find first xx where xxpart = scx_part no-lock no-error.
@@ -216,13 +213,15 @@ repeat:
 			end. /*if po_sched = yes then do*/  
 			
 			else do:
-				for each pod_det  where pod_nbr = po_nbr
+				for each pod_det  where pod_det.pod_domain = global_domain
+									and pod_nbr = po_nbr
 									and site <= pod_site and pod_site <= site1
 									no-lock:
 
-					find first pt_mstr where prodline <= pt_prod_line and pt_prod_line <= prodline1 
+					find first pt_mstr where pt_domain = global_domain
+										and prodline <= pt_prod_line and pt_prod_line <= prodline1 
 										and pt_part = pod_part
-										and pt_domain = global_domain 
+										 
 										no-lock no-error.
 
 						if not available pt_mstr then next.

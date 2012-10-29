@@ -1,3 +1,4 @@
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 
 	 {mfdeclre.i}
 
@@ -44,7 +45,7 @@ form
 	                  "yyusrw_key2 yyusrw_key4 yyusrw_decfld[1] yyusrw_datefld[1]"
 					  yyusrw_key2
 					  c
-					  "yyusrw_key1 = nbr and yyusrw_key3 = ""ORDER-TEST-DET"""				
+					  "yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key3 = ""ORDER-TEST-DET"""				
 	                  8808
 	                  yes
                          yyusrw_datefld[1]
@@ -73,7 +74,7 @@ form
 	
 	/*GA32*/             if recno = ? then do:
 	/*GA32*/                create yyusrw_wkfl.
-	
+	                        yyusrw_domain = global_domain.
 	                        display yyusrw_key2 yyusrw_datefld[1] with frame c.
 	
 	/*GA32*/                prompt-for yyusrw_key2 yyusrw_datefld[1] with frame c.
@@ -83,7 +84,7 @@ form
 	/*GA32*/                delete yyusrw_wkfl. 
 	
                                 
-	/*GA32*/                find first yyusrw_wkfl where yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET" 
+	/*GA32*/                find first yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET" 
 							and  yyusrw_key2 = input yyusrw_key2 
                                                         and  yyusrw_datefld[1]      = input yyusrw_datefld[1]  no-error.
                                    
@@ -94,13 +95,13 @@ form
 	/*GA32*/                end.
 	/*GA32*/                else do:
 	/*GA32*/                   	create yyusrw_wkfl.
-	/*GA32*/                   	assign yyusrw_key1  = nbr
+	/*GA32*/                   	assign yyusrw_domain = global_domain  yyusrw_key1  = nbr
 									   yyusrw_key2		= input yyusrw_key2
                                                                            yyusrw_key3		= "ORDER-TEST-DET"
                                                                            yyusrw_datefld[1]      = input yyusrw_datefld[1].
 							end.
 
-                                    find pt_mstr where pt_part = yyusrw_key2 no-lock no-error.
+                                    find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = yyusrw_key2 no-lock no-error.
 	  						if not available pt_mstr then do:
 	  							message "零件不存在，请重新输入" view-as alert-box.
 	  							next-prompt yyusrw_key2 with frame c.

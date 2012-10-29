@@ -294,10 +294,10 @@ view-as alert-box error.
 /*************tfq added begin**********************************/
 /*added by kevin, 10/16/2003 for site control*/
             fc_type = no.
-            update site editing:
+            update site with no-validate frame a editing:
                 {mfnp.i si_mstr site si_site site si_site si_site}
                 if recno <> ? then
-                    disp si_site @ site si_desc.
+                    disp si_site @ site si_desc with no-validate frame a.
             end.
                  find si_mstr no-lock where  /* *SS-20120827.1*   */ si_mstr.si_domain = global_domain and si_site = site no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
@@ -325,7 +325,7 @@ view-as alert-box error.
 /*J034*/                                /* ACCESS TO THIS SITE*/
 /*J034*/             undo,retry.
 /*J034*/          end.
-                  disp si_site @ site si_desc.
+                  disp si_site @ site si_desc with no-validate frame a.
 /*end added by kevin, 10/16/2003*/
 /*************tfq added end********************************/
  /* *SS-20120827.1* -b  */
@@ -382,7 +382,7 @@ view-as alert-box error.
       end.
 /*GUI*/ if global-beam-me-up then undo, leave.
  /* prompt-for */
-   end. /* if c-application-mode <> "API" */
+
 
    /* Assign the local variables from either the UI or API */
    assign
@@ -498,8 +498,8 @@ view-as alert-box error.
       }
  /* *SS-20120827.1*   */     assign bom__chr01 = site.                    
    end. /* TRANSACTION */
-   else do:
  /* *SS-20120827.1*  -b */
+   else do:
    if not available pt_mstr and bom__chr01 <> site 
         then do:
          message "物料单代码的地点与输入的地点不一致,请重新输入!" 
@@ -1365,11 +1365,9 @@ view-as alert-box error.
         /*********************tfq added begin*********************************/
         /*added by kevin, 11/09/2003*/
              if input ps_op <> 0 then do:
-                  find opm_mstr where opm_mstr.opm_domain = global_domain and opm_std_op = input ps_op no-lock 
-no-error.
+                  find opm_mstr where opm_mstr.opm_domain = global_domain and opm_std_op = input ps_op no-lock no-error.
                   if not available opm_mstr then do:
-                     message "错误:标准工序不存在,请重新输入!" view-as 
-alert-box error.
+                     message "错误:标准工序不存在,请重新输入!" view-as alert-box error.
                      next-prompt ps_op.
                      undo,retry.
                   end.

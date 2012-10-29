@@ -1,7 +1,10 @@
 /*yyldsoxls.p designed by Philips Li for so-loading by excel           03/31/08*/
-/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/27/12  ECO: *SS-20120927.1*   */
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/26/12  ECO: *SS-20121026.1*   */
 
-{mfdtitle.i "120927.1"}
+{mfdtitle.i "121026.1"}
+define   variable ciminputfile   as char .
+define   variable cimoutputfile  as char .
+define   variable errstr as char no-undo .
 
 DEFINE VARIABLE sonbr LIKE so_nbr.
 DEFINE VARIABLE cust LIKE so_cust.
@@ -136,7 +139,6 @@ REPEAT:
        worksheet = excelapp:worksheets(sheetname).
        
        i = startline.
-          MESSAGE i "--" amount "--" worksheet:cells(i,15):TEXT VIEW-AS ALERT-BOX ERROR .
 
        /*so head information*/
        ASSIGN  sonbr =  worksheet:cells(i,1):TEXT 
@@ -147,7 +149,7 @@ REPEAT:
                    site = worksheet:cells(i,7):text
                    channel = worksheet:cells(i,8):TEXT 
                    promoter = worksheet:cells(i,9):TEXT.
-       FIND FIRST ad_mstr WHERE   /* *SS-20120927.1*   */ ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
+       FIND FIRST ad_mstr WHERE  /* *SS-20121026.1*   */ ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
        IF NOT AVAIL ad_mstr THEN DO:
            worksheet:Range("Z" + STRING(i)):VALUE = "客户不存在！".
            isvalid = NO.
@@ -172,7 +174,7 @@ REPEAT:
            ASSIGN  
                    lineno = INT (worksheet:cells(i,10):TEXT) 
                    part = worksheet:cells(i,11):TEXT  
-                   amount = trim(worksheet:cells(i,15):TEXT)
+                   amount = worksheet:cells(i,17):TEXT
                    ischeck1 = worksheet:cells(i,3):TEXT
                    ischeck2 = worksheet:cells(i,13):TEXT
                   /* ischeck3 = worksheet:cells(i,14):TEXT  */
@@ -198,8 +200,6 @@ REPEAT:
            IF ischeck11 = "" THEN confirm = NO.
            IF ischeck12 = "" THEN confirm = NO.
 
-	  MESSAGE i "--" amount "--" worksheet:cells(i,15):TEXT VIEW-AS ALERT-BOX ERROR .
-
           
            IF amount = "" THEN DO:
                isvalid = NO.
@@ -213,7 +213,7 @@ REPEAT:
                soline_qty = int(amount)
                soline_index = i.
               
-           FIND FIRST sod_det WHERE  /* *SS-20120927.1*   */ sod_det.sod_domain = global_domain and sod_line = lineno AND sod_nbr = sonbr NO-LOCK NO-ERROR.
+           FIND FIRST sod_det WHERE  /* *SS-20121026.1*   */ sod_det.sod_domain = global_domain and  sod_line = lineno AND sod_nbr = sonbr NO-LOCK NO-ERROR.
            IF AVAIL sod_det THEN
                soline_isnew = NO.
            ELSE
@@ -239,23 +239,22 @@ REPEAT:
       
 IF isvalid THEN DO:
 
-
       /*creating cim format*/
        OUTPUT STREAM cim TO VALUE(cim_file) NO-ECHO .
   
     /************************************************************/
-         PUT STREAM cim UNFORMATTED  "@@BATCHLOAD yysosomt.p" SKIP. 
+        
          IF isnewso THEN
-              PUT STREAM cim UNFORMATTED "-" SKIP.
+              PUT STREAM cim UNFORMATTED "-" SKIP.
          ELSE
-              PUT STREAM cim UNFORMATTED """" sonbr """" SKIP.
+              PUT STREAM cim UNFORMATTED """" sonbr """" SKIP.
          PUT STREAM cim UNFORMATTED """" cust """" SKIP.
          PUT STREAM cim UNFORMATTED "-" SKIP.
          PUT STREAM cim UNFORMATTED "-" SKIP.
          IF isnewso THEN
              PUT STREAM cim UNFORMATTED "- " "- " "- " "- " "- " "- " "- " "- " "- " """" pricelist """" " "  """" site """" " dfm " "- " "- " "- " "- " "- " "- " "- " "- " "-" SKIP.
          ELSE 
-             PUT STREAM cim UNFORMATTED "- " "- " "- " "- " "- " "- " """" sopo """" " " """" rmks """" " - " """" pricelist """" " "  """" site """" " dfm " "- " "- " "- " "- " "- " "- " "- " "- " "-" SKIP.
+             PUT STREAM cim UNFORMATTED "- " "- " "- " "- " "- " "- " """" sopo """" " " """" rmks """" " " """" pricelist """" " "  """" site """" " dfm " "- " "- " "- " "- " "- " "- " "- " "- " "-" SKIP.
          PUT STREAM cim UNFORMATTED  "- " "- " "- " """" "Y" """"  " " """" "Y" """" SKIP.
          PUT STREAM cim UNFORMATTED promoter " - " "- " "- " "- " "- " "- " "- " "- " "- " "- " "- " "-" SKIP.
          FOR EACH soline_det WHERE soline_mfguser = mfguser NO-LOCK :
@@ -263,16 +262,17 @@ IF isvalid THEN DO:
             IF soline_isnew THEN DO:
                 PUT STREAM cim UNFORMATTED """" soline_part """" SKIP.
                 PUT STREAM cim UNFORMATTED soline_qty " -" SKIP.
+                PUT STREAM cim UNFORMATTED "-" SKIP.
             END.
             IF NOT soline_isnew THEN DO:
-                PUT STREAM cim UNFORMATTED soline_qty " -" SKIP.
+                PUT STREAM cim UNFORMATTED soline_qty "-" SKIP.
             END.
          END.
          PUT STREAM cim UNFORMATTED "." SKIP.
          PUT STREAM cim UNFORMATTED "." SKIP.
          PUT STREAM cim UNFORMATTED "-" SKIP.
          PUT STREAM cim UNFORMATTED "-" SKIP.
-         PUT STREAM cim UNFORMATTED "@@end" SKIP.
+
          
 
     /************************************************************/
@@ -293,20 +293,26 @@ IF isvalid THEN DO:
           OUTPUT err)"}
 */
 
+       errstr = "".
 
 	input from value ( cim_file ) .
-	output to  value ( "c:/soloading.out") .
+	output to  value ( lg_file) .
         batchrun = yes. 
 		{gprun.i ""yysosomt.p""}
         batchrun = no.  
 	input close.
 	output close.
 
+	ciminputfile = cim_file .
+	cimoutputfile = lg_file.
 
-    OS-DELETE VALUE(cim_file).
-    OS-DELETE VALUE("c:/soloading.out").
+	{yyldsoxls_err.i}
+
+     OS-DELETE VALUE(cim_file).  
+
  /* *SS-20120927.1*  -e */
 
+  
     IF isnewso THEN DO:
         REPEAT j = startline TO i - 1:
             worksheet:Range("A" + STRING(j)):VALUE = sonbr.
@@ -314,7 +320,7 @@ IF isvalid THEN DO:
     END.
     
     FOR EACH soline_det WHERE soline_mfguser = mfguser NO-LOCK:
-        FIND FIRST sod_det WHERE  /* *SS-20120927.1*   */ sod_det.sod_domain = global_domain and  sod_nbr = sonbr AND sod_line = soline_line NO-LOCK NO-ERROR.
+        FIND FIRST sod_det WHERE /* *SS-20120927.1*   */ sod_det.sod_domain = global_domain and sod_nbr = sonbr AND sod_line = soline_line NO-LOCK NO-ERROR.
         IF AVAIL sod_det THEN DO:
             worksheet:Range("Z" + STRING(soline_index)):VALUE = sod_price.
             worksheet:Range("AA" + STRING(soline_index)):VALUE = sod_price * soline_qty.
@@ -335,7 +341,7 @@ IF isvalid THEN DO:
                worksheet:Range("S" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("T" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -343,7 +349,7 @@ IF isvalid THEN DO:
                worksheet:Range("T" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("W" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -351,7 +357,7 @@ IF isvalid THEN DO:
                worksheet:Range("W" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part
+           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part
                AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("U" + STRING(soline_index)):VALUE = in_qty_ord. 
@@ -362,7 +368,7 @@ IF isvalid THEN DO:
               worksheet:Range("V" + STRING(soline_index)):VALUE = "库存信息不存在！".
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part
+           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part
                AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("X" + STRING(soline_index)):VALUE = in_qty_ord. 
@@ -385,10 +391,15 @@ IF isvalid THEN DO:
     RELEASE OBJECT excelapp.
     RELEASE OBJECT excelworkbook.
     RELEASE OBJECT worksheet.
+
     IF NOT isvalid THEN
         MESSAGE "导入失败，文件内容不正确!" VIEW-AS ALERT-BOX .
-    ELSE
-        MESSAGE "导入成功!" VIEW-AS ALERT-BOX .   
- END. /*do transaction*/
+    ELSE do :
+        if errstr = "" then
+           MESSAGE "导入成功!" VIEW-AS ALERT-BOX .   
+	else MESSAGE "导入失败，" errstr ",请查看日志文件！" VIEW-AS ALERT-BOX .
+    END.
+    
+  END. /*do transaction*/
 END. 
 
