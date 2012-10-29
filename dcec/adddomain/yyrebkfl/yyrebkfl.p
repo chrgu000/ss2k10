@@ -62,9 +62,7 @@
 /******************************************************************************/
 
 /*V8:ConvertMode=Maintenance                                                  */
-/* {mfdtitle.i "121025.1"} */
-{mfdeclre.i}
-{gplabel.i &ClearReg = yes}
+{mfdtitle.i "121025.1"}
 {cxcustom.i "yyrebkfl.P"}
 
 {gldydef.i new}
@@ -628,7 +626,7 @@ repeat:
                line
             with frame b side-labels width 80 attr-space.
 
-      /*zy */     {gprun.i ""xxreisslst.p""
+      /*zy */     {gprun.i ""yyreisslst.p""
                "(input cumwo_lot,
                  input part,
                  input site,
