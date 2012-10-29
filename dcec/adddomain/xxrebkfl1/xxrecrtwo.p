@@ -242,7 +242,7 @@ repeat:
       /* PAUSE 0 INTRODUCED TO SUPPRESS PROGRESS ERROR WHEN 2 USERS */
       /* TRY TO CREATE qadlock AT THE SAME TIME.                    */
 
-      pause 0.
+      /* pause 0. */
 
       find first qadlock
          where qadlock.qad_domain = global_domain 
@@ -562,7 +562,7 @@ repeat:
      /*tfq {gpxpldps.i
          &date=eff_date &site=wo_site &comp=temp_bom_code &op=? &op_list=?} */
          
-        {yygpxpldps.i
+        {xxgpxpldps.i
          &date=eff_date &site=wo_site &comp=temp_bom_code &op=? &op_list=?}
         
       for each ro_det

@@ -250,4 +250,3 @@ ln_site = site no-lock no-error.
    global_part = part.
 end.
 /*GUI*/ if global-beam-me-up then undo, leave.
-

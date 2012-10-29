@@ -62,7 +62,7 @@ op_list = gpchr.                      /*(may include non mile-stone */
      input incl_phtm,
      input op_list,
      output bombatch)"} */
-/*tfq*/ {gprun.i ""yygpxpld.p""
+/*tfq*/ {gprun.i ""xxgpxpld.p""
    "(input xplddate,
      input xpldsite,
      input xpldcomp,

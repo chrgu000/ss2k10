@@ -134,10 +134,10 @@ define new shared temp-table xxpk_det
          incl_nopk = no.    
                   /*DON'T INCLUDE FLOORSTOCK*/
                     /***  
-         message "call yygpxldps.i" .
+         message "call xxgpxldps.i" .
          pause .
          ***/
-         {yygpxpldps.i &date=eff_date &site=wo_site &comp=bomcode &op=op
+         {xxgpxpldps.i &date=eff_date &site=wo_site &comp=bomcode &op=op
          &op_list=oplist}
 
          /*FIGURE QTIES TO BACKFLUSH AT EACH OPERATION BASED ON CURRENT QUEUES

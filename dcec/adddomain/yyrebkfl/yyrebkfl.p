@@ -63,6 +63,12 @@
 
 /*V8:ConvertMode=Maintenance                                                  */
 {mfdtitle.i "121025.1"}
+/*
+{mfdeclre.i}
+{mf1.i}
+{gplabel.i &ClearReg = no}
+*/
+
 {cxcustom.i "yyrebkfl.P"}
 
 {gldydef.i new}

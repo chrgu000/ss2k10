@@ -39,9 +39,9 @@ mfguser="".
 global_user_lang = "ch".
 global_user_lang_dir = "ch/".
 global_domain = "DCEC".
+global_db = "DCEC".
 
 /*G1MN*/ {gpglefv.i}
-
 def var srcdir as char format "x(20)".           /*source file directory*/
 def var okdir as char format "x(20)".            /*verified file directory*/
 def var errdir as char format "x(20)".    /*incorrect file directory*/
@@ -144,18 +144,6 @@ if not available list then do:
      put "Error: No source file for backflush!" at 1.
      leave.
 end.
-
-/*To backflush based on every source file*/
-output stream bkflhcim close.   /*judy*/
-output stream bkflhcim to value(bkflh_filecim).   /*judy*/
-
-put stream bkflhcim unformat "~"" at 1 trim(usrw_key2) "~"" " ~"" trim(usrw_charfld[1]) "~"".
-put stream bkflhcim unformat "DCEC" at 1 skip.
-put stream bkflhcim unformat "-" skip.
-put stream bkflhcim unformat "-" skip.
-put stream bkflhcim unformat "-" skip.
-/**  put stream bkflhcim unformat "yyrebkcim.p".      /*judy*/  */
-put stream bkflhcim unformat "yyrebkfl.p".
 
 output stream bkflh close.
 output stream bkflh to value(bkflh_file).
@@ -667,8 +655,11 @@ for each list where list.filename <> "" no-lock:
      /*create the header format*/
      find first xxwk no-lock no-error.
      put stream bkflh "~"" at 1 xxwk.emp "~"".
-     /*tfq*/  put stream bkflh  string(day(xxwk.effdate),"99") format "99" at 1
-    /*tfq*/   "/"  string(month(xxwk.effdate),"99") format "99"  "/"  substring(string(year(xxwk.effdate)),3,2) format "99"  .
+     /*
+     /*tfq*/  put stream bkflh  string(month(xxwk.effdate),"99") format "99" at 1
+    /*tfq*/   "/"  string(date(xxwk.effdate),"99") format "99"  "/"  substring(string(year(xxwk.effdate)),3,2) format "99"  .
+    */
+    put stream bkflh unformat  "- " at 1. 
      /*tfq*/     put stream bkflh UNFORMAT " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"".
      /*tfq put stream bkflh xxwk.effdate at 1 " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"". */
       put stream bkflh UNFORMAT "~"" at 1 xxwk.par "~" " xxwk.lastop " ~"" xxwk.line "~"".
@@ -678,20 +669,17 @@ for each list where list.filename <> "" no-lock:
       /*tfq put stream bkflh "" at 1.  */
 
      /*create the detail components issue format*/
-      put stream bkflh "-" at 1.             /*added by kevin,for batch*/
-      for first xxwk where xxwk.comp <> "" no-lock:
+      put stream bkflh unformat  "-" AT 1.             /*added by kevin,for batch*/
+      for each xxwk where xxwk.comp <> "" no-lock:
           /* put stream bkflh "-" at 1.  judy*/           /* added by kevin,for batch*/            
           put stream bkflh unformat "~"" at 1 xxwk.comp "~" " xxwk.compop.
           put stream bkflh unformat xxwk.qty_iss at 1 " N " "~"" xxwk.site "~"" " ~"" xxwk.comploc "~""
                              " ~"" xxwk.complot "~"" " ~"" xxwk.compref "~"".
-
-/*           /*                                                                                    */
 /*            put stream bkflh "- " at 1 "~"" xxwk.comp "~" " xxwk.compop.                         */
 /*            put stream bkflh xxwk.qty_iss at 1 " N " "~"" xxwk.site "~"" " ~"" xxwk.comploc "~"" */
 /*                              " ~"" xxwk.complot "~"" " ~"" xxwk.compref "~"".                   */
-/*           */                                                                                    */
       end.
-      put unformat "." skip.
+      put stream bkflh unformat "." at 1 skip.
 /* /*kevin, 01/08/2004                                                                     */
 /*       put stream bkflh "." at 1.                                                        */
 /*       put stream bkflh "Y" at 1.                                                        */
@@ -721,10 +709,10 @@ for each list where list.filename <> "" no-lock:
 
 /*added by kevin, for non-serial control*/
     find first xxwk no-lock no-error.
-     put stream bkflh unformat xxwk.qty_comp at 1 " - - " "~"" xxwk.site "~"" " ~"" xxwk.parloc  "~"" " - - " "No No".
+     put stream bkflh unformat xxwk.qty_comp at 1 " - - " "~"" xxwk.site "~"" " ~"" xxwk.parloc  "~"" " - - " "N N".
 /* /*tfq*/     put stream bkflh "Y" at 1.  */
 /* /*tfq*/     put stream bkflh "Y" at 1.  */
-							 put stream bkflh "Y" at 1.
+/*						 put stream bkflh "Y" at 1.  */
 
 /*end added by kevin, for non-serial control*/
 
@@ -754,32 +742,44 @@ for each list where list.filename <> "" no-lock:
 end. /*for each list*/
 
 
+
 put stream bkflh "." at 1.
 put stream bkflh "." at 1.
 output stream bkflh close.
 /*judy*/
-  put stream bkflhcim "." at 1.
-  put stream bkflhcim "Y" at 1.
-  output stream bkflhcim close.
-/*judy*/
+/*   /*To backflush based on every source file*/                                                           */
+/*   output stream bkflhcim close.   /*judy*/                                                              */
+/*   output stream bkflhcim to value(bkflh_filecim).   /*judy*/                                            */
+/*                                                                                                         */
+/*   put stream bkflhcim unformat "~"" at 1 trim(usrw_key2) "~"" " ~"" trim(usrw_charfld[1]) "~"".         */
+/*   put stream bkflhcim unformat "DCEC" at 1 skip.                                                        */
+/*   put stream bkflhcim unformat "-" skip.                                                                */
+/*   put stream bkflhcim unformat "-" skip.                                                                */
+/*   put stream bkflhcim unformat "-" skip.                                                                */
+/*   /**  put stream bkflhcim unformat "yyrebkcim.p".      /*judy*/  */                                    */
+/*   put stream bkflhcim unformat "yyrebkfl.p".                                                            */
+/*                                                                                                         */
+/*     put stream bkflhcim "." at 1.                                                                       */
+/*     put stream bkflhcim "Y" at 1.                                                                       */
+/*     output stream bkflhcim close.                                                                       */
+/*   /*judy*/                                                                                              */
+/*                                                                                                         */
+/*   INPUT CLOSE.                                                                                          */
+/*   INPUT from value(bkflh_filecim).                                                                      */
+/*   output to value(bkflh_filecim + ".out").                                                              */
+/*   /*   PAUSE 0 BEFORE-HIDE.  */                                                                         */
+/*   RUN MF.P.                                                                                             */
+/*   INPUT CLOSE.                                                                                          */
+/*   OUTPUT CLOSE.                                                                                         */
 
-INPUT CLOSE.
-INPUT from value(bkflh_filecim).
-output to value(bkflh_filecim + ".out").
-/*   PAUSE 0 BEFORE-HIDE.  */
-RUN MF.P.
-INPUT CLOSE.
-OUTPUT CLOSE.
-
-/***********************
 input from value(bkflh_file).
 output to value(bkflh_file + ".out").
 batchrun = yes.
-{gprun.i ""yyrebkfl.p""}
+{gprun.i ""xxrebkfl1.p""}
 batchrun = no.
 output close.
 input close.
-**************************/
+
 
 put skip(1).
 put "=======================  Run Date: " today   "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).

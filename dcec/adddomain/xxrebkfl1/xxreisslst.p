@@ -199,7 +199,6 @@ setFrameLabels(frame d:handle).
 /* EMPTY TEMP-TABLEs  */
 empty temp-table t_sr_wkfl.
 empty temp-table t_pk_det.
-
 assign
    undo_stat = yes
    {&REISSLST-P-TAG4}
@@ -270,7 +269,6 @@ do transaction:
          l_pk_qty = accum sub-total by pk_part pk_qty.
       else
          l_pk_qty = pk_qty.
-
       {gprun.i ""icedit2.p"" "(input ""ISS-WO"",
                                input wosite,
                                input pk_loc,
@@ -376,7 +374,7 @@ repeat:
 
          select-part:
          repeat on endkey undo, leave:
-
+/******commed by zy for space key requered**************
             if batchrun = no and not {gpisapi.i}
             then do:
 
@@ -387,7 +385,6 @@ repeat:
                end. /* FOR FIRST t_pk_det */
 
                datainput = getFrameTitle("ISSUE_DATA_INPUT",20).
-
                window_row = 6 .
                comp-block  :
                repeat:
@@ -410,7 +407,6 @@ repeat:
                      }
                  leave comp-block.
                end. /*COMP-BLOCK*/
-
                if keyfunction(lastkey) <> "END-ERROR" then
                   view frame w.
 
@@ -424,7 +420,7 @@ repeat:
             then
                leave.
             clear frame d.
-
+***************commed by zy for space key requered****************/
             do on error undo , retry with frame d:
                assign
                   part = ""
@@ -485,7 +481,6 @@ repeat:
                   trans_um = pt_um.
 
                trans_conv = 1.
-
                /* CONDITION ADDED TO IMPROVE PERFORMANCE IN DESKTOP 2 */
                if not {gpiswrap.i}
                then
@@ -572,7 +567,7 @@ repeat:
 
                   frame-d-loop:
                   repeat:
-                     pause 0.
+        /*             pause 0. */
                      assign
                         sub_comp    = no
                         multi_entry = no.
@@ -1219,7 +1214,6 @@ repeat:
                end. /* GET-PART */
             end. /* DO */
          end. /* SELECT-PART */
-
          repeat:
             yn = yes.
 						if batchrun then yn = no.
@@ -1290,7 +1284,6 @@ repeat:
 
          do on endkey undo seta , leave seta:
             yn = yes.
-            if batchrun then yn = no.
             /*V8-*/
             /* IS ALL INFORMATION CORRECT? */
             if not batchrun  then do:

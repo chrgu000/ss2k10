@@ -148,9 +148,11 @@ if can-find(first qad_wkfl
    where qad_key1 = "rpm_mstr")
 then do:
 
+/**
    {pxmsg.i &MSGNUM=5126 &ERRORLEVEL=3}
    message.
    message.
+  **/
    leave.
 end. /* if can-find(first qad_wkfl... */
 
@@ -576,7 +578,7 @@ repeat:
          end. /* IF move_next_op */
 
          /*FORCE A PAUSE IF NECESSARY*/
-         {gprun.i ""repause.p"" "(input msg_ct)"}
+  /*        {gprun.i ""repause.p"" "(input msg_ct)"} */
          /*BUILD DEFAULT COMPONENT PART ISSUE LIST*/
 /*tfq*/                 {gprun.i ""xxrecrtcl.p"" "(input cumwo_lot,
                                            input op,
@@ -926,7 +928,7 @@ repeat:
 
                   {&REBKFL-P-TAG6}
                   /*MODIFY FINISHED PART RECEIVE LIST*/
-                  {gprun.i ""rercvlst.p""
+                  {gprun.i ""xxrercvlst.p""
                      "(input cumwo_lot,
                        input conv_qty_move,
                        output undo_stat)"}
@@ -1191,7 +1193,7 @@ repeat:
          end. /* IF NOT CAN-FIND(wo_mstr) */
 
          {&REBKFL-P-TAG2}
-         /*******
+/*******
 message "call reoptr1f.p" .
 pause .
 ******/
@@ -1209,7 +1211,7 @@ pause .
       /*  GOT ALL DATA AND VALIDATED IT,   */
       /*  NOW WE CAN DO SOMETHING WITH IT  */
       /*************************************/
-      /****
+/****
 message "call gpistran.p " .
 pause .
 ***/
