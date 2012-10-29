@@ -62,8 +62,9 @@
 /******************************************************************************/
 
 /*V8:ConvertMode=Maintenance                                                  */
-
-{mfdtitle.i "121025.1"}
+/* {mfdtitle.i "121025.1"} */
+{mfdeclre.i}
+{gplabel.i &ClearReg = yes}
 {cxcustom.i "yyrebkfl.P"}
 
 {gldydef.i new}
@@ -102,7 +103,7 @@ define variable l_reject_to_mch    like wc_mch      no-undo.
 define variable elapse               as decimal   format ">>>>>>>>.999" no-undo.
 define variable trans_type           as character initial "BACKFLSH"    no-undo.
 
-{retrform.i new}
+{yyretrform.i new}
 define new shared variable rsn_codes          as character   extent 10.
 define new shared variable quantities       like wr_qty_comp extent 10.
 define new shared variable scrap_rsn_codes    as character   extent 10.
@@ -131,7 +132,7 @@ define variable   result_status                    as character   no-undo.
 
 {wlfnc.i} /*FUNCTION FORWARD DECLARATIONS*/
 {wlcon.i} /*CONSTANTS DEFINITIONS*/
-
+SESSION:SET-WAIT-STATE ("").
 if is_wiplottrace_enabled()
 then do:
 
@@ -627,7 +628,7 @@ repeat:
                line
             with frame b side-labels width 80 attr-space.
 
-      /*tfq */     {gprun.i ""reisslst.p""
+      /*zy */     {gprun.i ""xxreisslst.p""
                "(input cumwo_lot,
                  input part,
                  input site,

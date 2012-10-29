@@ -8,8 +8,7 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-
-/*GI32*/ {mfdtitle.i "120816.1"}
+{mfdtitle.i "120816.1"}
 
 def	var	parent1	like ps_par.		
 def	var	parent2	like ps_par.
@@ -28,7 +27,9 @@ define new shared work-table mybomcmp
 	field bdesc like pt_desc1
 	field bdesc2 like pt_desc2
 	field bqty1 like ps_qty_per
-	field bqty2 like ps_qty_per.
+	field bqty2 like ps_qty_per
+	field bref1 like ps_ref
+	field bref2 like ps_ref.
 	
 /* define Excel	object handle */
 DEFINE NEW SHARED VARIABLE chExcelApplication AS COM-HANDLE.
@@ -163,8 +164,8 @@ repeat:
 		delete mybomcmp.
 	end.
 
-	{gprun.i ""yyIstWkf.p"" "(input parent1, input yes)"}
-	{gprun.i ""yyIstWkf.p"" "(input parent2, input no)"}
+	{gprun.i ""yyistwkf.p"" "(input parent1, input yes)"}
+	{gprun.i ""yyistwkf.p"" "(input parent2, input no)"}
 	
 	/* Create a New chExcel Application object */
 	CREATE "Excel.Application" chExcelApplication.
@@ -180,6 +181,8 @@ repeat:
 	chExcelWorkbook:Worksheets(1):Cells(iRow,5) = "'" + parent1.
 	chExcelWorkbook:Worksheets(1):Cells(iRow,6) = "'" + parent2.
 	chExcelWorkbook:Worksheets(1):Cells(iRow,7) = "差异数量".
+	chExcelWorkbook:Worksheets(1):Cells(iRow,8) = parent1 + " - 随机带走件" .
+	chExcelWorkbook:Worksheets(1):Cells(iRow,9) = parent2 + " - 随机带走件" .
 	chExcelWorkbook:Worksheets(1):Range("E2"):AddComment.
 	if effdate1 = ? then
 		strdate = "".
@@ -207,6 +210,8 @@ repeat:
 		chExcelWorkbook:Worksheets(1):Cells(iRow,5) = string(mybomcmp.bqty1).
 		chExcelWorkbook:Worksheets(1):Cells(iRow,6) = string(mybomcmp.bqty2).
 		chExcelWorkbook:Worksheets(1):Cells(iRow,7) = string(mybomcmp.bqty2 - mybomcmp.bqty1).
+		chExcelWorkbook:Worksheets(1):Cells(iRow,8) = "'" + string(mybomcmp.bref1).
+		chExcelWorkbook:Worksheets(1):Cells(iRow,9) = "'" + string(mybomcmp.bref2).
 	end.
 	
 	chExcelWorkbook:Worksheets(1):Range("A1:G1"):HorizontalAlignment = -4108.
@@ -224,6 +229,8 @@ repeat:
 	chExcelWorkbook:Worksheets(1):Columns("E:E"):EntireColumn:AutoFit.
 	chExcelWorkbook:Worksheets(1):Columns("F:F"):EntireColumn:AutoFit.
 	chExcelWorkbook:Worksheets(1):Columns("G:G"):EntireColumn:AutoFit.
+  chExcelWorkbook:Worksheets(1):Columns("H:H"):EntireColumn:AutoFit.
+	chExcelWorkbook:Worksheets(1):Columns("I:I"):EntireColumn:AutoFit.
 
 	 
 	chExcelApplication:Visible = True.

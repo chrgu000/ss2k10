@@ -1,6 +1,5 @@
 /*2004-08-25 21:06 create by longbo*/
 
-{mfdeclre.i}
 
 /*G1MN*/ {gpglefv.i}
 		

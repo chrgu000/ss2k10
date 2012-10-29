@@ -10,12 +10,11 @@
     input close.
     batchrun = yes.
     input from value(bkflh_file).
-    output to value(bkflh_file + ".out") keep-messages.
+/*    output to value(bkflh_file + ".out") keep-messages. */
+		    output to value(bkflh_file + ".out").
        
     hide message no-pause.
-       
     {gprun.i ""yyrebkfl.p""}
-       
     hide message no-pause.
       
     output close.

@@ -27,7 +27,9 @@ define shared work-table mybomcmp
 	field bdesc like pt_desc1
 	field bdesc2 like pt_desc2
 	field bqty1 like ps_qty_per
-	field bqty2 like ps_qty_per.
+	field bqty2 like ps_qty_per
+	field bref1 like ps_rmks
+	field bref2 like ps_rmks.
 
 	dLevel = 1.
 	dComp = Parent.	
@@ -97,10 +99,14 @@ define shared work-table mybomcmp
 		if dPhantom = no then do: 
 			find first mybomcmp where bcomp = ps_comp exclusive-lock no-error.
 			if available mybomcmp then do:
-				if bSource then
+				if bSource then do:
 					mybomcmp.bqty1 = mybomcmp.bqty1 + ps_qty_per.
-				else 
+					mybomcmp.bref1 = ps_rmks.
+				end.
+				else do:
 					mybomcmp.bqty2 = mybomcmp.bqty2 + ps_qty_per.
+					mybomcmp.bref2 = ps_rmks.
+				end.
 			end.
 			else do:
 				create mybomcmp. 
@@ -110,11 +116,13 @@ define shared work-table mybomcmp
 					mybomcmp.bdesc2 = ddesc2.
 				if bSource then do:
 					mybomcmp.bqty1 = ps_qty_per.
+					mybomcmp.bref1 = ps_rmks.
 					mybomcmp.bqty2 = 0.
 				end.
 				else do:
 					mybomcmp.bqty1 = 0.
 					mybomcmp.bqty2 = ps_qty_per.
+					mybomcmp.bref2 = ps_rmks.
 				end.
 			end.
 			/* next node when this node of component is "P" or ("M" and Phantom = no) */ 

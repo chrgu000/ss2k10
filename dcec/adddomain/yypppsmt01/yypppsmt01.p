@@ -31,13 +31,13 @@
 /******************************************************************************/
 /* REVISION: 8.5      LAST MODIFIED: 10/16/03   BY: Kevin               */
 /* REVISION: eb2+sp6 retrofit     by tao fengqin  ECO *tfq*               */
-/*FL60*/ {mfdtitle.i "b+ "}
+{mfdtitle.i "121026.1"}
 define variable part like in_part.
 define variable site like in_site.
 
 define variable inrecno as recid no-undo.
 &SCOPED-DEFINE PP_FRAME_NAME A
-form 
+form
 RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -109,13 +109,13 @@ repeat:
 
          if frame-field = "pt_part" then do:
             /* FIND NEXT/PREVIOUS RECORD */
-            {mfnp.i in_mstr pt_part in_part site in_site in_part}
+            {mfnp.i in_mstr pt_part " in_domain = global_domain and in_part " site in_site in_part}
          end.
          else if frame-field = "site" then do:
             /* FIND NEXT/PREVIOUS RECORD */
             /* Changed search index from "in_site" to "in_part" */
             /* FIND NEXT/PREVIOUS RECORD */
-            {mfnp01.i in_mstr site in_site in_part
+            {mfnp01.i in_mstr site " in_domain = global_domain and in_site " in_part
                "input pt_part" in_part}
          end.
          else do:
@@ -124,7 +124,7 @@ repeat:
          end.
 
          if recno <> ? then do:
-            find pt_mstr where pt_part = in_part no-lock no-error.
+            find pt_mstr where pt_domain = global_domain and pt_part = in_part no-lock no-error.
 
             if available pt_mstr then do:
 
@@ -160,18 +160,21 @@ repeat:
 
       /* ADD/MODIFY  */
       /*NOTE: DELETING THE IN_MSTR RECORD SHOULD NOT BE ALLOWED. */
-      if not can-find (pt_mstr where pt_part = input pt_part) then do:
+      if not can-find (pt_mstr where pt_domain = global_domain and
+                       pt_part = input pt_part) then do:
          {pxmsg.i &MSGNUM=16 &ERRORLEVEL=3} /* ITEM NUMBER IS NOT AVAILABLE */
          undo, retry.
       end.
 
-      if not can-find (si_mstr where si_site = input site) then do:
+      if not can-find (si_mstr where si_domain = global_domain and
+                       si_site = input site) then do:
          {pxmsg.i &MSGNUM=708 &ERRORLEVEL=3} /* SITE IS NOT AVAILABLE */
          next-prompt site with frame a.
          undo, retry.
       end.
 
-      find si_mstr where si_site = input site no-lock no-error.
+      find si_mstr where si_domain = global_domain and
+           si_site = input site no-lock no-error.
       if available si_mstr and si_db <> global_db then do:
          {pxmsg.i &MSGNUM=5421 &ERRORLEVEL=3}
          /* SITE NOT ASSIGNED TO THIS DATABASE */
@@ -190,18 +193,18 @@ repeat:
          end.
       end.
 
-      find pt_mstr where pt_part = input pt_part
+      find pt_mstr where pt_domain = global_domain and pt_part = input pt_part
       exclusive-lock no-error.
       if not available pt_mstr then do:
          {pxmsg.i &MSGNUM=16 &ERRORLEVEL=3} /* ITEM NUMBER IS NOT AVAILABLE */
          undo, retry.
       end.
 
-      find ptp_det where ptp_part = pt_part
+      find ptp_det where ptp_domain = global_domain and ptp_part = pt_part
          and ptp_site = input site
       no-lock no-error.
 
-      find in_mstr where in_part = pt_part
+      find in_mstr where in_domain = global_domain and in_part = pt_part
          and in_site = input site
       exclusive-lock no-error.
 
@@ -272,7 +275,7 @@ repeat:
             in__qadc01                          /*tfq*/
          with frame c.
             /*added by tfq, 2005/06/23 to add a field to record the warehouse clerk*/
-                  find loc_mstr where loc_site = in_site and loc_loc = input in_user1 no-lock no-error.
+                  find loc_mstr where loc_domain = global_domain and loc_site = in_site and loc_loc = input in_user1 no-lock no-error.
                   if not available loc_mstr then do:
                     /*tfq   {mfmsg.i 229 3} */
                      {pxmsg.i
@@ -286,19 +289,19 @@ repeat:
                   if pt_site = in_site and pt_loc <> input in_user1 then do:
                    message "提示: 与缺省地点的缺省库位不一致!".
                 end.
-                
-                          
-              find code_mstr where code_fldname = "in__qadc01" and code_value = input in__qadc01 
+
+
+              find code_mstr where code_domain = global_domain and code_fldname = "in__qadc01" and code_value = input in__qadc01
               no-lock no-error.
               if not available code_mstr then do:
                    message "错误: 通用代码中未定义请重新输入!" view-as alert-box error.
                    next-prompt in__qadc01 with frame c.
                    undo setc, retry setc.
               end.
-                                        
+
 /*end added by tfq, 2005/06/23*/
          if (in_rctpo_active or in_rctpo_status <> "") and
-            not can-find (is_mstr where is_status = in_rctpo_status)
+            not can-find (is_mstr where is_domain = global_domain and is_status = in_rctpo_status)
          then do:
 
             next-prompt in_rctpo_status.
@@ -309,7 +312,7 @@ repeat:
          end. /* IF (IN_RCTPO_ACTIVE ... */
 
          if (in_rctwo_active or in_rctwo_status <> "") and
-            not can-find (is_mstr where is_status = in_rctwo_status)
+            not can-find (is_mstr where is_domain = global_domain and is_status = in_rctwo_status)
          then do:
 
             next-prompt in_rctwo_status.

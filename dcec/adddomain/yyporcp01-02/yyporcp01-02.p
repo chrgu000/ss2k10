@@ -9,7 +9,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "E"}
+{mfdtitle.i "121020.1"}
 
 def var vend like vd_addr.
 def var vend1 like vd_addr.
@@ -103,10 +103,10 @@ repeat:
 		    
     update vend vend1 part part1 with frame a.
     
-    {mfquoter.i  vend	 	 }
-    {mfquoter.i  vend1	 	 }
-    {mfquoter.i  part	 	 }
-    {mfquoter.i  part1	 	 }
+    {mfquoter.i  vend}
+    {mfquoter.i  vend1}
+    {mfquoter.i  part}
+    {mfquoter.i  part1}
 
 
     if vend1 = "" then vend1 = hi_char.
@@ -231,11 +231,12 @@ if global-beam-me-up then undo, leave.
 		end.
 	end. 
 
+/**
 OUTPUT TO c:\zzwk.txt.
     FOR EACH zzwk.
         DISP zzwk WITH WIDTH 180.
     END.
-
+***/
 /*
 	
 	/*¼Æ»®Á¿*/

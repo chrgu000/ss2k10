@@ -11,7 +11,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "f+ "}
+{mfdtitle.i "121026.1"}
 
 define variable nbr like tr_nbr.
 define variable nbr1 like tr_nbr.
@@ -181,7 +181,8 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 */
  IF flag1 THEN DO:
 
-   for each tr_hist where /*ss2012-8-14 b*/ tr_hist.tr_domain = global_domain and /*2012-8-14 e*/ (tr_nbr >= nbr and tr_nbr <= nbr1 and tr_nbr <> "")
+   for each tr_hist where /*ss2012-8-14 b*/ tr_hist.tr_domain = global_domain
+   and (tr_nbr >= nbr and tr_nbr <= nbr1 and tr_nbr <> "")
    and (tr_effdate >= trdate and tr_effdate <= trdate1)
    and (tr_part >= part) and (tr_part <= part1 or part1 = "")
    and (tr_type = "ISS-DO")

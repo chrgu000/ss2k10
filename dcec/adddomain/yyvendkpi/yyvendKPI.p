@@ -1,45 +1,37 @@
-/* {mfdtitle.i "d+ "} */
+
 {mfdtitle.i "20120816"}
-DEFINE VAR v_qty_req LIKE b_req_qty_req.
-DEFINE VAR v_qty_rct LIKE b_req_qty_rct.
-DEFINE VAR v_qty_req_all LIKE b_req_qty_req.
-DEFINE VAR v_qty_rct_all LIKE b_req_qty_rct.
-DEFINE VAR v_buyer LIKE ptp_buyer.
+DEFINE VARIABLE v_qty_req LIKE b_req_qty_req.
+DEFINE VARIABLE v_qty_rct LIKE b_req_qty_rct.
+DEFINE VARIABLE v_qty_req_all LIKE b_req_qty_req.
+DEFINE VARIABLE v_qty_rct_all LIKE b_req_qty_rct.
+DEFINE VARIABLE v_buyer LIKE ptp_buyer.
 
-DEFINE VAR v_eff_date1 LIKE b_req_due_date.
-DEFINE VAR v_eff_date2 LIKE b_req_due_date.
-DEFINE VAR v_site1 LIKE b_req_site.
-DEFINE VAR v_site2 LIKE b_req_site.
-DEFINE VAR v_sum AS LOGICAL INITIAL YES.
-
-
-
+DEFINE VARIABLE v_eff_date1 LIKE b_req_due_date.
+DEFINE VARIABLE v_eff_date2 LIKE b_req_due_date.
+DEFINE VARIABLE v_site1 LIKE b_req_site.
+DEFINE VARIABLE v_site2 LIKE b_req_site.
+DEFINE VARIABLE v_sum AS LOGICAL INITIAL YES.
 
 FORM
     v_eff_date1 LABEL "生效日期"  COLON 20 v_eff_date2  LABEL "To" COLON 55
     v_site1     LABEL "地点"      COLON 20 v_site2     LABEL "To" COLON 55
     v_sum LABEL "是否汇总" COLON 20
-
     WITH FRAME  a SIDE-LABELS WIDTH 80 ATTR-SPACE NO-BOX THREE-D.
-
-
 
 /*detail*/
 
 REPEAT:
 
-    IF v_site1 = hi_char THEN v_site1 = "".
-    IF v_site2 = "" THEN v_site2 = hi_char.
-    IF v_eff_date1 = hi_date THEN v_eff_date1 = low_date.
-    IF v_eff_date2 = low_date THEN v_eff_date2 = hi_date.
+    IF v_site2 = hi_char THEN v_site2 = "".
+    IF v_eff_date1 = low_date THEN v_eff_date1 = ?.
+    IF v_eff_date2 = hi_date THEN v_eff_date2 = ?.
 
 UPDATE v_eff_date1 v_eff_date2 v_site1 v_site2 v_sum WITH FRAME a.
 {mfselprt.i "printer" 132}
 
-    IF v_site1 = hi_char THEN v_site1 = "".
     IF v_site2 = "" THEN v_site2 = hi_char.
-    IF v_eff_date1 = hi_date THEN v_eff_date1 = low_date.
-    IF v_eff_date2 = low_date THEN v_eff_date2 = hi_date.
+    IF v_eff_date1 = ? THEN v_eff_date1 = low_date.
+    IF v_eff_date2 = ? THEN v_eff_date2 = hi_date.
 
 IF v_sum = NO THEN DO:
 

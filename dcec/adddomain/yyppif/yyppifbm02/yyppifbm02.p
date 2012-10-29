@@ -33,7 +33,7 @@ else if xxppif__dte01 <= ps_start then ps_start = xxppif__dte01   */
 /* Last change by Wilber 05/14/2008    indentify the t-code pdsco pdsao sosao sasco          *W009*/
 /* Last change by Wilber 05/21/2008    process when xxppif__chr01 < ps_start and ps_start < today         *W010*/
 /* Last change by Wilber 05/22/2008    delete the 2039 error of pdsao and differ pdsio and pdsco        *W011*/
-session:date-format = 'ymd'.
+/* session:date-format = 'ymd'.                              */
 {mfdeclre.i "new global"}
 {mf1.i "new global"}
 
@@ -90,7 +90,9 @@ output stream batchdata to value(strinputfile) NO-ECHO.
                 output stream batchdata to value(strinputfile) NO-ECHO .
             END.
             put stream batchdata unformatted "~"" runuser "~" ~"" runpsw "~"" skip.
-            put stream batchdata unformatted "~"yybmpsmt-1.p~"" skip.   /*13.5*/
+            put stream batchdata unformatted "-" skip.
+/*          put stream batchdata unformatted "~"yybmpsmt-1.p~"" skip.   /*13.5*/  */
+						put stream batchdata unformatted "bmpsmt.p" skip.
 
 for each xxppif_log where xxppif_domain = global_domain
  		 and lookup(xxppif_tr_code,"PDSA,SOSA,PDSC,SOSC") > 0

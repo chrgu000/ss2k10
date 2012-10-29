@@ -64,7 +64,7 @@ for each so_mstr
   assign wkgtm_ref = "DC@" + string(so_nbr,"x(8)")
                    + string(month(v_dt),"99")
                    + string(day(v_dt),"99")
-                   + string(v_times,"99")
+                   + string(v_times,"999")
                    + string(i)
        wkgtm_line   = 0
        wkgtm_name   = ""
@@ -263,7 +263,7 @@ for each so_mstr
     assign wkgtm_ref    = "DC@" + string(so_nbr,"x(8)")
               + string(month(v_dt),"99")
               + string(day(v_dt),"99")
-                  + string(v_times,"99")
+                  + string(v_times,"999")
                   + string(k)
          wkgtm_line   = 0
          wkgtm_name   = substring(ad_name,1,length(ad_name))

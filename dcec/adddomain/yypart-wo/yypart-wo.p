@@ -1,5 +1,10 @@
-/* Revision: QAD2011  BY: Apple Tam         DATE: 08/15/12  ECO: *SS -20120815.1  */
-{mfdtitle.i "20120815.1"}
+/* yypart-wo.p - yypart wo                                                 */
+/*V8:ConvertMode=report                                                 */
+/* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
+/* REVISION END                                                              */
+
+{mfdtitle.i "121021.1"}
+
 DEFINE VAR itpart LIKE tr_part.
 DEFINE VAR bedate LIKE tr_date INIT TODAY.
 DEFINE VAR eddate LIKE tr_date INIT TODAY.
@@ -39,7 +44,15 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 setframelabels(frame a:handle) .
 
 REPEAT:
+		
+		if bedate = low_date then bedate = ?.
+		if eddate = hi_date  then eddate = ?.
+		
     update itpart bedate eddate with frame a.
+    
+    if bedate = ? then bedate = low_date.
+    if eddate = ? then eddate = hi_date.
+    
     {mfquoter.i itpart}
     {mfquoter.i bedate}
     {mfquoter.i eddate}
@@ -51,7 +64,10 @@ REPEAT:
        DELETE xxwkso.
    END.
 
-   FOR EACH tr_hist WHERE tr_domain = global_domain and tr_part =itpart AND tr_userid ="mrp" AND tr_date >=bedate AND tr_date <= eddate BREAK BY tr_lot .
+   FOR EACH tr_hist WHERE tr_domain = global_domain and
+   				  tr_part = itpart AND 
+/* 				  tr_userid ="mrp" AND  */
+   				  tr_date >=bedate AND tr_date <= eddate BREAK BY tr_lot .
     IF FIRST-OF (tr_lot) THEN partsum =0.
     partsum= partsum + tr_qty_loc.
     IF LAST-OF(tr_lot) THEN do:
@@ -64,7 +80,9 @@ REPEAT:
 
    FOR EACH xxwkpt.
     FOR EACH tr_hist WHERE tr_domain = global_domain and tr_lot = xxwkpt.lot AND 
-        tr_userid="mrp" AND tr_type ="rct-wo" AND  tr_date >= bedate AND tr_date <= eddate BREAK BY tr_lot. 
+/*         tr_userid="mrp" AND   */
+        tr_type ="rct-wo" AND  tr_date >= bedate AND tr_date <=eddate
+      BREAK BY tr_lot. 
         IF FIRST-OF (tr_lot) THEN sosum =0.
         sosum= sosum + tr_qty_loc.
         IF LAST-OF(tr_lot) THEN do:

@@ -1,5 +1,5 @@
 
-/* xxvralrp.p - Varience Detail REPORT - By Shop Order not only By Production Line                              */
+/* xxvralrp.p - Varience Detail REPORT - By Shop Order not only By Production Line          */
 /* COPYRIGHT qad.inc. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
 /*F0PN*/ /*V8:ConvertMode=FullGUIReport                                 */
 /* REVISION: 1.0      Developed: 01/28/02   BY: RHB                 */
@@ -16,8 +16,10 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "120815.1"}  /*GA14*/ /*GUI moved to top.*/
-define variable varacct like gltr_acc label "²îÒìÕÊ»§". 
+{mfdtitle.i "120815.1"}
+
+define variable varacct like gltr_acc label "²îÒìÕÊ»§".
+define variable varacct1 like gltr_acc label "²îÒìÕÊ»§".
 define variable site like pt_site.
 define variable site1 like pt_site.
 define variable line like pt_prod_line.
@@ -36,24 +38,25 @@ define variable sum_var_wo as decimal label "²îÒìºÏ¼Æ-wo" format "->,>>>,>>>,>>9
 define workfile so_sum field so_part like pt_part
                         field so_var_ic as decimal  label "²îÒì-ic"  format "->,>>>,>>>,>>9.99"
                         field so_var_wo as decimal  label "²îÒì-wo"  format "->,>>>,>>>,>>9.99".
-                        
+
 /* DISPLAY TITLE */
 /*GUI moved mfdeclre/mfdtitle.*/
 
 /* SELECT FORM */
-         
+
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-            
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
- 	    varacct	colon 20 skip
+            varacct        colon 20
+            varacct1       label {t001.i} colon 49 skip
             site           colon 20
             site1          label {t001.i} colon 49 skip
-	    line           colon 20
+            line           colon 20
             line1          label {t001.i} colon 49 skip
             part           colon 20
             part1          label {t001.i} colon 49 skip
@@ -88,16 +91,15 @@ with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
 /*GUI repeat : */
 /*GUI*/ procedure p-enable-ui:
 
-   if varacct = hi_char then varacct = "".
    if part1 = hi_char then part1 = "".
    if line1 = hi_char then line1 = "".
    if site1 = hi_char then site1 = "".
    if effdate = low_date then effdate = ?.
    if effdate1 = hi_date then effdate1 = ?.
+   if varacct1 = hi_char then varacct1 = "".
 
 
 
-   
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -115,8 +117,9 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    {mfquoter.i effdate }
    {mfquoter.i effdate1}
    {mfquoter.i varacct }
+   {mfquoter.i varacct1}
 
-   if varacct = "" then varacct = hi_char.
+   if varacct1 = "" then varacct1 = hi_char.
    if  part1 = "" then part1 = hi_char.
    if  line1 = "" then line1 = hi_char.
    if  site1 = "" then site1 = hi_char.
@@ -124,7 +127,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    if  effdate1 = ?  then effdate1  = hi_date.
 
    /* PRINTER SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -138,37 +141,39 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    {mfphead.i}
 
 
-for each gltr_hist use-index gltr_acc_ctr where  /* *SS-20120815.1* */ gltr_hist.gltr_domain = global_domain and gltr_acc = varacct and gltr_eff_dt >= effdate and gltr_eff_dt <=effdate1
+for each gltr_hist use-index gltr_acc_ctr where  /* *SS-20120815.1* */ gltr_hist.gltr_domain = global_domain
+    and gltr_acc >= varacct and gltr_acc <= varacct1 and gltr_eff_dt >= effdate and gltr_eff_dt <=effdate1
     ,each trgl_det use-index trgl_ref_nbr where  /* *SS-20120815.1* */ trgl_det.trgl_domain = global_domain and trgl_gl_ref = gltr_ref
     ,each tr_hist use-index tr_trnbr where /* *SS-20120815.1* */ tr_hist.tr_domain = global_domain and tr_trnbr = trgl_trnbr no-lock:
 
-	if not tr_type = "iss-wo" then do:
-		find first so_sum where so_part = tr_part no-error.
-		if available so_sum then do:
-		so_var_ic = so_var_ic + gltr_amt.
-		end.
-		else do:
-		create so_sum.
-		so_part = tr_part.
-		so_var_ic = gltr_amt.
-		end.
-	end.
-	else do:
-		find first wo_mstr where /* *SS-20120815.1* */ wo_mstr.wo_domain = global_domain and wo_lot = tr_lot no-error.
-		find first so_sum where so_part = wo_part no-error.
-		if available so_sum then do:
-		so_var_ic = so_var_ic + gltr_amt.
-		end.
-		else do:
-		create so_sum.
-		so_part = wo_part.
-		so_var_ic = gltr_amt.
-		end.
-	end.
+  if not tr_type = "iss-wo" then do:
+    find first so_sum where so_part = tr_part no-error.
+    if available so_sum then do:
+    so_var_ic = so_var_ic + gltr_amt.
+    end.
+    else do:
+    create so_sum.
+    so_part = tr_part.
+    so_var_ic = gltr_amt.
+    end.
+  end.
+  else do:
+    find first wo_mstr where /* *SS-20120815.1* */ wo_mstr.wo_domain = global_domain and wo_lot = tr_lot no-error.
+    find first so_sum where so_part = wo_part no-error.
+    if available so_sum then do:
+    so_var_ic = so_var_ic + gltr_amt.
+    end.
+    else do:
+    create so_sum.
+    so_part = wo_part.
+    so_var_ic = gltr_amt.
+    end.
+  end.
 end.
 
 
-for each gltr_hist use-index gltr_acc_ctr where /* *SS-20120815.1* */ gltr_hist.gltr_domain = global_domain and gltr_acc = varacct and gltr_eff_dt >= effdate and gltr_eff_dt <=effdate1
+for each gltr_hist use-index gltr_acc_ctr where /* *SS-20120815.1* */ gltr_hist.gltr_domain = global_domain
+     and gltr_acc >= varacct and gltr_acc <= varacct1 and gltr_eff_dt >= effdate and gltr_eff_dt <=effdate1
     ,each opgl_det use-index opgl_ref_nbr where /* *SS-20120815.1* */ opgl_det.opgl_domain = global_domain and opgl_gl_ref = gltr_ref
     ,each op_hist use-index op_trnbr where /* *SS-20120815.1* */ op_hist.op_domain = global_domain and op_trnbr = opgl_trnbr no-lock:
 
@@ -192,19 +197,19 @@ end.
 
 
       if first-of (pt_prod_line) then do:
-	 if page-size - line-counter < 7 then page.
-	 find pl_mstr where /* *SS-20120815.1* */ pl_mstr.pl_domain = global_domain and pl_prod_line = pt_prod_line no-lock.
-	 pldesc = pl_desc.
-	 display skip(1) pt_prod_line pl_desc no-label
-	 with frame a2 side-labels no-box STREAM-IO /*GUI*/ .
+   if page-size - line-counter < 7 then page.
+   find pl_mstr where /* *SS-20120815.1* */ pl_mstr.pl_domain = global_domain and pl_prod_line = pt_prod_line no-lock.
+   pldesc = pl_desc.
+   display skip(1) pt_prod_line pl_desc no-label
+   with frame a2 side-labels no-box STREAM-IO /*GUI*/ .
 /*cj*/ setFrameLabels(frame a2:handle).
 
-	 prod_var_ic = 0.
-	 prod_var_wo = 0.
+   prod_var_ic = 0.
+   prod_var_wo = 0.
       end.
 
 
-      FORM /*GUI*/ 
+      FORM /*GUI*/
        header
       skip(1)
       pt_prod_line pldesc " (¼ÌÐø)"
@@ -237,17 +242,17 @@ end.
 
 end.
 
- 
+
 /*judy 07/05/05*/  /*disp sum_var_ic  sum_var_wo sum_var_ic + sum_var_wo column-label "²îÒìºÏ¼Æ" format "->>,>>>,>>>,>>9.99" with width 132 STREAM-IO.*/
 /*judy 07/05/05*/  /*sum_var_ic = 0.*/
 /*judy 07/05/05*/ /*    sum_var_wo = 0.*/
-    
- 
+
+
 
 
    /* REPORT TRAILER */
 
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
@@ -256,4 +261,4 @@ end.
 end.
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" varacct site site1 line line1 part part1  effdate effdate1 "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" varacct varacct1 site site1 line line1 part part1  effdate effdate1 "} /*Drive the Report*/

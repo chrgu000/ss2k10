@@ -1,24 +1,25 @@
 /*yyssrp02.p for 零件日程报表打印（也即采购日程单打印），writed by Kevin,2003/11*/
 
-/*LAST MODIFIED BY *LB01*             LONG BO   2004-6-02                            
+/*LAST MODIFIED BY *LB01*             LONG BO   2004-6-02
 
-	ADDED 5 COLUMNS: 
-	
-	1）安全库存				是指.1.4.17（DCEC零件－地点计划维护）中的安全库存。
-	2）"月度需求"			＝本月到报表日期间的所有采购收货量 + 报表日到月底这段时间的MRP计划订货量。
-	3）"供应商比例"			是指.5.5.1.17（排程单MRP%维护）中的比例。
-	4）"比例采购数量"		是指根据"月度需求"和"供应商比例"自动分配出来的数量。
-	5）"当月累计到货数量"	即当月累计采购收货量
+  ADDED 5 COLUMNS:
+
+  1）安全库存       是指.1.4.17（DCEC零件－地点计划维护）中的安全库存。
+  2）"月度需求"     ＝本月到报表日期间的所有采购收货量 + 报表日到月底这段时间的MRP计划订货量。
+  3）"供应商比例"     是指.5.5.1.17（排程单MRP%维护）中的比例。
+  4）"比例采购数量"   是指根据"月度需求"和"供应商比例"自动分配出来的数量。
+  5）"当月累计到货数量" 即当月累计采购收货量
 
 -----------------------------------------------------------------------------------*/
+/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
 
          /* DISPLAY TITLE */
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-/*GI32*/ 
-{mfdtitle.i "120815.1"}
+/*GI32*/
+{mfdtitle.i "121023.1"}
 
 def var site like si_site.
 def var site1 like si_site.
@@ -38,8 +39,8 @@ def var testdir as char.
 def var i as inte.
 
 /*lb01*/
-def var mstart as date label "月度范围".		/*月度开始日期 */
-def var mend as date.		/*月度结束日期 */
+def var mstart as date label "月度范围".    /*月度开始日期 */
+def var mend as date.   /*月度结束日期 */
 /*lb01*/
 
 /*workfile key index: buyer + vend + part*/
@@ -58,10 +59,10 @@ def workfile xxwk
    field ponbr like pod_nbr
    field poline like pod_line
    field keeper as char label "保管员"
-   FIELD runseq LIKE ptp_run_seq2 
+   FIELD runseq LIKE ptp_run_seq2
    /*lb01*/
    field sftstock like ptp_sfty_stk
-   field mqty	like tr_qty_loc
+   field mqty like tr_qty_loc
    field supperc like qad_decfld[1]  /*采购比例*/
    field cumrctqty like tr_qty_loc
    /*lb01*/
@@ -89,11 +90,11 @@ form
    RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
    SKIP(1)  /*GUI*/
    start colon 22  v_end  COLON 45 skip(1)
-   mstart colon 22 		mend	colon 45 label "至"	skip(1) /*lb01*/
+   mstart colon 22    mend  colon 45 label "至" skip(1) /*lb01*/
    site colon 22        site1 colon 45 label {t001.i}
    vend colon 22        vend1 colon 45 label {t001.i}
    buyer colon 22       buyer1 colon 45 label {t001.i}
-   part colon 22        part1 colon 45 label {t001.i} 
+   part colon 22        part1 colon 45 label {t001.i}
 /*hj01*/  v_zzk COLON 22 v_zzk1 colon 45 label "至" skip(1)
    outpath colon 22
    skip (1)
@@ -107,12 +108,12 @@ form
    RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
 setframelabels(frame a:handle) .
 repeat:
-    
-    outpath = "c:\Purchase daily schedule". 
-/*	outpath = "E:\Project\DCEC\Customization(6702C.08)". lb01*/
-    if start = ? then start = today.   
+
+    outpath = "c:\Purchase daily schedule".
+/*  outpath = "E:\Project\DCEC\Customization(6702C.08)". lb01*/
+    if start = ? then start = today.
     v_end = START.
-    
+
     if site1 = hi_char then site1 = "".
     if vend1 = hi_char then vend1 = "".
     if buyer1 = hi_char then buyer1 = "".
@@ -124,29 +125,29 @@ repeat:
       message "日程日期不允许为空" view-as alert-box error.
       undo,retry.
     end.
- 	
-	if day(start) < 28 then do:
-		mstart = start - day(start) - 1. /*上个月最后一天*/
-		mend = start.
-	end.
-	else do:
-		mstart = start.
-		mend = start + 5.   /*变到下个月*/
-	end.
-	mstart = mstart + 28 - day(mstart).  /*变到月的28号*/
-	
-	mend = mend + 27 - day(mend).
-	/*--lb01*/
-	
-	    
+
+  if day(start) < 28 then do:
+    mstart = start - day(start) - 1. /*上个月最后一天*/
+    mend = start.
+  end.
+  else do:
+    mstart = start.
+    mend = start + 5.   /*变到下个月*/
+  end.
+  mstart = mstart + 28 - day(mstart).  /*变到月的28号*/
+
+  mend = mend + 27 - day(mend).
+  /*--lb01*/
+
+
     update /*start lb01*/ mstart mend  site site1 vend vend1 buyer buyer1 part part1 v_zzk v_zzk1 outpath  with frame a.
-    
+
     if site1 = "" then site1 = hi_char.
     if vend1 = "" then vend1 = hi_char.
     if buyer1 = "" then buyer1 = hi_char.
     if part1 = "" then part1 = hi_char.
-/*hj01*/ if v_zzk1 = "" then v_zzk1 = hi_char.   
-   
+/*hj01*/ if v_zzk1 = "" then v_zzk1 = hi_char.
+
 /*J034*/       if not batchrun then do:
 /*J034*/          {gprun.i ""gpsirvr.p""
                    "(input site, input site1, output return_int)"}
@@ -156,13 +157,13 @@ repeat:
 /*J034*/          end.
 /*J034*/       end.
 
-    /*verify whether the output path is existing*/    
+    /*verify whether the output path is existing*/
     if outpath = "" then do:
           message "目录不允许为空,请重新输入!" view-as alert-box error.
           next-prompt outpath with frame a.
           undo,retry.
     end.
-    
+
     testdir = outpath + "\testdir".
     OS-CREATE-DIR value(testdir).
     if OS-ERROR <> 0 then do:
@@ -172,24 +173,25 @@ repeat:
     end.
     OS-DELETE value(testdir).
      /*end verify the output path*/
-    
+
     up_yn = yes.
    message "确认更新" view-as alert-box question buttons yes-no update up_yn.
    if not up_yn then undo,retry.
-    
-   /*search the template file*/   
+
+   /*search the template file*/
 /* lb01   if search("E:\Project\DCEC\Customization(6702C.08)\supplier schedule template.xlt") = ? then do:*/
-  if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt") = ? then do: 
+/* *SS-20121023.1*     if search("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt") = ? then do:  */
+/* *SS-20121023.1*  */   if search("\\dcecssy046\template\purchase\supplier schedule template.xlt") = ? then do:
       message "报表模板不存在!" view-as alert-box error.
       undo,retry.
    end.
-      
+
     for each xxwk:
        delete xxwk.
     end. 
     
-    for each pod_det where pod_domain = global_domain 
-    							     and (pod_site >= site and pod_site <= site1)
+    for each pod_det where pod_domain = global_domain
+                       and (pod_site >= site and pod_site <= site1)
                        and (pod_part >= part and pod_part <= part1)
 /*hj01*/               AND (pod__chr01 >= v_zzk and pod__chr01 <= v_zzk1) no-lock,
         each po_mstr where po_domain = global_domain and po_nbr = pod_nbr
@@ -197,25 +199,25 @@ repeat:
                        and (po_vend >= vend and po_vend <= vend1) no-lock,
         each pt_mstr where pt_domain = global_domain and pt_part = pod_part no-lock,
         each ptp_det where ptp_domain = global_domain and ptp_site = pod_site
-                       and ptp_part = pt_part 
+                       and ptp_part = pt_part
                        and (ptp_buyer >= buyer and ptp_buyer <= buyer1) no-lock,
         each schd_det where schd_domain = global_domain and schd_type = 4
-                     and schd_rlse_id = pod_curr_rlse_id[1] 
-                       and schd_nbr = pod_nbr 
-                       and schd_line = pod_line 
+                     and schd_rlse_id = pod_curr_rlse_id[1]
+                       and schd_nbr = pod_nbr
+                       and schd_line = pod_line
                        and schd_discr_qty > 0
                        and schd_date >= START AND schd_date <= v_end no-lock:              /*kevin*/
         /*break by ptp_buyer by po_vend:*/
-        
+
 
         find first xxwk where xxwk.buyer = ptp_buyer
                          and xxwk.zzk = pod__chr01
                          and xxwk.ponbr = po_nbr
-                     and xxwk.poline = pod_line    
+                     and xxwk.poline = pod_line
                          and xxwk.part = pod_part no-error.
         if not available xxwk then do:
               create xxwk.
-              assign xxwk.zzk = pod__chr01 
+              assign xxwk.zzk = pod__chr01
                     xxwk.buyer = ptp_buyer
                      xxwk.vend = po_vend
                      xxwk.part = pod_part
@@ -224,54 +226,54 @@ repeat:
                      xxwk.loc = pod_loc
                      xxwk.ponbr = pod_nbr
                      xxwk.poline = pod_line
-                     xxwk.site = pod_site                     
+                     xxwk.site = pod_site
                      xxwk.stime = schd_time
                      xxwk.sftstock = ptp_sfty_stk
                      xxwk.runseq = ptp_run_seq2
-                     .       
-			/* lb01-- 计算月度需求数量 
-			本月到报表日期间的所有采购收货量 + 报表日到月底这段时间的MRP计划订货量。*/
-			xxwk.mqty = 0.
-			for each prh_hist no-lock where prh_domain = global_domain and
-			prh_rcp_date >= mstart and prh_rcp_date <= mend
-			and prh_part = pod_part and prh_site = pod_site:
-				xxwk.mqty = xxwk.mqty + prh_rcvd.
-			end.
-			for each mrp_det no-lock where mrp_domain = global_domain and
-			mrp_site = pod_site and mrp_part = pod_part 
-			and mrp_due_date >= today and mrp_due_date <= mend
-			and index(mrp_type,"demand") > 0:
-				xxwk.mqty = xxwk.mqty + mrp_qty.
-			end.			
-			
-			/*供应商比例*/
-			find last qad_wkfl where qad_domain = global_domain 
-					and qad_key1 = "poa_det"
-      		and qad_charfld[3] = pod_site and qad_charfld[2] = pod_part
-      		and qad_charfld[1] = pod_nbr 
-      		and qad_datefld[1] <= mend 
-      		no-lock no-error.
-      		xxwk.supperc = if available qad_wkfl then qad_decfld[1] else 0 .
-			
-			/*当月累计到货数量*/
-			xxwk.cumrctqty = 0.
-			for each prh_hist no-lock where prh_domain = global_domain and
-			prh_rcp_date >= mstart and prh_rcp_date <= mend
-			and prh_part = pod_part and prh_site = pod_site
-			and prh_nbr = pod_nbr:
-				xxwk.cumrctqty = xxwk.cumrctqty + prh_rcvd.
-			end.
-			/*--lb01*/
+                     .
+      /* lb01-- 计算月度需求数量
+      本月到报表日期间的所有采购收货量 + 报表日到月底这段时间的MRP计划订货量。*/
+      xxwk.mqty = 0.
+      for each prh_hist no-lock where prh_domain = global_domain and
+      prh_rcp_date >= mstart and prh_rcp_date <= mend
+      and prh_part = pod_part and prh_site = pod_site:
+        xxwk.mqty = xxwk.mqty + prh_rcvd.
+      end.
+      for each mrp_det no-lock where mrp_domain = global_domain and
+      mrp_site = pod_site and mrp_part = pod_part
+      and mrp_due_date >= today and mrp_due_date <= mend
+      and index(mrp_type,"demand") > 0:
+        xxwk.mqty = xxwk.mqty + mrp_qty.
+      end.
+
+      /*供应商比例*/
+      find last qad_wkfl where qad_domain = global_domain
+          and qad_key1 = "poa_det"
+          and qad_charfld[3] = pod_site and qad_charfld[2] = pod_part
+          and qad_charfld[1] = pod_nbr
+          and qad_datefld[1] <= mend
+          no-lock no-error.
+          xxwk.supperc = if available qad_wkfl then qad_decfld[1] else 0 .
+
+      /*当月累计到货数量*/
+      xxwk.cumrctqty = 0.
+      for each prh_hist no-lock where prh_domain = global_domain and
+      prh_rcp_date >= mstart and prh_rcp_date <= mend
+      and prh_part = pod_part and prh_site = pod_site
+      and prh_nbr = pod_nbr:
+        xxwk.cumrctqty = xxwk.cumrctqty + prh_rcvd.
+      end.
+      /*--lb01*/
         end.
-        
+
         assign xxwk.qty_ord = xxwk.qty_ord + schd_discr_qty.
-        
-        find in_mstr where in_domain = global_domain 
+
+        find in_mstr where in_domain = global_domain
          and in_site = xxwk.site and in_part = xxwk.part no-lock no-error.
        if available in_mstr then assign xxwk.keeper = in__qadc01.
-       
+
     end. /*for each pod_det, each ...*/
-        
+
 
      /*Begin to create the PO　palnning order by vendor*/
 
@@ -279,15 +281,17 @@ repeat:
      CREATE "Excel.Application" chExcelApplication.
 
      for each xxwk no-lock break by xxwk.buyer by xxwk.zzk by xxwk.vend by xxwk.part:
-    
+
         i = i + 1.
-        
+
        if first-of(xxwk.zzk) then do:
 
          /*Create a new workbook based on the template chExcel file */
 /*         chExcelWorkbook = chExcelApplication:Workbooks:ADD("E:\Project\DCEC\Customization(6702C.08)\supplier schedule template.xlt").*/
-         chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt").
-         /* Set Excel Format Variable.*/
+/* *SS-20121023.1*           chExcelWorkbook = chExcelApplication:Workbooks:ADD("D:\ss\trunk\cummins\dcec\src\no source code\template\purchase\supplier schedule template.xlt").   */
+/* *SS-20121023.1*      */     chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\purchase\supplier schedule template.xlt").
+
+   /* Set Excel Format Variable.*/
          iHeaderLine = 16.
          iLine = iHeaderLine + 1.
          iHeaderStartLine = 1.
@@ -297,12 +301,12 @@ repeat:
          iPageNum = 1.
 
          /*chExcelApplication:visible = true.*/
-           
+
            i = 1.
-           
+
            chExcelWorkbook:worksheets(1):cells(5,"AA"):value = start.
            chExcelWorkbook:worksheets(1):cells(7,"D"):value = xxwk.zzk.
-           
+
            find ad_mstr where ad_domain = global_domain and ad_addr = xxwk.zzk and ad_type = "company" no-lock no-error.
          if available ad_mstr then do:
              chExcelWorkbook:worksheets(1):cells(8,"D"):value = ad_name.
@@ -312,27 +316,27 @@ repeat:
              chExcelWorkbook:worksheets(1):cells(13,"D"):value = ad_fax.
              chExcelWorkbook:worksheets(1):cells(14,"D"):value = ad_line3.
          end.
-                              
-           find code_mstr where code_domain = global_domain 
-           	and code_fldname = "ptp_buyer" 
-           	and code_value = xxwk.buyer no-lock no-error.
+
+           find code_mstr where code_domain = global_domain
+            and code_fldname = "ptp_buyer"
+            and code_value = xxwk.buyer no-lock no-error.
            if available code_mstr then do:
-               chExcelWorkbook:worksheets(1):cells(11,"AA"):value = 
+               chExcelWorkbook:worksheets(1):cells(11,"AA"):value =
                    substr(code_cmmt,index(code_cmmt,",") + 1,length(code_cmmt,"raw") - index(code_cmmt,","),"raw").
-               
-               find emp_mstr where emp_domain = global_domain 
-               	and emp_addr = xxwk.buyer no-lock no-error.
+
+               find emp_mstr where emp_domain = global_domain
+                and emp_addr = xxwk.buyer no-lock no-error.
                if available emp_mstr then do:
                      chExcelWorkbook:worksheets(1):cells(12,"AA"):value = emp_bs_phone. /* + ",转: " + emp_ext.*/ /*kevin*/
-                     chExcelWorkbook:worksheets(1):cells(14,"AA"):value = emp_line3.     
+                     chExcelWorkbook:worksheets(1):cells(14,"AA"):value = emp_line3.
                end.
-           end.                                            
-           
+           end.
+
            find usr_mstr where usr_userid = global_userid no-lock no-error.
            if available usr_mstr then do:
                  chExcelWorkbook:worksheets(1):cells(15,"J"):value = usr_name.
            end.
-                      
+
        end. /*if first-of(xxwk.vend)*/
 
          if not first-of(xxwk.zzk) /*and not last-of(xxwk.zzk)*/ then do:
@@ -340,18 +344,18 @@ repeat:
             chExcelWorkbook:worksheets(1):rows(itotalline + 1):copy.
             chExcelWorkbook:worksheets(1):cells(itotalline,1):select.
             chExcelWorkbook:worksheets(1):paste.
-         end. 
+         end.
          /*
          ELSE DO:
             IF LAST(xxwk.zzk) THEN DO:
                 IF FIRST(xxwk.vend) THEN DO:
                     chExcelWorkbook:Worksheets(1):Rows(iTotalLine + 1):DELETE.
-                END.  
+                END.
                 ELSE DO:
                     chExcelWorkbook:Worksheets(1):Rows(iTotalLine):DELETE.
-                END.  
+                END.
             END.
-         END.           
+         END.
         */
 
          IF iLine > iMAXPageLine THEN DO:
@@ -365,13 +369,13 @@ repeat:
              iLine = iHeaderLine + 1.
          END.
 
-           find first ad_mstr where ad_domain = global_domain 
+           find first ad_mstr where ad_domain = global_domain
                  and (ad_type = "supplier" or ad_type = "vendor")
                   and ad_addr = xxwk.vend no-lock no-error.
            if available ad_mstr then do:
                assign xxwk.vendname = ad_name.
            end.
-                          
+
         chExcelWorkbook:worksheets(1):cells(itotalline,"A"):value = i.
         chExcelWorkbook:worksheets(1):cells(itotalline,"B"):value = xxwk.part.
         chExcelWorkbook:worksheets(1):cells(itotalline,"F"):value = xxwk.desc1.
@@ -385,7 +389,7 @@ repeat:
 /*        chExcelWorkbook:worksheets(1):cells(itotalline,"AG"):value = xxwk.site.*/              /*kevin,12/2*/
         chExcelWorkbook:worksheets(1):cells(itotalline,"AE"):value = xxwk.ponbr.
         chExcelWorkbook:worksheets(1):cells(itotalline,"AG"):value = xxwk.poline.
-        
+
         /*lb01--*/
         chExcelWorkbook:worksheets(1):cells(itotalline,"AH"):value = xxwk.sftstock.
         chExcelWorkbook:worksheets(1):cells(itotalline,"AI"):value = xxwk.mqty.
@@ -407,23 +411,23 @@ repeat:
                 chExcelWorkbook:Worksheets(1):Paste.
                 iTotalLine = iTotalLine + 1.
             END.
-        
+
             chExcelWorkbook:Worksheets(1):Rows(iTotalLine):DELETE.
 
-           /* save the new chExcel data workbook file */ 
-             chExcelWorkbook:SaveAs(outpath + "\" + string(year(start),"9999") 
+           /* save the new chExcel data workbook file */
+             chExcelWorkbook:SaveAs(outpath + "\" + string(year(start),"9999")
                                    + string(month(start),"99") + string(day(start),"99") + "-"
                                    + xxwk.buyer + "-" + xxwk.zzk + ".xls",,,,,,1).
              chExcelWorkbook:CLOSE.
              RELEASE OBJECT chExcelWorkbook.
         end.
-         
-     end. /*for each xxwk*/ 
+
+     end. /*for each xxwk*/
 
      /* close the Excel file */
      chExcelApplication:QUIT.
      /* release com - handles */
      RELEASE OBJECT chExcelApplication.
-     /*End of creation*/                  
-        
+     /*End of creation*/
+
 end. /*repeat*/

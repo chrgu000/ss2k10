@@ -11,16 +11,16 @@
 /* Last change by wilber 03/27/2008 For check the ptp_pm_code  change *W001*/
 /* Last change by wilber 03/31/2008 For input the comment of 13.1.2 from pt_desc2  change *W002*/
 /* Last change by wilber 04/02/2008 for item_type = 2 don't maintanence the bom-code  *W003*/
-session:date-format = 'ymd'.
-{mfdeclre.i "new global"}
-{mf1.i "new global"}
-
-base_curr = "RMB".
-IF global_userid = "" THEN global_userid = "MFG".
-mfguser="".
-global_user_lang = "ch".
-global_user_lang_dir = "ch/".
-global_domain = "DCEC".
+session:date-format = 'ymd'.                             
+{mfdeclre.i "new global"}                                
+{mf1.i "new global"}                                     
+                                                         
+base_curr = "RMB".                                       
+IF global_userid = "" THEN global_userid = "MFG".        
+mfguser="".                                              
+global_user_lang = "ch".                                 
+global_user_lang_dir = "ch/".                            
+global_domain = "DCEC".                                  
 
 { xxppifdef.i }
 def var item_type as char.
@@ -43,7 +43,8 @@ def var exec_child as char.
 
         output stream batchdata to value(strinputfile) no-echo.
 
-        put stream batchdata unformatted "~"" at 1 runuser "~" ~"" runpsw "~"".
+        put stream batchdata unformatted "~"" at 1 runuser "~" ~"" runpsw "~"".            
+        put stream batchdata unformatted "-" at 1 skip.
         put stream batchdata unformatted "~"yybmmamt2.p~"" at 1.   /*13.1.2*/
         		for each xxppif_log where xxppif_domain = global_domain
         				 and lookup(xxppif_tr_code,"PDSA,SOSA,PDSC,SOSC") > 0
