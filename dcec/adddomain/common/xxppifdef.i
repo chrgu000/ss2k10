@@ -1,5 +1,6 @@
 /*2004-08-25 21:06 create by longbo*/
 
+{mfdeclre.i}
 
 /*G1MN*/ {gpglefv.i}
 		
@@ -51,7 +52,7 @@
 		
 
 
-		find first usrw_wkfl where usrw_key1 = "BKFLH-CTRL" no-lock no-error.
+		find first usrw_wkfl where usrw_domain = global_domain and usrw_key1 = "BKFLH-CTRL" no-lock no-error.
 		if not available usrw_wkfl then do:
 			runuser = "admin".
 			runpsw = "admin".		
@@ -62,14 +63,15 @@
 		end.
 		
 		trid_begin = 0.
-		find first usrw_wkfl no-lock where
+		find first usrw_wkfl no-lock where usrw_domain = global_domain and
 		usrw_key1 = "XX-PPIF-LASTID" no-error.
 		if available usrw_wkfl then do:
 			trid_begin = usrw_decfld[1].
 		end.
 
 
-		find first code_mstr no-lock where code_fldname = "PPIF_SO" no-error.
+		find first code_mstr no-lock where code_domain = global_domain and
+						   code_fldname = "PPIF_SO" no-error.
 		if available code_mstr then do:
 			filepath = trim(code_cmmt).
 		end.
