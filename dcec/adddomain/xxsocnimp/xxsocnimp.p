@@ -12,11 +12,11 @@
 {mfdtitle.i "20121020.1"}
 {cxcustom.i "SOCNUAC.P"}
 DEFINE NEW SHARED VAR thfile AS CHAR FORMAT "x(50)".
-def new shared var bexcel as com-handle.   
-def new shared var bbook as com-handle.    
-def new shared var bsheet as com-handle.   
+def new shared var bexcel as com-handle.
+def new shared var bbook as com-handle.
+def new shared var bsheet as com-handle.
 
-DEFINE NEW SHARED TEMP-TABLE mytt 
+DEFINE NEW SHARED TEMP-TABLE mytt
     FIELD f01 AS CHAR
     FIELD f02 AS CHAR
     FIELD f03 AS CHAR
@@ -35,8 +35,8 @@ DEFINE NEW SHARED TEMP-TABLE mytt
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/

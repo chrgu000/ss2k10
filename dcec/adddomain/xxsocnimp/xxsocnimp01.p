@@ -4,14 +4,14 @@
 /* DISPLAY TITLE */
 {mfdeclre.i}
 def shared var thfile as CHAR FORMAT "x(50)".
-def shared var bexcel as com-handle.      
-def shared var bbook as com-handle.       
-def shared var bsheet as com-handle.      
+def shared var bexcel as com-handle.
+def shared var bbook as com-handle.
+def shared var bsheet as com-handle.
 
 DEFINE VAR myi AS INT NO-UNDO.
 DEFINE VAR thchar AS CHAR NO-UNDO.
 
-DEFINE SHARED TEMP-TABLE mytt 
+DEFINE SHARED TEMP-TABLE mytt
     FIELD f01 AS CHAR
     FIELD f02 AS CHAR
     FIELD f03 AS CHAR
@@ -26,14 +26,14 @@ DEFINE SHARED TEMP-TABLE mytt
     FIELD f12 AS CHAR format "x(48)"
     .
 
-    
+
   create "Excel.Application" bexcel.
   bexcel:visible = false.
   bbook = bexcel:workbooks:open(thfile).
   Bsheet = bexcel:sheets:ITEM("socnimp").
   myi = 3.
   thchar = Bsheet:range("A2"):VALUE.
-  
+
   DO WHILE thchar > "" :
       CREATE mytt.
       f01 = trim(string(Bsheet:cells(myi, 1):VALUE)).
@@ -62,9 +62,3 @@ DEFINE SHARED TEMP-TABLE mytt
       myi = myi + 1.
       thchar = Bsheet:range("A" + STRING(myi)):VALUE.
   END.
-  
-  
-  
-  
-  
-

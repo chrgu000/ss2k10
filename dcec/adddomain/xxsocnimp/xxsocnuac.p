@@ -79,8 +79,8 @@ define variable frmd_ref                     like cncix_ref             no-undo.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -90,7 +90,7 @@ FORM /*GUI*/
  location
    skip(1)
    {socnfm2a.i}
- 
+
  SKIP(.4)  /*GUI*/
 with frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
 
@@ -196,7 +196,7 @@ repeat with frame a:
       nbr       nbr1
       part      part1
       thLINE
-      site 
+      site
       location
       eff-date
       sel_all
@@ -214,7 +214,7 @@ repeat with frame a:
          nbr       nbr1
          part      part1
           thLINE
-          site 
+          site
           location
          eff-date
          sel_all
@@ -344,8 +344,8 @@ repeat with frame a:
    with frame a1.
 
    FOR EACH tt_autocr :
-       IF (ac_line = thline OR thline = 0 ) AND 
-          (ac_site = site OR site = "") AND 
+       IF (ac_line = thline OR thline = 0 ) AND
+          (ac_site = site OR site = "") AND
           (ac_loc = location OR location = "")  THEN NEXT.
        DELETE tt_autocr.
    END.
@@ -371,7 +371,7 @@ repeat with frame a:
 
       if (keyfunction(lastkey) = "END-ERROR"
          and not continue-yn)
-         or continue-yn = ?   
+         or continue-yn = ?
       then
          undo mainloop, leave mainloop.
 

@@ -5,9 +5,9 @@
 {mfdeclre.i}
 def shared var thfile as CHAR FORMAT "x(50)".
 define var mymsg as char no-undo.
-def shared var bexcel as com-handle.  
-def shared var bbook as com-handle.   
-def shared var bsheet as com-handle.  
+def shared var bexcel as com-handle.
+def shared var bbook as com-handle.
+def shared var bsheet as com-handle.
 def stream bfi.
 def stream bfo.
 def stream bfoo.
@@ -22,7 +22,7 @@ define var flag3 as log no-undo.
 DEFINE VAR myi AS INT NO-UNDO.
 DEFINE VAR thchar AS CHAR NO-UNDO.
 
-DEFINE SHARED TEMP-TABLE mytt 
+DEFINE SHARED TEMP-TABLE mytt
     FIELD f01 AS CHAR
     FIELD f02 AS CHAR
     FIELD f03 AS CHAR
@@ -39,19 +39,19 @@ DEFINE SHARED TEMP-TABLE mytt
 
 
   define temp-table mytr field mytr_rec as recid .
-  
+
   on create of tr_hist do:
     find first mytr where mytr_rec = recid(tr_hist) no-lock no-error.
     if not available mytr then do:
       create mytr. mytr_rec = recid(tr_hist).
     end.
   end.
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 
   logfile =  mfguser + substring(string(today),1,2) + substring(string(today),4,2)
                       + substring(string(today),7,2) + "_" + substring(string(time,"HH:MM"),1,2)
@@ -82,7 +82,7 @@ DEFINE SHARED TEMP-TABLE mytt
       {gprun.i ""xxsocnuac.p"" }
       batchrun = no.
       OUTPUT CLOSE.
-      INPUT CLOSE. 
+      INPUT CLOSE.
       flag1 = false.
       flag2 = false.
       flag3 = false.
@@ -95,7 +95,7 @@ DEFINE SHARED TEMP-TABLE mytt
             if tr_type = "Iss-so" and tr_nbr = F03 and tr_part = F05 then do:
               flag2 = true.
             end.
-            release tr_hist.            
+            release tr_hist.
          	end.
       end.
       if flag1 and flag2 then f12 = "true".
@@ -137,10 +137,10 @@ PROCEDURE dataout.
         IF index (woutputstatment,"ERROR:") <>  0 OR    /* for us langx */
            index (woutputstatment,"´íÎó:")  <>  0 OR    /* for ch langx */
            index (woutputstatment,"¿ù»~:")  <>  0 OR
-           index (woutputstatment,"(87)")   <>  0 OR      
-           index (woutputstatment,"(557)")  <>  0 OR      
-           index (woutputstatment,"(1896)") <>  0 OR      
-           index (woutputstatment,"(143)")  <>  0                  
+           index (woutputstatment,"(87)")   <>  0 OR
+           index (woutputstatment,"(557)")  <>  0 OR
+           index (woutputstatment,"(1896)") <>  0 OR
+           index (woutputstatment,"(143)")  <>  0
            then do:
                 thmsg = woutputstatment.
                 leave.
