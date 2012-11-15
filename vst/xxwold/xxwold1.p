@@ -64,7 +64,7 @@ for each xxwoload exclusive-lock where xxwo_chk = "".
 
      find first wo_mstr no-lock where wo_lot = xxwo_lot no-error.
      if available wo_mstr and wo_rel_date = xxwo_rel_date and
-                  wo_due_date = xxwo_due_date and wo_stat = xxwo_stat
+                  wo_due_date = xxwo_due_date and (wo_stat = xxwo_stat or xxwo_stat = "-")
      then do:
         assign xxwo_chk = "OK".
      end.
