@@ -5,6 +5,8 @@
 /* REVISION END                                                              */
 
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+{mfdeclre.i}
+{xxloaddata.i}
 {xxwold.i}
 define variable txt as character.
 define variable vdte as character.
