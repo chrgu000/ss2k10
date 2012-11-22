@@ -1,0 +1,565 @@
+ADD TABLE "a6rq_mstr"
+  AREA "TRANSACTION"
+  LABEL "reply orders list"
+  FROZEN
+  DUMP-NAME "a6rq_mst"
+
+ADD FIELD "a6rq_site" OF "a6rq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "site"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "site"
+  ORDER 10
+
+ADD FIELD "a6rq_custpono" OF "a6rq_mstr" AS character 
+  FORMAT "x(22)"
+  INITIAL ""
+  LABEL "customer PO NO."
+  POSITION 3
+  SQL-WIDTH 44
+  COLUMN-LABEL "customer PO NO."
+  ORDER 20
+
+ADD FIELD "a6rq_custpoln" OF "a6rq_mstr" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Costomer PO Line"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "Costomer PO Line"
+  ORDER 30
+
+ADD FIELD "a6rq_cust" OF "a6rq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "customer ADDR."
+  POSITION 5
+  SQL-WIDTH 16
+  COLUMN-LABEL "Customer ADDR."
+  ORDER 40
+
+ADD FIELD "a6rq_bill" OF "a6rq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "BILL ADDR."
+  POSITION 6
+  SQL-WIDTH 16
+  COLUMN-LABEL "BILL ADDR."
+  ORDER 50
+
+ADD FIELD "a6rq_ship" OF "a6rq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship ADDR."
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "SHIP ADDR."
+  ORDER 60
+
+ADD FIELD "a6rq_consums" OF "a6rq_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "DUC FCS"
+  POSITION 8
+  SQL-WIDTH 1
+  COLUMN-LABEL "DUC FCS"
+  ORDER 70
+
+ADD FIELD "a6rq_part" OF "a6rq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item NO."
+  POSITION 9
+  SQL-WIDTH 36
+  COLUMN-LABEL "Itrm NO."
+  ORDER 80
+
+ADD FIELD "a6rq_rq_qty" OF "a6rq_mstr" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Qty Ordered"
+  POSITION 10
+  SQL-WIDTH 17
+  COLUMN-LABEL "Qty Ordered"
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "a6rq_due_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "due date"
+  POSITION 11
+  SQL-WIDTH 4
+  COLUMN-LABEL "due date"
+  ORDER 100
+
+ADD FIELD "a6rq_decbom" OF "a6rq_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "decompose bom"
+  POSITION 12
+  SQL-WIDTH 1
+  COLUMN-LABEL "decompose bom"
+  ORDER 110
+
+ADD FIELD "a6rq_bomcode" OF "a6rq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "BOM Code"
+  POSITION 13
+  SQL-WIDTH 36
+  COLUMN-LABEL "BOM Code"
+  ORDER 120
+
+ADD FIELD "a6rq_reply" OF "a6rq_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "need to reply"
+  POSITION 14
+  SQL-WIDTH 1
+  COLUMN-LABEL "neet to reply"
+  ORDER 130
+
+ADD FIELD "a6rq_rpl_dt" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "when to reply"
+  POSITION 15
+  SQL-WIDTH 4
+  COLUMN-LABEL "when to reply"
+  ORDER 140
+
+ADD FIELD "a6rq_rpl_user" OF "a6rq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "who to reply"
+  POSITION 16
+  SQL-WIDTH 36
+  COLUMN-LABEL "who to reply"
+  ORDER 150
+
+ADD FIELD "a6rq_confirm" OF "a6rq_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "sure date"
+  POSITION 17
+  SQL-WIDTH 1
+  COLUMN-LABEL "sure date"
+  ORDER 160
+
+ADD FIELD "a6rc_con_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "con date"
+  POSITION 18
+  SQL-WIDTH 4
+  COLUMN-LABEL "con date"
+  ORDER 170
+
+ADD FIELD "a6rq_con_user" OF "a6rq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "con user"
+  POSITION 19
+  SQL-WIDTH 36
+  COLUMN-LABEL "con user"
+  ORDER 180
+
+ADD FIELD "a6rq_crea_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "creat date"
+  POSITION 20
+  SQL-WIDTH 4
+  COLUMN-LABEL "creat date"
+  ORDER 190
+
+ADD FIELD "a6rq_last_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "last date"
+  POSITION 21
+  SQL-WIDTH 4
+  COLUMN-LABEL "last date"
+  ORDER 200
+
+ADD FIELD "a6rq_last_user" OF "a6rq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "last user"
+  POSITION 22
+  SQL-WIDTH 36
+  COLUMN-LABEL "last user"
+  ORDER 210
+
+ADD FIELD "a6rq_status" OF "a6rq_mstr" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "status"
+  POSITION 23
+  SQL-WIDTH 2
+  COLUMN-LABEL "status"
+  ORDER 220
+
+ADD FIELD "a6rq_run" OF "a6rq_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "run"
+  POSITION 24
+  SQL-WIDTH 1
+  COLUMN-LABEL "run"
+  ORDER 230
+
+ADD FIELD "a6rq_run_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "run date"
+  POSITION 25
+  SQL-WIDTH 4
+  COLUMN-LABEL "run date"
+  ORDER 240
+
+ADD FIELD "a6rq_rmk1" OF "a6rq_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "remark"
+  POSITION 26
+  SQL-WIDTH 80
+  COLUMN-LABEL "remark"
+  ORDER 250
+
+ADD FIELD "a6rq_rmk2" OF "a6rq_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "remark"
+  POSITION 27
+  SQL-WIDTH 80
+  COLUMN-LABEL "remark"
+  ORDER 260
+
+ADD FIELD "a6rq_rmk3" OF "a6rq_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "remark"
+  POSITION 28
+  SQL-WIDTH 80
+  COLUMN-LABEL "remark"
+  ORDER 270
+
+ADD FIELD "a6rq_char01" OF "a6rq_mstr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 29
+  SQL-WIDTH 40
+  ORDER 280
+
+ADD FIELD "a6rq_char02" OF "a6rq_mstr" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 30
+  SQL-WIDTH 40
+  ORDER 290
+
+ADD FIELD "a6rq_date01" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "a6rq_date02" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 32
+  SQL-WIDTH 4
+  ORDER 310
+
+ADD FIELD "a6ra_sim_mod" OF "a6rq_mstr" AS integer 
+  FORMAT "9"
+  INITIAL "0"
+  POSITION 33
+  SQL-WIDTH 4
+  ORDER 320
+
+ADD FIELD "a6rq_rq_date" OF "a6rq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 34
+  SQL-WIDTH 4
+  ORDER 330
+
+ADD INDEX "sitepono" ON "a6rq_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "a6rq_site" ASCENDING 
+  INDEX-FIELD "a6rq_custpono" ASCENDING 
+  INDEX-FIELD "a6rq_custpoln" ASCENDING 
+
+ADD INDEX "custdate" ON "a6rq_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "a6rq_cust" ASCENDING 
+  INDEX-FIELD "a6rq_due_date" ASCENDING 
+
+ADD TABLE "a6rqd_det"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "a6rqd_de"
+
+ADD FIELD "a6rqd_site" OF "a6rqd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "a6rqd_custpono" OF "a6rqd_det" AS character 
+  FORMAT "x(22)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 44
+  ORDER 20
+
+ADD FIELD "a6rqd_custpoln" OF "a6rqd_det" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "a6rqd_sort" OF "a6rqd_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "a6rqd_part" OF "a6rqd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 36
+  ORDER 50
+
+ADD FIELD "a6rqd_pmcode" OF "a6rqd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 2
+  ORDER 60
+
+ADD FIELD "a6rqd_Pt_code" OF "a6rqd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "a6rqd_key" OF "a6rqd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 80
+
+ADD FIELD "a6rqd_yld_pct" OF "a6rqd_det" AS decimal 
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "a6rqd_scrap_pct" OF "a6rqd_det" AS decimal 
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  POSITION 11
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "a6rqd_rel_date" OF "a6rqd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "a6rqd_due_date" OF "a6rqd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "a6rqd_rq_qty" OF "a6rqd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 14
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "a6rqd_short_qty" OF "a6rqd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 15
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "a6rqd_desc" OF "a6rqd_det" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 48
+  ORDER 150
+
+ADD FIELD "a6rqd_run" OF "a6rqd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 17
+  SQL-WIDTH 1
+  ORDER 160
+
+ADD FIELD "a6rqd_status" OF "a6rqd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 2
+  ORDER 170
+
+ADD FIELD "a6rqd_sim_code" OF "a6rqd_det" AS integer 
+  FORMAT "9"
+  INITIAL "0"
+  POSITION 19
+  SQL-WIDTH 4
+  ORDER 180
+
+ADD FIELD "a6rqd_remark" OF "a6rqd_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 80
+  ORDER 190
+
+ADD FIELD "a6rqd_char01" OF "a6rqd_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 21
+  SQL-WIDTH 40
+  ORDER 200
+
+ADD FIELD "a6rqd_char02" OF "a6rqd_det" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  POSITION 22
+  SQL-WIDTH 40
+  ORDER 210
+
+ADD FIELD "a6rqd_date01" OF "a6rqd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD FIELD "a6rqd_date02" OF "a6rqd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 24
+  SQL-WIDTH 4
+  ORDER 230
+
+ADD FIELD "a6rqd_qty_per" OF "a6rqd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 25
+  SQL-WIDTH 19
+  DECIMALS 4
+  ORDER 240
+
+ADD FIELD "a6rqd_scrp_pct" OF "a6rqd_det" AS decimal 
+  FORMAT ">>.99%"
+  INITIAL "0"
+  POSITION 26
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 250
+
+ADD FIELD "a6rqd_level" OF "a6rqd_det" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  POSITION 27
+  SQL-WIDTH 4
+  ORDER 260
+
+ADD FIELD "a6rqd_lt" OF "a6rqd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 28
+  SQL-WIDTH 4
+  ORDER 270
+
+ADD FIELD "a6rqd_insp" OF "a6rqd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 29
+  SQL-WIDTH 4
+  ORDER 280
+
+ADD FIELD "a6rqd_sfty" OF "a6rqd_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 30
+  SQL-WIDTH 4
+  ORDER 290
+
+ADD FIELD "a6rqd_rq_date" OF "a6rqd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 31
+  SQL-WIDTH 4
+  ORDER 300
+
+ADD FIELD "a6rqd_cust" OF "a6rqd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 32
+  SQL-WIDTH 16
+  ORDER 310
+
+ADD FIELD "a6rqd_stock" OF "a6rqd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 33
+  SQL-WIDTH 1
+  ORDER 320
+
+ADD FIELD "a6rqd_zone" OF "a6rqd_det" AS integer 
+  FORMAT "9"
+  INITIAL "0"
+  POSITION 34
+  SQL-WIDTH 4
+  ORDER 330
+
+ADD INDEX "sitepono" ON "a6rqd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "a6rqd_site" ASCENDING 
+  INDEX-FIELD "a6rqd_custpono" ASCENDING 
+  INDEX-FIELD "a6rqd_custpoln" ASCENDING 
+  INDEX-FIELD "a6rqd_sort" ASCENDING 
+
+ADD INDEX "itemdate" ON "a6rqd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "a6rqd_site" ASCENDING 
+  INDEX-FIELD "a6rqd_part" ASCENDING 
+  INDEX-FIELD "a6rqd_due_date" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000010484
