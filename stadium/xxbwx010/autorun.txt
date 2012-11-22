@@ -1,0 +1,2 @@
+C:\progress\91d\bin\prowin32.exe -pf C:\USGUICL\Production.pf -ininame C:\USGUICL\Production.SVG -p D:\tmp\xrc\us\xx\xxupcpdt.r
+rem 此程序用于同步制造商名称 从ad_name到cp__chr02.用于br010,br022.
