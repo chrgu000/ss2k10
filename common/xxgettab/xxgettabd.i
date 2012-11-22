@@ -123,3 +123,40 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
       END.
     END. /* FOR EACH _index */
 end.
+
+if genprg then do:
+	 if opsys = "unix" then do:
+	 		assign fname = fname + "/".
+	 end.
+	 else if opsys = "win" or opsys = "dos" then do:
+	 		assign fname = fname + "~\".
+	 end.
+	 output stream eo to value(fname + "xx" + sfile + "o.p").
+   put stream eo unformat 'SESSION:DATE-FORMAT = "' + dtefmt + '".' skip.
+   put stream eo unformat 'OUTPUT TO "' + fname + sfile + '.d".' skip.
+   put stream eo unformat 'for each ' sfile ' no-lock:' skip.
+   put stream eo unformat '    EXPORT DELIMITER ","' skip.
+   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):  
+       FOR EACH _FIELD OF _FILE BY _ORDER:
+   		     put stream eo unformat fill(' ',11) _FIELD-NAME skip.
+   		 END.
+   end.
+   put stream eo unformat fill(' ',11) '.' skip.
+   put stream eo 'END.' skip.
+   output stream eo close.
+   
+   output stream ei to value(fname + "xx" + sfile + "i.p").
+   put stream ei unformat 'SESSION:DATE-FORMAT = "' + dtefmt + '".' skip.
+   put stream ei unformat 'INPUT FROM "' + fname + sfile + '.d".' skip.
+   put stream ei unformat 'repeat:' skip.
+   put stream ei unformat '    create ' sfile ' .' skip.
+   put stream ei unformat '    IMPORT DELIMITER ","' skip.
+   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):  
+       FOR EACH _FIELD OF _FILE BY _ORDER:
+   		     put stream ei unformat fill(' ',11) _FIELD-NAME skip.
+   		 END.
+   end.
+   put stream ei unformat fill(' ',11) '.' skip.
+   put stream ei 'END.' skip.
+   output stream ei close.
+end.

@@ -5,16 +5,24 @@
 /*V8:ConvertMode=Report                                                      */
 /* REVISION END                                                              */
 
-{mfdtitle.i "23YL"}
+{mfdtitle.i "2AYL"}
 define variable db_name as character format "x(24)".
 define variable db_hold as character format "x(24)".
+define variable dtefmt  as character format "x(3)" initial "mdy".
+define variable genprg  as logical no-undo.
+define variable fname   as character format "x(40)" initial ".". 
 define variable sfile   as character format "x(32)".
 define variable i       as integer.
+define stream ei.
+define stream eo.
 define new shared variable sdb as character.
 define new shared variable stb as character.
 if opsys = "unix" then assign sfile = global_program_rev.
 form
    sfile   colon 20 label "TABLE"
+   genprg  colon 20
+   dtefmt  colon 20
+   fname   colon 20 skip(1)
    db_name colon 20 label "DATABASE" skip(1)
 with frame a side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
@@ -53,7 +61,7 @@ assign
    db_hold = sdbname("qaddb").
 repeat:
 if c-application-mode <> 'web' then.
-   update sfile db_name with frame a.
+   update sfile genprg dtefmt fname db_name with frame a.
    if sfile = "" then do:
       {pxmsg.i &MSGNUM=4463 &ERRORLEVEL=3}
       undo,retry.
@@ -64,7 +72,7 @@ if c-application-mode <> 'web' then.
        assign sdb = db_name
               stb = sfile.
    end.
-{wbrp06.i &command = update &fields = " db_name sfile" &frm = "a"}
+{wbrp06.i &command = update &fields = " db_name sfile genprg dtefmt fname" &frm = "a"}
 
 if (c-application-mode <> 'web') or
    (c-application-mode = 'web' and (c-web-request begins 'data')) then do:

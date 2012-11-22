@@ -16,21 +16,25 @@ compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "25YG"}
+{mfdtitle.i "2CY8"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
 &SCOPED-DEFINE xxcomp_p_3 "To"
 &SCOPED-DEFINE xxcomp_p_4 "Compile ProPath"
 &SCOPED-DEFINE xxcomp_p_5 "Language Code"
-&SCOPED-DEFINE xxcomp_p_6 "Destination Directory"
+&SCOPED-DEFINE xxcomp_p_6 "xref"
+&SCOPED-DEFINE xxcomp_p_7 "Destination Directory"
 
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
+define variable xrcKey1    as character initial "xxcomp.p.xrcdir" no-undo.
 define variable filef      as character format "x(60)".
 define variable filet      as character format "x(60)".
 define variable del-yn     as logical.
 define variable vClientDir as character no-undo.
+define variable vchkPath   as logical   no-undo.
+define new shared variable vxref as logical initial no no-undo.
 
 define temp-table tmpfile
   fields fn as CHARACTER
@@ -54,25 +58,26 @@ form
    skip(1)
    lng      colon 22 label {&xxcomp_p_5}
    kbc_display_pause colon 50
+   vxref colon 60 label {&xxcomp_p_6}
    skip(1)
-   destDir  colon 22 view-as fill-in size 50 by 1 label {&xxcomp_p_6}
+   destDir  colon 22 view-as fill-in size 50 by 1 label {&xxcomp_p_7}
 with Frame z side-labels width 80.
 setFrameLabels(Frame z:handle).
 
-ON value-changed OF lng in frame z DO:
-   IF LASTKEY = KEYCODE("u") OR LASTKEY = KEYCODE("U") then do:
-      assign lng:screen-value in frame z = "us".
-      assign lng.
-   end.
-   IF LASTKEY = KEYCODE("c") OR LASTKEY = KEYCODE("C") then do:
-      assign lng:screen-value in frame z = "ch".
-      assign lng.
-   end.
-   IF LASTKEY = KEYCODE("t") OR LASTKEY = KEYCODE("T") then do:
-      assign lng:screen-value in frame z = "tw".
-      assign lng.
-   end.
-end.
+/* ON value-changed OF lng in frame z DO:                                     */
+/*    IF LASTKEY = KEYCODE("u") OR LASTKEY = KEYCODE("U") then do:            */
+/*       assign lng:screen-value in frame z = "us".                           */
+/*       assign lng.                                                          */
+/*    end.                                                                    */
+/*    IF LASTKEY = KEYCODE("c") OR LASTKEY = KEYCODE("C") then do:            */
+/*       assign lng:screen-value in frame z = "ch".                           */
+/*       assign lng.                                                          */
+/*    end.                                                                    */
+/*    IF LASTKEY = KEYCODE("t") OR LASTKEY = KEYCODE("T") then do:            */
+/*       assign lng:screen-value in frame z = "tw".                           */
+/*       assign lng.                                                          */
+/*    end.                                                                    */
+/* end.                                                                       */
 
 ON ENTRY of destDir in FRAME Z DO:
    status input "Ctrl-] to change default value.".
@@ -85,16 +90,12 @@ end.
 ON ENTRY of filef in FRAME Z DO:
    status input "Ctrl-] to get file list.".
 end.
-/*
+
 ON LEAVE of filef in FRAME Z DO:
    assign filef.
-   assign filet:screen-value = trim(filef) + hi_char.
-   status input "".
-END.
-*/
-ON Leave of filet in FRAME Z DO:
+   assign filet:screen-value = trim(filef).
    assign filet.
-   if index(filet,hi_char) = 0 then assign filet:screen-value = filet + hi_char.
+   status input "".
 END.
 
 ON "CTRL-]" OF destDir IN FRAME z DO:
@@ -119,64 +120,116 @@ ON "CTRL-]" OF destDir IN FRAME z DO:
    end.
 end.
 
-/*
 ON RETURN of xrcdir in frame z DO:
    assign xrcdir.
    assign xrcdir = lower(trim(xrcDir)).
    run setbpropath.
    display bpropath with frame z.
 end.
-*/
+
+ON CURSOR-UP of xrcdir in frame z do:
+   assign xrcDir.
+   find first usrw_wkfl no-lock where
+           {xxusrwdom.i} {xxand.i}
+            usrw_key1 = xrcKey1 and usrw_key2 = input xrcDir and
+            usrw_key3 = opsys no-error.
+   IF recid(usrw_wkfl) = ? THEN
+      find first usrw_wkfl no-lock where
+           {xxusrwdom.i} {xxand.i}
+            usrw_key1 = xrcKey1 and usrw_key2 <= input xrcDir and
+            usrw_key3 = opsys no-error.
+   else do:
+      if usrw_key2 = input xrcDir then
+         find prev usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
+                   usrw_key1 = xrcKey1 and usrw_key2 <= input xrcDir and
+                   usrw_key3 = opsys no-error.
+      else
+         find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
+                    usrw_key1 = xrcKey1 and usrw_key2 <= input xrcDir and
+                    usrw_key3 = opsys no-error.
+   end.
+   if available usrw_wkfl then do:
+      display usrw_key2 @ xrcDir
+      			  trim(usrw_charfld[6]) @ filef
+              trim(usrw_charfld[7]) @ filet
+      			  with frame Z.
+   end.
+
+end.
+
+ON CURSOR-DOWN of xrcdir in frame z do:
+   assign xrcDir.
+   find first usrw_wkfl no-lock where
+           {xxusrwdom.i} {xxand.i}
+            usrw_key1 = xrcKey1 and usrw_key2 = input xrcDir and
+            usrw_key3 = opsys no-error.
+   IF recid(usrw_wkfl) = ? THEN
+      find first usrw_wkfl no-lock where
+           {xxusrwdom.i} {xxand.i}
+            usrw_key1 = xrcKey1 and usrw_key2 >= input xrcDir and
+            usrw_key3 = opsys no-error.
+    else do:
+      if usrw_key2 = INPUT xrcDir then
+         find next usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
+                   usrw_key1 = xrcKey1 and usrw_key2 >= input xrcDir and
+                   usrw_key3 = opsys no-error.
+      else
+         find Last usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
+                    usrw_key1 = xrcKey1 and usrw_key2 >= input xrcDir and
+                    usrw_key3 = opsys no-error.
+   end.
+   if available usrw_wkfl then do:
+      display usrw_key2 @ xrcDir
+      				trim(usrw_charfld[6]) @ filef
+              trim(usrw_charfld[7]) @ filet
+              with frame Z.
+   end.
+   APPLY LASTKEY.
+   next-prompt xrcDir with frame z.
+end.
+
+   ON F9 of xrcdir in frame z do:
+     APPLY "CURSOR-UP":U TO xrcdir .
+   END.
+/*                                                                           */
+/* ON F10 of xrcdir in frame z do:                                           */
+/*   APPLY "CURSOR-DOWN":U TO xrcdir IN FRAME Z.                             */
+/* END.                                                                      */
 
 ON "CTRL-]" OF fileF IN FRAME z DO:
   assign xrcdir.
-  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = "xxvifile.p":
-      delete usrw_wkfl.
-  end.
-  INPUT FROM OS-DIR(xrcdir).
-  REPEAT:
-      CREATE usrw_wkfl. {xxusrwdom.i}.
-      IMPORT usrw_key4 usrw_key2 usrw_key5.
-      assign usrw_key1 = "xxvifile.p"
-             usrw_key3 = global_userid.
-  END.
-  INPUT CLOSE.
-  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = "xxvifile.p" AND
-           usrw_key5 <> "F":
-      delete usrw_wkfl.
-  end.
+  {gprun.i ""xxgetfilelst.p"" "(input xrcDir, input 50)"}
+END.
+
+ON "CTRL-]" of fileT in frame z do:
+    assign xrcdir.
+   {gprun.i ""xxgetfilelst.p"" "(input xrcDir, input 50)"}
 END.
 
 on "CTRL-]" of bPropath in frame z do:
-run setbpropath.
-display bpropath with frame z.
+   assign bpropath = replace(propath,",",chr(10)).
+   run setbpropath.
+   display bpropath with frame z.
 end.
-
-ON "CTRL-]" of fileT in frame z do:
-   APPLY "CTRL-]":u TO xrcDir.
-END.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
-display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause destdir
-        with Frame z.
-ENABLE  xrcDir filef filet bproPath lng kbc_display_pause destdir
+display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause vxref
+       destdir with Frame z.
+ENABLE  xrcDir filef filet bproPath lng kbc_display_pause vxref destdir
         WITH Frame z.
 {xxchklv.i 'MODEL-CAN-RUN' 10}
 mainLoop:
 repeat:
 do on error undo, retry:
-   update destDir xrcDir fileF fileT bpropath lng kbc_display_pause destdir
+   update destDir xrcDir fileF fileT bpropath lng kbc_display_pause vxref destdir
    go-on("F5" "CTRL-D") with Frame z.
-   assign fileT = trim(fileT) + hi_char.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
       {mfmsg.i 7656 3}
       next-prompt lng with frame z.
       undo,retry.
    end.
-   if fileT < fileF then do:
+   if fileT + hi_char < fileF then do:
       {mfmsg.i 4479 9}
       next-prompt fileF with frame z.
       undo,retry.
@@ -193,12 +246,12 @@ do on error undo, retry:
        next-prompt destDir with frame z.
        undo,retry.
    end.
- /*  if index(propath,destDir) = 0 then do:                                   */
- /*     message "Destination directory Error,Pleaes check propath setting!".  */
- /*     message "Destination directory must in propath list.".                */
- /*     next-prompt destDir with frame z.                                     */
- /*     undo,retry.                                                           */
- /*  end.                                                                     */
+   run checkBpropath(output vchkPath).
+   if not vchkPath then do:
+      status input "ProPath settings error ,Please Try it again !".
+      next-prompt destDir with frame z.
+      undo,retry.
+   end.
    assign xrcDir = lower(trim(xrcDir)).
    assign xrcdir destdir.
    display bpropath with frame z.
@@ -217,41 +270,37 @@ do on error undo, retry:
                    usrw_key1 = "xxvifile.p":
             delete usrw_wkfl.
           end.
+          for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
+                   usrw_key1 = xrcKey1 and usrw_key3 = opsys:
+            delete usrw_wkfl.
+          end.
           leave.
       end.
    end. /* if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") */
 
    if xrcdir <> "" and destdir <> "" then do:
-   find first usrw_wkfl where {xxusrwdom.i} {xxand.i}
-              usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
-        if not available usrw_wkfl then do:
-           create usrw_wkfl.
-           assign
-              {xxusrwdom.i}
-              usrw_key1 = qadkey1
-              usrw_key2 = global_userid.
-        end.
-        if not locked(usrw_wkfl) then do:
-           assign usrw_charfld[6] = filef
-                  usrw_charfld[7] = trim(filet)
-                  usrw_intfld[1] = kbc_display_pause.
-           if opsys = "msdos" or opsys = "win32" then do:
-              assign usrw_charfld[11] = xrcdir
-                     usrw_charfld[12] = trim(destDir) when destDir <> ""
-                                       and destDir <> vClientDir
-                     usrw_charfld[13]  = bpropath
-                     usrw_charfld[15] = trim(destDir).
+      find first usrw_wkfl where {xxusrwdom.i} {xxand.i}
+                 usrw_key1 = qadkey1 and usrw_key2 = global_userid no-error.
+           if not available usrw_wkfl then do:
+              create usrw_wkfl.
+              assign
+                 {xxusrwdom.i}
+                 usrw_key1 = qadkey1
+                 usrw_key2 = global_userid.
            end.
-           else if opsys = "unix" then do:
-              assign usrw_charfld[1] = xrcdir
-                     usrw_charfld[2] = trim(destDir)
-                                when destDir <> "" and destDir <> vClientDir
-                     usrw_charfld[3] = bpropath
-                     usrw_charfld[5] = trim(destDir).
+           run recordUsrwwkfl.
+      find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
+                 usrw_key1 = xrcKey1 and usrw_key2 = xrcDir no-error.
+           if not available usrw_wkfl then do:
+              create usrw_wkfl.
+              assign {xxusrwdom.i}
+                     usrw_key1 = xrcKey1
+                     usrw_key2 = xrcDir.
            end.
-        end.
-        release usrw_wkfl.
-    end.
+              assign usrw_key3 = opsys.
+           run recordUsrwWkfl.
+    end. /* if xrcdir <> "" and destdir <> "" then do: */
+
 end.
 
 /*generate vworkfile.*/
@@ -262,7 +311,7 @@ repeat:
    if vFileName[3] = "F" and
       index(".p.w.t.P.W.T"
            ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
-      vFileName[1] >= filef and (vFileName[1] <= filet or filet = "")
+      vFileName[1] >= filef and (vFileName[1] <= filet + hi_char)
    then do:
       create tmpfile.
       assign fn = vFileName[1].
@@ -293,15 +342,16 @@ PROCEDURE iniForm:
                bpropath = usrw_charfld[3] when usrw_charfld[3] <> ""
                destDir = trim(usrw_charfld[5]) when usrw_charfld[5] <> ""
                filef = trim(usrw_charfld[6])
-               filet = substring(usrw_charfld[7],1,length(usrw_charfld[7]) - 1)
-               kbc_display_pause = usrw_intfld[1].
+               filet = trim(usrw_charfld[7])
+               kbc_display_pause = usrw_intfld[1]
+               vxref = usrw_logfld[1].
         if opsys = "msdos" or opsys = "win32" then do:
            assign xrcdir = usrw_charfld[11]
                   bpropath = usrw_charfld[13]
                   destDir = trim(usrw_charfld[15]).
         end.
     end.
-    assign xrcDir DestDir fileF filet kbc_display_pause.
+    assign xrcDir DestDir fileF filet kbc_display_pause vxref.
     assign lng = lower(global_user_lang).
     if bpropath = "" then do:
        assign bpropath = replace(v_oldpropath,",",chr(10)).
@@ -354,7 +404,7 @@ PROCEDURE iniVar:
                vlocfile = vdir + v_DirSepChr + "locale.dat".
         if search(vverfile) <> ? and
            search(vlocfile) <> ? then do:
-            assign xrcDir = vdir + "/xrc"
+            assign xrcDir = vdir + v_DirSepChr + "xrc"
                    DestDir = vDir
                    vClientDir = vDir
                    kbc_display_pause = 5.
@@ -363,3 +413,49 @@ PROCEDURE iniVar:
         ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
     END.
 END PROCEDURE. /* PROCEDURE iniVar*/
+
+procedure checkBpropath:
+    define output parameter oresult as logical.
+    assign oresult = yes.
+    define variable vpath as character.
+    define variable vbpath as character.
+    assign vbpath = bpropath.
+    do while index(vbpath,chr(10)) > 0:
+       assign vpath = substring(vbpath,1,index(vbpath,chr(10)) - 1).
+       vbpath = substring(vbpath,index(vbpath,chr(10)) + 1).
+       FILE-INFO:FILE-NAME = vpath.
+       if FILE-INFO:FILE-TYPE = ? and search(vpath) = ? then do:
+          message "Propath settings error!" skip(1) vpath
+                  view-as alert-box.
+          oresult = no.
+          leave.
+       end.
+    end.
+end procedure.
+
+procedure recordUsrwWkfl:
+/*	assign filef filet kbc_display_pause vxref bpropath destDir in frame z. */
+  if not locked(usrw_wkfl) then do:
+      assign usrw_key5 = string(today,"9999-99-99") + " "
+                       + string(time,"HH:MM:SS")
+             usrw_charfld[6] = filef
+             usrw_charfld[7] = replace(filet,"hi_char","")
+             usrw_intfld[1] = kbc_display_pause
+             usrw_logfld[1] = vxref.
+      if opsys = "msdos" or opsys = "win32" then do:
+         assign usrw_charfld[11] = xrcdir
+                usrw_charfld[12] = trim(destDir) when destDir <> ""
+                                  and destDir <> vClientDir
+                usrw_charfld[13]  = bpropath
+                usrw_charfld[15] = trim(destDir).
+      end.
+      else if opsys = "unix" then do:
+         assign usrw_charfld[1] = xrcdir
+                usrw_charfld[2] = trim(destDir)
+                           when destDir <> "" and destDir <> vClientDir
+                usrw_charfld[3] = bpropath
+                usrw_charfld[5] = trim(destDir).
+       end.
+   end.
+   release usrw_wkfl.
+end Procedure.

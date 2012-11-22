@@ -5,7 +5,7 @@
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "14Y9.1"}
+{mfdtitle.i "25YP"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
@@ -14,6 +14,7 @@ define variable file_name as character format "x(50)".
 define variable lngdir    like lng_dir format "x(50)".
 define temp-table tf
     fields tf_txt as character format "x(200)" column-label "CONTENT".
+{gpcdget.i "UT"}
 
 form
    lngdir    colon 15
@@ -26,26 +27,9 @@ setFrameLabels(frame a:handle).
 ON LEAVE OF lngdir IN FRAME a /* Fill 1 */
 DO:
   assign lngdir.
-  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = "xxvifile.p":
-      delete usrw_wkfl.
-  end.
   if lngdir = "" then assign lngdir:screen-value = ".".
   assign lngdir.
-  INPUT FROM OS-DIR(lngdir).
-  REPEAT:
-      CREATE usrw_wkfl. {xxusrwdom.i}.
-      IMPORT usrw_key4 usrw_key2 usrw_key5.
-      assign usrw_key1 = "xxvifile.p"
-             usrw_key3 = global_userid.
-  END.
-  INPUT CLOSE.
-
-  for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = "xxvifile.p"
-       and usrw_key5 <> "F":
-      delete usrw_wkfl.
-  end.
+  {gprun.i ""xxgetfilelst.p"" "(input lngdir , input 50)"}
 END.
 
 ON CTRL-D OF file_name IN FRAME a /* Fill 1 */

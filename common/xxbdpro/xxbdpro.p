@@ -63,7 +63,7 @@ define variable new_file as logical no-undo.
 
 define variable process_file as logical
    label "Process Direct From File".
-define variable file_name as character format "x(40)"
+define variable file_name as character format "x(80)"
    label "Input File Name".
 define variable fld_name like code_fldname initial "mgbdpro".
 define stream cim_load.
@@ -150,7 +150,7 @@ form
    skip(1)
    process_file        colon 28
    skip(1)
-   file_name           colon 28
+   file_name view-as fill-in size 40 by 1 colon 28
    skip(2)
 with frame a side-labels width 80 attr-space.
 

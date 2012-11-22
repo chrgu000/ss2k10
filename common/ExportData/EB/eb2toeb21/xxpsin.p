@@ -1,0 +1,66 @@
+﻿SESSION:DATE-FORMAT = "dmy".
+INPUT FROM d:\i\wrk\ps.xp.in.
+REPEAT:
+    CREATE ps_mstr.
+    IMPORT DELIMITER ","
+        ps_par
+       ps_comp
+       ps_ref
+       ps_qty_per
+       ps_scrp_pct
+       ps_ps_code
+       ps_lt_off
+       ps_start
+       ps_end
+       ps_rmks
+       ps_op
+       ps_item_no
+       ps_mandatory
+       ps_exclusive
+       ps_process
+       ps_qty_type
+       ps_user1
+       ps_user2
+       ps_fcst_pct
+       ps_default
+       ps_group
+       ps_critical
+       ps_qty_per_b
+       ps_comp_um
+       ps_um_conv
+       ps_assay
+       ps_comm_code
+       ps_non_bal
+       ps__qad01
+       ps_userid
+       ps_mod_date
+       ps_batch_pct
+       ps_cmtindx
+       ps_start_ecn
+       ps_end_ecn
+       ps_joint_type
+       ps_cop_qty
+       ps_cst_pct
+       ps_prod_pct
+       ps_qty_cons
+       ps_qty_exch
+       ps_qty_diag
+       ps__chr01
+       ps__chr02
+       ps__dte01
+       ps__dte02
+       ps__dec01
+       ps__dec02
+       ps__log01
+       ps__log02
+       ps__qadc01
+       ps__qadc02
+       ps__qadt01
+       ps__qadt02
+       ps__qadt03
+       ps__qadd01
+       ps__qadd02
+       ps__qadl01
+       ps__qadl02
+       ps_domain.
+END.

@@ -48,7 +48,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
     IF brw_mstr.brw_cansee <> "" THEN
     put unformat fill(" ",7) "brw_mstr.brw_cansee    = '" brw_cansee "'" skip.
     put unformat fill(" ",7) "brw_mstr.brw_filter    = '" brw_filter "'" skip.
-    put unformat fill(" ",7) "brw_mstr.brw_userid    = '" brw_userid "'" skip.
+    put unformat fill(" ",7) "brw_mstr.brw_userid    = global_userid" skip.
     put unformat fill(" ",7) "brw_mstr.brw_mod_date  = today" skip.
     IF brw_mstr.brw_user1 <> "" THEN
     put unformat fill(" ",7) "brw_mstr.brw_user1     = '" brw_user1 "'" skip.
@@ -82,7 +82,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         IF brwt_det.brwt_where <> "" THEN
         put unformat skip fill(" ",7) "brwt_det.brwt_where    = '" brwt_where "'".
         IF brwt_det.brwt_userid <> "" THEN
-        put unformat skip fill(" ",7) "brwt_det.brwt_userid   = '" brwt_userid "'".
+        put unformat skip fill(" ",7) "brwt_det.brwt_userid   = global_userid".
         put unformat skip fill(" ",7) "brwt_det.brwt_mod_date = today".
         IF brwt_det.brwt_user1 <> "" THEN
         put unformat skip fill(" ",7) "brwt_det.brwt_user1    = '" brwt_user1 "'".
@@ -126,7 +126,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put unformat fill(" ",7) "brwf_det.brwf_select   = "  brwf_select skip.
         put unformat fill(" ",7) "brwf_det.brwf_sort     = "  brwf_sort skip.
         IF brwf_det.brwf_userid <> "" THEN
-        put unformat fill(" ",7) "brwf_det.brwf_userid   = '" brwf_userid "'".
+        put unformat fill(" ",7) "brwf_det.brwf_userid   = global_userid".
         put skip.
         put unformat fill(" ",7) "brwf_det.brwf_mod_date = today".
         put skip.
@@ -168,8 +168,7 @@ FOR EACH brw_mstr NO-LOCK WHERE brw_mstr.brw_name = Vbrowse:
         put unformat flh_mstr.flh_user2 """" skip.            
         put unformat fill(" ",7) "flh_mstr.flh__qadc01 = """.     
         put unformat flh_mstr.flh__qadc01 """" skip.     
-        put unformat fill(" ",7) "flh_mstr.flh_mod_userid = """.  
-        put unformat flh_mstr.flh_mod_userid """" skip.     
+        put unformat fill(" ",7) "flh_mstr.flh_mod_userid = global_userid" skip.     
         put unformat fill(" ",7) "flh_mstr.flh_mod_date = today." skip.    
     end.
 END.
