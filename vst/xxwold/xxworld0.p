@@ -24,7 +24,9 @@ repeat:
     	 assign xxwo_orel_date = wo_rel_date
     	 			  xxwo_odue_date = wo_due_date
     	 			  xxwo_due_date = wo_due_date
-    	 			  xxwo_rel_date = wo_due_date - 1.
+    	 			  xxwo_rel_date = wo_due_date - 1
+    	 			  xxwo_stat = wo_stat
+    	 			  xxwo_ostat = wo_stat.
     end.
 end.
 input close.
