@@ -30,6 +30,7 @@ define variable qtyiss like tr_qty_loc   no-undo.  /*每月出货*/
 define variable qtyisstot like tr_qty_loc no-undo. /*总出货*/
 define variable stddev like tr_qty_loc   no-undo.
 define variable qtyavg like tr_qty_loc   no-undo.
+
 /* SELECT FORM */
 
 
@@ -279,11 +280,12 @@ for each xss_mstr exclusive-lock: delete xss_mstr. end.
 
       display xss_part
               xss_site
-              xss_sfty_stkn
+              xss_sfty_stkn / vtat @ xss_sfty_stkn
               xss_sfty_stk
               xss_qty_loc
               xss_abc
               xss_k
+              vtat
               xss_desc
               xss_qty_iss
               xss_qty_avg

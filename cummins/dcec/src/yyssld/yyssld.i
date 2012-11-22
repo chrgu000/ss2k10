@@ -11,6 +11,7 @@ define {1} shared temp-table xss_mstr
     fields xss_desc like pt_desc1 label "DESCRIPTION"
     fields xss_chk as character format "x(40)" label "RESULT"
     fields xss_k    as   decimal label "K_VALUE"
+    fields xss_tat as decimal label "TURN_AROUND_TIMES"
     fields xss_sn  as integer label "SERIAL"
     index xss_index1 is primary xss_part xss_site.
     .

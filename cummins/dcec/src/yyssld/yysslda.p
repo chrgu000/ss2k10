@@ -75,5 +75,7 @@ empty temp-table xss_mstr no-error.
      	  else do:
      	  		assign xss_k = usrw_decfld[3].
      	  end.
+     	  if usrw_decfld[4] = 0 then assign xss_tat = 1.
+     	  	 else assign xss_tat = usrw_decfld[4].
      end.
  end.

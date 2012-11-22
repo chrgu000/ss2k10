@@ -30,6 +30,7 @@ FORM /*GUI*/
    usrw_decfld[1] colon 25 label "Ka"
    usrw_decfld[2] colon 25 label "Kb"
    usrw_decfld[3] colon 25 label "Kc"
+   usrw_decfld[4] colon 25 label "TAT"
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -78,7 +79,7 @@ repeat with frame a:
             " input usrw_key2 "}
          if recno <> ? then do:
             display usrw_key2 usrw_intfld[1] usrw_decfld[1]
-                    usrw_decfld[2] usrw_decfld[3] .
+                    usrw_decfld[2] usrw_decfld[3] usrw_decfld[4].
          end.
       end. /* editing: */
 
@@ -106,7 +107,7 @@ repeat with frame a:
   repeat with frame a:
 /*GUI*/ if global-beam-me-up then undo, leave.
          update usrw_intfld[1] usrw_decfld[1] usrw_decfld[2]
-                usrw_decfld[3]
+                usrw_decfld[3] usrw_decfld[4]
          go-on(F5 CTRL-D).
         do i = 1 to 3:
            if usrw_decfld[i] = 0 then do:

@@ -137,6 +137,7 @@ DEFINE BROWSE brList
         xss_qty_loc   COLUMN-LABEL '当前!库存'
         xss_abc       COLUMN-LABEL 'ABC分类'
         xss_desc      COLUMN-LABEL '说明'
+        xss_tat       COLUMN-LABEL '周转次数'
         xss_chk       COLUMN-LABEL '状态'
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME

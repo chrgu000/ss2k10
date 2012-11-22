@@ -10,11 +10,11 @@ define {1} shared variable v_key like usrw_key1 no-undo
 define {1} shared variable v_key1 like usrw_key1 no-undo
            initial "Safey_Stock_Month_Ref".
 
-define {1} shared variable vka as decimal  no-undo.
-define {1} shared variable vkb as decimal  no-undo.
-define {1} shared variable vkc as decimal  no-undo.
+define {1} shared variable vka  as decimal  no-undo.
+define {1} shared variable vkb  as decimal  no-undo.
+define {1} shared variable vkc  as decimal  no-undo.
 define {1} shared variable vcyc as integer no-undo.
-
+define {1} shared variable vtat as decimal no-undo initial 1.
 define {1} shared temp-table xss_mstr
     fields xss_part like pt_part
     fields xss_site like pt_site
@@ -39,15 +39,17 @@ procedure iniVar:
   assign vka = 1.5
          vkb = 1.25
          vkc = 1
-         vcyc = 6.
+         vcyc = 6
+         vtat = 1.
   find first usrw_wkfl no-lock where usrw_domain = global_domain
          and usrw_key1 = v_key and usrw_key2 = v_key no-error.
   if available usrw_wkfl then do:
      assign vka = usrw_decfld[1]
             vkb = usrw_decfld[2]
             vkc = usrw_decfld[3]
-            vcyc = usrw_intfld[1].
-  end.
+            vcyc = usrw_intfld[1]
+            vtat = usrw_decfld[4] when usrw_decfld[4] <> 0.
+	  end.
 end procedure.
 
 FUNCTION getMonths RETURNS integer(fdate as date,tdate as date):
