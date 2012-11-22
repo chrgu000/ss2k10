@@ -1,0 +1,142 @@
+ADD TABLE "absc_det"
+  AREA "TRANSACTION"
+  DESCRIPTION "Shipment Carrier Detail"
+  FROZEN
+  DUMP-NAME "absc_det"
+
+ADD FIELD "absc_abs_id" OF "absc_det" AS character 
+  DESCRIPTION "Shipper with which this carrier is associated"
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "ID"
+  POSITION 2
+  MAX-WIDTH 30
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "absc_seq" OF "absc_det" AS integer 
+  DESCRIPTION "Indicates the order in which this carrier handles the shipment"
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Seq"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+  MANDATORY
+
+ADD FIELD "absc_carrier" OF "absc_det" AS character 
+  DESCRIPTION "Address for carrier of this shipment"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Carrier"
+  POSITION 4
+  MAX-WIDTH 80
+  ORDER 30
+  MANDATORY
+
+ADD FIELD "absc_user1" OF "absc_det" AS character 
+  DESCRIPTION "Not Used. Field available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  POSITION 5
+  MAX-WIDTH 80
+  ORDER 40
+
+ADD FIELD "absc_user2" OF "absc_det" AS character 
+  DESCRIPTION "Not Used. Field available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  POSITION 6
+  MAX-WIDTH 80
+  ORDER 50
+
+ADD FIELD "absc__qadc01" OF "absc_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 7
+  MAX-WIDTH 80
+  ORDER 60
+
+ADD FIELD "absc_domain" OF "absc_det" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 8
+  MAX-WIDTH 8
+  ORDER 70
+  MANDATORY
+
+ADD FIELD "oid_absc_det" OF "absc_det" AS decimal 
+  DESCRIPTION "Unique application generated record identifier."
+  FORMAT ">>>>>>>>>>>>>>>>>>>>>>>>>>>9.9<<<<<<<<<"
+  INITIAL "0"
+  POSITION 9
+  MAX-WIDTH 38
+  DECIMALS 10
+  ORDER 80
+  MANDATORY
+
+ADD INDEX "absc_abs_id" ON "absc_det" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "absc_domain" ASCENDING 
+  INDEX-FIELD "absc_abs_id" ASCENDING 
+  INDEX-FIELD "absc_seq" ASCENDING 
+
+ADD INDEX "absc_carrier" ON "absc_det" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "absc_domain" ASCENDING 
+  INDEX-FIELD "absc_carrier" ASCENDING 
+
+ADD TABLE "xxbomc_ctrl"
+  AREA "Schema Area"
+  DESCRIPTION "BOM控制文件"
+  DUMP-NAME "xxbomc_c"
+
+ADD FIELD "xxbomc_part_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "零件地点"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxbomc_code_site" OF "xxbomc_ctrl" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Code地点"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xxbomc_index1" OF "xxbomc_ctrl" AS integer 
+  FORMAT ">>>>>9"
+  INITIAL "0"
+  LABEL "索引"
+  POSITION 4
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxbomc_domain" OF "xxbomc_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD INDEX "xxbomc_index1" ON "xxbomc_ctrl" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxbomc_domain" ASCENDING 
+  INDEX-FIELD "xxbomc_index1" ASCENDING 
+
+.
+PSC
+cpstream=cp936
+.
+0000003049

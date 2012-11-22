@@ -1,0 +1,126 @@
+ADD TABLE "yyspares_disc"
+  AREA "Schema Area"
+  DUMP-NAME "yyspares_disc"
+  FILE-MISC26 "Spares discount"
+
+ADD FIELD "yysparesdisc_domain" OF "yyspares_disc" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 2
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yysparesdisc_entity" OF "yyspares_disc" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Entity"
+  POSITION 3
+  MAX-WIDTH 16
+  ORDER 20
+
+ADD FIELD "yysparesdisc_cust" OF "yyspares_disc" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "yysparesdisc_curr" OF "yyspares_disc" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Currency"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "yysparesdisc_ovh_mtl" OF "yyspares_disc" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Cost OVH MTL"
+  POSITION 6
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "yysparesdisc_service" OF "yyspares_disc" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Service"
+  POSITION 7
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "yysparesdisc_effdate" OF "yyspares_disc" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Effective Date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yysparesdisc_due_date" OF "yyspares_disc" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  POSITION 9
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "yysparesdisc_char" OF "yyspares_disc" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 10
+  MAX-WIDTH 380
+  EXTENT 10
+  ORDER 90
+
+ADD FIELD "yysparesdisc_int" OF "yyspares_disc" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 11
+  MAX-WIDTH 220
+  EXTENT 10
+  ORDER 100
+
+ADD FIELD "yysparesdisc_deci" OF "yyspares_disc" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 12
+  MAX-WIDTH 220
+  EXTENT 10
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "yysparesdisc_log" OF "yyspares_disc" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 13
+  MAX-WIDTH 80
+  EXTENT 10
+  ORDER 120
+
+ADD FIELD "yysparesdisc_date" OF "yyspares_disc" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 14
+  MAX-WIDTH 180
+  EXTENT 10
+  ORDER 130
+
+ADD INDEX "yysparesdisc_indx" ON "yyspares_disc" 
+  AREA "Schema Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "yysparesdisc_domain" ASCENDING 
+  INDEX-FIELD "yysparesdisc_entity" ASCENDING 
+  INDEX-FIELD "yysparesdisc_cust" ASCENDING 
+  INDEX-FIELD "yysparesdisc_effdate" ASCENDING
+
+.
+PSC
+cpstream=CP936
+.
+0000001510

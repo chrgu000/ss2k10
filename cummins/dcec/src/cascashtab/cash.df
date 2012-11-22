@@ -1,0 +1,865 @@
+ADD TABLE "xcftr_hist"
+  AREA "TRANSACTION"
+  LABEL "Cash Flow Transaction Detail"
+  DESCRIPTION "Cash Flow Transaction Detail "
+  DUMP-NAME "xcftr_hi"
+
+ADD FIELD "xcftr_entity" OF "xcftr_hist" AS character 
+  DESCRIPTION "Cash Flow Entity"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Entity"
+  POSITION 2
+  SQL-WIDTH 16
+  COLUMN-LABEL "Enty"
+  ORDER 10
+
+ADD FIELD "xcftr_ref" OF "xcftr_hist" AS character 
+  DESCRIPTION "GL Reference"
+  FORMAT "x(14)"
+  INITIAL ""
+  LABEL "GL Reference"
+  POSITION 3
+  SQL-WIDTH 28
+  ORDER 20
+
+ADD FIELD "xcftr_ac_code" OF "xcftr_hist" AS character 
+  DESCRIPTION "MFG/PRO Account Code"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xcftr_acct" OF "xcftr_hist" AS character 
+  DESCRIPTION "Cash Flow Account"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xcftr_desc" OF "xcftr_hist" AS character 
+  DESCRIPTION "Cash Flow Account Description"
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 6
+  SQL-WIDTH 48
+  ORDER 50
+
+ADD FIELD "xcftr_sub" OF "xcftr_hist" AS character 
+  DESCRIPTION "MFG/PRO Sub Account"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sub-Account"
+  POSITION 7
+  SQL-WIDTH 16
+  COLUMN-LABEL "Sub-Acct"
+  ORDER 60
+
+ADD FIELD "xcftr_line" OF "xcftr_hist" AS integer 
+  DESCRIPTION "Cash Flow Line"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 8
+  SQL-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xcftr_amt" OF "xcftr_hist" AS decimal 
+  DESCRIPTION "Cash Flow Amount"
+  FORMAT "->>,>>>,>>>,>>9,99"
+  INITIAL "0"
+  LABEL "Amount"
+  POSITION 9
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xcftr_curr_amt" OF "xcftr_hist" AS decimal 
+  DESCRIPTION "Cash Flow Currency Amount"
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Currency Amount"
+  POSITION 10
+  SQL-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xcftr_pro" OF "xcftr_hist" AS character 
+  DESCRIPTION "MFG/PRO Cost Center"
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Project Code"
+  POSITION 11
+  SQL-WIDTH 8
+  COLUMN-LABEL "Pr"
+  ORDER 110
+
+ADD FIELD "xcftr_glt_line" OF "xcftr_hist" AS integer 
+  DESCRIPTION "MFG/PRO Line"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xcftr_rflag" OF "xcftr_hist" AS logical 
+  DESCRIPTION "MFG/PRO Reversing/Retroactive Line"
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Reversing/Retroactive Line"
+  POSITION 13
+  SQL-WIDTH 1
+  COLUMN-LABEL "Rev!Ret"
+  ORDER 130
+
+ADD FIELD "xcftr__qadc01" OF "xcftr_hist" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 14
+  SQL-WIDTH 1
+  ORDER 140
+
+ADD FIELD "xcftr__qadc02" OF "xcftr_hist" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 15
+  SQL-WIDTH 1
+  ORDER 150
+
+ADD FIELD "xcftr__qadc03" OF "xcftr_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "xcftr__qadc04" OF "xcftr_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xcftr__qadc05" OF "xcftr_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD FIELD "xcftr_domain" OF "xcftr_hist" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "QAD"
+  LABEL "Domain"
+  POSITION 19
+  SQL-WIDTH 8
+  ORDER 190
+  MANDATORY
+
+ADD FIELD "xcftr_cc" OF "xcftr_hist" AS character 
+  DESCRIPTION "MFG/PRO Cost Center"
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Cost Ctr"
+  POSITION 20
+  SQL-WIDTH 8
+  COLUMN-LABEL "CC"
+  ORDER 100
+
+ADD INDEX "xcftr_ref" ON "xcftr_hist" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xcftr_entity" ASCENDING 
+  INDEX-FIELD "xcftr_ref" ASCENDING 
+  INDEX-FIELD "xcftr_rflag" ASCENDING 
+  INDEX-FIELD "xcftr_glt_line" ASCENDING 
+  INDEX-FIELD "xcftr_line" ASCENDING 
+  INDEX-FIELD "xcftr__qadc04" ASCENDING 
+
+ADD INDEX "xcftr_acct" ON "xcftr_hist" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xcftr_ac_code" ASCENDING 
+  INDEX-FIELD "xcftr_acct" ASCENDING 
+  INDEX-FIELD "xcftr_sub" ASCENDING 
+  INDEX-FIELD "xcftr_cc" ASCENDING 
+  INDEX-FIELD "xcftr_ref" ASCENDING 
+  INDEX-FIELD "xcftr_glt_line" ASCENDING 
+  INDEX-FIELD "xcftr_line" ASCENDING 
+  INDEX-FIELD "xcftr__qadc04" ASCENDING 
+
+ADD TABLE "xcf1_mstr"
+  AREA "Schema Area"
+  LABEL "CAS Cash Flow account master"
+  DESCRIPTION "CAS Module Cash Flow Account Master"
+  DUMP-NAME "xcf1_mst"
+
+ADD FIELD "xcf1_ac_code" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Account Code"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xcf1_active" OF "xcf1_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Active"
+  POSITION 3
+  SQL-WIDTH 1
+  ORDER 20
+
+ADD FIELD "xcf1_cf_acc" OF "xcf1_mstr" AS logical 
+  DESCRIPTION "MFG/PRO Account"
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Cash Flow account"
+  POSITION 5
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "xcf1_qadc01" OF "xcf1_mstr" AS logical 
+  FORMAT "dr/cr"
+  INITIAL "yes"
+  LABEL "Debit(dr)/Credit(cr)"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "xcf1_qadc02" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xcf1_qadc03" OF "xcf1_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "xcf1_mfg_acc" OF "xcf1_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "MFG/PRO Account"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xcf1_mfg_ac_code" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Account Code"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xcf1_mfgc_ac_code" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG GL Cash Flow account code"
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xcf1_domain" OF "xcf1_mstr" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "FTES"
+  LABEL "Domain"
+  POSITION 14
+  SQL-WIDTH 8
+  ORDER 130
+  MANDATORY
+
+ADD FIELD "xcf1_mfgc_cc" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG GL Cash Flow cost cneter"
+  POSITION 15
+  SQL-WIDTH 16
+  ORDER 140
+
+ADD FIELD "xcf1_mfgc_pro" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG GL Cash Flow project code"
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xcf1_mfgc_sub" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG GL Cash Flow sub account"
+  POSITION 17
+  SQL-WIDTH 16
+  ORDER 131
+
+ADD FIELD "xcf1_mfg_sub" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG Sub Acct Code"
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xcf1_mfg_cc" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG Cost Center"
+  POSITION 19
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xcf1_mfg_pro" OF "xcf1_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG Project Code"
+  POSITION 20
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD INDEX "xcf1_mfg_ac_code" ON "xcf1_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xcf1_mfgc_ac_code" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_sub" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_cc" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_pro" ASCENDING 
+  INDEX-FIELD "xcf1_mfg_ac_code" ASCENDING ABBREVIATED 
+
+ADD INDEX "xcf1_cf_mfg" ON "xcf1_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xcf1_mfg_ac_code" ASCENDING 
+  INDEX-FIELD "xcf1_mfg_sub" ASCENDING 
+  INDEX-FIELD "xcf1_mfg_cc" ASCENDING 
+  INDEX-FIELD "xcf1_mfg_pro" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_ac_code" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_sub" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_cc" ASCENDING 
+  INDEX-FIELD "xcf1_mfgc_pro" ASCENDING 
+  INDEX-FIELD "xcf1_qadc01" ASCENDING 
+  INDEX-FIELD "xcf1_mfg_ac_code" ASCENDING ABBREVIATED 
+
+ADD TABLE "xcfp_ctrl"
+  AREA "TRANSACTION"
+  DUMP-NAME "xcfp_ctr"
+
+ADD FIELD "xcfp_active" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Active Cash Flow Function"
+  POSITION 2
+  SQL-WIDTH 1
+  ORDER 10
+
+ADD FIELD "xcfp_post_chk" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Check CF amount when posting"
+  POSITION 3
+  SQL-WIDTH 1
+  ORDER 20
+
+ADD FIELD "xcfp__qadlog1" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 4
+  SQL-WIDTH 1
+  ORDER 30
+
+ADD FIELD "xcfp__qadchr" OF "xcfp_ctrl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xcfp__qaddec" OF "xcfp_ctrl" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 6
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "xcfp_dsp_mt" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Display CF maintenance"
+  POSITION 7
+  SQL-WIDTH 1
+  ORDER 60
+
+ADD FIELD "xcfp_dsp_sub" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Cash flow maintenance in Sub M"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "xcfp__qadlog2" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 9
+  SQL-WIDTH 1
+  ORDER 80
+
+ADD FIELD "xcfp__qadlog3" OF "xcfp_ctrl" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 10
+  SQL-WIDTH 1
+  ORDER 90
+
+ADD FIELD "xcfp_domain" OF "xcfp_ctrl" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "QAD"
+  LABEL "Domain"
+  POSITION 11
+  SQL-WIDTH 8
+  ORDER 100
+  MANDATORY
+
+ADD TABLE "xcf2_mstr"
+  AREA "Schema Area"
+  LABEL "CAS Cash Flow account master"
+  DESCRIPTION "CAS Module Cash Flow Account Master"
+  DUMP-NAME "xcf2_mst"
+
+ADD FIELD "xcf2_ac_code" OF "xcf2_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Cash Flow Account Code"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xcf2_active" OF "xcf2_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Active"
+  POSITION 3
+  SQL-WIDTH 1
+  ORDER 20
+
+ADD FIELD "xcf2_cf_acc" OF "xcf2_mstr" AS logical 
+  DESCRIPTION "Cash Flow Account"
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Cash Flow account"
+  POSITION 5
+  SQL-WIDTH 1
+  ORDER 40
+
+ADD FIELD "xcf2_qadc01" OF "xcf2_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "xcf2_qadc02" OF "xcf2_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xcf2_qadc03" OF "xcf2_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "xcf2_mfg_acc" OF "xcf2_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "If MFG/PRO Account"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xcf2_mfg_ac_code" OF "xcf2_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Account Code"
+  POSITION 12
+  SQL-WIDTH 16
+  ORDER 110
+
+ADD FIELD "xcf2_domain" OF "xcf2_mstr" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "QAD"
+  LABEL "Domain"
+  POSITION 13
+  SQL-WIDTH 8
+  ORDER 120
+  MANDATORY
+
+ADD INDEX "xcf2_ac_code" ON "xcf2_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xcf2_ac_code" ASCENDING ABBREVIATED 
+
+ADD TABLE "xcf_mstr"
+  AREA "Schema Area"
+  LABEL "CAS Cash Flow account master"
+  DESCRIPTION "CAS Module Cash Flow Account Master"
+  DUMP-NAME "xcf_mstr"
+
+ADD FIELD "xcf_ac_code" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL " MFG/PRO Account Code"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xcf_sub" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Sub-Account Code"
+  POSITION 3
+  SQL-WIDTH 16
+  ORDER 20
+
+ADD FIELD "xcf_cc" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Cost Center"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xcf_pro" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Project Code"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xcf_mfg_code" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL " MFG/PRO Account Code"
+  POSITION 6
+  SQL-WIDTH 16
+  ORDER 50
+
+ADD FIELD "xcf_mfg_sub" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Sub-Account Code"
+  POSITION 7
+  SQL-WIDTH 16
+  ORDER 60
+
+ADD FIELD "xcf_mfg_cc" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Cost Center"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xcf_mfg_pro" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Project Code"
+  POSITION 9
+  SQL-WIDTH 16
+  ORDER 80
+
+ADD FIELD "xcf_active" OF "xcf_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Active"
+  POSITION 10
+  SQL-WIDTH 1
+  ORDER 90
+
+ADD FIELD "xcf_cf_acc" OF "xcf_mstr" AS logical 
+  DESCRIPTION "Cash Flow Account"
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Cash Flow account"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xcf_qadc01" OF "xcf_mstr" AS logical 
+  FORMAT "dr/cr"
+  INITIAL "yes"
+  LABEL "Debit(dr)/Credit(cr)"
+  POSITION 12
+  SQL-WIDTH 1
+  ORDER 110
+
+ADD FIELD "xcf_qadc02" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xcf_mfg_acc" OF "xcf_mstr" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "If MFG/PRO Account"
+  POSITION 15
+  SQL-WIDTH 1
+  ORDER 140
+
+ADD FIELD "xcf_mfg_ac_code" OF "xcf_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "MFG/PRO Account Code"
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xcf_domain" OF "xcf_mstr" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "QAD"
+  LABEL "Domain"
+  POSITION 17
+  SQL-WIDTH 8
+  ORDER 160
+  MANDATORY
+
+ADD FIELD "xcf_qadc03" OF "xcf_mstr" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 18
+  SQL-WIDTH 14
+  DECIMALS 2
+  ORDER 130
+
+ADD INDEX "xcf_ac_code" ON "xcf_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xcf_ac_code" ASCENDING 
+  INDEX-FIELD "xcf_sub" ASCENDING 
+  INDEX-FIELD "xcf_cc" ASCENDING 
+  INDEX-FIELD "xcf_pro" ASCENDING ABBREVIATED 
+
+ADD INDEX "xcf_cf_mfg" ON "xcf_mstr" 
+  AREA "TRANSACTION"
+  UNIQUE
+  INDEX-FIELD "xcf_mfg_code" ASCENDING 
+  INDEX-FIELD "xcf_mfg_sub" ASCENDING 
+  INDEX-FIELD "xcf_mfg_cc" ASCENDING 
+  INDEX-FIELD "xcf_mfg_pro" ASCENDING 
+  INDEX-FIELD "xcf_mfg_ac_code" ASCENDING 
+  INDEX-FIELD "xcf_ac_code" ASCENDING 
+  INDEX-FIELD "xcf_sub" ASCENDING 
+  INDEX-FIELD "xcf_cc" ASCENDING 
+  INDEX-FIELD "xcf_qadc01" ASCENDING 
+  INDEX-FIELD "xcf_pro" ASCENDING ABBREVIATED 
+
+ADD TABLE "xcft_det"
+  AREA "TRANSACTION"
+  LABEL "Cash Flow Transaction Detail"
+  DESCRIPTION "Cash Flow Transaction Detail "
+  DUMP-NAME "xcft_det"
+
+ADD FIELD "xcft_entity" OF "xcft_det" AS character 
+  DESCRIPTION "Cash Flow Entity"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Entity"
+  POSITION 2
+  MAX-WIDTH 16
+  COLUMN-LABEL "Enty"
+  ORDER 10
+
+ADD FIELD "xcft_ref" OF "xcft_det" AS character 
+  DESCRIPTION "GL Reference"
+  FORMAT "x(14)"
+  INITIAL ""
+  LABEL "GL Reference"
+  POSITION 3
+  MAX-WIDTH 28
+  ORDER 20
+
+ADD FIELD "xcft_ac_code" OF "xcft_det" AS character 
+  DESCRIPTION "MFG/PRO Account Code"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xcft_acct" OF "xcft_det" AS character 
+  DESCRIPTION "Cash Flow Account"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account"
+  POSITION 5
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xcft_desc" OF "xcft_det" AS character 
+  DESCRIPTION "Cash Flow Account Description"
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Description"
+  POSITION 6
+  MAX-WIDTH 48
+  ORDER 50
+
+ADD FIELD "xcft_sub" OF "xcft_det" AS character 
+  DESCRIPTION "MFG/PRO Sub Account"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sub-Account"
+  POSITION 7
+  MAX-WIDTH 16
+  COLUMN-LABEL "Sub-Acct"
+  ORDER 60
+
+ADD FIELD "xcft_line" OF "xcft_det" AS integer 
+  DESCRIPTION "Cash Flow Line"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xcft_amt" OF "xcft_det" AS decimal 
+  DESCRIPTION "Cash Flow Amount"
+  FORMAT "->>,>>>,>>>,>>9,99"
+  INITIAL "0"
+  LABEL "Amount"
+  POSITION 9
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "xcft_curr_amt" OF "xcft_det" AS decimal 
+  DESCRIPTION "Cash Flow Currency Amount"
+  FORMAT "->>,>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Currency Amount"
+  POSITION 10
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "xcft_cc" OF "xcft_det" AS character 
+  DESCRIPTION "MFG/PRO Cost Center"
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Cost Ctr"
+  POSITION 11
+  MAX-WIDTH 8
+  COLUMN-LABEL "CC"
+  ORDER 100
+
+ADD FIELD "xcft_glt_line" OF "xcft_det" AS integer 
+  DESCRIPTION "MFG/PRO Line"
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 12
+  MAX-WIDTH 4
+  ORDER 110
+
+ADD FIELD "xcft_rflag" OF "xcft_det" AS logical 
+  DESCRIPTION "MFG/PRO Reversing/Retroactive Line"
+  FORMAT "Y/N"
+  INITIAL "no"
+  LABEL "Reversing/Retroactive Line"
+  POSITION 13
+  MAX-WIDTH 1
+  COLUMN-LABEL "Rev!Ret"
+  ORDER 120
+
+ADD FIELD "xcft__qadc01" OF "xcft_det" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 14
+  MAX-WIDTH 1
+  ORDER 130
+
+ADD FIELD "xcft__qadc02" OF "xcft_det" AS logical 
+  FORMAT "Y/N"
+  INITIAL "no"
+  POSITION 15
+  MAX-WIDTH 1
+  ORDER 140
+
+ADD FIELD "xcft__qadc03" OF "xcft_det" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 16
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "xcft__qadc04" OF "xcft_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 17
+  MAX-WIDTH 16
+  ORDER 160
+
+ADD FIELD "xcft__qadc05" OF "xcft_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xcft_domain" OF "xcft_det" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL "QAD"
+  LABEL "Domain"
+  POSITION 19
+  MAX-WIDTH 8
+  ORDER 180
+  MANDATORY
+
+ADD INDEX "xcft_ref" ON "xcft_det" 
+  AREA "TRANSACTION"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xcft_domain" ASCENDING 
+  INDEX-FIELD "xcft_entity" ASCENDING 
+  INDEX-FIELD "xcft_ref" ASCENDING 
+  INDEX-FIELD "xcft_rflag" ASCENDING 
+  INDEX-FIELD "xcft_glt_line" ASCENDING 
+  INDEX-FIELD "xcft_line" ASCENDING 
+
+.
+PSC
+cpstream=gb2312
+.
+0000014193
+

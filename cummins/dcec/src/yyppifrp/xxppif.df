@@ -1,0 +1,173 @@
+ADD TABLE "xxppif_log"
+  AREA "Schema Area"
+  DUMP-NAME "xxppif"
+
+ADD FIELD "xxppif_tr_id" OF "xxppif_log" AS integer 
+  DESCRIPTION "Transaction ID"
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Tran ID"
+  POSITION 2
+  MAX-WIDTH 4
+  ORDER 10
+
+ADD FIELD "xxppif_act_date" OF "xxppif_log" AS date 
+  DESCRIPTION "Action Date, Import or export date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Act Date"
+  POSITION 3
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxppif_act_time" OF "xxppif_log" AS character 
+  DESCRIPTION "Action Time, Import or export time."
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Act Time"
+  POSITION 4
+  MAX-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxppif_file" OF "xxppif_log" AS character 
+  FORMAT "X(16)"
+  INITIAL ""
+  LABEL "Deliver File"
+  POSITION 5
+  MAX-WIDTH 32
+  ORDER 40
+
+ADD FIELD "xxppif_msg" OF "xxppif_log" AS character 
+  FORMAT "X(24)"
+  INITIAL ""
+  LABEL "Error Msg"
+  POSITION 6
+  MAX-WIDTH 48
+  ORDER 50
+
+ADD FIELD "xxppif_tr_code" OF "xxppif_log" AS character 
+  DESCRIPTION "PPIF Transaction Code"
+  FORMAT "X(4)"
+  INITIAL ""
+  LABEL "PPIF Code"
+  POSITION 7
+  MAX-WIDTH 8
+  ORDER 60
+
+ADD FIELD "xxppif_tr_date" OF "xxppif_log" AS date 
+  DESCRIPTION "PPIF Transaction Date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Tran Date"
+  POSITION 8
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "xxppif_part" OF "xxppif_log" AS character 
+  DESCRIPTION "Item Number"
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 9
+  MAX-WIDTH 36
+  ORDER 80
+
+ADD FIELD "xxppif_bld_date" OF "xxppif_log" AS date 
+  DESCRIPTION "Shop Item Build Date"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Bld Date"
+  POSITION 10
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxppif_qty_chg" OF "xxppif_log" AS decimal 
+  DESCRIPTION "Shop Order build qty or qty change"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty Chg"
+  POSITION 11
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "xxppif_content" OF "xxppif_log" AS character 
+  DESCRIPTION "1 Transaction Content"
+  FORMAT "X(100)"
+  INITIAL ""
+  LABEL "PPIF Content"
+  POSITION 12
+  MAX-WIDTH 200
+  ORDER 110
+
+ADD FIELD "xxppif__chr01" OF "xxppif_log" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  POSITION 13
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD FIELD "xxppif__log01" OF "xxppif_log" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 14
+  MAX-WIDTH 1
+  ORDER 130
+
+ADD FIELD "xxppif__dte01" OF "xxppif_log" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 15
+  MAX-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxppif_err" OF "xxppif_log" AS integer 
+  DESCRIPTION "Error Code"
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Err Code"
+  POSITION 16
+  MAX-WIDTH 4
+  ORDER 45
+
+ADD FIELD "xxppif__log02" OF "xxppif_log" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 17
+  MAX-WIDTH 1
+  ORDER 150
+
+ADD FIELD "xxppif_domain" OF "xxppif_log" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  POSITION 18
+  MAX-WIDTH 16
+  ORDER 160
+
+ADD INDEX "xxppif_tr_id" ON "xxppif_log" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxppif_domain" ASCENDING 
+  INDEX-FIELD "xxppif_tr_id" ASCENDING 
+
+ADD INDEX "xxppif_act_date" ON "xxppif_log" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxppif_domain" ASCENDING 
+  INDEX-FIELD "xxppif_act_date" ASCENDING 
+
+ADD INDEX "xxppif_part" ON "xxppif_log" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxppif_domain" ASCENDING 
+  INDEX-FIELD "xxppif_part" ASCENDING 
+
+ADD INDEX "xxppif_tr_code" ON "xxppif_log" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxppif_domain" ASCENDING 
+  INDEX-FIELD "xxppif_tr_code" ASCENDING 
+
+.
+PSC
+cpstream=cp936
+.
+0000003627

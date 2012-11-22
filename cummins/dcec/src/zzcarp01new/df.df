@@ -1,0 +1,205 @@
+ADD TABLE "yyinvoth_det"
+  AREA "Schema Area"
+  DUMP-NAME "yyinvoth"
+
+ADD FIELD "yyinvoth_part" OF "yyinvoth_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yyinvoth_qty" OF "yyinvoth_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "yyinvoth_mark" OF "yyinvoth_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yyinvoth_domain" OF "yyinvoth_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD TABLE "yyinvpro_det"
+  AREA "Schema Area"
+  DUMP-NAME "yyinvpro"
+
+ADD FIELD "yyinvpro_part" OF "yyinvpro_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 10
+
+ADD FIELD "yyinvpro_qty" OF "yyinvpro_det" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "yyinvpro_date" OF "yyinvpro_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "yyinvpro_edn" OF "yyinvpro_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yyinvpro_domain" OF "yyinvpro_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  MAX-WIDTH 16
+  ORDER 50
+
+ADD TABLE "yyusrw_wkfl"
+  AREA "Schema Area"
+  DESCRIPTION "User Work Table"
+  DUMP-NAME "yyusrw_w"
+
+ADD FIELD "yyusrw_key1" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 10
+
+ADD FIELD "yyusrw_key2" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the first index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 20
+
+ADD FIELD "yyusrw_key3" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the second index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 30
+
+ADD FIELD "yyusrw_key4" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the second index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 40
+
+ADD FIELD "yyusrw_key5" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The first field of the third index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 50
+
+ADD FIELD "yyusrw_key6" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "The second field of the third index."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 60
+
+ADD FIELD "yyusrw_charfld" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "Character fields available for user definition and use."
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 1230
+  EXTENT 15
+  ORDER 70
+
+ADD FIELD "yyusrw_decfld" OF "yyusrw_wkfl" AS decimal 
+  DESCRIPTION "Decimal fields available for user definition and use."
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 600
+  EXTENT 15
+  DECIMALS 10
+  ORDER 80
+
+ADD FIELD "yyusrw_datefld" OF "yyusrw_wkfl" AS date 
+  DESCRIPTION "Date fields available for user definition and use."
+  FORMAT "99/99/99"
+  INITIAL ?
+  MAX-WIDTH 72
+  EXTENT 4
+  ORDER 90
+
+ADD FIELD "yyusrw_user1" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "User field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  MAX-WIDTH 80
+  ORDER 100
+
+ADD FIELD "yyusrw_user2" OF "yyusrw_wkfl" AS character 
+  DESCRIPTION "User field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  MAX-WIDTH 80
+  ORDER 110
+
+ADD FIELD "yyusrw__qadc01" OF "yyusrw_wkfl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 80
+  ORDER 120
+
+ADD FIELD "yyusrw_logfld" OF "yyusrw_wkfl" AS logical 
+  DESCRIPTION "Logical fields available for user definition and use."
+  FORMAT "Y/N"
+  INITIAL "no"
+  MAX-WIDTH 120
+  EXTENT 15
+  ORDER 130
+
+ADD FIELD "yyusrw_intfld" OF "yyusrw_wkfl" AS integer 
+  DESCRIPTION "Integer fields available for user definition and use."
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  MAX-WIDTH 330
+  EXTENT 15
+  ORDER 140
+
+ADD FIELD "yyusrw_domain" OF "yyusrw_wkfl" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  MAX-WIDTH 16
+  ORDER 150
+
+ADD INDEX "yyusrw_index1" ON "yyusrw_wkfl" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "yyusrw_domain" ASCENDING 
+  INDEX-FIELD "yyusrw_key1" ASCENDING 
+  INDEX-FIELD "yyusrw_key2" ASCENDING 
+
+ADD INDEX "yyusrw_index2" ON "yyusrw_wkfl" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "yyusrw_domain" ASCENDING 
+  INDEX-FIELD "yyusrw_key3" ASCENDING 
+  INDEX-FIELD "yyusrw_key4" ASCENDING 
+
+ADD INDEX "yyusrw_index3" ON "yyusrw_wkfl" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "yyusrw_domain" ASCENDING 
+  INDEX-FIELD "yyusrw_key5" ASCENDING 
+  INDEX-FIELD "yyusrw_key6" ASCENDING 
+
+.
+PSC
+cpstream=CP936
+.
+0000004627

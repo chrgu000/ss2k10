@@ -1,0 +1,234 @@
+ADD TABLE "yp_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "Price List Master"
+  DUMP-NAME "yp_mstr"
+
+ADD FIELD "yp_list" OF "yp_mstr" AS character 
+  DESCRIPTION "The code used to identify a specific price list."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Price List"
+  POSITION 2
+  MAX-WIDTH 80
+  COLUMN-LABEL "List"
+  VALEXP "yp_list > """""
+  VALMSG "ERROR: BLANK NOT ALLOWED. Please re-enter."
+  ORDER 10
+
+ADD FIELD "yp_cust" OF "yp_mstr" AS character 
+  DESCRIPTION "The customer to which this price list applies."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 3
+  MAX-WIDTH 30
+  COLUMN-LABEL "Customer"
+  ORDER 20
+
+ADD FIELD "yp_part" OF "yp_mstr" AS character 
+  DESCRIPTION "The item number to which this price list applies."
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  POSITION 4
+  MAX-WIDTH 30
+  ORDER 30
+
+ADD FIELD "yp_um" OF "yp_mstr" AS character 
+  DESCRIPTION "The unit of measure of the quantity levels on this price list."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  POSITION 5
+  MAX-WIDTH 30
+  VALEXP "{gpcode.v yp_um }"
+  VALMSG "ERROR: VALUE MUST EXIST IN GENERALIZED CODES. Please re-enter."
+  ORDER 40
+
+ADD FIELD "yp_start" OF "yp_mstr" AS date 
+  DESCRIPTION "The date when this price list goes into effect."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start"
+  POSITION 6
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "yp_expire" OF "yp_mstr" AS date 
+  DESCRIPTION "The date when this price list expires."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Expire"
+  POSITION 7
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "yp_amt_type" OF "yp_mstr" AS character 
+  DESCRIPTION "A code indicating the type of amount: Discount, Markup, or Price."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Amount Type"
+  POSITION 8
+  MAX-WIDTH 30
+  COLUMN-LABEL "T"
+  VALEXP "lookup(yp_amt_type,""L,P,D,M"") <> 0"
+  VALMSG "ERROR: MUST BE (L)IST, (P)RICE, (D)ISCOUNT%, OR (M)ARK-UP%. Please re-enter."
+  ORDER 70
+
+ADD FIELD "yp__qad02" OF "yp_mstr" AS character 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 9
+  MAX-WIDTH 80
+  ORDER 80
+
+ADD FIELD "yp_min_qty" OF "yp_mstr" AS decimal 
+  DESCRIPTION "The minimum order quantity to which this amount applies."
+  FORMAT ">>>>>>9"
+  INITIAL "0"
+  LABEL "Min Qty"
+  POSITION 10
+  MAX-WIDTH 600
+  EXTENT 15
+  DECIMALS 10
+  ORDER 90
+
+ADD FIELD "yp_amt" OF "yp_mstr" AS decimal 
+  DESCRIPTION "The amount of discount, markup, or actual price at this quantity."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Amount"
+  POSITION 11
+  MAX-WIDTH 600
+  EXTENT 15
+  DECIMALS 10
+  ORDER 100
+
+ADD FIELD "yp_curr" OF "yp_mstr" AS character 
+  DESCRIPTION "The currency for the price list."
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Currency"
+  POSITION 12
+  MAX-WIDTH 30
+  COLUMN-LABEL "Cur"
+  ORDER 110
+
+ADD FIELD "yp_tax_in" OF "yp_mstr" AS logical 
+  DESCRIPTION "A flag indicating whether the price includes tax."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Tax In"
+  POSITION 13
+  MAX-WIDTH 1
+  ORDER 120
+
+ADD FIELD "yp__qad01" OF "yp_mstr" AS decimal 
+  DESCRIPTION "Not used, reserved for qad use."
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  POSITION 14
+  MAX-WIDTH 38
+  DECIMALS 10
+  ORDER 130
+
+ADD FIELD "yp_user1" OF "yp_mstr" AS character 
+  DESCRIPTION "User field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld1"
+  POSITION 15
+  MAX-WIDTH 80
+  ORDER 140
+
+ADD FIELD "yp_user2" OF "yp_mstr" AS character 
+  DESCRIPTION "User field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ufld2"
+  POSITION 16
+  MAX-WIDTH 80
+  ORDER 150
+
+ADD FIELD "yp_userid" OF "yp_mstr" AS character 
+  DESCRIPTION "The Userid of the last user to access this record."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  POSITION 17
+  MAX-WIDTH 80
+  ORDER 170
+
+ADD FIELD "yp_mod_date" OF "yp_mstr" AS date 
+  DESCRIPTION "Date the record was last modified."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modified Date"
+  POSITION 18
+  MAX-WIDTH 4
+  COLUMN-LABEL "Mod Date"
+  ORDER 160
+
+ADD FIELD "yp_min_price" OF "yp_mstr" AS decimal 
+  DESCRIPTION "The minimum price allowed when this price list applies."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Minimum Price"
+  POSITION 19
+  MAX-WIDTH 38
+  DECIMALS 10
+  ORDER 180
+
+ADD FIELD "yp_max_price" OF "yp_mstr" AS decimal 
+  DESCRIPTION "The maximum price allowed when this price list applies."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Maximum Price"
+  POSITION 20
+  MAX-WIDTH 400
+  EXTENT 10
+  DECIMALS 10
+  ORDER 190
+
+ADD FIELD "yp_domain" OF "yp_mstr" AS character 
+  DESCRIPTION "The business domain for this data."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Domain"
+  POSITION 21
+  MAX-WIDTH 8
+  ORDER 200
+  MANDATORY
+
+ADD FIELD "oid_yp_mstr" OF "yp_mstr" AS decimal 
+  DESCRIPTION "Unique application generated record identifier."
+  FORMAT ">>>>>>>>>>>>>>>>>>>>>>>>>>>9.9<<<<<<<<<"
+  INITIAL "0"
+  POSITION 22
+  MAX-WIDTH 38
+  DECIMALS 10
+  ORDER 210
+  MANDATORY
+
+ADD FIELD "yp_Market" OF "yp_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Apply Market"
+  POSITION 23
+  MAX-WIDTH 24
+  ORDER 220
+
+ADD INDEX "yp_list" ON "yp_mstr" 
+  AREA "Schema Area"
+  PRIMARY
+  INDEX-FIELD "yp_domain" ASCENDING 
+  INDEX-FIELD "yp_list" ASCENDING 
+  INDEX-FIELD "yp_part" ASCENDING 
+  INDEX-FIELD "yp_start" ASCENDING 
+
+.
+PSC
+cpstream=CP936
+.
+0000005449

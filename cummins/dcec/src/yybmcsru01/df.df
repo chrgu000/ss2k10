@@ -1,0 +1,553 @@
+ADD TABLE "xxwobmfd_det"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmfd"
+
+ADD FIELD "xxwobmfd_site" OF "xxwobmfd_det" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmfd_par" OF "xxwobmfd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Parent"
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmfd_version" OF "xxwobmfd_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Version"
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxwobmfd_comp" OF "xxwobmfd_det" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Component Item Number"
+  MAX-WIDTH 36
+  ORDER 40
+
+ADD FIELD "xxwobmfd_op" OF "xxwobmfd_det" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Operation"
+  MAX-WIDTH 8
+  ORDER 50
+
+ADD FIELD "xxwobmfd_qty" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.9<<<<"
+  INITIAL "0"
+  LABEL "Quantity"
+  MAX-WIDTH 20
+  DECIMALS 2
+  ORDER 60
+
+ADD FIELD "xxwobmfd_userid" OF "xxwobmfd_det" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  MAX-WIDTH 24
+  ORDER 80
+
+ADD FIELD "xxwobmfd_date_mod" OF "xxwobmfd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "xxwobmfd_cost_tot" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 100
+
+ADD FIELD "xxwobmfd_mtl_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Material Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmfd_lbr_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Labor Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmfd_bdn_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Burden Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmfd_ovh_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Overhead Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmfd_sub_tl" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Subcon Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmfd_mtl_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Material Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmfd_lbr_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Labor Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmfd_bdn_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Burden Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmfd_ovh_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Overhead Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmfd_sub_ll" OF "xxwobmfd_det" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Subcon Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 290
+
+ADD FIELD "xxwobmfd_domain" OF "xxwobmfd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  MAX-WIDTH 16
+  ORDER 300
+
+ADD INDEX "xxwobmfd_idx1" ON "xxwobmfd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxwobmfd_domain" ASCENDING 
+  INDEX-FIELD "xxwobmfd_site" ASCENDING 
+  INDEX-FIELD "xxwobmfd_par" ASCENDING 
+  INDEX-FIELD "xxwobmfd_version" ASCENDING 
+  INDEX-FIELD "xxwobmfd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmfd_op" ASCENDING 
+
+ADD INDEX "xxwobmfd_idx2" ON "xxwobmfd_det" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmfd_domain" ASCENDING 
+  INDEX-FIELD "xxwobmfd_par" ASCENDING 
+  INDEX-FIELD "xxwobmfd_site" ASCENDING 
+  INDEX-FIELD "xxwobmfd_comp" ASCENDING 
+  INDEX-FIELD "xxwobmfd_version" ASCENDING 
+
+ADD TABLE "xxwobmfm_mstr"
+  AREA "Schema Area"
+  DUMP-NAME "xxwobmfm"
+
+ADD FIELD "xxwobmfm_site" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Site"
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxwobmfm_part" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "xxwobmfm_version" OF "xxwobmfm_mstr" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Version"
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "xxwobmfm_date_eff" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Start Date"
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "xxwobmfm_date_exp" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Expired Date"
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "xxwobmfm_userid" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(12)"
+  INITIAL ""
+  LABEL "User ID"
+  MAX-WIDTH 24
+  ORDER 150
+
+ADD FIELD "xxwobmfm_date_mod" OF "xxwobmfm_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Modification Date"
+  MAX-WIDTH 4
+  ORDER 160
+
+ADD FIELD "xxwobmfm_time_mod" OF "xxwobmfm_mstr" AS integer 
+  FORMAT ">>>>>>"
+  INITIAL "0"
+  LABEL "Time"
+  MAX-WIDTH 16
+  ORDER 170
+
+ADD FIELD "xxwobmfm_bom" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "BOM Code"
+  MAX-WIDTH 36
+  ORDER 180
+
+ADD FIELD "xxwobmfm_routing" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(18)"
+  INITIAL ""
+  LABEL "Routing Code"
+  MAX-WIDTH 36
+  ORDER 190
+
+ADD FIELD "xxwobmfm_cost_tot" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Total Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 200
+
+ADD FIELD "xxwobmfm_mtl_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Material Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 210
+
+ADD FIELD "xxwobmfm_lbr_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Labor Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 220
+
+ADD FIELD "xxwobmfm_bdn_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Burden Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 230
+
+ADD FIELD "xxwobmfm_ovh_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Overhead Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 240
+
+ADD FIELD "xxwobmfm_sub_tl" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "TL Subcon Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 250
+
+ADD FIELD "xxwobmfm_mtl_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Material Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 260
+
+ADD FIELD "xxwobmfm_lbr_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Labor Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 270
+
+ADD FIELD "xxwobmfm_bdn_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Burden Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 280
+
+ADD FIELD "xxwobmfm_ovh_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Overhead Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 290
+
+ADD FIELD "xxwobmfm_sub_ll" OF "xxwobmfm_mstr" AS decimal 
+  FORMAT "->>>,>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "LL Subcon Cost"
+  MAX-WIDTH 20
+  DECIMALS 5
+  ORDER 300
+
+ADD FIELD "xxwobmfm_domain" OF "xxwobmfm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 310
+
+ADD INDEX "xxwobmfm_idx1" ON "xxwobmfm_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "xxwobmfm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmfm_site" ASCENDING 
+  INDEX-FIELD "xxwobmfm_part" ASCENDING 
+  INDEX-FIELD "xxwobmfm_version" ASCENDING 
+
+ADD INDEX "xxwobmfm_idx2" ON "xxwobmfm_mstr" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "xxwobmfm_domain" ASCENDING 
+  INDEX-FIELD "xxwobmfm_part" ASCENDING 
+  INDEX-FIELD "xxwobmfm_site" ASCENDING 
+  INDEX-FIELD "xxwobmfm_date_eff" ASCENDING 
+  INDEX-FIELD "xxwobmfm_version" ASCENDING 
+
+ADD TABLE "yywobmsptd_det"
+  AREA "Schema Area"
+  DESCRIPTION "BOM镜像后产品标准成本按元素明细表成品/半成品中每一个子件的BOM镜像后的标准成本按元素"
+  DUMP-NAME "yywobms1"
+
+ADD FIELD "yywobmsptd_site" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "地点"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yywobmsptd_part" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yywobmsptd_comp" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "子件"
+  FORMAT "x(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 30
+
+ADD FIELD "yywobmsptd_version" OF "yywobmsptd_det" AS integer 
+  DESCRIPTION "镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD FIELD "yywobmsptd_unit_qty" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "子件数量"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "yywobmsptd_elem" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "标准成本元素"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "yywobmsptd_elem_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, this level + lower level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "yywobmsptd_userid" OF "yywobmsptd_det" AS character 
+  DESCRIPTION "修改人"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 80
+
+ADD FIELD "yywobmsptd_mod_date" OF "yywobmsptd_det" AS date 
+  DESCRIPTION "修改日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "yywobmsptd_elem_tl_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, this level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 100
+
+ADD FIELD "yywobmsptd_elem_ll_cost" OF "yywobmsptd_det" AS decimal 
+  DESCRIPTION "标准成本元素成本, lower level"
+  FORMAT "->,>>>,>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "yywobmsptd_domain" OF "yywobmsptd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "domain"
+  MAX-WIDTH 16
+  ORDER 120
+
+ADD INDEX "yywobmsptd_ver" ON "yywobmsptd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "yywobmsptd_domain" ASCENDING 
+  INDEX-FIELD "yywobmsptd_site" ASCENDING 
+  INDEX-FIELD "yywobmsptd_part" ASCENDING 
+  INDEX-FIELD "yywobmsptd_comp" ASCENDING 
+  INDEX-FIELD "yywobmsptd_version" ASCENDING 
+  INDEX-FIELD "yywobmsptd_elem" ASCENDING 
+
+ADD TABLE "yywobmspt_mstr"
+  AREA "Schema Area"
+  DESCRIPTION "BOM镜像后产品标准成本按元素主表成品/半成品BOM镜像后的标准成本按元素"
+  DUMP-NAME "yywobmsp"
+
+ADD FIELD "yywobmspt_site" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "地点"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 10
+
+ADD FIELD "yywobmspt_part" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "产品"
+  FORMAT "x(18)"
+  INITIAL ""
+  MAX-WIDTH 36
+  ORDER 20
+
+ADD FIELD "yywobmspt_version" OF "yywobmspt_mstr" AS integer 
+  DESCRIPTION "镜像BOM版本"
+  FORMAT ">>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 30
+
+ADD FIELD "yywobmspt_elem" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "标准成本元素"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 40
+
+ADD FIELD "yywobmspt_elem_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "yywobmspt_userid" OF "yywobmspt_mstr" AS character 
+  DESCRIPTION "修改人"
+  FORMAT "x(8)"
+  INITIAL ""
+  MAX-WIDTH 16
+  ORDER 60
+
+ADD FIELD "yywobmspt_mod_date" OF "yywobmspt_mstr" AS date 
+  DESCRIPTION "修改日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 70
+
+ADD FIELD "yywobmspt_elem_tl_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "yywobmspt_elem_ll_cost" OF "yywobmspt_mstr" AS decimal 
+  DESCRIPTION "标准成本元素成本"
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "yywobmspt_domain" OF "yywobmspt_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "DOMAIN"
+  MAX-WIDTH 16
+  ORDER 100
+
+ADD INDEX "yywobmspt_ver" ON "yywobmspt_mstr" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "yywobmspt_domain" ASCENDING 
+  INDEX-FIELD "yywobmspt_site" ASCENDING 
+  INDEX-FIELD "yywobmspt_part" ASCENDING 
+  INDEX-FIELD "yywobmspt_version" ASCENDING 
+  INDEX-FIELD "yywobmspt_elem" ASCENDING 
+
+.
+PSC
+cpstream=cp936
+.
+0000012633
