@@ -27,12 +27,13 @@ define variable histfn        as character format "x(24)".
 define variable cLoadFile     as logical initial "NO".
 define variable md5           as character.
 define variable rev           as character.
-
+define variable includedom    as character format "x(12)".
 {gpcdget.i "UT"}
 form
    skip(1)
    l_prod colon 20
    loc_phys_addr colon 20
+   rev    colon 20 includedom no-label
    uid    colon 20
    daysto colon 20
    l_tot_usrs colon 20
@@ -41,18 +42,23 @@ form
    key3   colon 20
    skip(1)
    cmmt   colon 20
-   rev    colon 20
    histfn colon 20
    cLoadFile colon 20
    skip(2)
-   yn label {&xxlvgen_p_1}
+   yn  colon 20 label {&xxlvgen_p_1}
 with frame a side-labels width 80.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
 assign loc_phys_addr = getMAC().
 {gprun.i ""gpgetver.p"" "(input '4', output rev)"}
-display l_prod loc_phys_addr with frame a.
+if rev = "EB2.1" then do:
+    includedom = getTermLabel("DOMAIN",20).
+end.
+else do:
+    includedom = "".
+end.
+display includedom rev l_prod loc_phys_addr with frame a.
 
 mainloop:
 repeat with frame a:
@@ -63,8 +69,8 @@ repeat with frame a:
      prompt-for l_prod loc_phys_addr editing:
        if frame-field = "l_prod" then do:
       /* FIND NEXT/PREVIOUS RECORD */
-         {mfnp.i usrw_wkfl l_prod " {xxusrwdom1.i} {xxand.i} 
-         						                usrw_charfld[15] = 'lvctrl' and usrw_key1 "
+         {mfnp.i usrw_wkfl l_prod " {xxusrwdom1.i} {xxand.i}
+                                    usrw_charfld[15] = 'lvctrl' and usrw_key1 "
                  l_prod usrw_key1 usrw_index1}
              if recno <> ? then do:
                 assign l_prod = usrw_key1
@@ -132,9 +138,17 @@ repeat with frame a:
        assign histfn = "xx" + substring(l_prod,3,index(l_prod,".") - 3)
                      + "lv.p".
    display uid daysto l_tot_usrs key1 key2 key3 cmmt histfn with frame a.
+   update rev.
+   if rev = "EB2.1" then do:
+      includedom = getTermLabel("DOMAIN",20).
+   end.
+   else do:
+      includedom = "".
+   end.
+   display includedom with frame a.
    lab001:
    repeat:
-      update  uid daysto l_tot_usrs key1 key2 key3 cmmt rev
+      update  uid daysto l_tot_usrs key1 key2 key3 cmmt
               histfn cLoadFile with frame a.
       if daysto <= 0 then do:
         {pxmsg.i &MSGNUM=5904 &ERRORLEVEL=3}
