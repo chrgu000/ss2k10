@@ -1,4 +1,4 @@
-/* xxrold.i - rwromt.p cim load                                                */
+/* xxrold.i - rwromt.p cim load                                              */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
