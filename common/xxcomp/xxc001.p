@@ -127,10 +127,10 @@ repeat:
           end.
           assign propath =xrcDir + "," + replace(bpropath,chr(10),",") when bpropath <> "".
           if vxref then do:
-          	 compile value(proc_name) no-attr-space save into value(".") xref value(proc_name + ".xref").
+             compile value(proc_name) no-attr-space save into value(".") xref value(proc_name + ".xref").
           end.
           else do:
-          	 compile value(proc_name) no-attr-space save into value(".").
+             compile value(proc_name) no-attr-space save into value(".").
           end.
           assign propath = v_oldpropath.
    output close.
@@ -361,19 +361,13 @@ procedure getVer:
   input from value(iProc).
   repeat:
       import unformat txt.
-      if index(txt,"mfdtitle.i") > 0 and index(txt,"/*") = 0 then do:
+      if index(txt,"mfdtitle.i ") > 0 and
+         index(txt,"/*") = 0 and
+         index(txt,"*/") = 0 then do:
          leave.
       end.
   end.
-  if index(txt,"mfdtitle.i") > 0 then do:
-     assign oVer = entry(2,txt," ").
-     if index(over,"}") > 0 then
-         assign oVer = trim(substring(over,2,LENGTH(over) - 3)).
-     else
-         assign over = substring(over,2).
-  end.
-  else do:
-     assign over = "".
-  end.
   input close.
+
+  assign over = trim(ENTRY(2,txt,'~"')).
 end procedure.
