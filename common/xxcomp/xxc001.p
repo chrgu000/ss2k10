@@ -93,6 +93,7 @@ repeat:
    view frame m0.
    if substring(proc_name,1,2) = "mf" then assign incmf = yes.
 /*   display stream cmp m0-comp with frame m0. */
+	 proc_ver = "".
    if opsys = "UNIX" then do:
       run getVer(input xrcDir + "/" + proc_name,output proc_ver).
    end.
@@ -357,17 +358,19 @@ procedure getVer:
   define input parameter iProc as character.
   define output parameter oVer as character.
   define variable txt as character.
-  assign txt = "".
+  assign txt = "" oVer = "".
   input from value(iProc).
   repeat:
       import unformat txt.
-      if index(txt,"mfdtitle.i ") > 0 and
+      if index(txt,"~{") > 0 and
+         index(txt,"}") > 0 and
+         index(txt,"~"") > 0 and
+      	 index(txt,"mfdtitle.i ") > 0 and
          index(txt,"/*") = 0 and
          index(txt,"*/") = 0 then do:
+         assign over = trim(ENTRY(2,txt,'~"')) no-error.
          leave.
       end.
   end.
   input close.
-
-  assign over = trim(ENTRY(2,txt,'~"')).
 end procedure.
