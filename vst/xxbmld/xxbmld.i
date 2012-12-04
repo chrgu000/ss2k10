@@ -31,18 +31,3 @@ define {1} shared temp-table tmpbomn
        fields tbmn_scrp as decimal
        fields tbmn_sn as integer
        fields tbmn_chk as character format "x(40)".
-
-FUNCTION getMsg RETURNS character(inbr as integer):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = "TW" and msg_nbr = inbr no-error.
-  if available msg_mstr then do:
-      return msg_desc.
-  end.
-  else do:
-      return "ERROR.".
-  end.
-END FUNCTION. /*FUNCTION getMsg*/
