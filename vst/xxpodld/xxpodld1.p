@@ -16,10 +16,12 @@ define variable vprice-list-msg as integer no-undo.
 
 /*define variable v-use-log-acctg as logical no-undo. */
 /* {gprun.i ""lactrl.p"" "(output v-use-log-acctg)"} */
-  fn_i = "xxpodld-" + string(today,"99999999") + "-" + string(time).
 
-  OUTPUT TO VALUE(fn_i + ".bpi" ).
-  FOR EACH xxpod_det no-lock where xxpod_chk = "":
+
+
+FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
+    assign fn_i = "xxpodld-" + xxpod_nbr + "-" + string(xxpod_line).
+    OUTPUT TO VALUE(fn_i + ".bpi" ).
       FIND FIRST po_mstr NO-LOCK WHERE po_nbr = xxpod_nbr NO-ERROR.
       find first pod_det no-lock where pod_nbr = po_nbr AND pod_line = xxpod_line NO-ERROR.
       if not available pod_det then do:
@@ -116,41 +118,37 @@ define variable vprice-list-msg as integer no-undo.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "-" SKIP.
       PUT UNFORMATTED "-" SKIP.
-  END.
-  OUTPUT CLOSE .
-
-  do transaction on endkey undo, leave:
-      batchrun = yes.
-      INPUT FROM VALUE( fn_i + ".bpi" ) .
-      OUTPUT TO VALUE( fn_i + ".bpo" ) .
-      {gprun.i ""popomt.p""}
-      INPUT CLOSE .
       OUTPUT CLOSE .
-      batchrun = NO.
+      if cloadfile then do:
+         do transaction on endkey undo, leave:
+            batchrun = yes.
+            INPUT FROM VALUE( fn_i + ".bpi" ) .
+            OUTPUT TO VALUE( fn_i + ".bpo" ) .
+            {gprun.i ""popomt.p""}
+            INPUT CLOSE .
+            OUTPUT CLOSE .
+            batchrun = NO.
+        FIND FIRST pod_det no-lock WHERE
+                   pod_nbr = xxpod_nbr AND pod_line = xxpod_line no-error.
+        IF AVAIL pod_det THEN DO:
+            if (pod_due_date <> xxpod_due_date and xxpod_due_date <> ?) then do:
+               assign xxpod_chk = "ERROR:POD_DUE_DATE".
+            end.
+            if (pod_status <> xxpod_stat) then do:
+               if xxpod_chk = ""
+                  then assign xxpod_chk = "ERROR:POD_STATUS".
+                  else assign xxpod_chk = xxpod_chk + ";POD_STATUS".
+            end.
+            if xxpod_chk = "" then do:
+               assign xxpod_chk = "OK".
+               OS-DELETE VALUE(fn_i + ".bpi").
+               OS-DELETE VALUE(fn_i + ".bpo").
+            end.
+        END. /*IF AVAIL pod_det THEN DO:*/
+        else do:
+            undo,next.
+        end.
+      end. /*do transaction on endkey undo, leave:*/
+    end. /* if cloadfile then do: */
+END. /*FOR EACH xxpod_det no-lock where xxpod_chk = "":*/
 
-  FOR EACH xxpod_det where xxpod_chk = "":
-      FIND FIRST pod_det no-lock WHERE
-                 pod_nbr = xxpod_nbr AND pod_line = xxpod_line no-error.
-      IF AVAIL pod_det THEN DO:
-          if (pod_due_date <> xxpod_due_date and xxpod_due_date <> ?) then do:
-             assign xxpod_chk = "ERROR:POD_DUE_DATE".
-          end.
-          if (pod_status <> xxpod_stat) then do:
-             if xxpod_chk = ""
-                then assign xxpod_chk = "ERROR:POD_STATUS".
-                else assign xxpod_chk = xxpod_chk + ";POD_STATUS".
-          end.
-
-         if xxpod_chk = "" then do:
-            assign xxpod_chk = "OK".
-         end.
-      END.
-  end.   /*  FOR EACH xxpod_det where xxpod_chk = "":*/
-  if cloadfile = no then do:
-     undo.
-  end.
-  else do:
-        OS-DELETE VALUE(fn_i + ".bpi").
-        OS-DELETE VALUE(fn_i + ".bpo").
-  end.
-end. /*do transaction on endkey undo, leave:*/
