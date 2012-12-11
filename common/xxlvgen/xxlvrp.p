@@ -4,24 +4,26 @@
 /*-Revision end---------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "23YO"}
+{mfdtitle.i "2CYA"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
 {pocnvars.i}
+{xxecdc.i}
 
 define variable l_prod as character format 'x(30)'.
 define variable l_prod1 as character format 'x(30)'.
 define variable loc_phys_addr as character format "x(20)".
-define variable sub1          as character format "x(20)".
-define variable fg      as character format "x(76)".
-define variable del-yn  as logical.
+define variable sub1 as character format "x(20)".
+define variable fg as character format "x(76)".
+define variable del-yn as logical.
+
 form
    skip(.1)
-   l_prod  colon 20
-   l_prod1 colon 20 label {t001.i}
-   loc_phys_addr colon 20
-   sub1          colon 20 label {t001.i} skip(2)
-   del-yn  colon 32
+   l_prod colon 14 view-as fill-in size 20 by 1
+   l_prod1 colon 48 view-as fill-in size 20 by 1 label {t001.i}
+   loc_phys_addr colon 14
+   sub1 colon 48 label {t001.i} skip(2)
+   del-yn colon 32
    skip(2)
 with frame a side-labels width 80 attr-space.
 /* SET EXTERNAL LABELS */
@@ -29,28 +31,26 @@ setFrameLabels(frame a:handle).
 
 form
     skip(.1)
-       usrw_key1  colon  20 format "x(20)"
-       usrw_key2  colon  54 format "x(20)"
-       usrw_key3  colon  20 format "x(20)"
-       usrw_key4  colon  54 format "x(20)"
-       usrw_key5  colon  20 format "x(20)"
-       usrw_key6  colon  54 format "x(20)"
+    loc_phys_addr
+with frame P side-labels width 80 attr-space.
+setFrameLabels(frame P:handle).
+
+form
+    skip(.1)
+       usrw_key1 colon 16 format "x(20)"
+       usrw_key2 colon 54 format "x(20)"
+       usrw_key3 colon 16 format "x(20)"
+       usrw_key4 colon 54 format "x(20)"
+       usrw_key5 colon 16 format "x(20)"
+       usrw_key6 colon 54 format "x(20)"
        usrw_intfld[1] colon 20
-       usrw_datefld[1] colon 54
-       usrw_charfld[10] colon 20 format "x(56)"
        usrw_datefld[2] colon 20
        usrw_intfld[2] colon 54
+       usrw_datefld[1] colon 20
+       usrw_charfld[10] colon 20 format "x(56)"
        fg no-label
 with frame b side-labels width 80 attr-space.
 setFrameLabels(frame b:handle).
-
-/* DETERMINE IF SUPPLIER CONSIGNMENT IS ACTIVE */
-{gprun.i ""gpmfc01.p""
-         "(input ENABLE_SUPPLIER_CONSIGNMENT,
-           input 11,
-           input ADG,
-           input SUPPLIER_CONSIGN_CTRL_TABLE,
-           output using_supplier_consignment)"}
 
 {wbrp01.i}
 repeat:
@@ -87,12 +87,17 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
 
-  {mfphead2.i}
-  assign fg = fill("-",80).
+   {mfphead2.i}
+   assign fg = getMac().
+   display fg @ loc_phys_addr with frame p.
+
+   assign fg = fill("-",80).
+
    for each usrw_wkfl no-lock where {xxusrwdom1.i} {xxand.i}
             usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
             usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1 and
-            usrw_charfld[15] = "lvctrl":
+            usrw_charfld[15] = "lvctrl"
+   with frame b width 132 no-attr-space:
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
@@ -108,16 +113,15 @@ repeat:
               usrw_datefld[2]
               usrw_charfld[10]
               string(usrw_intfld[2],"HH:MM:SS") @ usrw_intfld[2]
-              fg
-               with frame b.
+              fg.
       {mfrpchk.i}
       down with frame b.
    end.
    {mftrl080.i}
    if del-yn then do:
     for each usrw_wkfl exclusive-lock where {xxusrwdom1.i} {xxand.i}
-            usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
-            usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1:
+             usrw_key1 >= l_prod and usrw_key1 <= l_prod1 and
+             usrw_key2 >= loc_phys_addr and usrw_key2 <= sub1:
         delete usrw_wkfl.
     end.
     {mfmsg.i 22 1}

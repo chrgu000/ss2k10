@@ -48,24 +48,24 @@ if dev <> "terminal" then do:
             string(time,"hh:mm:ss") @ trtime
             session:date-format @ apr_date_form
             with frame b width 80.
-    setFrameLabels(frame b:handle).        
+    setFrameLabels(frame b:handle).
     do trtime = 1 to 5 with frame c down:
-       {gprun.i ""gpgetver.p"" "(input trtime,output mfvers)"} 
+       {gprun.i ""gpgetver.p"" "(input trtime,output mfvers)"}
        if trtime = 1 then do:
-       		display PROVERSION @ mfvers with frame c.
-       		setFrameLabels(frame c:handle).
-       		down with frame c.
+          display PROVERSION @ mfvers with frame c.
+          setFrameLabels(frame c:handle).
+          down with frame c.
        end.
        display mfvers .
     end.
-    
-    for each ad_mstr no-lock where 
-    			     ad_addr = "~~screens" with frame d width 80.
-    		display  {xxaddom0.i} ad_name format "x(40)" with frame d.
-    		setFrameLabels(frame d:handle). 
+
+    for each ad_mstr no-lock where
+               ad_addr = "~~screens" with frame d width 80.
+        display  {xxaddom0.i} ad_name format "x(40)" with frame d.
+        setFrameLabels(frame d:handle).
     end.
 
-      
+
   if dev <> "terminal" then do:
    {mftrl080.i}
   end.
