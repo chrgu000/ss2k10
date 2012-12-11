@@ -7,14 +7,20 @@
 {mfdeclre.i}
 {xxbmld.i}
 define variable vtax as character.
-define variable verr as character.
 define variable vi as integer.
 empty temp-table tmpbom no-error.
 assign vi = 0.
 input from value(flhload).
 repeat:
   create tmpbom.
-  import delimiter "," tbm_par tbm_old tbm_new tbm_qty_per tbm_scrp no-error.
+  import unformat vtax.
+  assign tbm_par = entry(1,vtax,",") no-error.
+  assign tbm_old = entry(2,vtax,",") no-error.
+  assign tbm_new = entry(3,vtax,",") no-error.
+  if entry(4,vtax,",") = "-" then assign tbm_qty_per = -1000.
+     else assign tbm_qty_per = integer(entry(4,vtax,",")) no-error.
+  if entry(5,vtax,",") = "-" then assign tbm_scrp = -1000.
+     else assign tbm_scrp = integer(entry(5,vtax,",")) no-error.
 end.
 input close.
 
@@ -110,8 +116,14 @@ for each tmpbom no-lock:
                  assign tbmn_par = tbm_par
                        tbmn_comp = tbm_new.
        end.
-       assign tbmn_start = today + 1
-              tbmn_qty_per = tbm_qty_per
-              tbmn_scrp = tbm_scrp.
+       assign tbmn_start = today + 1.
+       if tbm_qty_per <> -1000 then
+          assign tbmn_qty_per = tbm_qty_per.
+       else
+          assign tbmn_qty_per = ps_qty_per.
+       if tbm_scrp <> -1000 then
+          assign tbmn_scrp = tbm_scrp.
+       else
+          assign tbm_scrp = ps_scrp_pct.
    end. /* if tbm_new <> "" and  ... */
 end.
