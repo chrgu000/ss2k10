@@ -18,6 +18,7 @@ define variable yn        as logical.
 define variable okProg    as character.
 define variable c-comp    as character format "x(12)" no-undo.
 define variable m0-comp   as character format "x(40)" no-undo.
+define shared variable vtriggers as character format "x(30)" no-undo.
 define shared variable cut_paste   as character format "x(70)" no-undo.
 define shared variable vxref as logical no-undo.
 define temp-table t_log
@@ -291,12 +292,12 @@ procedure createDestDir:
 
   if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
      if opsys = "unix" then do:
-        assign vdir = iDestDir + "/triggers".
+        assign vdir = iDestDir + "/" + trim(vtriggers).
         FILE-INFO:FILE-NAME = vdir.
         if FILE-INFO:FILE-TYPE = ? then unix silent mkdir value(vdir).
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        assign vdir = destDir + "~\triggers".
+        assign vdir = destDir + "~\" + trim(vtriggers).
         FILE-INFO:FILE-NAME = vdir.
         if FILE-INFO:FILE-TYPE = ? then dos silent mkdir value(vdir).
      end.
@@ -328,10 +329,10 @@ procedure getDestFileName:
 
   if substring(icompFile,length(icompFile) - 1,2) = ".t" then do:
      if opsys = "unix" then do:
-        odir = idestdir + "/triggers".
+        odir = idestdir + "/" + trim(vtriggers).
      end.
      else if opsys = "msdos" or opsys = "win32" then do:
-        odir = idestdir + "~\triggers".
+        odir = idestdir + "~\" + trim(vtriggers).
      end.
   end.
   else do:

@@ -35,7 +35,8 @@ define variable del-yn     as logical.
 define variable vClientDir as character no-undo.
 define variable vchkPath   as logical   no-undo.
 define new shared variable vxref as logical initial no no-undo.
-
+define new shared variable vtriggers as character format "x(30)"
+                  initial "triggers" no-undo.
 define temp-table tmpfile
   fields fn as CHARACTER
   index fn is primary fn.
