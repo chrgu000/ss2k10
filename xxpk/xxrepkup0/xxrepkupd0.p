@@ -186,17 +186,13 @@ by wr_start by wr_part by wr_op
 /*             xx_qty_req = wod_qty_req       /* 总需求量 */                */
              xx_qty_need = max(wod_qty_req - wod_qty_iss,0)  /* 缺料量 */
              xx_qty_iss = wod_qty_iss
-             xx_um = um
+/*            xx_um = um                                                    */
              xx_par = wr_part
              xx_due_date = wo_due_date
              xx_op = wr_op
              xx_mch = wr_mch
              xx_start = wr_start.
-end.       
-
-       
-       
-       
+end.
 /*********************************************************************
 /* for each rps_mstr no-lock                                                        */
 /* where rps_part >= part and rps_part <= part1                                     */
@@ -1072,20 +1068,20 @@ end.
 
 /*未发料的物料不能在当做需求了*/
 /*731*/ for each xxwd_det no-lock where xxwd_type = "S" and xxwd_stat = "":
-/*731*/ 		assign qtyneed = max(xxwd_qty_plan - xxwd_qty_iss,0).
-/*731*/ 		if qtyneed > 0 then do:
-/*731*/ 		   for each tsupp exclusive-lock where tsu_part = xxwd_part and
-/*731*/ 		   		 tsu_loc = xxwd_loc and tsu_lot = xxwd_lot break by tsu_qty:
-/*731*/ 		   		 if qtyneed >= tsu_qty then do:
-/*731*/ 		   		 	  assign qtyneed = qtyneed - tsu_qty.
-/*731*/ 		   		 	  delete tsupp.
-/*731*/ 		   		 end.
-/*731*/ 		   		 else do:
-/*731*/ 		   		 		 assign tsu_qty = tsu_qty - qtyneed.
-/*731*/ 		   		 		 assign qtyneed = 0.
-/*731*/ 		   		 end.
-/*731*/ 		   		 if qtyneed <= 0 then leave.
-/*731*/   	   end.
+/*731*/     assign qtyneed = max(xxwd_qty_plan - xxwd_qty_iss,0).
+/*731*/     if qtyneed > 0 then do:
+/*731*/        for each tsupp exclusive-lock where tsu_part = xxwd_part and
+/*731*/            tsu_loc = xxwd_loc and tsu_lot = xxwd_lot break by tsu_qty:
+/*731*/            if qtyneed >= tsu_qty then do:
+/*731*/               assign qtyneed = qtyneed - tsu_qty.
+/*731*/               delete tsupp.
+/*731*/            end.
+/*731*/            else do:
+/*731*/                assign tsu_qty = tsu_qty - qtyneed.
+/*731*/                assign qtyneed = 0.
+/*731*/            end.
+/*731*/            if qtyneed <= 0 then leave.
+/*731*/        end.
 /*731*/     end.
 /*731*/ end.
 
@@ -1219,6 +1215,10 @@ for each xxwd_det exclusive-lock break by xxwd_ladnbr by xxwd_line by xxwd_date 
        if available xxlnw_det then do:
           assign i = xxlnw_stime.
        end.
+    end.
+    if xxwd__int01 >= 3 * 3600 and xxwd__int01 <= 9 * 3600 then do:
+    	 assign xxwd__int01 = 0
+    				  xxwd__int02 = .5 * 3600.
     end.
     if xxwd__int03 >= 0 and xxwd__int03 < i then do:
        assign xxwd_date = xxwd__dte01 + 1.

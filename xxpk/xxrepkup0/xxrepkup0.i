@@ -2,17 +2,17 @@
 /*V8:ConvertMode=Maintenance                                                 */
 
 define {1} shared temp-table tmp_ld
-		fields tld_site like ld_site
-		fields tld_part like ld_part
-		fields tld_abc  like pt_abc
-		fields tld_pk   like pt__qad20
-		fields tld_tp   like pt__qad19
-		fields tld_loc  like ld_loc
-		fields tld_lot  like ld_lot
-		fields tld_ref  like ld_ref
-		fields tld_qty  like ld_qty_oh
-		fields tld_sort as   character
-		index tld_part tld_part tld_lot.
+    fields tld_site like ld_site
+    fields tld_part like ld_part
+    fields tld_abc  like pt_abc
+    fields tld_pk   like pt__qad20
+    fields tld_tp   like pt__qad19
+    fields tld_loc  like ld_loc
+    fields tld_lot  like ld_lot
+    fields tld_ref  like ld_ref
+    fields tld_qty  like ld_qty_oh
+    fields tld_sort as   character
+    index tld_part tld_part tld_lot.
 
 /*临时表用于分割时间段*/
 DEFINE {1} SHARED TEMP-TABLE tmp_file0 no-undo
@@ -49,7 +49,6 @@ define {1} SHARED temp-table xx_pklst no-undo
   fields xx_qty_req like wod_qty_req
   fields xx_qty_need like wod_qty_req
   fields xx_qty_iss  like wod_qty_iss
-  fields xx_um like pt_um
   fields xx_par  like wo_part
   fields xx_due_date like wo_due_date
   fields xx_op  like wr_op
@@ -93,16 +92,16 @@ FUNCTION getMult RETURNS DECIMAL (qty as decimal, mult as decimal) :
     Notes:
 ------------------------------------------------------------------------------*/
 
-  if mult <> 0 AND qty / mult <> truncate(qty / mult,0)
-  then
+  IF mult <> 0 AND qty / mult <> truncate(qty / mult,0)
+  THEN
       RETURN  MAX(qty,(truncate (qty / mult,0) + 1) * mult).
   ELSE
       RETURN qty.
 END FUNCTION.
 
 procedure getld:
-		define input parameter iLine as character.
-		define input parameter iPart as character.
+    define input parameter iLine as character.
+    define input parameter iPart as character.
 
 end procedure.
 
