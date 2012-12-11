@@ -1,7 +1,7 @@
 /* xxc.p - compile procedure                                                 */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
+/* REVISION: 24YP LAST MODIFIED: 12/11/12 BY: zy expand xrc length to 120    */
 /* REVISION END                                                              */
 
 /**below program*************************************************************
@@ -16,7 +16,7 @@ compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "2CY8"}
+{mfdtitle.i "2CYA"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -150,9 +150,9 @@ ON CURSOR-UP of xrcdir in frame z do:
    end.
    if available usrw_wkfl then do:
       display usrw_key2 @ xrcDir
-      			  trim(usrw_charfld[6]) @ filef
+              trim(usrw_charfld[6]) @ filef
               trim(usrw_charfld[7]) @ filet
-      			  with frame Z.
+              with frame Z.
    end.
 
 end.
@@ -180,7 +180,7 @@ ON CURSOR-DOWN of xrcdir in frame z do:
    end.
    if available usrw_wkfl then do:
       display usrw_key2 @ xrcDir
-      				trim(usrw_charfld[6]) @ filef
+              trim(usrw_charfld[6]) @ filef
               trim(usrw_charfld[7]) @ filet
               with frame Z.
    end.
@@ -308,7 +308,7 @@ empty temp-table tmpfile no-error.
 input from OS-DIR(xrcDir).
 repeat:
    import delimiter " " vFilename.
-   if vFileName[3] = "F" and
+   if index(vFileName[3],"F") > 0 and
       index(".p.w.t.P.W.T"
            ,substring(vFileName[1],length(vFileName[1]) - 1)) > 0 and
       vFileName[1] >= filef and (vFileName[1] <= filet + hi_char)
@@ -434,7 +434,7 @@ procedure checkBpropath:
 end procedure.
 
 procedure recordUsrwWkfl:
-/*	assign filef filet kbc_display_pause vxref bpropath destDir in frame z. */
+/*  assign filef filet kbc_display_pause vxref bpropath destDir in frame z. */
   if not locked(usrw_wkfl) then do:
       assign usrw_key5 = string(today,"9999-99-99") + " "
                        + string(time,"HH:MM:SS")
