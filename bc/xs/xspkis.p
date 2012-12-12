@@ -12,7 +12,7 @@ define variable qtyreq as decimal format "->>>,>>>,>>9".
 define variable qtytmp as decimal format "->>>,>>>,>>9".
 define variable trrecid as recid.
 
-assign vernbr = "620".
+assign vernbr = "ba".
 {mfdtitle.i vernbr}
 {xsdfsite.i}
 {xspkpub.i}
@@ -170,6 +170,16 @@ repeat:
         hide frame framea1.
         hide frame framea2.
         hide frame framep.
+        find first ld_det no-lock where ld_site = "gsa01" and ld_loc = vtrloc
+        			 and ld_part = xxwd_part and ld_lot < xxwd_lot no-error.
+        if available ld_det then do:
+        	 assign wmessage = "非最小批号!继续或退出.".
+           display  skip WMESSAGE NO-LABEL skip with fram framer no-box.
+           update ret-ok no-label with frame framer.
+            if not ret-ok then do:
+               undo,retry.
+            end.
+        end.
         find first ld_det no-lock where ld_site = "gsa01" and ld_loc = vtrloc
              and ld_part = xxwd_part and ld_lot = xxwd_lot no-error.
         if available ld_det then do:
