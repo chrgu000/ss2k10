@@ -131,9 +131,11 @@ define variable comments   like mfc_logical
 /*ADM1b*/ {quotuser.i}
 
 needtochkps = No.
-assign env_chkps = os-getenv("CHKPS").
-if env_chkps = ? or env_chkps = "Yes" then
-   needtochkps = Yes.
+if not batchrun then do:
+	 assign env_chkps = os-getenv("CHKPS").
+	 if env_chkps = ? or env_chkps = "Yes"  then
+	    needtochkps = Yes.
+end.
 
 /* Display selection form */
 form
