@@ -4,7 +4,6 @@
 /* REVISION: 120703.1 LAST MODIFIED: 07/03/12 BY:                            */
 /* REVISION END                                                              */
 
-
 /* DISPLAY TITLE */
 {mfdtitle.i "120907.1"}
 {xxbmld.i "new"}
@@ -91,8 +90,8 @@ repeat:
              {gprun.i ""xxbmld1.p""}
      end.
      for each tmpbom no-lock with width 320 frame c:
-     	   setFrameLabels(frame c:handle).
-     	   display tmpbom.
+         setFrameLabels(frame c:handle).
+         display tbm_par tbm_old tbm_new tbm_qty_per tbm_scrp.
      end.
      for each tmpbomn exclusive-lock with width 320 frame d:
       /* SET EXTERNAL LABELS */

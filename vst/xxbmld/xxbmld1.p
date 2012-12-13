@@ -57,7 +57,8 @@ end.
 for each tmpbomn exclusive-lock:
     find first ps_mstr no-lock where ps_par = tbmn_par
            and ps_comp = tbmn_comp and ps_ref = tbmn_ref
-           and ps_start = tbmn_start and ps_end = tbmn_end no-error.
+           and ps_start = tbmn_start and ps_end = tbmn_end 
+           and ps_qty_per = tbmn_qty_per and ps_scrp_pct = tbmn_scrp no-error.
     if available ps_mstr then do:
        assign tbmn_chk = "OK".
     end.
