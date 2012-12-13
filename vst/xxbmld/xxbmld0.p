@@ -59,27 +59,33 @@ for each tmpbom exclusive-lock:
     end.
 end.
 empty temp-table tmpbomn no-error.
-for each tmpbom no-lock:
+for each tmpbom exclusive-lock:
     for each ps_mstr no-lock where ps_par = tbm_par
           and ps_comp = tbm_old and tbm_old <> ""
           and (ps_start <= today or ps_start = ?)
           and (ps_end >= today or ps_end = ?)
     break by ps_comp by ps_start by ps_end:
           if last-of(ps_comp) then do:
-                find first tmpbomn where tbmn_par = ps_par
-                       and tbmn_comp = ps_comp
-                       and tbmn_ref = ps_ref
-                       and tbmn_start = ps_start no-error.
-                if not available tmpbomn then do:
-                  create tmpbomn.
-                  assign tbmn_par = ps_par
-                         tbmn_comp = ps_comp
-                         tbmn_ref = ps_ref.
-                end.
-                assign tbmn_start = ps_start
-                       tbmn_end = today
-                       tbmn_qty_per = ps_qty_per
-                       tbmn_scrp = ps_scrp_pct.
+             if tbm_qty_per = -1000 then do:
+                assign tbm_qty_per = ps_qty_per.
+             end.
+             if tbm_scrp = -1000 then do:
+                assign tbm_scrp = ps_scrp_pct.
+             end.
+             find first tmpbomn where tbmn_par = ps_par
+                    and tbmn_comp = ps_comp
+                    and tbmn_ref = ps_ref
+                    and tbmn_start = ps_start no-error.
+             if not available tmpbomn then do:
+               create tmpbomn.
+               assign tbmn_par = ps_par
+                      tbmn_comp = ps_comp
+                      tbmn_ref = ps_ref.
+             end.
+             assign tbmn_start = ps_start
+                    tbmn_end = today
+                    tbmn_qty_per = ps_qty_per
+                    tbmn_scrp = ps_scrp_pct.
           end.
     end.
     if tbm_new <> "" then do:
@@ -116,14 +122,8 @@ for each tmpbom no-lock:
                  assign tbmn_par = tbm_par
                        tbmn_comp = tbm_new.
        end.
-       assign tbmn_start = today + 1.
-       if tbm_qty_per <> -1000 then
-          assign tbmn_qty_per = tbm_qty_per.
-       else
-          assign tbmn_qty_per = ps_qty_per.
-       if tbm_scrp <> -1000 then
-          assign tbmn_scrp = tbm_scrp.
-       else
-          assign tbm_scrp = ps_scrp_pct.
+       assign tbmn_start = today + 1
+              tbmn_qty_per = tbm_qty_per
+              tbmn_scrp = tbm_scrp.
    end. /* if tbm_new <> "" and  ... */
 end.
