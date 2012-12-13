@@ -54,14 +54,30 @@ repeat:
     display  skip WMESSAGE NO-LABEL with fram framea1.
     undo,retry.
   end.
-  else do:
-     find first xxwd_det no-lock where  xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
-            and xxwd_stat <> "C" no-error.
-     if not available xxwd_det then do:
-        assign wmessage = "取料单已结清,请确认资料!".
-         display  skip WMESSAGE NO-LABEL with fram framea1.
-         undo,retry.
-     end.
+	find first xxwd_det no-lock where xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
+	       and xxwd_stat <> "C" no-error.
+	if not available xxwd_det then do:
+	    assign wmessage = "取料单已结清,请确认资料!".
+	    display  skip WMESSAGE NO-LABEL with fram framea1.
+	    undo,retry.
+	end.
+	assign wmessage = "".
+	for each xxwd_det no-lock where xxwd_type = "P" and xxwd_type + xxwd_nbr = tcnbr
+	     and xxwd_stat <> "C":
+	    find first ld_det no-lock where ld_site = trim(wdefsite) and 
+	    					 ld_part = xxwd_part and ld_loc = xxwd_loc and ld_lot = xxwd_lot and
+	    					 ld_qty_oh >=  xxwd_qty_plan - xxwd_qty_iss no-error.
+	    if not available ld_det then do:
+	    	 if wmessage = "" then 
+	    	 		assign wmessage = string(xxwd_sn).
+	    	 else 
+	    	 	  assign wmessage = wmessage + "," + string(xxwd_sn).
+	    end.
+	end.
+	if wmessage <> "" then do: 
+	   WMESSAGE = "项次" + wmessage + "库存不足".
+   	 display  skip WMESSAGE NO-LABEL with fram framea1.
+	   undo,retry.
   end.
   hide all.
   hide frame framea1.
