@@ -1,0 +1,682 @@
+ADD TABLE "xxrqm_mstr"
+  AREA "GRS"
+  LABEL "Requisition master"
+  DESCRIPTION "Requisition Master"
+  FROZEN
+  DUMP-NAME "xxrqm_mstr"
+
+ADD FIELD "xxrqm_nbr" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The requisition number."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Req Nbr"
+  POSITION 2
+  SQL-WIDTH 80
+  ORDER 10
+  MANDATORY
+
+ADD FIELD "xxrqm_req_date" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The date the requisition was created."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Rqstn Date"
+  POSITION 3
+  SQL-WIDTH 4
+  ORDER 20
+
+ADD FIELD "xxrqm_rqby_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of the person who initiated the requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Requested By"
+  POSITION 4
+  SQL-WIDTH 80
+  COLUMN-LABEL "Req By"
+  ORDER 30
+
+ADD FIELD "xxrqm_end_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of the person who will receive the material."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "End User"
+  POSITION 5
+  SQL-WIDTH 80
+  ORDER 40
+  MANDATORY
+
+ADD FIELD "xxrqm_ship" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The id of the ship-to address."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Ship to"
+  POSITION 6
+  SQL-WIDTH 80
+  ORDER 50
+
+ADD FIELD "xxrqm_cmtindx" OF "xxrqm_mstr" AS integer 
+  DESCRIPTION "An index to retrieve comment information."
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Comments"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxrqm_reason" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The requisition reason."
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Reason"
+  POSITION 8
+  SQL-WIDTH 80
+  ORDER 70
+
+ADD FIELD "xxrqm_eby_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of person entering the transaction."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Entered By"
+  POSITION 9
+  SQL-WIDTH 80
+  ORDER 80
+
+ADD FIELD "xxrqm_status" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The status of the requisition."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Status"
+  POSITION 10
+  SQL-WIDTH 30
+  ORDER 90
+
+ADD FIELD "xxrqm_print" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates if the requisition has been printed."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Print Req"
+  POSITION 11
+  SQL-WIDTH 1
+  ORDER 100
+
+ADD FIELD "xxrqm_effdate" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The effective date of this transaction."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Effective"
+  POSITION 12
+  SQL-WIDTH 4
+  COLUMN-LABEL "Eff Date"
+  ORDER 110
+
+ADD FIELD "xxrqm_need_date" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The date the material is required for further processing. (MRP)"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Need Date"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxrqm_cust" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The id of the customer."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Customer"
+  POSITION 14
+  SQL-WIDTH 80
+  ORDER 130
+
+ADD FIELD "xxrqm_acct" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The general ledger account to be used for PO receipts."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Account"
+  POSITION 15
+  SQL-WIDTH 80
+  ORDER 140
+
+ADD FIELD "xxrqm_sub" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The GL sub-account to be used for PO receipts."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Sub-Account"
+  POSITION 16
+  SQL-WIDTH 80
+  COLUMN-LABEL "Sub-Acct"
+  ORDER 150
+
+ADD FIELD "xxrqm_cc" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The cost center used for PO receipts."
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Cost Ctr"
+  POSITION 17
+  SQL-WIDTH 30
+  COLUMN-LABEL "CC"
+  ORDER 160
+
+ADD FIELD "xxrqm_project" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The project number."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Project"
+  POSITION 18
+  SQL-WIDTH 80
+  ORDER 170
+
+ADD FIELD "xxrqm_tax_in" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "A flag indicating whether the price includes tax."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Tax In"
+  POSITION 19
+  SQL-WIDTH 1
+  ORDER 180
+
+ADD FIELD "xxrqm_curr" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The currency of the requisition."
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Currency"
+  POSITION 20
+  SQL-WIDTH 30
+  ORDER 190
+
+ADD FIELD "xxrqm_ex_rate" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "Number of transaction currency units related to base currency units."
+  FORMAT ">>>>,>>>,>>9.9<<<<<<<<<"
+  INITIAL "1"
+  LABEL "Exch Rate"
+  POSITION 21
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "xxrqm_inv_date" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The date that the invoice for this sales order was generated."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Invoice Date"
+  POSITION 22
+  SQL-WIDTH 4
+  COLUMN-LABEL "Inv Date"
+  ORDER 210
+
+ADD FIELD "xxrqm_site" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The site for this requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 23
+  SQL-WIDTH 80
+  ORDER 220
+
+ADD FIELD "xxrqm_lang" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The language of the requisition."
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Lang"
+  POSITION 24
+  SQL-WIDTH 30
+  ORDER 230
+
+ADD FIELD "xxrqm_disc_pct" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "The default discount percent to apply to each line of this requisition"
+  FORMAT "->9.99%"
+  INITIAL "0"
+  LABEL "Disc %"
+  POSITION 25
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 240
+
+ADD FIELD "xxrqm_bill" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The address code of the bill-to address for this requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Bill-To"
+  POSITION 26
+  SQL-WIDTH 80
+  ORDER 250
+
+ADD FIELD "xxrqm_contact" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The person at the customer who is responsible for this requisition"
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Contact"
+  POSITION 27
+  SQL-WIDTH 30
+  ORDER 260
+
+ADD FIELD "xxrqm_invoiced" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "A flag indicating an invoice has been posted to Accounts Receivable."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Invoiced"
+  POSITION 28
+  SQL-WIDTH 1
+  ORDER 270
+
+ADD FIELD "xxrqm_type" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "Type of Requisition E(val), L(oan), space(Purchase)."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 29
+  SQL-WIDTH 30
+  ORDER 280
+
+ADD FIELD "xxrqm_pr_list" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "A code indicating the price list to be used for this order."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Disc Tbl"
+  POSITION 30
+  SQL-WIDTH 80
+  ORDER 290
+
+ADD FIELD "xxrqm_ent_ex" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "Exchange rate entered at approval time."
+  FORMAT ">>,>>9.99999<<<<<"
+  INITIAL "1"
+  LABEL "Exch Rate"
+  POSITION 31
+  SQL-WIDTH 20
+  DECIMALS 10
+  ORDER 300
+
+ADD FIELD "xxrqm_rtdto_purch" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates that the req is fully approved and routed to Purchasing."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Routed To Purchasing"
+  POSITION 32
+  SQL-WIDTH 1
+  COLUMN-LABEL "Routed To!Purchasing"
+  ORDER 310
+
+ADD FIELD "xxrqm_partial" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates whether this is a partial requisition."
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "Partial OK"
+  POSITION 33
+  SQL-WIDTH 1
+  ORDER 320
+
+ADD FIELD "xxrqm_buyer" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The id of the buyer."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Buyer"
+  POSITION 34
+  SQL-WIDTH 80
+  ORDER 330
+
+ADD FIELD "xxrqm_inv_nbr" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "A unique code used to identify a specific invoice."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Invoice"
+  POSITION 35
+  SQL-WIDTH 80
+  ORDER 340
+
+ADD FIELD "xxrqm_category" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The type of material on this requisition."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Category"
+  POSITION 36
+  SQL-WIDTH 80
+  ORDER 350
+
+ADD FIELD "xxrqm_fix_rate" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates whether fixed rates are used on this requisition."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Fixed Rate"
+  POSITION 37
+  SQL-WIDTH 1
+  ORDER 360
+
+ADD FIELD "xxrqm_rmks" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user's remarks regarding this requisition."
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "Remarks"
+  POSITION 38
+  SQL-WIDTH 80
+  ORDER 370
+
+ADD FIELD "xxrqm_direct" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates if the requisition is for direct materials (MRP) or indirect (MRO) purchases"
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Direct Matls"
+  POSITION 39
+  SQL-WIDTH 1
+  ORDER 380
+
+ADD FIELD "xxrqm_apr_cmtindx" OF "xxrqm_mstr" AS integer 
+  DESCRIPTION "An index to retrieve comment information for approvals."
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Approval Comments"
+  POSITION 40
+  SQL-WIDTH 4
+  ORDER 390
+
+ADD FIELD "xxrqm_rtto_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of the person to whom the requisition is routed."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Route To"
+  POSITION 41
+  SQL-WIDTH 80
+  ORDER 400
+
+ADD FIELD "xxrqm_prev_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of the previous route-to."
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "Prev Route To"
+  POSITION 42
+  SQL-WIDTH 80
+  ORDER 410
+
+ADD FIELD "xxrqm_fob" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The ""free-on-board"" location to be printed on the purchase order."
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "FOB"
+  POSITION 43
+  SQL-WIDTH 30
+  ORDER 420
+
+ADD FIELD "xxrqm_shipvia" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "Notes specifying the shipment method to be used."
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Ship Via"
+  POSITION 44
+  SQL-WIDTH 30
+  ORDER 430
+
+ADD FIELD "xxrqm_email_opt" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "Indicates if e-mail notification will be used and if
+the mode is (r)egular or (e)xtended."
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "E-mail Option"
+  POSITION 45
+  SQL-WIDTH 30
+  ORDER 440
+
+ADD FIELD "xxrqm_entity" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The entity code."
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Entity"
+  POSITION 46
+  SQL-WIDTH 30
+  COLUMN-LABEL "Ent"
+  ORDER 450
+
+ADD FIELD "xxrqm_pent_userid" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "The user id of the person who last entered the last route-to."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Prev Route To Entered By"
+  POSITION 47
+  SQL-WIDTH 80
+  ORDER 460
+
+ADD FIELD "xxrqm_total" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "The total of all line extended amounts."
+  FORMAT "->>>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Ext Cost Total"
+  POSITION 48
+  SQL-WIDTH 38
+  COLUMN-LABEL "Ext!Cost Total"
+  DECIMALS 10
+  ORDER 470
+
+ADD FIELD "xxrqm_max_total" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "The total of all line extended amounts."
+  FORMAT "->>>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Max Ext Cost Total"
+  POSITION 49
+  SQL-WIDTH 38
+  COLUMN-LABEL "Max Ext!Cost Total"
+  DECIMALS 10
+  ORDER 480
+
+ADD FIELD "xxrqm_pr_list2" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "A code indicating the list price list to be used for this order."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Price Tbl"
+  POSITION 50
+  SQL-WIDTH 80
+  COLUMN-LABEL "Pr Tbl"
+  ORDER 490
+
+ADD FIELD "xxrqm_rtto_date" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The date the requisition was routed to the route-to user."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Date Routed"
+  POSITION 51
+  SQL-WIDTH 4
+  ORDER 500
+
+ADD FIELD "xxrqm_rtto_time" OF "xxrqm_mstr" AS integer 
+  DESCRIPTION "The time the requisition was routed to the route-to user."
+  FORMAT ">>>>>>>9"
+  INITIAL "0"
+  LABEL "Time Routed"
+  POSITION 52
+  SQL-WIDTH 4
+  ORDER 510
+
+ADD FIELD "xxrqm_open" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "Indicates if the requisition has any open qties to be purchased."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Open"
+  POSITION 53
+  SQL-WIDTH 1
+  ORDER 520
+
+ADD FIELD "xxrqm_prev_rtp" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "The value of xxrqm_ok previous to the last route operation."
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL ""
+  POSITION 54
+  SQL-WIDTH 1
+  ORDER 530
+
+ADD FIELD "xxrqm_cls_date" OF "xxrqm_mstr" AS date 
+  DESCRIPTION "The date the requisition was closed."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Close Date"
+  POSITION 55
+  SQL-WIDTH 4
+  COLUMN-LABEL "Closed"
+  ORDER 540
+
+ADD FIELD "xxrqm__chr01" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "User custom character field #1."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 56
+  SQL-WIDTH 80
+  ORDER 550
+
+ADD FIELD "xxrqm__chr02" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "User custom character field #2."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 57
+  SQL-WIDTH 80
+  ORDER 560
+
+ADD FIELD "xxrqm__chr03" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "User custom character field #3."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 58
+  SQL-WIDTH 80
+  ORDER 570
+
+ADD FIELD "xxrqm__chr04" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "User custom character field #4."
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 59
+  SQL-WIDTH 80
+  ORDER 580
+
+ADD FIELD "xxrqm__log01" OF "xxrqm_mstr" AS logical 
+  DESCRIPTION "User custom logical field #1."
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 60
+  SQL-WIDTH 1
+  ORDER 590
+
+ADD FIELD "xxrqm__dec01" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "User custom decimal field #1."
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 61
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 600
+
+ADD FIELD "xxrqm__qadc01" OF "xxrqm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "QAD Field"
+  POSITION 62
+  SQL-WIDTH 80
+  LENGTH 0
+  ORDER 610
+
+ADD FIELD "xxrqm__qadc02" OF "xxrqm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "QAD Field"
+  POSITION 63
+  SQL-WIDTH 80
+  LENGTH 0
+  ORDER 620
+
+ADD FIELD "xxrqm__qadc03" OF "xxrqm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "QAD Field"
+  POSITION 64
+  SQL-WIDTH 80
+  LENGTH 0
+  ORDER 630
+
+ADD FIELD "xxrqm__qadc04" OF "xxrqm_mstr" AS character 
+  FORMAT "X(8)"
+  INITIAL ""
+  LABEL "QAD Field"
+  POSITION 65
+  SQL-WIDTH 80
+  LENGTH 0
+  ORDER 640
+
+ADD FIELD "xxrqm_aprv_stat" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "Indicates approval status: Approved, Not Approved, Out of Tolerance."
+  FORMAT "x(16)"
+  INITIAL ""
+  LABEL "Aprvl Status"
+  POSITION 66
+  SQL-WIDTH 30
+  ORDER 650
+
+ADD FIELD "xxrqm_ex_rate2" OF "xxrqm_mstr" AS decimal 
+  DESCRIPTION "Number of base currency units related to transaction currency units."
+  FORMAT ">>>>,>>>,>>9.9<<<<<<<<<"
+  INITIAL "1"
+  LABEL "Exch Rate 2"
+  POSITION 67
+  SQL-WIDTH 38
+  DECIMALS 10
+  ORDER 660
+  MANDATORY
+
+ADD FIELD "xxrqm_ex_ratetype" OF "xxrqm_mstr" AS character 
+  DESCRIPTION "Exchange rate type."
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Rate Type"
+  POSITION 68
+  SQL-WIDTH 80
+  ORDER 670
+  MANDATORY
+
+ADD FIELD "xxrqm_exru_seq" OF "xxrqm_mstr" AS integer 
+  DESCRIPTION "Sequence number of exchange rate usage."
+  FORMAT ">>>>>>>>9"
+  INITIAL "0"
+  LABEL "Sequence"
+  POSITION 69
+  SQL-WIDTH 4
+  ORDER 680
+  MANDATORY
+
+ADD INDEX "xxrqm_nbr" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_buyer" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_buyer" ASCENDING 
+  INDEX-FIELD "xxrqm_rtdto_purch" ASCENDING 
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_inv_nbr" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_inv_nbr" ASCENDING 
+  INDEX-FIELD "xxrqm_rtdto_purch" ASCENDING 
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_open" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_open" ASCENDING 
+  INDEX-FIELD "xxrqm_rtdto_purch" ASCENDING 
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_rqby_userid" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_rqby_userid" ASCENDING 
+  INDEX-FIELD "xxrqm_rtdto_purch" ASCENDING 
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_rtto" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_rtto_userid" ASCENDING 
+  INDEX-FIELD "xxrqm_open" ASCENDING 
+  INDEX-FIELD "xxrqm_nbr" ASCENDING 
+
+ADD INDEX "xxrqm_cust" ON "xxrqm_mstr" 
+  AREA "GRS_IDX"
+  INDEX-FIELD "xxrqm_cust" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000015304
