@@ -16,7 +16,7 @@ compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "2CYA"}
+{mfdtitle.i "2CYE"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -425,8 +425,8 @@ procedure checkBpropath:
        assign vpath = substring(vbpath,1,index(vbpath,chr(10)) - 1).
        vbpath = substring(vbpath,index(vbpath,chr(10)) + 1).
        FILE-INFO:FILE-NAME = vpath.
-       if FILE-INFO:FILE-TYPE = ? and search(vpath) = ? then do:
-          message "Propath settings error!" skip(1) vpath
+       if FILE-INFO:FILE-TYPE = ? then do:
+          message "Propath [" + vpath "]settings error!" skip(1) vpath
                   view-as alert-box.
           oresult = no.
           leave.
