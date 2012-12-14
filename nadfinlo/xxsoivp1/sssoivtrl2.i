@@ -329,8 +329,7 @@ do for so_mstr:     /*scope this trans */
          line_total = line_total + tot_line_charge.
 
       for each sod_det where sod_nbr = so_nbr no-lock
-/*121213.1*/  ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+/*y  	 ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */ :
 
          if using_cust_consignment then do:
             /* IF THE ORDER LINE IS A CONSIGNMENT ORDER LINE  */
@@ -826,9 +825,7 @@ do for so_mstr:     /*scope this trans */
             line_total = line_total + tot_line_charge.
 
          for each sod_det where sod_nbr = so_nbr
-/*121213.1*/  ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
-          :
+ 						,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock:
 
             if using_cust_consignment then do:
                /* IF THE ORDER LINE IS A CONSIGNMENT ORDER LINE  */

@@ -77,7 +77,7 @@ define variable taxes_included    like  ar_amt        no-undo.
 define variable last_disc_amt     like  pih_disc_amt  no-undo.
 define variable mc-error-number   like  msg_nbr       no-undo.
 define variable account_code      like  ac_code       no-undo.
-
+{sssoivp1.i}
 do transaction on error undo, leave:
 
    for first gl_ctrl
@@ -97,8 +97,6 @@ do transaction on error undo, leave:
              sod_qty_inv     sod_site sod_std_cost sod_taxc
              sod_type        sod_um_conv)
      no-lock where recid(sod_det) = sod_recno 
-/*121213.1*/    ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
        :
    end. /* FOR FIRST sod_det */
 

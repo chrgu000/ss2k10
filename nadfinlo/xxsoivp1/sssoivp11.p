@@ -145,7 +145,6 @@
 /* THE SPACEBAR PROMPT FOR OUTPUT DIRECTED TO TERMINAL                    */
 
 
-
 /* SS - 20060524.3 - B */
 /*
 1. 更新了折扣的问题
@@ -194,7 +193,7 @@ define new shared variable rndmthd like rnd_rnd_mthd.
 {etdcrvar.i "new"}
 
 define new shared frame sotot.
-
+{sssoivp1.i}
 {etsotrla.i "NEW"}
 
 define variable w-first-key like so_mstr.so_inv_nbr   no-undo.
@@ -854,7 +853,23 @@ do on error undo, leave:
                                                        and   sod_taxable
                                                        and   sod_tax_in).
 
-               /* GET ORDER DETAIL  */
+               
+	       empty temp-table tmpso no-error.
+	       for each xxabs_mstr NO-LOCK
+		  WHERE xxabs_nbr = xxabsnbr
+		  break by xxabs_order by xxabs_line:
+		  if first-of(xxabs_line) then do:
+		     find first tmpso no-lock where tso1_nbr  = xxabs_order and tso1_line = integer(xxabs_line) no-error.
+		     if not available tmpso then do:
+			 create tmpso.
+			 assign tso1_nbr  = xxabs_order
+			        tso1_line = integer(xxabs_line).
+		     end.
+		  end.
+	       end.
+
+
+	       /* GET ORDER DETAIL  */
                for each sod_det
                fields (sod_acct sod_cc sod_crt_int sod_desc sod_line sod_sub
                        sod_list_pr sod_nbr sod_part sod_price
@@ -864,10 +879,13 @@ do on error undo, leave:
                        sod_tax_in sod_um sod_sched)
                   where sod_nbr = so_nbr
                     and sod_line > 0
-                    and sod_qty_inv <> 0,
+                    and sod_qty_inv <> 0
+		    ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
+/*		   ,
 		 each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
-               break by sod_line with frame e width 132:
+*/              
+		break by sod_line with frame e width 132:
 
                   sod_recno = recid(sod_det).
                   {&SOIVPST1-P-TAG8}
@@ -1235,7 +1253,6 @@ do on error undo, leave:
                   undo_all = no.
 /*121213.1				  {gprun.i ""soivpstb.p""}                     */ 
 /*121213.1*/        {gprun.i ""sssoivpstb.p"" "(input xxabsnbr)"}
-
                   if undo_all then undo invoiceloop , leave.
 
                end. /* for each sod_det */
@@ -1284,11 +1301,8 @@ do on error undo, leave:
                        input '',
                        input yes)"}
                   {&SOIVPST1-P-TAG31}
-
                   if undo_txdetrp then undo invoiceloop, leave.
-
                   {soivtot8.i}
-
                   if so_fsm_type = "PRM" and so_prepaid <> 0 then do:
 
                      assign
@@ -1347,7 +1361,6 @@ do on error undo, leave:
 
                /* ADDED SEVENTH INPUT PARAMETER p_last_line TO ACCOMODATE THE */
                /* LOGIC INTRODUCED IN gpcurcnv.i FOR HANDLING ROUNDING ISSUES */
-
                {gprun.i ""sosogla.p""
                   "(input-output l_ar_gl_line,
                     input-output l_ar_gltw_line,
@@ -1371,8 +1384,10 @@ do on error undo, leave:
                      where tx2d_ref     = so_inv_nbr
                      and   tx2d_tr_type = "16"
                   no-lock
-/*121213.1*/ ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+/*121213.1  ,each xxabs_mstr NO-LOCK
+ 121213.1 WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
+*/ 
+:
                      assign
                         l_rnd_tax_amt  = l_rnd_tax_amt
                                        + tx2d_cur_tax_amt
@@ -1480,13 +1495,13 @@ do on error undo, leave:
                     input-output l_tot_amt1,
                     input-output l_tot_ramt1)" }
                   */
-                                       {gprun.i ""sssoivp1a.p""
-                                          "(input        l_consolidate,
-                                          	input        xxabsnbr,
-                                            output       viar_recno,
-                                            output       vglamt,
-                                            input-output l_tot_amt1,
-                                            input-output l_tot_ramt1)" }
+                 {gprun.i ""sssoivp1a.p""
+                    "(input        l_consolidate,
+                    	input        xxabsnbr,
+                      output       viar_recno,
+                      output       vglamt,
+                      input-output l_tot_amt1,
+                      input-output l_tot_ramt1)" }
                   /* SS - 20060524.1 - E */
                                           /* SS - 20060524.2 - E */
 

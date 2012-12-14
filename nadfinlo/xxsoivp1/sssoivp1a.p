@@ -194,10 +194,9 @@ DEFINE VARIABLE DEL_so AS LOGICAL.
 {&SOIVPSTA-P-TAG1}
 {apconsdf.i}   /* PRE-PROCESSOR CONSTANTS FOR LOGISTICS ACCOUNTING */
 {ieconsdf.i}   /* INTRASTAT PRE-PROCESSOR CONSTANTS DEFINITION */
-
 {gldydef.i}
 {gldynrm.i}
-
+{sssoivp1.i}
 define input parameter l_consolidate as logical no-undo.
 define input parameter xxabsnbr as character no-undo.
 define output parameter viar_recno   as recid   no-undo.
@@ -277,6 +276,7 @@ define variable l_consigned_line_item as logical no-undo.
 /* Logistics orders can be invoiced before shipping. */
 define variable ExtInvoicing        as logical        no-undo.
 {gpfilev.i}
+
 
 define shared workfile invoice_err no-undo
    field  inv_nbr  like so_inv_nbr
@@ -453,8 +453,8 @@ do transaction on error undo, leave:
                     sod_qty_ord sod_qty_pick sod_qty_ship sod_cum_qty
                     sod_taxable sod_taxc sod_tax_in sod_type sod_um_conv)
             where sod_nbr = so_nbr
-         no-lock,each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+         no-lock 
+         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock:
 
             for first si_mstr
                fields (si_db si_site)
@@ -505,8 +505,7 @@ do transaction on error undo, leave:
                        sod_taxable sod_taxc sod_tax_in sod_type sod_um_conv)
                where sod_nbr  = work_sod_nbr
                  and sod_line = work_sod_line
-            no-lock,each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line): end.
+            no-lock: end.
 
             for first si_mstr
                fields (si_db si_site)
@@ -628,8 +627,7 @@ do transaction on error undo, leave:
          or (sod_qty_ord - sod_qty_ship = 0
          and substring(sod_fsm_type,1,3) <> "RMA"
          and not sod_sched))
-/*121213.1*/    ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+/*121213.1*/   ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock:
 
       assign
          l_invnbr  = so_inv_nbr
@@ -1010,9 +1008,12 @@ do transaction on error undo, leave:
          or sod_qty_pick <> 0
          or sod_sched)
        and  sod_fsm_type <> "FSM-RO"
-   no-lock,
+   no-lock,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
+   /*
+   ,
    each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
+            */
    : end.
 
    if available sod_det
@@ -1027,8 +1028,7 @@ do transaction on error undo, leave:
             or soddet.sod_qty_pick <> 0
             or soddet.sod_sched)
       and  soddet.sod_fsm_type     <> "FSM-RO"
-      no-lock,each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and soddet.sod_nbr = xxabs_order AND soddet.sod_line = integer(xxabs_line):
+      no-lock:
 
          run del_tx2d_line13
             (input l_invnbr,
