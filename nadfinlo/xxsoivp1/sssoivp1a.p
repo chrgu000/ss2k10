@@ -196,7 +196,7 @@ DEFINE VARIABLE DEL_so AS LOGICAL.
 {ieconsdf.i}   /* INTRASTAT PRE-PROCESSOR CONSTANTS DEFINITION */
 {gldydef.i}
 {gldynrm.i}
-{sssoivp1.i}
+/*{sssoivp1.i}*/
 define input parameter l_consolidate as logical no-undo.
 define input parameter xxabsnbr as character no-undo.
 define output parameter viar_recno   as recid   no-undo.
@@ -1010,8 +1010,9 @@ do transaction on error undo, leave:
          or sod_qty_pick <> 0
          or sod_sched)
        and  sod_fsm_type <> "FSM-RO"
-   no-lock,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
-   /*
+   no-lock
+   /* 121216.1
+   ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
    ,
    each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)

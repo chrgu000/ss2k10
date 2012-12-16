@@ -183,7 +183,7 @@
 define variable trans_conv like sod_um_conv no-undo.
 
 {txcalvar.i}
-{sssoivp1.i "new"}
+/* 	121216 {sssoivp1.i "new"} */
 /* SS - 20060401 - E */
 
 /* SS - 20060313 - B */

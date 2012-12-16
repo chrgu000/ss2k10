@@ -77,7 +77,7 @@ define variable taxes_included    like  ar_amt        no-undo.
 define variable last_disc_amt     like  pih_disc_amt  no-undo.
 define variable mc-error-number   like  msg_nbr       no-undo.
 define variable account_code      like  ac_code       no-undo.
-{sssoivp1.i}
+/* {sssoivp1.i} */
 do transaction on error undo, leave:
 
    for first gl_ctrl

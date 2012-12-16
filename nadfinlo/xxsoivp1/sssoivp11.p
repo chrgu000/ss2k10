@@ -193,7 +193,7 @@ define new shared variable rndmthd like rnd_rnd_mthd.
 {etdcrvar.i "new"}
 
 define new shared frame sotot.
-{sssoivp1.i}
+/* {sssoivp1.i} */
 {etsotrla.i "NEW"}
 
 define variable w-first-key like so_mstr.so_inv_nbr   no-undo.
@@ -853,22 +853,20 @@ do on error undo, leave:
                                                        and   sod_taxable
                                                        and   sod_tax_in).
 
-
-         empty temp-table tmpso no-error.
-         for each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr
-            break by xxabs_order by xxabs_line:
-            if first-of(xxabs_line) then do:
-               find first tmpso no-lock where tso1_nbr  = xxabs_order
-                      and tso1_line = integer(xxabs_line) no-error.
-               if not available tmpso then do:
-                  create tmpso.
-                  assign tso1_nbr  = xxabs_order
-                         tso1_line = integer(xxabs_line).
-               end.
-            end.
-         end.
-
+/*         empty temp-table tmpso no-error.                                 */
+/*         for each xxabs_mstr NO-LOCK                                      */
+/*            WHERE xxabs_nbr = xxabsnbr                                    */
+/*            break by xxabs_order by xxabs_line:                           */
+/*            if first-of(xxabs_line) then do:                              */
+/*               find first tmpso no-lock where tso1_nbr  = xxabs_order     */
+/*                      and tso1_line = integer(xxabs_line) no-error.       */
+/*               if not available tmpso then do:                            */
+/*                  create tmpso.                                           */
+/*                  assign tso1_nbr  = xxabs_order                          */
+/*                         tso1_line = integer(xxabs_line).                 */
+/*               end.                                                       */
+/*            end.                                                          */
+/*         end.                                                             */
 
          /* GET ORDER DETAIL  */
                for each sod_det
@@ -881,8 +879,11 @@ do on error undo, leave:
                   where sod_nbr = so_nbr
                     and sod_line > 0
                     and sod_qty_inv <> 0
-        ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
-  /*  分开2行错误了
+                    and can-find (first xxabs_mstr no-lock where  
+					xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line))                    
+   /*     
+    ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
+   分开2行错误了
      ,each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
  */

@@ -64,7 +64,7 @@ define input parameter tot_line_charge as decimal no-undo.
 DEFINE INPUT PARAMETER xxabsnbr  as character no-undo.
 define shared variable convertmode as character no-undo.
 define shared variable rndmthd          like rnd_rnd_mthd.
-{sssoivp1.i}
+/* {sssoivp1.i} */
 /* SS - 20060524.3 - B */
 /*
 if convertmode = "MAINT" then do:
@@ -84,16 +84,16 @@ else do:
                              input tot_line_charge)"}
 end.
    */
-if convertmode = "MAINT" then do:
-   {gprun.i ""sssoivtrld.p"" "(input ref /* TX2D_REF */,
-                             input nbr    /* TX2D_NBR */,
-                             input col-80 /* REPORT WIDTH */,
-                             input tax_tr_type /* TRANSACTION TYPE */,
-                             input tot_cont_charge,
-                             input tot_line_charge,
-                             input xxabsnbr)"}
-end.
-else do:
+/*    if convertmode = "MAINT" then do:                                      */
+/*       {gprun.i ""sssoivtrld.p"" "(input ref /* TX2D_REF */,               */
+/*                                 input nbr    /* TX2D_NBR */,              */
+/*                                 input col-80 /* REPORT WIDTH */,          */
+/*                                 input tax_tr_type /* TRANSACTION TYPE */, */
+/*                                 input tot_cont_charge,                    */
+/*                                 input tot_line_charge,                    */
+/*                                 input xxabsnbr)"}                         */
+/*    end.                                                                   */
+/*    else do:                                                               */
    {gprun.i ""sssoivtrlc.p"" "(input ref /* TX2D_REF */,
                              input nbr    /* TX2D_NBR */,
                              input col-80 /* REPORT WIDTH */,
@@ -101,5 +101,5 @@ else do:
                              input tot_cont_charge,
                              input tot_line_charge,
                              input xxabsnbr)"}
-end.
+/* end.                                                                     */
    /* SS - 20060524.3 - E */
