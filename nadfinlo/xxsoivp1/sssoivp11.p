@@ -157,7 +157,7 @@
 */
 /* SS - 20060524.3 - E */
 
-/* SS - 20060524.2 - B */   
+/* SS - 20060524.2 - B */
 /*
 1. 不删除已结的SO和SOD
 2. 执行列表:
@@ -167,7 +167,7 @@
 */
 /* SS - 20060524.2 - E */
 
-/* SS - 20060524.1 - B */   
+/* SS - 20060524.1 - B */
 /*
 1. 删除已结的SO和SOD
 2. 执行列表:
@@ -702,7 +702,7 @@ do on error undo, leave:
                      setFrameLabels(frame h2:handle).
 
                      display
-                        skip(1) 
+                        skip(1)
                         space(3)
                         so_nbr
                         so_ship
@@ -715,10 +715,10 @@ do on error undo, leave:
 
 /* ss 20070125 - b */
                     put "货运单: " at 7 .
-                    for each xxrqm_mstr where xxrqm_inv_nbr = so_inv_nbr 
-                        and  xxrqm_invoiced 
-                        no-lock ,            
-                        each xxabs_mstr where xxrqm_nbr = xxabs_nbr 
+                    for each xxrqm_mstr where xxrqm_inv_nbr = so_inv_nbr
+                        and  xxrqm_invoiced
+                        no-lock ,
+                        each xxabs_mstr where xxrqm_nbr = xxabs_nbr
                         and  xxabs_order = so_nbr no-lock,
                         each abs_mstr where abs_shipfrom = xxabs_shipfrom
                         and abs_id = xxabs_id no-lock:
@@ -837,7 +837,7 @@ do on error undo, leave:
                        input '16'   /* TRANSACTION TYPE */,
                        input cont_charges,
                        input line_charges,
-		       input xxabsnbr)"}
+                       input xxabsnbr)"}
                   /* SS - 20060524.3 - E */
 
                if undo_trl2 then return.
@@ -853,23 +853,24 @@ do on error undo, leave:
                                                        and   sod_taxable
                                                        and   sod_tax_in).
 
-               
-	       empty temp-table tmpso no-error.
-	       for each xxabs_mstr NO-LOCK
-		  WHERE xxabs_nbr = xxabsnbr
-		  break by xxabs_order by xxabs_line:
-		  if first-of(xxabs_line) then do:
-		     find first tmpso no-lock where tso1_nbr  = xxabs_order and tso1_line = integer(xxabs_line) no-error.
-		     if not available tmpso then do:
-			 create tmpso.
-			 assign tso1_nbr  = xxabs_order
-			        tso1_line = integer(xxabs_line).
-		     end.
-		  end.
-	       end.
+
+         empty temp-table tmpso no-error.
+         for each xxabs_mstr NO-LOCK
+            WHERE xxabs_nbr = xxabsnbr
+            break by xxabs_order by xxabs_line:
+            if first-of(xxabs_line) then do:
+               find first tmpso no-lock where tso1_nbr  = xxabs_order
+                      and tso1_line = integer(xxabs_line) no-error.
+               if not available tmpso then do:
+                  create tmpso.
+                  assign tso1_nbr  = xxabs_order
+                         tso1_line = integer(xxabs_line).
+               end.
+            end.
+         end.
 
 
-	       /* GET ORDER DETAIL  */
+         /* GET ORDER DETAIL  */
                for each sod_det
                fields (sod_acct sod_cc sod_crt_int sod_desc sod_line sod_sub
                        sod_list_pr sod_nbr sod_part sod_price
@@ -880,12 +881,12 @@ do on error undo, leave:
                   where sod_nbr = so_nbr
                     and sod_line > 0
                     and sod_qty_inv <> 0
-		    ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
-/*		   ,
-		 each xxabs_mstr NO-LOCK
+        ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
+  /*  分开2行错误了
+     ,each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
-*/              
-		break by sod_line with frame e width 132:
+ */
+    break by sod_line with frame e width 132:
 
                   sod_recno = recid(sod_det).
                   {&SOIVPST1-P-TAG8}
@@ -1251,7 +1252,7 @@ do on error undo, leave:
 
                   /* UPDATE AR DETAIL */
                   undo_all = no.
-/*121213.1				  {gprun.i ""soivpstb.p""}                     */ 
+/*121213.1          {gprun.i ""soivpstb.p""}                     */
 /*121213.1*/        {gprun.i ""sssoivpstb.p"" "(input xxabsnbr)"}
                   if undo_all then undo invoiceloop , leave.
 
@@ -1386,7 +1387,7 @@ do on error undo, leave:
                   no-lock
 /*121213.1  ,each xxabs_mstr NO-LOCK
  121213.1 WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
-*/ 
+*/
 :
                      assign
                         l_rnd_tax_amt  = l_rnd_tax_amt
@@ -1497,7 +1498,7 @@ do on error undo, leave:
                   */
                  {gprun.i ""sssoivp1a.p""
                     "(input        l_consolidate,
-                    	input        xxabsnbr,
+                      input        xxabsnbr,
                       output       viar_recno,
                       output       vglamt,
                       input-output l_tot_amt1,

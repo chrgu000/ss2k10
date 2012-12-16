@@ -33,7 +33,6 @@
 /*
 {soivtrl2.i}
    */
-   {sssoivp1.i}
    {sssoivtrl2.i}
    /* SS - 20060524.3 - E */
 

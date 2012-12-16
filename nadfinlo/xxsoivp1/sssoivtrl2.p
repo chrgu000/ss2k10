@@ -64,7 +64,7 @@ define input parameter tot_line_charge as decimal no-undo.
 DEFINE INPUT PARAMETER xxabsnbr  as character no-undo.
 define shared variable convertmode as character no-undo.
 define shared variable rndmthd          like rnd_rnd_mthd.
-
+{sssoivp1.i}
 /* SS - 20060524.3 - B */
 /*
 if convertmode = "MAINT" then do:

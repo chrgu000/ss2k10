@@ -454,7 +454,8 @@ do transaction on error undo, leave:
                     sod_taxable sod_taxc sod_tax_in sod_type sod_um_conv)
             where sod_nbr = so_nbr
          no-lock 
-         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock:
+/*         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */         
+         :
 
             for first si_mstr
                fields (si_db si_site)
@@ -627,8 +628,9 @@ do transaction on error undo, leave:
          or (sod_qty_ord - sod_qty_ship = 0
          and substring(sod_fsm_type,1,3) <> "RMA"
          and not sod_sched))
-/*121213.1*/   ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock:
-
+/*121213.1   ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
+*/
+:
       assign
          l_invnbr  = so_inv_nbr
          net_price = sod_price.
@@ -1049,9 +1051,11 @@ do transaction on error undo, leave:
       for each sod_det
          where sod_nbr = so_nbr
            and sod_line > 0
-           ,each xxabs_mstr NO-LOCK
+/*121213.1       ,each xxabs_mstr NO-LOCK
             WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order 
-              AND sod_line = integer(xxabs_line):
+              AND sod_line = integer(xxabs_line)
+*121213.1*/              
+              :
 
          /* FORCE USE OF sod_nbrln INDEX */
          /* Delete line information that might exist in other dbs */

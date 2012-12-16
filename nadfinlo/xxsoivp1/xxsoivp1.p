@@ -199,7 +199,6 @@ define variable trans_conv like sod_um_conv no-undo.
 
 {mfdtitle.i "121213.1"}
 {cxcustom.i "SOIVPST.P"}
-
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE soivpst_p_1 "GL Consolidated or Detail"
