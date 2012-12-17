@@ -9,7 +9,7 @@
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "120906.2"}
+{mfdtitle.i "121217.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -558,7 +558,7 @@ repeat:
             USE-INDEX mrp_part,
        EACH vd_mstr no-lock where vd_addr = pt_vend and vd__chr03 <> "":
        find first tmp_po no-lock where tpo_vend = pt_vend
-              and tpo_part = pt_part and tpo_due = duef - 1 no-error.
+              and tpo_part = pt_part /* and tpo_due = duef - 1 */ no-error.
        if not available tmp_po then do:
           create tmp_po.
           assign tpo_vend = pt_vend
@@ -569,9 +569,9 @@ repeat:
                  tpo_rule0 = vd__chr03
                  tpo_fut = yes.
        end.
-       else do:
-       	  assign tpo_fut = yes.
-       end.
+       /* else do:                       */
+       /* 	  assign tpo_fut = yes.      */
+       /* end.                           */
    END.
 
     for each tmp_po exclusive-lock,each pt_mstr no-lock where
