@@ -1386,10 +1386,9 @@ do on error undo, leave:
                      where tx2d_ref     = so_inv_nbr
                      and   tx2d_tr_type = "16"
                   no-lock
-/*121213.1  ,each xxabs_mstr NO-LOCK
- 121213.1 WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)
-*/
-:
+                   ,each xxabs_mstr NO-LOCK
+  WHERE tx2d_ref = xxabsnbr and tx2d_nbr = xxabs_order AND tx2d_line = integer(xxabs_line)
+                  :
                      assign
                         l_rnd_tax_amt  = l_rnd_tax_amt
                                        + tx2d_cur_tax_amt

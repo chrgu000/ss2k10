@@ -163,7 +163,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-/* SS - 20060524.2 - B */   
+/* SS - 20060524.2 - B */
 /*
 1. 不删除已结的SO和SOD
 2. 执行列表:
@@ -173,7 +173,7 @@
 */
 /* SS - 20060524.2 - E */
 
-/* SS - 20060524.1 - B */   
+/* SS - 20060524.1 - B */
 /*
 1. 删除已结的SO和SOD
 2. 执行列表:
@@ -453,8 +453,8 @@ do transaction on error undo, leave:
                     sod_qty_ord sod_qty_pick sod_qty_ship sod_cum_qty
                     sod_taxable sod_taxc sod_tax_in sod_type sod_um_conv)
             where sod_nbr = so_nbr
-         no-lock 
-/*         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */         
+         no-lock
+/*         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */
          :
 
             for first si_mstr
@@ -1053,9 +1053,9 @@ do transaction on error undo, leave:
          where sod_nbr = so_nbr
            and sod_line > 0
 /*121213.1       ,each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order 
+            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order
               AND sod_line = integer(xxabs_line)
-*121213.1*/              
+*121213.1*/
               :
 
          /* FORCE USE OF sod_nbrln INDEX */
@@ -2206,8 +2206,10 @@ PROCEDURE Update_tx2d:
 
    for each sod_det
       where sod_nbr = sonbr
-   exclusive-lock,each xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+/*      and can-find(first xxabs_mstr NO-LOCK                                */
+/*            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order           */
+/*              AND sod_line = integer(xxabs_line))                          */
+   exclusive-lock:
 
       sod_qty_chg = sod_qty_ord - sod_qty_ivcd.
 

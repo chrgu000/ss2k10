@@ -147,9 +147,8 @@ do transaction on error undo, leave:
          and   tx2d_nbr     = so_nbr
          and   tx2d_tr_type = "16"
          and   tx2d_line    = sod_line
-         no-lock
-/*121213.1*/ ,each xxabs_mstr NO-LOCK
-/*121213.1*/  WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line):
+/*121213.1 */ and can-find(first xxabs_mstr NO-LOCK where tx2d_ref = xxabsnbr and tx2d_nbr = xxabs_order AND tx2d_line = integer(xxabs_line))
+         no-lock:
 
             /* TAX INCLUDED = YES */
             if tx2d_tax_in
