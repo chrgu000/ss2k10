@@ -180,9 +180,10 @@
 1. 更新了税额的重新计算
 2. 更新了计量单位的处理
 */
-define            variable trans_conv like sod_um_conv no-undo.
+define variable trans_conv like sod_um_conv no-undo.
 
 {txcalvar.i}
+/* 	121216 {sssoivp1.i "new"} */
 /* SS - 20060401 - E */
 
 /* SS - 20060313 - B */
@@ -192,9 +193,12 @@ define            variable trans_conv like sod_um_conv no-undo.
 */
 /* SS - 20060313 - E */
 
+/*ss - 121213.1
+  可以按照出货单按项次
+*/
+
 {mfdtitle.i "121217.1"}
 {cxcustom.i "SOIVPST.P"}
-
 /* ********** Begin Translatable Strings Definitions ********* */
 
 &SCOPED-DEFINE soivpst_p_1 "GL Consolidated or Detail"
@@ -503,8 +507,8 @@ repeat:
 /*
    DO TRANSACTION:
 */
-	 trans1:
-	 DO transaction on error undo,retry:
+   trans1:
+   DO transaction on error undo,retry:
 /* ss 20070911 - e */
       FOR EACH xxrqm_mstr EXCLUSIVE-LOCK
          /* SS - 20060324 - B */
@@ -531,7 +535,6 @@ repeat:
             BREAK BY xxabs_order
             BY xxabs_line
             :
-
             /* 更新SO */
             IF LAST-OF(xxabs_order) THEN DO:
                FIND FIRST so_mstr WHERE so_nbr = xxabs_order EXCLUSIVE-LOCK NO-ERROR.
@@ -549,7 +552,7 @@ repeat:
             /* 更新SOD */
             ACCUMULATE xxabs_ship_qty (TOTAL BY xxabs_order BY xxabs_line).
             IF LAST-OF(xxabs_line) THEN DO:
-               FIND FIRST sod_det WHERE sod_nbr = xxabs_order AND STRING(sod_line) = xxabs_line EXCLUSIVE-LOCK NO-ERROR.
+               FIND FIRST sod_det WHERE sod_nbr = xxabs_order AND sod_line = integer(xxabs_line) EXCLUSIVE-LOCK NO-ERROR.
                IF AVAILABLE sod_det THEN DO:
                   /* SS - 20060401 - B */
                   FIND FIRST ABS_mstr WHERE ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id NO-LOCK NO-ERROR.
@@ -583,13 +586,13 @@ repeat:
                END.
             END.
 
-            /* 更新TX2D */
-           if first-of(xxabs_order) then do:
-           	  for each tx2d_det exclusive-lock where tx2d_nbr = xxabs_order:
-           	  	  delete tx2d_det.
-           	  end.
-           end.
-           IF LAST-OF(xxabs_line) THEN DO: 
+/* 更新TX2D */
+/*121213.1*/  if first-of(xxabs_order) then do:
+/*121213.1*/    for each tx2d_det exclusive-lock where tx2d_ref = xxabs_order:
+/*121213.1*/       delete tx2d_det.
+/*121213.1*/    end.
+/*121213.1*/  end.
+/*121213.1            IF LAST-OF(xxabs_order) THEN DO:    */
                FIND FIRST so_mstr WHERE so_nbr = xxabs_order NO-LOCK NO-ERROR.
                IF AVAILABLE so_mstr THEN DO:
                   {gprun.i ""txcalc.p""  "(input  "13",
@@ -614,12 +617,11 @@ repeat:
                           output result-status)"}
 
                   end. /* IF NOT so_sched */
-               END.
+/*121213.1             END.  */
             END.
 
             /* 更新ABS */
-            FIND FIRST ABS_mstr WHERE ABS_shipfrom = xxabs_shipfrom
-                   AND ABS_id = xxabs_id EXCLUSIVE-LOCK NO-ERROR.
+            FIND FIRST ABS_mstr WHERE ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id EXCLUSIVE-LOCK NO-ERROR.
             IF AVAILABLE ABS_mstr THEN DO:
                ASSIGN
                   /* SS - 20060324 - B */
@@ -653,7 +655,7 @@ repeat:
    /* SS - 20060313 - E */
 
    l_increment = no.
-   
+
    so_mstr-loop:
    for each so_mstr no-lock
       where (so_inv_nbr >= inv
@@ -687,7 +689,8 @@ repeat:
          where tx2d_ref         = so_nbr
          and   (tx2d_tr_type    = '13'
                 or tx2d_tr_type = '14')
-         no-lock:
+         no-lock
+         :
          l_cur_tax_amt = l_cur_tax_amt + absolute(tx2d_cur_tax_amt).
       end. /* FOR EACH tx2d_det */
 
@@ -724,7 +727,7 @@ repeat:
          /*
       {gprun.i ""soivpst1.p"" "(input ?)"}
          */
-         {gprun.i ""sssoivp11.p"" "(input ?,input nbr)"}
+/*121213.1*/ {gprun.i ""sssoivp11.p"" "(input ?,input nbr)"}
          /* SS - 20060524.1 - E */
          /* SS - 20060524.2 - E */
          /* SS - 20060524.3 - E */
@@ -754,7 +757,7 @@ repeat:
    end. /* mainloop */
 
 /* ss 20070911 - b */
-	end. /* do transaction on error */
+  end. /* do transaction on error */
 /* ss 20070911 - e */
 
    if lgData then leave.
