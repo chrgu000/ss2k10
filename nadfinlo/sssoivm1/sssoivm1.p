@@ -61,7 +61,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "sp8 "}
+{mfdtitle.i "121218.1"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -812,7 +812,7 @@ repeat on error undo, retry:
                end.
 
                IF tt1_stat = "*" THEN DO:
-                  sel_total = sel_total + tt1_qty_inv * tt1_price.
+                  sel_total = sel_total + round(tt1_qty_inv * tt1_price , 2).
                END.
             END.
             /* SS - 20060401 - E */
