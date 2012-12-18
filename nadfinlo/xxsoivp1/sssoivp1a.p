@@ -2206,9 +2206,6 @@ PROCEDURE Update_tx2d:
 
    for each sod_det
       where sod_nbr = sonbr
-/*      and can-find(first xxabs_mstr NO-LOCK                                */
-/*            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order           */
-/*              AND sod_line = integer(xxabs_line))                          */
    exclusive-lock:
 
       sod_qty_chg = sod_qty_ord - sod_qty_ivcd.

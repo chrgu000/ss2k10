@@ -197,7 +197,7 @@ define variable trans_conv like sod_um_conv no-undo.
   可以按照出货单按项次
 */
 
-{mfdtitle.i "121217.1"}
+{mfdtitle.i "121218.1"}
 {cxcustom.i "SOIVPST.P"}
 /* ********** Begin Translatable Strings Definitions ********* */
 

@@ -176,7 +176,8 @@ define variable l_nontax_amt  like tx2d_nontax_amt no-undo.
 define variable auth_price    like sod_price format "->>>>,>>>,>>9.99"
                                                    no-undo.
 define variable auth_found    like mfc_logical     no-undo.
-
+/*121217.1*/ define variable shipfrom        as   character   no-undo.
+/*121217.1*/ define variable shipto          as   character   no-undo.
 define new shared temp-table t_absr_det            no-undo
    field t_absr_reference like absr_reference
    field t_absr_qty       as decimal format "->>>>,>>>,>>9.99"
@@ -300,7 +301,7 @@ do for so_mstr:     /*scope this trans */
       assign
          line_total = 0
          taxable_amt = 0
-      /* SS - 20060524.3 - B */         
+      /* SS - 20060524.3 - B */
          OLD_taxable_amt = 0
          OLD_nontaxable_amt = 0
       /* SS - 20060524.3 - e */
@@ -328,8 +329,20 @@ do for so_mstr:     /*scope this trans */
       if using_line_charges then
          line_total = line_total + tot_line_charge.
 /*项目合计*/
-      for each sod_det no-lock where sod_nbr = so_nbr and can-find (first xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)):
+/*121217.1*/   assign shipfrom = ""
+/*121217.1*/          shipto = "".
+/*121217.1*/   find first xxabs_mstr no-lock where xxabs_nbr = xxabsnbr no-error.
+/*121217.1*/   if available xxabs_mstr then do:
+/*121217.1*/      assign shipfrom = xxabs_shipfrom
+/*121217.1*/             shipto   = xxabs_shipto.
+/*121217.1*/   end.
+      for each sod_det no-lock where sod_nbr = so_nbr and
+       can-find (first xxabs_mstr no-lock where
+          xxabs_nbr = xxabsnbr and xxabs_shipfrom = shipfrom and
+          xxabs_shipto = shipto and xxabs_order = sod_nbr and
+          integer(xxabs_line) = sod_line
+          use-index xxabs_shipto
+          ):
 
          if using_cust_consignment then do:
             /* IF THE ORDER LINE IS A CONSIGNMENT ORDER LINE  */
@@ -823,10 +836,20 @@ do for so_mstr:     /*scope this trans */
             line_total = line_total + tot_cont_charge.
          if using_line_charges then
             line_total = line_total + tot_line_charge.
-
-         for each sod_det where sod_nbr = so_nbr 
-         and can-find (first xxabs_mstr NO-LOCK
-            WHERE xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line)) 
+/*121217.1*/   assign shipfrom = ""
+/*121217.1*/          shipto = "".
+/*121217.1*/   find first xxabs_mstr no-lock where xxabs_nbr = xxabsnbr no-error.
+/*121217.1*/   if available xxabs_mstr then do:
+/*121217.1*/      assign shipfrom = xxabs_shipfrom
+/*121217.1*/             shipto   = xxabs_shipto.
+/*121217.1*/   end.
+         for each sod_det where sod_nbr = so_nbr
+/*121217.1*/   and  can-find (first xxabs_mstr no-lock where
+/*121217.1*/    xxabs_nbr = xxabsnbr and xxabs_shipfrom = shipfrom and
+/*121217.1*/    xxabs_shipto = shipto and xxabs_order = sod_nbr and
+/*121217.1*/    integer(xxabs_line) = sod_line
+/*121217.1*/    use-index xxabs_shipto
+/*121217.1*/    )
          :
 
             if using_cust_consignment then do:

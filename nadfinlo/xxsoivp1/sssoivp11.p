@@ -279,7 +279,8 @@ define variable avail_abs       like mfc_logical no-undo.
 define variable l_rnd_tax_amt   like glt_amt     no-undo.
 define variable l_rnd_tax_ramt  like glt_amt     no-undo.
 define variable l_locked        like mfc_logical no-undo.
-
+/*121217.1*/ define variable shipfrom        as   character   no-undo.
+/*121217.1*/ define variable shipto          as   character   no-undo.
 define new shared frame d.
 
 define new shared temp-table t_absr_det no-undo
@@ -852,23 +853,14 @@ do on error undo, leave:
                                                        where sod_nbr = so_nbr
                                                        and   sod_taxable
                                                        and   sod_tax_in).
-
-/*         empty temp-table tmpso no-error.                                 */
-/*         for each xxabs_mstr NO-LOCK                                      */
-/*            WHERE xxabs_nbr = xxabsnbr                                    */
-/*            break by xxabs_order by xxabs_line:                           */
-/*            if first-of(xxabs_line) then do:                              */
-/*               find first tmpso no-lock where tso1_nbr  = xxabs_order     */
-/*                      and tso1_line = integer(xxabs_line) no-error.       */
-/*               if not available tmpso then do:                            */
-/*                  create tmpso.                                           */
-/*                  assign tso1_nbr  = xxabs_order                          */
-/*                         tso1_line = integer(xxabs_line).                 */
-/*               end.                                                       */
-/*            end.                                                          */
-/*         end.                                                             */
-
          /* GET ORDER DETAIL  */
+/*121217.1*/   assign shipfrom = ""
+/*121217.1*/          shipto = "".
+/*121217.1*/   find first xxabs_mstr no-lock where xxabs_nbr = xxabsnbr no-error.
+/*121217.1*/   if available xxabs_mstr then do:
+/*121217.1*/      assign shipfrom = xxabs_shipfrom
+/*121217.1*/             shipto   = xxabs_shipto.
+/*121217.1*/   end.
                for each sod_det
                fields (sod_acct sod_cc sod_crt_int sod_desc sod_line sod_sub
                        sod_list_pr sod_nbr sod_part sod_price
@@ -879,9 +871,15 @@ do on error undo, leave:
                   where sod_nbr = so_nbr
                     and sod_line > 0
                     and sod_qty_inv <> 0
-                    and can-find (first xxabs_mstr no-lock where  
-					xxabs_nbr = xxabsnbr and sod_nbr = xxabs_order AND sod_line = integer(xxabs_line))                    
-   /*     
+/*121217.1*/        and can-find (first xxabs_mstr no-lock where
+/*121217.1*/    xxabs_nbr = xxabsnbr and
+/*121217.1*/    xxabs_shipfrom = shipfrom and
+/*121217.1*/    xxabs_shipto = shipto and
+/*121217.1*/    xxabs_order = sod_nbr and
+/*121217.1*/    integer(xxabs_line) = sod_line
+/*121217.1*/    use-index xxabs_shipto
+/*121217.1*/    )
+   /*
     ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
    分开2行错误了
      ,each xxabs_mstr NO-LOCK
@@ -1384,10 +1382,10 @@ do on error undo, leave:
                   for each tx2d_det
                   fields(tx2d_cur_tax_amt tx2d_ref tx2d_tax_amt tx2d_tr_type)
                      where tx2d_ref     = so_inv_nbr
-                     and   tx2d_tr_type = "16"
-                  no-lock
-                   ,each xxabs_mstr NO-LOCK
-  WHERE tx2d_ref = xxabsnbr and tx2d_nbr = xxabs_order AND tx2d_line = integer(xxabs_line)
+                     and   tx2d_tr_type = "16" no-lock
+/*121218.1*/     ,each xxabs_mstr NO-LOCK WHERE
+/*121218.1*/          tx2d_ref = xxabsnbr and tx2d_nbr = xxabs_order
+/*121218.1*/          AND tx2d_line = integer(xxabs_line)
                   :
                      assign
                         l_rnd_tax_amt  = l_rnd_tax_amt
