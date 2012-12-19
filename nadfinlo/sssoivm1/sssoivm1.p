@@ -61,7 +61,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "121218.1"}
+{mfdtitle.i "121219.1"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -117,7 +117,7 @@ DEFINE NEW SHARED TEMP-TABLE tt1
    FIELD tt1_desc2        like pt_desc2
    FIELD tt1_um           AS CHAR FORMAT "x(2)"
    FIELD tt1_ship_qty AS DECIMAL FORMAT "->,>>>,>>9.99"
-   FIELD tt1_qty_inv AS DECIMAL FORMAT "->,>>>,>>9.99"
+   FIELD tt1_qty_inv AS DECIMAL FORMAT "->,>>>,>>9.9<<<<<<<"
    FIELD tt1_price LIKE sod_price
    FIELD tt1_close_abs AS LOGICAL
    FIELD tt1_type LIKE sod_type
