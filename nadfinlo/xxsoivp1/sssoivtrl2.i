@@ -684,15 +684,15 @@ do for so_mstr:     /*scope this trans */
 
       if maint then do on endkey undo taxloop, leave:
 
-         if txc__qad03
-         then
-            display
-               l_nontaxable_lbl
-               nontaxable_amt
-               l_taxable_lbl
-               taxable_amt
-               with frame sotot.
-         else
+/*         if txc__qad03                                                      */
+/*         then                                                               */
+/*            display                                                         */
+/*               l_nontaxable_lbl                                             */
+/*               nontaxable_amt                                               */
+/*               l_taxable_lbl                                                */
+/*               taxable_amt                                                  */
+/*               with frame sotot.                                            */
+/*         else                                                               */
             display
                "" @ l_nontaxable_lbl
                "" @ nontaxable_amt
@@ -1037,15 +1037,15 @@ do for so_mstr:     /*scope this trans */
          if not et_dc_print
          then do:
 
-            if txc__qad03
-            then
-               display
-                  l_nontaxable_lbl
-                  nontaxable_amt
-                  l_taxable_lbl
-                  taxable_amt
-                  with frame sotot.
-            else
+/*zy            if txc__qad03                                                */
+/*zy            then                                                         */
+/*zy               display                                                   */
+/*zy                  l_nontaxable_lbl                                       */
+/*zy                  nontaxable_amt                                         */
+/*zy                  l_taxable_lbl                                          */
+/*zy                  taxable_amt                                            */
+/*zy                  with frame sotot.                                      */
+/*zy            else                                                         */
                display
                   "" @ l_nontaxable_lbl
                   "" @ nontaxable_amt
@@ -1109,15 +1109,15 @@ PROCEDURE ip_dispeuro:
       where recid(somstr) = so_recno
       no-lock:
 
-      if txcctrl.txc__qad03
-      then
-         display
-            l_nontaxable_lbl
-            nontaxable_amt
-            l_taxable_lbl
-            taxable_amt
-            with frame sototeuro.
-      else
+/*zy      if txcctrl.txc__qad03                                               */
+/*zy      then                                                                */
+/*zy         display                                                          */
+/*zy            l_nontaxable_lbl                                              */
+/*zy            nontaxable_amt                                                */
+/*zy            l_taxable_lbl                                                 */
+/*zy            taxable_amt                                                   */
+/*zy            with frame sototeuro.                                         */
+/*zy      else                                                                */
          display
             "" @ l_nontaxable_lbl
             "" @ nontaxable_amt
