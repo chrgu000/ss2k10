@@ -61,7 +61,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "121219.1"}
+{mfdtitle.i "121219.2"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -206,17 +206,11 @@ setFrameLabels(frame sel_item:handle).
 
 /* SS - 20060311 - B */
 form
-/* ss 20070102.1 -b */
-/*
-   tt1_id
- */
    tt1_disp_id
-/* ss 20070102.1 - e */
    tt1_qty_inv
-   with frame w scroll 1 4 down NO-VALIDATE ATTR-SPACE TITLE COLOR normal (getFrameTitle("SHIPPER_MATCHING_DETAIL",34))  WIDTH 80 .
-
-/* SET EXTERNAL LABELS */
+   with frame w scroll 1 4 down NO-VALIDATE ATTR-SPACE TITLE COLOR normal (getFrameTitle("SHIPPER_MATCHING_DETAIL",34)) WIDTH 80.
 setFrameLabels(frame w:handle).
+
 
 FORM
    /* ss 20070102.1 -b */
