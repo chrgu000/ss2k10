@@ -9,13 +9,14 @@
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "121217.1"}
+{mfdtitle.i "121218.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
 define variable key1 as character INITIAL "xxmrpporp0.p" no-undo.
 define variable vkey1 like usrw_key1 no-undo
                   initial "XXMRPPORP0.P-ITEM-ORDER-POLICY".
+define variable vkey0 like usrw_key1 initial "xxmrpporp0.p.dataset.121218.1" no-undo.
 define variable part like pt_part.
 define variable part1 like pt_part.
 define variable due as date.
@@ -43,6 +44,7 @@ define variable tpoqty  like mrp_qty.
 define variable tpoqtys like mrp_qty.
 define variable tpopo   like mrp_qty.
 define variable tpotpo  like mrp_qty.
+define variable i as integer.
 define variable T       as   logical initial "YES".
 define variable tpo1date as date.
 define variable aqty as decimal.
@@ -188,6 +190,7 @@ repeat:
   empty temp-table tmp_rule_date no-error.
 
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
+  for each usrw_wkfl exclusive-lock where usrw_key1 = vkey0: delete usrw_wkfl. end.
    assign sendDate = today - 3.
    for each code_mstr no-lock where code_fldname = "vd__chr03" and
             index(code_value,"M4") = 0 and code_value <> "" and
@@ -570,7 +573,7 @@ repeat:
                  tpo_fut = yes.
        end.
        /* else do:                       */
-       /* 	  assign tpo_fut = yes.      */
+       /*     assign tpo_fut = yes.      */
        /* end.                           */
    END.
 
@@ -702,22 +705,6 @@ repeat:
          for each qad_wkfl exclusive-lock where qad_key1 = key1 + "_Det":
              delete qad_wkfl.
          end.
-         export delimiter "~011" getTermLabel("PO_NUMBER",12)
-                                 getTermLabel("SUPPLIER",12)
-                                 getTermLabel("ITEM_NUMBER",12)
-                                 getTermLabel("RECEIVED_QTY",12)
-                                 getTermLabel("DUE_DATE",12)
-                                 getTermLabel("TYPE",12)
-                                 getTermLabel("DEMAND_QTY",12)
-                                 getTermLabel("PO_QTY",12)
-                                 getTermLabel("TEMP_PO_QTY",12)
-/*629*                           getTermLabel("ADJUSTMENT_QUANTITY",12)      */
-                                 getTermLabel("WEEK",12)
-                                 getTermLabel("SHIP_TERMS",12)
-                                 getTermLabel("COMMENT",12).
-         /*                      getTermLabel("START",12)                    */
-         /*                      getTermLabel("END",12)                      */
-         /*                      getTermLabel("EXPIRATION_DATE",12).         */
 
          for each tmp_po no-lock where tpo_qty < 0 break by tpo_part:
              if first-of(tpo_part) then do:
@@ -751,6 +738,7 @@ repeat:
                 end.
             end.
          end.       /** if t then do:   */
+         assign i = 0.
          for each tmp_po no-lock
              where (tpo_qty > 0 or tpo_fut) or not act
              break by tpo_nbr by tpo_vend by tpo_part by tpo_due:
@@ -797,18 +785,38 @@ repeat:
 /*630*/                 assign tpoqty = tpoqty + pt_ord_mult - tpoqty mod pt_ord_mult .
 /*630*/             end.
 /*630*/          end.
-/*831*/          if tpoqty > 0 or tpo_fut then do: /*仅显示数量不为0或有预示量的*/
-                    export delimiter "~011"
-                           tpo_nbr tpo_vend tpo_part tpoqty
-                           tpo_due tpo_type tpoqtys
-                           if first-of(tpo_part) then tpopo else 0
-                           if first-of(tpo_part) then tpotpo else 0
-/*629*                     if first-of(tpo_part) then adjqty else 0          */
-                           weekday(tpo_due) - 1
-                           tpo_rule0 areaDesc
-/*                         tpo_fut                                           */
-                            .
-/*831*/          end. /* if first-of(tpo_part) or tpoqty > 0 then do: */
+/*121218.1*********************************************************************/ 
+/*121218.1*     if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:            */ 
+/*121218.1*						/*仅显示数量不为0或有预示量的*/                         */
+/*121218.1*        export delimiter "~011"                                    */
+/*121218.1*               tpo_nbr tpo_vend tpo_part tpoqty                    */
+/*121218.1*               tpo_due tpo_type tpoqtys                            */
+/*121218.1*               if first-of(tpo_part) then tpopo else 0             */
+/*121218.1*               if first-of(tpo_part) then tpotpo else 0            */
+/*121218.1*               if first-of(tpo_part) then adjqty else 0            */  
+/*121218.1*               weekday(tpo_due) - 1                                */  
+/*121218.1*               tpo_rule0 areaDesc                                  */  
+/*121218.1*               tpo_fut                                             */  
+/*121218.1*               .                                                   */  
+/*121218.1*     end. /* if first-of(tpo_part) or tpoqty > 0 then do: */       */
+/*121218.1*********************************************************************/ 
+/*121218.1*/    create usrw_wkfl.
+/*121218.1*/    assign usrw_key1 = vkey0
+/*121218.1*/           usrw_key2 = string(i)
+/*121218.1*/           usrw_charfld[1] = tpo_nbr
+/*121218.1*/           usrw_charfld[2] = tpo_vend
+/*121218.1*/           usrw_charfld[3] = tpo_part
+/*121218.1*/           usrw_decfld[1]  = tpoqty
+/*121218.1*/           usrw_datefld[1] = tpo_due
+/*121218.1*/           usrw_charfld[4] = tpo_type
+/*121218.1*/           usrw_decfld[2]  = tpoqtys
+/*121218.1*/           usrw_decfld[3]  = (if first-of(tpo_part) then tpopo else 0)
+/*121218.1*/           usrw_decfld[4]  = (if first-of(tpo_part) then tpotpo else 0)
+/*121218.1*/           usrw_intfld[1]  = weekday(tpo_due) - 1
+/*121218.1*/           usrw_charfld[5] = tpo_rule0
+/*121218.1*/           usrw_charfld[6] = areaDesc
+/*121218.1*/           usrw_logfld[1] = tpo_fut
+/*121218.1*/           usrw_datefld[2] = tpo_due.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
                             no-error.
                  if available tmp_po1 then do:
@@ -818,11 +826,62 @@ repeat:
                  end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.  /*if last-of(tpo_due) then do:*/
+            assign i = i + 1.
          end. /*for each tmp_po no-lock*/
+         
+/*121218.1*/	for each usrw_wkfl exclusive-lock where
+/*121218.1*/	         usrw_key1 = vkey0 and usrw_charfld[4] = "T"
+/*121218.1*/	         break by usrw_charfld[3] by usrw_datefld[2]:
+/*121218.1*/	    if first-of(usrw_charfld[3]) then do:
+/*121218.1*/	       assign qty_pod = 0.
+/*121218.1*/	    end.
+/*121218.1*/	    if usrw_decfld[1] <> 0 then qty_pod = usrw_decfld[1].
+/*121218.1*/	    if last-of(usrw_charfld[3]) then do:
+/*121218.1*/	       if qty_pod = 0 then do:
+/*121218.1*/	          assign usrw_datefld[1] = duef - 1
+/*121218.1*/	                 usrw_logfld[1] = yes.
+/*121218.1*/	       end.
+/*121218.1*/	    end.
+/*121218.1*/	end.
+         export delimiter "~011" getTermLabel("PO_NUMBER",12)
+                                 getTermLabel("SUPPLIER",12)
+                                 getTermLabel("ITEM_NUMBER",12)
+                                 getTermLabel("RECEIVED_QTY",12)
+                                 getTermLabel("DUE_DATE",12)
+                                 getTermLabel("TYPE",12)
+                                 getTermLabel("DEMAND_QTY",12)
+                                 getTermLabel("PO_QTY",12)
+                                 getTermLabel("TEMP_PO_QTY",12)
+/*629*                           getTermLabel("ADJUSTMENT_QUANTITY",12)      */
+                                 getTermLabel("WEEK",12)
+                                 getTermLabel("SHIP_TERMS",12)
+                                 getTermLabel("COMMENT",12).
+         /*                      getTermLabel("START",12)                    */
+         /*                      getTermLabel("END",12)                      */
+         /*                      getTermLabel("EXPIRATION_DATE",12).         */
 
+/*121218.1*/	for each usrw_wkfl no-lock where usrw_key1 = vkey0
+/*121218.1*/	     and (usrw_decfld[1] > 0 or usrw_logfld[1]) 
+/*121218.1*/	break by usrw_key1 by usrw_charfld[1] by usrw_charfld[2] 
+/*121218.1*/				by usrw_charfld[3] by usrw_datefld[1]:
+/*121218.1*/	     export delimiter "~011"
+/*121218.1*/	            usrw_charfld[1]
+/*121218.1*/	            usrw_charfld[2]
+/*121218.1*/	            usrw_charfld[3]
+/*121218.1*/	            usrw_decfld[1]
+/*121218.1*/	            usrw_datefld[1]
+/*121218.1*/	            usrw_charfld[4]
+/*121218.1*/	            usrw_decfld[2]
+/*121218.1*/	            usrw_decfld[3]
+/*121218.1*/	            usrw_decfld[4]
+/*121218.1*/	            usrw_intfld[1]
+/*121218.1*/	            usrw_charfld[5]
+/*121218.1*/	            usrw_charfld[6].
+/*121218.1*/	end.
 end.      /*if detsum else do:    */
 /* REPORT TRAILER  */
 /*   {mfrtrail.i} */
+
   {mfreset.i}
 
 end.
