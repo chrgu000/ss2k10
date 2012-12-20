@@ -9,8 +9,8 @@ define {1} shared variable cloadfile as logical initial "no".
 define {1} shared temp-table xxtmppt
        fields xxpt_site like ptp_site
        fields xxpt_part like ptp_part
-       fields xxpt_ms like ptp_ms
-       fields xxpt_timefnce like ptp_timefnce
+       fields xxpt_ms like ptp_ms                    /*LOGICAL*/
+       fields xxpt_timefnce like ptp_timefnce        /*integer*/
        fields xxpt_ord_per like ptp_ord_per
        fields xxpt_sfty_stk like ptp_sfty_stk
        fields xxpt_sfty_tme like ptp_sfty_tme
@@ -26,18 +26,3 @@ define {1} shared temp-table xxtmppt
        fields xxpt_yld_pct like ptp_yld_pct
        fields xxpt_chk as character format "x(40)"
        index xxpt_site_part xxpt_site xxpt_part.
-
-FUNCTION getMsg RETURNS character(inbr as integer):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = "TW" and msg_nbr = inbr no-error.
-  if available msg_mstr then do:
-      return msg_desc.
-  end.
-  else do:
-      return "ERROR.".
-  end.
-END FUNCTION. /*FUNCTION getMsg*/

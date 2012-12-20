@@ -5,13 +5,21 @@
 /* REVISION END                                                              */
 
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+{mfdeclre.i}
 {xxptpld.i}
+{xxloaddata.i}
 define variable txt as character.
 empty temp-table xxtmppt no-error.
+define variable i as integer.
+assign i = 0.
 input from value(flhload).
 repeat:
-  create xxtmppt.
-  import delimiter "," xxtmppt.
+	import unformat txt.
+	if i > 0 and entry(1,txt,",") <> "" and entry(2,txt,",") <> "" then do:
+  	create xxtmppt.
+  	import delimiter "," xxtmppt .
+  end.
+  i = i + 1.
 end.
 input close.
 
