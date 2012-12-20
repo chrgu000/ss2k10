@@ -197,7 +197,7 @@ define variable trans_conv like sod_um_conv no-undo.
   可以按照出货单按项次
 */
 
-{mfdtitle.i "121219.1"}
+{mfdtitle.i "121220.1"}
 {cxcustom.i "SOIVPST.P"}
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -224,6 +224,8 @@ define new shared variable prog_name as character
 
 define variable l_increment   like mfc_logical      no-undo.
 define variable l_cur_tax_amt like tx2d_cur_tax_amt no-undo.
+/*121217.1*/ define variable shipfrom        as   character   no-undo.
+/*121217.1*/ define variable shipto          as   character   no-undo.
 {&SOIVPST-P-TAG8}
 
 /* THE TEMP-TABLE WORK_TRNBR STORES THE VALUES OF FIRST AND LAST  */
@@ -586,39 +588,6 @@ repeat:
                END.
             END.
 
-/* 更新TX2D */
-/*121213.1*/  if first-of(xxabs_order) then do:
-/*121213.1*/    for each tx2d_det exclusive-lock where tx2d_ref = xxabs_order:
-/*121213.1*/       delete tx2d_det.
-/*121213.1*/    end.
-/*121213.1*/  end.
-/*121213.1            IF LAST-OF(xxabs_order) THEN DO:    */
-               FIND FIRST so_mstr WHERE so_nbr = xxabs_order NO-LOCK NO-ERROR.
-               IF AVAILABLE so_mstr THEN DO:
-                  {gprun.i ""txcalc.p""  "(input  "13",
-                    input  xxabs_order,
-                    input  '',
-                    input  integer(xxabs_line), /* ALL LINES */
-                    input  no,
-                    output result-status)"}
-
-                  /* CREATES TAX RECORDS WITH TRANSACTION TYPE "11" */
-                  /* FOR THE QUANTITY BACKORDER DURING PENDING      */
-                  /* INVOICE MAINTENANCE                            */
-                  if not so_sched
-                  then do:
-
-                     {gprun.i ""txcalc.p""
-                        "(input  "11",
-                          input  xxabs_order,
-                          input  '',
-                          input  integer(xxabs_line),
-                          input  no,
-                          output result-status)"}
-
-                  end. /* IF NOT so_sched */
-/*121213.1             END.  */
-            END.
 
             /* 更新ABS */
             FIND FIRST ABS_mstr WHERE ABS_shipfrom = xxabs_shipfrom AND ABS_id = xxabs_id EXCLUSIVE-LOCK NO-ERROR.
@@ -647,6 +616,53 @@ repeat:
    END. /* DO TRANSACTION: */
 */
 /* ss 20070911 - e */
+
+/*重新计算税*/
+FOR EACH xxrqm_mstr NO-LOCK WHERE (xxrqm_nbr = nbr)
+         AND (xxrqm_cust = cust OR cust = "")
+         USE-INDEX xxrqm_nbr,
+	  EACH xxabs_mstr NO-LOCK WHERE xxabs_nbr = xxrqm_nbr,
+    each sod_det WHERE sod_nbr = xxabs_order 
+                   AND sod_line = integer(xxabs_line) 
+    break by sod_nbr by sod_line:
+
+
+/* 更新TX2D */
+/*121213.1*/  if first-of(sod_nbr) then do:
+/*121213.1*/    for each tx2d_det exclusive-lock where tx2d_ref = xxabs_order:
+/*121213.1*/       delete tx2d_det.
+/*121213.1*/    end.
+/*121213.1*/  end.
+
+             if last-of(sod_line) then do:
+               FIND FIRST so_mstr WHERE so_nbr = xxabs_order NO-LOCK NO-ERROR.
+               IF AVAILABLE so_mstr THEN DO:
+                  {gprun.i ""txcalc.p""  "(input  "13",
+                    input  xxabs_order,
+                    input  '',
+                    input  integer(xxabs_line), /* ALL LINES */
+                    input  no,
+                    output result-status)"}
+
+                  /* CREATES TAX RECORDS WITH TRANSACTION TYPE "11" */
+                  /* FOR THE QUANTITY BACKORDER DURING PENDING      */
+                  /* INVOICE MAINTENANCE                            */
+                  if not so_sched
+                  then do:
+
+                     {gprun.i ""txcalc.p""
+                        "(input  "11",
+                          input  xxabs_order,
+                          input  '',
+                          input  integer(xxabs_line),
+                          input  no,
+                          output result-status)"}
+
+                  end. /* IF NOT so_sched */
+            END.
+          end.
+end.  /* FOR EACH xxrqm_mstr NO-LOCK WHERE (xxrqm_nbr = nbr) */
+
 
    ASSIGN
       inv = inv_nbr

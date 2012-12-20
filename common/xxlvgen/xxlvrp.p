@@ -7,7 +7,7 @@
 {mfdtitle.i "2CYA"}
 
 /* CONSIGNMENT INVENTORY VARIABLES */
-{pocnvars.i}
+
 {xxecdc.i}
 
 define variable l_prod as character format 'x(30)'.
