@@ -9,7 +9,7 @@
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "121218.1"}
+{mfdtitle.i "121220.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -76,6 +76,11 @@ define temp-table tmp_po
     fields tpo_fut as logical initial no
     index tpo_part_vend is primary tpo_part tpo_vend tpo_due.
 
+/*下2月预示量*/
+define temp-table tmp_n2po
+			 fields tn2_part like pt_part
+			 fields tn2_qty as decimal.
+
 define temp-table tmp_rule_date
     fields trd_rule AS CHARACTER
     fields trd_datef AS DATE
@@ -101,7 +106,7 @@ define temp-table tmp_tmd
    index tm_rule is primary tm_rule
    index tm_vpa tm_vend tm_part tm_adate
    index tm_pm tm_part tm_month.
-
+define buffer usrwwkfl for usrw_wkfl.
 /* SELECT FORM */
 form
    site   colon 15
@@ -188,6 +193,7 @@ repeat:
   empty temp-table tmp_po1 no-error.
   empty temp-table tmp_tmd no-error.
   empty temp-table tmp_rule_date no-error.
+	empty temp-table tmp_n2po no-error.
 
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
   for each usrw_wkfl exclusive-lock where usrw_key1 = vkey0: delete usrw_wkfl. end.
@@ -572,9 +578,15 @@ repeat:
                  tpo_rule0 = vd__chr03
                  tpo_fut = yes.
        end.
-       /* else do:                       */
-       /*     assign tpo_fut = yes.      */
-       /* end.                           */
+       find first tmp_n2po exclusive-lock where tn2_part = pt_part no-error.
+       if not available tmp_n2po then do:
+       	  create tmp_n2po.
+       	  assign tn2_part = pt_part.
+       end.
+       assign tn2_qty = tn2_qty + mrp_qty.
+      /* else do:                          */
+      /*     assign tpo_fut = yes.         */
+      /* end.                              */
    END.
 
     for each tmp_po exclusive-lock,each pt_mstr no-lock where
@@ -785,21 +797,22 @@ repeat:
 /*630*/                 assign tpoqty = tpoqty + pt_ord_mult - tpoqty mod pt_ord_mult .
 /*630*/             end.
 /*630*/          end.
-/*121218.1*********************************************************************/ 
-/*121218.1*     if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:            */ 
+/*121218.1*********************************************************************/
+/*121218.1*     if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:            */
 /*121218.1*						/*仅显示数量不为0或有预示量的*/                         */
 /*121218.1*        export delimiter "~011"                                    */
 /*121218.1*               tpo_nbr tpo_vend tpo_part tpoqty                    */
 /*121218.1*               tpo_due tpo_type tpoqtys                            */
 /*121218.1*               if first-of(tpo_part) then tpopo else 0             */
 /*121218.1*               if first-of(tpo_part) then tpotpo else 0            */
-/*121218.1*               if first-of(tpo_part) then adjqty else 0            */  
-/*121218.1*               weekday(tpo_due) - 1                                */  
-/*121218.1*               tpo_rule0 areaDesc                                  */  
-/*121218.1*               tpo_fut                                             */  
-/*121218.1*               .                                                   */  
+/*121218.1*               if first-of(tpo_part) then adjqty else 0            */
+/*121218.1*               weekday(tpo_due) - 1                                */
+/*121218.1*               tpo_rule0 areaDesc                                  */
+/*121218.1*               tpo_fut                                             */
+/*121218.1*               .                                                   */
 /*121218.1*     end. /* if first-of(tpo_part) or tpoqty > 0 then do: */       */
-/*121218.1*********************************************************************/ 
+/*121218.1*********************************************************************/
+ 								if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:    
 /*121218.1*/    create usrw_wkfl.
 /*121218.1*/    assign usrw_key1 = vkey0
 /*121218.1*/           usrw_key2 = string(i)
@@ -817,6 +830,7 @@ repeat:
 /*121218.1*/           usrw_charfld[6] = areaDesc
 /*121218.1*/           usrw_logfld[1] = tpo_fut
 /*121218.1*/           usrw_datefld[2] = tpo_due.
+						     end.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
                             no-error.
                  if available tmp_po1 then do:
@@ -828,7 +842,7 @@ repeat:
             end.  /*if last-of(tpo_due) then do:*/
             assign i = i + 1.
          end. /*for each tmp_po no-lock*/
-         
+
 /*121218.1*/	for each usrw_wkfl exclusive-lock where
 /*121218.1*/	         usrw_key1 = vkey0 and usrw_charfld[4] = "T"
 /*121218.1*/	         break by usrw_charfld[3] by usrw_datefld[2]:
@@ -843,6 +857,18 @@ repeat:
 /*121218.1*/	       end.
 /*121218.1*/	    end.
 /*121218.1*/	end.
+
+for each usrw_wkfl no-lock where usrw_wkfl.usrw_key1 = vkey0
+		 and usrw_charfld[4] = "T" and usrw_decfld[1] = 0 and  usrw_decfld[2] = 0:
+		 find first tmp_n2po no-lock where tn2_part = usrw_charfld[3] no-error.
+		 if not available tmp_n2po then do:
+		 		delete usrw_wkfl.
+		 end.
+		 else if tn2_qty = 0 then do:
+		 		delete usrw_wkfl.
+		 end.
+end.
+
          export delimiter "~011" getTermLabel("PO_NUMBER",12)
                                  getTermLabel("SUPPLIER",12)
                                  getTermLabel("ITEM_NUMBER",12)
@@ -860,9 +886,9 @@ repeat:
          /*                      getTermLabel("END",12)                      */
          /*                      getTermLabel("EXPIRATION_DATE",12).         */
 
-/*121218.1*/	for each usrw_wkfl no-lock where usrw_key1 = vkey0
-/*121218.1*/	     and (usrw_decfld[1] > 0 or usrw_logfld[1]) 
-/*121218.1*/	break by usrw_key1 by usrw_charfld[1] by usrw_charfld[2] 
+
+/*121218.1*/	for each usrw_wkfl no-lock where usrw_wkfl.usrw_key1 = vkey0
+/*121218.1*/	break by usrw_key1 by usrw_charfld[1] by usrw_charfld[2]
 /*121218.1*/				by usrw_charfld[3] by usrw_datefld[1]:
 /*121218.1*/	     export delimiter "~011"
 /*121218.1*/	            usrw_charfld[1]
@@ -876,7 +902,8 @@ repeat:
 /*121218.1*/	            usrw_decfld[4]
 /*121218.1*/	            usrw_intfld[1]
 /*121218.1*/	            usrw_charfld[5]
-/*121218.1*/	            usrw_charfld[6].
+/*121218.1*/	            usrw_charfld[6]
+													usrw_logfld[1].
 /*121218.1*/	end.
 end.      /*if detsum else do:    */
 /* REPORT TRAILER  */
