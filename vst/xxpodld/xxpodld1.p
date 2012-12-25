@@ -13,7 +13,8 @@ define variable poc_pt_req1 like mfc_logical.
 
 define variable vprice-list-failed like mfc_logical initial false no-undo.
 define variable vprice-list-msg as integer no-undo.
-
+define variable vfile as character.
+define variable verr as character.
 /*define variable v-use-log-acctg as logical no-undo. */
 /* {gprun.i ""lactrl.p"" "(output v-use-log-acctg)"} */
 
@@ -125,11 +126,17 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
         IF AVAIL pod_det THEN DO:
             if (pod_due_date <> xxpod_due_date and xxpod_due_date <> ?) then do:
                assign xxpod_chk = "ERROR:POD_DUE_DATE".
+               assign vfile = fn_i + ".bpo".
+               {gprun.i ""xxgetcimerr.p"" "(input vfile,output verr)"}
+               assign xxpod_chk = xxpod_chk + verr.
             end.
             if (pod_status <> xxpod_stat) then do:
                if xxpod_chk = ""
                   then assign xxpod_chk = "ERROR:POD_STATUS".
                   else assign xxpod_chk = xxpod_chk + ";POD_STATUS".
+                  assign vfile = fn_i + ".bpo".
+                  {gprun.i ""xxgetcimerr.p"" "(input vfile,output verr)"}
+                  assign xxpod_chk = xxpod_chk + verr.
             end.
             if xxpod_chk = "" then do:
                assign xxpod_chk = "OK".
