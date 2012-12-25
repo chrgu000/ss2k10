@@ -88,19 +88,11 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
       ELSE
          PUT UNFORMATTED "-".
 
-      PUT UNFORMATTED " ".
+      PUT UNFORMATTED " - - - - - - - - - - - N" SKIP.
 
- /*     IF xxpod_per_date <> ? THEN                  */
- /*        PUT UNFORMATTED xxpod_per_date.           */
- /*     ELSE                                         */
-         PUT UNFORMATTED "-".
-
-      PUT UNFORMATTED " ".
-/*     IF xxpod_need <> ? THEN           */
-/*        PUT UNFORMATTED xxpod_need.    */
-/*     ELSE                              */
-         PUT UNFORMATTED "-".
-      PUT UNFORMATTED " -" SKIP.
+      IF POD_TYPE = "S" then DO:
+         PUT UNFORMATTED "-" SKIP.
+      END.
 
       IF pod_taxable = YES THEN DO:
          PUT UNFORMATTED "-" SKIP.
@@ -111,9 +103,9 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
  /*         PUT UNFORMATTED "-" SKIP.                            */
  /*      END.                                                    */
 
-      if pod_cmtindx <> 0 then do:        /*CMMT = YES*/
-         PUT UNFORMATTED "." skip.
-      end.
+ /*     if pod_cmtindx <> 0 then do:        /*CMMT = YES*/       */
+ /*        PUT UNFORMATTED "." skip.                             */
+ /*     end.                                                     */
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "-" SKIP.
@@ -123,7 +115,7 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
          do transaction on endkey undo, leave:
             batchrun = yes.
             INPUT FROM VALUE( fn_i + ".bpi" ) .
-            OUTPUT TO VALUE( fn_i + ".bpo" ) .
+            OUTPUT TO VALUE( fn_i + ".bpo" ) keep-messages.
             {gprun.i ""popomt.p""}
             INPUT CLOSE .
             OUTPUT CLOSE .
