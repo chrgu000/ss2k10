@@ -39,9 +39,9 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
       PUT UNFORMATTED "-" SKIP. /*Order date*/
 
       /*ss - 120113.1 b*/
-      FIND FIRST gl_ctrl NO-LOCK NO-ERROR.
-      IF AVAIL gl_ctrl THEN DO:
-          IF po_curr <> gl_base_curr THEN DO:
+      FIND FIRST vd_mstr NO-LOCK where vd_addr = po_vend NO-ERROR.
+      IF AVAIL vd_mstr THEN DO:
+          IF po_curr <> vd_curr THEN DO:
              PUT UNFORMATTED "-" SKIP.
           END.
       END.
@@ -98,14 +98,14 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
          PUT UNFORMATTED "-" SKIP.
       END.
 
- /*      IF pod_consignment = YES THEN DO:  /*Consignment*/      */
- /*         PUT UNFORMATTED "-" SKIP.                            */
- /*         PUT UNFORMATTED "-" SKIP.                            */
- /*      END.                                                    */
-
- /*     if pod_cmtindx <> 0 then do:        /*CMMT = YES*/       */
- /*        PUT UNFORMATTED "." skip.                             */
- /*     end.                                                     */
+ /*      IF pod_consignment = YES THEN DO:  /*Consignment*/                  */
+ /*         PUT UNFORMATTED "-" SKIP.                                        */
+ /*         PUT UNFORMATTED "-" SKIP.                                        */
+ /*      END.                                                                */
+                                                                             
+ /*     if pod_cmtindx <> 0 then do:        /*CMMT = YES*/                   */
+ /*        PUT UNFORMATTED "." skip.                                         */
+ /*     end.                                                                 */
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "." SKIP.
       PUT UNFORMATTED "-" SKIP.
