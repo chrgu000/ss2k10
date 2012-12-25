@@ -7,9 +7,6 @@
 /* DISPLAY TITLE */
 {mfdtitle.i "25YP"}
 
-/* CONSIGNMENT INVENTORY VARIABLES */
-{pocnvars.i}
-
 define variable file_name as character format "x(50)".
 define variable lngdir    like lng_dir format "x(50)".
 define temp-table tf
@@ -43,14 +40,6 @@ DO:
 	  end.
 	end.
 END.
-
-/* DETERMINE IF SUPPLIER CONSIGNMENT IS ACTIVE */
-{gprun.i ""gpmfc01.p""
-         "(input ENABLE_SUPPLIER_CONSIGNMENT,
-           input 11,
-           input ADG,
-           input SUPPLIER_CONSIGN_CTRL_TABLE,
-           output using_supplier_consignment)"}
 
 {wbrp01.i}
 {xxchklv.i 'MODEL-CAN-RUN' 10}
