@@ -1,17 +1,17 @@
-/* xxsoivm1.p - INVOICE MAINTENANCE                                             */
-/* Copyright 1996-2006 Softspeed, China.                        */
-/* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.95.1.6 $                                                      */
-/* REVISION: 1.0      LAST MODIFIED: 02/21/06   BY: Apple Tam *SS - 20060221*                  */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 02/25/06  ECO: *SS - 20060225* */
-/* $Revision: 1.95.1.6 $    BY: Micho Yang        DATE: 03/07/06  ECO: *SS - 20060307* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/11/06  ECO: *SS - 20060311* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/16/06  ECO: *SS - 20060316* */
-/* $Revision: 1.95.1.6 $    BY: Micho Yang        DATE: 03/20/06  ECO: *SS - 20060320* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/24/06  ECO: *SS - 20060324* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 03/31/06  ECO: *SS - 20060331* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 04/01/06  ECO: *SS - 20060401* */
-/* $Revision: 1.95.1.6 $    BY: Bill Jiang        DATE: 06/12/06  ECO: *SS - 20060612.1* */
+/* xxsoivm1.p - INVOICE MAINTENANCE                                          */
+/* Copyright 1996-2006 Softspeed, China.                                     */
+/* All rights reserved worldwide.  This is an unpublished work.              */
+/* $Revision: 1.95.1.6 $                                                     */
+/* REVISION: 1.0      LAST MODIFIED: 02/21/06   BY: Apple Tam *SS - 20060221**/
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 02/25/06  ECO: *SS - 20060225* */
+/* $Revision: 1.95.1.6 $ BY: Micho Yang DATE: 03/07/06  ECO: *SS - 20060307* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/11/06  ECO: *SS - 20060311* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/16/06  ECO: *SS - 20060316* */
+/* $Revision: 1.95.1.6 $ BY: Micho Yang DATE: 03/20/06  ECO: *SS - 20060320* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/24/06  ECO: *SS - 20060324* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 03/31/06  ECO: *SS - 20060331* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 04/01/06  ECO: *SS - 20060401* */
+/* $Revision: 1.95.1.6 $ BY: Bill Jiang DATE: 06/12/06  ECO: *SS - 20060612.1*/
 /* By: Neil Gao Date: 20070102 ECO: * ss 20070102.1 * */
 /* By: Neil Gao Date: 20070108 ECO: * ss 20070108.1 * */
 /* By: Neil Gao Date: 20070417 ECO: * ss 20070417.1 * */
@@ -34,7 +34,7 @@
 2. 改变为集中处理已选择的金额
 */
 
-{mfdtitle.i "121226.1"}
+{mfdtitle.i "1226.1"}
 {sssoivm1.i "new"}
 define            variable trans_conv like sod_um_conv no-undo.
 define variable cnt as decimal no-undo.
@@ -112,7 +112,9 @@ FORM
    /* SS - 20060324 - E */
    SKIP(1)
    sel_all        COLON 19
-   WITH FRAME sel_auto TITLE COLOR normal (getFrameTitle("AUTOMATIC_SELECTION",39)) SIDE-LABELS WIDTH 80.
+   WITH FRAME sel_auto
+   TITLE COLOR normal (getFrameTitle("AUTOMATIC_SELECTION",39))
+   SIDE-LABELS WIDTH 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame sel_auto:handle).
@@ -128,7 +130,8 @@ FORM
 /* ss 20070102.1 - e */
 
    tt1_ship_qty
-   WITH FRAME sel_shipper WIDTH 80 TITLE COLOR normal (getFrameTitle("SHIPPER_SELECTION_MAINTENANCE",42)).
+   WITH FRAME sel_shipper WIDTH 80
+   TITLE COLOR normal (getFrameTitle("SHIPPER_SELECTION_MAINTENANCE",42)).
 /* SS - 20060311 - E */
 
 /* SET EXTERNAL LABELS */
@@ -217,7 +220,8 @@ repeat on error undo, retry:
          repeat:
             find first xxrqm_mstr where xxrqm_nbr = xxrqmnbr  no-lock no-error.
             if available xxrqm_mstr then do:
-               xxrqmnbr = fill("0",8 - length(string(integer(xxrqmnbr) + 1))) + string(integer(xxrqmnbr) + 1).
+               xxrqmnbr = fill("0",8 - length(string(integer(xxrqmnbr) + 1)))
+                                     + string(integer(xxrqmnbr) + 1).
             end.
             else do:
           leave.
@@ -275,8 +279,10 @@ repeat on error undo, retry:
          undo,retry.
       end.
 
-      FIND first xxrqm_mstr where xxrqm_nbr = xxrqmnbr AND xxrqm_site <> "" AND xxrqm_cust <> "" no-lock NO-ERROR.
-    IF available xxrqm_mstr and (xxrqm_site <> xxrqmsite OR xxrqm_cust <> xxrqmcust) THEN DO:
+      FIND first xxrqm_mstr where xxrqm_nbr = xxrqmnbr AND xxrqm_site <> ""
+             AND xxrqm_cust <> "" no-lock NO-ERROR.
+    IF available xxrqm_mstr
+            and (xxrqm_site <> xxrqmsite OR xxrqm_cust <> xxrqmcust) THEN DO:
          /* TODO */
          message "该申请号已存在，不能修改地点和客户。请重新输入".
       next-prompt xxrqmsite with frame a.
@@ -299,7 +305,8 @@ repeat on error undo, retry:
          apply lastkey.
       end.
       */
-      FIND first xxabs_mstr where xxabs_nbr = xxrqmnbr USE-INDEX xxabs_id no-lock NO-ERROR.
+      FIND first xxabs_mstr where xxabs_nbr = xxrqmnbr
+       USE-INDEX xxabs_id no-lock NO-ERROR.
       IF AVAILABLE xxabs_mstr THEN DO:
          update
             xxrqmrqby_userid
@@ -338,7 +345,8 @@ repeat on error undo, retry:
                   DELETE xxabs_mstr.
                END.
 
-               find first xxrqm_mstr where xxrqm_nbr = xxrqmnbr USE-INDEX xxrqm_nbr exclusive-lock no-error.
+               find first xxrqm_mstr where xxrqm_nbr = xxrqmnbr
+                USE-INDEX xxrqm_nbr exclusive-lock no-error.
                if available xxrqm_mstr then do:
                   delete xxrqm_mstr.
                end.

@@ -14,11 +14,15 @@
 {mfdeclre.i}
 {gplabel.i}
 {sssoivm1.i}
-
-/*K0H7*  define input param abs_recid as recid.  */
 /*K0H7*/ define input param i_recid as recid no-undo.
-     /* SS - 20060331 - B */
-     /*
+/*K0H7*/ define temp-table t_done no-undo
+/*K0H7*/    field t_recid as recid
+/*K0H7*/    index t_recid is primary unique t_recid.
+
+
+/* SS - 20060331 - B */
+/*K0H7*  define input param abs_recid as recid.  */
+/*
 /*K0H7*/ define input param part like pt_part no-undo.
 /*K0H7*/ define input param part1 like pt_part no-undo.
 /*K0H7*/ define input param sonbr like so_nbr no-undo.
@@ -26,11 +30,6 @@
 /*K0H7*/ define output param v_items as logical no-undo.
 */
 /* SS - 20060331 - E */
-
-/*K0H7*/ define temp-table t_done no-undo
-/*K0H7*/    field t_recid as recid
-/*K0H7*/    index t_recid is primary unique t_recid.
-
 
 /*K0H7*  define variable par_shipfrom as character.
  *   define variable par_id as character.
@@ -64,7 +63,7 @@
 
 /*K0H7*/ run ip_abs_item (input i_recid, input-out v_items).
 */
-/*K0H7*/ run ip_abs_item (input i_recid).
+
 /* SS - 20060331 - E */
 
 /*K0H7*
@@ -94,6 +93,7 @@
  *   end.
 *K0H7*/
 
+/*K0H7*/ run ip_abs_item (input i_recid).
 procedure ip_abs_item:
 /*This replaces the  body of orginal rcshrp1a.p as part of ECO K0H7 */
 

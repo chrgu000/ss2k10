@@ -1,4 +1,4 @@
-/* sssoivm1.i - procedureDesc                                                 */
+/* sssoivm1.i - procedureDesc                                                */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
