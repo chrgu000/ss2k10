@@ -18,16 +18,14 @@ with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-/*
 find first qad_wkfl where
-           qad_key1 = "xxunrcld.p_filename" and
+           qad_key1 = "batchload_filename" and
            qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
    if qad_key3 <> "" then do:
       assign flhload =  qad_key3.
    end.
 end.
-*/
 assign flhload = os-getenv("HOME").
 display flhload with frame a.
 
@@ -70,20 +68,18 @@ repeat:
                &defineVariables = "yes"}
    {mfmsg.i 832 1}
    {mfphead.i}
-   /*
    find first qad_wkfl where
-              qad_key1 = "xxunrcld.p_filename" and
+              qad_key1 = "batchload_filename" and
               qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
           assign qad_key3 = flhload.
    end.
    else do:
        create qad_wkfl.
-       assign qad_key1 = "xxunrcld.p_filename"
+       assign qad_key1 = "batchload_filename"
               qad_key2 = global_userid
               qad_key3 = flhload.
    end.
-   */
    empty temp-table tmpic no-error.
    for each tmpic exclusive-lock: delete tmpic. end.
    {gprun.i ""xxunrcld0.p""}
@@ -92,7 +88,9 @@ repeat:
           {mfmsg.i 1310 1}
      end.
      else do:
+          IF CLOADFILE THEN DO:
              {gprun.i ""xxunrcld1.p""}
+          END.
      end.
      for each tmpic exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */

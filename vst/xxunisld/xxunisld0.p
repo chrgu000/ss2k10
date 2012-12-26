@@ -8,39 +8,7 @@
 {mfdeclre.i}
 {xxunrcld.i}
 {xxloaddata.i}
-define variable txt as character.
-define variable j as integer.
-empty temp-table tmpic no-error.
-assign j = 0.
-input from value(flhload).
-repeat:
-		j = j + 1.
-    import unformat txt.
-    if j = 1 then next.
-    create tmpic.
-    assign tic_site = entry(1,txt,",")
-           tic_nbr = entry(2,txt,",")
-           tic_loc = entry(3,txt,",")
-           tic_part = entry(4,txt,",")
-           tic_qty = dec(entry(5,txt,","))
-           tic_acct  = entry(6,txt,",")
-           tic_sub  = entry(7,txt,",")
-           tic_cc  = entry(8,txt,",") no-error.
-    assign tic_proj  = entry(9,txt,",") no-error.
-end.
-input close.
-j = 1.
-for each tmpic exclusive-lock:
-    if tic_part <= "" or tic_part >= "ZZZZZZZZ" then do:
-       delete tmpic.
-    end.
-    else do:
-       assign tic_sn = j
-       				tic_chk = "".
-       j = j + 1.
-    end.
-end.
-
+{xxunrcin.i}
 /* check data */
 for each tmpic exclusive-lock:
     find first pt_mstr no-lock where  pt_part = tic_part no-error.

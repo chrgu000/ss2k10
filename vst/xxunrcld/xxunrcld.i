@@ -8,6 +8,7 @@ define {1} shared variable flhload as character format "x(70)".
 define {1} shared variable cloadfile as logical initial "no".
 define {1} shared temp-table tmpic
        fields tic_site like si_site
+       fields tic_effdate like tr_effdate
        fields tic_nbr as character format "x(18)"
        fields tic_loc like ld_loc
        fields tic_part like ld_part
