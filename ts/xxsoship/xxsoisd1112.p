@@ -1855,7 +1855,7 @@ repeat transaction:
 
       l_remove_srwkfl = yes.
 
-      yn = yes.
+      yn = NO.
       /* Display sales order lines being shipped? */
 
       /* Identify context for QXtend

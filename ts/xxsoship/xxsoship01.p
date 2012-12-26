@@ -12,7 +12,7 @@ DEFINE SHARED VARIABLE v_qty_oh LIKE IN_qty_oh.
 DEFINE SHARED VARIABLE fn_i AS CHARACTER.
 DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
 DEFINE SHARED VARIABLE v_flag AS CHARACTER.
-
+DEFINE VARIABLE vdate as date.
 DEFINE TEMP-TABLE ttld_det LIKE ld_det.
 define variable vdata as character.
 
@@ -92,9 +92,10 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
       repeat:
           import vdata.
           if vdata < "ZZZZZZZZZZZZZZ" then do:
+          	 vdate = str2Date(entry(2,vdata,",")).
              create xxso.
              assign xxso_nbr = entry(1,vdata,",")
-                    xxso_effdate = str2Date(entry(2,vdata,","))
+                    xxso_effdate = vdate
                     xxso_site = entry(3,vdata,",")
                     xxso_line = integer(entry(4,vdata,","))
                     xxso_qty = dec(entry(5,vdata,","))
@@ -107,22 +108,25 @@ DEFINE VARIABLE v_sum_part_qty AS DECIMAL.
 /*V8+*/
 /******* New Import data from xls for gui application *************************/
 /*V8!
-elseif opsys = "msdos" or opsys = "win32" then do:
+else if opsys = "msdos" or opsys = "win32" then do:
    CREATE "Excel.Application" excelAppl.
    xworkbook = excelAppl:Workbooks:OPEN(xpath).
    xworksheet = excelAppl:sheets:item(1).
-   DO v_i = 2 TO xworksheet:UsedRange:Columns:count:
-      IF xworksheet:cells(v_i,1):VALUE <> ? THEN DO:
+   DO v_i = 2 TO xworksheet:UsedRange:Rows:Count:
+      IF xworksheet:cells(v_i,1):FormulaR1C1 <> "" and
+         xworksheet:cells(v_i,1):FormulaR1C1 <> ?
+          THEN DO:
+      	 vdate = str2Date(xworksheet:cells(v_i,2):FormulaR1C1).
          CREATE xxso.
-         ASSIGN xxso_nbr = string(xworksheet:cells(v_i,1):VALUE)
-                xxso_effdate = xworksheet:cells(v_i,2):VALUE
-                xxso_site = xworksheet:cells(v_i,3):VALUE
-                xxso_line = xworksheet:cells(v_i,4):VALUE
-                xxso_qty = xworksheet:cells(v_i,5):VALUE
-                xxso_loc = string(xworksheet:cells(v_i,6):VALUE).
+         ASSIGN xxso_nbr = string(xworksheet:cells(v_i,1):FormulaR1C1)
+                xxso_effdate = vdate
+                xxso_site = xworksheet:cells(v_i,3):FormulaR1C1
+                xxso_line = xworksheet:cells(v_i,4):FormulaR1C1
+                xxso_qty = xworksheet:cells(v_i,5):FormulaR1C1
+                xxso_loc = string(xworksheet:cells(v_i,6):FormulaR1C1).
       END.
       ELSE DO:
-         LEAVE.
+         next.
       END.
    END.
    excelAppl:quit.
@@ -273,12 +277,5 @@ end. /* if opsys = "msdos" or opsys = "win32" then do:  */
                   v_flag = "3".
               END.
           END.
-
-          /*
-          FOR EACH xxso1:
-              DISP xxso1 WITH WIDTH 200 STREAM-IO.
-          END.
-          */
       END.
    END.
-

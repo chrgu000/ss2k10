@@ -38,28 +38,24 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
        INDEX index1 xxso1_nbr.
 
 
-   fn_i = "xxsoship-" + STRING(TIME).
-   OUTPUT TO VALUE(fn_i + ".bpi" ).
-   FOR EACH xxso1 no-lock break by xxso1_nbr by xxso1_line:
-       if first-of(xxso1_nbr) then do:
-          PUT UNFORMATTED xxso1_nbr " " xxso1_effdate " - - " xxso1_site SKIP.
-       end.
+
+FOR EACH xxso1 no-lock break by xxso1_nbr by xxso1_line:
+    fn_i = "xxsoship-" + xxso1_nbr + STRING(xxso1_line).
+    OUTPUT TO VALUE(fn_i + ".bpi" ).
+           PUT UNFORMATTED xxso1_nbr " " xxso1_effdate " - - " xxso1_site SKIP.
            PUT UNFORMATTED xxso1_line SKIP.
            PUT UNFORMATTED xxso1_lot_qty ' "' xxso1_site '" "' xxso1_loc '" "'
                            xxso1_lot '"' SKIP.
-       if last-of(xxso1_nbr) then do:
-          PUT UNFORMATTED "." SKIP.
-          put unformatted "-" skip.
-          PUT UNFORMATTED "-" SKIP.
-          PUT UNFORMATTED "-" SKIP.
-          PUT UNFORMATTED "." SKIP.
-       end.
-   END.
-   OUTPUT CLOSE.
+           PUT UNFORMATTED "." SKIP.
+           put unformatted "-" skip.
+           PUT UNFORMATTED "-" SKIP.
+           PUT UNFORMATTED "-" SKIP.
+           PUT UNFORMATTED "." SKIP.
+    OUTPUT CLOSE.
 
    FIND LAST tr_hist WHERE tr_domain = GLOBAL_domain NO-LOCK NO-ERROR.
    if available tr_hist then do:
-   		assign v_tr_trnbr = tr_trnbr .
+      assign v_tr_trnbr = tr_trnbr .
    end.
 
    batchrun = yes.
@@ -70,7 +66,6 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
    OUTPUT CLOSE .
    batchrun = NO.
 
- FOR EACH xxso1:
      if can-find (first tr_hist use-index tr_trnbr
        WHERE tr_domain = global_domain
          AND tr_trnbr >= v_tr_trnbr
@@ -88,62 +83,4 @@ DEFINE SHARED VARIABLE v_tr_trnbr LIKE tr_trnbr.
       ELSE DO:
          xxso1_error = "导入失败".
       END.
-end.
-
-/**ken****************************
-  /*cimload */
-  FOR EACH xxso1:
-      fn_i = "".
-      fn_i = "xxsoship-" + replace(STRING(TIME,"HH:MM:SS"),":","-").
-
-      OUTPUT TO VALUE( fn_i + ".inp" ).
-      PUT UNFORMATTED xxso1_nbr " " xxso1_effdate " - - " xxso1_site SKIP.
-      PUT UNFORMATTED xxso1_line SKIP.
-      PUT UNFORMATTED xxso1_lot_qty " " xxso1_site " " xxso1_loc " " xxso1_lot SKIP.
-      PUT UNFORMATTED "." SKIP.
-      PUT UNFORMATTED "-" SKIP.
-      PUT UNFORMATTED "-" SKIP.
-      PUT UNFORMATTED "-" SKIP.
-      PUT UNFORMATTED "-" SKIP.
-
-      PUT UNFORMATTED "." SKIP.
-
-      OUTPUT CLOSE .
-
-
-      FIND LAST tr_hist WHERE tr_domain = GLOBAL_domain NO-LOCK NO-ERROR.
-      v_tr_trnbr = tr_trnbr .
-
-      batchrun = yes.
-      INPUT FROM VALUE( fn_i + ".inp" ) .
-      OUTPUT TO VALUE( fn_i + ".cim" ) .
-      {gprun.i ""sosois.p""}
-      INPUT CLOSE .
-      OUTPUT CLOSE .
-      batchrun = NO.
-
-
-      /*111220.1 add index*/
-
-      FIND LAST tr_hist WHERE tr_domain = GLOBAL_domain
-         AND tr_nbr = xxso1_nbr
-         AND tr_effdate = xxso1_effdate
-         AND tr_line = xxso1_line
-         AND tr_part = xxso1_part
-         AND tr_loc = xxso1_loc
-         AND tr_serial = xxso1_lot
-         AND tr_qty_loc = - xxso1_lot_qty
-         AND tr_trnbr > v_tr_trnbr
-         AND tr_type = "ISS-SO" USE-INDEX tr_nbr_eff NO-LOCK NO-ERROR .
-      IF AVAIL tr_hist THEN DO:
-         xxso1_error = "导入成功".
-         OS-DELETE VALUE( fn_i + ".inp").
-         OS-DELETE VALUE( fn_i + ".cim").
-      END.
-      ELSE DO:
-         xxso1_error = "导入失败".
-      END.
-
-  END.
-
-*********************************/
+END.

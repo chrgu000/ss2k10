@@ -23,7 +23,7 @@ repeat:
   import unformat verr.
   if index(verr,getTermLabel("ERROR",12)) > 0 then do:
      oerr = substring(verr,index(verr,trim(getTermLabel("ERROR",12)))
-                          + length(trim(getTermLabel("ERROR",12)),"RAW") + 1).
+                          + length(trim(getTermLabel("ERROR",12)),"RAW")).
      leave.
   end.
 end.
