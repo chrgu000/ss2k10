@@ -3,10 +3,10 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120704.1 LAST MODIFIED: 07/04/12 BY:                            */
 /* REVISION END                                                              */
-
+/*121226.1 Add Column EffDate                                                */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120828.1"}
+{mfdtitle.i "121226.1"}
 {xxunrcld.i "new"}
 {gpcdget.i "UT"}
 

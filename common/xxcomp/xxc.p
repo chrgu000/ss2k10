@@ -123,7 +123,7 @@ end.
 
 ON RETURN of xrcdir in frame z DO:
    assign xrcdir.
-   assign xrcdir = lower(trim(xrcDir)).
+   assign xrcdir = trim(xrcDir).
    run setbpropath.
    display bpropath with frame z.
 end.
@@ -253,7 +253,7 @@ do on error undo, retry:
       next-prompt destDir with frame z.
       undo,retry.
    end.
-   assign xrcDir = lower(trim(xrcDir)).
+   assign xrcDir = trim(xrcDir).
    assign xrcdir destdir.
    display bpropath with frame z.
    if lastkey = keycode("F5") or lastkey = keycode("CTRL-D") then do:
@@ -362,8 +362,8 @@ END PROCEDURE.  /* PROCEDURE iniForm: */
 
 procedure setbpropath:
     define variable vpropath as character.
-    assign xrcdir = lower(trim(xrcDir)).
-    assign destdir = lower(trim(destdir)).
+    assign xrcdir = trim(xrcDir).
+    assign destdir = trim(destdir).
     assign vpropath = replace(replace(bpropath,chr(10),","),".,","").
     if index(vpropath,xrcdir) <> 0 and xrcdir <> "" then do:
        assign vpropath = trim(replace(vpropath,xrcdir + ",","")).

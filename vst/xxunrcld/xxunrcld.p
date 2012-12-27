@@ -2,11 +2,11 @@
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120704.1 LAST MODIFIED: 07/04/12 BY:                            */
+/*121226.1 Add Column EffDate                                                */
 /* REVISION END                                                              */
 
-
 /* DISPLAY TITLE */
-{mfdtitle.i "120704.1"}
+{mfdtitle.i "121226.1"}
 {xxunrcld.i "new"}
 {gpcdget.i "UT"}
 {xxloaddata.i}

@@ -22,15 +22,15 @@ assign flhload = OS-GETENV("HOME").
 display flhload with frame a.
 {wbrp01.i}
 repeat:
-/*   find first usrw_wkfl no-lock where                                  */
-/*              usrw_key1 = "xxbmld.p_filename" and                      */
-/*              usrw_key2 = global_userid no-error.                      */
-/*   if available usrw_wkfl then do:                                     */
-/*      if usrw_key4 <> "" then do:                                      */
-/*         assign flhload =  usrw_key4.                                  */
-/*      end.                                                             */
-/*   end.                                                                */
-/*   release usrw_wkfl.                                                  */
+   find first usrw_wkfl no-lock where
+              usrw_key1 = "xxbmld.p_filename" and
+              usrw_key2 = global_userid no-error.
+   if available usrw_wkfl then do:
+      if usrw_key4 <> "" then do:
+         assign flhload =  usrw_key4.
+      end.
+   end.
+   release usrw_wkfl.
    if c-application-mode <> 'web' then
    update flhload cloadfile with frame a.
 
@@ -42,21 +42,21 @@ repeat:
          next-prompt flhload.
          undo, retry.
      END.
-/*   else do:                                                               */
-/*        find first usrw_wkfl exclusive-lock where                         */
-/*                   usrw_key1 = "xxbmld.p_filename" and                    */
-/*                   usrw_key2 = global_userid no-error.                    */
-/*        if available usrw_wkfl and locked(usrw_wkfl) then do:             */
-/*              assign usrw_key4 = flhload no-error.                        */
-/*        end.                                                              */
-/*        else do:                                                          */
-/*            create usrw_wkfl.                                             */
-/*            assign usrw_key1 = "xxbmld.p_filename"                        */
-/*                   usrw_key2 = global_userid                              */
-/*                   usrw_key4 = flhload no-error.                          */
-/*        end.                                                              */
-/*        release usrw_wkfl.                                                */
-/*   end.                                                                   */
+     else do:
+          find first usrw_wkfl exclusive-lock where
+                     usrw_key1 = "xxbmld.p_filename" and
+                     usrw_key2 = global_userid no-error.
+          if available usrw_wkfl and locked(usrw_wkfl) then do:
+                assign usrw_key4 = flhload no-error.
+          end.
+          else do:
+              create usrw_wkfl.
+              assign usrw_key1 = "xxbmld.p_filename"
+                     usrw_key2 = global_userid
+                     usrw_key4 = flhload no-error.
+          end.
+          release usrw_wkfl.
+     end.
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
