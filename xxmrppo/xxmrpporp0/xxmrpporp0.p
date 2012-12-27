@@ -9,7 +9,7 @@
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "121220.1"}
+{mfdtitle.i "121227.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -49,6 +49,7 @@ define variable T       as   logical initial "YES".
 define variable tpo1date as date.
 define variable aqty as decimal.
 define variable adjqty as decimal.
+define stream bf.
 define temp-table tmp_po1
        fields tp1_part like pt_part
        fields tp1_po as decimal format "->>>,>>>,>>>,>>>,9.9<"
@@ -78,8 +79,8 @@ define temp-table tmp_po
 
 /*下2月预示量*/
 define temp-table tmp_n2po
-			 fields tn2_part like pt_part
-			 fields tn2_qty as decimal.
+       fields tn2_part like pt_part
+       fields tn2_qty as decimal.
 
 define temp-table tmp_rule_date
     fields trd_rule AS CHARACTER
@@ -193,7 +194,7 @@ repeat:
   empty temp-table tmp_po1 no-error.
   empty temp-table tmp_tmd no-error.
   empty temp-table tmp_rule_date no-error.
-	empty temp-table tmp_n2po no-error.
+  empty temp-table tmp_n2po no-error.
 
   for each qad_wkfl exclusive-lock where qad_key1 = key1: delete qad_wkfl. end.
   for each usrw_wkfl exclusive-lock where usrw_key1 = vkey0: delete usrw_wkfl. end.
@@ -580,8 +581,8 @@ repeat:
        end.
        find first tmp_n2po exclusive-lock where tn2_part = pt_part no-error.
        if not available tmp_n2po then do:
-       	  create tmp_n2po.
-       	  assign tn2_part = pt_part.
+          create tmp_n2po.
+          assign tn2_part = pt_part.
        end.
        assign tn2_qty = tn2_qty + mrp_qty.
       /* else do:                          */
@@ -799,7 +800,7 @@ repeat:
 /*630*/          end.
 /*121218.1*********************************************************************/
 /*121218.1*     if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:            */
-/*121218.1*						/*仅显示数量不为0或有预示量的*/                         */
+/*121218.1*           /*仅显示数量不为0或有预示量的*/                         */
 /*121218.1*        export delimiter "~011"                                    */
 /*121218.1*               tpo_nbr tpo_vend tpo_part tpoqty                    */
 /*121218.1*               tpo_due tpo_type tpoqtys                            */
@@ -812,7 +813,7 @@ repeat:
 /*121218.1*               .                                                   */
 /*121218.1*     end. /* if first-of(tpo_part) or tpoqty > 0 then do: */       */
 /*121218.1*********************************************************************/
- 								if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:    
+                if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:
 /*121218.1*/    create usrw_wkfl.
 /*121218.1*/    assign usrw_key1 = vkey0
 /*121218.1*/           usrw_key2 = string(i)
@@ -830,7 +831,7 @@ repeat:
 /*121218.1*/           usrw_charfld[6] = areaDesc
 /*121218.1*/           usrw_logfld[1] = tpo_fut
 /*121218.1*/           usrw_datefld[2] = tpo_due.
-						     end.
+                 end.
                  find first tmp_po1 exclusive-lock where tp1_part = tpo_part
                             no-error.
                  if available tmp_po1 then do:
@@ -843,32 +844,72 @@ repeat:
             assign i = i + 1.
          end. /*for each tmp_po no-lock*/
 
-/*121218.1*/	for each usrw_wkfl exclusive-lock where
-/*121218.1*/	         usrw_key1 = vkey0 and usrw_charfld[4] = "T"
-/*121218.1*/	         break by usrw_charfld[3] by usrw_datefld[2]:
-/*121218.1*/	    if first-of(usrw_charfld[3]) then do:
-/*121218.1*/	       assign qty_pod = 0.
-/*121218.1*/	    end.
-/*121218.1*/	    if usrw_decfld[1] <> 0 then qty_pod = usrw_decfld[1].
-/*121218.1*/	    if last-of(usrw_charfld[3]) then do:
-/*121218.1*/	       if qty_pod = 0 then do:
-/*121218.1*/	          assign usrw_datefld[1] = duef - 1
-/*121218.1*/	                 usrw_logfld[1] = yes.
-/*121218.1*/	       end.
-/*121218.1*/	    end.
-/*121218.1*/	end.
-
-for each usrw_wkfl no-lock where usrw_wkfl.usrw_key1 = vkey0
-		 and usrw_charfld[4] = "T" and usrw_decfld[1] = 0 and  usrw_decfld[2] = 0:
-		 find first tmp_n2po no-lock where tn2_part = usrw_charfld[3] no-error.
-		 if not available tmp_n2po then do:
-		 		delete usrw_wkfl.
+/*121218.1*/  for each usrw_wkfl exclusive-lock where
+/*121218.1*/           usrw_key1 = vkey0 and usrw_charfld[4] = "T"
+/*121218.1*/           break by usrw_charfld[3] by usrw_datefld[2]:
+/*121218.1*/      if first-of(usrw_charfld[3]) then do:
+/*121218.1*/         assign qty_pod = 0.
+/*121218.1*/      end.
+/*121218.1*/      if usrw_decfld[1] <> 0 then qty_pod = usrw_decfld[1].
+/*121218.1*/      if last-of(usrw_charfld[3]) then do:
+/*121218.1*/         if qty_pod = 0 then do:
+/*121218.1*/            assign usrw_datefld[1] = duef - 1
+/*121218.1*/                   usrw_logfld[1] = yes.
+/*121218.1*/         end.
+/*121218.1*/      end.
+/*121218.1*/  end.
+assign sendDate = ?.
+for each pod_det no-lock use-index pod_partdue where pod_part <> ""
+		 and pod_due_date > low_date break by pod_due_date:
+		 if pod_type = "T" then do:
+		 		assign sendDate = pod_due_date when sendDate = ?.
 		 end.
-		 else if tn2_qty = 0 then do:
-		 		delete usrw_wkfl.
-		 end.
+		 if sendDate <> ? then leave.
 end.
-
+/*output stream bf to xxmrppo.txt.*/
+for each usrw_wkfl exclusive-lock where usrw_wkfl.usrw_key1 = vkey0
+     and usrw_charfld[4] = "T" and usrw_decfld[1] = 0 and usrw_decfld[2] = 0:
+     assign qty_tpod = 0
+            qty_pod = 0
+            tmpDate = ?.
+     find first tmp_n2po no-lock where tn2_part = usrw_charfld[3] no-error.
+     if not available tmp_n2po then do:
+        delete usrw_wkfl.
+        next.
+     end.
+     else if tn2_qty = 0 then do:
+        delete usrw_wkfl.
+        next.
+     end.
+     /*如果T类型PO数量大于需求量与下2个月的预示则删除此预示*/
+     for each pod_det no-lock use-index pod_partdue where
+         pod_part = usrw_charfld[3] and pod_due_date >= sendDate
+         break by pod_part by pod_due_date:
+              if pod_type = "T" then do:
+                 assign tmpDate = pod_due_date
+                        qty_tpod = qty_tpod + pod_qty_ord.
+              end.
+              else do:
+                  if tmpDate <> ? then do:
+                     qty_pod = qty_pod + pod_qty_ord.
+                  end.
+              end.
+     end.
+    /* put stream bf unformat usrw_charfld[3] "~011" qty_tpod "~011" qty_pod.*/
+     qty_tpod = qty_tpod - qty_pod.
+     if qty_tpod > 0 then do:
+        find first tmp_n2po no-lock where tn2_part = usrw_charfld[3] no-error.
+        if available tmp_n2po then do:
+           assign qty_tpod = qty_tpod - tn2_qty.
+/*					 put stream bf unformat "~011" tn2_qty.*/
+        end.
+     end.
+/*     put stream bf skip.*/
+     if qty_tpod > 0 then do:
+        delete usrw_wkfl.
+     end.
+end.
+/*output stream bf close.*/
          export delimiter "~011" getTermLabel("PO_NUMBER",12)
                                  getTermLabel("SUPPLIER",12)
                                  getTermLabel("ITEM_NUMBER",12)
@@ -887,24 +928,24 @@ end.
          /*                      getTermLabel("EXPIRATION_DATE",12).         */
 
 
-/*121218.1*/	for each usrw_wkfl no-lock where usrw_wkfl.usrw_key1 = vkey0
-/*121218.1*/	break by usrw_key1 by usrw_charfld[1] by usrw_charfld[2]
-/*121218.1*/				by usrw_charfld[3] by usrw_datefld[1]:
-/*121218.1*/	     export delimiter "~011"
-/*121218.1*/	            usrw_charfld[1]
-/*121218.1*/	            usrw_charfld[2]
-/*121218.1*/	            usrw_charfld[3]
-/*121218.1*/	            usrw_decfld[1]
-/*121218.1*/	            usrw_datefld[1]
-/*121218.1*/	            usrw_charfld[4]
-/*121218.1*/	            usrw_decfld[2]
-/*121218.1*/	            usrw_decfld[3]
-/*121218.1*/	            usrw_decfld[4]
-/*121218.1*/	            usrw_intfld[1]
-/*121218.1*/	            usrw_charfld[5]
-/*121218.1*/	            usrw_charfld[6]
-													usrw_logfld[1].
-/*121218.1*/	end.
+/*121218.1*/  for each usrw_wkfl no-lock where usrw_wkfl.usrw_key1 = vkey0
+/*121218.1*/  break by usrw_key1 by usrw_charfld[1] by usrw_charfld[2]
+/*121218.1*/        by usrw_charfld[3] by usrw_datefld[1]:
+/*121218.1*/       export delimiter "~011"
+/*121218.1*/              usrw_charfld[1]
+/*121218.1*/              usrw_charfld[2]
+/*121218.1*/              usrw_charfld[3]
+/*121218.1*/              usrw_decfld[1]
+/*121218.1*/              usrw_datefld[1]
+/*121218.1*/              usrw_charfld[4]
+/*121218.1*/              usrw_decfld[2]
+/*121218.1*/              usrw_decfld[3]
+/*121218.1*/              usrw_decfld[4]
+/*121218.1*/              usrw_intfld[1]
+/*121218.1*/              usrw_charfld[5]
+/*121218.1*/              usrw_charfld[6]
+                          usrw_logfld[1].
+/*121218.1*/  end.
 end.      /*if detsum else do:    */
 /* REPORT TRAILER  */
 /*   {mfrtrail.i} */
