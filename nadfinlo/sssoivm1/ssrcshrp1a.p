@@ -1,28 +1,25 @@
-/* rcshrp1a.p - PRE-SHIPPERSHIPPER REPORT                                    */
-/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                       */
-/* All rights reserved worldwide.  This is an unpublished work.              */
-/*F0PN*/ /*V8:ConvertMode=Report                                             */
-/*K1Q4*/ /*V8:WebEnabled=No                                                  */
-/* REVISION: 8.6    LAST MODIFIED: 10/17/96   BY: *K003* Kieu Nguyen         */
-/* REVISION: 8.6    LAST MODIFIED: 07/30/97   BY: *K0H7* Taek-Soo Chang      */
-/* REVISION: 8.6    LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan          */
-/* REVISION: 9.1    LAST MODIFIED: 08/12/00   BY: *N0KP* myb                 */
-/* REVISION: 9.1    LAST MODIFIED: 03/31/06   BY: *SS - 20060331* Bill Jiang */
+/* rcshrp1a.p - PRE-SHIPPERSHIPPER REPORT                               */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                  */
+/* All rights reserved worldwide.  This is an unpublished work.         */
+/*F0PN*/ /*V8:ConvertMode=Report                                        */
+/*K1Q4*/ /*V8:WebEnabled=No                                             */
+/* REVISION: 8.6    LAST MODIFIED: 10/17/96   BY: *K003* Kieu Nguyen    */
+/* REVISION: 8.6    LAST MODIFIED: 07/30/97   BY: *K0H7* Taek-Soo Chang    */
+/* REVISION: 8.6    LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan        */
+/* REVISION: 9.1    LAST MODIFIED: 08/12/00   BY: *N0KP* myb               */
+/* REVISION: 9.1    LAST MODIFIED: 03/31/06   BY: *SS - 20060331* Bill Jiang               */
+
 
 /* SHIPPER REPORT SUBPROGRAM */
 
-{mfdeclre.i}
-{gplabel.i}
-{sssoivm1.i}
-/*K0H7*/ define input param i_recid as recid no-undo.
-/*K0H7*/ define temp-table t_done no-undo
-/*K0H7*/    field t_recid as recid
-/*K0H7*/    index t_recid is primary unique t_recid.
+
+     {mfdeclre.i}
 
 
-/* SS - 20060331 - B */
 /*K0H7*  define input param abs_recid as recid.  */
-/*
+/*K0H7*/ define input param i_recid as recid no-undo.
+     /* SS - 20060331 - B */
+     /*
 /*K0H7*/ define input param part like pt_part no-undo.
 /*K0H7*/ define input param part1 like pt_part no-undo.
 /*K0H7*/ define input param sonbr like so_nbr no-undo.
@@ -31,13 +28,17 @@
 */
 /* SS - 20060331 - E */
 
+/*K0H7*/ define temp-table t_done no-undo
+/*K0H7*/    field t_recid as recid
+/*K0H7*/    index t_recid is primary unique t_recid.
+
+
 /*K0H7*  define variable par_shipfrom as character.
  *   define variable par_id as character.
  *
  *K0H7*/
 
     /* TEMP-TABLE */
-    /*
         define shared TEMP-TABLE tab_abs
         field tab_id              like abs_id
         field tab_item            like abs_item
@@ -54,7 +55,7 @@
         FIELD TAB__qad02 LIKE ABS__qad02
         /* SS - 20060401 - E */
         .
-*/
+
         /* SS - 20060331 - B */
         /*
 /*K0H7*/ for each tab_abs exclusive-lock:
@@ -63,7 +64,7 @@
 
 /*K0H7*/ run ip_abs_item (input i_recid, input-out v_items).
 */
-
+/*K0H7*/ run ip_abs_item (input i_recid).
 /* SS - 20060331 - E */
 
 /*K0H7*
@@ -93,7 +94,6 @@
  *   end.
 *K0H7*/
 
-/*K0H7*/ run ip_abs_item (input i_recid).
 procedure ip_abs_item:
 /*This replaces the  body of orginal rcshrp1a.p as part of ECO K0H7 */
 
@@ -137,7 +137,7 @@ procedure ip_abs_item:
 /*K0H7*/       tab_shipfrom      = abs_mstr.abs_shipfrom
 /*K0H7*/       tab_order         = abs_mstr.abs_order
 /*K0H7*/       tab_line          = integer(abs_mstr.abs_line)
-/*K0H7*/       tab_qty           = abs_mstr.abs_qty
+/*K0H7*/       tab_qty           = abs_mstr.abs_qty 
    TAB_par_id = ABS_mstr.ABS_par_id
    TAB_ship_qty = ABS_mstr.ABS_ship_qty
    TAB__dec04 = ABS_mstr.ABS__dec04
