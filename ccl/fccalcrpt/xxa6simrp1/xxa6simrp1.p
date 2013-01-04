@@ -1,5 +1,5 @@
 
-{mfdtitle.i "120925.1"}
+{mfdtitle.i "130104.1"}
 define variable site       like wo_site .
 define variable site1      like wo_site .
 define variable cust       like a6rq_cust.
@@ -76,7 +76,7 @@ repeat :
 
     /* output destination selection */
     {gpselout.i &printtype = "printer"
-    &printwidth = 200
+    &printwidth = 500
     &pagedflag = " "
     &stream = " "
     &appendtofile = " "
@@ -89,8 +89,9 @@ repeat :
     &withwinprint = "yes"
     &definevariables = "yes"}
 
+/*
     {mfphead.i}
-
+*/
     for each a6rq_mstr where (a6rq_site >= site ) and  ( a6rq_site <= site1 )
         and ( a6rq_cust >= cust )  and ( a6rq_cust <= cust1 )
         and ( a6rq_custpono = custpono  or custpono = '' )  and ( a6rq_custpoln = custpoln or custpoln = 0 )
@@ -134,14 +135,14 @@ repeat :
             'ord_mult '  at 64 v_ord_mult skip.
         put '客采单号:'  at 2 a6rq_custpono
             '项次:'  at  17 a6rq_custpoln
-            '需求日期:' at 64  a6rq_due_date  skip .
+            '需求日期:' at 64  "'" a6rq_due_date  skip .
         put fill("=", 88) format 'x(200)' skip .
         /* put '项次     零件编号           零件描述                  提前期    需求日期 um        毛需求     预计库存    短缺数量 入库日期 下达日期 需求单号          编号/项次 明细     p/m   buyer ord_min   ord_mult' skip . */
-        put '零件编号' '~t' '零件描述' '~t' '提前期' '~t' '需求日期' '~t'
+        put unformat '零件编号' '~t' '零件描述' '~t' '提前期' '~t' '需求日期' '~t'
             'um' '~t' '物料用量' '~t' 'OPPO' '~t' '当天库存' '~t' '总需求' '~t'
             '扣出WO及FCS多出物料' '~t' 'MOQ' '~t' '组别' '~t' '毛需求' '~t'
             '预计库存' '~t' '短缺数量' '~t' '入库日期' '~t' '下达日期' '~t'
-            '需求单号' '~t' '编号/项次' '~t' '明细' '~t' 'p/m' '~t' '状态' at 1 skip .
+            '需求单号' '~t' '编号/项次' '~t' '明细' '~t' 'p/m' '~t' '状态' skip.
 
         for each a6rqd_det
             where a6rqd_site = a6rq_site
@@ -229,20 +230,20 @@ repeat :
                     a6rqd_part at 1 '~t'
                     desc1 '~t'
                     a6rqd_lt '~t'
-                    a6rqd_rq_date '~t'
+                    "'" a6rqd_rq_date '~t'
                     pt_um '~t'
                     decBomSummary  '~t'
                     decOpenPOQty   '~t'
                     decInventory   '~t'
                     decDemandQty   '~t'
-                    decPlan1       '~t'
+                    decPlan1 format "->,>>>,>>>,>>9.<<<<<<" '~t'
                     dMOQ           '~t'
                     v_buyer        '~t'
                     a6rqd_rq_qty '~t'
-                    dec(a6rqd_char02)  format "->,>>>,>>>,>>9.<<" '~t'
+                    dec(a6rqd_char02)  format "->,>>>,>>>,>>9.<<<<<<" '~t'
                     decShort '~t'
-                    a6rqd_due_date '~t'
-                    a6rqd_rel_date '~t'
+                    "'" a6rqd_due_date '~t'
+                    "'" a6rqd_rel_date '~t'
                     nbr   format "x(40)" '~t'
                     ln '~t'
                     a6rqd_remark '~t'
@@ -306,20 +307,20 @@ repeat :
                         a6rrd_part at 1 '~t'
                         desc1 '~t'
                         a6rqd_lt '~t'
-                        a6rrd_rq_date '~t'
+                        "'" a6rrd_rq_date '~t'
                         pt_um  '~t'
                         decBomSummary   '~t'
                         decOpenPOQty    '~t'
                         decInventory    '~t'
                         decDemandQty    '~t'
-                        decPlan1        '~t'
+                        decPlan1  format "->,>>>,>>>,>>9.<<<<<<" '~t'
                         dMOQ            '~t'
                         v_buyer         '~t'
                         a6rrd_rq_qty  '~t'
-                        dec (a6rrd_desc) format "->,>>>,>>>,>>9.<<" '~t'
+                        dec (a6rrd_desc) format "->,>>>,>>>,>>9.<<<<<<" '~t'
                         decShort '~t'
-                        a6rrd_due_date '~t'
-                        a6rrd_rel_date '~t'
+                        "'" a6rrd_due_date '~t'
+                        "'" a6rrd_rel_date '~t'
                         nbr  format "x(40)" '~t'
                         ln '~t'
                         a6rrd_remark '~t'
@@ -382,7 +383,7 @@ repeat :
                     '~t'
                     a6rqd_lt
                     '~t'
-                    a6rqd_rq_date
+                    "'" a6rqd_rq_date
                     '~t'
                     pt_um
                     '~t'
@@ -390,18 +391,18 @@ repeat :
                     decOpenPOQty    '~t'
                     decInventory    '~t'
                     decDemandQty    '~t'
-                    decPlan1        '~t'
+                    decPlan1  format "->,>>>,>>>,>>9.<<<<<<" '~t'
                     dMOQ            '~t'
                     v_buyer         '~t'
                     a6rqd_rq_qty
                     '~t'
-                    dec(a6rqd_char02)  format "->,>>>,>>>,>>9.<<"
+                    dec(a6rqd_char02)  format "->,>>>,>>>,>>9.<<<<<<"
                     '~t'
                     decShort
                     '~t'
-                    a6rqd_due_date
+                    "'" a6rqd_due_date
                     '~t'
-                    a6rqd_rel_date
+                    "'" a6rqd_rel_date
                     '~t'
                     nbr   format "x(40)"
                     '~t'
@@ -473,7 +474,7 @@ repeat :
                         '~t'
                         a6rqd_lt
                         '~t'
-                        a6rrd_rq_date
+                        "'" a6rrd_rq_date
                         '~t'
                         pt_um
                         '~t'
@@ -481,18 +482,18 @@ repeat :
                         decOpenPOQty    '~t'
                         decInventory    '~t'
                         decDemandQty    '~t'
-                        decPlan1        '~t'
+                        decPlan1  format "->,>>>,>>>,>>9.<<<<<<" '~t'
                         dMOQ            '~t'
                         v_buyer         '~t'
                         a6rrd_rq_qty
                         '~t'
-                        dec (a6rrd_desc) format "->,>>>,>>>,>>9.<<"
+                        dec (a6rrd_desc) format "->,>>>,>>>,>>9.<<<<<<"
                         '~t'
                         decShort
                         '~t'
-                        a6rrd_due_date
+                        "'" a6rrd_due_date
                         '~t'
-                        a6rrd_rel_date
+                        "'" a6rrd_rel_date
                         '~t'
                         nbr  format "x(40)"
                         ln
@@ -528,7 +529,7 @@ repeat :
                 a6rqd_part at 1  '~t'
                 desc1 '~t'
                 a6rqd_lt  '~t'
-                a6rqd_rq_date '~t'
+                "'" a6rqd_rq_date '~t'
                 pt_um  '~t'
                 decBomSummary  '~t'
                 decOpenPOQty   '~t'
@@ -538,10 +539,10 @@ repeat :
                 dMOQ           '~t'
                 v_buyer        '~t'
                 a6rqd_rq_qty  '~t'
-                decOpenPOQty + decInventory format "->,>>>,>>>,>>9.<<" '~t'
-                decInventory - mrpqty - a6rqd_rq_qty format "->,>>>,>>>,>>9.<<" '~t'
-                a6rqd_due_date '~t'
-                a6rqd_rel_date '~t'
+                decOpenPOQty + decInventory format "->,>>>,>>>,>>9.<<<<<<" '~t'
+                decInventory - mrpqty - a6rqd_rq_qty format "->,>>>,>>>,>>9.<<<<<<" '~t'
+                "'" a6rqd_due_date '~t'
+                "'" a6rqd_rel_date '~t'
                 nbr format "x(40)" '~t'
                 ln '~t'
                 v_rmks format "x(30)" '~t'
@@ -598,20 +599,20 @@ repeat :
                     a6rrd_part at 1 '~t'
                     desc1 '~t'
                     a6rqd_lt '~t'
-                    a6rrd_rq_date '~t'
+                    "'" a6rrd_rq_date '~t'
                     pt_um '~t'
                     decBomSummary '~t'
                     decOpenPOQty '~t'
                     decInventory '~t'
                     decDemandQty '~t'
-                    decPlan1 '~t'
+                    decPlan1  format "->,>>>,>>>,>>9.<<<<<<" '~t'
                     dMOQ '~t'
                     v_buyer '~t'
                     a6rrd_rq_qty '~t'
-                    decOpenPOQty + decInventory format "->,>>>,>>>,>>9.<<" '~t'
-                    decInventory - mrpqty format "->,>>>,>>>,>>9.<<" '~t'
-                    a6rrd_due_date '~t'
-                    a6rrd_rel_date '~t'
+                    decOpenPOQty + decInventory format "->,>>>,>>>,>>9.<<<<<<" '~t'
+                    decInventory - mrpqty format "->,>>>,>>>,>>9.<<<<<<" '~t'
+                    "'" a6rrd_due_date '~t'
+                    "'" a6rrd_rel_date '~t'
                     nbr format "x(40)" '~t'
                     ln '~t'
                     v_rmks format "x(30)" '~t'
@@ -625,7 +626,10 @@ repeat :
 
         page .
     end.
+    /*
     {mfrtrail.i}
+    */
+    {mfreset.i}
 end.
 {wbrp04.i &frame-spec = a}
 

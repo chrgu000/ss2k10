@@ -1,0 +1,158 @@
+ADD TABLE "a6rc_cot"
+  AREA "TRANSACTION"
+  LABEL "Reply ShipDate Control Doc."
+  DESCRIPTION "Reply ShipDate Control Doc"
+  FROZEN
+  DUMP-NAME "a6rc_cot"
+
+ADD FIELD "a6rc_past_offset" OF "a6rc_cot" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Offset Of OverDate"
+  POSITION 2
+  SQL-WIDTH 4
+  COLUMN-LABEL "Offset Of OverDate"
+  ORDER 10
+
+ADD FIELD "a6rc_safty_type" OF "a6rc_cot" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Safty Type"
+  POSITION 3
+  SQL-WIDTH 2
+  COLUMN-LABEL "Safty Type"
+  ORDER 20
+
+ADD FIELD "a6rc_safty_offset" OF "a6rc_cot" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Safty Offset"
+  POSITION 4
+  SQL-WIDTH 4
+  COLUMN-LABEL "Safty Offset"
+  ORDER 30
+
+ADD FIELD "a6rc_scrapt_pct" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "Scrapt Percenty"
+  POSITION 5
+  SQL-WIDTH 1
+  COLUMN-LABEL "Scrapt Percenty"
+  ORDER 40
+
+ADD FIELD "a6rc_yld_pct" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "yield percent"
+  POSITION 6
+  SQL-WIDTH 1
+  COLUMN-LABEL "yield percent"
+  ORDER 50
+
+ADD FIELD "a6rc_work_date" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "work date"
+  POSITION 7
+  SQL-WIDTH 1
+  COLUMN-LABEL "work date"
+  ORDER 60
+
+ADD FIELD "a6rc_reply_lk" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "after reply lock"
+  POSITION 8
+  SQL-WIDTH 1
+  COLUMN-LABEL "after reply lock"
+  ORDER 70
+
+ADD FIELD "a6rc_check" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "QC LT"
+  POSITION 9
+  SQL-WIDTH 1
+  COLUMN-LABEL "QC LT"
+  ORDER 80
+
+ADD FIELD "a6rc_sim_date" OF "a6rc_cot" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "last sim date"
+  POSITION 10
+  SQL-WIDTH 4
+  COLUMN-LABEL "last sim date"
+  ORDER 90
+
+ADD FIELD "a6rc_char01" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 11
+  SQL-WIDTH 36
+  ORDER 100
+
+ADD FIELD "a6rc_char02" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 12
+  SQL-WIDTH 36
+  ORDER 110
+
+ADD FIELD "a6rc_char03" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 13
+  SQL-WIDTH 36
+  ORDER 120
+
+ADD FIELD "a6rc_char04" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 36
+  ORDER 130
+
+ADD FIELD "a6rc_char05" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 36
+  ORDER 140
+
+ADD FIELD "a6rc_char06" OF "a6rc_cot" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 36
+  ORDER 150
+
+ADD FIELD "a6rc_short" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "short log"
+  POSITION 17
+  SQL-WIDTH 1
+  COLUMN-LABEL "short log"
+  ORDER 160
+
+ADD FIELD "a6rc_sim_mod" OF "a6rc_cot" AS integer 
+  FORMAT "9"
+  INITIAL "1"
+  POSITION 18
+  SQL-WIDTH 4
+  ORDER 170
+
+ADD FIELD "a6rc_sim_insp" OF "a6rc_cot" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  POSITION 19
+  SQL-WIDTH 1
+  ORDER 180
+
+.
+PSC
+cpstream=GB2312
+.
+0000002915

@@ -1,0 +1,176 @@
+ADD TABLE "a6rrd_det"
+  AREA "TRANSACTION"
+  FROZEN
+  DUMP-NAME "a6rrd_de"
+
+ADD FIELD "a6rrd_site" OF "a6rrd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "a6rrd_custpono" OF "a6rrd_det" AS character 
+  FORMAT "x(22)"
+  INITIAL ""
+  POSITION 3
+  SQL-WIDTH 44
+  ORDER 20
+
+ADD FIELD "a6rrd_custpoln" OF "a6rrd_det" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  POSITION 4
+  SQL-WIDTH 4
+  ORDER 30
+
+ADD FIELD "a6rrd_sort" OF "a6rrd_det" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  POSITION 5
+  SQL-WIDTH 4
+  ORDER 40
+
+ADD FIELD "a6rrd_part" OF "a6rrd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 6
+  SQL-WIDTH 36
+  ORDER 50
+
+ADD FIELD "a6rrd_pmcode" OF "a6rrd_det" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  POSITION 7
+  SQL-WIDTH 2
+  ORDER 60
+
+ADD FIELD "a6rrd_key" OF "a6rrd_det" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 8
+  SQL-WIDTH 1
+  ORDER 70
+
+ADD FIELD "a6rrd_yld_pct" OF "a6rrd_det" AS decimal 
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  POSITION 9
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "a6rrd_scrap_pct" OF "a6rrd_det" AS decimal 
+  FORMAT ">>9.99%"
+  INITIAL "0"
+  POSITION 10
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 90
+
+ADD FIELD "a6rrd_rel_date" OF "a6rrd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 11
+  SQL-WIDTH 4
+  ORDER 100
+
+ADD FIELD "a6rrd_due_date" OF "a6rrd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 12
+  SQL-WIDTH 4
+  ORDER 110
+
+ADD FIELD "a6rrd_rq_qty" OF "a6rrd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 13
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "a6rrd_desc" OF "a6rrd_det" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  POSITION 14
+  SQL-WIDTH 48
+  ORDER 130
+
+ADD FIELD "a6rrd_rel_ord" OF "a6rrd_det" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  POSITION 15
+  SQL-WIDTH 36
+  ORDER 140
+
+ADD FIELD "a6rrd_remark" OF "a6rrd_det" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  POSITION 16
+  SQL-WIDTH 80
+  ORDER 150
+
+ADD FIELD "a6rrd_short_qty" OF "a6rrd_det" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  POSITION 17
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "a6rr_ord_id" OF "a6rrd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 18
+  SQL-WIDTH 16
+  ORDER 170
+
+ADD FIELD "a6rrd_rel_id" OF "a6rrd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 19
+  SQL-WIDTH 16
+  ORDER 180
+
+ADD FIELD "a6rrd_ord_type" OF "a6rrd_det" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  POSITION 20
+  SQL-WIDTH 24
+  ORDER 190
+
+ADD FIELD "a6rrd_rq_date" OF "a6rrd_det" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 21
+  SQL-WIDTH 4
+  ORDER 200
+
+ADD FIELD "a6rrd_cust" OF "a6rrd_det" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 22
+  SQL-WIDTH 16
+  ORDER 210
+
+ADD FIELD "a6rrd_zone" OF "a6rrd_det" AS integer 
+  FORMAT "9"
+  INITIAL "0"
+  POSITION 23
+  SQL-WIDTH 4
+  ORDER 220
+
+ADD INDEX "siteponosort" ON "a6rrd_det" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "a6rrd_site" ASCENDING 
+  INDEX-FIELD "a6rrd_custpono" ASCENDING 
+  INDEX-FIELD "a6rrd_custpoln" ASCENDING 
+  INDEX-FIELD "a6rrd_sort" ASCENDING 
+
+.
+PSC
+cpstream=GB2312
+.
+0000003109

@@ -62,7 +62,7 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "130104.1"}
+{mfdtitle.i "130104.2"}
 
 define new shared variable xxrqmnbr like xxrqm_nbr.
 define new shared variable xxrqmsite  like xxrqm_site.
@@ -1136,7 +1136,8 @@ repeat on error undo, retry:
                apply lastkey.
             END.
          END. /* with frame match_maintenance editing: */
-
+				 
+				 assign tt1_disp_id.
          FIND FIRST tt1 WHERE tt1_disp_id = INPUT tt1_disp_id  NO-LOCK NO-ERROR.
          IF NOT AVAILABLE tt1 THEN DO:
             MESSAGE "记录不存在".
@@ -1151,11 +1152,19 @@ repeat on error undo, retry:
          /* SS - 20060311 - E */
 
          sel_total = sel_total - tt1_qty_inv * tt1_price.
-
-         SET
-            tt1_qty_inv
-            go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
-
+				do transaction:
+	         SET
+	            tt1_qty_inv
+	            go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
+	         if tt1_qty_inv = ? then do:
+	         	  message "不允许为?".
+	         	  next-prompt tt1_qty_inv.
+	         	  undo,retry.
+	         end.
+	         else do:
+	         		  leave.
+	         end.
+				end.
          sel_total = sel_total + tt1_qty_inv * tt1_price.
          DISP
             sel_total
