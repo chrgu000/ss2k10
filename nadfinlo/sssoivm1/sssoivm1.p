@@ -643,7 +643,7 @@ repeat on error undo, retry:
 
             ASSIGN
                tt1_qty_inv = tt1_ship_qty
-               tt1_close_abs = YES
+               tt1_close_abs = NO
                tt1_type = ""
                .
 
