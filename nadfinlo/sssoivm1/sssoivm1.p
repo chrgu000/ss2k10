@@ -419,7 +419,7 @@ repeat on error undo, retry:
          if del-yn then do:
             /* SS - 20060311 - B */
             /* 只要是未过账的申请,就允许删除 */
-            DO TRANSACTION:
+            DO:
                FOR EACH xxabs_mstr EXCLUSIVE-LOCK
                   WHERE xxabs_nbr = xxrqmnbr
                   USE-INDEX xxabs_id
@@ -1136,14 +1136,23 @@ repeat on error undo, retry:
                apply lastkey.
             END.
          END. /* with frame match_maintenance editing: */
-				 
-				 assign tt1_disp_id.
+
+         assign tt1_disp_id.
          FIND FIRST tt1 WHERE tt1_disp_id = INPUT tt1_disp_id  NO-LOCK NO-ERROR.
          IF NOT AVAILABLE tt1 THEN DO:
             MESSAGE "记录不存在".
             NEXT-PROMPT tt1_disp_id.
-            UNDO,RETRY.
+            clear frame match_maintenance.
+            UNDO,RETRY loopf2.
          END.
+         else do:
+              if tt1_close_abs then do:
+                 MESSAGE "记录已关闭不允修改".
+                 NEXT-PROMPT tt1_disp_id.
+                 clear frame match_maintenance.
+                 undo,retry loopf2.
+              end.
+         end.
 /* ss 20070102.1 - e */
 
          /* SS - 20060311 - B */
@@ -1153,13 +1162,11 @@ repeat on error undo, retry:
 
          sel_total = sel_total - tt1_qty_inv * tt1_price.
          SET  tt1_qty_inv validate ( tt1_qty_inv <> ?,"不允许为？")
-	            go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
+              go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
          sel_total = sel_total + tt1_qty_inv * tt1_price.
          if tt1_ship_qty <> tt1_qty_inv then do:
-         	  tt1_close_abs = NO.
-            tt1_type = "".
-						DISP tt1_close_abs tt1_type
-                 WITH FRAME match_maintenance.   
+            DISP no @ tt1_close_abs
+                 WITH FRAME match_maintenance.
          end.
          DISP
             sel_total
