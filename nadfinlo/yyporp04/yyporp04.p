@@ -12,6 +12,12 @@
 */
 /* NAD - 20110428.1 - E */
 
+
+/*ss - 131007.1                                                   *ECO:*1317* 
+ * fix bug   ** The month of a date must be from 1 to 12. (80)  
+**/
+
+
 {mfdtitle.i "130107.1"}
 
 define variable site   like po_site.
@@ -146,9 +152,9 @@ repeat:
    IF mon1 = 12 THEN DO:
       eff1 = DATE(1,1,yr1 + 1) - 1.
    END.
-   ELSE DO:
+/*1317*/  ELSE DO:
    		eff1 = DATE(mon1 + 1,1,yr1) - 1.
-	 END.
+/*1317*/  END.
    v_month1 = 0.
    v_month1_tot = 0.
    FOR EACH po_mstr NO-LOCK 
