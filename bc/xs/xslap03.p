@@ -496,7 +496,7 @@ If available pt_mstr then
 
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
-        V1520 = "Y".
+        V1520 = "N".
         V1520 = ENTRY(1,V1520,"@").
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 

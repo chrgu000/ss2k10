@@ -63,7 +63,7 @@ repeat:
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "terminal"
+   {gpselout.i &printType = "printer1"
                &printWidth = 320
                &pagedFlag = " "
                &stream = " "

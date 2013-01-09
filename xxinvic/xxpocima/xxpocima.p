@@ -69,8 +69,8 @@ def var tmp_line like pod_line.
 def var curr like  po_curr.
 DEF VAR jj AS INTEGER .
 DEF VAR tmp_ponbr LIKE po_nbr.
-DEF VAR v_flagyn AS LOGICAL INIT NO .
-DEF VAR v_flagpo AS LOGICAL INIT NO .
+DEF VAR v_flagyn AS LOGICAL INIT yes.
+DEF VAR v_flagpo AS LOGICAL INIT yes.
 
 define var v_qty_rct like tr_qty_loc .
 

@@ -1491,9 +1491,12 @@ tr_site = V1002     and
 tr_part = V1300     and tr_serial = V1500   and
 tr_time  + 15 >= TIME
 use-index tr_date_trn no-lock no-error.
-If AVAILABLE ( tr_hist ) then
+If AVAILABLE ( tr_hist ) then do:
                 L90102 = "½»Ò×ºÅ :" + trim(string(tr_trnbr)) .
-                else L90102 = "" .
+                os-delete value(ciminputfile) no-error.
+                os-delete value(cimoutputfile) no-error.
+end.
+else L90102 = "" .
                 display L90102          format "x(40)" skip with fram F9010 no-box.
                 /* LABEL 2 - END */
 

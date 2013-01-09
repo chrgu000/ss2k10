@@ -2,6 +2,8 @@
 /* INV TRANSFER */
 /* Generate date / time  2007-6-8 10:29:06                                    */
 /* ------- Barcode 69  库存转移只能到生产库位                                 */
+/* xxtrlocmt.p 程序用于维护库位类型                                           */
+
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -607,7 +609,7 @@ If AVAILABLE ( pt_mstr ) then
 
 
                 /* LABEL 2 - START */
-                find first ld_det where ld_part = V1300  and ld_site = V1002  and ld_ref  = ""     and ld_qty_oh <> 0   and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS" ) use-index ld_part_lot no-lock no-error.
+                find first ld_det where ld_part = V1300  and ld_site = V1002  and ld_ref  = "" and ld_qty_oh <> 0   and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS") use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                 L15002 = "最小:" + trim(ld_lot) .
                 else L15002 = "" .
@@ -618,7 +620,7 @@ If AVAILABLE ( ld_det ) then
                 /* LABEL 3 - START */
                 find first ld_det where ld_part = V1300 and
 ld_site = V1002 and
-ld_ref  = ""     and ld_qty_oh <> 0 and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS" ) use-index ld_part_lot no-lock no-error.
+ld_ref  = ""     and ld_qty_oh <> 0 and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS") use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                /*SS - 080912.1 B*/
                 DO:
