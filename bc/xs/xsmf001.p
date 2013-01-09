@@ -7,6 +7,12 @@
   Parameters: NONE
   Memo: Add new table xxtc_hst record it.
 ------------------------------------------------------------------------------*/
+/*- SS - 110720.1 --------------------------------------------*31Y9*-----------
+    Purpose:新增70从ZZ调拨到EPS库位的
+    Parameters:
+    Notes:
+------------------------------------------------------------------------------*/
+
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -814,7 +820,7 @@ IF OkToRun = yes then RUN    xspor03.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-   
+
    /**********14*************/
       V1114LMAINLOOP:
    REPEAT:
@@ -936,11 +942,11 @@ IF OkToRun = yes then RUN xsinv23n.p.
    /* Internal Cycle END :1113    */
    END.
    pause 0 before-hide.
-   
-   
+
+
    /**********14*************/
-   
-   
+
+
    /* Internal Cycle Input :1115    */
    V1115LMAINLOOP:
    REPEAT:
@@ -4106,7 +4112,7 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
 
         /* LOGICAL SKIP START */
         V1160 = "".
-/*        
+/*
 RUN CheckSecurity (INPUT "xsinv23.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
 IF OkToRun = yes THEN  RUN    xsinv23.p.
 */
@@ -4787,7 +4793,84 @@ repeat:
      leave v1169lmainloop.
 end. /*v1169lmainloop:*/
 
+/**31Y9**************START****************************************************/
+pause 0 before-hide.
+v11A70lmainloop:
+repeat:
+     if not (v1160 = "70" or v1100 = "70" ) then leave v11A70lmainloop.
+     v11A70l:
+     repeat:
 
+        hide all.
+        define variable v11A70           as char format "x(50)".
+        define variable pv11A70          as char format "x(50)".
+        define variable l11A701          as char format "x(40)".
+        define variable l11A702          as char format "x(40)".
+        define variable l11A703          as char format "x(40)".
+        define variable l11A704          as char format "x(40)".
+        define variable l11A705          as char format "x(40)".
+        define variable l11A706          as char format "x(40)".
+
+
+        v11A70 = " ".
+        v11A70 = entry(1,v11A70,"@").
+        v11A70 = "".
+        run checksecurity (input "xsictr70.p" , input global_userid , output oktorun , output execname ).
+        if oktorun = yes then  run xsictr70.p.
+
+        leave v11A70l.
+
+
+        l11A701 = "" .
+        l11A702 = "" .
+        l11A703 = "" .
+        l11A704 = "" .
+        l11A705 = "" .
+        l11A706 = "" .
+        display
+            "#条码# *" + ( if length(dbname) < 5 then trim( dbname ) else trim(substring(dbname,length(dbname) - 4,5)) )
+            + "*" + trim ( v1002 )  format "x(40)" skip
+        with fram f11A70 no-box.
+        display l11A701          format "x(40)" skip with fram f11A70 no-box.
+        display l11A702          format "x(40)" skip with fram f11A70 no-box.
+        display l11A703          format "x(40)" skip with fram f11A70 no-box.
+        display l11A704          format "x(40)" skip with fram f11A70 no-box.
+        display l11A705          format "x(40)" skip with fram f11A70 no-box.
+        display l11A706          format "x(40)" skip with fram f11A70 no-box.
+
+
+        update v11A70
+        with  fram f11A70 no-label
+        editing:
+            readkey pause wtimeout.
+            if lastkey = -1 then quit.
+            if lastkey = 404 then do: /* disable f4 */
+                pause 0 before-hide.
+                undo, retry.
+            end.
+            apply lastkey.
+        end.
+
+        if v11A70 = "e" then  leave mainloop.
+        if v11A70 = "$loadmenu" then  run loadmenu.
+        if index ( v11A70 ,".") <> 0 then  run runmfgproprogram ( input v11A70 ).
+        if v11A70 = "s" then  run xsmdf01.p.
+        display  skip wmessage no-label with fram f11A70.
+
+
+        display "...processing...  " @ wmessage no-label with fram f11A70.
+        pause 0.
+
+        display  "" @ wmessage no-label with fram f11A70.
+        pause 0.
+        leave v11A70l.
+     end. /*v11A70l*/
+
+     pv11A70 = v11A70.
+     leave v11A70lmainloop.
+end. /*v11A70lmainloop:*/
+
+/**31Y9**************END****************************************************/
 
    pause 0 before-hide.
    /* Internal Cycle Input :1170    */
@@ -4903,6 +4986,7 @@ end. /*v1169lmainloop:*/
    /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1170    */
    END.
+
    pause 0 before-hide.
    /* Internal Cycle Input :1180    */
    V1180LMAINLOOP:
