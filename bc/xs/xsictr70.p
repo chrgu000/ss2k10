@@ -3,7 +3,7 @@
 /* Generate date / time  2007-6-8 10:29:06                                    */
 /* ------- Barcode 70  ZZ调拨到EPS库位的 (从库位固定为ZZ 至库位固定为EPS)     */
 /* xxtrlocmt.p 程序用于维护库位类型                                           */
-
+/*1319 如果批号为空则需输入批号 */ 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -425,6 +425,7 @@ REPEAT:
                 /* LABEL 4 - END */
                 display "输入或按E退出"       format "x(40)" skip
         skip with fram F1305 no-box.
+        /*********************
         Update V1305
         WITH  fram F1305 NO-LABEL
         EDITING:
@@ -436,7 +437,7 @@ REPEAT:
         end.
            apply lastkey.
         end.
-
+				************************/		
         /* PRESS e EXIST CYCLE */
         IF V1305 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1305.
@@ -644,20 +645,20 @@ If AVAILABLE ( ld_det ) then
                 display "输入或按E退出"       format "x(40)" skip
         skip with fram F1500 no-box.
         recid(LD_DET) = ?.
-        Update V1500
-        WITH  fram F1500 NO-LABEL
-        /* ROLL BAR START */
-        EDITING:
-        readkey pause wtimeout.
+           Update V1500 
+/*1319*/          when v1500 = ""
+           WITH  fram F1500 NO-LABEL
+           /* ROLL BAR START */
+           EDITING:
+           readkey pause wtimeout.
+           
+           IF INPUT V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
+           if lastkey = -1 then quit.
+           if LASTKEY = 404 Then Do: /* DISABLE F4 */
+              pause 0 before-hide.
+              undo, retry.
+           end.
 
-
-        IF INPUT V1500 = "e" THEN  LEAVE V1300LMAINLOOP.
-
-        if lastkey = -1 then quit.
-        if LASTKEY = 404 Then Do: /* DISABLE F4 */
-           pause 0 before-hide.
-           undo, retry.
-        end.
         display skip "^" @ WMESSAGE NO-LABEL with fram F1500.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
