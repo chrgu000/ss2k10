@@ -609,7 +609,7 @@ If AVAILABLE ( pt_mstr ) then
 
 
                 /* LABEL 2 - START */
-                find first ld_det where ld_part = V1300  and ld_site = V1002 and ld_loc = "ZZ" and ld_ref  = "" and ld_qty_oh <> 0   and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS") use-index ld_part_lot no-lock no-error.
+                find first ld_det where ld_part = V1300  and ld_site = V1002 and ld_loc = "ZZ" and ld_ref  = "" and ld_qty_oh <> 0 use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                 L15002 = "最小:" + trim(ld_lot) .
                 else L15002 = "" .
@@ -620,7 +620,7 @@ If AVAILABLE ( ld_det ) then
                 /* LABEL 3 - START */
                 find first ld_det where ld_part = V1300 and
 ld_site = V1002 and ld_loc = "ZZ" and
-ld_ref  = ""     and ld_qty_oh <> 0 and ( substring( ld_loc ,1,1 ) = "X" or substring (ld_loc ,1,1 ) = "Y" or ld_loc = "P-4RSA" or ld_loc = "P-4RPS") use-index ld_part_lot no-lock no-error.
+ld_ref  = ""     and ld_qty_oh <> 0  use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                /*SS - 080912.1 B*/
                 DO:
@@ -663,18 +663,18 @@ If AVAILABLE ( ld_det ) then
             THEN DO:
                   IF recid(LD_DET) = ? THEN find first LD_DET where
                               LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = "" AND
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   else do:
                        if LD_LOT =  INPUT V1500
                        then find next LD_DET
                        WHERE LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = ""
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = ""
                         no-lock no-error.
                         else find first LD_DET where
                               LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = "" AND
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   end.
@@ -686,18 +686,18 @@ LD_SITE = V1002 AND LD_REF = "" AND
             THEN DO:
                   IF recid(LD_DET) = ? THEN find last LD_DET where
                               LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = "" AND
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = "" AND
                               LD_LOT <=  INPUT V1500
                                no-lock no-error.
                   else do:
                        if LD_LOT =  INPUT V1500
                        then find prev LD_DET
                        where LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = ""
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = ""
                         no-lock no-error.
                         else find first LD_DET where
                               LD_PART = V1300 AND LD_QTY_OH <> 0  AND index ( "N", substring (ld_loc ,1,1 ) ) = 0  AND
-LD_SITE = V1002 AND LD_REF = "" AND
+LD_SITE = V1002  and ld_loc = "ZZ" AND LD_REF = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
                   end.
@@ -736,6 +736,11 @@ LD_SITE = V1002 AND LD_REF = "" AND
         /* CHECK FOR NUMBER VARIABLE  END */
         IF not ( IF INDEX(V1500,"@" ) <> 0 then ENTRY(2,V1500,"@") else V1500 ) <> "" THEN DO:
                 display skip "L控制,不能为空" @ WMESSAGE NO-LABEL with fram F1500.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        if  vv_loc_from <> "ZZ" then do:
+           display skip "库位必需是ZZ" @ WMESSAGE NO-LABEL with fram F1500.
                 pause 0 before-hide.
                 undo, retry.
         end.
