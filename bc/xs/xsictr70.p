@@ -646,7 +646,9 @@ If AVAILABLE ( ld_det ) then
         skip with fram F1500 no-box.
         recid(LD_DET) = ?.
            Update V1500 
-/*1319*/          when v1500 = ""
+/*1319*/          when not can-find(first ld_det no-lock where ld_site = V1002 
+																			and ld_loc = "ZZ" 
+																			and ld_part = V1300 and ld_lot = v1500)
            WITH  fram F1500 NO-LABEL
            /* ROLL BAR START */
            EDITING:
