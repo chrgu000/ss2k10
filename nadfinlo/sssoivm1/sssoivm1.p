@@ -1,20 +1,8 @@
 /* xxsoivm1.p - INVOICE MAINTENANCE                                           */
-/* Copyright 1996-2006 Softspeed, China.                                      */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.95.1.6 $                                                      */
-/* REVISION: 1.0      LAST MODIFIED: 02/21/06   BY: Apple Tam *SS - 20060221* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 02/25/06  ECO: *SS - 20060225* */
-/* $Revision: 1.95.1.6 $  BY: Micho Yang DATE: 03/07/06  ECO: *SS - 20060307* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 03/11/06  ECO: *SS - 20060311* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 03/16/06  ECO: *SS - 20060316* */
-/* $Revision: 1.95.1.6 $  BY: Micho Yang DATE: 03/20/06  ECO: *SS - 20060320* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 03/24/06  ECO: *SS - 20060324* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 03/31/06  ECO: *SS - 20060331* */
 /* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 04/01/06  ECO: *SS - 20060401* */
-/* $Revision: 1.95.1.6 $  BY: Bill Jiang DATE: 06/12/06  ECO: *SS - 20060612.1*/
-/* By: Neil Gao Date: 20070102 ECO: * ss 20070102.1 * */
-/* By: Neil Gao Date: 20070108 ECO: * ss 20070108.1 * */
-/* By: Neil Gao Date: 20070417 ECO: * ss 20070417.1 * */
+/* By: Neil Gao Date: 20070417 ECO: * ss 20070417.1 *                         */
+
 /* ss - 20070108.1 - b */
 /*
 下面加多一个货物发往地址.    上面的客户改成票据开往
@@ -41,7 +29,6 @@ define variable range       as character no-undo.
 define variable range1      as character no-undo.
 DEFINE VARIABLE s1 AS CHAR.
 define variable cnt as decimal.
-
 /* TEMP-TABLE */
 define new shared temp-table tab_abs
    field tab_id              like abs_id
@@ -61,9 +48,14 @@ define new shared temp-table tab_abs
    .
 /* SS - 20060331 - E */
 
-{mfdtitle.i "130110.1"}
-{sssoivm1.i "new"}
-define variable vtt1_disp_id like tt1_disp_id.
+{mfdtitle.i "130110.9"}
+
+define new shared variable xxrqmnbr like xxrqm_nbr.
+define new shared variable xxrqmsite  like xxrqm_site.
+define new shared variable xxrqmcust  like xxrqm_cust.
+define new shared variable xxrqmrqby_userid like xxrqm_rqby_userid.
+define new shared variable xxrqmreq_date like xxrqm_req_date.
+define new shared variable xxrqmtax_in like xxrqm_tax_in.
 define variable del-yn like mfc_logical initial no.
 
 /* SS - 20060307 - B */
@@ -96,9 +88,43 @@ DEFINE VARIABLE xxship  like so_ship.
 DEFINE VARIABLE xxship1 like so_ship.
 /* ss - 20070108.1 - e */
 
+DEFINE NEW SHARED TEMP-TABLE tt1
+   FIELD tt1_stat     as character format "x(1)"
+   FIELD tt1_shipfrom LIKE ABS_shipfrom
+   FIELD tt1_id LIKE ABS_id FORMAT "x(58)"
+/* ss 20070102.1 */   FIELD tt1_disp_id like abs_id label "货运单号" FORMAT "x(58)"
+   FIELD tt1_par_id LIKE ABS_par_id
+   FIELD tt1_shipto         LIKE ABS_shipto
+   FIELD tt1_order        AS CHAR FORMAT "x(8)"
+   FIELD tt1_po           LIKE so_po
+   FIELD tt1_line     LIKE ABS_line FORMAT "x(3)"
+   FIELD tt1_item     AS CHAR FORMAT "x(18)"
+   FIELD tt1_cust_part LIKE cp_cust_part
+   FIELD tt1_desc1        like pt_desc1
+   FIELD tt1_desc2        like pt_desc2
+   FIELD tt1_um           AS CHAR FORMAT "x(2)"
+   FIELD tt1_ship_qty AS DECIMAL FORMAT "->,>>>,>>9.99"
+   FIELD tt1_qty_inv AS DECIMAL FORMAT "->,>>>,>>9.99"
+   FIELD tt1_price LIKE sod_price
+   FIELD tt1_close_abs AS LOGICAL
+   FIELD tt1_type LIKE sod_type
+   /* SS - 20060401 - B */
+   FIELD tt1_new  AS LOGICAL INITIAL YES
+   FIELD tt1_ord_date LIKE so_ord_date
+   FIELD tt1__qad02 LIKE ABS__qad02
+   FIELD tt1_conv AS DECIMAL INITIAL 1
+   /* SS - 20060401 - E */
+/* ss 20070102.1 */ INDEX tt1_disp_id tt1_disp_id
+   INDEX tt1_id tt1_id
+   INDEX tt1_stat tt1_stat
+   INDEX tt1_par_id_line tt1_par_id tt1_line
+   INDEX tt1_shipfrom_id tt1_shipfrom tt1_id
+   .
 DEFINE BUFFER btt11 FOR tt1.
 
 DEFINE BUFFER babs1 FOR ABS_mstr.
+DEFINE NEW SHARED FRAME match_maintenance .
+DEFINE NEW SHARED FRAME w.
 
 form
    xxrqmnbr               colon 15
@@ -165,12 +191,51 @@ form
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame sel_item:handle).
 
+/* SS - 20060311 - B */
+form
+/* ss 20070102.1 -b */
+/*
+   tt1_id
+ */
+   tt1_disp_id
+/* ss 20070102.1 - e */
+   tt1_qty_inv
+   with frame w scroll 1 4 down NO-VALIDATE ATTR-SPACE TITLE COLOR normal (getFrameTitle("SHIPPER_MATCHING_DETAIL",34))  WIDTH 80 .
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame w:handle).
+
+FORM
+   /* ss 20070102.1 -b */
+/*
+   tt1_id
+ */
+   tt1_disp_id
+/* ss 20070102.1 - e */
+   COLON 18
+   /* SS - 20060331 - B */
+   pt_desc1 COLON 18
+   pt_desc2 NO-LABEL
+   tt1_po COLON 18
+   /* SS - 20060331 - E */
+   tt1_ship_qty COLON 18
+   tt1_cust_part COLON 58 FORMAT "x(18)"
+   tt1_qty_inv COLON 18 FORMAT "->,>>>,>>9.99999"
+   tt1_close_abs COLON 48 LABEL "Closed"
+   tt1_type COLON 72
+   with frame match_maintenance side-labels title color normal (getFrameTitle("SHIPPER_MATCHING_MAINTENANCE",41)) width 80 no-attr-space.
+/* SS - 20060311 - E */
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame match_maintenance:handle).
+/* SS - 20060307 - E */
+
 xxrqmnbr         = "".
-xxrqmsite        = "".
-xxrqmcust        = "".
-xxrqmrqby_userid = "".
-xxrqmreq_date    = today.
-xxrqmtax_in      = no.
+xxrqmsite = "".
+xxrqmcust         = "".
+xxrqmrqby_userid     = "".
+xxrqmreq_date   = today.
+xxrqmtax_in  = no.
 
 mainloop:
 repeat on error undo, retry:
@@ -346,7 +411,8 @@ repeat on error undo, retry:
          if del-yn then do:
             /* SS - 20060311 - B */
             /* 只要是未过账的申请,就允许删除 */
-            DO:
+/*            DO TRANSACTION:*/
+							do:
                FOR EACH xxabs_mstr EXCLUSIVE-LOCK
                   WHERE xxabs_nbr = xxrqmnbr
                   USE-INDEX xxabs_id
@@ -704,84 +770,40 @@ repeat on error undo, retry:
             END.
          END.
 
-/**原始小数点1位问题***********************************************************
- *          /* SS - 20060324 - B */
- *          /* SS - 20060401 - B */
- *          sel_total = 0.
- *          /* SS - 20060401 - E */
- *          FOR EACH tt1:
- *             IF tt1_ship_qty = 0 THEN DO:
- *                DELETE tt1.
- *             END.
- *             /* SS - 20060401 - B */
- *             ELSE DO:
- *                if tt1__qad02 <> tt1_um
- *                then do:
- *                   {gprun.i ""gpumcnv.p""
- *                      "(input  tt1_um,
- *                      input  tt1__qad02,
- *                      input  tt1_item,
- *                      output trans_conv)"}
- *
- *  /* ss 20070417.1 - b */
- *                  if trans_conv = ? or trans_conv = 0 then trans_conv = 1.
- *  /* ss 20070417.1 - e */
- *
- *                   ASSIGN
- *                      tt1_ship_qty = tt1_ship_qty / TRANS_conv
- *                      tt1_qty_inv = tt1_qty_inv / TRANS_conv
- *                      tt1_conv = TRANS_conv
- *                      .
- *                end.
- *
- *                IF tt1_stat = "*" THEN DO:
- *                   sel_total = sel_total + tt1_qty_inv * tt1_price.
- *                END.
- *             END.
- *             /* SS - 20060401 - E */
- *
- *           END.
- *           /* SS - 20060324 - E */
- ****************************************************************************/
+         /* SS - 20060324 - B */
+         /* SS - 20060401 - B */
          sel_total = 0.
-/* SS - 20060401 - E*/
-          FOR EACH tt1 where tt1_stat = "*" break by tt1_order by tt1_line:
-             if first-of(tt1_line) then do:
-                assign cnt = 0.
-             end.
-             IF tt1_ship_qty = 0 THEN DO:
-                DELETE tt1.
-             END.
-             /* SS - 20060401 - B */
-             ELSE DO:
-                if tt1__qad02 <> tt1_um
-                then do:
-                   {gprun.i ""gpumcnv.p""
-                      "(input  tt1_um,
-                      input  tt1__qad02,
-                      input  tt1_item,
-                      output trans_conv)"}
+         /* SS - 20060401 - E */
+         FOR EACH tt1:
+            IF tt1_ship_qty = 0 THEN DO:
+               DELETE tt1.
+            END.
+            /* SS - 20060401 - B */
+            ELSE DO:
+               if tt1__qad02 <> tt1_um
+               then do:
+                  {gprun.i ""gpumcnv.p""
+                     "(input  tt1_um,
+                     input  tt1__qad02,
+                     input  tt1_item,
+                     output trans_conv)"}
 
- /* ss 20070417.1 - b */
+/* ss 20070417.1 - b */
                   if trans_conv = ? or trans_conv = 0 then trans_conv = 1.
- /* ss 20070417.1 - e */
+/* ss 20070417.1 - e */
 
-                   ASSIGN
-                      tt1_ship_qty = tt1_ship_qty / TRANS_conv
-                      tt1_qty_inv = tt1_qty_inv / TRANS_conv
-                      tt1_conv = TRANS_conv
-                      .
-                end.
-                   assign cnt = cnt + tt1_qty_inv.
-
-              if last-of(tt1_line) then do:
-                      sel_total = sel_total + round(cnt * tt1_price , 2).
-                      assign cnt = 0.
-              end.
-             END.
-             /* SS - 20060401 - E */
-          END.
-
+                  ASSIGN
+                     tt1_ship_qty = tt1_ship_qty / TRANS_conv
+                     tt1_qty_inv = tt1_qty_inv / TRANS_conv
+                     tt1_conv = TRANS_conv
+                     .
+               end.
+ 
+            END.
+            /* SS - 20060401 - E */
+         END.
+         /* SS - 20060324 - E */
+         run calcSelTot.
          DISPLAY
             sel_total
             WITH FRAME a.
@@ -829,13 +851,15 @@ repeat on error undo, retry:
                &record-id    = apwork-recno
                &include1     = "
                   /* ACCUMULATE OPEN AMOUNT INTO SELECTION TOTAL */
-                  sel_total = sel_total - tt1_ship_qty * tt1_price.
+                  sel_total = sel_total - round(tt1_ship_qty * tt1_price,2).
+                  run calcSelTot.
                   /* DISPLAY SUMMARY & tt1_item INFORMATION */
                   display sel_total with frame a.
                   "
                &include2     = "
                   /* ACCUMULATE OPEN AMOUNT INTO SELECTION TOTAL */
-                  sel_total = sel_total + tt1_ship_qty * tt1_price.
+                  sel_total = sel_total + round(tt1_ship_qty * tt1_price,2).
+                  run calcSelTot.
                   /* DISPLAY SUMMARY & tt1_item INFORMATION */
                   display sel_total with frame a.
                   "
@@ -872,7 +896,7 @@ repeat on error undo, retry:
          END. /* do on endkey undo, leave: */
 
          /* 删除没有选择的记录 */
-         FOR EACH tt1 exclusive-LOCK
+         FOR EACH tt1 NO-LOCK
             WHERE tt1_stat <> "*"
             USE-INDEX tt1_stat
             :
@@ -1024,8 +1048,8 @@ repeat on error undo, retry:
             if frame-field = "tt1_disp_id" then do:
                /* NEXT-PREV ON ATTACHED RECEIVERS ONLY */
                {mfnp.i tt1 tt1_disp_id tt1_disp_id tt1_disp_id tt1_disp_id tt1_disp_id}
+
                if recno <> ? then do:
-               		assign vtt1_disp_id = tt1_disp_id.
                   /* SS - 20060331 - B */
                   FIND FIRST pt_mstr WHERE pt_part = tt1_item NO-LOCK NO-ERROR.
                   IF AVAILABLE pt_mstr THEN DO:
@@ -1063,7 +1087,8 @@ repeat on error undo, retry:
                apply lastkey.
             END.
          END. /* with frame match_maintenance editing: */
-         FIND FIRST tt1 WHERE tt1_disp_id = vtt1_disp_id  NO-LOCK NO-ERROR.
+
+         FIND FIRST tt1 WHERE tt1_disp_id = INPUT tt1_disp_id  NO-LOCK NO-ERROR.
          IF NOT AVAILABLE tt1 THEN DO:
             MESSAGE "记录不存在".
             NEXT-PROMPT tt1_disp_id.
@@ -1076,13 +1101,14 @@ repeat on error undo, retry:
          status input ststatus.
          /* SS - 20060311 - E */
 
-         sel_total = sel_total - tt1_qty_inv * tt1_price.
+         sel_total = sel_total - round(tt1_qty_inv * tt1_price,2).
 
          SET
             tt1_qty_inv validate ( tt1_qty_inv <> ?,"不允许为？")
             go-on ("F5" "CTRL-D") WITH FRAME match_maintenance .
 
-         sel_total = sel_total + tt1_qty_inv * tt1_price.
+         sel_total = sel_total + round(tt1_qty_inv * tt1_price,2).
+         run calcSelTot.
          DISP
             sel_total
             WITH FRAME a.
@@ -1103,7 +1129,8 @@ repeat on error undo, retry:
                delete xxabs_mstr .
             END.
 
-            sel_total = sel_total - tt1_qty_inv * tt1_price.
+            sel_total = sel_total - round(tt1_qty_inv * tt1_price,2).
+            run calcSelTot.
             DISP
                sel_total
                WITH FRAME a.
@@ -1134,7 +1161,7 @@ repeat on error undo, retry:
             DISP
                tt1_type
                WITH FRAME match_maintenance.
-
+						display no @ tt1_close_abs with frame match_maintenance.
             SET
                tt1_close_abs
                WITH FRAME match_maintenance .
@@ -1200,3 +1227,29 @@ repeat on error undo, retry:
 end. /*mainloop*/
 
 STATUS input.
+
+procedure calcSelTot:
+/*cc*/  sel_total = 0.
+/*cc*/  FOR EACH tt1 where tt1_stat = "*" break by tt1_order by tt1_line:
+/*cc*/     if first-of(tt1_line) then do:
+/*cc*/        assign cnt = 0.
+/*cc*/     end.
+/*cc*/     /* SS - 20060401 - B */
+/*cc*/        if tt1__qad02 <> tt1_um
+/*cc*/        then do:
+/*cc*/           {gprun.i ""gpumcnv.p""
+/*cc*/              "(input  tt1_um,
+/*cc*/              input  tt1__qad02,
+/*cc*/              input  tt1_item,
+/*cc*/              output trans_conv)"}
+/*cc*/          if trans_conv = ? or trans_conv = 0 then trans_conv = 1.
+/*cc*/        end.
+/*cc*/           assign cnt = cnt + tt1_qty_inv.
+/*cc*/
+/*cc*/      if last-of(tt1_line) then do:
+/*cc*/              sel_total = sel_total + round(cnt * tt1_price , 2).
+/*cc*/              assign cnt = 0.
+/*cc*/      end.
+/*cc*/     /* SS - 20060401 - E */
+/*cc*/  END.
+end procedure.
