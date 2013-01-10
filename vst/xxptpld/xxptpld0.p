@@ -15,7 +15,9 @@ assign i = 0.
 input from value(flhload).
 repeat:
 	import unformat txt.
-	if i > 0 and entry(1,txt,",") <> "" and entry(2,txt,",") <> "" then do:
+	if i > 0 and entry(1,txt,",") <> ""
+	         and entry(1,txt,",") < "ZZZZZZZZ" 
+	         and entry(2,txt,",") <> "" then do:
   	create xxtmppt.
   	assign xxpt_site = entry(1,txt,",")
   				 xxpt_part = entry(2,txt,",")
@@ -33,7 +35,7 @@ repeat:
            xxpt_phantom = logical(entry(14,txt,","))
            xxpt_ord_min = dec(entry(15,txt,","))
            xxpt_ord_mult = dec(entry(16,txt,","))
-           xxpt_yld_pct = dec(entry(17,txt,",")).
+           xxpt_yld_pct = dec(entry(17,txt,",")) no-error.
   end.
   i = i + 1.
 end.
