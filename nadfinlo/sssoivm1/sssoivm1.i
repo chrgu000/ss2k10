@@ -12,21 +12,6 @@ define {1} shared variable xxrqmtax_in like xxrqm_tax_in.
 DEFINE {1} SHARED FRAME match_maintenance .
 DEFINE {1} SHARED FRAME w.
 
-/* TEMP-TABLE */
-define {1} shared temp-table tab_abs
-   field tab_id              like abs_id
-   field tab_item            like abs_item
-   field tab_shipto          like abs_shipto
-   field tab_shipfrom        like abs_shipfrom
-   field tab_order           like abs_order
-   field tab_line            like sod_line
-   field tab_qty             like abs_qty
-   field tab_recid           as recid
-   FIELD TAB_par_id LIKE ABS_par_id
-   FIELD TAB_ship_qty LIKE ABS_ship_qty
-   FIELD TAB__dec04 LIKE ABS__dec04
-   FIELD TAB__qad02 LIKE ABS__qad02
-   .
 
 DEFINE {1} SHARED TEMP-TABLE tt1
    FIELD tt1_stat     as character format "x(1)"
