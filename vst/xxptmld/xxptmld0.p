@@ -15,31 +15,35 @@ assign i = 0.
 input from value(flhload).
 repeat:
   import unformat txt.
-  if i > 0 and entry(1,txt,",") <> "" and entry(2,txt,",") <> "" then do:
-    create xxtmppt.
-    import delimiter "," xxpt_part
-                         xxpt_ms
-                         xxpt_timefnce
-                         xxpt_ord_per
-                         xxpt_sfty_stk
-                         xxpt_sfty_tme
-                         xxpt_buyer
-                         xxpt_pm_code
-                         xxpt_mfg_lead
-                         xxpt_pur_lead
-                         xxpt_ins_rqd
-                         xxpt_ins_lead
-                         xxpt_phantom
-                         xxpt_ord_min
-                         xxpt_ord_mult
-                         xxpt_yld_pct .
+  if i = 0 then do:
+     i = 1.
+     next.
   end.
-  i = i + 1.
+  if entry(1,txt,",") = "" then do:
+  	 next.
+  end.
+    create xxtmppt.
+    assign xxpt_part = entry(1,txt,",")
+           xxpt_ms = logical(entry(2,txt,","))
+           xxpt_timefnce = int(entry(3,txt,","))
+           xxpt_ord_per = int(entry(4,txt,","))
+           xxpt_sfty_stk = int(entry(5,txt,","))
+           xxpt_sfty_tme = int(entry(6,txt,","))
+           xxpt_buyer = entry(7,txt,",")
+           xxpt_pm_code = entry(8,txt,",")
+           xxpt_mfg_lead = int(Entry(9,txt,","))
+           xxpt_pur_lead = int(entry(10,txt,","))
+           xxpt_ins_rqd = logical(entry(11,txt,","))
+           xxpt_ins_lead = int(entry(12,txt,","))
+           xxpt_phantom = logical(entry(13,txt,","))
+           xxpt_ord_min = dec(entry(14,txt,","))
+           xxpt_ord_mult = dec(entry(15,txt,","))
+           xxpt_yld_pct = dec(entry(16,txt,",")) no-error.
 end.
 input close.
 
 for each xxtmppt exclusive-lock :
-      if xxpt_part <= "" or xxpt_part >= "ZZZZZZZZ" then do:
+      if xxpt_part = "" or xxpt_part >= "ZZZZZZZZ" then do:
          delete xxtmppt.
       end.
       else do:

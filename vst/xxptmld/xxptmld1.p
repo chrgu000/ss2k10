@@ -9,32 +9,28 @@
 define variable vfile as character.
 
 assign vfile = "xxptld.p." + string(today,"99999999") + '.' + string(time).
-
-output to value(vfile + ".bpi").
-for each xxtmppt no-lock where xxpt_chk = "".
+if cloadfile then do:
+for each xxtmppt exclusive-lock where xxpt_chk = "".
+		output to value(vfile + ".bpi").
     put unformat '"' xxpt_part '"' skip.
     put unformat xxpt_ms ' - ' xxpt_timefnce ' - - ' xxpt_ord_per ' ' xxpt_sfty_stk ' ' xxpt_sfty_tme ' - - - '.
     put unformat xxpt_buyer ' - - ' xxpt_pm_code ' - ' xxpt_mfg_lead ' '  xxpt_pur_lead ' ' xxpt_ins_rqd ' ' xxpt_ins_lead ' - - '.
     put unformat xxpt_phantom ' ' xxpt_ord_min ' - '  xxpt_ord_mult  ' - ' xxpt_yld_pct skip.
-end.
-output close.
-
-if cloadfile then do:
-   batchrun = yes.
-   input from value(vfile + ".bpi").
-   output to value(vfile + ".bpo") keep-messages.
-   hide message no-pause.
-   cimrunprogramloop:
-   do on stop undo cimrunprogramloop,leave cimrunprogramloop:
-      {gprun.i ""ppptmt02.p""}
-   end.
-   hide message no-pause.
-   output close.
-   input close.
-   batchrun = no.
-
-   for each xxtmppt exclusive-lock where xxpt_chk = "":
-       find first pt_mstr no-lock where pt_part = xxpt_part no-error.
+    output close.
+    batchrun = yes.
+    input from value(vfile + ".bpi").
+    output to value(vfile + ".bpo") keep-messages.
+    hide message no-pause.
+    cimrunprogramloop:
+    do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+       {gprun.i ""ppptmt02.p""}
+    end.
+    hide message no-pause.
+    output close.
+    input close.
+    batchrun = no.
+    
+    find first pt_mstr no-lock where pt_part = xxpt_part no-error.
        if available pt_mstr and
                     xxpt_ms = pt_ms  and
                     xxpt_timefnce = pt_timefence and
@@ -53,11 +49,11 @@ if cloadfile then do:
                     xxpt_yld_pct  = pt_yield_pct
           then do:
           assign xxpt_chk = "OK".
+				   os-delete value(vfile + ".bpi").
+				   os-delete value(vfile + ".bpo").
        end.
        else do:
           assign xxpt_chk = "FAIL".
        end.
-   end.
-   os-delete value(vfile + ".bpi").
-   os-delete value(vfile + ".bpo").
+end.
 end.

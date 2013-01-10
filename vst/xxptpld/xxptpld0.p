@@ -17,7 +17,23 @@ repeat:
 	import unformat txt.
 	if i > 0 and entry(1,txt,",") <> "" and entry(2,txt,",") <> "" then do:
   	create xxtmppt.
-  	import delimiter "," xxtmppt .
+  	assign xxpt_site = entry(1,txt,",")
+  				 xxpt_part = entry(2,txt,",")
+           xxpt_ms = logical(entry(3,txt,","))
+           xxpt_timefnce = int(entry(4,txt,","))
+           xxpt_ord_per = int(entry(5,txt,","))
+           xxpt_sfty_stk = int(entry(6,txt,","))
+           xxpt_sfty_tme = int(entry(7,txt,","))
+           xxpt_buyer = entry(8,txt,",")
+           xxpt_pm_code = entry(9,txt,",")
+           xxpt_mfg_lead = int(Entry(10,txt,","))
+           xxpt_pur_lead = int(entry(11,txt,","))
+           xxpt_ins_rqd = logical(entry(12,txt,","))
+           xxpt_ins_lead = int(entry(13,txt,","))
+           xxpt_phantom = logical(entry(14,txt,","))
+           xxpt_ord_min = dec(entry(15,txt,","))
+           xxpt_ord_mult = dec(entry(16,txt,","))
+           xxpt_yld_pct = dec(entry(17,txt,",")).
   end.
   i = i + 1.
 end.
