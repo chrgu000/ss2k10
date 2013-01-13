@@ -11,8 +11,6 @@ define variable v_number as character format "x(12)".
 define variable v_errorst as logical.
 define variable v_errornum as integer.
 define variable del-yn like mfc_logical initial no.
-/*N0GD*   define variable msgdel as character*/
-/*N0GD*   initial {&mgbcmt_p_1}.*/
 
 /* DISPLAY SELECTION FORM */
 form
@@ -44,9 +42,9 @@ repeat with frame a:
       {gprun.i ""gpnrmgv.p"" "(v_booknbrkey,input-output v_number
                                ,output v_errorst
                                ,output v_errornum)" }
- 			if v_errornum = 0 then do:
- 		 		 display v_number @ xxbk_id with frame a.
- 		  end.
+      if v_errornum = 0 then do:
+         display v_number @ xxbk_id with frame a.
+      end.
    end.
 
    /* ADD/MOD/DELETE  */
@@ -72,9 +70,12 @@ repeat with frame a:
 /* ---CANNOT DELETE. LEND HISTORY DETAIL RECORDS EXIST"---*/
          {pxmsg.i &MSGNUM = 7770 &ERRORLEVEL = 3}
          next.
+         del-yn = no.
       end.
-      del-yn = yes.
-      {mfmsg01.i 11 1 del-yn}
+      else do:
+           del-yn = yes.
+           {mfmsg01.i 11 1 del-yn}
+      end.
    end.
 
    if del-yn then do:
