@@ -224,7 +224,7 @@ batch)
       and (ap_entity >= entity)
       and (ap_entity <= entity1)
       and (ap_type = "VO")
-      and (ap_open = yes or open_only = no)
+      and (ap_open = yes or open_only = yes)
       and ((ap_curr = base_rpt)
       or (base_rpt = "")) ) no-lock,
       each vo_mstr  where vo_mstr.vo_domain = global_domain and (  vo_ref =
