@@ -38,7 +38,7 @@ repeat with frame a:
       end.
    end.
 
-   if input xxbk_id = "" or xxbk_id = "" then do:
+   if input xxbk_id = "" then do:
       {gprun.i ""gpnrmgv.p"" "(v_booknbrkey,input-output v_number
                                ,output v_errorst
                                ,output v_errornum)" }
