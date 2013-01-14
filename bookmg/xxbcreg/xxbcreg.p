@@ -4,12 +4,16 @@
 /* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
 /* REVISION END                                                              */
 
-{mfdtitle.i "130110.1"}
-
+{mfdtitle.i "130114.1"}
+{xxbkmg.i}
 define variable v_empnbrkey as character initial "xxbk_002".
 define variable v_number as character format "x(12)".
 define variable v_errorst as logical.
 define variable v_errornum as integer.
+define variable v_Deposit like xxbc_amt.
+define variable v_desc    as character format "x(16)".
+define variable v_stat    as character format "x(16)".
+define variable v_avail   like mfc_logical.
 define variable del-yn like mfc_logical initial no.
 
 /* DISPLAY SELECTION FORM */
@@ -19,9 +23,9 @@ form
    xxbc_dept     view-as fill-in size 40 by 1  colon 20
    xxbc_phone    colon 20
    xxbc_email    colon 20
-   xxbc_type     colon 20
+   xxbc_type     colon 20 v_desc no-label v_Deposit
+   xxbc_stat     colon 20 v_stat no-label v_avail
    xxbc_amt      colon 20
-   xxbc_stat     colon 20
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -35,7 +39,21 @@ repeat with frame a:
       {mfnp.i xxbc_lst xxbc_id xxbc_id xxbc_id xxbc_id xxbc_id}
       if recno <> ? then do:
          display xxbc_id xxbc_name xxbc_dept xxbc_phone xxbc_email
-                 xxbc_type xxbc_amt xxbc_stat.
+                 xxbc_type xxbc_stat xxbc_amt "" @ v_Deposit.
+         assign v_desc = "" v_Deposit = 0 v_stat = "" v_avail = no .
+  			 find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
+              and usrw_key2 = xxbc_type no-error.
+         if available usrw_wkfl then do:
+				 		assign v_desc = usrw_key3
+				 					 v_Deposit = usrw_decfld[1].
+				 end.
+				 find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
+			        and usrw_key2 = xxbc_stat no-error.
+			   if available usrw_wkfl then do:
+			  		assign v_stat = usrw_key3
+			  					 v_avail = usrw_logfld[1].
+			   end.
+				 display v_desc v_Deposit v_stat v_avail.
       end.
    end.
 
@@ -59,9 +77,36 @@ repeat with frame a:
    ststatus = stline[2].
    status input ststatus.
 
+	 repeat with frame a:
    update xxbc_name xxbc_dept xxbc_phone xxbc_email
-          xxbc_type xxbc_amt xxbc_stat go-on(F5 CTRL-D).
-
+          xxbc_type xxbc_stat go-on(F5 CTRL-D).
+          if xxbc_name = "" then do:
+             {mfmsg.i 40 3}
+   					 next-prompt xxbc_name.
+   					 undo,retry.
+          end.
+   				find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
+   							  and usrw_key2 = xxbc_type no-error.
+   				if not available usrw_wkfl then do:
+   					 {mfmsg.i 7774 3}
+   					 next-prompt xxbc_type.
+   					 undo,retry.
+   				end.
+   				else do:
+   			  		 if usrw_decfld[1] <> xxbc_amt or batchrun then do:
+   			  		 	  display usrw_decfld[1] @ v_Deposit.
+   			  		 		update xxbc_amt.
+   			  		 end.
+   			  end.
+   				find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
+   							  and usrw_key2 = xxbc_stat no-error.
+   				if not available usrw_wkfl then do:
+   					 {mfmsg.i 7775 3}
+   					 next-prompt xxbc_stat.
+   					 undo,retry.
+   				end.
+   				leave.
+	 end.
    /* DELETE */
    if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
    then do:
