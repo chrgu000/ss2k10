@@ -103,7 +103,7 @@ repeat:
            and xxbl_start >= v_start and xxbl_start <= v_start1
            break by xxbl_bkid by xxbl_start:
            assign v_lendcnt = v_lendcnt + 1.
-           if xxbl_end = ? then assign v_onhand = v_onhand + 1.
+           if xxbl_ret = ? then assign v_onhand = v_onhand + 1.
            if xxbl_ret > xxbl_end or (xxbl_ret = ? and xxbl_end < today) then do:
               assign v_latecnt = v_latecnt + 1.
               if xxbl_ret = ? then do:

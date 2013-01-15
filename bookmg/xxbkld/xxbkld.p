@@ -96,6 +96,8 @@ repeat with frame a:
     end.
 
    /* ADD/MOD/DELETE  */
+   createBl:
+   do trans:
    find first xxbl_hst using xxbl_start where xxbl_bkid = input xxbl_bkid
           and xxbl_start = input xxbl_start no-error.
    if not available xxbl_hst then do:
@@ -105,7 +107,7 @@ repeat with frame a:
              xxbl_start.
              xxbl_end = getPlanReturnDay(xxbl_bkid,xxbl_start).
    end.
-   display xxbl_bcid xxbl_end with frame a.
+   display xxbl_bcid xxbl_end xxbl_ret vname with frame a.
 
    ststatus = stline[2].
    status input ststatus.
@@ -115,12 +117,12 @@ repeat with frame a:
           if xxbl_bcid = "" then do:
             {mfmsg.i 40 3}
              next-prompt xxbl_bcid.
-             undo,retry.
+             undo createBl,retry.
           end.
           if xxbl_end = ? then do:
           	 {mfmsg.i 40 3}
              next-prompt xxbl_end.
-             undo,retry.
+             undo createBl,retry.
           end.
    end.
        /* DELETE */
@@ -141,6 +143,7 @@ repeat with frame a:
 /*             {mfmsg01.i 11 1 del-yn}                                       */
 /*        end.                                                               */
        end.
+    end. /* do trans:*/
 
 /*       if del-yn then do:              */
 /*          delete xxbl_hst.             */
