@@ -22,7 +22,7 @@ define variable v_bctype as character format "x(10)".
 define variable v_bcstat as character format "x(10)".
 define variable v_bk like xxbk_id.
 define variable v_bkname like xxbk_name.
-define variable report_detail like mfc_logical initial no.
+define variable report_detail like mfc_logical initial yes.
 define variable v_late like mfc_logical.
 form
    v_bc   colon 12
@@ -108,14 +108,12 @@ repeat:
               assign v_latecnt = v_latecnt + 1.
               if xxbl_ret = ? then do:
                  if v_maxlate < today - xxbl_end then do:
-                    assign v_late = yes
-                           v_maxlate = today - xxbl_end.
+                    assign v_maxlate = today - xxbl_end.
                     end.
               end.
               else do:
                  if v_maxlate < xxbl_ret - xxbl_end then do:
-                    assign v_late = yes
-                           v_maxlate = xxbl_ret - xxbl_end.
+                    assign v_maxlate = xxbl_ret - xxbl_end.
                  end.
               end.
            end.
