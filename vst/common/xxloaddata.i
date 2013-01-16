@@ -1,8 +1,15 @@
-/* xxload.i - loadData common procedure                                      */
+/* xxloaddata.i - loadData common procedure                                  */
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120828.1 LAST MODIFIED: 08/28/12 BY: zy                         */
 /* REVISION END                                                              */
+
+/*
+define variable vusrwkey1 as character initial "xxcimload_filename_default_value".
+*/
+/* vusrwkey1 reference to cimload filename list.                              */
+/* xxpcld.p = usrw_key3                                                       */
+
 
 FUNCTION deltmpfile RETURNS logical():
  /* -----------------------------------------------------------
@@ -35,3 +42,28 @@ FUNCTION getMsg RETURNS character(inbr as integer):
       return string(inbr).
   end.
 END FUNCTION. /*FUNCTION getMsg*/
+
+/* 日期YYYY-MM-DD转换为QAD日期格式 */
+FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER,INPUT fmt AS CHARACTER):
+    DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
+    DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE od   AS DATE      NO-UNDO.
+    if datestr = "" then do:
+        assign od = ?.
+    end.
+    else do:
+    		if lower(fmt) = "ymd" then do:
+           ASSIGN sstr = datestr.
+           ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
+           ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,"-") + 1).
+           
+           ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
+           ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,"-") + 1)).
+           ASSIGN od = DATE(im,id,iy).
+        end.
+    end.
+    RETURN od.
+
+END FUNCTION.
