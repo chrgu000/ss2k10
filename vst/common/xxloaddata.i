@@ -44,25 +44,47 @@ FUNCTION getMsg RETURNS character(inbr as integer):
 END FUNCTION. /*FUNCTION getMsg*/
 
 /* 日期YYYY-MM-DD转换为QAD日期格式 */
-FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER,INPUT fmt AS CHARACTER):
+FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER
+                              ,INPUT fmt AS CHARACTER):
     DEFINE VARIABLE sstr AS CHARACTER NO-UNDO.
     DEFINE VARIABLE iY   AS INTEGER   NO-UNDO.
     DEFINE VARIABLE iM   AS INTEGER   NO-UNDO.
     DEFINE VARIABLE id   AS INTEGER   NO-UNDO.
     DEFINE VARIABLE od   AS DATE      NO-UNDO.
+    define variable spchar as character no-undo.
+    define variable i as integer.
     if datestr = "" then do:
         assign od = ?.
     end.
     else do:
-    		if lower(fmt) = "ymd" then do:
-           ASSIGN sstr = datestr.
-           ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
-           ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,"-") + 1).
-           
-           ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
-           ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,"-") + 1)).
-           ASSIGN od = DATE(im,id,iy).
+        ASSIGN sstr = datestr.
+        do i = 1 to length(sstr).
+           if index("0123456789",substring(sstr,i,1)) = 0 then do:
+              assign spchar = substring(sstr,i,1).
+              leave.
+           end.
         end.
+        if lower(fmt) = "ymd" then do:
+           ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,spchar) + 1).
+           ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,spchar) + 1)).
+        end.
+        else if lower(fmt) = "mdy" then do:
+           ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,spchar) + 1).
+           ASSIGN iD = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN iY = INTEGER(SUBSTRING(sstr,INDEX(sstr,spchar) + 1)).
+        end.
+        else if lower(fmt) = "dmy" then do:
+           ASSIGN iD = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,spchar) + 1).
+           ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,spchar) - 1)).
+           ASSIGN iY = INTEGER(SUBSTRING(sstr,INDEX(sstr,spchar) + 1)).
+        end.
+        if iY <= 1000 then iY = iY + 2000.
+        message im id iy view-as alert-box.
+        ASSIGN od = DATE(im,id,iy).
     end.
     RETURN od.
 
@@ -73,13 +95,13 @@ FUNCTION Pct2Dec RETURNS Decimal(input iPercentStr AS CHARACTER):
     Purpose: 将百分比数值转化为数值。
     Parameters: 可以不带百分号。
     Notes: 直接截取掉百分号的。
-  -------------------------------------------------------------*/	
-	Define variable oRet as decimal format "->>>,>>>,>>>,>>>,>>>,>>9.<<<<<<<<<<<".
-	if substring(trim(iPercentStr),length(trim(iPercentStr)),1) <> "%" then do:
-  	 assign oRet = decimal(trim(iPercentStr)).
+  -------------------------------------------------------------*/
+  Define variable oRet as decimal format "->>>,>>>,>>>,>>>,>>>,>>9.<<<<<<<<<<<".
+  if substring(trim(iPercentStr),length(trim(iPercentStr)),1) <> "%" then do:
+     assign oRet = decimal(trim(iPercentStr)).
   end.
   else do:
-  	 assign oRet = decimal(substring(trim(iPercentStr),1,length(trim(iPercentStr)) - 1)).
+     assign oRet = decimal(substring(trim(iPercentStr),1,length(trim(iPercentStr)) - 1)).
   end.
   RETURN oRet.
 END FUNCTION.

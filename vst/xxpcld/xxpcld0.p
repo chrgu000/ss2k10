@@ -19,8 +19,8 @@ repeat:
     	 assign xxpc_list = entry(1,txt,",") no-error.
  		 	 assign xxpc_curr = entry(2,txt,",") no-error.
 			 assign xxpc_part = entry(3,txt,",") no-error.
-			 assign xxpc_start = str2Date(entry(4,txt,","),"ymd") no-error.
-			 assign xxpc_expir  = str2Date(entry(5,txt,","),"ymd") no-error.
+			 assign xxpc_start = str2Date(entry(4,txt,","),"mdy") no-error.
+			 assign xxpc_expir  = str2Date(entry(5,txt,","),"mdy") no-error.
 			 assign xxpc_um  = entry(6,txt,",") no-error.
 			 assign xxpc_user1 = entry(7,txt,",") no-error.
 			 assign xxpc_amt = decimal(entry(8,txt,",")) no-error.
