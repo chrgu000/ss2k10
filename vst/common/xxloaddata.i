@@ -67,3 +67,19 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER,INPUT fmt AS CHARACTER
     RETURN od.
 
 END FUNCTION.
+
+FUNCTION Pct2Dec RETURNS Decimal(input iPercentStr AS CHARACTER):
+ /* -----------------------------------------------------------
+    Purpose: 将百分比数值转化为数值。
+    Parameters: 可以不带百分号。
+    Notes: 直接截取掉百分号的。
+  -------------------------------------------------------------*/	
+	Define variable oRet as decimal format "->>>,>>>,>>>,>>>,>>>,>>9.<<<<<<<<<<<".
+	if substring(trim(iPercentStr),length(trim(iPercentStr)),1) <> "%" then do:
+  	 assign oRet = decimal(trim(iPercentStr)).
+  end.
+  else do:
+  	 assign oRet = decimal(substring(trim(iPercentStr),1,length(trim(iPercentStr)) - 1)).
+  end.
+  RETURN oRet.
+END FUNCTION.
