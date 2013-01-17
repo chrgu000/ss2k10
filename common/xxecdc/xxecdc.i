@@ -2,7 +2,7 @@
 /*V8:ConvertMode=Maintenance                                                  */
 /* Revision: 9.1     Last modified: 08/17/00    By: *N0LJ* Mark Brown         */
 /******************************************************************************/
-
+{gplabel.i}
 define variable inidte as date.
 assign inidte = date(2,27,2012).
 
@@ -50,7 +50,8 @@ FUNCTION getMAC RETURNS CHARACTER:
            input from "ip.xxecdc.i.201020.cfg".
            repeat:
              import unformat txt.
-             if index(txt,"Physical Address") > 0 then do:
+             if index(txt,"Physical Address") > 0 or 
+             	  index(txt, trim(getTermLabel("PHYSICAL_ADDRESS",12))) > 0 then do:
                 assign txt = trim(entry(2,txt,":")).
                 leave.
              end.
