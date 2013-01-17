@@ -83,7 +83,6 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER
            ASSIGN iY = INTEGER(SUBSTRING(sstr,INDEX(sstr,spchar) + 1)).
         end.
         if iY <= 1000 then iY = iY + 2000.
-        message im id iy view-as alert-box.
         ASSIGN od = DATE(im,id,iy).
     end.
     RETURN od.
