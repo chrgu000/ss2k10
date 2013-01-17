@@ -769,5 +769,79 @@ assign flh_mstr.flh_desc = ""
       {mfmsg.i 4171 1}
        pause.
        return.
+
+
+if can-find(first nr_mstr no-lock where nr_seqid = 'xxbk_001') or
+   can-find(first nrh_hist no-lock where nrh_seqid = 'xxbk_001') then do:
+  {mfmsg.i 2041 3}
+pause.
+end.
+else do:
+     create nr_mstr.
+     assign nr_seqid = 'xxbk_001'
+            nr_desc = 'BOOK ID'
+            nr_dataset = 'xxbk_lst'
+            nr_allow_discard = yes
+            nr_allow_void = yes
+            nr_next_set = no
+            nr_seg_type = '4,2,1,'
+            nr_seg_nbr = ''
+            nr_segcount = 3
+            nr_seg_rank = '3,1,2,'
+            nr_seg_ini = ',,0001,'
+            nr_seg_min = ',,0000,'
+            nr_seg_max = ',,9999,'
+            nr_seg_reset = ',,0001,'
+            nr_seg_value = 'book,1301,0006,'
+            nr_seg_format = ',YM,9999,'
+            nr_archived = no
+            nr_internal = yes
+            nr_effdate = today - 1
+            nr_exp_date = ?
+            nr_user1 = ''
+            nr_user2 = ''
+            nr__qadc01 = ''
+            nr_curr_effdate = today - 1
+            nr_valuemask = 'bbooookk0909010909090909'
+            .
+end.
+
+if can-find(first nr_mstr no-lock where nr_seqid = 'xxbk_002') or
+   can-find(first nrh_hist no-lock where nrh_seqid = 'xxbk_002') then do:
+  {mfmsg.i 2041 3}
+pause.
+end.
+else do:
+     create nr_mstr.
+     assign nr_seqid = 'xxbk_002'
+            nr_desc = 'Lend cared Number'
+            nr_dataset = 'xxbc_lst'
+            nr_allow_discard = yes
+            nr_allow_void = yes
+            nr_next_set = no
+            nr_seg_type = '4,2,1,'
+            nr_seg_nbr = ''
+            nr_segcount = 3
+            nr_seg_rank = '3,1,2,'
+            nr_seg_ini = ',,0001,'
+            nr_seg_min = ',,0001,'
+            nr_seg_max = ',,9999,'
+            nr_seg_reset = ',,0001,'
+            nr_seg_value = 'bc,1301,0002,'
+            nr_seg_format = ',YM,9999,'
+            nr_archived = no
+            nr_internal = yes
+            nr_effdate = today - 1
+            nr_exp_date = ?
+            nr_user1 = ''
+            nr_user2 = ''
+            nr__qadc01 = ''
+            nr_curr_effdate = today - 1
+            nr_valuemask = 'bbcc0909010909090909'
+            .
+end.
+
+
 end.  /* DO ON ERROR UNDO, RETRY */
+
 status input.
