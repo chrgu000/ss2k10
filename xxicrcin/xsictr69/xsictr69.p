@@ -2,8 +2,6 @@
 /* INV TRANSFER */
 /* Generate date / time  2007-6-8 10:29:06                                    */
 /* ------- Barcode 69  库存转移只能到生产库位                                 */
-/* xxtrlocmt.p 程序用于维护库位类型                                           */
-
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -2128,6 +2126,8 @@ If AVAILABLE ( pt_mstr )  then
    /* Internal Cycle END :9130    */
    END.
    pause 0 before-hide.
+   
+/***********余数不打印了****************   
    /* Internal Cycle Input :9140    */
    V9140LMAINLOOP:
    REPEAT:
@@ -2747,5 +2747,5 @@ If AVAILABLE ( pt_mstr )  then
    /* Internal Cycle END :9160    */
    END.
    pause 0 before-hide.
-
+***********余数不打印了****************/
 end.
