@@ -22,11 +22,11 @@ procedure printbc:
           import unformatted ts9030.
 
           /*条码和条码下文字*/
-          if index(ts9030, "$B") <> 0 then do:
+          if index(ts9030, "&B") <> 0 then do:
              av9030 = trim(iIDnbr).
-             ts9030 = substring(ts9030, 1, index(ts9030 , "$B") - 1) + av9030
-                    + substring( ts9030 , index(ts9030 ,"$B")
-                    + length("$B"), length(ts9030) - ( index(ts9030 , "$B") + length("$B") - 1 )).
+             ts9030 = substring(ts9030, 1, index(ts9030 , "&B") - 1) + av9030
+                    + substring( ts9030 , index(ts9030 ,"&B")
+                    + length("&B"), length(ts9030) - ( index(ts9030 , "&B") + length("&B") - 1 )).
           end.
           /*图号文字*/
           if index(ts9030, "图号:") <> 0 then do:
@@ -106,24 +106,14 @@ procedure printbc:
 
           /*数量文字*/
           if index(ts9030, "数量:") <> 0 then do:
-            if iType = "BK" then do:
-               av9030 = trim("金额:").
-            end.
-            else do:
-               av9030 = "".
-            end.
+            av9030 = "".
             ts9030 = substring(ts9030, 1, index(ts9030 , "数量:") - 1) + av9030
                    + substring( ts9030 , index(ts9030 ,"数量:")
                    + length("数量:"), length(ts9030) - ( index(ts9030 , "数量:") + length("数量:") - 1 )).
           end.
          /*数量*/
-          if index(ts9030, "$F") <> 0 then do:
-             if iType = "BK" then do:
-                av9030 = trim(iQty).
-             end.
-             else do:
-                 av9030 = "".
-             end.
+          if index(ts9030, "$Q") <> 0 then do:
+             av9030 = "".
              ts9030 = substring(ts9030, 1, index(ts9030 , "$Q") - 1) + av9030
                     + substring( ts9030 , index(ts9030 ,"$Q")
                     + length("$Q"), length(ts9030) - ( index(ts9030 , "$Q") + length("$Q") - 1 )).
@@ -158,14 +148,24 @@ procedure printbc:
           end.
           /*单位文字*/
           if index(ts9030, "单位:") <> 0 then do:
-            av9030 = "".
+            if iType = "BK" then do:
+                av9030 = "金额:".
+             end.
+             else do:
+                 av9030 = "".
+             end.
             ts9030 = substring(ts9030, 1, index(ts9030 , "单位:") - 1) + av9030
                    + substring( ts9030 , index(ts9030 ,"单位:")
                    + length("单位:"), length(ts9030) - ( index(ts9030 , "单位:") + length("单位:") - 1 )).
           end.
           /*单位*/
           if index(ts9030, "$U") <> 0 then do:
-            av9030 = "".
+            if iType = "BK" then do:
+                av9030 = Iqty.
+             end.
+             else do:
+                 av9030 = "".
+             end.
             ts9030 = substring(ts9030, 1, index(ts9030 , "$U") - 1) + av9030
                    + substring( ts9030 , index(ts9030 ,"$U")
                    + length("$U"), length(ts9030) - ( index(ts9030 , "$U") + length("$U") - 1 )).
@@ -198,12 +198,19 @@ procedure printbc:
                    + substring( ts9030 , index(ts9030 ,"$D")
                    + length("$D"), length(ts9030) - ( index(ts9030 , "$D") + length("$D") - 1 )).
           end.
-          /*$R*/
-          if index(ts9030, "$R") <> 0 then do:
+          /*&R*/
+          if index(ts9030, "&R") <> 0 then do:
             av9030 = "".
-            ts9030 = substring(ts9030, 1, index(ts9030 , "$R") - 1) + av9030
-                   + substring( ts9030 , index(ts9030 ,"$R")
-                   + length("$R"), length(ts9030) - ( index(ts9030 , "$R") + length("$R") - 1 )).
+            ts9030 = substring(ts9030, 1, index(ts9030 , "&R") - 1) + av9030
+                   + substring( ts9030 , index(ts9030 ,"&R")
+                   + length("&R"), length(ts9030) - ( index(ts9030 , "&R") + length("&R") - 1 )).
+          end.
+           /*&Q*/
+          if index(ts9030, "&Q") <> 0 then do:
+            av9030 = "".
+            ts9030 = substring(ts9030, 1, index(ts9030 , "&Q") - 1) + av9030
+                   + substring( ts9030 , index(ts9030 ,"&Q")
+                   + length("&Q"), length(ts9030) - ( index(ts9030 , "&Q") + length("&Q") - 1 )).
           end.
           put unformatted ts9030 skip.
        end.

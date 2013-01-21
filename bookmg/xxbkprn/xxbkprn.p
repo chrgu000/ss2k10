@@ -73,7 +73,7 @@ repeat:
    for each xxbk_lst no-lock
       where xxbk_id >= v_book and xxbk_id <= v_book1
    with frame b width 320 no-attr-space:
-			assign vprice = string(xxbk_price,">>>>9.<<").
+			assign vprice = string(xxbk_price,">>>>9.9<").
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
 			run printbc(input "BK",
