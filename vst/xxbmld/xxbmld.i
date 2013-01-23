@@ -6,6 +6,7 @@
 
 define {1} shared variable flhload as character format "x(70)".
 define {1} shared variable cloadfile as logical initial "no".
+define {1} shared variable effdate as date initial today.
 define {1} shared variable vpar like ps_par.
 define {1} shared variable vold like ps_comp.
 define {1} shared variable vnew like ps_comp.

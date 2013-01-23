@@ -12,6 +12,7 @@
 
 form
    skip(1)
+   effdate colon 14
    flhload colon 14  view-as fill-in size 40 by 1 skip(1)
    cloadfile colon 14 skip(2)
 with frame a side-labels width 80.
@@ -32,9 +33,9 @@ repeat:
      end.                                                                    
      release usrw_wkfl.                                                      
    if c-application-mode <> 'web' then
-   update flhload cloadfile with frame a.
+   update effdate flhload cloadfile with frame a.
 
-   {wbrp06.i &command = update &fields = " flhload cloadfile "
+   {wbrp06.i &command = update &fields = " effdate flhload cloadfile "
       &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:

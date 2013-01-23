@@ -32,8 +32,8 @@ i = 0.
 for each tmpbom no-lock:
     for each ps_mstr no-lock use-index ps_comp
        where ps_comp = tbm_old and (ps_par = tbm_par or tbm_par = "")
-         and (ps_start <= today - i or ps_start = ?)
-         and (ps_end >= today - i or ps_end = ?)
+         and (ps_start <= effdate - i or ps_start = ?)
+         and (ps_end >= effdate - i or ps_end = ?)
           break by ps_par by ps_comp by ps_start by ps_end:
           if last-of(ps_comp) then do:
           		/*失效旧BOM*/
@@ -44,13 +44,13 @@ for each tmpbom no-lock:
                       tbmn_start = ps_start
                       tbmn_qty_per = ps_qty_per
                       tbmn_scrp = ps_scrp
-                      tbmn_end = today.
+                      tbmn_end = effdate.
                /*生效新BOM*/
                create tmpbomn.
                assign tbmn_par = ps_par
                       tbmn_comp = tbm_new
                       tbmn_ref = ""
-                      tbmn_start = today + 1
+                      tbmn_start = effdate + 1
                       tbmn_qty_per = ps_qty_per
                       tbmn_scrp = ps_scrp.
           end.
