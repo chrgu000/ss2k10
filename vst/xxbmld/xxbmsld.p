@@ -47,15 +47,12 @@ repeat:
           find first usrw_wkfl exclusive-lock where                                   
                      usrw_key1 = "xxbmld.p_filename" and                              
                      usrw_key2 = global_userid no-error.                              
-          if available usrw_wkfl and locked(usrw_wkfl) then do:                       
-                assign usrw_key5 = flhload no-error.                                  
-          end.                                                                        
-          else do:                                                                    
+          if not available usrw_wkfl and locked(usrw_wkfl) then do:                       
               create usrw_wkfl.                                                       
               assign usrw_key1 = "xxbmld.p_filename"                                  
-                     usrw_key2 = global_userid                                        
-                     usrw_key5 = flhload no-error.                                    
-          end.                                                                        
+                     usrw_key2 = global_userid.                                   
+          end.                                 
+          assign usrw_key5 = flhload no-error.                                       
           release usrw_wkfl.                                                          
      end.                                                                             
                                                                                       
