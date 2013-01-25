@@ -716,7 +716,7 @@ repeat:
       IF std_dout = 0 THEN v_var_time = 0.
       ELSE v_var_time = (act_dout / std_dout) * 100.
 			if available wr_route then do:
-      PUT op_hist.op_emp FORMAT "x(8)" ","
+      PUT unformat op_hist.op_emp FORMAT "x(8)" ","
          s FORMAT "x(2)" ","
          DISP_pt_part FORMAT "x(18)" ","
          op_hist.op_wo_nbr FORMAT "x(10)" ","
