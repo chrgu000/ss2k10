@@ -50,8 +50,7 @@ FUNCTION getMAC RETURNS CHARACTER:
            input from "ip.xxecdc.i.201020.cfg".
            repeat:
              import unformat txt.
-             if index(txt,"Physical Address") > 0 or 
-             	  index(txt, trim(getTermLabel("PHYSICAL_ADDRESS",12))) > 0 then do:
+             if index(txt, trim(getTermLabel("PHYSICAL_ADDRESS_.....",12))) > 0 then do:
                 assign txt = trim(entry(2,txt,":")).
                 leave.
              end.
