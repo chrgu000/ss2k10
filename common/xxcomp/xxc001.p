@@ -363,13 +363,12 @@ procedure getVer:
   input from value(iProc).
   repeat:
       import unformat txt.
-      if index(txt,"~{") > 0 and
-         index(txt,"}") > 0 and
-         index(txt,"~"") > 0 and
-      	 index(txt,"mfdtitle.i ") > 0 and
-         index(txt,"/*") = 0 and
-         index(txt,"*/") = 0 then do:
-         assign over = trim(ENTRY(2,txt,'~"')) no-error.
+      if index(txt,'~{') > 0 and
+         index(txt,'}') > 0 and
+         index(txt,'"') > 0 and
+      	 index(txt,'mfdtitle.i') > 0 and
+         index(txt,'*') = 0 then do:
+         assign over = trim(ENTRY(2,txt,'"')) no-error.
          leave.
       end.
   end.
