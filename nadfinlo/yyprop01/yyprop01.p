@@ -1,17 +1,17 @@
-/* yyprop01.p - Prodcution Daily Report for Kunshan                       */
-/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                    */
-/* All rights reserved worldwide.  This is an unpublished work.           */
-/* $Revision: 1.14 $                                                      */
-/*V8:ConvertMode=Report                                                   */
-/* Copy from yyproprp.p for Nadfinlo Plastic Industrical Kunshan Co.,Ltd. */
-/* $Revision: 1.00.00  $   BY: Joy Huang      DATE: 15/01/06 ECO: *OPKS*  */
-/* $Revision: 1.00.10  $   BY: Martin tan     DATE: 24/01/07 ECO: *PTM01* */
-/* $Revision: 1.00.20  $   BY: Martin tan     DATE: 08/03/07 ECO: *ISK03* */
-/* $Revision: 1.00.20  $   BY: Martin tan     DATE: 23/03/07 ECO: *M0323* */
-/* $Revision: 1.10.30  $   BY: Martin tan     DATE: 06/09/07 ECO: *RST09* */
-/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 24/09/08 ECO: *NRJCT* */
-/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 04/12/08 ECO: *SET12* */
-/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 26/03/09 ECO: *SNRJC* */
+/* yyprop01.p - Prodcution Daily Report for Kunshan                           */
+/* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/* $Revision: 1.14 $                                                          */
+/*V8:ConvertMode=Report                                                       */
+/* Copy from yyproprp.p for Nadfinlo Plastic Industrical Kunshan Co.,Ltd.     */
+/* $Revision: 1.00.00  $   BY: Joy Huang      DATE: 15/01/06 ECO: *OPKS*      */
+/* $Revision: 1.00.10  $   BY: Martin tan     DATE: 24/01/07 ECO: *PTM01*     */
+/* $Revision: 1.00.20  $   BY: Martin tan     DATE: 08/03/07 ECO: *ISK03*     */
+/* $Revision: 1.00.20  $   BY: Martin tan     DATE: 23/03/07 ECO: *M0323*     */
+/* $Revision: 1.10.30  $   BY: Martin tan     DATE: 06/09/07 ECO: *RST09*     */
+/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 24/09/08 ECO: *NRJCT*     */
+/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 04/12/08 ECO: *SET12*     */
+/* $Revision: 1.20.00  $   BY: Martin tan     DATE: 26/03/09 ECO: *SNRJC*     */
 
 /* REVISION: eb2sp4     Create By: Micho Yang        ECO: NAD - 20110707.1    */
 /* REVISION: eb2sp4     Create By: Micho Yang        ECO: NAD - 20110718.1    */
@@ -48,8 +48,9 @@
 /* NAD - 20110718.1 - B */
 /* 效率4计算时需要考虑1模多出的情况，14.13.1的说明[15] */
 /* NAD - 20110718.1 - E */
-
-{mfdtitle.i "130104.1"}
+/*129 啤速数位不对Bug	*/
+/* yyprop01.p 130129.1 17.13.1 生产日报表(excel)                             */
+{mfdtitle.i "130129.1"}
 
 define variable nbr             like wr_nbr.
 define variable nbr1            like wr_nbr.
@@ -85,7 +86,8 @@ define variable s               as char format "x(2)".
 define variable mch             as deci format ">>>>>9.9".
 define variable rqty            as deci format ">>>>>>>9".
 define variable amch            as deci format "->>>>9.9".
-define variable bisu            as char format "x(3)".
+/*129*  define variable bisu            as char format "x(3)". */
+/*129*/ define variable bisu            as char format "x(4)".
 define variable qty_rjct        as decimal format "->>>>9".
 define variable rrjct           like op_rsn_rjct.
 define variable wr_comp         like wr_qty_comp.
@@ -95,8 +97,8 @@ define variable std_run         as decimal format "->>>9.9<".
 define variable act_run         as decimal format "->>>9.9<".
 define variable prate           as deci format "->>>9.9%".
 define variable dt01            as deci format "->9.9<".
-define variable dt02            as deci format "->9.9<". 
-define variable dt03            as deci format "->9.9<". 
+define variable dt02            as deci format "->9.9<".
+define variable dt03            as deci format "->9.9<".
 define variable it01            as deci format "->9.9<".
 define variable tot_comp_rate   as deci format "->>>9.9%".
 define variable tot_mach_rate   as deci format "->>>9.9%".
@@ -110,24 +112,24 @@ define variable rmks            as char format "x(42)" no-undo.
 define variable tot_hour        as decimal format "->>>>>>>>>>9.9<<<" no-undo.
 define variable rorun           like ro_run no-undo.
 
-define variable rate_ks         as decimal format "->>>9.9%" no-undo. 
-define variable tot_std_man	  as decimal format "->>>>9.9" no-undo.
-define variable tot_act_man	  as decimal format "->>>>9.9" no-undo.
-define variable tot_dout	     as decimal format "->>>>>>9" no-undo.
-define variable tot_sum_wt	     as decimal format "->>>>>>>9" no-undo.
-define variable tot_ac_qty	     as decimal format "->>>>>>>9" no-undo.
-define variable tot_rj_qty	     as decimal format "->>>>>>>9" no-undo.
-define variable tot_open_qty	  as decimal format "->>>>>>>9" no-undo.
-define variable tot_act_setup	  as decimal format "->>>>9.9" no-undo.
-define variable tot_st01	as decimal format "->>>>9.9" no-undo.
-define variable tot_st02	as decimal format "->>>>9.9" no-undo.
-define variable tot_st03	as decimal format "->>>>9.9" no-undo.
-define variable tot_std_run	  as decimal format "->>>>9.9" no-undo.
-define variable tot_act_run	  as decimal format "->>>>9.9" no-undo.
-define variable tot_dt01	     as decimal format "->>>9.9" no-undo.
-define variable tot_dt02	     as decimal format "->>>9.9" no-undo.
-define variable tot_dt03	     as decimal format "->>>9.9" no-undo.
-define variable tot_it01	     as decimal format "->>>9.9" no-undo.
+define variable rate_ks         as decimal format "->>>9.9%" no-undo.
+define variable tot_std_man	 as decimal format "->>>>9.9" no-undo.
+define variable tot_act_man	 as decimal format "->>>>9.9" no-undo.
+define variable tot_dout	   as decimal format "->>>>>>9" no-undo.
+define variable tot_sum_wt	 as decimal format "->>>>>>>9" no-undo.
+define variable tot_ac_qty	 as decimal format "->>>>>>>9" no-undo.
+define variable tot_rj_qty	 as decimal format "->>>>>>>9" no-undo.
+define variable tot_open_qty as decimal format "->>>>>>>9" no-undo.
+define variable tot_act_setup	as decimal format "->>>>9.9" no-undo.
+define variable tot_st01	  as decimal format "->>>>9.9" no-undo.
+define variable tot_st02	  as decimal format "->>>>9.9" no-undo.
+define variable tot_st03	  as decimal format "->>>>9.9" no-undo.
+define variable tot_std_run	as decimal format "->>>>9.9" no-undo.
+define variable tot_act_run	as decimal format "->>>>9.9" no-undo.
+define variable tot_dt01	  as decimal format "->>>9.9" no-undo.
+define variable tot_dt02	  as decimal format "->>>9.9" no-undo.
+define variable tot_dt03	  as decimal format "->>>9.9" no-undo.
+define variable tot_it01	  as decimal format "->>>9.9" no-undo.
 define variable tot_act_dout        as decimal format "->>>>>>9" no-undo.
 define variable tot_rj_rate	  as decimal format "->>>9.9%" no-undo.
 define variable tot_rj_cnt	     as decimal format ">>>>9" no-undo.
@@ -153,11 +155,11 @@ DEFINE VARIABLE v_group1 AS CHAR INIT "EMP-BLOW" LABEL "机台分组".
 DEFINE VARIABLE v_group2 AS CHAR .
 
 define variable st01 as deci format "->9.9<".
-define variable st02 as deci format "->9.9<". 
-define variable st03 as deci format "->9.9<". 
+define variable st02 as deci format "->9.9<".
+define variable st03 as deci format "->9.9<".
 
 DEFINE TEMP-TABLE tt
-   FIELD tt_emp like op_emp  
+   FIELD tt_emp like op_emp
    FIELD tt_shift like op_shift format "x(8)"
    FIELD tt_group2 AS CHAR
 	field tt_std_man	as decimal format "->>>>9.9"
@@ -186,20 +188,20 @@ define temp-table tmp_sum
 	field tmp_rj_qty	as decimal format "->>>>>>>9"
 	field tmp_open_qty	as decimal format "->>>>>>>9"
 	field tmp_act_setup	as decimal format "->>>>9.9"
-	field tmp_std_run	as decimal format "->>>>9.9"	
+	field tmp_std_run	as decimal format "->>>>9.9"
 	field tmp_act_run	as decimal format "->>>>9.9"
-	field tmp_st01		as decimal format "->>>>9.9"	
+	field tmp_st01		as decimal format "->>>>9.9"
 	field tmp_st02		as decimal format "->>>>9.9"
-	field tmp_st03		as decimal format "->>>>9.9"	
+	field tmp_st03		as decimal format "->>>>9.9"
 	field tmp_dt01		as decimal format "->>>9.9"
 	field tmp_dt02		as decimal format "->>>9.9"
 	field tmp_dt03		as decimal format "->>>9.9"
 	field tmp_it01		as decimal format "->>>9.9"
-    FIELD tmp_act_dout      as decimal format "->>>>>>9" 
+    FIELD tmp_act_dout      as decimal format "->>>>>>9"
     FIELD tmp_qty_comp      as decimal format "->>>>>>9"
     FIELD tmp_qty_rjct      as decimal format "->>>>9"
     FIELD tmp_v_mol         AS DECIMAL
-   FIELD tmp_v_var LIKE v_var 
+   FIELD tmp_v_var LIKE v_var
    FIELD tmp_v_var_time LIKE v_var_time
    FIELD tmp_i AS INTEGER
    FIELD tmp_i1 AS INTEGER
@@ -225,7 +227,7 @@ form
    eff                colon 15
    eff1               label {t001.i} colon 49 skip(2)
 
-   std_routing_run    colon 39 skip   
+   std_routing_run    colon 39 skip
    disp_rmks		    colon 39 skip
 
    v_group COLON 39 SKIP
@@ -254,22 +256,22 @@ repeat:
    if eff = low_date then eff = ?.
    if eff1 = hi_date then eff1 = ?.
 
-   update 
+   update
       nbr nbr1
       lot  lot1
       part part1
       emp  emp1
-      dept dept1      
+      dept dept1
       wkctr wkctr1
       op op1
       eff eff1
-      std_routing_run      
-      disp_rmks     
+      std_routing_run
+      disp_rmks
       v_group
    with frame a.
 
-   {wbrp06.i &command = update &fields = "nbr nbr1 lot lot1 part part1 
-      emp emp1 dept dept1 wkctr wkctr1 op op1 eff eff1 /*RST09*/ 
+   {wbrp06.i &command = update &fields = "nbr nbr1 lot lot1 part part1
+      emp emp1 dept dept1 wkctr wkctr1 op op1 eff eff1 /*RST09*/
       std_routing_run disp_rmks v_group " &frm = "a"}
 
    IF v_group = YES THEN DO:
@@ -312,12 +314,12 @@ repeat:
       if lot1 = "" then lot1 = hi_char.
       if part1 = "" then part1 = hi_char.
       if emp1 = "" then emp1 = hi_char.
-      if dept1 = "" then dept1 = hi_char. 
+      if dept1 = "" then dept1 = hi_char.
       if wkctr1 = "" then wkctr1 = hi_char.
       if op1 = 0 then op1 = 999999.
       if eff = ? then eff = low_date.
       if eff1 = ? then eff1 = hi_date.
-    
+
    end.
 
    /* OUTPUT DESTINATION SELECTION */
@@ -339,7 +341,7 @@ repeat:
    EMPTY TEMP-TABLE tt1.
    EMPTY TEMP-TABLE temp.
    EMPTY TEMP-TABLE tmp_sum.
-   
+
    EXPORT DELIMITER "," "" "" "" "" "" "" "17.13.1" "生产日报表" .
    PUT SKIP(1).
    EXPORT DELIMITER "," "机台号" "班" "零件号" "工单" "标志" "到期日" "工单数量" "工单完成数" "序" "标准用人" "实际用人" "标准日产"
@@ -357,30 +359,30 @@ repeat:
       and (op_wkctr >= wkctr and op_wkctr <= wkctr1)
       and (op_wo_op >= op    and op_wo_op <= op1)
       and op_type = "labor"
-      AND (v_group = NO OR (v_group = YES AND op_site BEGINS "NSZ" AND 
+      AND (v_group = NO OR (v_group = YES AND op_site BEGINS "NSZ" AND
                             CAN-FIND (CODE_mstr WHERE CODE_fldname = v_group1 AND op_emp = CODE_value)
                             )
-           )                
+           )
       use-index op_date
-      break by op_date by op_emp by op_shift by op_part 
+      break by op_date by op_emp by op_shift by op_part
       by op_wo_nbr by op_wo_lot by op_wo_op by op_trnbr
       with frame b width 320:
 
       if first-of(op_date) then do:
-         dis_log = no.	
+         dis_log = no.
 
          put getTermLabel("EFFECTIVE",9) + ":" FORMAT "x(10)"
             ","
-            string(year(op_date),"9999") + "/" + 
+            string(year(op_date),"9999") + "/" +
             STRING(MONTH(op_date),"99") + "/" +
-            STRING(DAY(op_date),"99") FORMAT "x(10)" 
-            skip(1).           
+            STRING(DAY(op_date),"99") FORMAT "x(10)"
+            skip(1).
       end.
 
       if first-of(op_emp) then tot_emp = tot_emp + 1.
 
       if last(op_date) then dis_log = yes.
-              
+
       find first temp where t_trnbr = op_trnbr no-lock no-error.
       if avail temp then do:
          if dis_log then do:
@@ -391,41 +393,41 @@ repeat:
                {yyprop01sz.i}
             END.
          end.	 /*if dis_log ... */
-	      
+
          next.
 	   end.
 
       find FIRST wo_mstr where wo_nbr = op_wo_nbr
          AND wo_lot = op_wo_lot and wo_part = op_part NO-LOCK NO-ERROR.
 
-      FIND FIRST wr_route where wr_nbr = op_wo_nbr 
-         and wr_lot = op_wo_lot AND wr_part = op_part 
+      FIND FIRST wr_route where wr_nbr = op_wo_nbr
+         and wr_lot = op_wo_lot AND wr_part = op_part
          and wr_op = op_wo_op NO-LOCK no-error.
 
-      find FIRST wc_mstr where wc_wkctr = op_wkctr 
+      find FIRST wc_mstr where wc_wkctr = op_wkctr
          and wc_mch = op_mch NO-LOCK no-error.
 
       tot_net_weight = 0.
       hqty = 0.
       mch  = 0.
       v_mol = 1.
-      find FIRST ro_det where ro_routing = (if available wo_mstr and wo_routing <> "" then wo_routing else op_part) 
+      find FIRST ro_det where ro_routing = (if available wo_mstr and wo_routing <> "" then wo_routing else op_part)
          and ro_op = op_wo_op
-         and ((ro_start <= op_date and ro_end = ?) or 
-              (ro_start = ? and ro_end >= op_date) or 
-              (ro_start <= op_date and ro_end >= op_date) or 
+         and ((ro_start <= op_date and ro_end = ?) or
+              (ro_start = ? and ro_end >= op_date) or
+              (ro_start <= op_date and ro_end >= op_date) or
               (ro_start = ? and ro_end = ?)) NO-LOCK no-error.
 
-      rorun = 0.00.		
+      rorun = 0.00.
       if avail ro_det AND std_routing_run then do:
          hqty = 1 / ro_run.
          mch  = ro_men_mch.
 
          /*if avail wr_route and (not std_routing_run) then hqty = 1 / wr_run.*/
-         rorun = ro_run. 
-         
+         rorun = ro_run.
+
          find FIRST pt_mstr where pt_part = ro_wipmtl_part no-lock no-error.
-         
+
          FOR first cmt_det where cmt_indx = ro_cmtindx NO-LOCK:
          END.
          if avail cmt_det then do:
@@ -439,7 +441,7 @@ repeat:
          hqty = 1 / wr_run.
          mch  = wr_men_mch.
          rorun = wr_run.  /*手工增加加工单工艺流程*/
-         
+
          FOR FIRST cmt_det WHERE cmt_indx = wr_cmtindx NO-LOCK:
          END.
          IF AVAIL cmt_det THEN DO:
@@ -459,8 +461,8 @@ repeat:
       for each tr_hist no-lock
          where tr_nbr = op_wo_nbr and tr_lot = op_wo_lot
          and tr_part = op_part and tr_type = "RCT-WO"
-         and tr_eff = op_date :        
-         tot_rct_qty = tot_rct_qty + tr_qty_loc.           
+         and tr_eff = op_date :
+         tot_rct_qty = tot_rct_qty + tr_qty_loc.
       end.
 
       assign
@@ -472,18 +474,18 @@ repeat:
        	std_run = 0.0.
 
       for each op_buff NO-LOCK
-         where op_buff.op_type   = "DOWN" 
+         where op_buff.op_type   = "DOWN"
            and op_buff.op_wo_lot = op_hist.op_wo_lot
-           and op_buff.op_part   = op_hist.op_part 
-           and op_buff.op_date  = op_hist.op_date 
+           and op_buff.op_part   = op_hist.op_part
+           and op_buff.op_date  = op_hist.op_date
            and op_buff.op_shift = op_hist.op_shift
-           and op_buff.op_wo_op = op_hist.op_wo_op 
+           and op_buff.op_wo_op = op_hist.op_wo_op
            and op_buff.op_emp   = op_hist.op_emp
            and op_buff.op_wkctr = op_hist.op_wkctr
            AND op_buff.op_act_run <> 0  :
 
          downtime = downtime + op_buff.op_act_run.
-           
+
          IF op_buff.op_rsn <> "" THEN DO:
            IF op_buff.op_rsn BEGINS "IT" THEN it01 = it01 + op_buff.op_act_run.
            ELSE DO:
@@ -491,7 +493,7 @@ repeat:
                  WHEN "DT01" THEN dt01 = dt01 + op_buff.op_act_run.
                  WHEN "DT02" THEN dt01 = dt01 + op_buff.op_act_run.
                  WHEN "DOWN01" THEN dt01 = dt01 + op_buff.op_act_run.
-                 WHEN "DT03" THEN dt02 = dt02 + op_buff.op_act_run. 
+                 WHEN "DT03" THEN dt02 = dt02 + op_buff.op_act_run.
                  WHEN "DT04" THEN dt02 = dt02 + op_buff.op_act_run.
                  WHEN "DOWN02" THEN dt02 = dt02 + op_buff.op_act_run.
                  WHEN "DOWN06" THEN dt02 = dt02 + op_buff.op_act_run.
@@ -500,7 +502,7 @@ repeat:
            END.
          END.
          ELSE DO:
-           FIND FIRST usrw_wkfl WHERE usrw_key1 = "down-reason" 
+           FIND FIRST usrw_wkfl WHERE usrw_key1 = "down-reason"
               AND usrw_key2 = STRING(op_buff.op_trnbr) NO-LOCK NO-ERROR.
            IF AVAIL usrw_wkfl THEN DO:
               DO i = 1 TO 5:
@@ -511,25 +513,25 @@ repeat:
            END.
          END.
       end.
-       
+
       qty_rjct = op_hist.op_qty_rjct.
-      rrjct = if op_hist.op_rsn_rjct = "REJ01" then "01" else "02".       
+      rrjct = if op_hist.op_rsn_rjct = "REJ01" then "01" else "02".
       for each op_buff where op_buff.op_trnbr > op_hist.op_trnbr
-           and op_buff.op_wo_lot   = op_hist.op_wo_lot 
+           and op_buff.op_wo_lot   = op_hist.op_wo_lot
            and op_buff.op_part     = op_hist.op_part
-           and op_buff.op_date     = op_hist.op_date 
+           and op_buff.op_date     = op_hist.op_date
            and op_buff.op_shift    = op_hist.op_shift
-           and op_buff.op_wo_op    = op_hist.op_wo_op 
+           and op_buff.op_wo_op    = op_hist.op_wo_op
            and op_buff.op_emp      = op_hist.op_emp
            and op_buff.op_type     = op_hist.op_type
            no-lock:
-         
+
            qty_rjct = qty_rjct + op_buff.op_qty_rjct.
-           rrjct = if op_buff.op_rsn_rjct = "REJ01" then (rrjct + " " + "01") else (rrjct + " " + "02").           
+           rrjct = if op_buff.op_rsn_rjct = "REJ01" then (rrjct + " " + "01") else (rrjct + " " + "02").
            create temp.
            assign t_trnbr = op_buff.op_trnbr.
       end.
-      
+
       if available wr_route then do:
       wr_comp = 0.
       for each op_buff no-lock where op_buff.op_trnbr > op_hist.op_trnbr
@@ -542,7 +544,7 @@ repeat:
          and op_buff.op_type     = op_hist.op_type:
          wr_comp = wr_comp + op_buff.op_qty_comp.
       end.
-      
+
       for each op_buff no-lock where op_buff.op_trnbr > op_hist.op_trnbr
          and op_buff.op_wo_lot   = op_hist.op_wo_lot
          and op_buff.op_part     = op_hist.op_part
@@ -553,7 +555,7 @@ repeat:
          and op_buff.op_type     = op_hist.op_type:
          wr_comp = wr_comp + op_buff.op_qty_comp.
       end.
-       
+
       for each op_buff no-lock where op_buff.op_trnbr > op_hist.op_trnbr
          and op_buff.op_wo_lot   = op_hist.op_wo_lot
          and op_buff.op_part     = op_hist.op_part
@@ -564,7 +566,7 @@ repeat:
          and op_buff.op_type     = op_hist.op_type:
          wr_comp = wr_comp + op_buff.op_qty_comp.
       end.
-       
+
       wr_comp = wr_qty_comp - wr_comp.
       end. /*  if available wr_route then do:*/
       qty_comp = op_hist.op_qty_comp.
@@ -582,7 +584,7 @@ repeat:
       	    st01 = op_hist.op_act_setup.
       	else if substr(op_hist.op_user2,1,6,"RAW") = "ST02" then
       	    st02 = op_hist.op_act_setup.
-      	else 
+      	else
       	    st03 = op_hist.op_act_setup.
       END.
       ELSE DO:
@@ -606,18 +608,18 @@ repeat:
          and op_buff.op_wo_op    = op_hist.op_wo_op
          and op_buff.op_emp      = op_hist.op_emp
          and op_buff.op_type     = op_hist.op_type:
-          
+
          qty_comp = qty_comp + op_buff.op_qty_comp.
          act_setup = act_setup + op_buff.op_act_setup.
          act_run   = act_run   + op_buff.op_act_run.
-         
+
          /* NAD - 20110415.1 - B */
          IF op_buff.op_user2 <> "" THEN DO:
          	if trim(substr(op_buff.op_user2,1,6,"RAW")) = "ST01" then
          	    st01 = st01 + op_buff.op_act_setup.
          	else if substr(op_buff.op_user2,1,6,"RAW") = "ST02" then
          	    st02 = st02 + op_buff.op_act_setup.
-         	else 
+         	else
          	    st03 = st03 + op_buff.op_act_setup.
          END.
          ELSE DO:
@@ -631,39 +633,39 @@ repeat:
                END.
             END.
          END.
-      	/* NAD - 20110415.1 - E */	
+      	/* NAD - 20110415.1 - E */
 
          create temp.
          assign t_trnbr = op_buff.op_trnbr.
       end.
-      
+
       if avail pt_mstr then tot_net_weight = pt_net_wt * qty_comp.
-      
+
       open_qty = 0.
       if avail wr_route then open_qty = wr_qty_ord - wr_comp.
-      
+
       rjct_rate = if (qty_comp + qty_rjct) <> 0 THEN (qty_rjct / (qty_comp + qty_rjct)) * 100
          ELSE 0.
-               
-      comp_rate = if avail wr_route and qty_comp <> 0 and act_run <> 0 then 
+
+      comp_rate = if avail wr_route and qty_comp <> 0 and act_run <> 0 then
          ((if std_routing_run then rorun else op_hist.op_std_run) / (act_run / qty_comp)) * 100.0
          else 0.
 
       std_run = std_run + (if std_routing_run then rorun else op_hist.op_std_run) * op_hist.op_qty_comp.
       prate = if (act_run + act_setup + downtime) <> 0 and qty_comp <> 0 then
-         ((if std_routing_run then rorun else op_hist.op_std_run) / ((act_run + act_setup + downtime ) / qty_comp)) * 100.0	             
+         ((if std_routing_run then rorun else op_hist.op_std_run) / ((act_run + act_setup + downtime ) / qty_comp)) * 100.0
 	      else 0.
 
       rate_ks = if (act_run + act_setup + downtime - it01) <> 0 and qty_comp <> 0 then
          ((if std_routing_run then rorun else op_hist.op_std_run) / ((act_run + act_setup + downtime - it01 ) / qty_comp)) * 100.0
 	      else 0.
-	          	
+
       open_day = 0.
-      FIND shop_cal where shop_site = op_hist.op_site 
+      FIND shop_cal where shop_site = op_hist.op_site
          and shop_wkctr = op_hist.op_wkctr NO-LOCK no-error.
       if not avail shop_cal then do:
-         find shop_cal where shop_site = op_hist.op_site and shop_wkctr = "" NO-LOCK no-error.	
-         if not avail shop_cal then 
+         find shop_cal where shop_site = op_hist.op_site and shop_wkctr = "" NO-LOCK no-error.
+         if not avail shop_cal then
 	         FIND shop_cal where shop_site = "" and shop_wkctr = "" NO-LOCK no-error.
       end.
       IF AVAIL shop_cal THEN do:
@@ -676,16 +678,17 @@ repeat:
 
       s = op_hist.op_shift.
       rqty = op_hist.op_qty_rwrk.
-       
+
 /*ISK03**********************************************
-/*ISK03*/ if s = "1" or s = "D" 
+/*ISK03*/ if s = "1" or s = "D"
 	    then s ="白".
-	    else s = "夜".      
+	    else s = "夜".
 **ISK03**********************************************/
 
       amch = (if op_date < date(1,5,2009) then integer(substr(op_hist.op_user1,1,3)) else op__dec01).
-      bisu = substr(op_hist.op_user1,4,3).
-       
+/*129*      bisu = substr(op_hist.op_user1,4,3). */
+/*129*/     bisu = substr(op_hist.op_user1,4,4).
+
       std_dout = hqty.	/*STANDARD HOURE OUTPUT*/
       act_dout = integer(bisu). /*ACTUAL HOURE OUTPUT*/
       hqty = round(hqty * 12,0). /*STANDARD DAILY OUTPUT*/
@@ -696,7 +699,7 @@ repeat:
             act_dout = act_dout * integer(substr(cmt_buff.cmt_cmmt[15],1,index(cmt_buff.cmt_cmmt[15],"/") - 1)).
          end.
       end. /*if avail cmt_det*/
-	
+
       disp_pt_part = if available ro_det and ro_wipmtl_part <> "" then ro_det.ro_wipmtl_part else op_hist.op_part.
 
       v_wo_qty_ord = 0.
@@ -724,34 +727,34 @@ repeat:
          STRING(year(wo_due_date),"9999") + "/" + STRING(MONTH(wo_due_date),"99") + "/" + STRING(DAY(wo_due_date),"99") FORMAT "x(10)" ","
          v_wo_qty_ord FORMAT "->>>>>>9" ","
          wr_comp FORMAT "->>>>>>9" ","
-         v_wr_op FORMAT ">>9" ","      
+         v_wr_op FORMAT ">>9" ","
          mch format ">>>>>9.9" ","
          amch format "->>>>9.9" ","
-         hqty format ">>>>>>>9" "," 
+         hqty format ">>>>>>>9" ","
          std_dout format "->>>>>>9" ","
-         act_dout format "->>>>>>9" ","      
-         v_var_time  format "->>>9.9%" ","   
+         act_dout format "->>>>>>9" ","
+         v_var_time  format "->>>9.9%" ","
          v_pt_net_wt FORMAT "->>>>9.99<<<<" ","
          tot_net_weight format "->>>>>9.9" ","
          qty_comp format "->>>>>>9" ","
          qty_rjct format "->>>>9" ","
          rjct_rate format "->>9.9%" ","
          prate format "->>>9.9%" "," /*PRODUCTION EFFECTIVE 1 INCLUDE ST/DT...*/
-         comp_rate format "->>>9.9%" "," /*PRODUCTION EFFECTIVE 1 NOT-INCLUDE ST/DT...*/ 
-         rate_ks format "->>>9.9%" "," /*PRODUCTION EFFECTIVE 1 NOT-INCLUDE ST/DT...*/           
+         comp_rate format "->>>9.9%" "," /*PRODUCTION EFFECTIVE 1 NOT-INCLUDE ST/DT...*/
+         rate_ks format "->>>9.9%" "," /*PRODUCTION EFFECTIVE 1 NOT-INCLUDE ST/DT...*/
          v_var format "->>>9.9%" ","
          open_qty format "->>>>>>9" ","
-	      open_day format "->>>9.9" ","
+	       open_day format "->>>9.9" ","
          /* act_setup format "->>>>9.99" "," */
          st01 FORMAT "->>>>9.99" ","
-         st02 FORMAT "->>>>9.99" "," 
+         st02 FORMAT "->>>>9.99" ","
          st03 FORMAT "->>>>9.99" ","
          act_run format "->>>>9.99" ","
-	      dt01 format "->>>>9.99" ","
-	      dt02 format "->>>>9.99" ","
+	       dt01 format "->>>>9.99" ","
+	       dt02 format "->>>>9.99" ","
          dt03 format "->>>>9.99" ","
-	      it01 format "->>>>9.99" ","  	  	  
-         Replace(substr(op_hist.op_comment,1,42),",","") format "x(42)" 
+	      it01 format "->>>>9.99" ","
+         Replace(substr(op_hist.op_comment,1,42),",","") format "x(42)"
          SKIP.
 			end. /* if available wr_route then do: */
       IF op_hist.op_site BEGINS "NSZ" THEN DO:
@@ -760,7 +763,7 @@ repeat:
             v_group2 = disp_pt_part + op_hist.op_wo_lot .
          END.
          ELSE v_group2 = SUBSTR(op_hist.op_comment,index(op_hist.op_comment,"//") + 2,1).
-      
+
          FOR FIRST tt WHERE tt_emp = op_hist.op_emp
             AND tt_shift = op_hist.op_shift
             AND tt_group = v_group2 :
@@ -788,23 +791,23 @@ repeat:
 	      create tmp_sum.
 	      assign
             tmp_shift = op_hist.op_shift
-	   	   tmp_std_man = mch
-	   	   tmp_act_man = amch
-	   	   tmp_dout = hqty
-		      tmp_sum_wt = tot_net_weight
-      		tmp_ac_qty = qty_comp
-      		tmp_rj_qty = qty_rjct
-      		tmp_open_qty = open_qty
-      		tmp_act_setup = act_setup
+	   	      tmp_std_man = mch
+	   	      tmp_act_man = amch
+	   	      tmp_dout = hqty
+		        tmp_sum_wt = tot_net_weight
+      		  tmp_ac_qty = qty_comp
+      		  tmp_rj_qty = qty_rjct
+      		  tmp_open_qty = open_qty
+      		  tmp_act_setup = act_setup
             tmp_std_run = (if std_routing_run then rorun else op_hist.op_std_run) * qty_comp
-      		tmp_act_run = act_run
+      		  tmp_act_run = act_run
             tmp_st01 = st01
             tmp_st02 = st02
             tmp_st03 = st03
-      		tmp_dt01 = dt01
-      		tmp_dt02 = dt02
-      		tmp_dt03 = dt03
-      		tmp_it01 = it01
+      		  tmp_dt01 = dt01
+      		  tmp_dt02 = dt02
+      		  tmp_dt03 = dt03
+      		  tmp_it01 = it01
 
             tmp_qty_com = qty_comp
             tmp_qty_rjct = qty_rjct
@@ -827,22 +830,22 @@ repeat:
 	   else do:
 	      assign
             tmp_std_man = tmp_std_man + mch
-	   	   tmp_act_man = tmp_act_man + amch
-	   	   tmp_dout = tmp_dout + hqty
-      		tmp_sum_wt = tmp_sum_wt + tot_net_weight
-      		tmp_ac_qty = tmp_ac_qty + qty_comp
-      		tmp_rj_qty = tmp_rj_qty + qty_rjct
-      		tmp_open_qty = tmp_open_qty + open_qty
-      		tmp_act_setup = tmp_act_setup + act_setup
+	   	      tmp_act_man = tmp_act_man + amch
+   	   	    tmp_dout = tmp_dout + hqty
+      		  tmp_sum_wt = tmp_sum_wt + tot_net_weight
+      		  tmp_ac_qty = tmp_ac_qty + qty_comp
+      		  tmp_rj_qty = tmp_rj_qty + qty_rjct
+      		  tmp_open_qty = tmp_open_qty + open_qty
+      		  tmp_act_setup = tmp_act_setup + act_setup
             tmp_std_run = tmp_std_run + (if std_routing_run then rorun else op_hist.op_std_run) * qty_comp
-      		tmp_act_run = tmp_act_run + act_run
+      		  tmp_act_run = tmp_act_run + act_run
             tmp_st01 = tmp_st01 + st01
             tmp_st02 = tmp_st02 + st02
             tmp_st03 = tmp_st03 + st03
-      		tmp_dt01 = tmp_dt01 + dt01
-      		tmp_dt02 = tmp_dt02 + dt02
-      		tmp_dt03 = tmp_dt03 + dt03
-      		tmp_it01 = tmp_it01 + it01
+      		  tmp_dt01 = tmp_dt01 + dt01
+      		  tmp_dt02 = tmp_dt02 + dt02
+      		  tmp_dt03 = tmp_dt03 + dt03
+      		  tmp_it01 = tmp_it01 + it01
 
             tmp_qty_comp = qty_comp + tmp_qty_comp
             tmp_qty_rjct = qty_rjct + tmp_qty_rjct
@@ -858,8 +861,8 @@ repeat:
          IF v_var_time <> 0 THEN  ASSIGN tmp_i = tmp_i + 1.
 
          IF v_var <> 0 THEN ASSIGN tmp_i1 = tmp_i1 + 1.
-	  end.		
-      	  		      
+	  end.
+
      if last(op_hist.op_date) then do:
          IF op_hist.op_site BEGINS "NKS" THEN DO:
             {yyprop01ks.i}
@@ -875,7 +878,7 @@ repeat:
      put skip(1).
      put "报表主要栏位计算公式或说明:"  skip.
      put "标准日产  = ( 1.0 / 单件加工时间 ) × 12.0(H)" skip.
-     put "标准时产  = (1.0 / 单件加工时间)× (每模产品数 / 总模腔数)" skip.  
+     put "标准时产  = (1.0 / 单件加工时间)× (每模产品数 / 总模腔数)" skip.
      put "实际时产  = 啤速 × 每模产品数(指1模多出产品)" skip.
      put "次品率    = [次品数  / (次品数 + 良品数量)] × 100.0" skip.
      put "效率P1 = [标准单件加工时间 / ((准备ST + 生产PT + 停机DT + 停用IT)/良品数量)] × 100.0" skip.
@@ -885,23 +888,23 @@ repeat:
      put "  <若生产时间汇报为零 则生产效率2默认为零>" skip.
      put "未结数量  = 工单数量 - 完成数量" skip.
      put "余天数    = 未结数量 / 标准日产" skip.
-     put "准备ST = 准备时间(包括待换模、换模、待换模头、换模头、洗筒、试啤、首检)" skip. 
+     put "准备ST = 准备时间(包括待换模、换模、待换模头、换模头、洗筒、试啤、首检)" skip.
      put "生产PT = 生产时间(含修风针、修气管、调机、换料、停料、清模头、调整模头)" skip.
      put "修机DT1 = 待修机、修机停工时间" skip.
      put "修模DT2 = 待修模、修模停工时间" skip.
      put "其他DT3 = 非修机、修模其他停工时间汇总" skip.
      put "停用IT = 待单、试机、试模、(无加工单)试料、机台保养等机台停用时间" skip.
-     put "零件号:若工艺流程工序中'在制品零件'存在 则显示'在制品零件'编号;若不存在 则显示加工单零件号" skip. 
-     put "(班次/合计)次品率 = (∑次品率 / ∑次数) × 100.0" skip.      
-     put "标准/实际用人说明: 同一个班同一台机 以实际用人最多的那款产品来统计 标准用人也是取对应产品的标准用人" skip.      
-     put "一模多出的情况 在工时反馈时需要在说明的最后一行输入://1(1表示一模多出的组别)" skip.      
+     put "零件号:若工艺流程工序中'在制品零件'存在 则显示'在制品零件'编号;若不存在 则显示加工单零件号" skip.
+     put "(班次/合计)次品率 = (∑次品率 / ∑次数) × 100.0" skip.
+     put "标准/实际用人说明: 同一个班同一台机 以实际用人最多的那款产品来统计 标准用人也是取对应产品的标准用人" skip.
+     put "一模多出的情况 在工时反馈时需要在说明的最后一行输入://1(1表示一模多出的组别)" skip.
      PUT "效率P4 = ((良品数+次品数) / (实际时产*生产PT)) × (每模产品数 / 总模腔数) " SKIP.
      PUT "T1 = 实际时产 / 标准时产" SKIP.
      PUT "M1 = ((生产PT/机台总时间) * 标准用人)/实际用人" SKIP.
      PUT "M2 = M1 + ((准备ST/机台总时间) * 标准用人(1))/实际用人(1)" SKIP.
      PUT "M3 = ((生产PT/汇报总时间) * 标准用人)/实际用人" SKIP.
    end.
-   
+
    {mfreset.i}
 end.
 
@@ -917,7 +920,7 @@ PROCEDURE pro_rsn:
         WHEN "DT01" THEN dt01 = dt01 + v_qty.
         WHEN "DT02" THEN dt01 = dt01 + v_qty.
         WHEN "DOWN01" THEN dt01 = dt01 + v_qty.
-        WHEN "DT03" THEN dt02 = dt02 + v_qty. 
+        WHEN "DT03" THEN dt02 = dt02 + v_qty.
         WHEN "DT04" THEN dt02 = dt02 + v_qty.
         WHEN "DOWN02" THEN dt02 = dt02 + v_qty.
         WHEN "DOWN06" THEN dt02 = dt02 + v_qty.
