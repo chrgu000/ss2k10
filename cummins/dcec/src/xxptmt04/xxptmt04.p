@@ -1,3 +1,4 @@
+/* GUI CONVERTED from xxptmt04.p (converter v1.78) Thu Jan 19 15:47:30 2012 */
 /* ppptmt04.p - use character program to gui for cim_load out of erp          */
 /* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -16,11 +17,15 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
-/* {mfdtitle.i "121030.1"} */
+ {mfdtitle.i "121030.1"}
+/*
 {mfdeclre.i}
 {gplabel.i &ClearReg = yes}
 session:set-wait-stat("").
+*/
 define new shared variable ppform as character.
 
 ppform = "a".
 {gprun.i ""xxptmta.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+

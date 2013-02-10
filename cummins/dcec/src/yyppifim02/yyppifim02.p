@@ -228,9 +228,10 @@ def var item_group as char.
                        put stream batchdata unformatted "~"" exec_part "~" ".
                        put stream batchdata unformatted "~"" site-b "~"" skip.
                        put stream batchdata unformatted "- - - - - - - - - - - - - - ~"" item_pm_code "~" ".
-                       put stream batchdata unformatted "- ".
+                       put stream batchdata unformatted "- - - - - - - - - - ".
                        if item_phantom = "P" then put stream batchdata unformatted "Y ".
                        else put stream batchdata unformatted "N ".   /*Phantom*/
+                       put stream batchdata unformatted "- - - - - - - - - - ".
                        if lookup(item_type,"1,5") > 0 then do:
                           put stream batchdata unformatted "~"" exec_part "ZZ~" ".
                           put stream batchdata unformatted "~"" exec_part "ZZ~" ".
@@ -301,7 +302,9 @@ W001 */
         INPUT from value(strinputfile).
 
         PAUSE 0 BEFORE-HIDE.
+        batchrun = yes.
         {gprun.i ""xxpsmt02.p""}
+        batchrun = no.
         INPUT CLOSE.
         OUTPUT CLOSE.
      /*W002 begin*/

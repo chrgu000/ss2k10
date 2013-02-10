@@ -1,4 +1,15 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "qadtocrm.p".
+
 DEFINE VAR mpath AS CHAR.
 DEFINE VAR v_start_date AS CHAR.
 DEFINE VAR v_end_date AS CHAR.
@@ -60,7 +71,7 @@ FOR EACH xx_wkfl NO-LOCK BREAK BY xx_part BY xx_price.
         PUT UNFORMATTED v_start_date "|".
         PUT UNFORMATTED v_end_date  SKIP.
     END.
-    
+
 
     ELSE IF (xx_line >= "1700" AND xx_line <= "17ZZ") OR (xx_line >= "7000" AND xx_line <"7W00") OR (xx_line > "7WZZ" AND xx_line < "7Z00") OR (xx_line >= "8000" AND xx_line <="8ZZZ")  THEN DO:
         IF LAST-OF(xx_part) THEN DO:
@@ -72,7 +83,7 @@ FOR EACH xx_wkfl NO-LOCK BREAK BY xx_part BY xx_price.
         END.
 
     END.
-    
+
     ELSE IF ((xx_line > "7W00" AND xx_line <="7WZZ") OR (xx_line >= "7Z00" AND xx_line <="7ZZZ")) AND xx_list = "C12" THEN DO:
         PUT UNFORMATTED xx_part "|".
         PUT UNFORMATTED xx_curr "|".
@@ -80,7 +91,7 @@ FOR EACH xx_wkfl NO-LOCK BREAK BY xx_part BY xx_price.
         PUT UNFORMATTED v_start_date "|".
         PUT UNFORMATTED v_end_date  SKIP.
     END.
-    
+
     /*
     ELSE DO:
         PUT UNFORMATTED xx_part "|".
@@ -90,7 +101,7 @@ FOR EACH xx_wkfl NO-LOCK BREAK BY xx_part BY xx_price.
         PUT UNFORMATTED v_end_date  SKIP.
     END.
     */
-    
+
 END.
 
 
@@ -113,7 +124,8 @@ FOR EACH pts_det NO-LOCK.
     PUT UNFORMATTED v_end_date  SKIP.
 END.
 
-OUTPUT TO VALUE ("\\qadtemp\ftp\QADtoCRM.logfile") APPEND.
+/* OUTPUT TO VALUE ("\\qadtemp\ftp\QADtoCRM.logfile") APPEND. */
+OUTPUT TO VALUE (mpath + "QADtoCRM.logfile") APPEND.
 DISP mpath FORMAT "X(100)" TODAY TIME WITH WIDTH 180 STREAM-IO.
 
 OUTPUT CLOSE.

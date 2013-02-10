@@ -44,3 +44,4 @@
       v_box[5] = trim(substring(usrw_charfld[10],241,60)).
       v_max_amt = usrw_decfld[3].
       v_drange = usrw_decfld[1].
+			gdinvmaxamt = usrw_decfld[3].

@@ -1,4 +1,15 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "SQ05_Purchase_receipt".
+
 DEFINE VAR v_3pl LIKE pod__chr01.
 DEFINE VAR v_wh LIKE IN__qadc01.
 DEFINE VAR v_pur_price LIKE prh_pur_cost.
@@ -21,7 +32,7 @@ FOR EACH prh_hist WHERE prh_domain = global_domain and prh_rcp_date >= TODAY - 1
     IF AVAIL pod_det THEN v_3pl = pod__chr01.
     ELSE v_3pl = "".
     FIND FIRST IN_mstr WHERE in_domain = global_domain and IN_part = prh_part AND IN_site = prh_site NO-LOCK NO-ERROR.
-    IF AVAIL IN_mstr THEN DO:    
+    IF AVAIL IN_mstr THEN DO:
        FIND FIRST  CODE_mstr WHERE code_domain = global_domain and CODE_fldname = "Keeper-Warehouse" AND CODE_value = IN__qadc01 NO-LOCK NO-ERROR.
        IF AVAIL CODE_mstr THEN v_wh = CODE_cmmt.
        ELSE DO:
@@ -33,17 +44,17 @@ FOR EACH prh_hist WHERE prh_domain = global_domain and prh_rcp_date >= TODAY - 1
     ELSE DO:
       IF prh_site = "DCEC-B" THEN v_wh = "B01".
       IF prh_site = "DCEC-C" THEN v_wh = "C01".
-      IF prh_site = "DCEC-SV" THEN v_wh = "V01".       
+      IF prh_site = "DCEC-SV" THEN v_wh = "V01".
     END.
-  
-        
+
+
 
     FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = prh_part NO-LOCK NO-ERROR.
 
     FIND LAST pc_mstr WHERE pc_domain = global_domain and pc_part = prh_part AND pc_list = prh_vend AND (pc_start <> 01/01/01 and pc_start <= prh_rcp_date) AND (pc_expire >= prh_rcp_date  OR pc_expire = ?) NO-LOCK NO-ERROR.
     IF AVAIL pc_mstr  THEN v_pur_price = pc_amt[1].  /*prh_pur_cost*/
     ELSE v_pur_price = 0.
-    
+
     v_date_string = STRING(YEAR(prh_rcp_date),"9999") + "-" + STRING(MONTH(prh_rcp_date),"99") + "-" +  STRING(DAY(prh_rcp_date),"99").
     v_pur_time  = "23:00:00".
 

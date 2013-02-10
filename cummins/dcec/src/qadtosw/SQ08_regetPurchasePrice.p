@@ -1,4 +1,15 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "SQ08_regetPurchasePrice".
+
 DEFINE VAR x_data AS CHAR EXTENT 6 FORMAT "X(20)".
 DEFINE VAR listfile AS CHAR.
 DEFINE VAR flpath AS CHAR FORMAT "X(30)".
@@ -85,7 +96,7 @@ FOR EACH xx_wkfl.
 
       FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = prh_part NO-LOCK NO-ERROR.
       IF AVAIL pt_mstr THEN desc2 = pt_desc2.
-      ELSE  desc2 = "". 
+      ELSE  desc2 = "".
 
       PUT UNFORMATTED UPPER(prh_receiver) "|".
       PUT UNFORMATTED prh_line "|".

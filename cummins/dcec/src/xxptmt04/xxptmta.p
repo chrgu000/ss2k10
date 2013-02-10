@@ -1,3 +1,4 @@
+/* GUI CONVERTED from xxptmta.p (converter v1.78) Thu Jan 19 15:47:30 2012 */
 /* ppptmta.p - ITEM MAINTENANCE                                               */
 /* Copyright 1986-2009 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -306,64 +307,182 @@ define variable lCustomOK as logical no-undo.
 /*@MODULE APM END*/
 
 /* NEW FORM DEFINITION TO INCLUDE THE batchdelete VARIABLE */
-form {ppptmtaa.i}
-with frame a side-labels width 80 attr-space.
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+{ppptmtaa.i}
+ SKIP(.4)  /*GUI*/
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame a:handle).
 
 /* ITEM MAINTENANCE FRAME INCLUDE FILE */
-form {ppptmta2.i}
-with frame a1 title color normal (getFrameTitle("ITEM_DATA",15))
-side-labels width 80 attr-space.
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{xxppptmta2.i}
+ SKIP(.4)  /*GUI*/
+with frame a1 
+side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a1-title AS CHARACTER.
+ F-a1-title = (getFrameTitle("ITEM_DATA",15)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a1 = F-a1-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a1 =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a1 + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a1 =
+  FRAME a1:HEIGHT-PIXELS - RECT-FRAME:Y in frame a1 - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a1 = FRAME a1:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame a1:handle).
 
-form {ppptmta3.i}
-with frame b title color normal (getFrameTitle("ITEM_INVENTORY_DATA",28))
-side-labels width 80 attr-space.
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{ppptmta3.i}
+ SKIP(.4)  /*GUI*/
+with frame b 
+side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-b-title AS CHARACTER.
+ F-b-title = (getFrameTitle("ITEM_INVENTORY_DATA",28)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame b = F-b-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame b =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame b + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame b =
+  FRAME b:HEIGHT-PIXELS - RECT-FRAME:Y in frame b - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME b = FRAME b:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame b:handle).
 
-form {ppptmta4.i}
-with frame c title color normal (getFrameTitle("ITEM_PLANNING_DATA",26))
-side-labels width 80 attr-space.
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{ppptmta4.i}
+ SKIP(.4)  /*GUI*/
+with frame c 
+side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-c-title AS CHARACTER.
+ F-c-title = (getFrameTitle("ITEM_PLANNING_DATA",26)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame c = F-c-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame c =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame c + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame c =
+  FRAME c:HEIGHT-PIXELS - RECT-FRAME:Y in frame c - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME c = FRAME c:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame c:handle).
 
-form {ppptmta5.i}
-with frame d1 title color normal (getFrameTitle("ITEM_PRICE_DATA",23))
-side-labels width 80 attr-space.
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{ppptmta5.i}
+ SKIP(.4)  /*GUI*/
+with frame d1 
+side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-d1-title AS CHARACTER.
+ F-d1-title = (getFrameTitle("ITEM_PRICE_DATA",23)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame d1 = F-d1-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame d1 =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame d1 + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame d1 =
+  FRAME d1:HEIGHT-PIXELS - RECT-FRAME:Y in frame d1 - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME d1 = FRAME d1:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame d1:handle).
 
-form
+FORM /*GUI*/ 
    {ppptmta9.i}
 with frame d ? down title color normal frtitle
-width 80 no-attr-space.
+width 80 no-attr-space THREE-D /*GUI*/.
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
    setFrameLabels(frame d:handle).
 
 {&PPPTMTA-P-TAG1}
-form {ppptmta9.i}
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{ppptmta9.i}
+ SKIP(.4)  /*GUI*/
 with frame d0 1 down width 80 overlay row startrow no-labels
-title color normal (getFrameTitle("TOTALS",16)) no-attr-space.
+ no-attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-d0-title AS CHARACTER.
+ F-d0-title = (getFrameTitle("TOTALS",16)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame d0 = F-d0-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame d0 =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame d0 + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame d0 =
+  FRAME d0:HEIGHT-PIXELS - RECT-FRAME:Y in frame d0 - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME d0 = FRAME d0:WIDTH-CHARS - .5. /*GUI*/
+
 {&PPPTMTA-P-TAG2}
 
-form {ppptmt10.i}
-with frame b1 title color normal (getFrameTitle("ITEM_SHIPPING_DATA",26))
-   side-labels width 80 attr-space.
+FORM /*GUI*/  
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{ppptmt10.i}
+ SKIP(.4)  /*GUI*/
+with frame b1 
+   side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-b1-title AS CHARACTER.
+ F-b1-title = (getFrameTitle("ITEM_SHIPPING_DATA",26)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame b1 = F-b1-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame b1 =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame b1 + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame b1 =
+  FRAME b1:HEIGHT-PIXELS - RECT-FRAME:Y in frame b1 - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME b1 = FRAME b1:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
@@ -494,6 +613,8 @@ if c-application-mode = "API" then do on error undo, return:
 
    /* Get handle of API Controller */
    {gprun.i ""gpaigach.p"" "(output ApiMethodHandle)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
    if not valid-handle(ApiMethodHandle) then do:
       /* API Error */
@@ -529,6 +650,8 @@ repeat:
       if pic_item_regen and regen_add
       then do:
          {gprun.i ""ppptgen.p"" "(input ""6"", input part_node)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
          regen_add = no.
       end.
 
@@ -553,6 +676,8 @@ repeat:
          end. /* FOR EACH ANX_DET */
 
          {gprun.i ""ppptgen.p"" "(input ""6"", input part_node)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
          l_ana_build = no.
 
       end.
@@ -594,6 +719,8 @@ repeat:
    end. /* c-application-mode <> "API" */
 
    do transaction on endkey undo, leave mainloop:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       if c-application-mode = "API" and retry then
          undo mainloop, next mainloop.
@@ -670,6 +797,8 @@ repeat:
                      pt_status
                      pt_break_cat
                      pt_promo
+                     pt__chr09
+                     pt__chr10
                   with frame a1.
 
                if ppform = "" or ppform = "b"
@@ -921,6 +1050,8 @@ repeat:
          pt_recno      = recid(pt_mstr).
 
       do on error undo mainloop, leave mainloop:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
          if c-application-mode = "API" and retry then
             undo mainloop, next mainloop.
@@ -1034,6 +1165,8 @@ repeat:
 
             set1:
             do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
                if (c-application-mode = "API"
                   or batchrun)
@@ -1155,7 +1288,9 @@ repeat:
                else do:
                   del-yn = (ttItem.operation = {&REMOVE}).
                end. /* c-application-mode = "API" */
-            end. /* SET1 */
+            end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* SET1 */
 
             if not regen_add
                and (l_pt_desc1 <> pt_desc1
@@ -1177,6 +1312,8 @@ repeat:
                  output undo_del,
                  output msg)"
                }
+/*GUI*/ if global-beam-me-up then undo, leave.
+
             if undo_del
             then
                next mainloop.
@@ -1201,6 +1338,7 @@ repeat:
 
             if c-application-mode <> "API" then
                clear frame a.
+/*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
             del-yn = no.
             next mainloop.
 
@@ -1278,7 +1416,9 @@ repeat:
                undo, return.
             end. /* IF error_flag */
 
-         end. /* IF soc_apm and (promo_old <> "" and ... )  */
+         end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* IF soc_apm and (promo_old <> "" and ... )  */
          /*@MODULE APM END*/
 
          if new_part
@@ -1287,6 +1427,8 @@ repeat:
             undo_all = yes.
 
             {gprun.i ""xxptmta1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
             if c-application-mode = "API" and not undo_all then do:
                /* Run any customizations in API mode for pt_mstr */
@@ -1332,7 +1474,9 @@ repeat:
                l_pt_prod_line  = pt_prod_line
                l_pt_site       = pt_site.
 
-      end. /* DO ON ERROR */
+      end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* DO ON ERROR */
 
       if (ppform = "" or ppform = "a")  and not new_part
       then do
@@ -1340,6 +1484,8 @@ repeat:
 
          undo_all = yes.
          {gprun.i ""xxptmta1.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
          if c-application-mode = "API" and not undo_all then do:
             /* Run any customizations in API mode for pt_mstr */
@@ -1379,8 +1525,12 @@ repeat:
    then do
      on endkey undo, next mainloop
      on error undo mainloop, next mainloop:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       {gprun.i ""ppptmtb.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       if not regen_add
          and (l_pt_article   <> pt_article
@@ -1400,7 +1550,9 @@ repeat:
          next mainloop.
       end.
 
-   end. /* IF ppform = ...*/
+   end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* IF ppform = ...*/
    /*END LOOP B */
 
    if c-application-mode <> "API" then do:
@@ -1413,8 +1565,12 @@ repeat:
    then do
       on endkey undo, next mainloop
       on error undo mainloop, next mainloop:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       {gprun.i ""ppptmtc.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
       if not regen_add
          and l_pt_buyer     <> pt_buyer
       then
@@ -1434,7 +1590,9 @@ repeat:
          next mainloop.
       end.
 
-   end. /* REPEAT: */
+   end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* REPEAT: */
    /* END LOOP C */
 
    if c-application-mode <> "API" then
@@ -1445,7 +1603,11 @@ repeat:
    then do
       on endkey undo, next mainloop
       on error undo mainloop, next mainloop:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
       {gprun.i ""ppptmtd.p""}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
       if keyfunction(lastkey) = "end-error"
       then do:
          if qxo_write then
@@ -1456,7 +1618,9 @@ repeat:
                                    input 'WRITE').
          next mainloop.
       end.
-   end. /* IF ppform = "" OR ppform = "d" */
+   end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* IF ppform = "" OR ppform = "d" */
 
    if ppform = " "
    then do:
@@ -1475,6 +1639,8 @@ repeat:
          end. /* c-application-mode <> "API" */
          {fsptfrm.i "new"}
          {gprun.i ""fsptmt1.p"" "(input pt_part)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
       end. /* IF AVAILABLE svc_ctrl AND ... */
    end.    /* IF ppform = " " */
 
@@ -1491,6 +1657,8 @@ repeat:
          hide frame d1.
          /* PROCESS APM DETAILS */
          {gprun.i ""ppptapm1.p"" "( input pt_part)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
          hide frame f_apmdata.
       end. /* IF ppform = "" OR ppform = "A" */
    end. /* IF soc_apm */

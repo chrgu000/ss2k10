@@ -175,24 +175,24 @@ repeat:
 
 
        repeat:    /*asn input repeat*/
-           assign   ponbr = excelsheetmain:cells(i,1):text
-                    povend = excelsheetmain:cells(i,2):text
-                    poduedate = excelsheetmain:cells(i,3):text
+           assign   ponbr = excelsheetmain:cells(i,1):FormulaR1C1
+                    povend = excelsheetmain:cells(i,2):FormulaR1C1
+                    poduedate = excelsheetmain:cells(i,3):FormulaR1C1
 /*judy 08/23/05*/
-                    pricelist = excelsheetmain:cells(i,4):TEXT
-                    pocurr = excelsheetmain:cells(i,5):text
-                    pobuyer = excelsheetmain:cells(i,6):text
-                    pocontract = excelsheetmain:cells(i,7):text
-                    poline = excelsheetmain:cells(i,8):text
-                    posite = excelsheetmain:cells(i,9):text
-                    popart = excelsheetmain:cells(i,10):text
-                    poqty = excelsheetmain:cells(i,11):TEXT
-                  /*  pocurr = excelsheetmain:cells(i,4):text
-                    pobuyer = excelsheetmain:cells(i,5):text
-                    pocontract = excelsheetmain:cells(i,6):text
-                    posite = excelsheetmain:cells(i,7):text
-                    popart = excelsheetmain:cells(i,8):text
-                    poqty = excelsheetmain:cells(i,9):text*/ .
+                    pricelist = excelsheetmain:cells(i,4):FormulaR1C1
+                    pocurr = excelsheetmain:cells(i,5):FormulaR1C1
+                    pobuyer = excelsheetmain:cells(i,6):FormulaR1C1
+                    pocontract = excelsheetmain:cells(i,7):FormulaR1C1
+                    poline = excelsheetmain:cells(i,8):FormulaR1C1
+                    posite = excelsheetmain:cells(i,9):FormulaR1C1
+                    popart = excelsheetmain:cells(i,10):FormulaR1C1
+                    poqty = excelsheetmain:cells(i,11):FormulaR1C1
+                  /*  pocurr = excelsheetmain:cells(i,4):FormulaR1C1
+                    pobuyer = excelsheetmain:cells(i,5):FormulaR1C1
+                    pocontract = excelsheetmain:cells(i,6):FormulaR1C1
+                    posite = excelsheetmain:cells(i,7):FormulaR1C1
+                    popart = excelsheetmain:cells(i,8):FormulaR1C1
+                    poqty = excelsheetmain:cells(i,9):FormulaR1C1*/ .
 /*judy 08/23/05*/
 
                     i = i + 1 .

@@ -64,11 +64,11 @@ define variable l_backup_domain              like global_domain         no-undo.
 {socnufrm.i}   /* COMMON USAGE FORM DEFINITIONS */
 
 /* FRAME B */
-FORM /*GUI*/ 
+FORM /*GUI*/
 with frame b 5 down width 80
 title color normal (getFrameTitle("CONSIGNMENT_SELECTION",78))
 &IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
+ STREAM-IO /*GUI*/
 &ENDIF /*GUI*/
 
 &IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
@@ -83,8 +83,8 @@ title color normal (getFrameTitle("CONSIGNMENT_SELECTION",78))
 setFrameLabels(frame b:handle).
 
 /* FRAME C */
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
 
 &IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
 (("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
@@ -109,7 +109,7 @@ title color normal (getFrameTitle("CONSIGNMENT_DETAILS",78))
 &ENDIF /*GUI*/
 
 &IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
+ STREAM-IO /*GUI*/
 &ENDIF /*GUI*/
 
 &IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
@@ -163,7 +163,7 @@ do transaction:
       view frame b.
       view frame c.
       clear frame d all.
-      
+
       /*
       scroll_loop:
       do with frame b
@@ -208,9 +208,9 @@ do transaction:
         hide frame c.
         hide frame b.
         undo shiploop, return.
-      end. 
+      end.
       if keyfunction(lastkey) = "END-ERROR" then do:
-               op_continue-yn = ?.   
+               op_continue-yn = ?.
          leave shiploop.
       end.
 
@@ -439,15 +439,18 @@ do transaction:
       ok_to_display = yes.
       /* DISPLAY ITEMS BEING ISSUED */
       /*V8+*/
-
-           
-      {mfgmsg10.i 636 1 ok_to_display}
+      if batchrun then do:
+      	 assign ok_to_display = no.
+      end.
+			else do:
+           {mfgmsg10.i 636 1 ok_to_display}
+      end.
       if ok_to_display = ? then do:
          op_continue-yn = ok_to_display.
          hide frame aa.
          undo, leave loop0.
       end.
-        
+
 
       if ok_to_display then do:
          /* DISPLAY QUANTITIES */
@@ -471,7 +474,7 @@ do transaction:
                ac_lotser             @ frmd_lotser
             with frame d
 &IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
+ STREAM-IO /*GUI*/
 &ENDIF /*GUI*/
 .
 
@@ -515,7 +518,7 @@ do transaction:
                   ac_consumed_um @ um
                with frame d
 &IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
+ STREAM-IO /*GUI*/
 &ENDIF /*GUI*/
 .
 
@@ -541,14 +544,15 @@ do transaction:
 
       /*V8+*/
 
-           
+if not batchrun then do:
       {mfgmsg10.i 12 1 ok_to_continue}
+end.
       if ok_to_continue = ? then do:
          op_continue-yn = ok_to_continue.
          hide frame aa.
          undo, leave loop0.
       end.
-        
+
 
       op_continue-yn = ok_to_continue.
 

@@ -17,8 +17,8 @@ define shared variable v_curr    like so_curr .
 define shared variable v_sonbr1  like so_nbr .
 define shared variable v_sonbr2  like so_nbr .
 define shared variable v_cust1   like so_nbr.
-define shared variable v_cust3   like so_cust .
 define shared variable v_cust2   like so_cust .
+define shared variable v_cust3   like so_cust .
 define shared variable v_bill1   like so_bill .
 define shared variable v_bill2   like so_bill .
 define shared variable v_date1   like so_ship_date .
@@ -343,10 +343,10 @@ for each so_mstr
         wkgtm_msg    = wkgtm_msg + "/订单行计税为NO".
         next.
       end.
-      /*
+/*
       message "vt_tax_pct=" + string(vt_tax_pct).
       pause.
-      */
+*/
       /*check*/
         {zzgt001.i wkgtd_item}
         {zzgt001.i wkgtd_spec}

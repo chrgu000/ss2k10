@@ -1,12 +1,20 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "SQ02_PurchaseSchdule".
+
 DEFINE VAR mfile  AS CHAR.
 DEFINE VAR mfile1 AS CHAR.
 DEFINE VAR v_warehouse LIKE CODE_cmmt INITIAL "B01".
 DEFINE VAR v_date_string AS CHAR.
 DEFINE VAR v_3pl LIKE pod__chr01.
-
-
-
 
 FIND FIRST CODE_mstr WHERE code_domain = global_domain and CODE_fldname = 'srmpath1' NO-LOCK NO-ERROR.
 mfile  = "SQ02\SQ02_" + STRING(YEAR(TODAY),"9999") + STRING(MONTH(TODAY),"99") + STRING(DAY(TODAY),"99") + STRING(TIME,"999999") + ".txt".
@@ -19,7 +27,7 @@ FOR EACH pod_det NO-LOCK WHERE pod_domain = global_domain and pod_site = "DCEC-S
     EACH po_mstr NO-LOCK WHERE po_domain = global_domain and po_nbr = pod_nbr AND po_sched,
     EACH pt_mstr NO-LOCK WHERE pt_domain = global_domain and pt_part = pod_part,
     EACH IN_mstr NO-LOCK WHERE in_domain = global_domain and IN_site = pod_site AND IN_part = pod_part,
-    EACH schd_det NO-LOCK WHERE schd_domain = global_domain and schd_type = 4 AND schd_rlse_id = pod_curr_rlse_id[1] AND schd_nbr = pod_nbr 
+    EACH schd_det NO-LOCK WHERE schd_domain = global_domain and schd_type = 4 AND schd_rlse_id = pod_curr_rlse_id[1] AND schd_nbr = pod_nbr
          AND schd_line = pod_line AND schd_discr_qty > 0 AND schd_date >= TODAY AND schd_date <= TODAY:
 
     FIND FIRST  CODE_mstr WHERE code_domain = global_domain and CODE_fldname = "Keeper-Warehouse" AND CODE_value = IN__qadc01 NO-LOCK NO-ERROR.

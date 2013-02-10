@@ -2,7 +2,7 @@
 /*Last modified by: Long Bo, Feb/19/2004              */
 /*eb2+sp7 retrofit: tao fengqin, 06/22/05              */
          /* DISPLAY TITLE */
-         {mfdtitle.i "120815.1"} /*FN07*/
+{mfdtitle.i "121214.1"}
 
 define variable part like wo_part.      /* assemble part    */
 define variable wodpart like wod_part.
@@ -10,6 +10,8 @@ define variable daPart like wod_part.   /* disassemble part */
 define variable nbr like wod_nbr.
 define variable lot like wod_lot.
 define variable woqtyord like wo_qty_ord.
+define variable area like mfc_logical
+   label "East/West" format "East/West" initial yes.
 
 define variable iss_pol like pt_iss_pol.
 
@@ -24,7 +26,7 @@ def var foutputfile as char format "x(55)".
 def var l_dot_pos as integer.     /* used to generate the string of foutputfile..*/
 def var iError as integer.
 def var iWarning as integer.
-def var iZero as integer.       /* if disass	emble part has the same part with assemeble part, then iZero = iZero + 1 */
+def var iZero as integer.       /* if disass  emble part has the same part with assemeble part, then iZero = iZero + 1 */
 
 def var iRow as integer.
 
@@ -55,6 +57,7 @@ FORM /*GUI*/
     status_name    colon 20
     wodesc2        no-label at 47 no-attr-space
     skip(1)
+    area  colon 20 skip(1)
     finputfile     colon 20   label "导入文件"
     foutputfile    colon 20   label "输出文件"
   SKIP(.4)  /*GUI*/
@@ -127,7 +130,23 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /*GUI*/ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
 
               display wo_nbr wo_lot part wodesc1 wodesc2 status_name.
-
+              if wo_bom_code <> "" then do:
+									if index(wo_bom_code,"zz") > 0 then do:
+										  assign area = no.
+									end.
+								  else do:
+								  	  assign area = yes.
+								  end.
+							end.
+							else do:
+						  		if index(wo_part,"zz") > 0 then do:
+										  assign area = no.
+									end.
+								  else do:
+								  	  assign area = yes.
+								  end.
+						  end.
+						  display area with frame a.
            end. /* IF RECNO <> ? */
         end. /* PROMPT-FOR...EDITING */
 
@@ -209,6 +228,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
            undo, retry.
         end.
 
+	 update area.
+
     /* input file and output file:*/
     repeat with frame a:
 
@@ -258,7 +279,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
     put stream outputfile " " at 1.
 
     /*check if the part in the EXCEL file is the same as the part of the work order*/
-    if part <> chExcelWorkbook:Worksheets(1):Cells(2,6):value then do:
+    if part <> chExcelWorkbook:Worksheets(1):Cells(2,6):FormulaR1C1 then do:
       put stream outputfile "错误：导入文件中拆装机零件号与加工单零件不一致，导入失败！" at 1 format "x(60)".
       iError = iError + 1.
       iRow = iRow + 1.
@@ -266,7 +287,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
     else do:
 
       /* check if the disassemble machine is a sub part of this work order. */
-      daPart = chExcelWorkbook:Worksheets(1):Cells(2,5):value.
+      daPart = chExcelWorkbook:Worksheets(1):Cells(2,5):FormulaR1C1.
       find wod_det where wod_domain = global_domain and wod_nbr = wo_nbr
         and wod_lot = wo_lot and wod_part = daPart
         no-lock no-error.
@@ -276,20 +297,20 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
       end.
 
        output stream wobomld to "c:\wobomldfile".
-         put stream wobomld "~"" at 1 wo_nbr "~" -".
+         put stream wobomld unformat '"' wo_nbr '" -' skip.
 
 
       BillLoadFromExcel:
       repeat:
 
         iRow = iRow + 1.
-        wodpart = chExcelWorkbook:Worksheets(1):Cells(iRow,2):value.
+        wodpart = chExcelWorkbook:Worksheets(1):Cells(iRow,2):FormulaR1C1.
 
         if wodpart = "" or wodpart = ? then do:
           leave.  /* import data finished. */
         end.
 
-        if chExcelWorkbook:Worksheets(1):Cells(iRow,7):value = 0 then do:
+        if chExcelWorkbook:Worksheets(1):Cells(iRow,7):FormulaR1C1 = 0 then do:
           iZero = iZero + 1.
           next.
         end.
@@ -312,9 +333,16 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
           next.
         end.
 
-          put stream wobomld "~"" at 1 wodpart "~" -" skip.
-          put stream wobomld string(woqtyord * chExcelWorkbook:Worksheets(1):Cells(iRow,7):value)
-                  "- - no " string(chExcelWorkbook:Worksheets(1):Cells(iRow,7):value).
+          put stream wobomld unformat '"' wodpart '" -' skip.
+          put stream wobomld unformat trim(string(woqtyord * chExcelWorkbook:Worksheets(1):Cells(iRow,7):FormulaR1C1))
+                  " - - no " trim(string(chExcelWorkbook:Worksheets(1):Cells(iRow,7):FormulaR1C1)) " - - ".
+          find first code_mstr no-lock where code_domain = global_domain 
+          			 and code_fldname = "Wo-iss-Loc-Area" and ((area and code_value = "East")
+          			 or (not area and code_value = "west")) no-error.
+          if available code_mstr then do:
+						 put stream wobomld unformat '"' code_cmmt '"'.          	 
+          end.
+          put stream wobomld unformat skip.
 
         /*
         create wod_det.
@@ -328,8 +356,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
           wod_recno = recid(wod_det)
           wod_loc = pt_loc
           wod_critical = pt_critical
-          wod_qty_req = woqtyord * chExcelWorkbook:Worksheets(1):Cells(iRow,7):value
-          wod_bom_qty = chExcelWorkbook:Worksheets(1):Cells(iRow,7):value.
+          wod_qty_req = woqtyord * chExcelWorkbook:Worksheets(1):Cells(iRow,7):FormulaR1C1
+          wod_bom_qty = chExcelWorkbook:Worksheets(1):Cells(iRow,7):FormulaR1C1.
 
         * Added section
         if not  can-find (wr_route where wr_domain = global_domain and wr_lot = wod_lot
@@ -396,7 +424,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
       input close.
       batchrun = no.
 
-    end. /*if part <> partchExcelWorkbook:Worksheets(1):Cells(2,6):value then do: */
+    end. /*if part <> partchExcelWorkbook:Worksheets(1):Cells(2,6):FormulaR1C1 then do: */
 
 
     put stream outputfile " " at 1.
@@ -421,5 +449,4 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
     message "执行结束，请查看输出文件。" + "错误:" + string(iError) + " 警告：" + string(iWarning).
 
     end.
-
 

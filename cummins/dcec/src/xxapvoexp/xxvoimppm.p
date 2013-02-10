@@ -3,7 +3,7 @@
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "121104.1"}
+{mfdtitle.i "121111.1"}
 define variable v_key like usrw_key1 no-undo initial "XXVOIMP-CTRL".
 define variable del-yn like mfc_logical initial no.
 define variable i as integer.
@@ -34,6 +34,8 @@ FORM /*GUI*/
    usrw_charfld[3] colon 25 format "x(120)" view-as fill-in size 40 by 1
    usrw_charfld[4] colon 25 format "x(120)" view-as fill-in size 40 by 1
    usrw_charfld[5] colon 25 format "x(120)" view-as fill-in size 40 by 1
+   skip(1)
+   usrw_charfld[6] colon 25 format "x(120)" view-as fill-in size 40 by 1
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -81,9 +83,10 @@ repeat with frame a:
              usrw_key2
             " input usrw_key2 "}
          if recno <> ? then do:
-            display usrw_key2 usrw_key3 usrw_key4 usrw_key5 
-            				usrw_charfld[1] usrw_charfld[2]
-                    usrw_charfld[3] usrw_charfld[4] usrw_charfld[5].
+            display usrw_key2 usrw_key3 usrw_key4 usrw_key5
+                    usrw_charfld[1] usrw_charfld[2]
+                    usrw_charfld[3] usrw_charfld[4]
+                    usrw_charfld[5] usrw_charfld[6].
          end.
       end. /* editing: */
 
@@ -111,7 +114,7 @@ repeat with frame a:
   repeat with frame a:
 /*GUI*/ if global-beam-me-up then undo, leave.
          update usrw_key3 usrw_key4 usrw_key5 usrw_charfld[1] usrw_charfld[2]
-                usrw_charfld[3] usrw_charfld[4] usrw_charfld[5]
+                usrw_charfld[3] usrw_charfld[4] usrw_charfld[5] usrw_charfld[6]
          go-on(F5 CTRL-D).
         do i = 1 to 4:
            if usrw_charfld[i] = "" then do:
@@ -127,7 +130,7 @@ repeat with frame a:
         leave.
   end.
 /*GUI*/ if global-beam-me-up then undo, leave.
-   do i = 1 to 4:
+   do i = 1 to 6:
       FILE-INFO:FILE-NAME = usrw_charfld[i].
       if substring(FILE-INFO:FILE-TYPE,1,1) <> "D" then do:
           dos silent value("mkdir " + usrw_charfld[i]).

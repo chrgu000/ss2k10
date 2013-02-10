@@ -1,6 +1,7 @@
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/26/12  ECO: *SS-20120926.1*   */
 
- /* *SS-20120926.1.1*   */ {mfdeclre.i }
+ /* *SS-20120926.1.1*   */ 
+{mfdeclre.i }
 
 DEFINE VAR v_local_amount LIKE IN_qty_oh INITIAL 0.
 DEFINE VAR v_import_amount LIKE IN_qty_oh INITIAL 0.
@@ -49,14 +50,14 @@ DEFINE NEW SHARED VARIABLE chExcelApplication AS COM-HANDLE.
 DEFINE NEW SHARED VARIABLE chExcelWorkbook AS COM-HANDLE.
 */
 
-FOR EACH IN_mstr WHERE  /* *SS-20120926.1*   */ IN_mstr.in_domain = global_domain and  in_qty_oh <> 0 OR in_qty_nonet <> 0 NO-LOCK.
-    FIND FIRST pt_mstr WHERE /* *SS-20120926.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = IN_part NO-LOCK NO-ERROR.
+FOR EACH IN_mstr WHERE IN_mstr.in_domain = global_domain and  in_qty_oh <> 0 OR in_qty_nonet <> 0 NO-LOCK.
+    FIND FIRST pt_mstr WHERE pt_mstr.pt_domain = global_domain and  pt_part = IN_part NO-LOCK NO-ERROR.
     IF AVAIL pt_mstr THEN DO:
-        FIND si_mstr NO-LOCK WHERE  /* *SS-20120926.1*   */ si_mstr.si_domain = global_domain and si_site = "DCEC-C" NO-ERROR.
-        FIND FIRST sct_det NO-LOCK WHERE /* *SS-20120926.1*   */ sct_det.sct_domain = global_domain and sct_part = in_part AND sct_sim = si_gl_set AND sct_cst_tot <> 0 NO-ERROR.
+        FIND si_mstr NO-LOCK WHERE si_mstr.si_domain = global_domain and si_site = "DCEC-C" NO-ERROR.
+        FIND FIRST sct_det NO-LOCK WHERE sct_det.sct_domain = global_domain and sct_part = in_part AND sct_sim = si_gl_set AND sct_cst_tot <> 0 NO-ERROR.
         IF AVAIL sct_det THEN DO:
             IF pt_prod_line >= "1000" AND pt_prod_line <= "11ZZ" THEN v_local_amount = v_local_amount + (IN_qty_oh + IN_qty_nonet) * sct_cst_tot.
-            IF (pt_prod_line >= "1200" AND pt_prod_line <= "1ZZZ") OR (pt_prod_line >= "5000" AND pt_prod_line <= "6ZZZ") 
+            IF (pt_prod_line >= "1200" AND pt_prod_line <= "1ZZZ") OR (pt_prod_line >= "5000" AND pt_prod_line <= "6ZZZ")
                 THEN v_import_amount = v_import_amount + (IN_qty_oh + IN_qty_nonet) * sct_cst_tot.
             IF (pt_prod_line >= "2000" AND pt_prod_line <= "2ZZZ") OR (pt_prod_line >= "7000" AND pt_prod_line <= "80ZZ")
                 THEN v_fg_amount  = v_fg_amount + (IN_qty_oh + IN_qty_nonet) * sct_cst_tot.
@@ -68,7 +69,7 @@ FOR EACH IN_mstr WHERE  /* *SS-20120926.1*   */ IN_mstr.in_domain = global_domai
 END.
 
 
-/*IF SEARCH("\\dcecssy009\bp-report\存货Inventory.xls") = ? THEN DO: 
+/*IF SEARCH("\\dcecssy009\bp-report\存货Inventory.xls") = ? THEN DO:
    MESSAGE "报表模板不存在!" VIEW-AS ALERT-BOX ERROR.
    UNDO,RETRY.
 END.
@@ -95,14 +96,14 @@ chExcelWorkbook:worksheets("Monthly Inventory(1)"):cells(11,INTEGER(MONTH(TODAY 
 
 /*aging*/
 
-FOR EACH IN_mstr NO-LOCK WHERE  /* *SS-20120926.1*   */ IN_mstr.in_domain = global_domain and  in_qty_oh <> 0 OR in_qty_nonet <> 0 BREAK BY IN_part.
+FOR EACH IN_mstr NO-LOCK WHERE IN_mstr.in_domain = global_domain and  in_qty_oh <> 0 OR in_qty_nonet <> 0 BREAK BY IN_part.
     IF FIRST-OF(IN_part) THEN v_qty = 0.
     v_qty = v_qty + IN_qty_oh + IN_qty_nonet.
     IF LAST-OF(IN_part) THEN DO:
-        FIND FIRST pt_mstr NO-LOCK WHERE  /* *SS-20120926.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = IN_part NO-ERROR.
-        FIND FIRST si_mstr NO-LOCK WHERE  /* *SS-20120926.1*   */ si_mstr.si_domain = global_domain and  si_site = "DCEC-C" NO-ERROR.
-        FIND FIRST sct_det NO-LOCK WHERE /* *SS-20120926.1*   */ sct_det.sct_domain = global_domain and sct_part = in_part AND sct_sim = si_gl_set AND sct_cst_tot <> 0 NO-ERROR.
-        FIND FIRST ptp_det NO-LOCK WHERE  /* *SS-20120926.1*   */ ptp_det.ptp_domain = global_domain and ptp_part = IN_part AND ptp_buyer <> "" NO-ERROR.
+        FIND FIRST pt_mstr NO-LOCK WHERE pt_mstr.pt_domain = global_domain and  pt_part = IN_part NO-ERROR.
+        FIND FIRST si_mstr NO-LOCK WHERE si_mstr.si_domain = global_domain and  si_site = "DCEC-C" NO-ERROR.
+        FIND FIRST sct_det NO-LOCK WHERE sct_det.sct_domain = global_domain and sct_part = in_part AND sct_sim = si_gl_set AND sct_cst_tot <> 0 NO-ERROR.
+        FIND FIRST ptp_det NO-LOCK WHERE ptp_det.ptp_domain = global_domain and ptp_part = IN_part AND ptp_buyer <> "" NO-ERROR.
         FIND FIRST xxwk WHERE xx_part = IN_part NO-ERROR.
         IF NOT AVAIL xxwk THEN DO:
             CREATE xxwk.
@@ -127,7 +128,7 @@ FOR EACH xxwk NO-LOCK.
     v_1080_qty = 0.
     v_over_qty = 0.
 
-    FOR EACH tr_hist NO-LOCK WHERE  /* *SS-20120926.1*   */ tr_hist.tr_domain = global_domain and  tr_part = xx_part AND (tr_type = "RCT-PO" OR tr_type = "RCT-WO" OR tr_type = "RCT-UNP") AND TODAY - tr_effdate <= 1080 BY tr_effdate DESCENDING.
+    FOR EACH tr_hist NO-LOCK WHERE tr_hist.tr_domain = global_domain and  tr_part = xx_part AND (tr_type = "RCT-PO" OR tr_type = "RCT-WO" OR tr_type = "RCT-UNP") AND TODAY - tr_effdate <= 1080 BY tr_effdate DESCENDING.
         IF (TODAY - tr_effdate) <= 180 THEN v_180_qty = v_180_qty + tr_qty_loc.
         IF xx_qty - v_180_qty <= 0 THEN DO:
             v_180_qty = MIN(v_180_qty, xx_qty).
@@ -153,7 +154,7 @@ FOR EACH xxwk NO-LOCK.
         END.
     END.
     FIND FIRST yywk WHERE yy_part = xx_part NO-ERROR.
-    FIND FIRST emp_mstr WHERE /* *SS-20120926.1*   */ emp_mstr.emp_domain = global_domain and emp_addr = xx_planner NO-ERROR.
+    FIND FIRST emp_mstr WHERE emp_mstr.emp_domain = global_domain and emp_addr = xx_planner NO-ERROR.
     IF NOT AVAIL yywk THEN DO:
         CREATE yywk.
             yy_part = xx_part.
@@ -169,7 +170,7 @@ FOR EACH xxwk NO-LOCK.
             yy_desc2 = xx_desc2.
             yy_planner = xx_planner.
             yy_l360_amount = (yy_over_qty + yy_1080_qty + yy_720_qty) * yy_price.
-            yy_pl_name = IF AVAIL emp_mstr THEN emp_lname + emp_fname ELSE "". 
+            yy_pl_name = IF AVAIL emp_mstr THEN emp_lname + emp_fname ELSE "".
     END.
 END.
 
@@ -240,7 +241,7 @@ chExcelWorkbook:worksheets("Chart"):cells(22,"R"):value = TODAY.
 */
 
 chExcelApplication:DisplayAlerts = FALSE.
-chExcelWorkbook:saveas("\\dcecssy009\bp-report\存货Inventory.xls" , , , , , , 1). 
+chExcelWorkbook:saveas("c:\Inventory.xls" , , , , , , 1).
 chExcelApplication:Visible = TRUE.
 RELEASE OBJECT chExcelWorkbook.
 chExcelApplication:QUIT.

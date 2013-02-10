@@ -29,7 +29,7 @@ def var new_yn as logic.
  Form
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1 SKIP(.1)  /*GUI*/
- part colon 33 desc1 no-label 
+ part colon 33 desc1 no-label
                desc2 no-label colon 49 skip(1)
  bomcode colon 33
  site colon 33 si_desc no-label
@@ -58,28 +58,28 @@ repeat:
         message "错误:BOM控制文件还未生成,请首先维护BOM控制文件!" view-as alert-box error.
         leave mainloop.
     end.
-  
+
     site = "".
     part = "".
     bomcode = "".
     um = "".
     desc1 = "".
     new_yn = no.
-    
-   clear frame a. 
-    
+
+   clear frame a.
+
     update part with frame a editing:
         if frame-field = "part" then do:
             {mfnp.i pt_mstr part " pt_mstr.pt_domain = global_domain and pt_part " part pt_part pt_part}
             if recno <> ? then do:
-                disp pt_part @ part pt_desc1 @ desc1 pt_desc2 @ desc2 with frame a.    
+                disp pt_part @ part pt_desc1 @ desc1 pt_desc2 @ desc2 with frame a.
             end.
         end.
         else do:
             readkey.
           apply lastkey.
-       end.    
-    end.    
+       end.
+    end.
 
    find pt_mstr where pt_domain = global_domain and pt_part = part no-lock no-error.
    if not available pt_mstr then do:
@@ -90,7 +90,7 @@ repeat:
                            }
         undo,retry.
    end.
-   
+
    find first ptp_det where ptp_domain = global_domain and ptp_part = part no-lock no-error.
    if not available ptp_det then do:
         message "零件无地点-计划数据,请重新输入" view-as alert-box error.
@@ -99,11 +99,11 @@ repeat:
 
    if ptp_pm_code <> "m" then do:
        conf-yn = no.
-       message "该零件的'采/制'类型为: '" + ptp_pm_code "',是否继续" 
+       message "该零件的'采/制'类型为: '" + ptp_pm_code "',是否继续"
               view-as alert-box question button yes-no update conf-yn.
-        if conf-yn <> yes then undo,retry. 
+        if conf-yn <> yes then undo,retry.
    end.
-      
+
     /*******************search the suffix for the bom code which users want to execute**********/
     find first code_mstr where code_domain = global_domain and code_fldname = "cust-control-file" and
                                code_value = "auto-bomcode-generate" no-lock no-error.
@@ -118,13 +118,13 @@ repeat:
        message "物料单代码 " + bomcode + " 长度超过了18位" view-as alert-box error.
        undo,retry.
     end.
-    
+
     um = pt_um.
     cmmts = pt_desc2.           /*kevin, for chinese description*/
 
-   
+
     find bom_mstr exclusive-lock where bom_domain = global_domain and bom_parent = bomcode no-error.
-    if not available bom_mstr then do:    
+    if not available bom_mstr then do:
          /*tfq {mfmsg.i 1 1} */
          {pxmsg.i
                &MSGNUM=1
@@ -134,24 +134,29 @@ repeat:
          assign bom_parent = caps(bomcode)
                 bom_batch_um = um
                 bom_formula = pt_formula
-                bom_desc = cmmts
-                bom__chr02 = part.    
-         
-         new_yn = yes.       
+                bom_desc = cmmts.
+         new_yn = yes.
     end.
 
-    disp bom__chr01 when not new_yn @ site xxbomc_code_site when new_yn @ site 
+		if substring(bomcode , length(bomcode) - 1,length(trim(code_cmmt))) = trim(code_cmmt) then do:
+    	  assign bom__chr02 = substring(bomcode , 1 , length(bomcode) - length(trim(code_cmmt))).
+    end.
+    else do:
+        assign bom__chr02 = bomcode.
+	  end.
+
+    disp bom__chr01 when not new_yn @ site xxbomc_code_site when new_yn @ site
         bom_parent @ bomcode bom_batch_um bom_desc with frame a.
-   
+
             ststatus = stline[2].
             status input ststatus.
             del-yn = no.
 
-            
+
             do on error undo, retry:
-/*GUI*/ if global-beam-me-up then undo, leave.    
-                 
-                 set site with frame a. 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
+                 set site with frame a.
 
                  find si_mstr no-lock where si_domain = global_domain and
                  	    si_site = site no-error.
@@ -165,7 +170,7 @@ repeat:
                           }
                      undo, retry.
                  end.
-   
+
                 {gprun.i ""gpsiver.p""
                 "(input si_site, input recid(si_mstr), output return_int)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
@@ -183,7 +188,7 @@ repeat:
                   message "错误:输入的地点与BOM控制文件中指定的地点不一致,请重新输入!" view-as alert-box error.
                   undo,retry.
                end.
-    
+
     find first ptp_det where ptp_domain = global_domain and
     				   ptp_part = part and ptp_site <> site no-lock no-error.
     if not available ptp_det then do:
@@ -192,13 +197,13 @@ repeat:
     end.
 
 
-                 set bom_batch_um bom_desc go-on ("F5" "CTRL-D") with frame a.    
-      	   
+                 set bom_batch_um bom_desc go-on ("F5" "CTRL-D") with frame a.
+
        	         assign
 	                 bom__chr01 = site
 	                 bom_userid = global_userid
 	                 bom_mod_date = today.
-	          
+
 	       /* DELETE */
 	       if lastkey = keycode("F5")
 	       or lastkey = keycode("CTRL-D")
@@ -209,13 +214,13 @@ repeat:
 	    /*STRUCTURES RATHER THAN AUTOMATICALLY DELETE THE STRUCTURE.     */
 /*G309*/    /*WHATEVER METHOD IS USED MUST BE THE SAME IN FMMAMT.P AS WELL   */
 
-/*G309*/            if can-find (first ps_mstr where ps_domain = global_domain 
+/*G309*/            if can-find (first ps_mstr where ps_domain = global_domain
 																	 and ps_par = bom_parent)
 /*FS62*  /*G309*/    or can-find (first ps_mstr where ps_domain = global_domain and ps_comp = bom_parent)  */
 /*F0SL*/            or (can-find (first ps_mstr where ps_domain = global_domain and ps_comp = bom_parent)
 /*F0SL*/                and not can-find(pt_mstr where pt_domain = global_domain and pt_part = bom_parent))
 /*G309*/            then do:
-/*G309*/             /*tfq   {mfmsg.i 226 3} */ 
+/*G309*/             /*tfq   {mfmsg.i 226 3} */
                      {pxmsg.i
                &MSGNUM=226
                &ERRORLEVEL=3
@@ -232,7 +237,7 @@ repeat:
                &CONFIRM=del-yn
             }
 	           if del-yn = no then undo, retry.
-                  
+
 	           delete bom_mstr.
 	           del-yn = no.
 /*F671*/            if lines > 0 then do:
@@ -251,8 +256,8 @@ repeat:
                            }
 /*F671*/            end.
 
-	       end.    /* if lastkey ... */	                 
-            
+	       end.    /* if lastkey ... */
+
             end. /*do on error undo,retry*/
-                 
+
 end. /*repeat*/

@@ -37,7 +37,8 @@ define temp-table xiv_m
   fields xiv_date     as   date
   fields xiv_po    like po_nbr
   fields xiv_vend     like po_vend
-  fields xiv_chk      as   character format "x(60)".
+  fields xiv_chk      as   character format "x(60)"
+  fields xiv_datec    as   character.
 
 define temp-table xivd_d
   fields xivd_inv like vo_invoice
@@ -84,23 +85,25 @@ empty temp-table xiv_m no-error.
 empty temp-table xivd_d no-error.
 input from value(xf_name).
 repeat:
-  import unformat v_key.
-  if index(entry(1,v_key,","),v_pre) > 0 then do:
+  import unformat v_key. 
+  if index(entry(1,v_key,"|"),v_pre) > 0 then do:
      create xiv_m.
-     assign xiv_receiver = entry(1,v_key,",").
-            xiv_line     = integer(entry(2,v_key,",")).
-            xiv_part     = entry(3,v_key,",").
-            xiv_qty_ord  = decimal(entry(4,v_key,",")).
-            xiv_iv_cost  = decimal(entry(5,v_key,",")).
-            xiv_amt      = decimal(entry(6,v_key,",")).
-            xiv_inv      = entry(7,v_key,",").
-            xiv_inv_amt  = decimal(entry(8,v_key,",")).
-            xiv_date     = str2Date(entry(9,v_key,",")).
+     assign xiv_receiver = entry(1,v_key,"|").
+            xiv_line     = integer(entry(2,v_key,"|")).
+            xiv_part     = entry(3,v_key,"|").
+            xiv_qty_ord  = decimal(entry(4,v_key,"|")).
+            xiv_iv_cost  = decimal(entry(5,v_key,"|")).
+            xiv_amt      = decimal(entry(6,v_key,"|")).
+            xiv_inv      = entry(7,v_key,"|").
+            xiv_inv_amt  = decimal(entry(8,v_key,"|")).
+            xiv_datec    = entry(9,v_key,"|") no-error.
   end.
 end.
 input close.
 
-for each xiv_m exclusive-lock with width 200:
+for each xiv_m exclusive-lock with width 200: 
+    if xiv_datec <> "" then assign xiv_date = str2Date(xiv_datec) no-error.
+    if xiv_date = ? then assign xiv_date = today.
     find first prh_hist no-lock where prh_domain = global_domain and
                prh_receiver = xiv_receiver and prh_line = xiv_line no-error.
     if available prh_hist then do:
@@ -146,12 +149,10 @@ for each xiv_m no-lock:
     end.
 end.
 
-output stream bf to value(vdirtmp + xf_file + ".bpi").
-for each xiv_m no-lock break by xiv_vend by xiv_inv:
-    if first-of(xiv_vend) then do:
-       put stream bf unformat "-" skip "-" skip '"' xiv_inv '"' skip.
-    end.
+for each xiv_m no-lock break by xiv_inv:
     if first-of(xiv_inv) then do:
+       output stream bf to value(vdirtmp + xf_file + ".bpi").
+       put stream bf unformat "-" skip "-" skip '"' xiv_inv '"' skip.
        for each xivd_d no-lock where xivd_inv = xiv_inv:
            put stream bf unformat '"' xivd_po '"' skip.
        end.
@@ -162,7 +163,7 @@ for each xiv_m no-lock break by xiv_vend by xiv_inv:
        put stream bf unformat '-' skip.
        put stream bf unformat 'N' skip. /* 自动选择 */
        put stream bf unformat '-' skip. /* 税 */
-    end.
+   end.       
        put stream bf unformat '"' xiv_receiver '" ' xiv_line skip.
        put stream bf unformat '-' skip. /* 税 */
        put stream bf unformat xiv_qty_ord ' ' xiv_iv_cost skip.
@@ -176,25 +177,32 @@ for each xiv_m no-lock break by xiv_vend by xiv_inv:
    /*     put stream bf unformat 'n' skip. 查看税细节 */
       put stream bf unformat '- N "' vusr '"' skip. /*确认 = NO*/
       put stream bf unformat '.' skip.
-   end.
-   if last-of(xiv_vend) then do:
       put stream bf unformat '.' skip.
+      output stream bf close.
+   end.
+   if last-of(xiv_inv) then do:
+
+      /* cim_load */
+      batchrun = yes.
+			input from value(vdirtmp + xf_file + ".bpi").
+			output to value(vdirlog + xf_file + ".bpo").
+			hide message no-pause.
+			cimrunprogramloop:
+			do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+			   {gprun.i ""xxapvomt.p""}
+			end.
+			hide message no-pause.
+			output close.
+			input close.
+			batchrun = no.
+			find ap_mstr NO-LOCK where ap_mstr.ap_domain = global_domain and  
+                  ap_type = "vo" and
+			            ap_ref = xiv_inv NO-ERROR.
+			IF AVAILABLE ap_mstr THEN DO:
+			     OS-COMMAND SILENT VALUE( "move /y " + xf_name + " " + vdirbak).
+			END.
    end.
 end.
-output stream bf close.
-
-batchrun = yes.
-input from value(vdirtmp + xf_file + ".bpi").
-output to value(vdirlog + xf_file + ".bpo").
-hide message no-pause.
-cimrunprogramloop:
-do on stop undo cimrunprogramloop,leave cimrunprogramloop:
-   {gprun.i ""xxapvomt.p""}
-end.
-hide message no-pause.
-output close.
-input close.
-batchrun = no.
 
 
 end. /* for each xf_list no-lock where : */
@@ -211,10 +219,11 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
     end.
     else do:
         ASSIGN sstr = datestr.
-        ASSIGN iD = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"/") - 1)).
-        ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,"/") + 1).
-        ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"/") - 1)).
-        ASSIGN iY = 2000 + INTEGER(SUBSTRING(sstr,INDEX(sstr,"/") + 1)).
+        ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
+        ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,"-") + 1).
+      
+        ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
+        ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,"-") + 1)).
         ASSIGN od = DATE(im,id,iy).
     end.
     RETURN od.

@@ -191,7 +191,7 @@ for each  tr_hist no-lock where tr_domain = global_domain
         if tr_type="ISS-UNP" THEN  QTY = 0 - tr_qty_loc.
              ELSE  QTY = TR_QTY_loc.
           FIND FIRST IN_mstr WHERE in_domain = global_domain and IN_part = tr_part AND IN_site = tr_site  NO-LOCK NO-ERROR.   
-        display tr_part format "x(18)" pt_desc1 format "x(22)"  " "
+        display tr_part format "x(18)" pt_desc2 format "x(22)"  " "
             QTY  " "   tr_effdate FORMAT "99/99/99" "  " tr_loc format "x(8)"  
   /*judy 05/08/0 5*/          /*pt_article*/
   /*judy 05/08/0 5*/   in__qadc01  WHEN AVAIL IN_mstr             

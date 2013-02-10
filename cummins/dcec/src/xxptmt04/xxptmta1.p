@@ -1,3 +1,4 @@
+/* GUI CONVERTED from xxptmta1.p (converter v1.78) Thu Jan 19 15:47:30 2012 */
 /* ppptmta1.p - ITEM MAINTENANCE SUBROUTINE ENGINEERING DATA                  */
 /* Copyright 1986-2009 QAD Inc., Santa Barbara, CA, USA.                      */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -109,10 +110,26 @@ define variable l_pt_break_cat like pt_break_cat               no-undo.
 /* Item Master API dataset definition */
 {pppdspt.i "reference-only"}
 
-form
-   {ppptmta2.i}
-with frame a1 title color normal (getFrameTitle("ITEM_DATA",15))
-side-labels width 80 attr-space.
+FORM /*GUI*/ 
+   
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+{xxppptmta2.i}
+ SKIP(.4)  /*GUI*/
+with frame a1 
+side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a1-title AS CHARACTER.
+ F-a1-title = (getFrameTitle("ITEM_DATA",15)).
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a1 = F-a1-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a1 =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a1 + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a1 =
+  FRAME a1:HEIGHT-PIXELS - RECT-FRAME:Y in frame a1 - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a1 = FRAME a1:WIDTH-CHARS - .5. /*GUI*/
+
 
 /* SET EXTERNAL LABELS */
 if c-application-mode <> "API" then
@@ -125,6 +142,8 @@ if c-application-mode = "API" then do on error undo, return:
 
    /* Get handle of API Controller */
    {gprun.i ""gpaigach.p"" "(output ApiMethodHandle)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
    if not valid-handle(ApiMethodHandle) then do:
       /* API Error */
@@ -139,6 +158,8 @@ end.  /* If c-application-mode = "API" */
 
 loopa1:
 do transaction on endkey undo, leave:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
    if c-application-mode = "API" and retry then
       return error.
@@ -169,6 +190,8 @@ do transaction on endkey undo, leave:
          pt_group
          pt_break_cat
          pt_promo
+         pt__chr09
+         pt__chr10
       with frame a1.
    end. /* c-application-mode <> "API" */
 
@@ -185,6 +208,8 @@ do transaction on endkey undo, leave:
 
    prodloop:
    do on error undo, retry:
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       if c-application-mode = "API" and retry then
          return error.
@@ -204,6 +229,8 @@ do transaction on endkey undo, leave:
             pt_drwg_loc
             pt_drwg_size
             pt_break_cat
+            pt__chr09
+            pt__chr10
          with frame a1 no-validate.
       end. /* c-application-mode <> "API" */
       else do:
@@ -652,7 +679,9 @@ do transaction on endkey undo, leave:
 
          end. /* ELSE IF NOT soc_apm */
 
-      end. /* FOR FIRST soc_ctrl */
+      end.
+/*GUI*/ if global-beam-me-up then undo, leave.
+ /* FOR FIRST soc_ctrl */
 
       if  soc_apm
       and (promo_old <> ""

@@ -33,14 +33,12 @@
 {mfdtitle.i "121110.1"}
 
 define variable pclist     like pc_list      no-undo.
-define variable prodline   like pt_prod_line FORMAT "x(18)"      no-undo.
+define variable itemnbr    like pt_part      no-undo.
 define variable cmname     like ad_name      no-undo.
 define variable i          as integer        no-undo.
 define variable curr       like pc_curr      no-undo.
 define variable start_dt   like pc_start     no-undo.
 define variable end_dt     like pc_expire    no-undo.
-
- 
 
 
 /*GUI preprocessor Frame A define */
@@ -49,7 +47,7 @@ define variable end_dt     like pc_expire    no-undo.
 FORM /*GUI*/ 
    pclist
    curr
-   prodline
+   itemnbr
    start_dt
    end_dt
 with frame a no-underline width 80 attr-space THREE-D /*GUI*/.
@@ -70,12 +68,12 @@ repeat:
       update
          pclist
          curr
-         prodline
+         itemnbr
          start_dt
          end_dt
       with frame a.
 
-   {wbrp06.i &command = update &fields = "pclist curr prodline  start_dt end_dt " &frm = "a"}
+   {wbrp06.i &command = update &fields = "pclist curr itemnbr  start_dt end_dt " &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -102,36 +100,66 @@ repeat:
                &withWinprint = "yes"
                &defineVariables = "yes"}
 
-      for each yysales_disc
-         where yysalesdisc_domain = global_domain 
-          and (yysalesdisc_nbr = pclist or pclist = "")
-          and (yysalesdisc_curr = curr or curr = "")
-          and (yysalesdisc_prod_line >= prodline)
+      for each yp_mstr
+         where yp_domain = global_domain 
+          and (yp_list = pclist or pclist = "")
+          and (yp_curr = curr or curr = "")
+          and (yp_part >= itemnbr)
           no-lock
-      with frame b width 223 no-attr-space:
+      with frame b width 600 no-attr-space:
          /* SET EXTERNAL LABELS */
          setFrameLabels(frame b:handle).
          assign cmname = "".
          find first cm_mstr no-lock where cm_domain = global_domain 
-         				and cm_addr = yysalesdisc_cust no-error.
+         				and cm_addr = yp_cust no-error.
          if availabl cm_mstr then do:
          		assign cmname = cm_sort.
          end.
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-			display yysalesdisc_entity
-							yysalesdisc_nbr
-							yysalesdisc_curr
-							yysalesdisc_prod_line
-							yysalesdisc_cust
+/*GUI* / {mfguichk.i } / *Replace mfrpchk*/
+			display 
+							yp_list
+							yp_curr
+							yp_part
+							yp_cust
 							cmname
-							yysalesdisc_market
+							yp_market
 /*                             yysalesdisc_part */
 /*                             yysalesdisc_um   */
-							yysalesdisc_effdate
-							yysalesdisc_due_date
-							yysalesdisc_type
-							yysalesdisc_min_qty[1]
-							yysalesdisc_amt[1]
+							yp_start
+							yp_expir
+							yp_amt_type
+							yp_min_qty[1]
+							yp_amt[1]
+							yp_min_qty[2]
+							yp_amt[2]
+							yp_min_qty[3]
+							yp_amt[3]
+							yp_min_qty[4]
+							yp_amt[4]
+							yp_min_qty[5]
+							yp_amt[5].
+							down.
+		 display	yp_min_qty[6] @ yp_min_qty[1]
+							yp_amt[6] @ yp_amt[1]
+							yp_min_qty[7]  @ yp_min_qty[2]
+							yp_amt[7]  @ yp_amt[2]
+							yp_min_qty[8] @ yp_min_qty[3]
+							yp_amt[8] @ yp_amt[3]
+							yp_min_qty[9]  @ yp_min_qty[4]
+							yp_amt[9] @ yp_amt[4]
+							yp_min_qty[10]  @ yp_min_qty[5]
+							yp_amt[10] @ yp_amt[5].
+							down.
+	    display yp_min_qty[11]  @ yp_min_qty[1]
+							yp_amt[11] @ yp_amt[1]
+							yp_min_qty[12]  @ yp_min_qty[2]
+							yp_amt[12] @ yp_amt[2]
+							yp_min_qty[13]  @ yp_min_qty[3]
+							yp_amt[13] @ yp_amt[3]
+							yp_min_qty[14]  @ yp_min_qty[4]
+							yp_amt[14] @ yp_amt[4]
+							yp_min_qty[15]  @ yp_min_qty[5]
+							yp_amt[15] @ yp_amt[5]
 							with stream-io.
  
    end.

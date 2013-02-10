@@ -106,7 +106,8 @@ repeat:
 
     for each tr_hist no-lock where tr_domain = global_domain
        and tr_effdate >= dte and tr_effdate <= effdate1
-       and (tr_type = 'iss-so' or tr_type = 'CN-USE'):
+       and (tr_type = 'ISS-SO' or tr_type = 'CN-USE') 
+       		break by tr_part by month(tr_effdate):
         FIND FIRST tt_temp EXCLUSIVE-LOCK WHERE tt_cust = tr_addr
                AND tt_part = tr_part NO-ERROR.
         IF NOT AVAILABLE tt_temp THEN DO:
@@ -114,6 +115,28 @@ repeat:
             ASSIGN tt_cust = tr_addr
                    tt_part = tr_part.
         END.
+        find first pt_mstr no-lock where pt_domain = global_domain 
+        		   and pt_part = tr_part no-error.
+        if available pt_mstr then do:
+        	 assign tt_desc = pt_desc1.
+				end.
+				tt_qty[month(tr_effdate)] = tt_qty[month(tr_effdate)] + (-1 * tr_qty_loc).
+				if last-of(month(tr_effdate)) then do:
+				   find first yp_mstr no-lock where yp_domain = global_domain and 
+				   					 yp_part = tr_part and 
+				   					 (yp_start <= tr_effdate or yp_start = ?) and 
+				   					 (yp_expir >= tr_effdate or yp_expir = ?) no-error.
+				   if available yp_mstr then do:
+				   	  assign tt_per_amt[i] = yp_amt[1].
+			     	  do i = 15 to 2:
+			     	     if yp_min_qty[i] <= tt_qty[month(tr_effdate)] 
+			     	     		and yp_min_qty[i] > 0 then 
+			     	  	 assign tt_per_amt[i] = yp_amt[i].
+			     	  	 leave.
+			     	  end.
+			     end.
+			  end.
+/***************** 
         assign j = 0.
         DO i = 1 TO 12:
             IF ym[i] = string(year(tr_effdate),"9999") + "-"
@@ -123,9 +146,6 @@ repeat:
               leave.
             END.
         END.
-        find first pt_mstr no-lock where pt_part = tr_part no-error.
-        if available pt_mstr then do:
-        assign tt_desc = pt_desc1.
 
          find first yysales_disc where yysalesdisc_domain = global_domain
                 and yysalesdisc_cust = tr_addr 
@@ -139,8 +159,16 @@ repeat:
             end.
          end.
         end.
+***************/        
     END.
-
+/*		find first yp_mstr no-lock where yp_domain = global_domain and         */
+/*									 yp_part = tr_part and                                   */
+/*									 (yp_start <= tt_date or yp_start = ?) and               */
+/*									 (yp_expir >= tt_date or yp_expir = ?) no-error.         */
+/*				if available yp_mstr then do:                                      */
+/*			  	                                                                 */
+/*			  end.                                                               */
+/*	  end.                                                                   */
     for each tt_temp exclusive-lock:
         do i = 1 to 12:
            assign tt_amt[i] = tt_per_amt[i] * tt_qty[i].
@@ -148,44 +176,9 @@ repeat:
     end.
 
   for each tt_temp:
-  display tt_temp with width 300 stream-io.
-end.
-
-/*    for each tr_hist no-lock where tr_domain = global_domain                                     */
-/*        and tr_effdate >= dte and tr_effdate <= effdate1                                         */
-/*        and (tr_type = 'iss-so' or tr_type = 'CN-USE'):                                          */
-/*        find first tt_temp where tt_cust = tr_addr and tt_part = tr_part no-error.               */
-/*        if not avail tt_temp then do:                                                            */
-/*           find first pt_mstr where pt_domain = global_domain                                    */
-/*           and pt_part = tr_part no-lock no-error.                                               */
-/*           create tt_temp.                                                                       */
-/*           assign tt_cust = tr_addr                                                              */
-/*                  tt_part = tr_part                                                              */
-/*                  tt_desc = if avail pt_mstr then pt_desc1 else ""                               */
-/*                  tt_ym   = string(year(tr_effdate)) + '/' + string(month(tr_effdate)).          */
-/*           find first yysales_disc where yysalesdisc_domain = global_domain                      */
-/*           and yysalesdisc_cust = tr_addr and yysalesdisc_part = tr_part                         */
-/*           and yysalesdisc_effdate <= tr_effdate and yysalesdisc_due_date >= tr_effdate          */
-/*           no-lock no-error.                                                                     */
-/*           if avail yysales_disc then do:                                                        */
-/*              if year(tr_effdate) > year(effdate)                                                */
-/*              then tt_per_amt[month(tr_effdate) + 12 - month(effdate) + 1] = yysalesdisc_amt[1]. */
-/*              else tt_per_amt[month(tr_effdate) - month(effdate) + 1] = yysalesdisc_amt[1].      */
-/*           end.                                                                                  */
-/*        end.                                                                                     */
-/*        if year(tr_effdate) > year(effdate)                                                      */
-/*        then do:                                                                                 */
-/*           tt_qty[month(tr_effdate) + 12 - month(effdate) + 1]                                   */
-/*           = tt_qty[month(tr_effdate) + 12 - month(effdate) + 1] + tr_qty_loc.                   */
-/*        end.                                                                                     */
-/*        else do:                                                                                 */
-/*           tt_qty[month(tr_effdate) - month(effdate) + 1]                                        */
-/*           = tt_qty[month(tr_effdate) - month(effdate) + 1] + tr_qty_loc.                        */
-/*        end.                                                                                     */
-/*    end.                                                                                         */
-
-/****** tx01 ********/
-/******start tx01 ********/
+  	  display tt_temp with width 300 stream-io.
+  end.
+ 
    CREATE "Excel.Application" chExcelApplication.
    chExcelWorkbook = chExcelApplication:Workbooks:add().
    chWorkSheet = chExcelApplication:Sheets:Item(1).

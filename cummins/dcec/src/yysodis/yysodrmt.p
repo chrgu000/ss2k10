@@ -6,7 +6,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "121121.1}
+{mfdtitle.i "121121.1"}
 
 define variable mc-error-number like msg_nbr no-undo.
 
@@ -52,8 +52,8 @@ define variable l_yn        like mfc_logical             no-undo.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -86,7 +86,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    /*   list_label     to 29 pt_price base_curr                  */
    /*   disp-stock-um  to 65 pt_um  at 68                        */
    /*   /*V8-*/                                                  */
@@ -96,24 +96,24 @@ FORM /*GUI*/
    /*   disp-total-gl-cost          to 29                        */
    /*   glxcst                      to 46 base_curr2             */
    /*V8+*/
-        
-   
+
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-disp-total-this-level-gl    at 7
-   glxcst_tl                   at 31
-   base_curr1 disp-site-col    at 57 pt_site at 68
-   disp-total-gl-cost          at 9
-   glxcst                      at 31 base_curr2   
+  /*  disp-total-this-level-gl    at 7                            */
+  /*  glxcst_tl                   at 31                           */
+  /*  base_curr1 disp-site-col    at 57 pt_site at 68             */
+  /*  disp-total-gl-cost          at 9                            */
+  /*  glxcst                      at 31 base_curr2                */
    /*V8+*/
-        
+
    qty_label[1]   at  2 amt_label[1] at 11
    qty_label[2]   at 27 amt_label[2] at 36
-   qty_label[3]   at 52 amt_label[3] at 61   
+   qty_label[3]   at 52 amt_label[3] at 61
    skip
    /*V8+*/
-        
+
    yp_min_qty[1]  at 2  yp_amt[1]  at 10 format "->>>,>>>,>>9.9<<<<"
    yp_min_qty[6]  at 27 yp_amt[6]  at 35 format "->>>,>>>,>>9.9<<<<"
    yp_min_qty[11] at 52 yp_amt[11] at 60 format "->>>,>>>,>>9.9<<<<"
@@ -132,7 +132,7 @@ disp-total-this-level-gl    at 7
    skip
    yp_min_qty[5]  at 2  yp_amt[5]  at 10 format "->>>,>>>,>>9.9<<<<"
    yp_min_qty[10] at 27 yp_amt[10] at 35 format "->>>,>>>,>>9.9<<<<"
-   yp_min_qty[15] at 52 yp_amt[15] at 60 format "->>>,>>>,>>9.9<<<<"          
+   yp_min_qty[15] at 52 yp_amt[15] at 60 format "->>>,>>>,>>9.9<<<<"
    skip
  SKIP(.4)  /*GUI*/
 with frame b no-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
@@ -235,7 +235,7 @@ repeat with frame a:
       run disp_proc.
 
       end.
- 
+
       else
       if frame-field = "yp_part" then do:
      {mfnp05.i yp_mstr yp_list "yp_domain = global_domain and yp_list = input yp_list " yp_part "input yp_part"}
@@ -249,16 +249,16 @@ repeat with frame a:
        end.
 
    end. /* editing: */
-	
+
 	 if input yp_list = "" then do:
 	 		{pxmsg.i &MSGNUM=2128 &ERRORLEVEL=3 &MSGARG1=yp_list}
 	 		next-prompt yp_list.
 	 		undo.
-	 end.	
-	
+	 end.
+
    if input yp_part <> "" then do:
       /* Product Line or Item must be blank */
-      find first pt_mstr no-lock where pt_domain = global_domain 
+      find first pt_mstr no-lock where pt_domain = global_domain
       			 and pt_part = input yp_part no-error.
       if not available pt_mstr then do:
       	{pxmsg.i &MSGNUM=16 &ERRORLEVEL=3}
@@ -266,17 +266,17 @@ repeat with frame a:
       	undo.
       end.
    end.
-	
-	 if input yp_cust <> "" and 
+
+	 if input yp_cust <> "" and
 	 	  not can-find(first cm_mstr no-lock where cm_domain = global_domain
 	 	  							 and cm_addr = input yp_cust) then do:
 			 {pxmsg.i &MSGNUM=2264 &ERRORLEVEL=3}
       	next-prompt yp_cust.
       	undo.
-	 
+
 	 end.
-	 			
-	
+
+
    /* VALIDATE CURRENCY CODE */
    if input yp_curr <> base_curr then do:
 
@@ -311,7 +311,7 @@ find first yp_mstr using yp_list and yp_part and yp_start
                yp_part.
             undo, retry.
          end. /* IF NOT l_yn */
-      end. 
+      end.
 
       /* ADDING NEW RECORD */
       {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
@@ -550,14 +550,14 @@ find first yp_mstr using yp_list and yp_part and yp_start
                   qty_label
                   amt_label
                with frame b.
-
+/*
                display
                   disp-stock-um
                   disp-total-this-level-gl
                   disp-site-col
                   disp-total-gl-cost
                with frame b.
-
+*/
                del-yn = no.
                next main-loop.
 

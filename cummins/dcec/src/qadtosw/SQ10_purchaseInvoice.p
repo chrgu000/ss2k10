@@ -1,4 +1,15 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "SQ10_purchaseInvoice".
+
 DEFINE TEMP-TABLE xxwk
     FIELD vend LIKE prh_vend
     FIELD reqnbr AS CHAR FORMAT "X(20)"
@@ -77,8 +88,8 @@ FOR EACH pvo_mstr NO-LOCK WHERE pvo_domain = global_domain and pvo_trans_date >=
         PUT UNFORMATTED  v_date_per_str "|".
         PUT UNFORMATTED "1" SKIP.
     END.
-    
-   
+
+
 
 END.
 QUIT.

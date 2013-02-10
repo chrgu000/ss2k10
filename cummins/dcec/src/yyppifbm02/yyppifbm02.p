@@ -23,11 +23,11 @@ If the xxppif__dte01 >=ps_start and xxppif__dte01<= ps_end ,then
 ps_end = xxppif__dte01 - 1 .
 else if xxppif__dte01 <= ps_start then ps_start = xxppif__dte01   */
 
-/* Last change by Wilber 04/01/2008                  *W002 */
-/* Last change by Wilber 04/01/2008                  *W003 */
-/* Last change by Wilber 04/02/2008                  *W004*/
+/* Last change by Wilber 04/01/2008                                    *W002 */
+/* Last change by Wilber 04/01/2008                                    *W003 */
+/* Last change by Wilber 04/02/2008                                    *W004 */
 /* Last change by Wilber 04/07/2008    add the logic of PDSCI and PDSCO               *W005*/
-/* Last change by Wilber 05/06/2008    process the ps_start = ?  and ps_start = today            *W006*/
+/* Last change by Wilber 05/06/2008    process the ps_start = ?  and ps_start = today       *W006*/
 /* Last change by Wilber 05/08/2008    process the ps_start < xxppif__chr01            *W007*/
 /* Last change by Wilber 05/13/2008    process the sosai add the bom            *W008*/
 /* Last change by Wilber 05/14/2008    indentify the t-code pdsco pdsao sosao sasco          *W009*/
@@ -44,7 +44,7 @@ session:date-format = 'dmy'.
    global_user_lang_dir = "ch/".
    global_domain = "DCEC".
 
-{ xxppifdef.i }
+{xxppifdef.i}
 define variable item_type as inte.
 define variable item_status as char.
 define variable item_phantom as log.
@@ -62,9 +62,13 @@ define variable bom-c as log.
 /*J010*/ define variable predef_site as char.
 /*J009*/ define variable last_bom_qty like ps_qty_per.
 /*J004*/ define variable new_bom as log init no.   /* if yes needs to process */
+define stream bfp.
+define stream bfc.
+define variable ifilept as character.
+define variable ifilecd as character.
 
-
-
+        ifilept = filepath + "\" + "ppifb02pt".
+        ifilecd = filepath + "\" + "ppifb02cd".
         strinputfile    = filepath + "\" + "ppifb02b.tmp".
         stroutputfile   = filepath + "\" + "ppifbout02b.tmp".
 
@@ -82,13 +86,42 @@ define variable bom-c as log.
                  and substr(xxppif__chr01,1,1) = "1"
                  and substr(xxppif__chr01,4,1) = "0":
          */
-output stream batchdata to value(strinputfile) NO-ECHO.
-
-            /*no-error proceed*/
             IF ERROR-STATUS:ERROR THEN DO:
                 OUTPUT STREAM batchdata CLOSE .
-                output stream batchdata to value(strinputfile) NO-ECHO .
+                output stream batchdata to value(strinputfile) NO-ECHO.
+                output stream bfc close.
+                output stream bfc to value(ifilecd + "in.tmp") NO-ECHO.
+                output stream bfp close.
+                output stream bfp to value(ifilept + "in.tmp") NO-ECHO.
             END.
+
+output stream bfc to value(ifilecd + "in.tmp") NO-ECHO.
+output stream bfp to value(ifilept + "in.tmp") NO-ECHO.
+for each xxppif_log where xxppif_domain = global_domain
+     and lookup(xxppif_tr_code,"SOIA") > 0
+     and xxppif_err <> 2
+     and substr(xxppif__chr01,1,1) = "1"
+     and substr(xxppif__chr01,4,1) = "0":
+     put stream bfp unformat '"' trim(substring(xxppif_content,12,12)) '"' skip.
+     put stream bfp unformat '-' skip.
+     put stream bfp unformat '- - - - - - - "'
+                       trim(substring(xxppif_content,139,17)) '" - "'
+                       trim(substring(xxppif_content,206,19,"RAW")) '" - - "'
+                       trim(substring(xxppif_content,121,18)) '" "'
+                       trim(substring(xxppif_content,26,11)) '"' skip.
+     if trim(substring(xxppif_content,139,17)) <> "" then do:
+        put stream bfc unformat '"PT_DRAW"' skip.
+        put stream bfc unformat '"' trim(substring(xxppif_content,139,17)) '"' skip.
+        put stream bfc unformat '"' trim(substring(xxppif_content,156,50,"RAW")) '"' skip.
+     end.
+/* /*zy*/     substr(xxppif__chr01,4,1) = "1".                             */
+end.
+put stream bfp "." skip.
+put stream bfc "." skip.
+output stream bfp close.
+output stream bfc close.
+            /*no-error proceed*/
+output stream batchdata to value(strinputfile) NO-ECHO.
 /*    put stream batchdata unformatted "~"" runuser "~" ~"" runpsw "~"" skip.  */
 /*    put stream batchdata unformatted "-" skip.                               */
 /*    put stream batchdata unformatted "~"yybmpsmt-1.p~"" skip.   /*13.5*/     */
@@ -520,7 +553,8 @@ for each xxppif_log where xxppif_domain = global_domain
 
 /*W001 begin*/ /*add the general code PHANTOM OP to define the OP */
                           /*put stream batchdata unformatted "- " skip. */
-                           put stream batchdata UNFORMATTED  " - - " .
+/*ZY*/             PUT STREAM batchdata UNFORMAT ' "' trim(substring(xxppif_content,225,1)) '"' . /*备注(随机带走件)*/
+                   put stream batchdata UNFORMATTED  " - " . /*废品率*/
 /*W002*                          find ptp_det where ptp_domain = global_domain and ptp_part = cummins_child AND ptp_site = SITE-B no-lock no-error.   */
 /*W002*/                  find ptp_det where ptp_domain = global_domain and
                                ptp_part = cummins_child  no-lock no-error.
@@ -862,7 +896,7 @@ end.
 /*W004*/    END . /*item_type <> 0*/
 
                 if xxppif_err = 99 then xxppif_err = 0.
-                substr(xxppif__chr01,4,1) = "2".
+    /*zy*/           substr(xxppif__chr01,4,1) = "2". 
 
 
 /*W001 begin*/
@@ -875,24 +909,41 @@ end.
         /**/
         END . /*end of for each xxppif_log */
  /*W001 end */
-
         put stream batchdata unformatted  "." at 1.
-
-
-
         output stream batchdata  close.
 
         /*INPUT CLOSE. */
         output to value(stroutputfile) .
-
         INPUT from value(strinputfile).
-
         PAUSE 0 BEFORE-HIDE.
+        batchrun = yes.
         {gprun.i ""xxbmpsmt.p""}
+        batchrun = no.
         INPUT CLOSE.
         OUTPUT CLOSE.
 
+        input from value(ifilept + "in.tmp").
+        output to value(ifilept + "ou.tmp") keep-messages.
+        hide message no-pause.
+        batchrun = yes.
+           {gprun.i ""xxptmt04c.p""}
+        batchrun = no.
+        hide message no-pause.
+        output close.
+        input close.
+        batchrun = no.
 
+        input from value(ifilecd + "in.tmp").
+        output to value(ifilecd + "ou.tmp") keep-messages.
+        hide message no-pause.
+        batchrun = yes.
+        {gprun.i ""xxcodemt.p""}
+        batchrun = no.
+        hide message no-pause.
+        output close.
+        input close.
+
+quit.
 
  procedure fix_date_format:
     def input-output parameter date-io as char format "x(8)".

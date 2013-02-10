@@ -162,12 +162,12 @@ end. /* if can-find(first qad_wkfl... */
 eff_date = today.
 
 for first gl_ctrl
-no-lock:
+no-lock where gl_domain = global_domain:
 end. /* FOR FIRST gl_ctrl */
 
 for first clc_ctrl
    fields(clc_domain clc_lotlevel)
-no-lock:
+no-lock where clc_domain = global_domain:
 end. /* FOR FIRST clc_ctrl */
 
 if not available clc_ctrl
@@ -176,7 +176,7 @@ then do:
    {gprun.i ""gpclccrt.p""}
    for first clc_ctrl
       fields(clc_domain clc_lotlevel)
-   no-lock:
+   no-lock where clc_domain = global_domain:
    end. /* FOR FIRST clc_ctrl */
 end. /* IF NOT AVAILABLE clc_ctrl */
 
@@ -185,9 +185,9 @@ end. /* IF NOT AVAILABLE clc_ctrl */
 main:
 repeat:
    /*GET EMP, EFFDATE, SHIFT, SITE, CONTROLTOTAL FROM USER*/
-   /*tfq           {gprun.i ""xxretrin1.p"" "(output undo_stat)"} */ 
+   /*tfq           {gprun.i ""xxretrin1.p"" "(output undo_stat)"} */
  /*tfq*/  {gprun.i ""xxretrin1.p""
-      "(output undo_stat)"} 
+      "(output undo_stat)"}
    {&REBKFL-P-TAG5}
    if undo_stat
    then
@@ -205,8 +205,8 @@ repeat:
       /*GET ITEM, OP, LINE FROM USER*/
 
      {gprun.i ""xxretrin2.p""
-         "(output undo_stat)"} 
-     /*tfq               {gprun.i ""xxretrin2.p"" "(output undo_stat)"}*/    
+         "(output undo_stat)"}
+     /*tfq               {gprun.i ""xxretrin2.p"" "(output undo_stat)"}*/
       if undo_stat
       then
          undo, leave.
@@ -233,8 +233,8 @@ repeat:
 
       /*GET BOM, ROUTING FROM USER*/
       {gprun.i ""xxretrin3.p""
-         "(output undo_stat)"} 
-    /*tfq               {gprun.i ""xxretrin3.p"" "(output undo_stat)"} */    
+         "(output undo_stat)"}
+    /*tfq               {gprun.i ""xxretrin3.p"" "(output undo_stat)"} */
       if undo_stat
       then
          undo, leave.
@@ -264,16 +264,16 @@ repeat:
       /* CREATE IT IF IT DOESN'T EXIST*/
       if cumwo_lot = ?
       then do:
-                                                     
-    {gprun.i ""recrtwo.p""                  
-       "(input site,                          
-         input part,                          
-         input eff_date,                      
-         input line,                          
-         input routing,                       
-         input bom_code,                      
-         output cumwo_lot)"}                  
-                                              
+
+    {gprun.i ""recrtwo.p""
+       "(input site,
+         input part,
+         input eff_date,
+         input line,
+         input routing,
+         input bom_code,
+         output cumwo_lot)"}
+
          if cumwo_lot = ?
          then
             next mainloop.
@@ -492,7 +492,7 @@ repeat:
         /*tfq*/  {gprun.i ""xxrebkfli1.p""
             "(input cumwo_lot,
               input op,
-              output undo_stat)"} 
+              output undo_stat)"}
 
          if undo_stat
          then
@@ -591,11 +591,11 @@ repeat:
                                            input wkctr,
                                            output rejected,
                                            output lotserials_req)"}
- 
 
- */ 
-             
- /*tfq                 
+
+ */
+
+ /*tfq
          {gprun.i ""recrtcl.p""
             "(input cumwo_lot,
               input op,
@@ -639,7 +639,7 @@ repeat:
                  input eff_date,
                  input wkctr,
                  input conv_qty_proc,
-                 output undo_stat)"} 
+                 output undo_stat)"}
                   /*tfq   {gprun.i ""xxreisslst.p""
                      "(input cumwo_lot, input part, input site,
                      input eff_date, input wkctr,
@@ -1298,7 +1298,7 @@ pause .
       end. /* DO TRANSACTION */
 /***
  message "call relbra.p" .
-pause . 
+pause .
 ***/
       {gprun.i ""relbra.p""
          "(input cumwo_lot,
@@ -1316,7 +1316,7 @@ pause .
       do transaction:
      /***
        message "call rebkfla.p" .
-       pause .  
+       pause .
        ***/
 
          /*REGISTER QTY PROCESSED (REDUCE INQUE, INCREASE OUTQUE)*/

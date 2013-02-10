@@ -1,12 +1,10 @@
+/* GUI CONVERTED from yychglpst.p (converter v1.78) Mon Jan 14 19:04:15 2013 */
 /* chglpst.p - GENERAL LEDGER UNPOSTED TRANSACTION REGISTER -              CAS*/
 /* glutrrp.p - GENERAL LEDGER UNPOSTED TRANSACTION REGISTER                   */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
 /* $Revision: 1.7.3.12 $                                                         */
-/*XXCH911*
 /*V8:ConvertMode=FullGUIReport                                                */
-*XXCH911*/
-/*XXCH911*/ /*V8:ConvertMode=ReportAndMaintenance*/
 /* REVISION: 5.0      LAST MODIFIED: 03/16/89   BY: JMS   *B066*              */
 /*                                   10/06/89   by: jms   *B330*              */
 /* REVISION: 6.0      LAST MODIFIED: 07/06/90   by: jms   *D034*              */
@@ -56,7 +54,15 @@
 
 /* DISPLAY TITLE */
 
-/*{mfdtitle.i "2+ "}*/
+
+/*GUI global preprocessor directive settings */
+&GLOBAL-DEFINE PP_PGM_RP TRUE
+&GLOBAL-DEFINE PP_ENV_GUI TRUE
+
+
+/*GUI preprocessor directive settings */
+&SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
+
 {mfdtitle.i "121011.1"}
 
 {cxcustom.i "GLUTRRP.P"}
@@ -96,7 +102,7 @@ define variable glname            like en_name     no-undo.
 define variable entity_flag       like mfc_logical no-undo.
 define variable displayed_effdate as logical       no-undo.
 
-define buffer gltdet for glt_det.
+
 /*XXCH911*/ define variable casacc as char format "x(16)".
 /*XXCH911*/ define variable casdesc as char format "x(16)".
 /*XXCH911*/ define variable cash_acct_dr as logical.
@@ -143,8 +149,16 @@ assign
 
 /* SELECT FORM */
 {&GLUTRRP-P-TAG15}
-form
-   entity   colon 25    entity1 colon 50 label {t001.i}
+
+/*GUI preprocessor Frame A define */
+&SCOPED-DEFINE PP_FRAME_NAME A
+
+FORM /*GUI*/ 
+   
+ RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ SKIP(.1)  /*GUI*/
+entity   colon 25    entity1 colon 50 label {t001.i}
 /*XXCH911*   ref      colon 25    ref1    colon 50 label {t001.i} */
 /*XXCH911*   dtcolon 25    dt1     colon 50 label {t001.i} */
 /*XXCH911*   effdt    colon 25    effdt1  colon 50 label {t001.i} */
@@ -156,8 +170,24 @@ form
 /* ss - 121011.1 - E */ 
    type     colon 25
 /*XXCH911*   unb      colon 25 */
+ SKIP(.4)  /*GUI*/
 with frame a side-labels attr-space width 80
-   title color normal glname.
+    NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER.
+ F-a-title = glname.
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+
+/*GUI preprocessor Frame A undefine */
+&UNDEFINE PP_FRAME_NAME
+
+
 {&GLUTRRP-P-TAG16}
 
 /* SET EXTERNAL LABELS */
@@ -176,7 +206,12 @@ glc_year = year(today) and
 
 {wbrp01.i}
 
-repeat:
+
+/*GUI*/ {mfguirpa.i false "printer" 132 " " " " " "  }
+
+/*GUI repeat : */
+/*GUI*/ procedure p-enable-ui:
+
    if ref1 = hi_char then ref1 = "".
    if dt =  low_date then dt = ?.
    if dt1 = hi_date then dt1 = ?.
@@ -195,20 +230,13 @@ repeat:
 
    if c-application-mode <> 'web' then
       {&GLUTRRP-P-TAG18}
-      update
-         entity entity1
-/*XXCH911*      ref ref1 */
-/*XXCH911*      dt dt1 */
-/*XXCH911*      effdt effdt1 */
-/*XXCH911*/     startref endref
-/*XXCH911*/     begdt enddt
-/*XXCH911*      btch */
-         /* ss - 121011.1 - b */
-         user_id user_id1  
-         /* ss - 121011.1 - e */
-         type
-/*XXCH911*      unb */
-      with frame a.
+      
+run p-action-fields (input "display").
+run p-action-fields (input "enable").
+end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+
+/*GUI*/ procedure p-report-quote:
+
 
 /*XXCH911*   {wbrp06.i &command = update &fields = "   entity entity1 ref ref1 
 dt dt1 effdt effdt1 btch type unb" &frm = "a"}  */
@@ -290,19 +318,25 @@ xen_entity = en_entity no-lock no-error.
 /*XXCH921*/ end.
 
    /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "printer"
-               &printWidth = 132
-               &pagedFlag = " "
-               &stream = " "
-               &appendToFile = " "
-               &streamedOutputToTerminal = " "
-               &withBatchOption = "no"
-               &displayStatementType = 1
-               &withCancelMessage = "yes"
-               &pageBottomMargin = 6
-               &withEmail = "yes"
-               &withWinprint = "yes"
-               &defineVariables = "yes"}
+   
+/*GUI*/ end procedure. /* p-report-quote */
+/*GUI - Field Trigger Section */
+
+/*GUI MFSELxxx removed*/
+/*GUI*/ procedure p-report:
+/*GUI*/   {gpprtrpa.i "printer" 132 " " " " " " " " }
+/*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
+find en_mstr  where en_mstr.en_domain = global_domain and  en_entity = 
+current_entity no-lock no-error.
+find first glc_cal  where glc_cal.glc_domain = global_domain and  
+glc_year = year(today) and
+/*XXCH911*/glc_per = 1 no-lock no-error.
+find xen_mstr  where xen_mstr.xen_domain = global_domain and  
+xen_entity = en_entity no-lock no-error.
+
+define buffer gltdet for glt_det.
+
+
    {mfphead.i}
 
    {&GLUTRRP-P-TAG24}
@@ -360,7 +394,7 @@ glt_entity >= entity and
             glt_det.glt_ref
             {&GLUTRRP-P-TAG29}
             glt_det.glt_date column-label "Entered!Eff Date"
-            glt_det.glt_userid.
+            glt_det.glt_userid WITH STREAM-IO /*GUI*/ .
 
          assign
             unb_msg = ""
@@ -374,7 +408,7 @@ glt_entity >= entity and
          if entity_flag = yes then next.
          {&GLUTRRP-P-TAG5}
          {&GLUTRRP-P-TAG30}
-         display "" @ glt_det.glt_ref.
+         display "" @ glt_det.glt_ref WITH STREAM-IO /*GUI*/ .
          {&GLUTRRP-P-TAG31}
 
          /* DISPLAY EFFECTIVE DATE STACKED UNDER ENTERED DATE, */
@@ -382,14 +416,14 @@ glt_entity >= entity and
          if not displayed_effdate
          then do:
             display
-               glt_det.glt_effdate @ glt_det.glt_date.
+               glt_det.glt_effdate @ glt_det.glt_date WITH STREAM-IO /*GUI*/ .
             displayed_effdate = yes.
          end.
          else
             display
-               "" @ glt_det.glt_date.
+               "" @ glt_det.glt_date WITH STREAM-IO /*GUI*/ .
          display
-            "" @ glt_det.glt_userid.
+            "" @ glt_det.glt_userid WITH STREAM-IO /*GUI*/ .
          {&GLUTRRP-P-TAG6}
       end.
       {&GLUTRRP-P-TAG32}
@@ -442,13 +476,13 @@ glt_entity >= entity and
 /*XXCH911*/    dr_cr
          amt
          glt_det.glt_curr
-         glt_det.glt_dy_code.
+         glt_det.glt_dy_code WITH STREAM-IO /*GUI*/ .
       {&GLUTRRP-P-TAG4}
       /* SECOND LINE NEEDED WHEN AN ERROR. */
       /* ALSO DISPLAY EFFECTIVE DATE STACKED UNDER ENTERED DATE. */
 /*XXCH911*/     if glt_det.glt_desc <> "" then do:
 /*XXCH911*/        down 1.
-/*XXCH911*/        display glt_det.glt_desc @ casacc.
+/*XXCH911*/        display glt_det.glt_desc @ casacc WITH STREAM-IO /*GUI*/ .
 /*XXCh911*/     end.
       if glt_det.glt_error <> "" then do:
          down 1.
@@ -456,13 +490,13 @@ glt_entity >= entity and
          then do:
             {&GLUTRRP-P-TAG8}
             display
-               glt_det.glt_effdate @ glt_det.glt_date.
+               glt_det.glt_effdate @ glt_det.glt_date WITH STREAM-IO /*GUI*/ .
             {&GLUTRRP-P-TAG9}
             displayed_effdate = yes.
          end.
 
 /*XXCH911*   display glt_det.glt_error @ glt_det.glt_desc. */
-/*XXCH911*/display glt_det.glt_error @ casacc.
+/*XXCH911*/display glt_det.glt_error @ casacc WITH STREAM-IO /*GUI*/ .
 
       end.
 
@@ -472,7 +506,7 @@ glt_entity >= entity and
          down 1.
          display  "* " + getTermLabel("NO_DAYBOOK_ENTRY",19) + "# *"
 /*XXCH911*    @ glt_det.glt_desc.  */
-/*XXCH911*/   @ casacc.
+/*XXCH911*/   @ casacc WITH STREAM-IO /*GUI*/ .
       end.
 
       if glt_det.glt_unb = yes then unbflag = yes.
@@ -497,7 +531,7 @@ glt_entity >= entity and
             down 1.
             {&GLUTRRP-P-TAG8}
             display
-               glt_det.glt_effdate @ glt_det.glt_date.
+               glt_det.glt_effdate @ glt_det.glt_date WITH STREAM-IO /*GUI*/ .
             {&GLUTRRP-P-TAG9}
             displayed_effdate = yes.
          end.
@@ -515,12 +549,14 @@ glt_entity >= entity and
          display
             accum total by glt_det.glt_ref glt_det.glt_amt @ amt
             base_curr @ glt_det.glt_curr
-            unb_msg @ glt_det.glt_dy_code.
+            unb_msg @ glt_det.glt_dy_code WITH STREAM-IO /*GUI*/ .
          down 1.
       end.
 
       {&GLUTRRP-P-TAG33}
-      {mfrpchk.i}
+      
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+
    end.
 
    /* PRINT DEBIT AND CREDIT TOTALS */
@@ -540,7 +576,11 @@ glt_entity >= entity and
       {&GLUTRRP-P-TAG35}
 
    /* REPORT TRAILER  */
-   {mfrtrail.i}
+   
+/*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
+
+/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
+
 /*XXCH911*/  view frame a.
 /*XXCH911*/  {mfmsg01.i 9834 1 ck_yn}
 /*XXCH911*/  if ck_yn then {gprun.i ""chglpst1.p""}
@@ -548,3 +588,6 @@ glt_entity >= entity and
 end.
 
 {wbrp04.i &frame-spec = a}
+
+/*GUI*/ end procedure. /*p-report*/
+/*GUI*/ {mfguirpb.i &flds=" entity entity1     startref endref  begdt enddt   user_id user_id1  type  "} /*Drive the Report*/

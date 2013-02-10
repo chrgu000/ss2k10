@@ -159,7 +159,7 @@ define variable lCustomOK as logical no-undo.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/  
+FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -207,18 +207,18 @@ if c-application-mode <> "API" then do:
 
    display
       site
-            skip(.4)   
+            skip(.4)
    with frame a.
 end. /* if c-application-mode <> "API" */
 
-FORM /*GUI*/  
+FORM /*GUI*/
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
  /* *SS-20120903.1*     {pppsmta4.i} */
-  /* *SS-20120903.1*  */     {yypppsmta4.i} 
+  /* *SS-20120903.1*  */     {yypppsmta4.i}
  SKIP(.4)  /*GUI*/
-with frame c1 
+with frame c1
    side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
  DEFINE VARIABLE F-c1-title AS CHARACTER.
@@ -270,7 +270,7 @@ repeat:
       view frame c1.
    end. /* if c-application-mode <> "API" */
 
- /* *SS-20120903.1*   */ 
+ /* *SS-20120903.1*   */
 /*added by kevin, 2003/12/09*/
       find first xxbomc_ctrl where xxbomc_ctrl.xxbomc_domain = global_domain no-lock no-error.
       if not available xxbomc_ctrl then do:
@@ -281,7 +281,7 @@ repeat:
 /*end added by kevin*/
 
 
-  /* *SS-20120903.1*   */ 
+  /* *SS-20120903.1*   */
    do on endkey undo, leave mainloop:
       if c-application-mode = "API" and retry then
          next mainloop.
@@ -371,7 +371,7 @@ repeat:
                             &mnemonic = atp-enforcement
                             &label = atp-enforce-desc}
 
- /* *SS-20120903.1*                 display {pppsmta4.i} with frame c1. */ 
+ /* *SS-20120903.1*                 display {pppsmta4.i} with frame c1. */
  /* *SS-20120903.1*   */               display {yypppsmta4.i} with frame c1.
 
                if ptp_bom_code <> "" then
@@ -730,7 +730,7 @@ repeat:
             /* PREVENTS THE USER FROM MANUALLY ENTERING */
             /* THE CUMULATIVE LEAD TIME ptp_cum_lead    */
             set
-	     /* *SS-20120903.1*   
+	     /* *SS-20120903.1*
                ptp_ms
                ptp_plan_ord
                ptp_timefnce
@@ -748,7 +748,7 @@ repeat:
              */
                ptp_pm_code validate(input ptp_pm_code <> "","'采/制'代码不允许为空")
                cfg
-             /* *SS-20120903.1*   
+             /* *SS-20120903.1*
                ptp_ins_rqd
                ptp_ins_lead
                ptp_cum_lead
@@ -760,7 +760,7 @@ repeat:
                ptp_run_seq2
              */
                ptp_phantom
-             /* *SS-20120903.1*   
+             /* *SS-20120903.1*
                ptp_ord_min
                ptp_ord_max
                ptp_ord_mult
@@ -771,7 +771,7 @@ repeat:
                emt-auto
                ptp_network
 	                    */
-               ptp_routing  validate(input ptp_pm_code <> "m" or input ptp_routing <> "" or pt_group = "M","工艺流程代码不允许为空")  /*kevin*/
+               ptp_routing   /* validate(input ptp_pm_code <> "m" or input ptp_routing <> "" or pt_group = "M","工艺流程代码不允许为空") kevin*/
                ptp_bom_code validate(input ptp_pm_code <> "m" or input ptp_bom_code <> "" or pt_group = "M","产品结构代码不允许为空") /*kevin*/
                go-on (F5 CTRL-D)
             with frame c1 no-validate.
@@ -830,7 +830,7 @@ repeat:
  /* *SS-20120903.1*   */
          /*added by kevin, 2003/12/09*/
                      find first ps_mstr where ps_mstr.ps_domain = global_domain and  ps__chr01 = ptp_site and (ps_par = ptp_part or ps_comp = ptp_part)
-                     no-lock no-error. 
+                     no-lock no-error.
                      if available ps_mstr then do:
                           message "该零件存在地点" + ptp_site + "的产品结构,请重新输入!" view-as alert-box error.
                           undo,retry.
@@ -1391,7 +1391,7 @@ repeat:
   *                 next-prompt btb-type with frame c1.
   *              undo, retry.
   *           end.
-  */  
+  */
  /* *SS-20120903.1* -e  */
             /* PICK UP NUMERIC FOR BTB TYPE CODE FROM MNEMONIC */
             {gplnga2n.i &file  = ""emt""
@@ -1421,31 +1421,31 @@ repeat:
                          undo, retry.
                       end.
                   end.
-                  
-              if input ptp_det.ptp_pm_code = "m" then do:                  
+
+              if input ptp_det.ptp_pm_code = "m" then do:
                   /*Verify the routing code against different sites*/
-                  find first ptpbuf where ptpbuf.ptp_domain = global_domain and  ptpbuf.ptp_part = input pt_part 
+                  find first ptpbuf where ptpbuf.ptp_domain = global_domain and  ptpbuf.ptp_part = input pt_part
                                        and ptpbuf.ptp_site <> input site
                                        and ptpbuf.ptp_routing = input ptp_det.ptp_routing no-lock no-error.
                   if available ptpbuf and pt_group <> "M" then do:
-                        message "零件 '" + ptpbuf.ptp_part "' 在地点 '" + ptpbuf.ptp_site 
+                        message "零件 '" + ptpbuf.ptp_part "' 在地点 '" + ptpbuf.ptp_site
                                  "' 已经使用了工艺流程 '" + ptpbuf.ptp_routing + "'" view-as alert-box error.
                         next-prompt ptp_det.ptp_routing with frame c1.
                         undo, retry.
-                     end.                  
-                  
+                     end.
+
                   /*verify the bom code against different sites*/
-                  find first ptpbuf where ptpbuf.ptp_domain = global_domain and  ptpbuf.ptp_part = input pt_part 
+                  find first ptpbuf where ptpbuf.ptp_domain = global_domain and  ptpbuf.ptp_part = input pt_part
                                        and ptpbuf.ptp_site <> input site
                                        and ptpbuf.ptp_bom_code = input ptp_det.ptp_bom_code no-lock no-error.
                   if available ptpbuf and pt_group <> "M" then do:
-                        message "零件 '" + ptpbuf.ptp_part "' 在地点 '" + ptpbuf.ptp_site 
+                        message "零件 '" + ptpbuf.ptp_part "' 在地点 '" + ptpbuf.ptp_site
                                  "' 已经使用了产品结构 '" + ptpbuf.ptp_bom_code + "'" view-as alert-box error.
                         next-prompt ptp_det.ptp_bom_code WITH FRAME c1.
                         UNDO, RETRY.
                   end.
              end. /*if input ptp_det.ptp_pm_code = "m"*/
-             
+
 /*cj*                  find pt_mstr where pt_part = input pt_part no-error.                     /*kevin,11/06/2003*/ */
 /*cj*                  if available pt_mstr then assign pt_phantom = ptp_det.ptp_phantom.               /*kevin,11/06/2003*/*/
 /*cj*/       FIND pt_mstr NO-LOCK WHERE pt_mstr.pt_domain = global_domain and pt_part = INPUT pt_part NO-ERROR .

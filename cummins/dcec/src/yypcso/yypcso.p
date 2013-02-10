@@ -1,113 +1,157 @@
-/* GUI CONVERTED from yypcso.p (converter v1.78) Mon Oct 22 19:46:32 2012 */
-/* yypcso.p - yypcso.p                                                       */
-/*V8:ConvertMode=Report                                                      */
-/* REVISION END                                                              */
+/* GUI CONVERTED from icsiiq.p (converter v1.78) Fri Oct 29 14:37:07 2004 */
+/* icsiiq.p - SITE INQUIRY                                                    */
+/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/* $Revision: 1.14 $                                                          */
+/*V8:ConvertMode=Report                                                       */
+/* REVISION: 6.0          LAST EDIT: 02/07/90   MODIFIED BY: EMB              */
+/* REVISION: 6.0          LAST EDIT: 09/03/91   BY: afs *D847*                */
+/* Revision: 7.3          Last edit: 11/19/92   By: jcd *G339*                */
+/*           7.3                     09/10/94   BY: bcm *GM02*                */
+/*           7.3                     03/15/95   by: str *F0N1*                */
+/* REVISION: 8.6          LAST EDIT: 03/09/98   BY: *K1KX* Beena Mol          */
+/* REVISION: 8.6          LAST EDIT: 05/20/98   BY: *K1Q4* Alfred Tan         */
+/* REVISION: 8.6          LAST EDIT: 06/02/98   BY: *K1RQ* A.Shobha           */
+/* REVISION: 9.0          LAST EDIT: 03/10/99   BY: *M0B8* Hemanth Ebenezer   */
+/* REVISION: 9.0          LAST EDIT: 03/13/99   BY: *M0BD* Alfred Tan         */
+/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
+/* REVISION: 9.1      LAST MODIFIED: 08/13/00   BY: *N0KS* Mark Brown         */
+/* Old ECO marker removed, but no ECO header exists *F0PN*                    */
+/* Revision: 1.12  BY: Jean Miller DATE: 04/06/02 ECO: *P056* */
+/* $Revision: 1.14 $ BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00G* */
+/*-Revision end---------------------------------------------------------------*/
 
+/******************************************************************************/
+/* All patch markers and commented out code have been removed from the source */
+/* code below. For all future modifications to this file, any code which is   */
+/* no longer required should be deleted and no in-line patch markers should   */
+/* be added.  The ECO marker should only be included in the Revision History. */
+/******************************************************************************/
+
+/* DISPLAY TITLE */
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "121017.1"}
-def var vend like pc_list.
-def var part like pt_part.
-def var vendpart like vp_vend_part.
-def var comp like ps_comp.
-def var eff_date like pc_start init today.
+{mfdtitle.i "130204.1"}
 
-def temp-table item_tmp
-    field item_part like pt_part
-/*    field item_vend like vp_vend
-    field item_vendpart like vp_vend_part 
-    field item_so like pt_part */
-    index item_part item_part.
-def temp-table sotmp
-    field sotmp_comp like pt_part
-    field sotmp_par like pt_part
-    index indx01 sotmp_comp sotmp_par.    
+define variable pclist like pc_list.
+define variable part like pc_part.
+define variable star like pc_start INITIAL TODAY.
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/  vend part eff_date  with frame a WIDTH 80 /*GUI*/ THREE-D /*GUI*/.
+FORM /*GUI*/
+
+ RECT-FRAME       AT ROW 1 COLUMN 1.25
+ RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+ SKIP(.1)  /*GUI*/
+space(1)
+   pclist
+   part
+   star
+with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+
+ DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
+ RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+ RECT-FRAME-LABEL:HIDDEN in frame a = yes.
+ RECT-FRAME:HEIGHT-PIXELS in frame a =
+  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+ RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
 
 /*GUI preprocessor Frame A undefine */
 &UNDEFINE PP_FRAME_NAME
 
+
+
+/* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
+{wbrp01.i}
 
 repeat:
-update vend part eff_date with frame a.
-{mfselprt.i "terminal" 80}
-empty temp-table item_tmp.
-empty temp-table sotmp.
-for each pt_mstr where /*ss2012-8-16 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-16 e*/ (pt_part begins part) no-lock,
-    each pc_mstr where /*ss2012-8-16 b*/ pc_mstr.pc_domain = global_domain and /*ss2012-8-16 e*/ pc_part = pt_part 
-		   and (pc_list = vend or pc_list = vend + "L")
-                   and (pc_start <= eff_date or pc_start = ? or eff_date = ?)
-                   and (pc_expire >= eff_date or pc_expire = ? or eff_date = ?)
-                   no-lock:
-    for first item_tmp where item_part = pc_part no-lock: end.
-    if not avail item_tmp then do:
-		    create item_tmp.
-		    assign item_part = pc_part.
-    end.
-end.
-for each item_tmp no-lock:
-disp item_tmp WITH STREAM-IO /*GUI*/ .
-end.
-for each item_tmp no-lock:
-    comp = item_part.
-    run extent_bom(item_part).
-end.
+   DISPLAY pclist part star WITH FRAME a.
+   if c-application-mode <> 'web' then
+      prompt-for pclist part star with frame a
+   editing:
 
-for each sotmp where  no-lock:
-    disp sotmp WITH STREAM-IO /*GUI*/ .
-end.
-empty temp-table item_tmp.
-empty temp-table sotmp.
-      {mfreset.i}
+      if frame-field = "pclist" then do:
+
+         /* FIND NEXT/PREVIOUS RECORD */
+         {mfnp.i pc_mstr pclist  " pc_domain = global_domain and
+         pc_list " pclist pc_list pc_list pc_list}
+
+         if recno <> ? then display pc_list @ pclist with frame a.
+         recno = ?.
+      end.
+      if frame-field = "part" then do:
+
+         /* FIND NEXT/PREVIOUS RECORD */
+         {mfnp.i pc_mstr part  " pc_domain = global_domain and
+             pc_list = INPUT pclist AND pc_part  "
+             part pc_part pc_part pc_part}
+
+         if recno <> ? then display pc_list @ pclist with frame a.
+         recno = ?.
+      end.
+      else do:
+         status input.
+         readkey.
+         apply lastkey.
+      end.
+   end.
+   status input.
+
+   {wbrp06.i &command = prompt-for &fields = " pclist part star " &frm = "a"}
+
+
+   /* OUTPUT DESTINATION SELECTION */
+   {gpselout.i &printType = "terminal"
+               &printWidth = 80
+               &pagedFlag = " "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "no"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 6
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
+/*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+
+
+   for each pc_mstr  where pc_domain = global_domain AND
+        (pc_list =input pclist OR INPUT pclist = "") AND
+       (pc_part = INPUT part OR INPUT part = "") AND
+       (pc_start <= INPUT star ) AND
+       (pc_expir >= INPUT star OR pc_expir = ?)
+   no-lock with frame b width 80 no-attr-space down:
+
+      /* SET EXTERNAL LABELS */
+      setFrameLabels(frame b:handle).
+
+
+/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+
+
+      display
+          pc_list
+          pc_part
+          pc_um
+          pc_start
+          pc_expir
+           WITH STREAM-IO /*GUI*/ .
+
+   end.
+
+   {mfreset.i}
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 
-      {mfgrptrm.i}
+   {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
+
 end.
 
-procedure extent_bom:
-    define input parameter precomp like ps_comp.
-    define var up-lvl as log.
-    define var input_precomp like ps_comp.
-    up-lvl = no.
-    input_precomp = precomp.
-    for first pt_mstr where /*ss2012-8-16 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-16 e*/ pt_part = precomp no-lock: end.
-    if not avail pt_mstr then do:
-       for first pt_mstr where pt_domain = global_domain and pt_part + "ZZ" = precomp no-lock: end.
-    end.
-    if avail pt_mstr and (pt_prod_line begins "2" or pt_prod_line begins "7") then do:
-       find sotmp where sotmp_comp = comp and sotmp_par = precomp no-lock no-error.
-       if not avail sotmp then do:
-          create sotmp.
-          assign sotmp_comp = comp
-                 sotmp_par  = precomp.
-       end.
-    end.
-    for first ps_mstr where /*ss2012-8-16 b*/ ps_mstr.ps_domain = global_domain and /*ss2012-8-16 e*/ ps_comp = precomp and (ps_start <= eff_date or eff_date = ? or ps_start = ?) 
-										and (ps_end >= eff_date or eff_date = ? or ps_end = ?)  no-lock: end.
-    if not avail ps_mstr then do:
-       up-lvl = yes.
-       /**
-       find sotmp where sotmp_comp = comp and sotmp_par = precomp no-lock no-error.
-       if not avail sotmp then do:
-          create sotmp.
-          assign sotmp_comp = comp
-                 sotmp_par  = precomp.
-       end.
-       **/
-       leave.
-    end.
-    if not up-lvl then
-		for each ps_mstr where /*ss2012-8-16 b*/ ps_mstr.ps_domain = global_domain and /*ss2012-8-16 e*/ ps_comp = precomp and (ps_start <= eff_date or eff_date = ? or ps_start = ?) 
-													and (ps_end >= eff_date or eff_date = ? or ps_end = ?) no-lock:
-		    run  extent_bom(ps_par).
-		end.
-		precomp = input_precomp.
-end procedure.
+{wbrp04.i &frame-spec = a}

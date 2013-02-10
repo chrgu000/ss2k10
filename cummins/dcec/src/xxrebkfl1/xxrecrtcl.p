@@ -47,29 +47,29 @@
             field work_ops_op as integer
             field work_ops_bkfl_qty as decimal.
 /**************tfq added begin***************************************/
-define new shared temp-table xxpk_det 
+define new shared temp-table xxpk_det
 			  field xxpk_domain like global_domain
         field xxpk_user like pk_user
         field xxpk_part like pk_part
         field xxpk_ref like pk_reference
-        field xxpk_op like ps_op  .
- define  temp-table zzpk_det 
+        field xxpk_op like ps_op.
+ define  temp-table zzpk_det
  						  field  zzpk_domain    like global_domain
               field  zzpk_user      like pk_user
               field  zzpk_part      like pk_part
 /*G656*/      field  zzpk_reference like pk_reference
               field  zzpk_loc       like pk_loc
               field  zzpk_start     like pk_start
-              field  zzpk_end       like pk_end 
+              field  zzpk_end       like pk_end
               field  zzpk_lot like pk_lot
               field  zzpk_user1 like pk_user1
               field  zzpk_user2 like pk_user2
-              field  zzpk__qadc01 like pk__qadc01 
+              field  zzpk__qadc01 like pk__qadc01
               field  zzpk_qty like pk_qty .
    for each zzpk_det where zzpk_domain = global_domain and zzpk_user = mfguser :
    delete zzpk_det .
-   end.           
-           
+   end.
+
 /*************tfq added end******************************************/
 
 /*H1J5*/ /* BEGIN OF ADDED CODE */
@@ -133,9 +133,9 @@ define new shared temp-table xxpk_det
          end.
 
          {gpxpld01.i "new shared"}
-         incl_nopk = no.    
+         incl_nopk = no.
                   /*DON'T INCLUDE FLOORSTOCK*/
-                    /***  
+                    /***
          message "call xxgpxldps.i" .
          pause .
          ***/
@@ -438,40 +438,40 @@ if available wr_route then  following_op_input_que = wr_qty_inque - backflush_qt
             end.
          end.
 /********tfq added begin********************/
-for each pk_det where pk_domain = global_domain and pk_user = mfguser :
-find first xxpk_det where xxpk_domain = global_domain and 
+for each pk_det exclusive-lock where pk_domain = global_domain and pk_user = mfguser :
+find first xxpk_det no-lock where xxpk_domain = global_domain and
            xxpk_user = mfguser and xxpk_part = pk_part and xxpk_ref = pk_reference no-error .
       if available xxpk_det and pk_reference <> string(xxpk_op) then do:
-         pk_reference = string(xxpk_op) .
+           pk_reference = string(xxpk_op) .
       end.
 end.
-for each  xxpk_det where xxpk_domain = global_domain and xxpk_user = mfguser :
+for each  xxpk_det exclusive-lock where xxpk_domain = global_domain and xxpk_user = mfguser :
 delete xxpk_det .
 end.
 for each pk_det where pk_domain = global_domain and  pk_user = mfguser :
   find first zzpk_det where zzpk_domain = global_domain and zzpk_user = pk_user
-                        and zzpk_part = pk_part 
+                        and zzpk_part = pk_part
                         and zzpk_reference = pk_reference no-error .
         if not available zzpk_det then
-        do:                
+        do:
             create zzpk_det. zzpk_domain = global_domain.
                    assign zzpk_user      = pk_user
                           zzpk_part      = pk_part
 /*G656*/                  zzpk_reference = pk_reference
                           zzpk_loc       = pk_loc
                           zzpk_start     = pk_start
-                          zzpk_end       = pk_end 
+                          zzpk_end       = pk_end
                           zzpk_lot = pk_lot
                           zzpk_user1= pk_user1
                           zzpk_user2 = pk_user2
                           zzpk__qadc01 = pk__qadc01 .
                           zzpk_qty = pk_qty .
-           end.               
-                          
+           end.
+
            else       zzpk_qty = pk_qty + zzpk_qty .
            delete pk_det .
-           end.               
-                  
+           end.
+
 for each zzpk_det where zzpk_user = mfguser :
                   create pk_det. pk_domain = global_domain.
                    assign pk_user      = zzpk_user
@@ -479,13 +479,13 @@ for each zzpk_det where zzpk_user = mfguser :
 /*G656*/                  pk_reference = zzpk_reference
                           pk_loc       = zzpk_loc
                           pk_start     = zzpk_start
-                          pk_end       = zzpk_end 
+                          pk_end       = zzpk_end
                           pk_lot = zzpk_lot
                           pk_user1= zzpk_user1
                           pk_user2 = zzpk_user2
                           pk__qadc01 = zzpk__qadc01 .
                           pk_qty = zzpk_qty .
                  delete zzpk_det .
-           end.               
+           end.
 
 /**********tfq added end***************/

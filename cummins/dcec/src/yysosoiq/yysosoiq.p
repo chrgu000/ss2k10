@@ -39,6 +39,7 @@ define variable part like pt_part no-undo.
 define variable qty_open like sod_qty_ship label "Qty Open" no-undo.
 define variable po like so_po no-undo.
 define variable desc1 like pt_desc1 no-undo.
+define variable desc2 like pt_desc1 no-undo.
 define variable site like so_site no-undo.
 
 part = global_part.
@@ -153,12 +154,16 @@ repeat:
                qty_open sod_um sod_due_date
                sod_site.*/
 /*fm268 begin*/
+            assign desc1 = "" desc2 = "".
             find first pt_mstr where pt_domain = global_domain and
                        pt_part=part no-lock no-error.
-
-            display so_nbr pt_desc1 pt_desc2 so_cust sod_line sod_qty_ord
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.
+            display so_nbr desc1 desc2 so_cust sod_line sod_qty_ord
                qty_open sod_um sod_due_date
-               sod_site with width 140.
+               sod_site with width 140 stream-io.
 /*fm268 end*/
          end.  /* IF (so_nbr = nbr OR nbr = "" )  */
       end. /*  FOR EACH sod_det  */
@@ -187,11 +192,17 @@ repeat:
             sod_qty_ord qty_open sod_um sod_due_date
             sod_site.*/
 /*fm268 begin*/
+				 assign desc1 = "" desc2 = "".
          find first pt_mstr where pt_domain = global_domain
          			  and pt_part=sod_part no-lock no-error.
-         display so_cust sod_line sod_part pt_desc1 pt_desc2
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.	
+
+         display so_cust sod_line sod_part desc1 desc2
             sod_qty_ord qty_open sod_um sod_due_date
-            sod_site with width 140.
+            sod_site with width 140 stream-io.
 /*fm268 end*/
          down 1.
       end. /*  FOR EACH sod_det  */
@@ -224,11 +235,17 @@ repeat:
             sod_qty_ord qty_open sod_um sod_due_date
             sod_site.*/
 /*fm268 begin*/
-         find first pt_mstr where pt_domain = global_domain and
-         					  pt_part = sod_part no-lock no-error.
-         display so_nbr sod_line sod_part pt_desc1 pt_desc2
+				 assign desc1 = "" desc2 = "".
+         find first pt_mstr where pt_domain = global_domain
+         			  and pt_part=sod_part no-lock no-error.
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.	
+
+         display so_nbr sod_line sod_part desc1 desc2
             sod_qty_ord qty_open sod_um sod_due_date
-            sod_site with width 140.
+            sod_site with width 140 stream-io.
 /*fm268 end */
          down 1.
       end. /*  FOR EACH sod_det  */
@@ -258,11 +275,16 @@ repeat:
             sod_qty_ord qty_open sod_um sod_due_date
             sod_site.*/
 /*fm268 begin*/
+         assign desc1 = "" desc2 = "".
          find first pt_mstr where pt_domain = global_domain
          			  and pt_part=sod_part no-lock no-error.
-         display so_nbr  sod_line sod_part pt_desc1 pt_desc2
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.	
+         display so_nbr  sod_line sod_part desc1 desc2
             sod_qty_ord qty_open sod_um sod_due_date
-            sod_site with width 140 .
+            sod_site with width 140 stream-io.
 /*fm268 end*/
          down 1.
       end. /*  FOR EACH sod_det  */
@@ -286,10 +308,15 @@ repeat:
       /*display so_nbr so_cust sod_line sod_part
          qty_open sod_um sod_due_date sod_site.*/
 /*fm268 begin*/
-      find first pt_mstr where pt_domain = global_domain
-      			 and pt_part=sod_part NO-LOCK no-error.
-      display so_nbr so_cust sod_line sod_part pt_desc1 pt_desc2
-         qty_open sod_um sod_due_date sod_site with width 140.
+      				 assign desc1 = "" desc2 = "".
+         find first pt_mstr where pt_domain = global_domain
+         			  and pt_part=sod_part no-lock no-error.
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.	
+      display so_nbr so_cust sod_line sod_part desc1 desc2
+         qty_open sod_um sod_due_date sod_site with width 140 stream-io.
 /*fm268 end*/
    end. /*  FOR EACH sod_det  */
 
@@ -308,11 +335,16 @@ repeat:
          qty_open sod_um sod_due_date
          sod_site.*/
 /*fm268 begin*/
-      find first pt_mstr where pt_domain = global_domain
-      	     and pt_part=sod_part no-lock no-error.
-      display so_nbr so_cust sod_line sod_part pt_desc1 pt_desc2
+      				 assign desc1 = "" desc2 = "".
+         find first pt_mstr where pt_domain = global_domain
+         			  and pt_part=sod_part no-lock no-error.
+						if available pt_mstr then do:
+					  	 assign desc1 = pt_desc1.
+					  	 			  desc2 = pt_desc2.
+					  end.	
+      display so_nbr so_cust sod_line sod_part desc1 desc2
          qty_open sod_um sod_due_date
-         sod_site with width 140.
+         sod_site with width 140 stream-io.
 /*fm268 end */
 
    end. /*  FOR EACH sod_det  */

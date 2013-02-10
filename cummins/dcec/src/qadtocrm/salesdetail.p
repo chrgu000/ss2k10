@@ -1,4 +1,15 @@
-{mfdeclre.i}
+{mfdeclre.i "new global"}
+{mf1.i "new global"}
+session:date-format = 'dmy'.
+base_curr = "RMB".
+IF global_userid = "" THEN global_userid = "MFG".
+mfguser="".
+global_user_lang = "ch".
+global_user_lang_dir = "ch/".
+global_domain = "DCEC".
+global_db = "DCEC".
+execname = "salesdetail.p".
+
 DEFINE WORKFILE xxwk
     FIELD xx_part LIKE idh_part LABEL "零件号"
     FIELD xx_desc1 LIKE pt_desc1 LABEL  "描述"
@@ -65,7 +76,7 @@ FOR EACH ih_hist WHERE ih_domain = global_domain and ih_inv_date >= TODAY - 1 AN
             xx_price = idh_price.
             xx_qty = idh_qty_inv.
             xx_amount = idh_price * idh_qty_inv.
-            xx_rate = ih_ex_rate2. 
+            xx_rate = ih_ex_rate2.
             xx_inv_nbr = idh_inv_nbr.
             xx_inv_date = ih_inv_date.
          END.
@@ -170,8 +181,8 @@ OUTPUT TO VALUE(mpath).
     PUT UNFORMATTED "单价|".
     PUT UNFORMATTED "数量|".
     PUT UNFORMATTED "总价|".
-    PUT UNFORMATTED "发票号|". 
-    PUT UNFORMATTED "发票日期|". 
+    PUT UNFORMATTED "发票号|".
+    PUT UNFORMATTED "发票日期|".
     PUT UNFORMATTED "汇率" SKIP.
 
 
@@ -192,7 +203,7 @@ FOR EACH xxwk NO-LOCK.
 
     IF (xxwk.xx_line >= "7000" AND xxwk.xx_line <= "8ZZZ") OR (xxwk.xx_line >= "2000" AND xxwk.xx_line <= "2ZZZ") THEN xx_eng_part = "发动机".
     ELSE xx_eng_part = "销售备件".
-    
+
     PUT UNFORMATTED xx_eng_part "|".
     PUT UNFORMATTED xx_dep "|".
     PUT UNFORMATTED xx_eng_type "|".
@@ -216,12 +227,13 @@ FOR EACH xxwk NO-LOCK.
     PUT UNFORMATTED xx_price "|".
     PUT UNFORMATTED xx_qty "|".
     PUT UNFORMATTED xx_amount "|".
-    PUT UNFORMATTED xx_inv_nbr "|". 
-    PUT UNFORMATTED v_inv_date "|". 
+    PUT UNFORMATTED xx_inv_nbr "|".
+    PUT UNFORMATTED v_inv_date "|".
     PUT UNFORMATTED xx_rate SKIP.
 END.
 
-OUTPUT TO VALUE ("\\qadtemp\ftp\QADtoCRM.logfile") APPEND.
+/* OUTPUT TO VALUE ("\\qadtemp\ftp\QADtoCRM.logfile") APPEND. */
+OUTPUT TO VALUE (mpath + "QADtoCRM.logfile") APPEND.
 DISP mpath FORMAT "X(100)" TODAY TIME WITH WIDTH 180 STREAM-IO.
 
 OUTPUT CLOSE.

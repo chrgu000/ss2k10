@@ -1,12 +1,13 @@
 /* zzIstWkf.p - insert PRODUCT STRUCTURE COMPONENT QUANTITY info into work file*/
 /* COPYRIGHT AtosOrigin. ALL RIGHTS	RESERVED. THIS IS AN UNPUBLISHED WORK.	   */
 /* REVISION: 8.5	LAST MODIFIED: Feb/19/04	 BY: *LB01*	Long Bo				   */
+/* REVISION: 8.6	LAST MODIFIED: 02/05/13	 BY: *CLZ* Leo Zhou	   */
 
 /************************************************************************/
 /* input parameter Parent product structure part to be */ 
 /* input parameter bSource yes = Դ, no = ±Ƚ͠         */
 /************************************************************************/
- /* *SS-20120816.1*   */ {mfdeclre.i }
+{mfdeclre.i }
 
 define input parameter Parent like ps_par.		
 define input parameter bSource like mfc_logical.
@@ -39,7 +40,8 @@ define shared work-table mybomcmp
 	else
 		effdate = effdate2.
 		
-	find first ps_mstr use-index ps_parcomp where /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and ps_par = dComp
+	find first ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain 
+			   and ps_par = dComp
 	no-lock no-error.
 	repeat:
 		if not available ps_mstr then do:
@@ -49,45 +51,46 @@ define shared work-table mybomcmp
 				find ps_mstr where recid(ps_mstr) = dRecord[dLevel]
 				no-lock no-error.
 				dComp = ps_par.
-				find next ps_mstr use-index ps_parcomp where /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and  ps_par = dComp
+				find next ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain 
+						  and ps_par = dComp
 				no-lock no-error.
 				if available ps_mstr then leave.
 			end.
 		end.
 		if dLevel < 1 then leave.
 		
-		/*
-		if eff_date = ? or (eff_date <> ? and
-		(ps_start = ? or ps_start <= eff_date)
-		and (ps_end = ? or eff_date <= ps_end)) then do:
-		*/
 		if effdate <> ? and 
 		((ps_start <> ? and effdate < ps_start) or 
 		(ps_end <> ? and effdate > ps_end)) then do:
-			find next ps_mstr use-index ps_parcomp where /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and ps_par = dComp
+			find next ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain and ps_par = dComp
 			no-lock no-error.
 			next. /*longbo 040219*/
 		end.
 		dPhantom = yes.
-		find pt_mstr where /* *SS-20120816.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = ps_comp no-lock no-error.
+		find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = ps_comp no-lock no-error.
 		if available pt_mstr then do:
 			assign
 				dPhantom = pt_phantom
 				dpmcode = pt_pm_code
 				ddesc = pt_desc1
 				ddesc2 = pt_desc2.
-			find first ptp_det where /* *SS-20120816.1*   */ ptp_det.ptp_domain = global_domain and ptp_part = ps_comp and ptp_site = ps__chr01 no-lock no-error.
+						
+/*CLZ*/		   find first ptp_det where ptp_domain = global_domain and ptp_site = "DCEC-C" and ptp_part = ps_comp no-lock no-error.
 				/* in DCEC, we store site in the field of ps_chr01 for reference.
 				*  if there is a item-site record in ptp_det, 
 				*  we should associate phantom and pm_code value with site.*/
 			if available ptp_det then do:
-				assign
-					dPhantom = ptp_phantom
+				assign dPhantom = ptp_phantom
 					dpmcode = ptp_pm_code.
 			end.
 		end.
 		else do:
-			find bom_mstr no-lock where /* *SS-20120816.1*   */ bom_mstr.bom_domain = global_domain and bom_parent = ps_comp no-error.
+			/*find bom_mstr no-lock where bom_mstr.bom_domain = global_domain and bom_parent = ps_comp no-error. */
+/*CLZ*/		   find first ptp_det where ptp_domain = global_domain and ptp_site = "DCEC-B"
+/*CLZ*/                   and ptp_part = substr(ps_comp,length(ps_comp) - 1, 2) no-lock no-error.
+/*CLZ*/            if avail ptp_det then 
+/*CLZ*/			assign dPhantom = ptp_phantom
+/*CLZ*/				dpmcode = ptp_pm_code.
 		end.
 	
 		dRecord[dLevel] = recid(ps_mstr).
@@ -126,7 +129,7 @@ define shared work-table mybomcmp
 				end.
 			end.
 			/* next node when this node of component is "P" or ("M" and Phantom = no) */ 
-			find next ps_mstr use-index ps_parcomp where  /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and ps_par = dComp
+			find next ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain and ps_par = dComp
 			no-lock no-error.
 			next.					
 		end.	/*end of if pmcode and phantom...    */
@@ -134,11 +137,11 @@ define shared work-table mybomcmp
 		if (dLevel < dMaxlevel) or (dMaxlevel = 0) then do:
 			dComp = ps_comp.
 			dLevel = dLevel + 1.
-			find first ps_mstr use-index ps_parcomp where /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and ps_par = dComp
+			find first ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain and ps_par = dComp
 			no-lock no-error.
 		end.
 		else do:
-			find next ps_mstr use-index ps_parcomp where /* *SS-20120816.1*   */ ps_mstr.ps_domain = global_domain and ps_par = dComp
+			find next ps_mstr use-index ps_parcomp where ps_mstr.ps_domain = global_domain and ps_par = dComp
 			no-lock no-error.
 		end.
 	end.	/* repeat */

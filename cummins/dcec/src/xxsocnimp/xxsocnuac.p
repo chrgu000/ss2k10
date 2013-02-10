@@ -84,8 +84,8 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-{socnfm1a.i}
- thLINE
+{socnfm1a.i}  
+ thLINE COLON 20
  site
  location
    skip(1)

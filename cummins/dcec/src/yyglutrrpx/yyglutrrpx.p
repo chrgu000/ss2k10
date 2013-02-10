@@ -39,7 +39,8 @@
 	  define variable type like glt_tr_type.
 	  define variable amt like glt_amt.
 	  define variable unbflag like mfc_logical.
-/*F058*/  define variable account as character format "x(14)" label "帐户".
+/*F058*/  define variable account as character format "x(22)" label "帐户".
+					define variable subdesc like sb_mstr.sb_desc.
 /*FQ15*/  define variable glname like en_name.
 /*FQ15*/  define variable entity like gltr_entity.
 /*FQ15*/  define variable entity1 like gltr_entity.
@@ -245,9 +246,16 @@ define buffer gltdet for glt_det.
 	       find pj_mstr where pj_domain = global_domain and
 	       		  pj_project = glt_project no-lock no-error.
 		if available pj_mstr then do:
+		assign subdesc = "".
+		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain 
+					 and sb_mstr.sb_sub = glt_det.glt_sub no-error.
+	  if available sb_mstr then do:
+	  	 assign subdesc = sb_mstr.sb_desc.
+	  end.
 		display glt_det.glt_line
-/*F058*/                account
+/*F058*/    account
 /*RHB*/			ac_mstr.ac_desc WHEN AVAIL ac_mstr column-label "账户名称"
+						subdesc
 /*bn083 don't disply entity*/
 			glt_det.glt_project 
 			pj_desc
@@ -258,9 +266,16 @@ define buffer gltdet for glt_det.
 			glt_det.glt_curr WITH width 180 /*GUI*/ .
 		end.
 		else do:
+	  assign subdesc = "".
+		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain 
+					 and sb_mstr.sb_sub = glt_det.glt_sub no-error.
+	  if available sb_mstr then do:
+	  	 assign subdesc = sb_mstr.sb_desc.
+	  end.
 		display glt_det.glt_line
-/*F058*/                account
+/*F058*/    account
 /*RHB*/			ac_mstr.ac_desc WHEN AVAIL ac_mstr
+				subdesc
 /*bn083 don't disply entity*/
 			glt_det.glt_project 			
 /*bn083			glt_det.glt_entity     */

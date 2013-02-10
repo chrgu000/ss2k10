@@ -454,6 +454,11 @@ repeat:
 		  			cr_proj =  IF entry(4,code_cmmt,'-') <> "Y" THEN entry(4,code_cmmt,'-') ELSE "".  
 		    END.
 		  end.
+		  else do:
+           {pxmsg.i &MSGNUM=7175 &MSGARG1=""SO_JOB"" &ERRORLEVEL=3}
+           next-prompt so_job with frame a.
+           undo,retry.
+		  end.
 		  /* ss - 121010.1 -e*/ 
 		  /* message "111--" cr_sub . */
 		  /****** tfq added end in 2005/06/20*/

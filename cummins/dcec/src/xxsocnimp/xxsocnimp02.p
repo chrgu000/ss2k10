@@ -1,150 +1,90 @@
-/* xxfcsimp.p - Forecast import from xls                                      */
-/*V8:ConvertMode=Report                                                       */
-
-/* DISPLAY TITLE */
+/* xxsocnimp02.p - export to xls                                              */
 {mfdeclre.i}
-def shared var thfile as CHAR FORMAT "x(50)".
-define var mymsg as char no-undo.
-def shared var bexcel as com-handle.  
-def shared var bbook as com-handle.   
-def shared var bsheet as com-handle.  
-def stream bfi.
-def stream bfo.
-def stream bfoo.
-DEFINE VAR infile AS CHAR   FORMAT "x(50)" .
-DEFINE VAR outfile AS CHAR  FORMAT "x(50)" .
-DEFINE VAR logfile AS CHAR.
+{xxsocnimp.i}
+define input parameter thfile as CHAR FORMAT "x(50)".
+define variable bexcel as com-handle.
+define variable bbook as com-handle.
+define variable bsheet as com-handle.
+define variable I as integer.
+   CREATE "Excel.Application" bexcel.
+   bbook = bexcel:Workbooks:add().
+   bsheet = bexcel:sheets:item(1) no-error.
+   bbook:Activate.
+   assign i = 1.
+   bsheet:cells(i,1)  = "ShipTO".
+   bsheet:cells(i,2)  = "BillTo".
+   bsheet:cells(i,3)  = "SO_Nbr".
+   bsheet:cells(i,4)  = "Sod_Line".
+   bsheet:cells(i,5)  = "SN".
+   bsheet:cells(i,6)  = "Sod_Part".
+   bsheet:cells(i,7)  = "Chinese Desc".
+   bsheet:cells(i,8)  = "Eng Desc".
+   bsheet:cells(i,9)  = "Iss-Qty".
+   bsheet:cells(i,10) = "Iss-Site".
+   bsheet:cells(i,11) = "Iss-Loc".
+   bsheet:cells(i,12) = "keep-Qty".
+   bsheet:cells(i,13) = "Iss-Lot".
+   bsheet:cells(i,14) = "Iss-Ref".
+   bsheet:cells(i,15) = "Iss-Due-Date".
+   bsheet:cells(i,16) = "Sales_Price".
+   bsheet:cells(i,17) = "Total".
+   bsheet:cells(i,18) = "Description".
+   i = i + 1.
+   bsheet:cells(i,1) = "发货至".
+   bsheet:cells(i,2) = "销往".
+   bsheet:cells(i,3) = "销售订单号".
+   bsheet:cells(i,4) = "销售订单项次".
+   bsheet:cells(i,5) = "序号".
+   bsheet:cells(i,6) = "销售物料".
+   bsheet:cells(i,7) = "中文名称".
+   bsheet:cells(i,8) = "英文名称".
+   bsheet:cells(i,9) = "使用数量".
+   bsheet:cells(i,10) = "发运地点".
+   bsheet:cells(i,11) = "发运库位".
+   bsheet:cells(i,12) = "剩余库存".
+   bsheet:cells(i,13) = "发运批次".
+   bsheet:cells(i,14) = "参考".
+   bsheet:cells(i,15) = "生效日期".
+   bsheet:cells(i,16) = "单价".
+   bsheet:cells(i,17) = "合计".
+   bsheet:cells(i,18) = "结果".
+   i = i + 1.
+   for each xsc_d no-lock:
+       bsheet:cells(i,1) = "'" + xsd_ship.
+       bsheet:cells(i,2) = "'" + xsd_cust.
+       bsheet:cells(i,3) = "'" + xsd_so.
+       bsheet:cells(i,4) = xsd_line.
+       bsheet:cells(i,5) = "'" + xsd_serial.
+       bsheet:cells(i,6) = xsd_part.
+       bsheet:cells(i,7) = xsd_desc1.
+       bsheet:cells(i,8) = xsd_desc2.
+       bsheet:cells(i,9) = xsd_qty_used.
+       bsheet:cells(i,10) = "'" + xsd_site.
+       bsheet:cells(i,11) = "'" + xsd_loc.
+       bsheet:cells(i,12) = xsd_qty_keep.
+       bsheet:cells(i,13) = "'" + xsd_lot.
+       bsheet:cells(i,14) = "'" + xsd_ref.
+       bsheet:cells(i,15) = "'" + string(xsd_eff,"99/99/99").
+       bsheet:cells(i,16) = xsd_price.
+       bsheet:cells(i,17) = xsd_amt.
+       bsheet:cells(i,18) = xsd_chk.
+       if xsd_chk = "" then do:
+            bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.
+       end.
+       else if xsd_chk <> "PASS" and xsd_chk <> "OK" then do:
+            bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 255.
+       end.
 
-define var flag1 as log no-undo.
-define var flag2 as log no-undo.
-define var flag3 as log no-undo.
+       i = i + 1.
+   end.
+  bsheet:Cells:EntireColumn:AutoFit.
+  bsheet:Range("G3"):Select.
+  bexcel:ActiveWindow:FreezePanes = True.
 
-DEFINE VAR myi AS INT NO-UNDO.
-DEFINE VAR thchar AS CHAR NO-UNDO.
+bbook:SaveAs(thfile ,,,,,,1).
+bexcel:visible = true.
+bbook:saved = true.
 
-DEFINE SHARED TEMP-TABLE mytt 
-    FIELD f01 AS CHAR
-    FIELD f02 AS CHAR
-    FIELD f03 AS CHAR
-    FIELD f04 AS CHAR
-    FIELD f05 AS CHAR format "x(18)"
-    FIELD f06 AS CHAR
-    FIELD f07 AS CHAR format "x(18)"
-    FIELD f08 AS CHAR format "x(18)"
-    FIELD f09 AS CHAR
-    FIELD f10 AS CHAR
-    FIELD f11 AS CHAR
-    FIELD f12 AS CHAR format "x(48)"
-    .
-
-
-  define temp-table mytr field mytr_rec as recid .
-  
-  on create of tr_hist do:
-    find first mytr where mytr_rec = recid(tr_hist) no-lock no-error.
-    if not available mytr then do:
-      create mytr. mytr_rec = recid(tr_hist).
-    end.
-  end.
-  
-  
-  
-  
-  
-  
-
-  logfile =  mfguser + substring(string(today),1,2) + substring(string(today),4,2)
-                      + substring(string(today),7,2) + "_" + substring(string(time,"HH:MM"),1,2)
-	              + substring(string(time,"HH:MM"),4,2) + substring(string(time,"HH:MM:SS"),7,2)
-      + ".log".
-  FOR EACH mytt:
-      infile = mfguser + substring(string(today),1,2) + substring(string(today),4,2)
-                      + substring(string(today),7,2) + "_" + substring(string(time,"HH:MM"),1,2)
-	              + substring(string(time,"HH:MM"),4,2) + substring(string(time,"HH:MM:SS"),7,2).
-      outfile = infile + ".out".
-      infile = infile + ".in".
-      OUTPUT TO value(infile).
-      PUT   UNFORMAT F01 "  " F02 "  " skip.
-      put   UNFORMAT F06 " " F06 " - - - - " F03 " " F03 " " F05 " " F05 " " F04 " " F06 " " F07 " " .
-      put  date(int(substring(F11,5,2)),int(substring(F11,7,2)),int(substring(F11,1,4)))  SKIP.
-      put  " " SKIP.
-      put  unformat F05 " " SKIP.
-      put  UNFORMAT F10 " - " F08 " " F09 SKIP.
-      put  " " SKIP.
-      put  " " SKIP.
-      put  " " SKIP.
-      put  "." skip.
-      OUTPUT  CLOSE.
-      for each mytr : delete mytr . end .
-      INPUT FROM VALUE(infile).
-      OUTPUT TO VALUE(outfile).
-      batchrun = yes.
-      {gprun.i ""xxsocnuac.p"" }
-      batchrun = no.
-      OUTPUT CLOSE.
-      INPUT CLOSE. 
-      flag1 = false.
-      flag2 = false.
-      flag3 = false.
-      for each mytr:
-         	find first tr_hist where recid(tr_hist) = mytr_rec no-error .
-         	if avail tr_hist    then do:
-            if tr_type = "CN_USE" and tr_nbr = F03 and tr_part = F05 then do:
-              flag1 = true.
-            end.
-            if tr_type = "Iss-so" and tr_nbr = F03 and tr_part = F05 then do:
-              flag2 = true.
-            end.
-            release tr_hist.            
-         	end.
-      end.
-      if flag1 and flag2 then f12 = "true".
-      else f12 = "false".
-      run dataout(input outfile,output mymsg).
-      f12 = f12 + ";" + mymsg.
-  END.
-  myi = 3.
-  for each mytt:
-     Bsheet:cells(myi, 1):VALUE = F01.
-     Bsheet:cells(myi, 2):VALUE = F02.
-     Bsheet:cells(myi, 3):VALUE = F03.
-     Bsheet:cells(myi, 4):VALUE = F04.
-     Bsheet:cells(myi, 5):VALUE = F05.
-     Bsheet:cells(myi, 6):VALUE = F06.
-     Bsheet:cells(myi, 7):VALUE = F07.
-     Bsheet:cells(myi, 8):VALUE = F08.
-     Bsheet:cells(myi, 9):VALUE = F09.
-     Bsheet:cells(myi,10):VALUE = F10.
-     Bsheet:cells(myi,11):VALUE = F11.
-     Bsheet:cells(myi,12):VALUE = F12.
-     myi = myi + 1.
-  end.
-  bbook:SaveAs(thfile + ".log.xls" ,,,,,,1).
-  bbook:CLOSE().
-  bexcel:quit.
-  release object bsheet.
-  release object bbook.
-  release object bexcel.
-
-PROCEDURE dataout.
-    DEFINE INPUT PARAMETER thPtr AS char.
-    define output PARAMETER thmsg AS char no-undo.
-    Define variable woutputstatment AS CHARACTER .
-    thmsg = "".
-    input from value (thPtr) .
-        Do While True:
-        IMPORT UNFORMATTED woutputstatment.
-        IF index (woutputstatment,"ERROR:") <>  0 OR    /* for us langx */
-           index (woutputstatment,"错误:")  <>  0 OR    /* for ch langx */
-           index (woutputstatment,"岿粇:")  <>  0 OR
-           index (woutputstatment,"(87)")   <>  0 OR      
-           index (woutputstatment,"(557)")  <>  0 OR      
-           index (woutputstatment,"(1896)") <>  0 OR      
-           index (woutputstatment,"(143)")  <>  0                  
-           then do:
-                thmsg = woutputstatment.
-                leave.
-           end.
-        End.
-    input close.
-END PROCEDURE.
+RELEASE OBJECT bsheet NO-ERROR.
+RELEASE OBJECT bbook NO-ERROR.
+RELEASE OBJECT bexcel NO-ERROR.

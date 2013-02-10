@@ -455,9 +455,9 @@ define buffer voddet for vod_det.
          ap_ref and vo_confirmed = no
          and (vo_type >= votype and vo_type <= votype1)
          and (vo__qad01 >= authorized and vo__qad01 <= authorized1)
-         /* ss lambert 20121026 */
+         /* ss lambert 20121026  
          and vo__chr01 = "SS.Lambert"
-         /* ss lambert 20121026 */
+         ss lambert 20121026 */
          no-lock
          break by ap_batch by vo__qad01 by ap_ref
          on error undo voucherloop, leave:

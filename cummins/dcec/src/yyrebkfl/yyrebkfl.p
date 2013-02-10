@@ -171,8 +171,7 @@ end. /* if can-find(first qad_wkfl... */
 
 eff_date = today.
 
-for first gl_ctrl
-no-lock:
+for first gl_ctrl no-lock where gl_domain = global_domain:
 end. /* FOR FIRST gl_ctrl */
 
 for first clc_ctrl

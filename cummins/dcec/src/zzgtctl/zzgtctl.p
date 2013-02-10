@@ -25,8 +25,8 @@ FORM /*GUI*/
     usrw_key2        colon 15  label "接口代码"    format "x(4)"  skip
     usrw_key4        colon 15  label "公司地址"    format "x(8)"  
     v_adname         colon 38  no-label            format "x(40)" skip
-    usrw_charfld[4]  colon 15  label "地点"        format "x(60)" skip
-    usrw_charfld[1]  colon 15  label "授权用户"    format "x(60)" skip
+    usrw_charfld[4]  colon 15  view-as fill-in size 60 by 1 label "地点"        format "x(300)" skip
+    usrw_charfld[1]  colon 15  view-as fill-in size 60 by 1 label "授权用户"    format "x(300)" skip
     v_p01            colon 15  label "开票人"      format "x(8)" 
     v_p02            colon 38  label "复核人"      format "x(8)"
     v_p03            colon 61  label "收款人"      format "x(8)"  skip

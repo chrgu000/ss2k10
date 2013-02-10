@@ -1,30 +1,30 @@
-/* xxretrrp.p  - Repetitive Picklist Transfer Report                               */
-/* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.     */
-/* V1                 Developped: 03/28/01      BY: Rao Haobin          */
-/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/13/12  ECO: *SS-20120813.1*   */
-/* 反映领料单实际转移量的报表 */
+/* xxretrrp.p  - Repetitive Picklist Transfer Report                          */
+/* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.          */
+/* V1                 Developped: 03/28/01      BY: Rao Haobin                */
+/* $Revision:eb21sp12  $ BY: Jordan Lin  DATE: 08/13/12  ECO: *SS-20120813.1***/
+/* 反映领料单实际转移量的报表                                                 */
 
-{mfdtitle.i "120813.1" } 
+{mfdtitle.i "120813.1"}
 define variable nbr like tr_nbr.
 define variable nbr1 like tr_nbr.
 define variable lineno as integer.
-
-form         
+define variable vqty like tr_qty_loc.
+form
 skip(1)
-     tr_nbr           label "加工单号  "   at 48 
-/*     tr_effdate          label "生效日期  " at 48*/
+     tr_nbr           label "加工单号  "   at 48
+/*   tr_effdate          label "生效日期  " at 48*/
      lineno label "页号" at 80
      with no-box side-labels width 180 frame b.
-     
+
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
- FORM /*GUI*/ 
+ FORM /*GUI*/
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-	     nbr             label "加工单号" colon 18
-	     nbr1           label {t001.i} colon 49
+       nbr             label "加工单号" colon 18
+       nbr1           label {t001.i} colon 49
   skip
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -45,17 +45,18 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /*judy 07/05/05*/  setFrameLabels(frame a:handle).
 
 
-	  /* REPORT BLOCK */
+    /* REPORT BLOCK */
 
-	  
+
 /*GUI*/ {mfguirpa.i true  "printer" 132 }
 
 /*GUI repeat : */
-/*GUI*/ procedure p-enable-ui:
+/*GUI*/
+procedure p-enable-ui:
 
-	     if nbr1 = hi_char then nbr = "".
+       if nbr1 = hi_char then nbr = "".
 
-	     
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -63,15 +64,15 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*GUI*/ procedure p-report-quote:
 
 
-	     bcdparm = "".
+       bcdparm = "".
 
-	     {mfquoter.i nbr   }
-	     {mfquoter.i nbr1   }
-	     
-	     if  nbr1 = "" then nbr1 = hi_char.
+       {mfquoter.i nbr   }
+       {mfquoter.i nbr1   }
 
-	     /* SELECT PRINTER */
-	     
+       if  nbr1 = "" then nbr1 = hi_char.
+
+       /* SELECT PRINTER */
+
 /*GUI*/ end procedure. /* p-report-quote */
 
 /*GUI*/ procedure p-report:
@@ -79,14 +80,27 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*GUI*/   {gpprtrpa.i  "printer" 132}
 {mfphead.i}
 lineno=0.
-for each tr_hist no-lock where /* *SS-20120813.1*   */ tr_hist.tr_domain = global_domain and  tr_nbr>=nbr and tr_nbr <= nbr1  and tr_type="ISS-wo" /*cj*/ USE-INDEX tr_nbr_eff break by tr_nbr by tr_part:
-if (page-size - line-counter <3) or (first-of(tr_nbr)) then do:
-  if lineno<>0 then page.
-  lineno = lineno + 1.
-  display tr_nbr lineno format "999" label "页号"  with frame b STREAM-IO .
-end.
-find pt_mstr where /* *SS-20120813.1*   */ pt_mstr.pt_domain = global_domain and pt_part = tr_part no-lock.
-disp tr_part pt_desc2 pt_article column-label "保管员" pt_um tr_loc tr_qty_chg column-label "已发数量  " tr_effdate  with width 144  STREAM-IO.
+
+for each wo_mstr no-lock where wo_domain = global_domain and
+         wo_nbr >= nbr and wo_nbr <= nbr1 with frame x width 160:
+         find first pt_mstr no-lock where pt_domain = global_domain
+                and pt_part = wo_part no-error.
+    display wo_nbr wo_lot wo_part pt_desc1 when (avail pt_mstr) wo_qty_ord with stream-io.
+    for each wod_det no-lock where wod_domain = global_domain and
+             wod_lot = wo_lot with frame y width 240:
+        assign vqty = 0.
+        for each tr_hist
+           fields(tr_domain tr_qty_loc tr_nbr tr_type)
+        no-lock where tr_domain = global_domain
+             and tr_lot = wo_lot and tr_type = "iss-wo" and tr_part = wod_part:
+             assign vqty = vqty + -1 * tr_qty_loc.
+        end.
+        find first pt_mstr no-lock where pt_domain = global_domain
+               and pt_part = wod_part no-error.
+        display wod_part pt_desc2 pt_article column-label "保管员" pt_um
+                wod_qty_req vqty column-label "已发数量"
+                wod_qty_req - vqty column-label "差异量" with stream-io .
+    end.
 end.
 
 /* {mfguitrl.i} */

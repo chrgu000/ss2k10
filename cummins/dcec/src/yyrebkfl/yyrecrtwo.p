@@ -110,8 +110,8 @@ define buffer   qadlock     for  qad_wkfl.
 	{yyrebktt.i "new"}
    for each zzpk_det where zzpk_user = mfguser :
    delete zzpk_det .
-   end.           
-           
+   end.
+
 /*************tfq added end******************************************/
 
 for first clc_ctrl
@@ -541,10 +541,10 @@ repeat:
 
      /*tfq {gpxpldps.i
          &date=eff_date &site=wo_site &comp=temp_bom_code &op=? &op_list=?} */
-         
+
         {yygpxpldps.i
          &date=eff_date &site=wo_site &comp=temp_bom_code &op=? &op_list=?}
-        
+
       for each ro_det
          fields (ro_domain ro_auto_lbr ro_desc ro_end ro_mch ro_mch_op ro_men_mch
                  ro_milestone ro_move ro_mv_nxt_op ro_op ro_po_line
@@ -755,39 +755,39 @@ repeat:
             sub_ll       = iro_sub_ll + iro_sub_tl.
       end.
 /********tfq added begin********************/
-for each pk_det where pk_domain = global_domain and pk_user = mfguser :
-find first xxpk_det where xxpk_user = mfguser and xxpk_part = pk_part and xxpk_ref = pk_reference no-error .
+for each pk_det exclusive-lock where pk_domain = global_domain and pk_user = mfguser :
+find first xxpk_det no-lock where  xxpk_user = mfguser and xxpk_part = pk_part and xxpk_ref = pk_reference no-error .
 if available xxpk_det and pk_reference <> string(xxpk_op) then do:
          pk_reference = string(xxpk_op) .
       end.
 end.
-for each  xxpk_det where xxpk_user = mfguser :
+for each xxpk_det exclusive-lock where xxpk_user = mfguser :
 delete xxpk_det .
 end.
 for each pk_det where pk_domain = global_domain and pk_user = mfguser :
   find first zzpk_det where zzpk_user = pk_user
-                        and zzpk_part = pk_part 
+                        and zzpk_part = pk_part
                         and zzpk_reference = pk_reference no-error .
         if not available zzpk_det then
-        do:                
+        do:
             create zzpk_det.
                    assign zzpk_user      = pk_user
                           zzpk_part      = pk_part
 /*G656*/                  zzpk_reference = pk_reference
                           zzpk_loc       = pk_loc
                           zzpk_start     = pk_start
-                          zzpk_end       = pk_end 
+                          zzpk_end       = pk_end
                           zzpk_lot = pk_lot
                           zzpk_user1= pk_user1
                           zzpk_user2 = pk_user2
                           zzpk__qadc01 = pk__qadc01 .
                           zzpk_qty = pk_qty .
-           end.               
-                          
+           end.
+
            else       zzpk_qty = pk_qty + zzpk_qty .
            delete pk_det .
-           end.               
-                  
+           end.
+
 for each zzpk_det where zzpk_user = mfguser :
                   create pk_det. pk_domain = global_domain.
                    assign pk_user      = zzpk_user
@@ -795,14 +795,14 @@ for each zzpk_det where zzpk_user = mfguser :
 /*G656*/                  pk_reference = zzpk_reference
                           pk_loc       = zzpk_loc
                           pk_start     = zzpk_start
-                          pk_end       = zzpk_end 
+                          pk_end       = zzpk_end
                           pk_lot = zzpk_lot
                           pk_user1= zzpk_user1
                           pk_user2 = zzpk_user2
                           pk__qadc01 = zzpk__qadc01 .
                           pk_qty = zzpk_qty .
                  delete zzpk_det .
-           end.               
+           end.
 
 /**********tfq added end***************/
 
@@ -814,7 +814,7 @@ for each zzpk_det where zzpk_user = mfguser :
                     and string(wr_op) = pk_reference no-error .
           if not available wr_route then
             do:
-            find first wod_det where wod_domain = global_domain and 
+            find first wod_det where wod_domain = global_domain and
             					 wod_part = pk_part and wod_lot = wo_loc and
             				   wod_nbr = wo_nbr no-lock no-error .
             if available wod_det then

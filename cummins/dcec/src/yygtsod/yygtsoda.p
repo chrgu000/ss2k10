@@ -5,9 +5,8 @@
 {mfdeclre.i}
 define TEMP-TABLE sodet like sod_det.  /*2004-09-01 13:18*/
 define buffer sodet2 for sodet.
-define variable gdinvmaxamt as decimal initial 11000000. /*一千一百万*/
+/* define variable gdinvmaxamt as decimal initial 11000000. 一千一百万*/
 define variable tmpqty  as integer.
-
 define shared variable so_recno as recid.
 define shared variable inv_date like ar_date.
 

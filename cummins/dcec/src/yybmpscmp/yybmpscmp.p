@@ -1,8 +1,7 @@
 /* zzbmpscmp.p - PRODUCT STRUCTURE COMPARE,	REPORT EXPORT TO MS EXCEL FILE    */
 /* COPYRIGHT AtosOrigin. ALL RIGHTS	RESERVED. THIS IS AN UNPUBLISHED WORK.	  */
 /* REVISION: 8.5	LAST MODIFIED: 11/19/03	 BY: *LB01*	Long Bo				  */
-/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/16/12  ECO: *SS-20120816.1*   */
-
+/* $Revision:eb21sp12  $ BY: Jordan Lin DATE: 08/16/12  ECO: *SS-20120816.1*   */
 
 		 /*	DISPLAY	TITLE */
 

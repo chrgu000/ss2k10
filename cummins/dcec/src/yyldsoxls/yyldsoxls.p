@@ -21,7 +21,7 @@ DEFINE VARIABLE um LIKE sod_um.
 DEFINE VARIABLE price LIKE pt_price.
 DEFINE VARIABLE src_file AS CHAR FORMAT "x(40)".
 DEFINE VARIABLE lg_file AS CHAR FORMAT "x(40)".
-DEFINE VARIABLE cim_file AS CHAR FORMAT "x(40)" INIT "c:\appeb2\mywrk\soloading.cim".
+DEFINE VARIABLE cim_file AS CHAR FORMAT "x(40)" INIT ".\soloading.cim".
 DEFINE VARIABLE sheetname AS CHAR FORMAT "x(18)".
 
 DEF VAR startline AS INT LABEL "数据开始行" INIT 6.
@@ -101,6 +101,15 @@ REPEAT:
      IF src_file = "" THEN src_file = "e:\so.xls".
      IF sheetname = "" THEN sheetname = "sheet1".
      IF lg_file = "" THEN lg_file = "d:\soloading.lg".
+     find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+			 				and usrw_key1 = "yyldsoxls.p.param" and usrw_key2 = global_userid
+			 		  no-error.
+		 if available usrw_wkfl then do:
+	      assign src_file = usrw_charfld[1] when usrw_charfld[1] <> ""
+	      			 lg_file = usrw_charfld[2] when usrw_charfld[2] <> ""
+     					 sheetname = usrw_charfld[3] when usrw_charfld[3] <> ""
+     					 startline = usrw_intfld[1] when usrw_intfld[1] <> 0.
+		 end.
     
      confirm = YES.
      isvalid = YES.
@@ -120,7 +129,18 @@ REPEAT:
              UNDO, RETRY.
 
        END.
-
+			 find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+			 				and usrw_key1 = "yyldsoxls.p.param" and usrw_key2 = global_userid
+			 		  no-error.
+			 if not available usrw_wkfl then do:
+					create usrw_wkfl. usrw_domain = global_domain.
+					assign usrw_key1 = "yyldsoxls.p.param"
+								 usrw_key2 = global_userid.
+			 end.
+			    assign usrw_charfld[1] = src_file
+			    			 usrw_charfld[2] = lg_file
+			    			 usrw_charfld[3] = sheetname
+			    			 usrw_intfld[1] = startline.
        conf-yn = NO.
        MESSAGE "确认导入" VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO UPDATE conf-yn.
        IF conf-yn <> YES THEN UNDO,RETRY.
@@ -141,26 +161,33 @@ REPEAT:
        i = startline.
 
        /*so head information*/
-       ASSIGN  sonbr =  worksheet:cells(i,1):TEXT 
-                   cust = worksheet:cells(i,2):TEXT 
-                   sopo = worksheet:cells(i,4):TEXT
-                   rmks = worksheet:cells(i,5):TEXT 
-                   pricelist = worksheet:cells(i,6):TEXT 
-                   site = worksheet:cells(i,7):text
-                   channel = worksheet:cells(i,8):TEXT 
-                   promoter = worksheet:cells(i,9):TEXT.
-       FIND FIRST ad_mstr WHERE  /* *SS-20121026.1*   */ ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
+       ASSIGN  sonbr =  worksheet:cells(i,1):FormulaR1C1 
+               cust = worksheet:cells(i,2):FormulaR1C1 
+               sopo = worksheet:cells(i,4):FormulaR1C1
+               rmks = worksheet:cells(i,5):FormulaR1C1 
+               pricelist = worksheet:cells(i,6):FormulaR1C1 
+               site = worksheet:cells(i,7):FormulaR1C1
+               channel = worksheet:cells(i,8):FormulaR1C1 
+               promoter = worksheet:cells(i,9):FormulaR1C1.
+       FIND FIRST ad_mstr WHERE ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
        IF NOT AVAIL ad_mstr THEN DO:
            worksheet:Range("Z" + STRING(i)):VALUE = "客户不存在！".
            isvalid = NO.
        END.
-       IF channel <> "dfm" THEN DO:
-           worksheet:Range("Z" + STRING(i)):VALUE = "通道必须为dfm！".
-           isvalid = NO.
-       END.
+       if channel <> "" then do:
+       	  find first code_mstr no-lock where code_domain = global_domain
+       	  			  and code_fldname = "so_channel" and code_value = channel no-error.
+       	  if not available code_mstr then do:
+       	  		worksheet:Range("Z" + STRING(i)):VALUE = "通道错误！".  
+       	  end.
+       end.
+/*       IF channel <> "dfm" THEN DO:                                         */
+/*           worksheet:Range("Z" + STRING(i)):VALUE = "通道必须为dfm！".      */
+/*           isvalid = NO.                                                    */
+/*       END.                                                                 */
 
        IF sonbr = "" THEN DO:
-           FIND FIRST soc_ctrl /* *SS-20120927.1*   */ where soc_ctrl.soc_domain = global_domain NO-LOCK NO-ERROR.
+           FIND FIRST soc_ctrl  where soc_ctrl.soc_domain = global_domain NO-LOCK NO-ERROR.
            sonbr = soc_so_pre + string(soc_so).
            isnewso = YES.
        END.
@@ -172,21 +199,21 @@ REPEAT:
 
       REPEAT:    /*so input repeat*/
            ASSIGN  
-                   lineno = INT (worksheet:cells(i,10):TEXT) 
-                   part = worksheet:cells(i,11):TEXT  
-                   amount = worksheet:cells(i,17):TEXT
-                   ischeck1 = worksheet:cells(i,3):TEXT
-                   ischeck2 = worksheet:cells(i,13):TEXT
-                  /* ischeck3 = worksheet:cells(i,14):TEXT  */
-                   ischeck4 = worksheet:cells(i,17):TEXT
-                   ischeck5 = worksheet:cells(i,18):TEXT
-                   ischeck6 = worksheet:cells(i,19):TEXT
-                   ischeck7 = worksheet:cells(i,20):TEXT
-                   ischeck8 = worksheet:cells(i,21):TEXT
-                   ischeck9 = worksheet:cells(i,22):TEXT
-                   ischeck10 = worksheet:cells(i,23):TEXT
-                   ischeck11 = worksheet:cells(i,24):TEXT
-                   ischeck12 = worksheet:cells(i,25):TEXT.
+                   lineno = INT (worksheet:cells(i,10):FormulaR1C1) 
+                   part = worksheet:cells(i,11):FormulaR1C1  
+                   amount = worksheet:cells(i,17):FormulaR1C1
+                   ischeck1 = worksheet:cells(i,3):FormulaR1C1
+                   ischeck2 = worksheet:cells(i,13):FormulaR1C1
+                  /* ischeck3 = worksheet:cells(i,14):FormulaR1C1  */
+                   ischeck4 = worksheet:cells(i,17):FormulaR1C1
+                   ischeck5 = worksheet:cells(i,18):FormulaR1C1
+                   ischeck6 = worksheet:cells(i,19):FormulaR1C1
+                   ischeck7 = worksheet:cells(i,20):FormulaR1C1
+                   ischeck8 = worksheet:cells(i,21):FormulaR1C1
+                   ischeck9 = worksheet:cells(i,22):FormulaR1C1
+                   ischeck10 = worksheet:cells(i,23):FormulaR1C1
+                   ischeck11 = worksheet:cells(i,24):FormulaR1C1
+                   ischeck12 = worksheet:cells(i,25):FormulaR1C1.
            IF ischeck1 = "" THEN confirm = NO.
            IF ischeck2 = "" THEN confirm = NO.
          /*  IF ischeck3 = "" THEN confirm = NO. */
@@ -213,7 +240,8 @@ REPEAT:
                soline_qty = int(amount)
                soline_index = i.
               
-           FIND FIRST sod_det WHERE  /* *SS-20121026.1*   */ sod_det.sod_domain = global_domain and  sod_line = lineno AND sod_nbr = sonbr NO-LOCK NO-ERROR.
+           FIND FIRST sod_det WHERE sod_det.sod_domain = global_domain 
+           			  and sod_line = lineno AND sod_nbr = sonbr NO-LOCK NO-ERROR.
            IF AVAIL sod_det THEN
                soline_isnew = NO.
            ELSE
@@ -223,7 +251,7 @@ REPEAT:
           
            
            i = i + 1 .
-           endrowmark = worksheet:cells(i,2):TEXT  .
+           endrowmark = worksheet:cells(i,2):FormulaR1C1.
 
              IF endrowmark = ""  THEN DO:
                 
@@ -320,12 +348,12 @@ IF isvalid THEN DO:
     END.
     
     FOR EACH soline_det WHERE soline_mfguser = mfguser NO-LOCK:
-        FIND FIRST sod_det WHERE /* *SS-20120927.1*   */ sod_det.sod_domain = global_domain and sod_nbr = sonbr AND sod_line = soline_line NO-LOCK NO-ERROR.
+        FIND FIRST sod_det WHERE sod_det.sod_domain = global_domain and sod_nbr = sonbr AND sod_line = soline_line NO-LOCK NO-ERROR.
         IF AVAIL sod_det THEN DO:
             worksheet:Range("Z" + STRING(soline_index)):VALUE = sod_price.
             worksheet:Range("AA" + STRING(soline_index)):VALUE = sod_price * soline_qty.
         END.
-        FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "dcec-b" NO-LOCK NO-ERROR.
+        FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "dcec-b" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("R" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -333,7 +361,7 @@ IF isvalid THEN DO:
                worksheet:Range("R" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "dcec-c" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = soline_part AND in_site = "dcec-c" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("S" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -341,7 +369,7 @@ IF isvalid THEN DO:
                worksheet:Range("S" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("T" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -349,7 +377,7 @@ IF isvalid THEN DO:
                worksheet:Range("T" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and  in_part = soline_part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("W" + STRING(soline_index)):VALUE = in_qty_oh. 
            END.
@@ -357,7 +385,7 @@ IF isvalid THEN DO:
                worksheet:Range("W" + STRING(soline_index)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part
+           FIND FIRST in_mstr  WHERE in_mstr.in_domain = global_domain and  in_part = soline_part
                AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("U" + STRING(soline_index)):VALUE = in_qty_ord. 
@@ -368,7 +396,7 @@ IF isvalid THEN DO:
               worksheet:Range("V" + STRING(soline_index)):VALUE = "库存信息不存在！".
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and  in_part = soline_part
+           FIND FIRST in_mstr  WHERE in_mstr.in_domain = global_domain and  in_part = soline_part
                AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("X" + STRING(soline_index)):VALUE = in_qty_ord. 

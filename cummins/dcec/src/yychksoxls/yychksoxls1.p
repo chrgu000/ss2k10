@@ -72,6 +72,15 @@ REPEAT:
      
      IF src_file = "" THEN src_file = "e:\so.xls".
      IF sheetname = "" THEN sheetname = "sheet1".
+     find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+			 			and usrw_key1 = "yyldsoxls.p.param" and usrw_key2 = global_userid 
+			 		no-error.
+		 if available usrw_wkfl then do:
+     		assign src_file = usrw_charfld[1]
+     					 sheetname = usrw_charfld[3]
+     					 startline = usrw_intfld[1]
+     					 max_lev = usrw_intfld[2].
+     end.
      dtn_file = src_file.
     
       UPDATE src_file sheetname startline VALIDATE(INPUT startline > 0 ,"行号小于等于零是不允许的") 
@@ -90,7 +99,18 @@ REPEAT:
              UNDO, RETRY.
 
        END.
-
+			 find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+			 				and usrw_key1 = "yyldsoxls.p.param" and usrw_key2 = global_userid
+			 		  no-error.
+			 if not available usrw_wkfl then do:
+					create usrw_wkfl. usrw_domain = global_domain.
+					assign usrw_key1 = "yyldsoxls.p.param"
+								 usrw_key2 = global_userid.
+			 end.
+			    assign usrw_charfld[1] = src_file
+			    			 usrw_charfld[3] = sheetname
+			    			 usrw_intfld[1] = startline
+			    			 usrw_intfld[2] = max_lev.
        conf-yn = NO.
        MESSAGE "确认检测" VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO UPDATE conf-yn.
        IF conf-yn <> YES THEN UNDO,RETRY.
@@ -112,13 +132,13 @@ REPEAT:
 
        sonbr =  worksheet:cells(i,1):TEXT.
        IF sonbr = "" THEN DO:
-           FIND FIRST soc_ctrl /* *SS-20120927.1*   */where soc_ctrl.soc_domain = global_domain NO-LOCK NO-ERROR.
+           FIND FIRST soc_ctrl where soc_ctrl.soc_domain = global_domain NO-LOCK NO-ERROR.
            IF AVAIL soc_ctrl THEN
                sonbr = soc_so_pre + STRING(soc_so).
            isnewso = YES.
        END.
        ELSE DO:
-           FOR EACH sod_det WHERE /* *SS-20120927.1*   */ sod_det.sod_domain = global_domain and  sod_nbr = sonbr NO-LOCK:
+           FOR EACH sod_det WHERE sod_det.sod_domain = global_domain and  sod_nbr = sonbr NO-LOCK:
                IF sod_qty_ship <> 0 THEN DO:
                    MESSAGE "该订单已被锁定!" VIEW-AS ALERT-BOX .
                    UNDO mainloop, RETRY.
@@ -152,7 +172,7 @@ REPEAT:
             worksheet:Range("I" + STRING(i)):VALUE = promoter.
            mprlist = NO.
 
-           FIND FIRST ad_mstr WHERE /* *SS-20120927.1*   */ ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
+           FIND FIRST ad_mstr WHERE ad_mstr.ad_domain = global_domain and ad_type = "customer" AND ad_addr = cust NO-LOCK NO-ERROR.
            IF AVAIL ad_mstr THEN DO:
                worksheet:Range("C" + STRING(i)):VALUE = ad_name .
            END.
@@ -160,7 +180,7 @@ REPEAT:
                worksheet:Range("C" + STRING(i)):VALUE = "该客户在系统中不存在！" .
            END.
 
-           FIND FIRST pt_mstr WHERE /* *SS-20120927.1*   */ pt_mstr.pt_domain = global_domain and pt_part = part NO-LOCK NO-ERROR.
+           FIND FIRST pt_mstr WHERE pt_mstr.pt_domain = global_domain and pt_part = part NO-LOCK NO-ERROR.
            IF AVAIL pt_mstr THEN DO:
                 worksheet:Range("L" + STRING(i)):VALUE = pt_desc1 .
                 worksheet:Range("M" + STRING(i)):VALUE = pt_desc2 .
@@ -170,7 +190,7 @@ REPEAT:
                worksheet:Range("M" + STRING(i)):VALUE = "该零件不在pt_mstr中！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-b" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-b" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("R" + STRING(i)):VALUE = in_qty_oh. 
            END.
@@ -178,7 +198,7 @@ REPEAT:
                worksheet:Range("R" + STRING(i)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-c" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-c" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("S" + STRING(i)):VALUE = in_qty_oh. 
            END.
@@ -186,7 +206,7 @@ REPEAT:
                worksheet:Range("S" + STRING(i)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = part AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("T" + STRING(i)):VALUE = in_qty_oh. 
            END.
@@ -194,7 +214,7 @@ REPEAT:
                worksheet:Range("T" + STRING(i)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
+           FIND FIRST in_mstr WHERE in_mstr.in_domain = global_domain and in_part = part AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:
                worksheet:Range("W" + STRING(i)):VALUE = in_qty_oh. 
            END.
@@ -202,7 +222,7 @@ REPEAT:
                worksheet:Range("W" + STRING(i)):VALUE = "库存信息不存在！". 
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part
+           FIND FIRST in_mstr  WHERE in_mstr.in_domain = global_domain and in_part = part
                AND in_site = "dcec-sv" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("U" + STRING(i)):VALUE = in_qty_ord. 
@@ -214,7 +234,7 @@ REPEAT:
               worksheet:Range("V" + STRING(i)):VALUE = "库存信息不存在！".
            END.
 
-           FIND FIRST in_mstr  WHERE /* *SS-20120927.1*   */ in_mstr.in_domain = global_domain and in_part = part
+           FIND FIRST in_mstr  WHERE in_mstr.in_domain = global_domain and in_part = part
                AND in_site = "CEBJ" NO-LOCK NO-ERROR.
            IF AVAIL in_mstr THEN DO:      
               worksheet:Range("X" + STRING(i)):VALUE = in_qty_ord.
@@ -226,7 +246,7 @@ REPEAT:
               worksheet:Range("Y" + STRING(i)):VALUE = "库存信息不存在！".
            END.
                 
-           FOR EACH pi_mstr NO-LOCK WHERE /* *SS-20120927.1*   */ pi_mstr.pi_domain = global_domain and pi_list = pricelist 
+           FOR EACH pi_mstr NO-LOCK WHERE pi_mstr.pi_domain = global_domain and pi_list = pricelist 
                AND ((TODAY >= pi_start AND TODAY <= pi_expire) OR (pi_start = ? AND pi_expire = ?) or (TODAY >= pi_start AND pi_expire = ?) or (pi_start = ? AND TODAY <= pi_expire))
                AND pi_um = "ea"
                AND pi_curr = "RMB":
@@ -245,7 +265,7 @@ REPEAT:
            END.
           
 
-           FIND FIRST ptp_det WHERE /* *SS-20120927.1*   */ ptp_det.ptp_domain = global_domain and ptp_part = part AND ptp_site = site NO-LOCK NO-ERROR.
+           FIND FIRST ptp_det WHERE ptp_det.ptp_domain = global_domain and ptp_part = part AND ptp_site = site NO-LOCK NO-ERROR.
            IF AVAIL ptp_det THEN DO:
                omin = ptp_ord_min.
                IF omin = 0 OR omin = 44444 THEN  DO:             
@@ -254,7 +274,7 @@ REPEAT:
                    END.
                    IF omin = 44444 THEN DO:
                        worksheet:Range("Q" + STRING(i)):VALUE = "".
-                       FIND FIRST pts_det WHERE /* *SS-20120927.1*   */ pts_det.pts_domain = global_domain and  pts_det.pts_par = "" 
+                       FIND FIRST pts_det WHERE pts_det.pts_domain = global_domain and  pts_det.pts_par = "" 
                            AND pts_det.pts_part = part NO-LOCK NO-ERROR.
                        IF AVAIL pts_det THEN DO:
                            run process_pts (input part , 
@@ -282,7 +302,7 @@ REPEAT:
                     worksheet:Range("O" + STRING(i)):VALUE = omin.
            END.
            ELSE DO:
-               FIND FIRST pt_mstr WHERE /* *SS-20120927.1*   */ pt_mstr.pt_domain = global_domain and  pt_part = part NO-LOCK NO-ERROR.
+               FIND FIRST pt_mstr WHERE pt_mstr.pt_domain = global_domain and  pt_part = part NO-LOCK NO-ERROR.
                IF AVAIL pt_mstr THEN DO:
                    omin = pt_ord_min.
                IF omin = 0 OR omin = 44444 THEN  DO:             
@@ -291,7 +311,7 @@ REPEAT:
                    END.
                    IF omin = 44444 THEN DO:
                        worksheet:Range("Q" + STRING(i)):VALUE = "".
-                       FIND FIRST pts_det WHERE /* *SS-20120927.1*   */ pts_det.pts_domain = global_domain and pts_det.pts_par = "" AND pts_det.pts_part = part NO-LOCK NO-ERROR.
+                       FIND FIRST pts_det WHERE pts_det.pts_domain = global_domain and pts_det.pts_par = "" AND pts_det.pts_part = part NO-LOCK NO-ERROR.
                        IF AVAIL pts_det THEN DO:
                            run process_pts (input part , 
                                 INPUT max_lev ,
@@ -327,7 +347,8 @@ REPEAT:
                    endrowmark = worksheet:cells(i,10):TEXT  .
 
              IF endrowmark = ""  THEN DO:
-                excelworkbook:saveas(src_file , , , , , , 1) . 
+             		os-delete value(SUBSTRING(src_file,1, LENGTH(src_file) - 4) + "_chk.xls") no-error.
+                excelworkbook:saveas(SUBSTRING(src_file,1, LENGTH(src_file) - 4) + "_chk.xls" , , , , , , 1) . 
                 excelapp:VISIBLE = FALSE .
                 excelworkbook:CLOSE(FALSE).
                 excelapp:QUIT. 
@@ -350,7 +371,7 @@ PROCEDURE process_pts :
    define OUTPUT parameter s AS CHAR FORMAT "x(50)" no-undo.
    DEFINE VAR ii AS INT no-undo.
    REPEAT ii = 1 TO max_l :
-       FIND FIRST pts_det WHERE  /* *SS-20120927.1*   */ pts_det.pts_domain = global_domain and  pts_det.pts_par = "" 
+       FIND FIRST pts_det WHERE pts_det.pts_domain = global_domain and  pts_det.pts_par = "" 
            AND pts_det.pts_part = p NO-LOCK NO-ERROR.
        IF AVAIL pts_det THEN DO:
            IF s = "" THEN

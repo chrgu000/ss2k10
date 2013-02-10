@@ -89,6 +89,7 @@ REPEAT ON ERROR UNDO, LEAVE :
         excelsheetmain:cells(1,12) = "数量" .
         excelsheetmain:cells(1,13) = "单价" .
         excelsheetmain:cells(1,14) = "产品类" .
+        excelsheetmain:cells(1,15) = "市场" .
     END.
 
     i = 2 .
@@ -150,7 +151,8 @@ REPEAT ON ERROR UNDO, LEAVE :
                         excelsheetmain:cells(i,11) = idh_qty_inv * (idh_price / ar_ex_rate) .
                         excelsheetmain:cells(i,12) = idh_qty_inv .
                         excelsheetmain:cells(i,13) = idh_price / ar_ex_rate .
-                        excelsheetmain:cells(i,14) = pt_prod_line .
+                        excelsheetmain:cells(i,14) = pt_prod_line.
+                        excelsheetmain:cells(i,15) = pt_drwg_loc.
                         i = i + 1 .
                     END .
                 END. /*for each idh_hist*/
