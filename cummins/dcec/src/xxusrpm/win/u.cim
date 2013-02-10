@@ -1,0 +1,10102 @@
+@@BATCHLOAD mgurmt.p
+"audit"
+"audit"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlall,admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"baradm"
+"baradm"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"bn166"
+"³ÂÑà"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ch106"
+"»Æºì¿ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cj622"
+"Wang Guilin"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,df575,DG092
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cj624"
+"Xiang ziying"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,purpln,dcec-b,dcec-c,dcec-sv,pe,itemBmgt,bommgt
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cj697"
+"ÕÅÓêºç"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ck288"
+"ck288"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ck467"
+"³Â´ú·É"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cl626"
+"ËÎºìÓ¢"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cn121"
+"³Ìçù"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cn599"
+"³ÂË«Áú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cn833"
+"ÕÅÖ¾»Ô"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,dc0146
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"co842"
+"Ñîºì"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cp457"
+"li cunhui"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,atpu
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cp527"
+"ÎâÏþ±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,CEBJ,ds839
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cq452"
+"yuan yuan"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cq467"
+"ÀîÓÂ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+bommgt,pe,itembmgt
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cq668"
+"Íõô´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cq670"
+"³Âºì"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cq670h"
+"chen hong"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,cq670,zz472
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cr032"
+"Íõ·çÆ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cr033"
+"½ªÐÂ¾ü"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cr291"
+"ËÎ½¨Æ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dk885
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cr957"
+"ÖÓ³Â"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cs104"
+"³ÂÕñ·å"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cs142"
+"xiao jinwei"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,itemBmgt,pe,bommgt,dcec-b,dcec-c,dcec-sv,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"CS785"
+"ÀîÍúÁÖ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ct014"
+"³Âè´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dg103
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ct613"
+""
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,itemcost,purchasing,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cv264"
+"Òó¸Õ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"CW256"
+"·ÑÁ¼¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-sv,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cx579"
+"ºúÑÓÖÒ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cx904"
+"ÕÔÀöÀö"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cx910"
+"·®½¨¶«"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"CX912"
+"ÁõÉ­Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,ey290
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"CX914"
+"ÂÀ³¤Çà"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,ey290
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"cy398"
+"ÀîË³Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"da828"
+"ËïÏåÆ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0012"
+"³ÂÒË"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0013"
+"³ÂÏþºì"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0017"
+"Huang yongming"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0027"
+"Liu Yan"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,planners,planmgr,matlsall,purplnsalepln,prodpln,itemmgt,mgts,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0033"
+"Deng Lijian"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0034"
+"Yang jun"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0038"
+"luo jian"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality,MGTS
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0040"
+"Xi Yucheng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc00407"
+"ÄôÖ¾·Ò"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0042"
+"Xiong jiaqiang"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0043"
+"lu jingtang"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0050"
+"Ñ¦Ñ©"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0051"
+"Pu qianmin"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,MGTS,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0059"
+"Xiao yisheng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi,purchasing,dcec-b,dcec-c,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0066"
+"ÕÅÓêºç"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0068"
+"Wang guilin"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,purchasing,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0069"
+"Ê¯Ü¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0073"
+"lv changqing"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0080"
+"Zhu xufeng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0094"
+"Xiang Ziying"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+matlsall,all,planners,itempmgt,purpln,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0095"
+"Yu Desheng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0118"
+"Zhou jifeng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,PLANNERS,PURPLN,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0127"
+"shen minzhu"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0134"
+"Li yong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0142"
+"ÉÛ¿­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0143"
+"Wang Lin"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,purchasing,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0145"
+"Wei xiangrui"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0146"
+"ÕÅÖ¾»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0162"
+"Chen Shuanglong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0164"
+"gong huisheng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,purchasing,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0168"
+"Óà·²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0185"
+"ÐìÓñÎµ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-sv,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DC0191"
+"º«Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0197"
+"li yugui"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0201"
+"Zheng fengming"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0241"
+"ÍõÒåÆ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0244"
+"Fan jiandong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0276"
+"Jiang xinjun"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0278"
+"Wang fengping"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0284"
+"Lu zhiying"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0296"
+"Li fengwei"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0297"
+"chen zhenfeng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+ALL,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0324"
+"Li lei"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,quality,MGTS
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0330"
+"gao jun"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0362"
+"chen peng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+pd,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc0401"
+"YinGang"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dc1840"
+"Íõçø"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF044"
+"zhang xiaoyan"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df149"
+"ÁõÏþÁá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF482"
+"ËïÖÐÈñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,DF580
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df495"
+"ºúÌÎ-QUA"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df496"
+"Wang Jinglei"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-C,DCEC-B,DCEC-SV,CEBJ
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF498"
+"ÕÅÏþÓ±"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df500"
+"ÀîË·"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df511"
+"ÕÅ¹ã¼½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df518"
+"ÀîË³Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df520"
+"ÌÆ¹Ú¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df521"
+"liu baomin"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df523"
+"yu dongming"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,all,pe,mgts
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF524"
+"wang xiaohong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df525"
+"ËïÁÁ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df531"
+"ÁõêÅ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df533"
+"Ð¤±ò"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df537"
+"Qi yuhang"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df538"
+"ºúÏþ¹â"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df540"
+"¿Â²É"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF541"
+"ºúºÆ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df542"
+"lu xiaoxi"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df547"
+"lihongyong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df551"
+"ÀîÓ­´º"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df552"
+"¹ùÏþËÉ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,mfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df558"
+"ÉêÓ±"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF559"
+"ÍõÔ¶·¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,ecnmgt,bommgt,itembmgt,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF567"
+"ÁºÓ°"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df569"
+"¶ÎÆ½°²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF570"
+"ÍõÑ§ÏÈ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df573"
+"Ñî¾ÕÏã"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF575"
+"Áõ½¨¹ú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF580"
+"ÕÅÑÞÇÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df582"
+"gou qin"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF647"
+"ÂíÞ±"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df648"
+"·áá°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df649"
+"ÅíÑÞ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF651"
+"´÷¿µ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DF652"
+"ÁõÓñ·¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df670"
+"ÚÈÏ×ÖÒ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df672"
+"ÕÅ²¨ÌÎ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"df673"
+"ÍõÏþÁá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg090"
+"³Â¸»Ó¢"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg092"
+"·ëº£Ç¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg093"
+"¹¨Ô¤Õð"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg100"
+"½ªÇÛ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg101"
+"Àîº£Æ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DG103"
+"Àî¾©¶õ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg106"
+"ÁõÏòÔÆ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg110"
+"ÂíÑà"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg117"
+"sun haiying"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DG121"
+"ÍõºìÓñ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DG121A"
+"ÍõºìÓñ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,dg121
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg122"
+"Îº²ÊÔÆ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg131"
+"Zeng Linglang"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg132"
+"ÕÅÏòÈº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg134"
+"zhang juan"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,bommgt,dcec-b,dcec-sv,dcec-c,itemBmgt
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg135"
+"ÕÅÑ©·å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg146"
+"xia zhirong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,querybom,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg147"
+"ÕÅÌÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg148"
+"»Æ¾²"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg150"
+"Ê°Óî"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg153"
+"yang jian"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg377"
+"Xu dinghui"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,planners,itempmgt,prodpln,salepln,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DG380"
+"ºúÃñ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DG382"
+"Åá»ª"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg385"
+"ÏÄ·¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg784"
+"ÍõÇìÀû"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cebj,dc0317
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg785"
+"ºÎ¿¡¸Õ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dg874"
+"ÍõÇìÀû"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,invcount,pliss,itemimgt,invmgr,porec,invwo,dcec-b,dcec-c,dc
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dh524"
+"Yu zhouguo"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,planners,matlsall,salepln,MGTS,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di276"
+"Ì·³ÉºÏ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,dg142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di280"
+"º«¹úÐÛ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di283"
+"·¶Ñ©Ã·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di290"
+"ÕÅ¾ê"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI296"
+"×Þ½¨Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI298"
+"ÉÛÇ¿"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di300"
+"À×ÃùÒø"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di301"
+"ºúÎÄÁä"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI302"
+"¼ÖÀ×"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di303"
+"Ô¬¸Öºé"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di304"
+"ÌÆÖ¾¹ú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di305"
+"ÕÔ¹úÉ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di307"
+"»ÆÒå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di308"
+"ºúµÀ½ð"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI309"
+"Àîº£Ï¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di311"
+"ÕÅÔÆºì"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+PE,all,itemBmgt,ecnmgy,dcec-b,dcec-c,bommgt
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di312"
+"Íò¼Ò±ø"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di325"
+"zhang min"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di326"
+"¸¶½¨Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di328"
+"ÀîÁ¦Æ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di330"
+"ÐÜÐ¡ÁÖ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di332"
+"ÍõÔ¾»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di334"
+"ËïÖÇ¹ú"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di335"
+"ÂÀÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di339"
+"ÕÅÀ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di340"
+"ÍõÐãÇÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di341"
+"ÑîÃ÷½Ü"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,planners,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di342"
+"Ñî»ÝÏé"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di343"
+"ÖÜÑÞ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di344"
+"½ðÎÀºì"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di353"
+"ÂÀÑ©Ñî"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,mfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di355"
+"³ÂÑà"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di356"
+"ÍõÔÆÁú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI366"
+"li qiaofeng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,opmgt,dcec-b,atpu,mfgcfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di368"
+"º«ÎÀ»ª"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,opmgt,dcec-b,atpu,mfgcfg
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di372"
+"HU YING"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,ecnmgt,bommgt,itembmgt,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di377"
+"ÁõÏÀ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di384"
+"ºú¾´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di385"
+"Ëï¹ðÈã"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di388"
+"ÍõÄÜº£"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di390"
+"Li na"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE,all,itemBmgt,ecnmgy,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di396"
+"yang xinhua"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di418"
+"Ëïº£Ñà"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+matlsall,all,planners,itempmgt,purpln,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI424"
+"¹ùÊçÓ¢"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di431"
+"Ô¬éóÄÐ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-sv,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di432"
+"wang jing"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,itemimgt,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di433"
+"³ÂºìÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di434"
+"ãÆï¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DI437"
+"Ñ¦º£ÌÎ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,planners,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"di438"
+"ËÎÏþ¶«"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,planners,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dk796"
+"º«Äî"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,dc0191
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dk885"
+"Íõºº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DL824"
+"³£´ºÏþ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DL825"
+"Wang xuemei"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,salepln,planners,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dl828"
+"Íõ»ÛÆ¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dr549"
+"º«ÊçÃô"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"dr550"
+"kang jian"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,bommgt,itemBmgt,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds153"
+"Ñî½¨"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+bommgt,itembmgt,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DS833"
+"ÕÅ¾þ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds835"
+"ÕÅÆôÃ·"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matsall,querybom
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds836"
+"zhouhongge"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,dcec-b,dcec-c,sup
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"DS837"
+"ÖÜ¿¡Ï¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sup,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds838"
+"³ÂÌÎ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds839"
+"ÓÚÌÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds840"
+"¸¶È«¸£"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ds841"
+"ÑîÐÛÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"du125"
+"Íõ½¨¸ù"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,atpu,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"du131"
+"Íõ½­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"du135"
+"Ð¤¸ù»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"du135n"
+"Ð¡¸ù»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,du135
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"du136"
+"Íõº£Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-sv,dcec-c,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"er990"
+"³ÂÐÛ·Â"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,CEBJ,DG092,zz117
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es147"
+"ÐíÀ¼À¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cl626
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es410"
+"ºú°®»ª"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es543"
+"ÌïÄ¾"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es754"
+"·ëÎÀ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es757"
+"³Ì²³ºÆ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"es758"
+"ÍõÇí"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,fsall,dcec-b,dcec-c,dg142,zz117
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et201"
+"¸ßÀ×"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et286"
+"ÕÅÃôÉ÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et289"
+"³ÂÃ·ÇÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et290"
+"³ÌÃù·É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et291"
+"pan mingjie"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et298"
+"ÖÜÀöÆ¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et311"
+"Íõ³çÂ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et313"
+"ÕÔ³¤ºÓ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et314"
+"ÀîÃ÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et315"
+"ÀîÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et316"
+"ÇØ°îÏé"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et317"
+"ÏÄºìÏß"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et384"
+"³Â²ýÃ÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DECE-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et385"
+"ÕÅÍþ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et386"
+"ÀîºìÀû"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et402"
+"¸ð¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEc-B,DCEC-C,DCEC-SV,ey290
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"et524"
+"º«Ñà"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"eu318"
+"ÇñÃ÷ÌÎ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ev431"
+"yang hong"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"EV891"
+"·½¾²"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew053"
+"ÕÅÊÀ¶«"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,DS839
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew135"
+"Â¥ÄÜÈÊ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew331"
+"Æ¤Ö¾¾§"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew838"
+"ÍõÅô"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew885"
+"ÐìºéÑã"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ew950"
+"ÌÆ½£³Ç"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"EW980"
+"³ÂÔ¶·¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ex026"
+"ÑîÎ°·ò"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+cebj,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ey274"
+"Êæ±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ey275"
+"liuzhenlun"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ey290"
+"ÑîÔ¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ey501"
+"ÈÎ°®ÇÙ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ez595"
+"ÍôÔó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c.dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ez629"
+"¸ßÔ­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ez845"
+"tang zijue"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ez967"
+"·®½¨ÖÐ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fa140"
+"Ñô·¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c£¬dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fa294"
+"ÀîË³Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fa658"
+"³ÂÐËÖÐ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fa745"
+"ÖÓÊ¤±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,df500
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fa818"
+"³Â´ú·É"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fb214"
+"ÖìÐã»¨"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fc358"
+"»Æ»ª"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,bommgt,pe,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"FC605"
+"ÁõÁá¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fe031"
+"³ÂÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fe032"
+"³ÉêÅ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ff088"
+"¶ÅÑ©ÑÞ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,stat
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fh707"
+"ÂíÃ÷²ý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fi737"
+"ÁõÅô·É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fj591"
+"ÀîÎ°"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fj592"
+"ÂÀÑ©Å¯"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fj595"
+"ÑÖÁ¢öÎ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fk994"
+"ÖÜÖ¾"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,bommgt,itembmgt
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fm066"
+"zhao ting"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,purchasing,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"FM181"
+"liu rui"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fm182"
+"Éò»ª±ø"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,purchasing,sqi,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fm268"
+"ÁõÏà¸Õ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fm268e"
+"liu xianggang"
+US "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fm943"
+"×£ºØ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,mfg,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fn333"
+"ÍõÐíµÏ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fo069"
+"Ñî»ªÆ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fo854"
+"he jun"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fo919"
+"Kong Jinzhong"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fp683"
+"·ëÉÆ¹ã"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fq968"
+"zhaotong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fv722"
+"²Ü¿ÉÓ½"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+matlsall,all,planners,itempmgt,purpln,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fv877"
+"Zhao shike"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fv894"
+"Chen Qizhi"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fx629"
+"³ÂÎÄ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cq335
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fx646"
+"Wan meng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fx647"
+"Zhou kui"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fy903"
+"Liu li"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fy904"
+"Wan qiong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fy905"
+"Sun yan"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fy944"
+"Ðì»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fy946"
+"Li jing"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,PE
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fz847"
+"Àî½à"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fz882"
+"Xiong jinfeng"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"fz883"
+"sheng tao"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gf474"
+"he zhirong"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gh294"
+"Zuo yuanhua"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gh846"
+"ÏàÓÀ¶«"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gi052"
+"ÔøÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-sv,dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gi591"
+"ÅíÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gj089"
+"Xu chenxi"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,sqi
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gm870"
+"»ÆÇÙ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gm871"
+"Íõè´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"go650"
+"ÕÅ¹¦³£"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"go652"
+"»Æ¹È°²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"go992"
+"Íõ½ðÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gp512"
+"ÀîÓñËÉ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gp513"
+"ãÆÏþÁá"
+us "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,matlsall,invcount,invwo,planners,purpln,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gq370"
+"Ð»ÎÀËÉ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe,bommgt,itembmgt,sqi,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"GS144"
+"Ò¶½¨Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw378"
+"²Ì²©¾ý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw386"
+"ÁÖË«"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw634"
+"Ð»Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw719"
+"Huang Zhongwei"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw760"
+"ÑîÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"gw774"
+"ÕÔÂü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"he394"
+"ºú±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hg560"
+"À´º£¾Õ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hi221"
+"ÅíÑà"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hn518"
+"ÍõÈð¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hn5188"
+"ÍõÈð¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ho409"
+"»ÆÈñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ho539"
+"¶­öÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ho556"
+"Ðí³¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hs004"
+"¹¨Î¬ÓÀ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ht397"
+"ÖìÁ¬±ø"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEc-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"hx981"
+"ÕÔÝÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ih666"
+"ÁõµÀÀ¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"il877"
+"Íõ»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"in983"
+"³Â³¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"io415"
+"ÖÜÈÙ·²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"io418"
+"ÀîÌÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"iq952"
+"ÕÅ¼ÌÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ir294"
+"ÕÅÓÀÌÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is154"
+"ÍõÆ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is157"
+"Â¬Î°³É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is176"
+"ÀîÖÒÁÁ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is177"
+"ÕÔÇïÊµ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is320"
+"Áõ´¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is359"
+"Li Haixing"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"is759"
+"ÕÔÒ¶"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"it586"
+"chen canwen"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"iv829"
+"Íòö©"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"IY745"
+"ÑîÀòÁá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ja773"
+"ÐÜ·æ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jb206"
+"ÐìÇÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jk527"
+"¹ùºêÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jl441"
+"ÕÅÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jn302"
+"ÁõÀöÃô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jn534"
+"ÂíÀò"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dce-c,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jo446"
+"È½ÁÖ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jp325"
+"ÈÎÁ¼³É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jq117"
+"·¶Àî½Ú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jq122"
+"ÉêÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ju088"
+"Xu Jiao"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ju402"
+"ÍõÁ¢¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ju406"
+"ÁõÇ¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jx649"
+"ÕÅÏþ¹â"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jz023"
+"ÍõÉÙÔÆ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jz287"
+"±ßÒ»Ãù"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jz735"
+"¹ùÖÇ¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"jz914"
+"»ÆÀ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ka785"
+"°¬»¢"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ka976"
+"Íõ¿ý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ka977"
+"³ÂÍ¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ka978"
+"ÁºËÉ»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kc417"
+"ÕÅÐñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kc427"
+"ÍõÊÀÎÄ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kc935"
+"ÀîÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,decec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"KD"
+"¿µ´ïÓÃ»§"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,CEBJ
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kd954"
+"Îâ¿Æ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ke320"
+"Áõ³¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ke923"
+"¼ªÆôÄþ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kf429"
+"Ë¾Ó¦Ñà"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kf430"
+"ÅíÓî"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kf786"
+"ÕÅêÌ·É"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kh283"
+"ÕÔºè±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"km543"
+"³Ì±¦¾ü"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kn334"
+"¶¡³¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kq547"
+"ÅË´æ±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kq853"
+"Â¬ÐÇ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kr582"
+"Öì¾ê¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ks629"
+"ÁõÖ¾Îä"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt589"
+"Ð¤³É½Ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt590"
+"ÕÅË«Àû"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt591"
+"ÑîÏéÁÖ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt595"
+"½­ÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt678"
+"ÕÔÖ¾¸£"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt679"
+"ºâÁä"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt680"
+"½­Ãô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec=b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt681"
+"¿ÜÇå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt682"
+"ÅíÎÄ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt684"
+"ÍõÇìÌÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt685"
+"Ê¯È½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kt688"
+"Ñî¾§"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ky329"
+"Liu Huisong"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-r
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"KY656"
+"zhu yang"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kz159"
+"ÂíËÄ½¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kz345"
+"ÐìÖÐÏé"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"kz986"
+"ÕÅÓîìµ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"la044"
+"ÀîÊéÃ÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"la270"
+"Ð¤Ê·Áú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lc309"
+"Àî¿¡·å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"le326"
+"½ðÒ¶"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lf235"
+"Íõ»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lh179"
+"ÎâÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lh889"
+"ì¶Åô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"li918"
+"ÀîÕý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lj013"
+"ÐìË¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lj303"
+"Íõ¿Æ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b£¬dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lk379"
+"Ê·è´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lk380"
+"ÌÕ½ø"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lk502"
+"Ò¦¿¡»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lk509"
+"Å·çâ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo015"
+"Áø»ÛÇí"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo016"
+"Ëï³¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo017"
+"ºúÒÀ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo018"
+"ÍõÓñÓñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo019"
+"Ðì¹úÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo020"
+"Ô¬ÈºÈº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo022"
+"Àî½¡Ãô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo023"
+"Â«æÃæÃ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo024"
+"Âí¹¦ÕÜ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo025"
+"ÕÅÑ§Î°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo026"
+"Ðì±ûÆ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo027"
+"¶­³É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo031"
+"·½Ö¾³É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"lo448"
+"½¯Éº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"may"
+"³ÂÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dc0050,dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"mrp"
+"MRP operator"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"qad01"
+"qad01"
+us "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"qad02"
+"qad02"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"qad03"
+"qad03"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"qad04"
+"qad04"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+admin,dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"QADadmin"
+"QADadmin"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"QADuser"
+"QADITuser"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"srmtest"
+"srmtest"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"test"
+"test"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+fm268e
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"testQADW"
+"testQADW"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"testserv"
+"testserven"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"XG"
+"Ïå¹ÜÓÃ»§"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cebj
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz008"
+"ÎºÓÀºÀ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz012"
+"»ÆöïÅô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ017"
+"ZZ017"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz018"
+"À´±ö"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz033"
+"zz033"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz034"
+"ÁõæÃ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz035"
+"Ò¦Ð÷»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz038"
+"Yang Lingyan"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,ap,ar,account
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz045"
+"ÔøÁá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv.pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz052"
+"Zhao Jiangjia"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz056"
+"¼òºìÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz073"
+"³Â¹ú¸»"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dk885
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz079"
+"Àî³¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz081"
+"ÑîÈð"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz083"
+"²Ì½­²¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz097"
+"Â¬¶¬Ã·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz098"
+"×ÞºìÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,zz283
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz099"
+"Ó÷½ø¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz101"
+"²ÜÒâ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ103"
+"ÖìÈ«Á¦"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz117"
+"Õ¼·¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,DI385
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz123"
+"ËïÑ©·É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz124"
+"Ã·ºé"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz125"
+"ºÂ¾ÞÉú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz126"
+"Áõ»Ýæ©"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,zz038
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz127"
+"ÆîµÂÇ¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ134"
+"Ð»Æ¼"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz135"
+"Àî¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz160"
+"Àî¾§"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz162"
+"ÑîÐñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all.pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz167"
+"ÐìÑÅ½à"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz172"
+"·½Ð¡Áá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz173"
+"zz173"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,admin
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz174"
+"ÔÀâùæÃ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,DF567
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz178"
+"Ð¤Ãô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz179"
+"ÕÅÓñ·¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz180"
+"Àî¾üÃñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz181"
+"³Â³ÎÇå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,dcec-C,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz182"
+"ÅËÑî"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,zz181
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz183"
+"Íõ¶Ø¹ú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,zz181
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz185"
+"Íõ½¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,zz181
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz186"
+"xx"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz189"
+"Ò×Áá"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+all,pe
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ192"
+"¸ßÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,zz238
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz193"
+"ÇÇÎ÷¾ê"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+CEBJ,DCEC-B,DCEC-C,DCEC-SV,di433
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz199"
+"ËïÓñË«"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,di340
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz205"
+"Ó¡¼Ò»¢"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ206"
+"»ÆÄËÐ÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz209"
+"³ÌÁÁ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz216"
+"»ÆÊ¿½Ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz217"
+"ÍõËÉ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz223"
+"³ÂÔÆæº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ230"
+"Íõì®"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,dg121A
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz236"
+"¿â½ðÖ¾"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dg142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz238"
+"ÕÅÖ¾Çå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ269"
+"ÀîÕý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ276"
+"·¶³¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz283"
+"ÕÅÖ¾Çå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz284"
+"³ÂÐËÁÖ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz288"
+"ÍõÀ¼¾Õ"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz295"
+"ÀîÓÂ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz299"
+"Íõ½¨À¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz307"
+"ÕÅ»áÆ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz310"
+"ÁºÎ¡"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz317"
+"ÑîÞ±"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz349"
+"ÕÔÇïÊµ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz358"
+"ÖìÓ¢¿¡"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz362"
+"ÕÅÏ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz363"
+"Ö£è±"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz366"
+"ÑîÊé»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz377"
+"³Â¾²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz378"
+"ÍõÓî³½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz379"
+"ºúÀöÇÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz380"
+"ÑÏ²¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz381"
+"Ñî¾²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz382"
+"ÕÅ¾²"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz383"
+"ºé³¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz385"
+"Íõ½¡Îä"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ386"
+"³ÂÏþ²¨"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz388"
+"Ù¡öÎ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz389"
+"Íô½¡"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz391"
+"Àî½­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ392"
+"li shen"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz393"
+"Àî¶«Ðñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz394"
+"Áõ»ªÐÀ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz396"
+"Ê¯Â½è´"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,ZZ167
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz410"
+"ÇñµÏ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+fa745
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz412"
+"ÐìÀö»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz421"
+"ÕÅÏþµ¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz425"
+"Ì·½¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz426"
+"Àî¹ã"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz432"
+"Áõ¼§"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz433"
+"ÕÅÖ¾Ç¿"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ436"
+"¹ØºìÃ·"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz472"
+"Ö£¼á"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cebj
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz473"
+"ÉêÓÀ¾ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz476"
+"ÖÜÔÆÒå"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz487"
+"ÕÅÆ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,ds833
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz513"
+"Ouyang xiaoying"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz525"
+"Ò¦ÎÄ·å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz531"
+"Ðì¿¡"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV,CEBJ
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz532"
+"ÁõÍþ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz533"
+"¸ßä­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz534"
+"ÇñÊç¿µ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz535"
+"ÕÅÏþÀÚ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz536"
+"Î»Ã÷Ñô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz537"
+"ÎÌÙ»"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,cebj,dk885
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz538"
+"»ÆÁÁ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz543"
+"ÖÜÍ©"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz570"
+"ÈÎÉ­ÁÖ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dg152,dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz574"
+"Àî¿µ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEC-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz577"
+"Ê¯³¤Òø"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,df652
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz579"
+"Í¿Îé·å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+DCEC-B,DCEc-C,DCEC-SV
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz582"
+"ÕÅË¼Ææ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz608"
+"ÂæË³ÐÛ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz637"
+"Ò×Èý±ë"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dc0142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz638"
+"ÃÏÏé»Ý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,zz574
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz643"
+"Liu Yuzhu"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz645"
+"Yu Wei01"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz657"
+"¿µÖÒÎ°"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz661"
+"ÐÜÆô»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,DG142
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz663"
+"ÄþÉÐÀ¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz664"
+"ÖÓÉÙ¾ý"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz665"
+"Öì·¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dc0168
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz666"
+"Ö£·Ç"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz674"
+"ÒüµÀ·å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz689"
+"ÀîÓ±"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz690"
+"ËïÇ¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz691"
+"ÓÐÕ×²¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz695"
+"ÕÅ»¢"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz696"
+"³ÂÑôÑô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz702"
+"Ïò½Ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,ds839
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz703"
+"ÀîµÂÅô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz704"
+"ÆîÃ¯»ª"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz705"
+"»ÆÍúÈª"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz706"
+"ÕÅÀÙ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz707"
+"ÔÀÖ¾µ¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz708"
+"Ñî·É"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dc00407
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz709"
+"Ëï¶«"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-b,df500
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz715"
+"Áõ¾üÁÁ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv,dk885
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz717"
+"ãÉË¼´Ï"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz735"
+"ÖÜÕù"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz737"
+"Ðì³å"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz738"
+"°¬±¦Èº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz749"
+"Ò¶ÓÂ²¨"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz755"
+"ÁõÍø³É"
+CH "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz759"
+"Â¬½Ü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz760"
+"¶ÅºìÐñ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz761"
+"ÕÅÍþ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz762"
+"Àî½¨»Ô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz773"
+"ÀîË¼¹ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz774"
+"Í¯ÓÀ¸Õ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz781"
+"ÁõÉù"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz791"
+"Ðì³¿ÃÉ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ792"
+"Ðì±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz794"
+"Â½½­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz804"
+"ÕÅÎÄç÷"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz807"
+"ÖìÇ¬"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c,zz081
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz808"
+"×Ú¿Ë±ó"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b,dcec-sv
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz820"
+"¹¨¿ª¼Ã"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz828"
+"Ê¢¿ö"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz831"
+"ÕÅ±¦Èº"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz835"
+"³²ÕýÀ¤"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz857"
+"ÒüÏþÉ­"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-b,dcec-c
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz859"
+"Îâ²¨"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz866"
+"ÐìÆ¼"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+dcec-c,dcec-b
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz880"
+"Àî¿µ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+zz574
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"ZZ881"
+"³ÂÍò±ø"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz884"
+"¶ÅÃù"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz887"
+"Ðì·¢Æ½"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz890"
+"¹ùçü"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz891"
+"Àîé»"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+ig804
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz895"
+"ÕÅÎ°¹â"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz896"
+"ÖìÏþÁú"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz900"
+"ÕÅÃô"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+cq670
+.
+.
+y
+.
+y
+.
+@@END
+@@BATCHLOAD mgurmt.p
+"zz909"
+"Ê¯öÎìÍ"
+ch "" PRC no - - - "" "" - - 
+y "QAD_DEF"
+- -
+dcec
+y y
+.
+.
+y
+.
+y
+.
+@@END

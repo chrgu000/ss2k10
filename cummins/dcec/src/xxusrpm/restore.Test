@@ -1,0 +1,21 @@
+#!/bin/sh
+
+BKDIR=`find /data/backup -name "mfgprod.bk" -mtime -1| tail -1`
+
+BKDIR=`dirname $BKDIR`
+
+/apps/scripts/test/stopAll.Test
+
+cd /data/test
+
+$DLC/bin/prodel /data/test/mfgtest < /apps/scripts/test/yes
+$DLC/bin/prorest mfgtest $BKDIR/mfgprod.bk
+
+$DLC/bin/prodel /data/test/addtest < /apps/scripts/test/yes
+$DLC/bin/prorest addtest $BKDIR/addprod.bk
+
+cd /data/testqxe
+$DLC/bin/prodel /data/testqxe/testqxe < /apps/scripts/test/yes
+$DLC/bin/prorest testqxe $BKDIR/prodqxe.bk
+
+/apps/scripts/test/startAll.Test
