@@ -93,15 +93,15 @@ DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON bChk 
      LABEL "检查" 
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE BUTTON bExp 
      LABEL "输出" 
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE BUTTON bLoad 
      LABEL "装入" 
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U 
      LABEL "文件名" 
@@ -140,17 +140,17 @@ tsod_project    column-label    "项目"
 tsod_chk        column-label    "状态"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
-    WITH NO-ROW-MARKERS SEPARATORS SIZE 106.5 BY 28.75 FIT-LAST-COLUMN.
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 106.5 BY 28.74 FIT-LAST-COLUMN.
 
 
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     vFile AT ROW 2.25 COL 7 COLON-ALIGNED WIDGET-ID 2
+     vFile AT ROW 2.26 COL 7 COLON-ALIGNED WIDGET-ID 2
      bChk AT ROW 2 COL 36 WIDGET-ID 4
      bExp AT ROW 2 COL 52.5 WIDGET-ID 6
      bLoad AT ROW 2 COL 68.5 WIDGET-ID 8
-     brDet AT ROW 3.69 COL 1.25 WIDGET-ID 200
+     brDet AT ROW 3.68 COL 1.25 WIDGET-ID 200
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
          SIDE-LABELS NO-UNDERLINE THREE-D 
          AT COL 1 ROW 1
@@ -173,12 +173,12 @@ DEFINE FRAME fMain
 IF SESSION:DISPLAY-TYPE = "GUI":U THEN
   CREATE WINDOW wWin ASSIGN
          HIDDEN             = YES
-         TITLE              = "客户寄售库存使用装入（xxcnimp.p）"
-         HEIGHT             = 31.75
+         TITLE              = "DCEC待开发票维护装入(仅M类型)（xxsoivimp.p）"
+         HEIGHT             = 31.74
          WIDTH              = 106.75
-         MAX-HEIGHT         = 44.13
+         MAX-HEIGHT         = 44.11
          MAX-WIDTH          = 170.75
-         VIRTUAL-HEIGHT     = 44.13
+         VIRTUAL-HEIGHT     = 44.11
          VIRTUAL-WIDTH      = 170.75
          RESIZE             = yes
          SCROLL-BARS        = no
@@ -229,7 +229,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH tmp-so.
 
 &Scoped-define SELF-NAME wWin
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON END-ERROR OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON END-ERROR OF wWin /* DCEC待开发票维护装入(仅M类型)（xxsoivimp.p） */
 OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
   /* This case occurs when the user presses the "Esc" key.
      In a persistently run window, just ignore this.  If we did not, the
@@ -242,7 +242,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-CLOSE OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON WINDOW-CLOSE OF wWin /* DCEC待开发票维护装入(仅M类型)（xxsoivimp.p） */
 DO:
   /* This event will close the window and terminate the procedure.  */
   APPLY "CLOSE":U TO THIS-PROCEDURE.
@@ -254,7 +254,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-RESIZED OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON WINDOW-RESIZED OF wWin /* DCEC待开发票维护装入(仅M类型)（xxsoivimp.p） */
 DO:
    IF wwin:HEIGHT >= 14 THEN DO:
       FRAME fmain:WIDTH = wwin:WIDTH NO-ERROR.

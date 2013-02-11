@@ -21,10 +21,9 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
                               else PUT UNFORMAT '"' tso_rmks '" ' .
             PUT UNFORMAT '- - "' tso_site '" "' tso_channel '" - '.
             PUT UNFORMAT '- ' vcurr SKIP.
-            PUT UNFORMAT '"' tso_tax_usage '"' SKIP.
-            PUT UNFORMAT '-' SKIP.
+            /* 兑换率 */
             for first en_mstr
-              fields( en_domain en_curr en_entity en_name)
+              fields(en_domain en_curr en_entity en_name)
                 where en_mstr.en_domain = global_domain and
                       en_entity = current_entity
               no-lock:
@@ -34,6 +33,9 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
                     PUT "-" SKIP.
                 END.
             END.
+            PUT UNFORMAT '"' tso_tax_usage '"' SKIP. /* 税 */
+            PUT UNFORMAT '- NO - - - - - - - - - - NO' SKIP. /*推销员(无备注)*/
+
         END. /* if first-of tso_nbr */
 
         PUT UNFORMAT tsod_line SKIP.
@@ -44,7 +46,7 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         PUT UNFORMAT '-' SKIP.  /*单价*/
         PUT UNFORMAT '-' SKIP.  /*净价*/
         /* PUT UNFORMAT '"' tsod_loc '" - - "' tsod_acct '" "' tsod_sub. */
-           PUT UNFORMAT '"TEMP" - - '.
+           PUT UNFORMAT '"TEMP" - - - '.
         IF tsod_acct = "-" then
            PUT UNFORMAT "- ".
         ELSE
@@ -75,14 +77,14 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         if not available pt_mstr then do:
              PUT UNFORMAT '-' SKIP.  /* ITEM_NOT_IN_INVENTORY */
         end.
-        IF tsod_rmks1 <> "-" THEN DO:
-           PUT UNFORMAT '- - - - - - - - - - y' skip.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '"' tsod_rmks1 '"' SKIP.
-           PUT UNFORMAT '-' SKIP.
-           PUT UNFORMAT '.' SKIP.
-        END.
+/*      IF tsod_rmks1 <> "-" THEN DO:                                        */
+/*         PUT UNFORMAT '- - - - - - - - - - y' skip.                        */
+/*         PUT UNFORMAT '-' SKIP.                                            */
+/*         PUT UNFORMAT '-' SKIP.                                            */
+/*         PUT UNFORMAT '"' tsod_rmks1 '"' SKIP.                             */
+/*         PUT UNFORMAT '-' SKIP.                                            */
+/*         PUT UNFORMAT '.' SKIP.                                            */
+/*      END.                                                                 */
         IF LAST-OF(tso_nbr) THEN DO:
            PUT UNFORMAT '.' SKIP.
            PUT UNFORMAT '.' SKIP.
@@ -95,11 +97,10 @@ OUTPUT CLOSE.
 INPUT FROM VALUE(fn  + ".bpi") .
 OUTPUT TO VALUE(fn + ".bpo") .
 batchrun = yes.
-/* {gprun.i ""soivmt.p""} */
+{gprun.i ""soivmt.p""}
 batchrun = NO.
 INPUT CLOSE .
 OUTPUT CLOSE .
-/*
 assign i = 0.
 for each tmp-so exclusive-lock:
      find first sod_det no-lock where sod_domain = global_domain
@@ -119,4 +120,3 @@ if i = 0 then do:
     os-delete value(fn + ".bpi") no-error.
     os-delete value(fn + ".bpo") no-error.
 end.
-*/
