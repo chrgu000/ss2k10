@@ -1,9 +1,9 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI
 &ANALYZE-RESUME
-/* Connected Databases 
+/* Connected Databases
 */
 &Scoped-define WINDOW-NAME wWin
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin
 /*------------------------------------------------------------------------
 
   File:
@@ -45,7 +45,7 @@ CREATE WIDGET-POOL.
 &ANALYZE-RESUME
 
 
-&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK
 
 /* ********************  Preprocessor Definitions  ******************** */
 
@@ -60,8 +60,8 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES tmp-so
 
 /* Definitions for BROWSE brDet                                         */
-&Scoped-define FIELDS-IN-QUERY-brDet tso_nbr "订单号" tso_cust "销往" tso_bill "发票地址" tso_ship "货物发往" tso_ord_date "订货日期" tso_rmks "备注" tso_site "地点" "TEMP" "库位" tso_channel "通道" tso_tax_usage "税用途" tsod_line "项次" tsod_part "料号" tsod_site "地点" tsod_qty_ord "数量" "M" "类别" tsod_acct "账户" tsod_sub "分账户" tsod_cc "成本中心" tsod_project "项目" tsod_chk "状态"   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brDet   
+&Scoped-define FIELDS-IN-QUERY-brDet tso_nbr "订单号" tso_cust "销往" tso_bill "发票地址" tso_ship "货物发往" tso_ord_date "订货日期" tso_rmks "备注" tso_site "地点" "TEMP" "库位" tso_channel "通道" tso_tax_usage "税用途" tsod_line "项次" tsod_part "料号" tsod_site "地点" tsod_qty_ord "数量" "M" "类别" tsod_acct "账户" tsod_sub "分账户" tsod_cc "成本中心" tsod_project "项目" tsod_chk "状态"
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brDet
 &Scoped-define SELF-NAME brDet
 &Scoped-define QUERY-STRING-brDet FOR EACH tmp-so
 &Scoped-define OPEN-QUERY-brDet OPEN QUERY {&SELF-NAME} FOR EACH tmp-so.
@@ -74,8 +74,8 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brDet}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS vFile bChk bExp bLoad brDet 
-&Scoped-Define DISPLAYED-OBJECTS vFile 
+&Scoped-Define ENABLED-OBJECTS vFile bChk bExp bLoad brDet
+&Scoped-Define DISPLAYED-OBJECTS vFile
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -91,26 +91,26 @@ CREATE WIDGET-POOL.
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON bChk 
-     LABEL "检查" 
+DEFINE BUTTON bChk
+     LABEL "检查"
      SIZE 15 BY 1.32.
 
-DEFINE BUTTON bExp 
-     LABEL "输出" 
+DEFINE BUTTON bExp
+     LABEL "输出"
      SIZE 15 BY 1.32.
 
-DEFINE BUTTON bLoad 
-     LABEL "装入" 
+DEFINE BUTTON bLoad
+     LABEL "装入"
      SIZE 15 BY 1.32.
 
-DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U 
-     LABEL "文件名" 
-     VIEW-AS FILL-IN 
+DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U
+     LABEL "文件名"
+     VIEW-AS FILL-IN
      SIZE 26 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
-DEFINE QUERY brDet FOR 
+DEFINE QUERY brDet FOR
       tmp-so SCROLLING.
 &ANALYZE-RESUME
 
@@ -122,7 +122,7 @@ DEFINE BROWSE brDet
 tso_cust        column-label    "销往"
 tso_bill        column-label    "发票地址"
 tso_ship        column-label    "货物发往"
-tso_ord_date    column-label    "订货日期" 
+tso_ord_date    column-label    "订货日期"
 tso_rmks        column-label    "备注"
 tso_site        column-label    "地点"
 "TEMP"          COLUMN-LABEL    "库位"
@@ -151,8 +151,8 @@ DEFINE FRAME fMain
      bExp AT ROW 2 COL 52.5 WIDGET-ID 6
      bLoad AT ROW 2 COL 68.5 WIDGET-ID 8
      brDet AT ROW 3.68 COL 1.25 WIDGET-ID 200
-    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
-         SIDE-LABELS NO-UNDERLINE THREE-D 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
+         SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
          SIZE 106.75 BY 31.75 WIDGET-ID 100.
 
@@ -221,7 +221,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH tmp-so.
 */  /* BROWSE brDet */
 &ANALYZE-RESUME
 
- 
+
 
 
 
@@ -279,7 +279,7 @@ DO:
     SESSION:SET-WAIT-STAT("").
     OPEN QUERY brlist FOR EACH tmp-so.
     IF CAN-FIND(FIRST tmp-so) THEN DO:
-    brdet:REFRESH(). 
+    brdet:REFRESH().
     END.
 END.
 
@@ -299,7 +299,7 @@ DO:
   ASSIGN GFILE = vfile.
     SYSTEM-DIALOG GET-FILE gfile
         TITLE      "另存为..."
-        FILTERS    "EXCEL工作簿(*.xsl)"   "*.xls"
+        FILTERS    "EXCEL工作簿(*.xls)" "*.xls"
         MUST-EXIST
         ASK-OVERWRITE
         INITIAL-DIR "."
@@ -308,7 +308,7 @@ DO:
         USE-FILENAME
         UPDATE gfret.
         if gfret then do:
-           {gprun.i ""xxsoivimp02.p"" "(input gfile)"}
+           {gprun.i ""xxsoivimp2.p"" "(input gfile)"}
         end.
 
 END.
@@ -351,18 +351,18 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL vFile wWin
 ON RETURN OF vFile IN FRAME fMain /* 文件名 */
 DO:
-    DEFINE VARIABL selet AS LOGICAL . 
+    DEFINE VARIABL selet AS LOGICAL .
     ASSIGN vfile.
-    
+
    ASSIGN vFile.
    IF SEARCH(vfile) = ? THEN DO:
-   
+
        SYSTEM-DIALOG GET-FILE vfile
            TITLE      "请选择导入文件..."
            FILTERS    "Excel文件(*.xls)" "*.xls"
            MUST-EXIST
        USE-FILENAME
-       UPDATE selet. 
+       UPDATE selet.
        ASSIGN vfile.
    END.
    /* IF lower(ENTRY(2,VFILE,".")) <> "xls" AND lower(ENTRY(2,VFILE,".")) <> "xlsx" THEN DO: */
@@ -386,7 +386,7 @@ DO:
    {gprun.i ""xxsoivimp0.p""}
       IF CAN-FIND(FIRST tmp-so) THEN DO:
       OPEN QUERY brDet FOR EACH tmp-so.
-      
+
            brdet:REFRESH().
       END.
    SESSION:SET-WAIT-STAT("").
@@ -399,7 +399,7 @@ END.
 &Scoped-define BROWSE-NAME brDet
 &UNDEFINE SELF-NAME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin
 
 
 /* ***************************  Main Block  *************************** */
@@ -448,7 +448,7 @@ PROCEDURE disable_UI :
   Purpose:     DISABLE the User Interface
   Parameters:  <none>
   Notes:       Here we clean-up the user-interface by deleting
-               dynamic widgets we have created and/or hide 
+               dynamic widgets we have created and/or hide
                frames.  This procedure is usually called when
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
@@ -469,12 +469,12 @@ PROCEDURE enable_UI :
   Notes:       Here we display/view/enable the widgets in the
                user-interface.  In addition, OPEN all queries
                associated with each FRAME and BROWSE.
-               These statements here are based on the "Other 
+               These statements here are based on the "Other
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-  DISPLAY vFile 
+  DISPLAY vFile
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE vFile bChk bExp bLoad brDet 
+  ENABLE vFile bChk bExp bLoad brDet
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.
