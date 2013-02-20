@@ -88,6 +88,36 @@ end.
 /*J001*/				local_child = "".
 /*J001*/				exec_par = cummins_par.
 /*J001*/				exec_child = cummins_child.
+
+/*y0220*/       find first ptp_det no-lock where ptp_domain = global_domain 
+/*y0220*/            and ptp_site = "DCEC-C" and ptp_part = cummins_par
+/*y0220*/            and ptp_phantom no-error.
+/*y0220*/       if available ptp_det then do:
+/*y0220*/          put stream batchdata unformatted '"' ptp_part zz '"' skip.
+/*y0220*/          find first pt_mstr no-lock where pt_domain = global_domain
+/*y0220*/                 and pt_part = ptp_part no-error.
+/*y0220*/          if available pt_mstr then do:
+/*y0220*/             put stream batchdata unformatted '"' pt_desc1 '"' skip.
+/*y0220*/          end.
+/*y0220*/          else do:
+/*y0220*/             put stream batchdata unformatted '-' skip.
+/*y0220*/          end.
+/*y0220*/       end.
+/*y0220*/       find first ptp_det no-lock where ptp_domain = global_domain 
+/*y0220*/            and ptp_site = "DCEC-C" and ptp_part = cummins_child
+/*y0220*/            and ptp_phantom no-error.
+/*y0220*/       if available ptp_det then do:
+/*y0220*/          put stream batchdata unformatted '"' ptp_part zz '"' skip.
+/*y0220*/          find first pt_mstr no-lock where pt_domain = global_domain
+/*y0220*/                 and pt_part = ptp_part no-error.
+/*y0220*/          if available pt_mstr then do:
+/*y0220*/             put stream batchdata unformatted '"' pt_desc1 '"' skip.
+/*y0220*/          end.
+/*y0220*/          else do:
+/*y0220*/             put stream batchdata unformatted '-' skip.
+/*y0220*/          end.
+/*y0220*/       end.
+
 /*J002* /*J001*/				if lookup(xxppif_tr_code,"PDSA,PDSC") > 0 then do: */
 /*J001*/						local_par = trim(substring(xxppif_content,67,16)).
 /*J001*/						local_child = trim(substring(xxppif_content,85,16)).
