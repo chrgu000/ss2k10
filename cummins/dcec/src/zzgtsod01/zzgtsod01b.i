@@ -72,7 +72,7 @@ for each wkgtm
       and   wkgtd_status = ""
       by wkgtd_line:
 
-          v_sum = round(((wkgtd_totamt - wkgtd_discamt) / wkgtd_qty),9).
+          v_sum = round(((wkgtd_totamt - wkgtd_discamt) / wkgtd_qty),2).
 
 /*frk* modify rmks from self item code to customer item code*/
           assign vcpcmmt = wkgtd_item.

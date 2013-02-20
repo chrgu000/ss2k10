@@ -101,7 +101,8 @@ for each xxppif_log where xxppif_domain = global_domain
      and lookup(xxppif_tr_code,"SOIA") > 0
      and xxppif_err <> 2
      and substr(xxppif__chr01,1,1) = "1"
-     and substr(xxppif__chr01,4,1) = "0":
+     and substr(xxppif__chr01,4,1) = "0"
+/*zy*/     and substr(xxppif__chr01,7,1) = "0":
      put stream bfp unformat '"' trim(substring(xxppif_content,12,12)) '"' skip.
      put stream bfp unformat '-' skip.
      put stream bfp unformat '- - - - - - - "'
@@ -114,7 +115,7 @@ for each xxppif_log where xxppif_domain = global_domain
         put stream bfc unformat '"' trim(substring(xxppif_content,139,17)) '"' skip.
         put stream bfc unformat '"' trim(substring(xxppif_content,156,50,"RAW")) '"' skip.
      end.
-/* /*zy*/     substr(xxppif__chr01,4,1) = "1".                             */
+/*zy*/     substr(xxppif__chr01,7,1) = "1".  
 end.
 put stream bfp "." skip.
 put stream bfc "." skip.
@@ -407,9 +408,10 @@ for each xxppif_log where xxppif_domain = global_domain
                         date_str = string(day(xxppif__dte01 - 1),"99/") + string(month(xxppif__dte01 - 1),"99/") + substr(string(year(xxppif__dte01 - 1),"9999"),3,2).
                         run fix_date_format(input-output date_str).
                         if trim(substr(xxppif_content,5,1)) = "O" or lookup(xxppif_tr_code,"SOSC,PDSC") = 0 then
-                           put stream batchdata unformatted date_str " ".
+                             put stream batchdata unformatted date_str " ".
                         else put stream batchdata unformatted "- ".
-                        put stream batchdata unformatted xxppif_tr_code skip.
+/* y0220                     put stream batchdata unformatted xxppif_tr_code skip. */
+/* y0220 */                  put stream batchdata unformatted skip. 
                              put stream batchdata unformatted "." skip.
 
 
@@ -448,7 +450,9 @@ for each xxppif_log where xxppif_domain = global_domain
                if trim(substr(xxppif_content,5,1)) = "O" or lookup(xxppif_tr_code,"SOSC,PDSC") = 0 then
                            put stream batchdata unformatted date_str " ".
                else put stream batchdata unformatted "- ".
-               put stream batchdata unformatted xxppif_tr_code skip.
+/* y0220            put stream batchdata unformatted xxppif_tr_code skip. */
+/* y0220 */         put stream batchdata unformatted skip. 
+
                put stream batchdata unformatted "." skip.
 
           end.   /* end for if avail ps_mstr*/
@@ -509,7 +513,8 @@ for each xxppif_log where xxppif_domain = global_domain
           if avail ps_mstr then last_bom_qty = ps_qty_per.
             if avail ps_mstr then do:
               put stream batchdata unformatted (string(day(ps_start),"99/") + STRING(MONTH(ps_start),"99/") + SUBSTR(STRING(YEAR(ps_start),"9999"),3,2)) " " .
-              put stream batchdata unformatted date_str " " xxppif_tr_code .
+/* y0220      put stream batchdata unformatted date_str " " xxppif_tr_code . */
+/* y0220 */   put stream batchdata unformatted date_str " - ".
             end.
             else do:
               xxppif_err = 2.
@@ -548,7 +553,7 @@ for each xxppif_log where xxppif_domain = global_domain
 /*W002*/              END.
 
 /*W001 end */
-                         put stream batchdata unformatted  " ? " xxppif_tr_code.
+                         put stream batchdata unformatted  " ? - ".
 /*W005*/end. /*else do*/
 
 /*W001 begin*/ /*add the general code PHANTOM OP to define the OP */
@@ -570,8 +575,8 @@ for each xxppif_log where xxppif_domain = global_domain
                                    ELSE DO :
                                           xxppif_err = 2.
                               xxppif_msg = "2054-" + exec_par    .
-/*W005*/                                           PUT STREAM batchdata UNFORMATTED SKIP .
-/*W005*/                                          put stream batchdata unformatted "." .
+/*W005*/                      PUT STREAM batchdata UNFORMATTED SKIP .
+/*W005*/                      put stream batchdata unformatted "." .
                               next.
                                    END.
                               END.
@@ -598,8 +603,8 @@ for each xxppif_log where xxppif_domain = global_domain
 /*J005*/        xxppif_err = 1.
 /*J005*/        xxppif_msg = "2041-" + exec_par. /* ×Ü³É SITE-B */
 /*J005*/      end.
-/*J003*/              end.   /*trim(substr(xxppif_content,5,1)) = "I"  */
-      substr(xxppif__chr01,4,1) = "1".
+/*J003*/   end.   /*trim(substr(xxppif_content,5,1)) = "I"  */
+               substr(xxppif__chr01,4,1) = "1".
 /*J004*/   end. /* new_bom = yes */   /* For SITE-C */
 /*J005*/    for first ptp_det where ptp_domain = global_domain and
                       ptp_site = SITE-B and ptp_part = exec_child no-lock: end.
@@ -786,7 +791,7 @@ end.
 /*W001                        if lookup(xxppif_tr_code,"PDSC,SOSC") > 0 then put stream batchdata unformatted  string(last_bom_qty,"->>9.999") " ".
                         else
 *W001*/
-                        put stream batchdata unformatted  string(xxppif_qty_chg,"->>9.999") " ".
+                        put stream batchdata unformatted  trim(string(xxppif_qty_chg,"->>9.999")) " ".
 /*J005**                put stream batchdata unformatted (if item_pm_code = "P" then "X " else "- ") date_str. */
 /*J005*/  /*W001    put stream batchdata unformatted (if (item_pm_code = "P" or item_phantom = yes) then "X " else "- ") date_str.
            *W001*/
@@ -802,7 +807,8 @@ end.
           if avail ps_mstr then last_bom_qty = ps_qty_per.
             if avail ps_mstr then do:
               put stream batchdata unformatted (string(day(ps_start),"99/") + STRING(MONTH(ps_start),"99/") + SUBSTR(STRING(YEAR(ps_start),"9999"),3,2)) " " .
-              put stream batchdata unformatted date_str " " xxppif_tr_code .
+/* y0220      put stream batchdata unformatted date_str " " xxppif_tr_code . */
+/* y0220 */   put stream batchdata unformatted date_str " - ".
             end.
             else do:
               xxppif_err = 2.
@@ -842,7 +848,7 @@ end.
 
 /*W001 end */
 
-                         put stream batchdata unformatted  " ? " xxppif_tr_code.
+                         put stream batchdata unformatted  " ? - ".
 /*W005 */ end . /*else do:*/
 
 /*W001 begin*/ /*add the general code PHANTOM OP to define the OP */

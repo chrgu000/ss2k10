@@ -318,7 +318,7 @@ W003 */
                 put stream batchdata unformatted "~"" strTmp "~" " skip.
 
                 if xxppif_err = 99 then xxppif_err = 0.
-              substr(xxppif__chr01,2,1) = "1" .
+                substr(xxppif__chr01,2,1) = "1" .
                 substr(xxppif__chr01,3,1) = "1".
 
         end. /*repeat end*/
