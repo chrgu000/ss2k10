@@ -33,7 +33,7 @@ else if xxppif__dte01 <= ps_start then ps_start = xxppif__dte01   */
 /* Last change by Wilber 05/14/2008    indentify the t-code pdsco pdsao sosao sasco          *W009*/
 /* Last change by Wilber 05/21/2008    process when xxppif__chr01 < ps_start and ps_start < today         *W010*/
 /* Last change by Wilber 05/22/2008    delete the 2039 error of pdsao and differ pdsio and pdsco        *W011*/
-session:date-format = 'dmy'.
+   session:date-format = 'dmy'.
    {mfdeclre.i "new global"}
    {mf1.i "new global"}
 
@@ -115,7 +115,7 @@ for each xxppif_log where xxppif_domain = global_domain
         put stream bfc unformat '"' trim(substring(xxppif_content,139,17)) '"' skip.
         put stream bfc unformat '"' trim(substring(xxppif_content,156,50,"RAW")) '"' skip.
      end.
-/*zy*/     substr(xxppif__chr01,7,1) = "1".  
+/*zy*/     substr(xxppif__chr01,7,1) = "1".
 end.
 put stream bfp "." skip.
 put stream bfc "." skip.
@@ -141,7 +141,7 @@ for each xxppif_log where xxppif_domain = global_domain
       exec_par = cummins_par.
       exec_child = cummins_child.
 /*J007*     if lookup(xxppif_tr_code,"PDSA,PDSC") > 0 then do: */
-            local_par = trim(substring(xxppif_content,67,16)).
+      local_par = trim(substring(xxppif_content,67,16)).
       local_child = trim(substring(xxppif_content,85,16)).
       if local_par <> "" then exec_par = local_par.
       if local_child <> "" then exec_child = local_child.
@@ -228,19 +228,17 @@ for each xxppif_log where xxppif_domain = global_domain
 /*J005*/    for first ptp_det where ptp_domain = global_domain and
                 ptp_site = SITE-B and ptp_part = exec_child no-lock: end.
 /*J005*/      if not avail ptp_det then do:
-          xxppif_err = 2.
-          xxppif_msg = "2031-" + exec_child.
-          next.
-/*J005*/            end.
+                 xxppif_err = 2.
+                 xxppif_msg = "2031-" + exec_child.
+                 next.
+/*J005*/      end.
     end.
-
-
           /* CHECK FOR CYCLIC PRODUCT STRUCTURES */
           find first ps_mstr no-lock where ps_domain = global_domain and
                      ps_par = exec_par and ps_comp = exec_child
                     and ps_ref = "" and ps_start = xxppif__dte01 no-error.
-    newBom = no.
-    if not avail ps_mstr then do:
+          newBom = no.
+          if not avail ps_mstr then do:
                     find first pt_mstr no-lock where pt_domain = global_domain
                            and pt_part = exec_par no-error.
                     if available pt_mstr then
@@ -297,8 +295,7 @@ for each xxppif_log where xxppif_domain = global_domain
 
 /*J005** Move up
 *           item_type = 0.
-*           find pt_mstr where pt_domain = global_domain and
-                 pt_part = exec_par no-lock no-error.
+*           find pt_mstr where pt_domain = global_domain and pt_part = exec_par no-lock no-error.
 *           if (pt_group begins "58" and item_pm_code = "M" and item_phantom = no) then item_type = 1.    /*1.发动机总成*/
 *           if (lookup(pt_group,"M") > 0 and item_pm_code = "M" and item_phantom = no) then item_type = 2.    /*2.八大件(自制件)*/
 *           if (lookup(pt_group,"O") > 0 and item_pm_code = "M" and item_phantom = yes) then item_type = 3.    /*3.组号*/
@@ -357,8 +354,8 @@ for each xxppif_log where xxppif_domain = global_domain
                          (ps_end = ? or ps_end >= xxppif__dte01) no-lock no-error.
 /*J008*/        if not avail ps_mstr or ps_qty_per = 0 then do:
 /*J008*/            xxppif_err = 2.
-/*J008*/                            xxppif_msg = "2026-" + exec_par.
-/*J008*/                            next.
+/*J008*/            xxppif_msg = "2026-" + exec_par.
+/*J008*/            next.
 /*J008*/        end.
 /*J009*/        else last_bom_qty = ps_qty_per.
 /*J008*/      end.  /*lookup(xxppif_tr_code,"PDSC,SOSC") > 0 */
@@ -368,7 +365,7 @@ for each xxppif_log where xxppif_domain = global_domain
 /*W006*/            if lookup(xxppif_tr_code,"PDSC,SOSC,PDSA,SOSA") = 0
 /*J006*//*W002      or trim(substr(xxppif_content,5,1)) = "O"    */
 /*W002*//*W009                or ((lookup(xxppif_tr_code,"PDSA,SOSA") > 0 ) AND trim(substr(xxppif_content,5,1)) = "O") */
-    /*W009*/         or trim(substr(xxppif_content,5,1)) = "O"
+    /*W009*/         or trim(substr(xxppif_content,5,1)) = "O" /*第5位为O=取消结构*/
         then do:
                    /*1.1 不存在本父,存在本子*/
                         if local_par = "" and local_child <> "" then do:
@@ -408,13 +405,11 @@ for each xxppif_log where xxppif_domain = global_domain
                         date_str = string(day(xxppif__dte01 - 1),"99/") + string(month(xxppif__dte01 - 1),"99/") + substr(string(year(xxppif__dte01 - 1),"9999"),3,2).
                         run fix_date_format(input-output date_str).
                         if trim(substr(xxppif_content,5,1)) = "O" or lookup(xxppif_tr_code,"SOSC,PDSC") = 0 then
-                             put stream batchdata unformatted date_str " ".
-                        else put stream batchdata unformatted "- ".
+                                 put stream batchdata unformatted date_str " ".
+                            else put stream batchdata unformatted "- ".
 /* y0220                     put stream batchdata unformatted xxppif_tr_code skip. */
-/* y0220 */                  put stream batchdata unformatted skip. 
+/* y0220 */                  put stream batchdata unformatted skip.
                              put stream batchdata unformatted "." skip.
-
-
                            end. /*end for item_type = 3*/
                         end. /* local_par = ""*/
                       end.  /*1.1*/
@@ -441,9 +436,7 @@ for each xxppif_log where xxppif_domain = global_domain
             date_str = string(day(xxppif__dte01),"99/") + string(month(xxppif__dte01),"99/") + substr(string(year(xxppif__dte01),"9999"),3,2).
 
         end.
-
-
-                        put stream batchdata unformatted  "- - " date_str " ".
+               put stream batchdata unformatted  "- - " date_str " ".
 
                date_str = string(day(xxppif__dte01 - 1),"99/") + string(month(xxppif__dte01 - 1),"99/") + substr(string(year(xxppif__dte01 - 1),"9999"),3,2).
                run fix_date_format(input-output date_str).
@@ -451,16 +444,16 @@ for each xxppif_log where xxppif_domain = global_domain
                            put stream batchdata unformatted date_str " ".
                else put stream batchdata unformatted "- ".
 /* y0220            put stream batchdata unformatted xxppif_tr_code skip. */
-/* y0220 */         put stream batchdata unformatted skip. 
+/* y0220 */         put stream batchdata unformatted skip.
 
                put stream batchdata unformatted "." skip.
 
           end.   /* end for if avail ps_mstr*/
 
-/*J003*/   /*W011       else if trim(substr(xxppif_content,5,1)) = "O" then do:
-/*J003*/         xxppif_err = 2.
-/*J003*/         xxppif_msg = "2039-" + exec_par.
-/*J003*/        end.   */
+/* /*J003*/   /*W011       else if trim(substr(xxppif_content,5,1)) = "O" then do: */
+/* /*J003*/         xxppif_err = 2.                                                */
+/* /*J003*/         xxppif_msg = "2039-" + exec_par.                               */
+/* /*J003*/        end.   */                                                       */
 
         end. /*if lookup(xxppif_tr_code,"PDSC,SOSC") = 0 then do:*/
                   /*end.*/ /*not avail code_mstr or code_cmmt = site-c */
@@ -496,7 +489,7 @@ for each xxppif_log where xxppif_domain = global_domain
 /*J009*/ /* W001               if lookup(xxppif_tr_code,"PDSC,SOSC") > 0 then put stream batchdata unformatted string(last_bom_qty,"->>9.999") " ".
                          else
           W001 */
-                           put stream batchdata unformatted  string(xxppif_qty_chg,"->>9.999") " ".
+                           put stream batchdata unformatted  trim(string(xxppif_qty_chg,"->>>>9.999")) " ".
 /*J005**                 put stream batchdata unformatted (if item_pm_code = "P" then "X " else "- ") date_str.  */
 
 /*J005*/  /*W001       put stream batchdata unformatted (if item_pm_code = "P" or item_phantom = yes then "X " else "- ") date_str.
@@ -517,11 +510,11 @@ for each xxppif_log where xxppif_domain = global_domain
 /* y0220 */   put stream batchdata unformatted date_str " - ".
             end.
             else do:
-              xxppif_err = 2.
-                        xxppif_msg = "2055-" + exec_par. /*没有存在的生效日期，不能设置截至日期*/
-                        put stream batchdata unformatted SKIP.
-                            put stream batchdata unformatted "." .
-                            next.
+                 xxppif_err = 2.
+                 xxppif_msg = "2055-" + exec_par. /*没有存在的生效日期，不能设置截至日期*/
+                 put stream batchdata unformatted SKIP.
+                 put stream batchdata unformatted "." .
+                 next.
 
             end.
         end. /*lookup(xxppif_tr_code,"PDSC,SOSC") > 0 and trim(substr(xxppif_content,5,1)) = "0" */
@@ -562,6 +555,7 @@ for each xxppif_log where xxppif_domain = global_domain
                    put stream batchdata UNFORMATTED  " - " . /*废品率*/
 /*W002*                          find ptp_det where ptp_domain = global_domain and ptp_part = cummins_child AND ptp_site = SITE-B no-lock no-error.   */
 /*W002*/                  find ptp_det where ptp_domain = global_domain and
+                               ptp_site = "dcec-c" and
                                ptp_part = cummins_child  no-lock no-error.
                           IF AVAIL ptp_det THEN DO:
                               IF  ptp_phantom THEN DO:
@@ -573,11 +567,11 @@ for each xxppif_log where xxppif_domain = global_domain
                                        PUT STREAM batchdata UNFORMATTED SKIP .
                                    END.
                                    ELSE DO :
-                                          xxppif_err = 2.
-                              xxppif_msg = "2054-" + exec_par    .
-/*W005*/                      PUT STREAM batchdata UNFORMATTED SKIP .
-/*W005*/                      put stream batchdata unformatted "." .
-                              next.
+                                        xxppif_err = 2.
+                                        xxppif_msg = "2054-" + exec_par    .
+/*W005*/                                PUT STREAM batchdata UNFORMATTED SKIP .
+/*W005*/                                put stream batchdata unformatted "." .
+                                        next.
                                    END.
                               END.
                               ELSE DO:
@@ -589,14 +583,13 @@ for each xxppif_log where xxppif_domain = global_domain
                           END.
  /*W001 END*/
    /*W001                  put stream batchdata unformatted skip.    */
-                         put stream batchdata unformatted "." skip.
-/*W007*/                        END. /*if avial ps_mstr */
-/*W007*/                                ELSE DO :
-/*W007*/                                     xxppif_err = 2.
-/*W007*/                         xxppif_msg = "2039-" + exec_par.
- /*W007*/                        next.
-
-   /*W007*/                             END.
+                           put stream batchdata unformatted "." skip.
+/*W007*/               END. /*if avial ps_mstr */
+/*W007*/            ELSE DO :
+/*W007*/                 xxppif_err = 2.
+/*W007*/                 xxppif_msg = "2039-" + exec_par.
+/*W007*/                 next.
+/*W007*/            END.
 /*W001*/ /*W002 move up              END . /*if avial ps_mstr */    */
 /*J005*/      end.
 /*J005*/      else do:
@@ -607,15 +600,13 @@ for each xxppif_log where xxppif_domain = global_domain
                substr(xxppif__chr01,4,1) = "1".
 /*J004*/   end. /* new_bom = yes */   /* For SITE-C */
 /*J005*/    for first ptp_det where ptp_domain = global_domain and
-                      ptp_site = SITE-B and ptp_part = exec_child no-lock: end.
+                      ptp_site = SITE-C and ptp_part = exec_child no-lock: end.
 /*J005*/    if avail ptp_det then item_phantom = ptp_phantom.
 /*J005*/    else do:
 /*J005*/        for first pt_mstr where pt_domain = global_domain and
                           pt_part = exec_child no-lock: end.
 /*J005*/        if avail pt_mstr then item_phantom = pt_phantom.
 /*J005*/    end.
-
-
 
             if item_type = 6 /* 虚件 PH*/
                or item_type =  3  /*组件 O */
@@ -645,8 +636,8 @@ for each xxppif_log where xxppif_domain = global_domain
 /*J004*/       new_bom = yes.
 /*J004*/       find last ps_mstr where ps_domain = global_domain and ps_par = exec_par and ps_comp = exec_child and (ps_end = ? or ps_end >= xxppif__dte01) no-lock no-error.
 /*J004*/       if avail ps_mstr
-/*J006*/                  and trim(substr(xxppif_content,5,1)) <> "O"
-                          and lookup(xxppif_tr_code,"PDSC,SOSC") = 0
+/*J006*/            and trim(substr(xxppif_content,5,1)) <> "O"
+                    and lookup(xxppif_tr_code,"PDSC,SOSC") = 0
 /*J004*/          then do: /*判断结构是否存在,若存在,显示提示信息**/
 /*J004*//*W002          xxppif_err = 3. */
 /*J004*/          /*xxppif_msg = "3004-" + exec_par.
@@ -681,8 +672,6 @@ for each xxppif_log where xxppif_domain = global_domain
                                 next.
                             end.
                         newBom = yes.
-
-
                         create ps_mstr.
                         assign
                              ps_par = exec_par
@@ -732,7 +721,7 @@ end.
                           xxppif_msg = "2035-" + exec_par.
                           next.
                         end.
- */             date_str = string(day(ps_start),"99/") + string(month(ps_start),"99/") + substr(string(year(ps_start),"9999"),3,2).
+ */            date_str = string(day(ps_start),"99/") + string(month(ps_start),"99/") + substr(string(year(ps_start),"9999"),3,2).
                         run fix_date_format(input-output date_str).
 /*                      put stream batchdata unformatted  "~"" SITE-B "~"" skip.   */
                         put stream batchdata unformatted  "~"" ps_par "~"" skip.
@@ -796,7 +785,7 @@ end.
 /*J005*/  /*W001    put stream batchdata unformatted (if (item_pm_code = "P" or item_phantom = yes) then "X " else "- ") date_str.
            *W001*/
 
-/*W001*/                  put stream batchdata unformatted (if (item_pm_code = "P" or item_phantom = yes) then "X " else "- ") .
+/*W001*/                  put stream batchdata unformatted (if (item_pm_code = "P" or item_phantom = yes) then "X " else " - ") .
 
 /*W001 begin*/
                               date_str = string(day(xxppif__dte01),"99/") + string(month(xxppif__dte01),"99/") + substr(string(year(xxppif__dte01),"9999"),3,2).
@@ -811,12 +800,11 @@ end.
 /* y0220 */   put stream batchdata unformatted date_str " - ".
             end.
             else do:
-              xxppif_err = 2.
-                        xxppif_msg = "2055-" + exec_par. /*??óD′??úμ?éúD§è??ú￡?2??üéè?????áè??ú*/
-                        put stream batchdata unformatted SKIP .
-                            put stream batchdata unformatted "." .
-                            next.
-
+                 xxppif_err = 2.
+                 xxppif_msg = "2055-" + exec_par. /*??óD′??úμ?éúD§è??ú￡?2??üéè?????áè??ú*/
+                 put stream batchdata unformatted SKIP .
+                 put stream batchdata unformatted "." .
+                 next.
             end.
         end. /*lookup(xxppif_tr_code,"PDSC,SOSC") > 0 and trim(substr(xxppif_content,5,1)) = "0" */
 /*W005 end*/
@@ -837,17 +825,13 @@ end.
 /*W003*/  /*W006*//*                    ELSE IF ps_start >= TODAY  THEN DO:  */
           /*W006*/            ELSE IF ps_start >= TODAY OR ps_start = xxppif__dte01  THEN DO:
                                   /*if start >= 数据中生效日期*/
-                                  put stream batchdata unformatted   date_str .
-
-                               END.
+                                  put stream batchdata unformatted date_str .
+                              END.
                       END.
 /*W002*/              ELSE DO:
-
-/*W002*/                     put stream batchdata unformatted   date_str .
+/*W002*/                     put stream batchdata unformatted date_str .
 /*W002*/              END.
-
 /*W001 end */
-
                          put stream batchdata unformatted  " ? - ".
 /*W005 */ end . /*else do:*/
 
@@ -855,7 +839,9 @@ end.
                           /*put stream batchdata unformatted "- " skip. */
                            put stream batchdata UNFORMATTED  " - - " .
 /*W002*                          find ptp_det where ptp_domain = global_domain and ptp_part = cummins_child AND ptp_site = SITE-B no-lock no-error.   */
-/*W002*/                  find ptp_det where ptp_domain = global_domain and ptp_part = cummins_child  no-lock no-error.
+/*W002*/                  find ptp_det where ptp_domain = global_domain and
+                               ptp_site = "DCEC-C" and
+                               ptp_part = cummins_child  no-lock no-error.
                           IF AVAIL ptp_det THEN DO:
                               IF  ptp_phantom THEN DO:
                                   FIND CODE_mstr WHERE code_domain = global_domain and code_fldname = "PHANTOM OP" AND code_value = "DCEC B" NO-LOCK NO-ERROR .
@@ -864,12 +850,11 @@ end.
                                        PUT STREAM batchdata UNFORMATTED SKIP .
                                    END.
                                    ELSE DO :
-                                          xxppif_err = 2.
-                              xxppif_msg = "2054-" + exec_par.
-/*W005*/                                           PUT STREAM batchdata UNFORMATTED SKIP .
-/*W005*/                                          put stream batchdata unformatted "." .
-
-                              next.
+                                        xxppif_err = 2.
+                                        xxppif_msg = "2054-" + exec_par.
+/*W005*/                                PUT STREAM batchdata UNFORMATTED SKIP .
+/*W005*/                                put stream batchdata unformatted "." .
+                                        next.
                                    END.
                               END.
                               ELSE DO:
@@ -879,18 +864,15 @@ end.
                           ELSE DO:
                               PUT STREAM batchdata UNFORMATTED SKIP .
                           END.
- /*W001 END*/
-
-
- /*W001                 put stream batchdata unformatted skip.   */
+/*W001 END*/
+/*W001                 put stream batchdata unformatted skip.   */
                         put stream batchdata unformatted "." skip.
- /*W007*/  /*W010*/                      END. /*if avial ps_mstr */  /*if not avail*/
-/*W007*/                                ELSE DO :
-/*W007*/                                     xxppif_err = 2.
-/*W007*/                         xxppif_msg = "2039-" + exec_par.
- /*W007*/                        next.
-
-   /*W007*/                             END.
+/*W007*/  /*W010*/    END. /*if avial ps_mstr */  /*if not avail*/
+/*W007*/              ELSE DO :
+/*W007*/                   xxppif_err = 2.
+/*W007*/                   xxppif_msg = "2039-" + exec_par.
+/*W007*/                   next.
+/*W007*/              END.
 
 /*W001*/ /*W002 move up                      END . /*if avial ps_mstr */   */
 
@@ -901,8 +883,8 @@ end.
 /*W004*/   /* end. /*虚零件*/    */
 /*W004*/    END . /*item_type <> 0*/
 
-                if xxppif_err = 99 then xxppif_err = 0.
-    /*zy*/           substr(xxppif__chr01,4,1) = "2". 
+            if xxppif_err = 99 then xxppif_err = 0.
+/*zy*/      substr(xxppif__chr01,4,1) = "2".
 
 
 /*W001 begin*/
@@ -916,7 +898,7 @@ end.
         END . /*end of for each xxppif_log */
  /*W001 end */
         put stream batchdata unformatted  "." at 1.
-        output stream batchdata  close.
+        output stream batchdata close.
 
         /*INPUT CLOSE. */
         output to value(stroutputfile) .
