@@ -16,7 +16,7 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
             PUT UNFORMAT '"' tso_cust '"' SKIP.
             PUT UNFORMAT '"' tso_bill '"' SKIP.
             PUT UNFORMAT '"' tso_ship '"' SKIP.
-            PUT UNFORMAT '"' tso_ord_date '" - - - - - '.
+            PUT UNFORMAT tso_ord_date ' - - - - - '.
             if tso_rmks = "-" then PUT UNFORMAT '- '.
                               else PUT UNFORMAT '"' tso_rmks '" ' .
             PUT UNFORMAT '- - "' tso_site '" "' tso_channel '" - '.

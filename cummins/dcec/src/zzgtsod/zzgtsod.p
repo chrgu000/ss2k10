@@ -1,7 +1,7 @@
 /* zzgtsod.p - dump soinvoice into a ascii file                           */
 /*                                                                        */
 /* VERSION  LAST MODIFIED    2004-08-30 11:07     *LB01*  LONG BO         */
-
+/* ss - 130219.1 by: jack */
 define stream   soivdat.
 
 define new shared variable v_curr    like so_curr .
@@ -47,7 +47,10 @@ define variable adname like ad_name.
 find first gl_ctrl no-lock no-error.
 
 /* DISPLAY TITLE */
+/*
 {mfdtitle.i "zz "}
+*/
+{mfdtitle.i "130219.1 "}
 
 v_dt = today.
 

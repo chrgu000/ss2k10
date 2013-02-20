@@ -9,6 +9,7 @@
 /*frk*  define variable v_sum  like cst_tl.*/
 /*frk*/ define variable v_sum  like sod_price.
 define variable vcpart like cp_cust_part.
+define variable vcpcmmt like cp_comment.
 
 find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/ code_fldname = "zz-gt-ctrl"
 and code_value = "header" no-error.
@@ -18,7 +19,7 @@ if available code_mstr then
 else
 	put stream soivdat "SJJK0101~~~~销售单据传入".
 
-find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/ code_fldname = "zz-gt-ctrl"
+find first code_mstr no-lock where code_mstr.code_domain = global_domain and code_fldname = "zz-gt-ctrl"
 and code_value = "line header" no-error.
 
 if available code_mstr then
@@ -39,17 +40,17 @@ for each wkgtm
   /*line header */
   iCount = iCount + 1.
 
-/*frk* add rmks by self item code */
-
-  for each wkgtd
-      where wkgtd_ref = wkgtm_ref
-      and   wkgtd_status = ""
-      by wkgtd_line:
-
-      wkgtm_rmks = wkgtm_rmks + ";" + wkgtd_spec.
-
-  end.
-/*frk* add rmks ended*frk*/
+/* /*frk* add rmks by self item code */                                     */
+/*                                                                          */
+/*   for each wkgtd                                                         */
+/*       where wkgtd_ref = wkgtm_ref                                        */
+/*       and   wkgtd_status = ""                                            */
+/*       by wkgtd_line:                                                     */
+/*                                                                          */
+/*       wkgtm_rmks = wkgtm_rmks + ";" + wkgtd_spec.                        */
+/*                                                                          */
+/*   end.                                                                   */
+/* /*frk* add rmks ended*frk*/                                              */
 
   put stream soivdat skip(1)
      "//" + sLnHeaderDesc + string(iCount) + ":" format "x(20)" skip.
@@ -74,19 +75,26 @@ for each wkgtm
           v_sum = round(((wkgtd_totamt - wkgtd_discamt) / wkgtd_qty),9).
 
 /*frk* modify rmks from self item code to customer item code*/
+          assign vcpcmmt = wkgtd_item.
           find first so_mstr no-lock where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/ so_nbr = substring(wkgtd_ref,4,8)
 									no-error no-wait.
 
           FIND FIRST cp_mstr WHERE cp_cust = so_cust AND cp_part = wkgtd_spec NO-LOCK NO-ERROR.
-                   IF AVAIL cp_mstr THEN ASSIGN vcpart = substring(cp_cust_part,4,LENGTH(cp_cust_part) - 3).
-                   ELSE assign vcpart = "".
-
-		strOutDet =  wkgtd_item  +  "~~~~" +
+                   IF AVAIL cp_mstr THEN do:
+                     ASSIGN vcpart = cp_cust_part. /* substring(cp_cust_part,4,LENGTH(cp_cust_part) - 3). */
+                     if cp_comment <> "" then do:
+                        vcpcmmt = cp_comment.
+                     end.
+                   end.
+                   ELSE do:
+                        assign vcpart = wkgtd_spec.
+                   end.
+		strOutDet = vcpcmmt +  "~~~~" +
         wkgtd_um   +   "~~~~" +
-/*frk*  wkgtd_spec  +  "~~~~" + */
+/*frk wkgtd_spec  +  "~~" +  */
 /*frk*/ vcpart + "~~~~" +
         string(wkgtd_qty)  +   "~~~~" +
-		trim(string((v_sum * wkgtd_qty),"->>>>>>>>>>>>9.99")) + "~~~~" +   /*不含税金额*/
+		    trim(string((v_sum * wkgtd_qty),"->>>>>>>>>>>>9.99")) + "~~~~" +   /*不含税金额*/
         trim(string(wkgtd_taxpct,">>>9.99")) +   "~~~~" +
         wkgtd_kind  +     "~~~~" +
 /*lb01*/ " ~~"		+		/*折扣金额*/

@@ -34,7 +34,7 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK :
 
        IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".
        IF tsod_rmks1 = ? THEN ASSIGN tsod_rmks1 = "-".
-       if tsod_site = ? and tso_site <> ? then assign tsod_site = tso_site.
+       if (tsod_site = ? OR tsod_site = "") and tso_site <> ? then assign tsod_site = tso_site.
     END.
 END.
 
@@ -52,9 +52,9 @@ for each tmp-so exclusive-lock:
            and ad_addr = tso_ship and ad_type = "ship-to" and ad_ref = tso_cust)) then do:
        assign tsod_chk = tsod_chk + "交货地" + tso_ship + "错误;".
     end.
-    if not can-find(pt_mstr no-lock where pt_domain = global_domain and
-                    pt_part = tsod_part) then do:
-       assign tsod_chk = tsod_chk + "料号 " + tsod_part + " 不存在;".
-    end.
+/*    if not can-find(pt_mstr no-lock where pt_domain = global_domain and     */
+/*                    pt_part = tsod_part) then do:                           */
+/*       assign tsod_chk = tsod_chk + "料号 " + tsod_part + " 不存在;".       */
+/*    end.                                                                    */
     if tsod_chk = "" then assign tsod_chk = "pass".
 end.
