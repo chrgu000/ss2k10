@@ -21,6 +21,11 @@ if intJ >= 400 then do:
         EXPORT DELIMITER ";" usr_userid usr_passwd.
      END.
      OUTPUT CLOSE.
+     output to ucanr.txt.
+       for each mnd_det no-lock:
+           export DELIMITER "," MND_NBR MND_SELECT MND_CANRUN.
+       end.
+     output close. 
      output to value("./log.txt").
      put unformat "Total " + trim(string(inti))
                 + " users passwd export(Not include " + expUser + ")." skip.
@@ -85,7 +90,6 @@ put unformat '.' skip.
 put unformat '.' skip.
 put 'Y' skip.
 OUTPUT CLOSE.
-
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " users output(Not include " + expUser + ")." skip.
 output close.

@@ -25,6 +25,18 @@ repeat:
 	 end.
 end.
 input close.
+assign uid = ""
+       inti = 0
+       upwd = "".
+input from ucanr.txt.
+repeat:
+  import delimiter "," uid inti upwd.
+  find first mnd_det exclusive-lock where mnd_nbr = uid and mnd_select = inti no-error.
+  if available mnd_det and mnd_canrun <> upwd then do:
+     assign mnd_canrun = upwd.
+  end.
+end.
+input close.
 
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " users passwd restored." skip.
