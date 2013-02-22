@@ -297,7 +297,7 @@ put stream chklog unformat "Start Progress " + list.filename + ":" + string(time
         /*verify the produce line*/
 /*G2JT*/    find first lnd_det
 /*G2JT*/    where lnd_domain = global_domain
-						and   lnd_line = xxwk.line
+            and   lnd_line = xxwk.line
 /*G2JT*/    and   lnd_site = xxwk.site
 /*G2JT*/    and   lnd_part = xxwk.par
 /*G2JT*/    and   (lnd_start <= today or lnd_start = ?)
@@ -659,7 +659,14 @@ put stream chklog unformat "Start Progress " + list.filename + ":" + string(time
     put stream bkflh "." at 1.
     put stream bkflh "." at 1 skip.
     output stream bkflh close.
+if ok_yn = no then do:
+   put stream chklog unformat "check error found" skip.
+   next.
+end.
     put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
+
+cimrunprogramloop:
+do on stop undo cimrunprogramloop,leave cimrunprogramloop:
     assign trrecid = current-value(tr_sq01).
     input from value(bkflh_file).
     output to value(bkflh_filecim + ".out") append.
@@ -668,7 +675,7 @@ put stream chklog unformat "Start Progress " + list.filename + ":" + string(time
     batchrun = no.
     output close.
     input close.
-    put stream chklog unformat "CIM_LOAD 完成,检查CIM结果:" string(time,"HH:MM:SS") skip.
+/*    put stream chklog unformat "CIM_LOAD 完成,检查CIM结果:" string(time,"HH:MM:SS") skip. */
     /* check cim_load status! */
     assign cim_yn = yes.
     find first tr_hist no-lock where tr_domain = global_domain and
@@ -693,8 +700,12 @@ put stream chklog unformat "Start Progress " + list.filename + ":" + string(time
             assign  cim_yn = no.
         end.
     end.
+    if cim_yn = no then do:
+       undo cimrunprogramloop, leave.
+    end.
+end.    /* cimrunprogramloop */
     put stream chklog unformat list.filename " 处理完成! " string(time,"HH:MM:SS") skip.
-    if ok_yn = no then do:
+    if ok_yn = no or cim_yn = no then do:
          Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir + "CHK_" + list.filename).
     end.
     else do:
