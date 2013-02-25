@@ -1156,7 +1156,6 @@ kevin*/
 /*F003         GLCOST                                                        */
 /*F190         ASSAY, GRADE, EXPIRE                                          */
 /*F0FH         added eff_date                                                */
-
 /*F003*/       {gprun.i ""icxfer.p"" "("""",
                        lotserial,
                        lotref_from,
@@ -1172,18 +1171,18 @@ kevin*/
                        site_to,
                        loc_to,
                        no,
-/*judy 05/08/09*/    """",
-/*judy 05/08/09*/    """",
- /*judy 05/08/09*/   """",
-  /*judy 05/08/09*/   0,
+/*judy 05/08/09*/      """",
+/*judy 05/08/09*/      """",
+/*judy 05/08/09*/      """",
+/*judy 05/08/09*/      0,
+                       """",
                        output glcost,
-/*judy 05/08/09*/   output iss_trnbr,
-/*judy 05/08/09*/   output rct_trnbr,
+/*judy 05/08/09*/      output iss_trnbr,
+/*judy 05/08/09*/      output rct_trnbr,
                        input-output assay,
                        input-output grade,
                        input-output expire)"
             }
-
 
 /*GUI*/ if global-beam-me-up then undo, leave.
 
