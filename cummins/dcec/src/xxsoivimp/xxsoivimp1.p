@@ -44,6 +44,10 @@ for each tmp-so exclusive-lock:
     if length(tso_nbr) > 8 then do:
        assign tsod_chk = "订单号长度大于8位限制;".
     end.
+    find first so_mstr no-lock where so_domain = global_domain and so_nbr = tso_nbr no-error.
+    if available so_mstr then do:
+       assign tsod_chk = tsod_chk + "订单" + tso_nbr + "已存在;".
+    end.
     if not can-find(first cm_mstr no-lock where cm_domain = global_domain
     			 and cm_addr = tso_cust) then do:
     	assign tsod_chk = tsod_chk + "客户" + tso_cust + "不存在;".
