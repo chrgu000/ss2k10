@@ -23,15 +23,17 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK:
                  ASSIGN vcurr = en_curr.
              END.
        END.
-       if tso_ord_date = "" or tso_ord_date = ? then assign tso_ord_date = today.
+       if /* tso_ord_date = "" or */ tso_ord_date = ? then assign tso_ord_date = today.
        IF tso_rmks = ? THEN ASSIGN tso_rmks = "-".
-       IF tsod_acct = ? THEN do:
+       IF tsod_acct = ? or tsod_acct = "" THEN do:
          ASSIGN tsod_acct = "-".
        END.
        IF index(tsod_acct,".") > 0 THEN DO:
            ASSIGN tsod_acct = substring(tsod_acct,1,index(tsod_acct,".") - 1).
        END.
        IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".
+       IF tsod_cc = ? THEN ASSIGN tsod_sub = "-".
+       IF tsod_project = ? THEN ASSIGN tsod_sub = "-".
        IF tsod_rmks1 = ? THEN ASSIGN tsod_rmks1 = "-".
        if (tsod_site = ? OR tsod_site = "") and tso_site <> ? then assign tsod_site = tso_site.
     END.

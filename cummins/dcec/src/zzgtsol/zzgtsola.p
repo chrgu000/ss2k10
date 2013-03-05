@@ -3,14 +3,14 @@
 /* VERSION:          DATE:2000.04.17  BY:James Zou*ORIGIN SHA*BW0000       */
 
 
-/*cal order inv total amt*/ 
+/*cal order inv total amt*/
 
 /*define input parameter  v_inv_nbr  as character.*/
 /*20001024* define output parameter v_mfgamt   as decimal. */
 define input parameter  v_so_nbr   as character.
-/*20001024*/ define output parameter v_mfgtotamt   like glt_amt. 
-/*20001024*/ define output parameter v_mfgtaxamt   like glt_amt . 
-/*20001024*/ define output parameter v_mfgnetamt    like glt_amt. 
+/*20001024*/ define output parameter v_mfgtotamt   like glt_amt.
+/*20001024*/ define output parameter v_mfgtaxamt   like glt_amt .
+/*20001024*/ define output parameter v_mfgnetamt    like glt_amt.
 
 {zzgtsotot.i}
 

@@ -1,5 +1,5 @@
 /*V8:ConvertMode=Report                                                       */
-
+/* jordan 21030227.1 增加单价 */
 define {1} shared variable file_name as character format "x(50)".
 define {1} shared variable vcurr like so_curr.
 DEFINE {1} shared TEMP-TABLE tmp-so
@@ -27,6 +27,8 @@ DEFINE {1} shared TEMP-TABLE tmp-so
 /*  FIELDS tsod_due_date LIKE sod_due_date          */
 /*  FIELDS tsod_type    LIKE sod_type initial "M"   */
     FIELDS tsod_rmks1    LIKE so_rmks
+    FIELDS tsod_pr   like sod_list_pr
+    FIELDS tsod_inv_nbr   like so_inv_nbr
     FIELDS tsod_chk      AS   CHARACTER FORMAT "x(40)"
     INDEX tso_nbr IS PRIMARY tso_nbr tsod_line
     .

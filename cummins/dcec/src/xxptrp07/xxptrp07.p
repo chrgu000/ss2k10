@@ -674,11 +674,14 @@ define buffer trhist for tr_hist.
             find first x_ret exclusive-lock where xr_part = ld_part no-error.
             if not available x_ret then do:
             	 create x_ret.
-            	 assign xr_part = ld_part
-            	 				xr_desc1 = pt_desc1
-            	 				xr_prodline = pt_prod_line
-            	 				xr_cst = std_as_of.
+            	 assign xr_part = ld_part.
             end.
+            find first t_sct no-lock where t_sct_part = xr_part.
+            if available t_sct then do:
+        	 		 assign	xr_desc1 = t_sct_desc1
+        	 				    xr_prodline = pt_prod_line
+        	 				    xr_cst = t_sct_std_as_of.
+        	 	end.
             assign xr_qty_oh = xr_qty_oh + ld_qty_oh.
 						run getidx(input ld_date,output inti).
 						assign xr_qty[inti] = xr_qty[inti] + ld_qty_oh.

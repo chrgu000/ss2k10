@@ -172,32 +172,32 @@ define variable disc_pct like so_disc_pct.
 /*G712*/ {gpvtepdf.i &var=" "}
 
 
-				maint = no.
-			
-				old_sod_nbr = ?.
+        maint = no.
+
+        old_sod_nbr = ?.
 
 
-/*G047*/    	{soivtot2.i}  /* Initialize variables for invoice totals. */
+/*G047*/      {soivtot2.i}  /* Initialize variables for invoice totals. */
 
-				find first so_mstr no-lock where so_mstr.so_domain = global_domain and so_nbr = v_so_nbr no-error.
-				if not available so_mstr then return.
-				find first gl_ctrl no-lock where gl_ctrl.gl_domain = global_domain .				
+        find first so_mstr no-lock where so_mstr.so_domain = global_domain and so_nbr = v_so_nbr no-error.
+        if not available so_mstr then return.
+        find first gl_ctrl no-lock where gl_ctrl.gl_domain = global_domain .
 /*J0ZZ*/       {gpcurmth.i
-				"so_curr"
-				"4"
-				"old_sod_nbr = ?"
-				"old_sod_nbr = ?" }
+        "so_curr"
+        "4"
+        "old_sod_nbr = ?"
+        "old_sod_nbr = ?" }
 
-		
+
 /*H197*/       so_recno = recid(so_mstr).
 
-							
-				if gl_vat or gl_can then find first vtc_ctrl no-lock .
-				find first soc_ctrl no-lock where soc_ctrl.soc_domain = global_domain.
-				
-				find so_mstr where recid(so_mstr) = so_recno no-lock.
-				
-				/* Calculate totals and taxes for trailer */
-				if so_tax_date = ? then tax_date = so_ship_date.
-				else tax_date = so_tax_date.
-				{mfsotrl.i &qty="sod_qty_inv" &vatdate="tax_date"}
+
+        if gl_vat or gl_can then find first vtc_ctrl no-lock .
+        find first soc_ctrl no-lock where soc_ctrl.soc_domain = global_domain.
+
+        find so_mstr where recid(so_mstr) = so_recno no-lock.
+
+        /* Calculate totals and taxes for trailer */
+        if so_tax_date = ? then tax_date = so_ship_date.
+        else tax_date = so_tax_date.
+        {mfsotrl.i &qty="sod_qty_inv" &vatdate="tax_date"}

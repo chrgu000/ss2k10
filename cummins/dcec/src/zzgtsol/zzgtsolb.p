@@ -27,12 +27,12 @@
           post = yes.
 
 
-       
+
 	/*GUI preprocessor Frame A define */
 	&SCOPED-DEFINE PP_FRAME_NAME A
-	
-	FORM /*GUI*/ 
-	             
+
+	FORM /*GUI*/
+
 	 RECT-FRAME       AT ROW 1.4 COLUMN 1.25
 	 RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
 	 SKIP(.1)  /*GUI*/
@@ -48,7 +48,7 @@
 	/*H0F0*   with frame a side-labels.       */
 	/*H0F0*/   SKIP(.4)  /*GUI*/
 	with frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
-	
+
 	 DEFINE VARIABLE F-a-title AS CHARACTER.
 	 F-a-title = " Ñ¡ÔñÌõ¼þ ".
 	 RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -58,11 +58,11 @@
 	 RECT-FRAME:HEIGHT-PIXELS in frame a =
 	  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
 	 RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
-	
+
 	/*GUI preprocessor Frame A undefine */
 	&UNDEFINE PP_FRAME_NAME
-	
- 	
+
+
 
           do transaction:
 
@@ -71,7 +71,7 @@
 /*G585*/     fsunit = false.
 
 
-             find first svc_ctrl where svc_ctrl.svc_domain = global_domain no-lock no-error.
+     find first svc_ctrl where svc_ctrl.svc_domain = global_domain no-lock no-error.
              /* SVC_WARR_SVCODE IS THE WARRANTY SERVICE TYPE FOR RMA'S, */
              /* NOT A DEFAULT WARRANTY TYPE.                            */
 
@@ -123,12 +123,12 @@
 				             if inv1 = hi_char then inv1 = "".
 				/*G047*/     if cust1 = hi_char then cust1 = "".
 				/*G047*/     if bill1 = hi_char then bill1 = "".
-				
-				             
+
+
 				run p-action-fields (input "display").
 				run p-action-fields (input "enable").
 				end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
-				
+
 				/*GUI*/ procedure p-report-quote:
 ******/
 
@@ -170,7 +170,7 @@
 /*J0DV*/           {mfmsg.i gpglef_msg_nbr 4}
 /*J0DV*/           /*GUI NEXT-PROMPT removed */
 /*J0DV*/           /*GUI UNDO removed  RETURN ERROR.*/
-/*origin*/         v_flag = yes.  undo, return.	
+/*origin*/         v_flag = yes.  undo, return.
 /*J0DV*/        end.
 /*J0DV*/     end.
 
@@ -197,7 +197,7 @@
 
 /* origin
              /* SELECT PRINTER */
-             
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -232,12 +232,12 @@ find first fac_ctrl where fac_ctrl.fac_domain = global_domain no-lock no-error.
                 {gprun.i ""sonsogl.p""}
              end.
 
-             
+
 /*GUI mainloop removed */
 
              do on error undo, leave:
 
-/*FO66       {mfphead.i} */ 
+/*FO66       {mfphead.i} */
 
 /*F017*/        /* Main program moved to soivpst1.p */
                 {gprun.i ""soivpst1.p""}
@@ -262,13 +262,13 @@ find first fac_ctrl where fac_ctrl.fac_domain = global_domain no-lock no-error.
 /*G585*/        end.
 
                 /* REPORT TRAILER */
-       /*         
+       /*
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 		 2004-09-02 14:08 *lb01*
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 
-*/ 
+*/
              end. /* mainloop */
 
           end.

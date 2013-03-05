@@ -227,8 +227,9 @@ repeat:
          v_gtaxid v_adname v_infile v_bkfile v_rpfile v_times v_drange v_ptbox
   with frame a.
 
-    assign v_adj = v_infixrd
-    		v_post = v_inpost. /*2004-09-02 14:10*/
+    assign /* v_adj = v_infixrd */
+           v_adj = no
+    		   v_post = v_inpost. /*2004-09-02 14:10*/
   update
         v_load
         v_adj
