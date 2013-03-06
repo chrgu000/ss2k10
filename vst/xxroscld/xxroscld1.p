@@ -18,10 +18,15 @@ for each xxro exclusive-lock by xxro_sn:
                  + "." + string(xxro_sn,"9999999").
     output STREAM xp to value(vfile + ".bpi").
     put STREAM xp unformat '"' xxro_routing '" ' xxro_op ' ' xxro_start skip.
-    put STREAM xp unformat '-' skip.
-    put STREAM xp unformat '- - - - - - - - - - - - - - - - - - ' xxro_sub_cost ' N' skip.
+    if xxro_tp = "A" then do:
+       put STREAM xp unformat '-' skip. /*ro_std_op*/
+    end.
+       put stream xp unformat '"' xxro_wkctr '" "' xxro_mch '"' skip.
+       put STREAM xp unformat '"' xxro_desc '" - - - - - - - - - '.
+       put STREAM xp unformat xxro_run ' - ' xxro_start ' ' xxro_end.
+       put STREAM xp unformat ' - - - - ' xxro_sub_cost ' N' skip.
+       put STREAM xp unformat '-' skip.
     output STREAM xp close.
-
 
 /*     {pxmsg.i &MSGNUM=776 &MSGARG1=xxro_sn &MSGARG2=i &ERRORLEVEL=1}       */
        batchrun = yes.
@@ -48,7 +53,7 @@ for each xxro exclusive-lock by xxro_sn:
           assign xxro_chk = "FAIL".
        end.
 
-       if clearwkfl then do:
+       if clearwkfl and xxro_chk = "OK" then do:
           os-delete value(vfile + ".bpi").
           os-delete value(vfile + ".bpo").
        end.

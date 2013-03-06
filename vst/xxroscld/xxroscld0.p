@@ -9,6 +9,7 @@
 define variable txt as character.
 define variable v_routing like ro_routing.
 define variable v_op like ro_op.
+define variable v_start like ro_start.
 define variable v_sub_cost like ro_sub_cost.
 empty temp-table xxros no-error.
 empty temp-table xxro no-error.
@@ -16,15 +17,18 @@ assign i = 0.
 input from value(flhload).
 repeat:
     assign v_routing = ""
-           v_op = 0.
+           v_op = 0
+           v_start = ?.
     import unformat txt.
     if i <> 0 then do:
        assign v_routing = trim(entry(1,txt,",")) no-error.
        assign v_sub_cost = Decimal(trim(entry(2,txt,","))) no-error.
+       assign v_start = str2Date(string(entry(3,txt,",")),"mdy") no-error.
        if v_routing <> "" and v_sub_cost <> 0 then do:
          create xxros.
          assign xxros_part = v_routing
-                xxros_sub_cost = v_sub_cost.
+                xxros_sub_cost = v_sub_cost
+                xxros_start = v_start.
           for each ro_det no-lock where ro_routing = v_routing
                and ro_op = 10 and ro_start <= today - 1
           break by ro_routing by ro_start:
@@ -34,7 +38,24 @@ repeat:
                   assign xxro_routing = ro_routing no-error.
                   assign xxro_op = ro_op no-error.
                   assign xxro_wkctr = ro_wkctr no-error.
+                  assign xxro_mch = ro_mch no-error.
+                  assign xxro_desc = ro_desc no-error.
+                  assign xxro_run = ro_run no-error.
                   assign xxro_start = ro_start no-error.
+                  assign xxro_end = v_start - 1 no-error.
+                  assign xxro_tp = "M".
+                  assign xxro_sub_cost  = ro_sub_cost no-error.
+
+                  create xxro.
+                  assign xxro_routing = ro_routing no-error.
+                  assign xxro_op = ro_op no-error.
+                  assign xxro_wkctr = ro_wkctr no-error.
+                  assign xxro_mch = ro_mch no-error.
+                  assign xxro_desc = ro_desc no-error.
+                  assign xxro_run = ro_run no-error.
+                  assign xxro_start = v_start no-error.
+                  assign xxro_end = ? no-error.
+                  assign xxro_tp = "A".
                   assign xxro_sub_cost  = v_sub_cost no-error.
                end.
           end.

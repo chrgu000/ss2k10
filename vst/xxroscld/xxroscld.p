@@ -7,7 +7,7 @@
 /* 工艺流程外包成本批量修改                                                  *
  * 装入文件只有 料号,外包成本2栏                                             *
  * 工序固定为10 生效日从现有工艺流程取得                                     */
- 
+
 /* DISPLAY TITLE */
 {mfdtitle.i "130305.1"}
 {xxroscld.i "NEW"}
@@ -99,7 +99,7 @@ repeat:
      for each xxro exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxro.
+         display xxro except xxro_tp.
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}
