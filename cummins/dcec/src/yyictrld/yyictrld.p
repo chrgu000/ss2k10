@@ -119,7 +119,7 @@ DEFINE BUTTON tnLoad
 DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U 
      LABEL "文件" 
      VIEW-AS FILL-IN 
-     SIZE 51.9 BY 1 NO-UNDO.
+     SIZE 51.88 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
@@ -153,8 +153,8 @@ DEFINE BROWSE brList
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     fiFile AT ROW 1.58 COL 5.1 COLON-ALIGNED
-     hbtnOpen AT ROW 1.58 COL 59.4
+     fiFile AT ROW 1.58 COL 5.13 COLON-ALIGNED
+     hbtnOpen AT ROW 1.58 COL 59.38
      tnLoad AT ROW 1.53 COL 71
      btnXls AT ROW 1.53 COL 82
      btnGenCimFile AT ROW 1.53 COL 94.5
@@ -184,11 +184,11 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
          HIDDEN             = YES
          TITLE              = "DCEC-库存转移-批次导入(yyictrld.p)"
          HEIGHT             = 37.32
-         WIDTH              = 126.9
+         WIDTH              = 126.88
          MAX-HEIGHT         = 39.95
-         MAX-WIDTH          = 146.2
+         MAX-WIDTH          = 146.25
          VIRTUAL-HEIGHT     = 39.95
-         VIRTUAL-WIDTH      = 146.2
+         VIRTUAL-WIDTH      = 146.25
          RESIZE             = yes
          SCROLL-BARS        = no
          STATUS-AREA        = yes
@@ -354,9 +354,8 @@ EMPTY TEMP-TABLE xic NO-ERROR.
     ASSIGN vsn = 0.
     IF search(fifile) <>  ? THEN DO:
         Input FROM VALUE(fifile).
-        REPEAT:
-            vsn = vsn + 1.
-            IF vsn <= 2 THEN NEXT.
+        REPEAT:  
+            IF vsn <> 0 THEN DO: 
             CREATE xim.
             IMPORT DELIMITER "," xim_nbr
                                  xim_part
@@ -366,12 +365,13 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                                  xim_flot
                                  xim_tsite
                                  xim_tloc
-                                 xim_tlot
+                                 xim_tlot 
                                  NO-ERROR.
+            END.
+            ASSIGN vsn = vsn + 1.
         END.
-        INPUT CLOSE.
-
-
+        INPUT CLOSE. 
+ 
     assign vsn = 0.
     FOR EACH xim NO-LOCK:
         assign vchk = ""
@@ -394,17 +394,63 @@ EMPTY TEMP-TABLE xic NO-ERROR.
          END.
          ELSE DO:
              vchk = "料号不存在".
+              create xic.
+              assign  xic_nbr     = xim_nbr
+                     xic_part    = xim_part
+                     xic_desc    = vdesc
+                     xic_qty_req = xim_qty_req
+                     xic_qty_ld  = v_qty_ld
+                     xic_qty_tr  = v_qty_tr
+                     xic_fsite   = xim_fsite
+                     xic_floc    = xim_floc
+                     xic_flot    = xim_flot
+                     xic_tsite   = xim_tsite
+                     xic_tloc    = xim_tloc
+                     xic_tlot    = xim_tlot
+                     xic_sn      = vsn
+                     xic_chk     = vchk.
+              NEXT.
          END.
          if vchk = "" then do:
             FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_fsite NO-ERROR.
             IF NOT AVAILABLE si_mstr THEN DO:
                 ASSIGN vchk = "地点" + xim_fsite + "不存在".
+                 create xic.
+                 assign  xic_nbr     = xim_nbr
+                         xic_part    = xim_part
+                         xic_desc    = vdesc
+                         xic_qty_req = xim_qty_req
+                         xic_qty_ld  = v_qty_ld
+                         xic_qty_tr  = v_qty_tr
+                         xic_fsite   = xim_fsite
+                         xic_floc    = xim_floc
+                         xic_flot    = xim_flot
+                         xic_tsite   = xim_tsite
+                         xic_tloc    = xim_tloc
+                         xic_tlot    = xim_tlot
+                         xic_sn      = vsn
+                         xic_chk     = vchk.
                 NEXT.
             END.
             ELSE DO:
                 FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_fsite AND loc_loc = xim_floc NO-ERROR.
                 IF NOT AVAILABLE loc_mstr THEN DO:
                     ASSIGN vchk = "库位" + xim_fsite + " : " + xim_floc + "不存在".
+                     create xic.
+                     assign  xic_nbr     = xim_nbr
+                             xic_part    = xim_part
+                             xic_desc    = vdesc
+                             xic_qty_req = xim_qty_req
+                             xic_qty_ld  = v_qty_ld
+                             xic_qty_tr  = v_qty_tr
+                             xic_fsite   = xim_fsite
+                             xic_floc    = xim_floc
+                             xic_flot    = xim_flot
+                             xic_tsite   = xim_tsite
+                             xic_tloc    = xim_tloc
+                             xic_tlot    = xim_tlot
+                             xic_sn      = vsn
+                             xic_chk     = vchk.
                     NEXT.
                 END.
             END.
@@ -413,12 +459,42 @@ EMPTY TEMP-TABLE xic NO-ERROR.
             FIND FIRST si_mstr NO-LOCK WHERE si_domain = GLOBAL_domain AND si_site = xim_tsite NO-ERROR.
             IF NOT AVAILABLE si_mstr THEN DO:
                 ASSIGN vchk = "地点" + xim_tsite + "不存在".
+                  create xic.
+                 assign  xic_nbr     = xim_nbr
+                         xic_part    = xim_part
+                         xic_desc    = vdesc
+                         xic_qty_req = xim_qty_req
+                         xic_qty_ld  = v_qty_ld
+                         xic_qty_tr  = v_qty_tr
+                         xic_fsite   = xim_fsite
+                         xic_floc    = xim_floc
+                         xic_flot    = xim_flot
+                         xic_tsite   = xim_tsite
+                         xic_tloc    = xim_tloc
+                         xic_tlot    = xim_tlot
+                         xic_sn      = vsn
+                         xic_chk     = vchk.
                 NEXT.
             END.
             ELSE DO:
                 FIND FIRST loc_mstr NO-LOCK WHERE loc_domain = GLOBAL_domain AND loc_site = xim_tsite AND loc_loc = xim_tloc NO-ERROR.
                 IF NOT AVAILABLE loc_mstr THEN DO:
                     ASSIGN vchk = "库位" + xim_tsite + " : " + xim_tloc + "不存在".
+                     create xic.
+                     assign  xic_nbr     = xim_nbr
+                             xic_part    = xim_part
+                             xic_desc    = vdesc
+                             xic_qty_req = xim_qty_req
+                             xic_qty_ld  = v_qty_ld
+                             xic_qty_tr  = v_qty_tr
+                             xic_fsite   = xim_fsite
+                             xic_floc    = xim_floc
+                             xic_flot    = xim_flot
+                             xic_tsite   = xim_tsite
+                             xic_tloc    = xim_tloc
+                             xic_tlot    = xim_tlot
+                             xic_sn      = vsn
+                             xic_chk     = vchk.
                     NEXT.
                 END.
             END.
@@ -485,29 +561,29 @@ EMPTY TEMP-TABLE xic NO-ERROR.
                                         v_qty_req = v_qty_req - ld_qty_oh.
                        end.
                        else do:
-                           create xic.
-                                       assign  xic_nbr     = xim_nbr
-                                               xic_part    = xim_part
-                                               xic_desc    = vdesc
-                                               xic_qty_req = v_qty_req
-                                               xic_qty_ld  = ld_qty_oh
-                                               xic_qty_tr  = v_qty_req
-                                               xic_fsite   = xim_fsite
-                                               xic_floc    = xim_floc
-                                               xic_flot    = ld_lot
-                                               xic_tsite   = xim_tsite
-                                               xic_tloc    = xim_tloc
-                                               xic_tlot    = ld_lot
-                                               xic_sn      = vsn
-                                               xic_chk     = vchk.
+                          create xic.
+                          assign xic_nbr     = xim_nbr
+                                 xic_part    = xim_part
+                                 xic_desc    = vdesc
+                                 xic_qty_req = v_qty_req
+                                 xic_qty_ld  = ld_qty_oh
+                                 xic_qty_tr  = v_qty_req
+                                 xic_fsite   = xim_fsite
+                                 xic_floc    = xim_floc
+                                 xic_flot    = ld_lot
+                                 xic_tsite   = xim_tsite
+                                 xic_tloc    = xim_tloc
+                                 xic_tlot    = ld_lot
+                                 xic_sn      = vsn
+                                 xic_chk     = vchk.
                                  leave.
                        end.
                 END. /* for each ld */
                 if xic_qty_req > xic_qty_tr then assign xic_chk = "库存不足".
            end.
            else do:
-                        assign vsn = vsn + 1.
-                         create xic.
+               assign vsn = vsn + 1.
+               create xic.
                assign  xic_nbr     = xim_nbr
                        xic_part    = xim_part
                        xic_desc    = vdesc
@@ -525,10 +601,13 @@ EMPTY TEMP-TABLE xic NO-ERROR.
            end.
         END. /* else xim_flot <> "" THEN DO: */
     END.
-
+    assign vsn = 1.
+    for each xic:
+        assign xic_sn = vsn.
+        assign vsn = vsn + 1.
+    end.
     OPEN QUERY brlist FOR EACH xic .
-    brList:REFRESH().
-
+    IF CAN-FIND(FIRST xic) THEN brList:REFRESH().
  END.
 
 END.
@@ -586,7 +665,7 @@ DO:
           xic_qty_req = decimal(br-col6:SCREEN-VALUE) :
         DELETE xic.
     END.
-    brList:REFRESH().
+    IF CAN-FIND(FIRST xic) THEN brList:REFRESH().
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -597,8 +676,7 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_item wWin
 ON CHOOSE OF MENU-ITEM m_item /* 刷新 */
 DO:
-  IF CAN-FIND(FIRST xic) THEN
-  brlist:REFRESH() IN FRAME fmain.
+  IF CAN-FIND(FIRST xic) THEN brlist:REFRESH() IN FRAME fmain.
 END.
 
 /* _UIB-CODE-BLOCK-END */
