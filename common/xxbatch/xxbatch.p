@@ -1,23 +1,22 @@
-/* xxbmpsrp10.p - bom runtime report                                         */
+/* xxbatch.p - batchrun status maintance                                     */
 /* REVISION:101020.2 LAST MODIFIED: 10/20/10 BY: zy                          */
-/* REVISION:101028.1 LAST MODIFIED: 10/28/10 BY: zy                      *as**/
-/* REVISION:101028.1 LAST MODIFIED: 11/29/10 BY: zy                      *bt**/
-/*-Revision end--------------------------------------------------------------*/
-/* Environment: Progress:10.1C04   QAD:eb21sp6                               */
 /*V8:ConvertMode=NoConvert                                                   */
-output to xxbatch.bpi.
-  put unformat 'mfg mfgpro' skip '-' skip.
-  put unformat "mgbatch.p" skip.
-  put unformat '- ""' skip.
-  put unformat "bmpsrp" skip.
-  put unformat '""' skip.
-  put "." skip.
-  put "." skip.
-  put "Y" skip.
-output close.
+/*-Revision end--------------------------------------------------------------*/
+{mfdtitle.i "130304.1"}
+define variable yn like mfc_logical no-undo.
+define variable stat as character format "x(20)".
+{gpcdget.i "UT"}
 
-input from xxbatch.bpi.
-output to xxbatch.bpo.
-   run mf.p.
-input close.
-output close.
+Form yn colon 40
+with frame a side-labels width 80 attr-space.
+setFrameLabels(frame a:handle).
+
+repeat with frame a:
+update yn.
+assign batchrun = yn.
+assign stat = "batchrun = " + string(yn).
+leave.
+end.  /* repeat with frame a: */
+{pxmsg.i &MSGTEXT=stat &ERRORLEVEL=1}
+pause.
+status input.
