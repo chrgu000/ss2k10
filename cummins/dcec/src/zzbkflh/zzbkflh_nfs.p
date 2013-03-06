@@ -53,6 +53,7 @@ global_db = "DCEC".
 execname = "zzbkflh.p".
 
 /*G1MN*/ {gpglefv.i}
+define variable wkdir as char format "x(20)".     /*work file directory*/
 define variable srcdir as char format "x(20)".    /*source file directory*/
 define variable okdir as char format "x(20)".     /*verified file directory*/
 define variable errdir as char format "x(20)".    /*incorrect file directory*/
@@ -131,17 +132,15 @@ srcdir = usrw_charfld[10].
 okdir = usrw_charfld[11].
 errdir = usrw_charfld[12].
 logfile = usrw_charfld[13] + "xxbkflh.log".
-bkflh_file = usrw_charfld[14] + "bkflh_file.in".
 bkflh_filecim = usrw_charfld[14] + "bkflh_file.in".
 listfile = usrw_charfld[14] + "list.txt".
-
-srcdir = "/data3/batch/bkfl/test/source/".
-okdir = "/data3/batch/bkfl/test/correct/".
-errdir = "/data3/batch/bkfl/test/error/".
-logfile = "/data3/batch/bkfl/test/xxbkflh_nfs.log".
-bkflh_file = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
-bkflh_filecim = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
-listfile = "/data3/batch/bkfl/test/temp/" + "list_nfs.txt".
+wkdir = "/data3/batch/bkfl/test/".
+srcdir = wkdir + "source/".
+okdir = wkdir + "correct/".
+errdir = wkdir + "error/".
+logfile = wkdir + "/log/xxbkflh_nfs_" + string(today,"99-99-99") + "_" + replace(string(time,"hh:mm:ss"),":",".") + ".log".
+bkflh_filecim = wkdir +  "temp/".
+listfile = wkdir + "temp/" + "list_nfs.txt".
 
 /*******To get the backflush source file list***********/
 if opsys = "UNIX" then
@@ -178,8 +177,7 @@ output stream bkflh to value(bkflh_file).
       for each xxwk exclusive-lock: delete xxwk. end.
 
       ok_yn = yes.
-      put stream chklog unformat skip(1).
-      put stream chklog unformat "Now process file: " + list.filename at 1 skip.
+      put stream chklog unformat skip(1) "Now process file: " + list.filename + ":" + string(time,"HH:MM:SS") at 1 skip.
          /*for log file*/
        xxinfile = srcdir + list.filename.
        if opsys = "UNIX" then
@@ -229,7 +227,7 @@ output stream bkflh to value(bkflh_file).
             put stream chklog unformat "Error: No data need to process!" at 5 skip.
             ok_yn = no.
        end.
-put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip.
+/* put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip. */
 /***********************
 if ok_yn = no then do:
   if opsys = "UNIX" then
@@ -678,7 +676,7 @@ end.
     put stream bkflh "." at 1 skip.
     output stream bkflh close.
 if ok_yn = no then do:
-   put stream chklog unformat "check error found" skip.
+   put stream chklog unformat "check error found Skip CIM_LOAD File" string(time,"HH:MM:SS") skip.
 end.
 else do:
     put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
@@ -686,7 +684,7 @@ else do:
     do on stop undo cimrunprogramloop,leave cimrunprogramloop:
         assign trrecid = current-value(tr_sq01).
         input from value(bkflh_file).
-        output to value(bkflh_filecim + ".out") append.
+        output to value(bkflh_file + ".out").
         batchrun = yes.
         {gprun.i ""xxrebkfl1.p""}
         batchrun = no.
@@ -724,20 +722,19 @@ else do:
         put stream chklog unformat list.filename " 处理完成! " string(time,"HH:MM:SS") skip.
 end.  /* if ok_yn = no else do: */
     if ok_yn = no or cim_yn = no then do:
-        if opsys = "UNIX" then
-           unix silent value("mv + '" + srcdir + list.filename + "' '" + errdir + list.filename + "'").
-        else
-           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir + list.filename).
+        if opsys = "UNIX" then do:
+           unix silent value("mv '" + srcdir + list.filename + "' " + errdir). 
+        end.
+        else do:
+           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
+        end.
     end.
     else do:
-         if opsys = "UNIX" then
+         if opsys = "UNIX" then do:
             unix silent value("mv '" + srcdir + list.filename + "' " + okdir).
-         else
+         end.
+         else do:
             Dos silent value("move " + "~"" + srcdir  + list.filename + "~"" + " " + okdir).
+         end.
     end.
 end. /*for each list*/
-
-
-put skip(1).
-put unformat "=======================  Run Date: " today.
-put unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
