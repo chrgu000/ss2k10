@@ -10,7 +10,13 @@
 define variable vfile as character.
 define variable clearwkfl as logical initial yes no-undo.
 define variable j as integer.
+define variable statstr as character.
 DEFINE STREAM xp.
+
+assign j = 0.
+for each xxro no-lock:
+    if j < xxro_sn then j = xxro_sn.
+end.
 
 assign clearwkfl = deltmpfile().
 for each xxro exclusive-lock by xxro_sn:
@@ -57,4 +63,5 @@ for each xxro exclusive-lock by xxro_sn:
           os-delete value(vfile + ".bpi").
           os-delete value(vfile + ".bpo").
        end.
+       assign statstr = trim(string(xxro_sn)) + " / " + trim(string(j)).
 end.

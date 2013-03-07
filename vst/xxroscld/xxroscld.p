@@ -67,6 +67,7 @@ repeat:
       hide frame b.
       hide frame c.
    end.
+    {mfmsg.i 832 1}
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "terminal"
                &printWidth = 320
@@ -81,7 +82,7 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-   {mfmsg.i 832 1}
+  
    {mfphead.i}
 
    empty temp-table xxro no-error.
