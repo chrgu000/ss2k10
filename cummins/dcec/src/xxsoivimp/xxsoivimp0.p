@@ -40,6 +40,7 @@ empty temp-table tmp-so no-error.
                tsod_sub = string(xworksheet:cells(intI,17):FormulaR1C1)
                tsod_cc = string(xworksheet:cells(intI,18):FormulaR1C1)
                tsod_project = string(xworksheet:cells(intI,19):FormulaR1C1)
+               tsod_tax_in = logical(xworksheet:cells(intI,20):FormulaR1C1)
                .
       end.
       else do:

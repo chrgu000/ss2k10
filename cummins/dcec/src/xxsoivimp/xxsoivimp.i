@@ -24,6 +24,7 @@ DEFINE {1} shared TEMP-TABLE tmp-so
     FIELDS tsod_sub     LIKE sod_sub
     FIELDS tsod_cc      LIKE sod_cc
     FIELDS tsod_project LIKE sod_project
+    FIELDS tsod_tax_in  like sod_tax_in
 /*  FIELDS tsod_due_date LIKE sod_due_date          */
 /*  FIELDS tsod_type    LIKE sod_type initial "M"   */
     FIELDS tsod_rmks1    LIKE so_rmks

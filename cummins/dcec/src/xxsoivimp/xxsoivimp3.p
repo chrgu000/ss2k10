@@ -35,10 +35,10 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
                 END.
             END.
             if tso_tax_usage = "-" then do:
-               put unformat '-' skip.
+               put unformat '- - - - ' tsod_tax_in skip.
             end.
             else do:
-               PUT UNFORMAT '"' tso_tax_usage '"' SKIP. /* 税 */
+               PUT UNFORMAT '"' tso_tax_usage '" - - - ' tsod_tax_in SKIP. /* 税 */
             end.
             PUT UNFORMAT '- NO - - - - - - - - - - NO' SKIP. /*推销员(无备注)*/
         END. /* if first-of tso_nbr */
@@ -67,11 +67,11 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         IF tsod_cc = "-" then
            PUT UNFORMAT "- ".
         ELSE
-           PUT UNFORMAT '"' tsod_cc '" '.   
+           PUT UNFORMAT '"' tsod_cc '" '.
         IF tsod_project = "-" then
            PUT UNFORMAT "- ".
         ELSE
-           PUT UNFORMAT '"' tsod_project '" '.    
+           PUT UNFORMAT '"' tsod_project '" '.
         if available pt_mstr then do:
            put unformat '- - - - - - - - - M - - - - - N' SKIP.
         end.
@@ -94,10 +94,10 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         find first pt_mstr no-lock where pt_domain = global_domain and
                    pt_part = tsod_part no-error.
         if available pt_mstr and pt_taxable and taxable then do:
-            PUT UNFORMAT '-' SKIP. /*税*/
+            PUT UNFORMAT '- - - - ' tsod_tax_in SKIP. /*税*/
         end.
         if not available pt_mstr then do:
-             PUT UNFORMAT '-' SKIP.  /* ITEM_NOT_IN_INVENTORY */
+             PUT UNFORMAT '- - - - ' tsod_tax_in SKIP.  /* ITEM_NOT_IN_INVENTORY */
         end.
 /*      IF tsod_rmks1 <> "-" THEN DO:                                        */
 /*         PUT UNFORMAT '- - - - - - - - - - y' skip.                        */

@@ -139,8 +139,8 @@ DEFINE BROWSE brDet
       tsod_sub        column-label    "分账户"
       tsod_cc         column-label    "成本中心"
       tsod_project    column-label    "项目"
-
-tsod_chk        column-label    "状态"
+      tsod_tax_in    column-label     "含税"
+      tsod_chk        column-label    "状态"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
     WITH NO-ROW-MARKERS SEPARATORS SIZE 106.5 BY 28.74 FIT-LAST-COLUMN.

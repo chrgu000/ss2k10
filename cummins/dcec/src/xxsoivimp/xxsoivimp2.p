@@ -30,8 +30,9 @@ define variable I as integer.
    bsheet:cells(i,17) = "分账户".
    bsheet:cells(i,18) = "成本中心".
    bsheet:cells(i,19) = "项目".
-   bsheet:cells(i,20) = "结果".
-   
+   bsheet:cells(i,20) = "含税".
+   bsheet:cells(i,21) = "结果".
+
    i = i + 1.
    for each tmp-so no-lock:
        bsheet:cells(i,1) = "'" + tso_nbr.
@@ -53,8 +54,9 @@ define variable I as integer.
        bsheet:cells(i,17) = "'" + tsod_sub.
        bsheet:cells(i,18) = "'" + tsod_cc.
        bsheet:cells(i,19) = "'" + tsod_proj.
-       bsheet:cells(i,20) = tsod_chk.
-       
+       bsheet:cells(i,20) = tsod_tax_in.
+       bsheet:cells(i,21) = tsod_chk.
+
        if tsod_chk = "" then do:
             bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.
        end.
