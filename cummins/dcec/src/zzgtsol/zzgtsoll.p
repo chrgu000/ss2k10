@@ -1,8 +1,8 @@
 /* zzgtsoll.p - UPLOAD INVOICE DATA GENERATE BY GOLD-TAX INTO MFG/PRO       */
-/*                                                                         */
-/*  LAST MODIFIED   DAT:2004.5.27 BY: *LB01* LONG BO             */
-/*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO         */
-
+/*                                                                          */
+/*  LAST MODIFIED   DAT:2004.5.27 BY: *LB01* LONG BO                        */
+/*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO                */
+/*313 解决过账后帐户错误问题                                                 */
   {mfdeclre.i }
 
 define shared stream rpt .
@@ -320,9 +320,9 @@ define variable tmpnetamt like glt_amt.
             {zzgtsolr.i no}   /*2004-09-02 10:16*/
             next.
           END.
-          so_trl2_amt = gnetamt - gmfgnetamt.
-          so_trl3_amt = gtaxamt - gmfgtaxamt.
-              end.
+/*313         so_trl2_amt = gnetamt - gmfgnetamt.         */
+/*313         so_trl3_amt = gtaxamt - gmfgtaxamt.         */
+          end.
       end.
       else do:
         gerrflag = yes.
@@ -421,8 +421,8 @@ define variable tmpnetamt like glt_amt.
               gerrmsg  = "ERROR:尾栏代码错误.".
               next.
             END.
-            so_trl2_amt = tmpnetamt - gmfgnetamt.
-            so_trl3_amt = tmptaxamt - gmfgtaxamt.
+/*313            so_trl2_amt = tmpnetamt - gmfgnetamt. */
+/*313            so_trl3_amt = tmptaxamt - gmfgtaxamt. */
                 end.
         end.
         else do:

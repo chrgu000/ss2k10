@@ -44,18 +44,18 @@ define  new shared workfile giv
  field gdate             like gltr_eff_dt
  field gshipdate         like gltr_eff_dt
  field gref              as char
- field gtotamt              like glt_amt
- field gtaxamt              like glt_amt
- field gnetamt              like glt_amt
+ field gtotamt           like glt_amt column-label "gtotamt"
+ field gtaxamt           like glt_amt column-label "gtaxamt"
+ field gnetamt           like glt_amt column-label "gnetamt" 
  field gtaxpct           like usrw_decfld[1]
  field gcust             as   char format "x(8)"
  field gbill             as   char format "x(8)"
  field grmks             as char
  field gsite            as character
  field gnbr             as character
- field gmfgtotamt           like glt_amt
- field gmfgtaxamt           like glt_amt
- field gmfgnetamt           like glt_amt
+ field gmfgtotamt           like glt_amt column-label "gmfgtotamt"
+ field gmfgtaxamt           like glt_amt column-label "gmfgtaxamt"
+ field gmfgnetamt           like glt_amt column-label "gmfgnetamt"
  field gerrflag          as logical  initial no
  field gerrmsg           as character
  .
@@ -309,7 +309,6 @@ repeat:
     end.
   end.
   input close.
-
  /*
   for each giv:
   	disp giv with stream-io width 250.
