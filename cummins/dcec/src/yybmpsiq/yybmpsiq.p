@@ -1,4 +1,4 @@
-/* GUI CONVERTED from bmpsiq.p (converter v1.76) Thu Jan 31 21:22:02 2002 */
+/* GUI CONVERTED from bmpsiq.p (converter v1.76) Thu Jan 31 21:22:02 2002     */
 /* bmpsiq.p - PRODUCT STRUCTURE INQUIRY                                       */
 /* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -52,7 +52,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "121022.1"}
+{mfdtitle.i "130311.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -99,6 +99,7 @@ define variable relation like mfc_logical.
 DEFINE VARIABLE xxpart LIKE pt_part.  /*judy*/
 /*hj01*/ DEFINE VARIABLE o_char AS CHAR FORMAT "x(3)" INIT "ALL" LABEL "零件状态".
 /*hj01*/ DEFINE VARIABLE yn AS LOG .
+define variable k as character initial "All".
 eff_date = today.
 
 
@@ -119,8 +120,12 @@ parent  colon 23
 /*hj01*/ o_char  COLON 68.4 /* VIEW-AS COMBO-BOX LIST-ITEM-PAIRS "ALL" ,"ALL" INNER-LINES 8 */
    ecmnbr     colon 13
    ecmid      colon 31
-   dbase      colon 51 SKIP(1)
+   dbase      colon 51
+   K          colon 68.4
+   SKIP(1)
+
     "**零件状态只能是已有零件状态(代表只显示选定状态的零件),或ALL(代表所有状态),或!O(代表非O)**" AT 10 SKIP(1)
+
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
 
 /* FOR EACH qad_wkfl NO-LOCK where qad_key1 = "PT_STATUS" :
@@ -156,12 +161,13 @@ repeat:
          eff_date
          maxlevel
          rev
-/*hj01*/ o_char VALIDATE(o_char = "ALL" OR o_char = "!O" OR
+/*hj01*/ o_char VALIDATE(o_char = "ALL" OR substring(o_char,1,1) = "!" OR
                          CAN-FIND(qad_wkfl NO-LOCK where qad_domain = global_domain and qad_key1 = "PT_STATUS" AND o_char = qad_key2),
                          "零件状态输入错误,请重新输入!" )
          ecmnbr
          ecmid
          dbase
+         K
          with frame a
    editing:
 
@@ -186,7 +192,7 @@ repeat:
 
                for first pt_mstr
                   fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
-                         pt_part pt_phantom pt_um)
+                         pt_part pt_phantom pt_um pt_status)
                   where pt_domain = global_domain and pt_part =  parent
                   no-lock:
                end. /* FOR FIRST pt_mstr */
@@ -248,9 +254,8 @@ repeat:
       end.
    end. /*editing*/
 
-   {wbrp06.i &command = update &fields = "  parent eff_date maxlevel rev
-        ecmnbr ecmid dbase " &frm = "a"}
-
+   {wbrp06.i &command = update &fields = "  parent eff_date maxlevel rev o_char
+        ecmnbr ecmid dbase K " &frm = "a"}
    if maxlevel = ?
    then do:
 
@@ -271,7 +276,7 @@ repeat:
 
       for first pt_mstr
          fields(pt_domain pt_bom_code pt_desc1 pt_desc2 pt_iss_pol
-                pt_part pt_phantom pt_um)
+                pt_part pt_phantom pt_um pt_status)
          use-index pt_part
          where pt_domain = global_domain and pt_part = parent
          no-lock:
@@ -313,7 +318,6 @@ repeat:
             um = pt_um
             desc1 = pt_desc1
             parent = pt_part.
-
 
       if not available pt_mstr
       and not available bom_mstr
@@ -501,15 +505,14 @@ repeat:
 /*judy*/
       IF SUBSTRING(PARENT, LENGTH(PARENT) - 1 ,2) = "zz" THEN  DO:
              xxpart = SUBSTRING(PARENT, 1,LENGTH(PARENT) - 2) .  /*judy*/
-                    FIND FIRST pt_mstr WHERE pt_domain = global_domain and
-                    					 pt_part = xxpart NO-LOCK NO-ERROR.
-                    IF AVAIL pt_mstr THEN DO:
-                        display
-                           pt_desc2 @ desc1
-                         with frame heading  STREAM-IO /*GUI*/ .
-                          down 1 with frame heading.
-                END.
-
+          FIND FIRST pt_mstr WHERE pt_domain = global_domain and
+          					 pt_part = xxpart NO-LOCK NO-ERROR.
+          IF AVAIL pt_mstr THEN DO:
+              display
+                 pt_desc2 @ desc1
+               with frame heading  STREAM-IO /*GUI*/ .
+                down 1 with frame heading.
+          END.
       END.
 
 /*judy*/
@@ -525,7 +528,7 @@ repeat:
       (rev = "" and ecmnbr + ecmid + dbase = "")
    then do:
 
-      run process_report (input comp,input level).
+      run process_report (input comp,input level,input o_char,input K).
 
    end. /* End of if relation */
 
@@ -544,6 +547,8 @@ global_part = parent.
 PROCEDURE process_report:
    define input parameter comp like ps_comp no-undo.
    define input parameter level as integer no-undo.
+   define input parameter stat  as character no-undo.
+   define input parameter iK    as character no-undo.
 
    define query q_ps_mstr for ps_mstr
       fields(ps_comp ps_end ps_par ps_ps_code ps_qty_per ps_start ps_rmks).
@@ -556,7 +561,7 @@ PROCEDURE process_report:
 
    for first pt_mstr
       fields (pt_domain pt_bom_code pt_desc1 pt_desc2
-      pt_iss_pol  pt_part  pt_phantom pt_um)
+      pt_iss_pol  pt_part  pt_phantom pt_um pt_status)
       no-lock
       where pt_domain = global_domain and pt_part = comp:
    end. /* FOR FIRST pt_mstr */
@@ -609,7 +614,7 @@ PROCEDURE process_report:
             um = ""
             desc1 = ""
             iss_pol = no
-             xxstatus = ""      /*judy*/
+            xxstatus = ""      /*judy*/
             phantom = no.
 
 /*hj01*/ yn = NO .
@@ -626,9 +631,9 @@ PROCEDURE process_report:
                um = pt_um
                desc1 = pt_desc1
                iss_pol = pt_iss_pol
-                xxstatus = pt_status  /*judy*/
+               xxstatus = pt_status  /*judy*/
                phantom = pt_phantom.
-/*hj01--*/
+/*hj01--
             CASE o_char :
                 WHEN "!O" THEN DO:
                     IF pt_status <> "o" THEN yn = NO .
@@ -642,7 +647,7 @@ PROCEDURE process_report:
                     ELSE yn = YES .
                 END.
             END.
-/*--hj01*/
+ --hj01*/
          end.
          else do:
             for first bom_mstr
@@ -675,8 +680,9 @@ PROCEDURE process_report:
                     FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = xxpart
                          NO-LOCK NO-ERROR.
                     IF AVAIL pt_mstr THEN do:
-                        ASSIGN desc1 = pt_desc1 /*hj01*/ xxstatus = pt_status .
-/*hj01--*/
+                        ASSIGN desc1 = pt_desc1 /*hj01*/
+                               xxstatus = pt_status .
+/*hj01--
                     CASE o_char :
                         WHEN "!O" THEN DO:
                             IF pt_status <> "o" THEN yn = NO .
@@ -690,7 +696,7 @@ PROCEDURE process_report:
                             ELSE yn = YES .
                         END.
                     END.
-/*--hj01*/
+ --hj01*/
                     END.
                    /* MESSAGE "aa" xxpart desc1.
                     PAUSE. */
@@ -704,8 +710,13 @@ PROCEDURE process_report:
 /*judy*/
 
 
-/*hj01*/ IF yn = NO THEN DO:
-
+/*hj01 IF yn = NO THEN DO:
+*/
+if (stat = "ALL" or
+      (substring(stat,1,1) <> "!" and stat = xxstatus) or
+      (substring(stat,1,1) = "!" and substring(stat,2,1) <> xxstatus))
+    and (iK = "All" or iK = ps_rmks)
+   then do:
          display
             lvl
             ps_comp
@@ -715,8 +726,8 @@ PROCEDURE process_report:
             phantom
             ps_ps_code
             iss_pol
-             xxstatus
-             ps_rmks
+            xxstatus
+            ps_rmks
          with frame heading STREAM-IO /*GUI*/ .
          down 1 with frame heading.
 
@@ -728,7 +739,6 @@ PROCEDURE process_report:
                with frame heading  STREAM-IO /*GUI*/ .
             down 1 with frame heading.
          end.
-
 
 /*judy*/
       IF SUBSTRING(ps_comp, LENGTH(ps_comp) - 1 ,2) = "zz" THEN  DO:
@@ -743,14 +753,15 @@ PROCEDURE process_report:
                 END.
 
       END.
- /*hj01*/ END.  /*IF yn = NO*/
+ end. /* if stat = "all" */
+ /*hj01 END. */ /*IF yn = NO*/
 /*judy*/
 
          if level < maxlevel
          or maxlevel = 0
          then do:
 
-/*hj01*/ IF yn = NO THEN  run process_report (input ps_comp, input level + 1).
+/*hj01*/ IF yn = NO THEN  run process_report (input ps_comp, input level + 1 , input o_char,input K).
             get next q_ps_mstr no-lock.
          end.
          else do:
