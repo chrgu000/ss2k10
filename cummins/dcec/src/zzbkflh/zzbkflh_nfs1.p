@@ -53,7 +53,6 @@ global_db = "DCEC".
 execname = "zzbkflh.p".
 
 /*G1MN*/ {gpglefv.i}
-define variable wkdir as char format "x(20)".     /*work file directory*/
 define variable srcdir as char format "x(20)".    /*source file directory*/
 define variable okdir as char format "x(20)".     /*verified file directory*/
 define variable errdir as char format "x(20)".    /*incorrect file directory*/
@@ -132,15 +131,17 @@ srcdir = usrw_charfld[10].
 okdir = usrw_charfld[11].
 errdir = usrw_charfld[12].
 logfile = usrw_charfld[13] + "xxbkflh.log".
+bkflh_file = usrw_charfld[14] + "bkflh_file.in".
 bkflh_filecim = usrw_charfld[14] + "bkflh_file.in".
 listfile = usrw_charfld[14] + "list.txt".
-wkdir = "/data3/batch/bkfl/test/".
-srcdir = wkdir + "source/".
-okdir = wkdir + "correct/".
-errdir = wkdir + "error/".
-logfile = wkdir + "/log/xxbkflh_nfs_" + string(today,"99-99-99") + "_" + replace(string(time,"hh:mm:ss"),":",".") + ".log".
-bkflh_filecim = wkdir +  "temp/".
-listfile = wkdir + "temp/" + "list_nfs.txt".
+
+srcdir = "/data3/batch/bkfl/source/".
+okdir = "/data3/batch/bkfl/correct".
+errdir = "/data3/batch/bkfl/error".
+logfile = "/data3/batch/bkfl/xxbkflh_nfs.log".
+bkflh_file = "/data3/batch/bkfl/temp/bkflh_file_nfs.in".
+bkflh_filecim = "/data3/batch/bkfl/temp/bkflh_file_nfs.in".
+listfile = "/data3/batch/bkfl/temp/" + "list_nfs.txt".
 
 /*******To get the backflush source file list***********/
 if opsys = "UNIX" then
@@ -177,7 +178,8 @@ output stream bkflh to value(bkflh_file).
       for each xxwk exclusive-lock: delete xxwk. end.
 
       ok_yn = yes.
-      put stream chklog unformat skip(1) "Now process file: " + list.filename + ":" + string(time,"HH:MM:SS") at 1 skip.
+      put stream chklog unformat skip(1).
+      put stream chklog unformat "Now process file: " + list.filename at 1 skip.
          /*for log file*/
        xxinfile = srcdir + list.filename.
        if opsys = "UNIX" then
@@ -227,7 +229,7 @@ output stream bkflh to value(bkflh_file).
             put stream chklog unformat "Error: No data need to process!" at 5 skip.
             ok_yn = no.
        end.
-/* put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip. */
+put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip.
 /***********************
 if ok_yn = no then do:
   if opsys = "UNIX" then
@@ -296,17 +298,18 @@ end.
           end.
 
           /*verify the parent number*/
-/*确认父零件及状态*/
+        if SESSION:PARAMETER = "" then do:
            find pt_mstr where pt_domain = global_domain and
                 pt_part = xxwk.par no-lock no-error.
            if not available pt_mstr then do:
                 put stream chklog unformat "错误: 父零件号 " + xxwk.par + " 不存在" at 5 skip.
                 ok_yn = no.
            end.
+        end.
 /*G1ZV*/   if can-find(first isd_det where isd_domain = global_domain and
 /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
 /*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO")) then do:
-                put stream chklog unformat "错误: 零件" + xxwk.par + "状态代码的限定过程 " + pt_status at 5 skip.
+                put stream chklog unformat "错误: 零件状态代码的限定过程 " + pt_status at 5 skip.
               ok_yn = no.
 /*F089*/   end.
 
@@ -453,10 +456,12 @@ end.
                ok_yn = no.
          end.
 
+       if SESSION:PARAMETER = "" then do:
           if xxwk.qty_comp <= 0 then do:
                put stream chklog unformat "错误: 完成数量必须大于零" at 5 skip.
                ok_yn = no.
           end.
+       end.
 
        /*verify the data of components*/
       find first xxwk no-lock no-error.
@@ -570,7 +575,7 @@ end.
          ok_yn = no.
       end.
 
-     END.
+            END.
 
 /*judy end of added*/
 
@@ -642,7 +647,7 @@ end.
                  ok_yn = no.
            end.
      end.
-
+    put stream chklog unformat "数据检查完成! " string(time,"HH:MM:SS") skip.
       /****exchange the list data to stream format data for batch input***/
 
      /*create the header format*/
@@ -673,15 +678,15 @@ end.
     put stream bkflh "." at 1 skip.
     output stream bkflh close.
 if ok_yn = no then do:
-   put stream chklog unformat "数据检查完成(失败)! 文件: " list.filename " 跳过装入 " string(time,"HH:MM:SS") skip.
+   put stream chklog unformat "check error found" skip.
 end.
 else do:
-    put stream chklog unformat "数据检查完成(成功)! CIM_LOAD处理: " string(time,"HH:MM:SS") skip.
+    put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
     cimrunprogramloop:
     do on stop undo cimrunprogramloop,leave cimrunprogramloop:
         assign trrecid = current-value(tr_sq01).
         input from value(bkflh_file).
-        output to value(bkflh_file + ".out").
+        output to value(bkflh_filecim + ".out") append.
         batchrun = yes.
         {gprun.i ""xxrebkfl1.p""}
         batchrun = no.
@@ -695,8 +700,8 @@ else do:
                    tr_type = "rct-wo" and tr_qty_loc = xxwk.qty_comp and
                    tr_site = xxwk.site and tr_loc = xxwk.parloc no-error.
         if not available tr_hist then do:
-           put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5 skip.
-           put stream chklog unformat xxwk.par " " xxwk.parloc  " rct-wo " xxwk.qty_comp at 5 skip.
+           put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5.
+           put stream chklog unformat xxwk.par " " xxwk.parloc  " iss-wo " xxwk.qty_comp at 5.
            assign cim_yn = no.
         end.
         for each xxwk where xxwk.comp <> "" and xxwk.qty_iss <> 0 no-lock:
@@ -707,35 +712,32 @@ else do:
                 tr_serial = xxwk.complot AND tr_ref = xxwk.compref
                 no-error.
             if not availabl tr_hist then do:
-                if cim_yn then
-                put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5 skip.
-                put stream chklog unformat xxwk.comp " " xxwk.comploc " " xxwk.complot " iss-wo " xxwk.qty_iss at 5 skip.
+                put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5.
+                put stream chklog unformat xxwk.comp " " xxwk.comploc " " xxwk.complot " iss-wo " xxwk.qty_iss at 5.
                 assign  cim_yn = no.
             end.
         end.
         if cim_yn = no then do:
-           put stream chklog unformat list.filename "处理失败!数据还原到装入前状态。 " string(time,"HH:MM:SS") skip.
            undo cimrunprogramloop, leave.
         end.
     end.    /* cimrunprogramloop */
-    if cim_yn then do:
-        put stream chklog unformat list.filename " 成功处理完成! " string(time,"HH:MM:SS") skip.
-    end.
+        put stream chklog unformat list.filename " 处理完成! " string(time,"HH:MM:SS") skip.
 end.  /* if ok_yn = no else do: */
     if ok_yn = no or cim_yn = no then do:
-        if opsys = "UNIX" then do:
-           unix silent value("mv '" + srcdir + list.filename + "' " + errdir).
-        end.
-        else do:
-           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
-        end.
+        if opsys = "UNIX" then
+           unix silent value("mv + '" + srcdir + list.filename + "' '" + errdir + list.filename + "'").
+        else
+           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir + list.filename).
     end.
     else do:
-         if opsys = "UNIX" then do:
+         if opsys = "UNIX" then
             unix silent value("mv '" + srcdir + list.filename + "' " + okdir).
-         end.
-         else do:
+         else
             Dos silent value("move " + "~"" + srcdir  + list.filename + "~"" + " " + okdir).
-         end.
     end.
 end. /*for each list*/
+
+
+put skip(1).
+put unformat "=======================  Run Date: " today.
+put unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
