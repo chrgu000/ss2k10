@@ -171,7 +171,7 @@ DEFINE FRAME fMain
 IF SESSION:DISPLAY-TYPE = "GUI":U THEN
   CREATE WINDOW wWin ASSIGN
          HIDDEN             = YES
-         TITLE              = "客户寄售库存使用装入（xxcnimp.p）"
+         TITLE              = "客户寄售库存使用装入（xxsocnimp.p）"
          HEIGHT             = 31.75
          WIDTH              = 106.75
          MAX-HEIGHT         = 44.13
@@ -227,7 +227,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH xsc_d.
 
 &Scoped-define SELF-NAME wWin
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON END-ERROR OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON END-ERROR OF wWin /* 客户寄售库存使用装入（xxsocnimp.p） */
 OR ENDKEY OF {&WINDOW-NAME} ANYWHERE DO:
   /* This case occurs when the user presses the "Esc" key.
      In a persistently run window, just ignore this.  If we did not, the
@@ -240,7 +240,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-CLOSE OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON WINDOW-CLOSE OF wWin /* 客户寄售库存使用装入（xxsocnimp.p） */
 DO:
   /* This event will close the window and terminate the procedure.  */
   APPLY "CLOSE":U TO THIS-PROCEDURE.
@@ -252,7 +252,7 @@ END.
 
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL wWin wWin
-ON WINDOW-RESIZED OF wWin /* 客户寄售库存使用装入（xxcnimp.p） */
+ON WINDOW-RESIZED OF wWin /* 客户寄售库存使用装入（xxsocnimp.p） */
 DO:
    IF wwin:HEIGHT >= 14 THEN DO:
       FRAME fmain:WIDTH = wwin:WIDTH NO-ERROR.
@@ -368,7 +368,7 @@ DO:
   ASSIGN GFILE = vfile.
     SYSTEM-DIALOG GET-FILE gfile
         TITLE      "另存为..."
-        FILTERS    "EXCEL工作簿(*.xsl)"   "*.xls"
+        FILTERS    "EXCEL工作簿(*.xls)"   "*.xls"
         MUST-EXIST
         ASK-OVERWRITE
         INITIAL-DIR "."
