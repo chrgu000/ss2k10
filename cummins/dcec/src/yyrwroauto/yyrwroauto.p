@@ -1,156 +1,154 @@
-/*yyrwroauto.p for generate the routing based on bom automatically           */
-/*Last modified by: Kevin, 11/09/2003                                        */
-/*eb2+sp7 retrofit:tao fengqin *tfq* 11/09/2003                              */
-/* $Revision:qad2011  $ BY: Jordan Lin DATE: 10/25/12  ECO:  *SS-20121025.1* */
+/* yyrwroauto.p - convert from xxtestoprp.p  - operation report print         */
+/* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK. */
+/* V1                 Developped: 09/05/01      BY: Kang Jian          */
+/* V2                 Developped: 09/16/01      BY: Kang Jian     *对自制零件的子件不进行检查**/
+/*表与字段说明
+pt_mstr 零件数据表
+pt_iss_pol 虚实
+pt_phantom 发放
+ps_mstr BOM数据表
+ps_par 零件号
+ps_comp 子零件
+ps_op 工序
+ps_qty_per 用量
+ps_start 起始日期
+ps_end 中止日期
 
-/* DISPLAY TITLE */
-{mfdtitle.i "121025.1"}
+ro_det 工艺流程数据表
+ro_routing 工艺流程代码
+ro_op 工艺流程代码工序
+ro_std_op 标准工序
 
-def var site like si_site.
-def var sidesc like si_desc.
-def var parent like bom_parent.
-def var parent1 like bom_parent.
-def var msg-nbr as inte.
-def var comp like ps_comp.
-def var level as inte.
-define variable record as integer extent 100.
+opm_mstr 标准工序数据表
+opm_std_op 标准工序 */
+{mfdtitle.i "120817.1"}
 def var rmks as char format "x(80)" label "说明".
+define workfile bom1 field bom1_par like ps_par
+                     field bom1_op like ps_op
+                     field bom1_i as integer.
+define workfile bom2 field bom2_par like ps_par label "零件号"
+                     field bom2_op like ps_op label "BOM中工序"
+                     field bom2_ro_op like ro_op label "工艺流程中工序"
+                     field bom2_start like ps_start label "起始日期"
+                     field bom2_end like ps_end label "中止日期"
+                     field bom2_std_op like opm_std_op label "标准工序"
+                     field bom2_pt_iss_pol like pt_iss_pol label "放"
+                     field bom2_pt_phantom like pt_phantom label "虚实"
+                     field bom2_pt_pm_code like pt_pm_code label "采/制"
+                     field bom2_i as integer.
+define var bom1 like ps_par.
+define var level as integer.
+/*start format of query screen*/
+&SCOPED-DEFINE PP_FRAME_NAME A
+FORM      
+   RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+   RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+   SKIP(.1)  
+   bom1 colon 30 
+with frame a side-labels width 80 attr-space NO-BOX THREE-D.
 
-FORM /*GUI*/
+DEFINE VARIABLE F-a-title AS CHARACTER.
+   F-a-title = " 选择条件 ".
+   RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+   RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+   FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+   RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+   RECT-FRAME:HEIGHT-PIXELS in frame a =
+   FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+   RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.
+&UNDEFINE PP_FRAME_NAME	  
+/*judy 05/08/05*/ /* SET EXTERNAL LABELS */
+/*judy 05/08/05*/  setFrameLabels(frame a:handle).
 
- RECT-FRAME       AT ROW 1 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
- SKIP(.1)  /*GUI*/
- /* *SS-20121025.1* site  colon 22 sidesc no-label  */
- parent colon 22       parent1 colon 45 label {t001.i}
- SKIP(.4)  /*GUI*/
-with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
+{mfguirpa.i true  "printer" 132 }
+/*end format of query screen*/
 
- DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:HIDDEN in frame a = yes.
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
-/*tfq*/ setFrameLabels(frame a:handle).
-repeat:
-    sidesc = "".
+/*start query preference initialize*/
+/*start procefuer p-enable-ui*/
+procedure p-enable-ui:
+   
+   if bom1     = hi_char  then bom1 = "". 
+     
+   run p-action-fields (input "display").
+   run p-action-fields (input "enable").
+end procedure. 
+/*end procefuer p-enable-ui*/
+/*end query preference initialize*/
 
-    if parent1 = hi_char then parent1 = "".
-  /* *SS-20121025.1*   -b */
-/*
- *   update site parent parent1 with frame a editing:
- *        if frame-field = "site" then do:
- *            {mfnp.i si_mstr site " si_domain = global_domain and si_site " site si_site si_site}
- *            if recno <> ? then
- *                disp si_site @ site si_desc @ sidesc with frame a.
- *        end.
- *        else do:
- *            readkey.
- *            apply lastkey.
- *        end.
- *    end.
- *
- *         find si_mstr no-lock where si_domain = global_domain
- *          and si_site = site no-error.
- *         if not available si_mstr or (si_db <> global_db) then do:
- *             if not available si_mstr then msg-nbr = 708.
- *             else msg-nbr = 5421.
- *             /*tfq {mfmsg.i msg-nbr 3} */
- *             {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3 }
- *             undo, retry.
- *         end.
- *
- *         disp si_site @ site si_desc @ sidesc with frame a.
- *
- *                {gprun.i ""gpsiver.p""
- *                "(input si_site, input recid(si_mstr), output return_int)"}
- * /*GUI*/ if global-beam-me-up then undo, leave.
- *
- * /*J034*/          if return_int = 0 then do:
- * /*J034*/             /*tfq {mfmsg.i 725 3}  */
- * {pxmsg.i
- *               &MSGNUM=725
- *              &ERRORLEVEL=3
- *                         }  /* USER DOES NOT HAVE */
- * /*J034*/                                /* ACCESS TO THIS SITE*/
- *  /*J034*/             undo,retry.
- * /*J034*/          end.
- */
-  update parent parent1 with frame a.
+/*start procedure of p-report-quote*/
+/*start receive query preference*/
+procedure p-report-quote:
+   bcdparm = "".
+   {mfquoter.i bom1} 
+/*end receive query preference*/
 
-   /* *SS-20121025.1* -e  */
-       bcdparm = "".
-  /* *SS-20121025.1*       {mfquoter.i site     }    */
-       {mfquoter.i parent   }
-       {mfquoter.i parent1  }
+/*start check the validity of query preference*/
+   if bom1     = ""  then do:
+      {mfmsg.i 40 3}
+      undo,retry.
+   end.
+/*end check the validity of query preference*/
+end procedure. 
+/*end procedure of p-report-quote*/
 
-       if parent1 = "" then parent1 = hi_char.
+/*end query  preference */
 
-    {mfselbpr.i "printer" 132}
-
-    {mfphead.i}
-
-    Do transaction:
-    for each bom_mstr where bom_domain = global_domain /* *SS-20121025.1*  and bom__chr01 = site  */
-        and (bom_parent >= parent and bom_parent <= parent1) no-lock:
-
-        rmks = "".
-
-        /*added by kevin,11/09/2003 for select the final product's bom code*/
-       find pt_mstr where pt_domain = global_domain and pt_part = bom_parent no-lock no-error.
-       if not available pt_mstr then do:
-          find pt_mstr where pt_domain = global_domain and pt_part = bom__chr02 no-lock no-error.
-          if not available pt_mstr then next.
-      end.
-
-       if not pt_prod_line begins "7" and pt_part_type <> "58" and not pt_group begins "58" then next.
-        /*end added by kevin,11/09/2003*/
-
-        find first ps_mstr where ps_domain = global_domain /* *SS-20121025.1*  and ps__chr01 = bom__chr01   */ and ps_par = bom_parent no-lock no-error.
-        if not available ps_mstr then next.
-
-        /*verify the routing record, if existing then next*/
-        find first ro_det where ro_domain = global_domain and ro_routing = bom_parent no-lock no-error.
-        if available ro_det then do:
-            disp bom_parent bom_desc "失败:工艺流程已经存在!" @ rmks with width 132 stream-io.
-            next.
+/*start procedure of p-report*/
+/*start report out put*/
+procedure p-report:
+{gpprtrpa.i  "window" 132}                               
+create bom1.
+bom1_par = bom1.
+bom1_i = 0.
+do level = 0 to 99 :
+    for each bom1 where bom1_i = level :
+        for each ps_mstr where ps_domain = global_domain and 
+        				 ps_par = bom1_par use-index ps_par no-lock:
+            create bom2.
+            bom2_par = ps_comp.
+            bom2_op = ps_op.
+            bom2_start = ps_start.
+            bom2_end = ps_end.
+            bom2_i = level + 1.
+            find pt_mstr where pt_domain = global_domain and
+            		 pt_part = ps_comp no-lock no-error .
+            if available pt_mstr then do:
+                 bom2_pt_pm_code = pt_pm_code.
+               bom2_pt_iss_pol = pt_iss_pol.
+               bom2_pt_phantom = pt_phantom.
+            end.
         end.
-
-   assign comp = bom_parent
-          level = 1.
-
-   find first ps_mstr use-index ps_parcomp where ps_domain = global_domain and ps_par = comp
-   no-lock no-error.
-   repeat:
-         if not available ps_mstr then do:
-      repeat:
-         level = level - 1.
-         if level < 1 then leave.
-         find ps_mstr where recid(ps_mstr) = record[level]
-         no-lock no-error.
-         comp = ps_par.
-         find next ps_mstr use-index ps_parcomp where ps_domain = global_domain and ps_par = comp
-         no-lock no-error.
-         if available ps_mstr then leave.
-      end.
-         end.
-         if level < 1 then leave.
-
-              record[level] = recid(ps_mstr).
-/*y0222*/ assign site = "dcec-c".
-/*y0222*/ if substring(ps_par,length(ps_par) - 1 , 2) = "zz" then assign site = "dcec-b".
-          find first ptp_det where ptp_domain = global_domain and ptp_site = site and ptp_part = ps_comp no-lock no-error.
-          if available ptp_det and ptp_phantom = no and ps_op <> 0 then do:
-
-              find first ro_det where ro_domain = global_domain and ro_routing = bom_parent and ro_op = ps_op no-error.
+    end.
+    find first bom2 where bom2_i = (level + 1) no-error.
+    if not available bom2 then leave.
+    for each bom2 :
+         if not (bom2_pt_pm_code="M" and (not bom2_pt_phantom)) then do:            
+          create bom1.
+            bom1_par = bom2_par.
+            bom1_i = bom2_i.
+       end.
+    end.   
+end.
+for each bom2 :    
+    if bom2_op <> 0 then do:
+       find first ro_det where ro_domain = global_domain and 
+       			ro_routing = bom1 and ro_op = bom2_op no-lock no-error .
+       if available ro_det then do:
+        bom2_ro_op = ro_op.
+        bom2_std_op = ro_std_op.
+       end.
+    end.
+end.
+/*产生工艺流程*/
+for each bom2 where bom2_op <> 0 and bom2_ro_op = 0:
+          find first ro_det where ro_domain = global_domain and ro_routing = bom1 and ro_op = bom2_op no-error.
               if not available ro_det then do:
                     create ro_det. ro_domain = global_domain.
-                    assign ro_routing = bom_parent
-                           ro_op = ps_op.
+                    assign ro_routing = bom1
+                           ro_op = bom2_op.
 /*                         ro__chr01 = bom__chr01.                           */
 
-                    find opm_mstr where opm_domain = global_domain and opm_std_op = string(ps_op) no-lock no-error.
+                    find opm_mstr where opm_domain = global_domain and opm_std_op = string(bom2_op) no-lock no-error.
                     if available opm_mstr then do:
                         assign ro_std_op = opm_std_op
                                ro_desc = opm_desc
@@ -180,34 +178,30 @@ repeat:
                     end.
 
               end. /*if not available ro_det*/
-          end. /*if available ptp_det and ptp_phantom = no*/
+end.
 
-          find pt_mstr where pt_domain = global_domain and pt_part = ps_comp no-lock no-error.
-          if available pt_mstr and pt_phantom = no then do:
-         find next ps_mstr use-index ps_parcomp where ps_domain = global_domain and ps_par = comp
-         no-lock no-error.
-          end.
-          else do:
-               comp = ps_comp.
-               level = level + 1.
-         find first ps_mstr use-index ps_parcomp where ps_domain = global_domain and ps_par = comp
-         no-lock no-error.
-     end.
-   end. /*repeat for expand the bom*/
-
-        find first ro_det where ro_domain = global_Domain and ro_routing = bom_parent no-lock no-error.
+for each bom_mstr where bom_domain = global_domain and bom_parent = BOM1 no-lock:
+        rmks = "".
+ find first ro_det where ro_domain = global_Domain and ro_routing = bom1 no-lock no-error.
         if available ro_det then do:
               disp bom_parent bom_desc "成功创建工艺流程!" @ rmks with width 132 stream-io.
         end.
         else do:
               disp bom_parent bom_desc "失败!" @ rmks with width 132 stream-io.
         end.
+end.
+for each bom1:
+   delete bom1.
+end.
+for each bom2:
+  delete bom2.
+end.
 
-    end. /*for each bom_mstr*/
-    end.
+{mfreset.i}    
+{mfgrptrm.i}
+ 
+/* reset variable */
 
-    {mfguitrl.i}
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
-end. /*repeat*/
+end. /*end of the procedure*/
+{mfguirpb.i &flds="bom1 "}
 
