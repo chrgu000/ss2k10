@@ -491,7 +491,7 @@ DO:
         PUT STREAM bf UNFORMAT xim_qty ' - - "' xim_site '" "' xim_loc '" "'.
                   put STREAM bf UNFORMAT xim_lot '" - N "' xim_sojob '"' SKIP.
         PUT STREAM bf UNFORMAT '"' xim_nbr '" - - "' xim_rmks '" ' xim_effdate.
-                        put STREAM bf UNFORMAT ' - - - ' xim_sojob SKIP.
+                        put STREAM bf UNFORMAT ' - - - -' SKIP.
         OUTPUT STREAM bf CLOSE.
 
          batchrun = yes.
