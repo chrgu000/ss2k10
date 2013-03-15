@@ -235,6 +235,11 @@ do on error undo, retry:
       next-prompt fileF with frame z.
       undo,retry.
    end.
+   if length(destdir) < 3 then do:
+       {mfmsg.i 2603 3}
+       next-prompt destdir with frame z.
+       undo,retry.
+   end.
    FILE-INFO:FILE-NAME = xrcDir.
    if FILE-INFO:FILE-TYPE = ? then do:
        status input "No such direction ,Please Try it again !".
