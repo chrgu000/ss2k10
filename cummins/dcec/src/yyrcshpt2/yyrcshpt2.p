@@ -158,31 +158,31 @@ function f-getsoprice returns DECIMAL
 
     IF AVAILABLE sod_det AND AVAILABLE so_mstr THEN DO:
         v_out_results = sod_price.
-        IF sod_pr_list <> "" THEN DO:
-            for last pc_mstr
-            fields(pc_amt pc_amt_type pc_curr pc_expire pc_list
-            pc_min_qty pc_part pc_prod_line pc_start pc_um)
-            where pc_domain    = global_domain         and
-                  pc_list      = sod_pr_list           and
-                  pc_part      = sod_part              and
-                  pc_um        = sod_um                and
-                  (pc_start    <= v_inp_effdt or pc_start = ?)  and
-                  (pc_expire   >= v_inp_effdt or pc_expire = ?) and
-                  pc_curr      = so_curr                        and
-                  pc_amt_type  = "P" no-lock:
-            end. /* FOR LAST PC_MSTR */
-            if available pc_mstr then DO:
-                if v_inp_qty < 0 then v_inp_qty = v_inp_qty * -1.
-                do jk = 1 to 15:
-                    if pc_min_qty[jk] > v_inp_qty
-                    or (pc_min_qty[jk] = 0 and pc_amt[jk] = 0)
-                    then leave.
-                end.
-                jk = jk - 1.
-
-                if jk > 0 then v_out_results = pc_amt[jk].
-            END.
-        END.
+/*      IF sod_pr_list <> "" THEN DO:                                        */
+/*          for last pc_mstr                                                 */
+/*          fields(pc_amt pc_amt_type pc_curr pc_expire pc_list              */
+/*          pc_min_qty pc_part pc_prod_line pc_start pc_um)                  */
+/*          where pc_domain    = global_domain         and                   */
+/*                pc_list      = sod_pr_list           and                   */
+/*                pc_part      = sod_part              and                   */
+/*                pc_um        = sod_um                and                   */
+/*                (pc_start    <= v_inp_effdt or pc_start = ?)  and          */
+/*                (pc_expire   >= v_inp_effdt or pc_expire = ?) and          */
+/*                pc_curr      = so_curr                        and          */
+/*                pc_amt_type  = "P" no-lock:                                */
+/*          end. /* FOR LAST PC_MSTR */                                      */
+/*          if available pc_mstr then DO:                                    */
+/*              if v_inp_qty < 0 then v_inp_qty = v_inp_qty * -1.            */
+/*              do jk = 1 to 15:                                             */
+/*                  if pc_min_qty[jk] > v_inp_qty                            */
+/*                  or (pc_min_qty[jk] = 0 and pc_amt[jk] = 0)               */
+/*                  then leave.                                              */
+/*              end.                                                         */
+/*              jk = jk - 1.                                                 */
+/*                                                                           */
+/*              if jk > 0 then v_out_results = pc_amt[jk].                   */
+/*          END.                                                             */
+/*      END.                                                                 */
     END.
     RETURN v_out_results.
 END FUNCTION.
@@ -426,7 +426,7 @@ PROCEDURE xxpro-input:
         END.
     END.
 
-    FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_id = 's' + v_shipper 
+    FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_id = 's0' + v_shipper 
         AND abs_type = 's'
         NO-LOCK NO-ERROR.
     IF AVAILABLE ABS_mstr THEN DO:
@@ -478,7 +478,8 @@ PROCEDURE xxpro-build:
 
     CREATE xxwk1.
     ASSIGN
-        xxwk1_inv_nbr   = v_shipper
+/*        xxwk1_inv_nbr   = v_shipper        */
+        xxwk1_inv_nbr   = abs_inv_nbr
         xxwk1_buyer[1]  = ABS_shipto
         xxwk1_seller[1] = /*ABS_shipfrom*/ v_sender
         xxwk1_billto[1] = ABS_shipto
@@ -653,7 +654,12 @@ PROCEDURE xxpro-post-process:
             IF AVAILABLE Xxwk3 THEN DO:
                 ASSIGN xxwk3_qty = xxwk3_qty + xxwk2_qty.
             END.
-            xxwk2_price = f-getsoprice(xxwk2_order, xxwk2_mfg_line, xxwk1_date[1], xxwk2_qty).
+            find first idh_hist no-lock where idh_domain = global_domain and idh_inv_nbr = xxwk1_inv_nbr
+                   and idh_part = xxwk2_part no-error.
+            if available idh_hist then do:
+               assign xxwk2_price = idh_price.
+            end.
+/*0316          xxwk2_price = f-getsoprice(xxwk2_order, xxwk2_mfg_line, xxwk1_date[1], xxwk2_qty).  */            
             xxwk2_amt   = xxwk2_price * xxwk2_qty.
             FIND FIRST scx_ref 
                 where scx_domain = global_domain 
@@ -1036,10 +1042,6 @@ PROCEDURE xxpro-excel:
         chWorkbook:worksheets(2):cells(i,7):value = "Net Weight".
         chWorkbook:worksheets(2):cells(i,9):Font:BOLD = TRUE.
         chWorkbook:worksheets(2):cells(i,9):value = "Order".
-
-
-
-
 
         /*body*/
         i = 12.
