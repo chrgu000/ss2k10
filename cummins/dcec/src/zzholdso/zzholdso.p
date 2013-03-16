@@ -2,6 +2,7 @@
 
 {mfdtitle.i "121119.1"}
 define variable yn like mfc_logical no-undo.
+define variable histfn as character format "x(120)".
 {gpcdget.i "UT"}
 
 
@@ -12,7 +13,8 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-yn colon 40
+ histfn  colon 25 format "x(120)" view-as fill-in size 40 by 1 skip(2)
+ yn colon 25
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -32,11 +34,18 @@ setFrameLabels(frame a:handle).
 repeat with frame a:
 /*GUI*/ if global-beam-me-up then undo, leave.
 
-update yn.
+update histfn yn.
+if histfn = "" then do:
+   {mfmsg.i 40 3}
+   undo,retry.
+end.
 if not yn then leave.
-FOR EACH so_mstr WHERE so_domain = "dcec" and so_stat = "".
+output to value(histfn).
+FOR EACH so_mstr exclusive-lock WHERE so_domain = "dcec" and so_stat = "".
     ASSIGN so_stat = "HD".
+    display so_nbr so_cust so_stat.
 END.
+output close.
 
 end.
 /*GUI*/ if global-beam-me-up then undo, leave.
