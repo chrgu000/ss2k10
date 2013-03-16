@@ -129,6 +129,7 @@ repeat:
                 amt1 = ap_base_amt .
                 due_date = vo_due_date.
                 invoice = vo_invoice.
+                vconf = VO__QAD01.
             END.
 
             amt6 = 0 .
