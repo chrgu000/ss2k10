@@ -34,6 +34,7 @@ define workfile bom2 field bom2_par like ps_par label "零件号"
                      field bom2_pt_iss_pol like pt_iss_pol label "放"
                      field bom2_pt_phantom like pt_phantom label "虚实"
                      field bom2_pt_pm_code like pt_pm_code label "采/制"
+                     field bom2_ps_code like ps_ps_code
                      field bom2_i as integer.
 define var bom1 like ps_par.
 define var level as integer.
@@ -104,6 +105,7 @@ do level = 0 to 99 :
             bom2_par = ps_comp.
             bom2_op = ps_op.
             bom2_start = ps_start.
+            bom2_ps_code = ps_ps_code.
             bom2_end = ps_end.
             bom2_i = level + 1.
             find pt_mstr where pt_domain = global_domain and
@@ -141,7 +143,7 @@ for each bom2 where bom2_op = 0:
    if line-count + 4 > page-size then page.
 end.
 display "工艺流程中未定义的清单" at 10 with STREAM-IO no-attr-space down.
-for each bom2 where bom2_op <> 0   and bom2_ro_op = 0:
+for each bom2 where bom2_op <> 0 and bom2_ro_op = 0 and bom2_ps_code <> "D":
    display bom2_par bom2_op bom2_pt_iss_pol  bom2_pt_phantom with STREAM-IO no-attr-space down.
    if line-count + 4 > page-size then page.
 end.
