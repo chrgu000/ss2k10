@@ -4,7 +4,7 @@
 
 /* DISPLAY TITLE */
 {mfdtitle.i "121111.1"}
-define variable v_key like usrw_key1 no-undo initial "ZZPTSTATCHG.P-CTRL".
+define variable v_key like usrw_key1 no-undo initial "ZZINNER.P-CTRL".
 define variable del-yn like mfc_logical initial no.
 define variable i as integer.
 
@@ -27,7 +27,9 @@ FORM /*GUI*/
  SKIP(.1)  /*GUI*/
    usrw_key2 colon 25 format "x(28)" skip(1)
    usrw_key3 colon 25 format "x(120)" view-as fill-in size 40 by 1
-   usrw_key4 colon 25 format "x(120)" view-as fill-in size 40 by 1 skip(1)
+   usrw_key4 colon 25 format "x(120)" view-as fill-in size 40 by 1
+   usrw_key5 colon 25 format "x(120)" view-as fill-in size 40 by 1
+   usrw_key6 colon 25 format "x(120)" view-as fill-in size 40 by 1 skip(1)
 
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
@@ -74,7 +76,7 @@ repeat with frame a:
              usrw_key2
             " input usrw_key2 "}
          if recno <> ? then do:
-            display usrw_key2 usrw_key3 usrw_key4.
+            display usrw_key2 usrw_key3 usrw_key4 usrw_key5 usrw_key6.
          end.
       end. /* editing: */
 
@@ -101,7 +103,7 @@ repeat with frame a:
 
   repeat with frame a:
 /*GUI*/ if global-beam-me-up then undo, leave.
-         update usrw_key3 usrw_key4 go-on(F5 CTRL-D).
+         update usrw_key3 usrw_key4 usrw_key5 usrw_key6 go-on(F5 CTRL-D).
 
            if usrw_key3 = "" then do:
               {mfmsg.i 40 3}
@@ -112,6 +114,16 @@ repeat with frame a:
               {mfmsg.i 40 3}
               next-prompt usrw_key4.
                undo,retry.
+           end.
+           if usrw_key5 = "" then do:
+              {mfmsg.i 40 3}
+              next-prompt usrw_key5.
+              undo,retry.
+           end.
+           if usrw_key6 = "" then do:
+              {mfmsg.i 40 3}
+              next-prompt usrw_key6.
+              undo,retry.
            end.
         leave.
   end.

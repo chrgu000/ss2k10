@@ -10,7 +10,7 @@ global_domain = "DCEC".
 global_db = "DCEC".
 execname = "zzinner.p".
 
-
+define variable v_key like usrw_key1 no-undo initial "ZZINNER.P-CTRL".
 DEFINE VAR path AS CHAR.
 DEFINE VAR loadfile AS CHARA. /*对应帐户导入文件*/
 DEFINE VAR logfile AS CHARA. /*对应帐户导入的日志*/
@@ -33,6 +33,19 @@ ASSIGN loadfile = "E:\inv\inner.xls".
 ASSIGN logfile = "D:\GLreport\logact.txt".
 ASSIGN outdir = "D:\GLreport\".
 ASSIGN outfile = "dflreport.xls".
+
+find first usrw_wkfl no-lock where usrw_domain = global_domain and
+           usrw_key1 = v_key and
+           usrw_key2 = v_key no-error.
+if available usrw_wkfl then do:
+   assign loadfile = usrw_key3
+          logfile = usrw_key4
+          outdir =  usrw_key5
+          outfile = usrw_key6.
+end.
+else do:
+end.
+
 FOR EACH xx_table.
     DELETE xx_table.
 END.
@@ -73,7 +86,7 @@ END.
     excelsheetmain:cells(1,7) = "备注" .
 
 
-path = "\\qadtemp\INV\inner" + string(year(TODAY - 1),"9999") +  STRING(month(TODAY - 1),"99") + STRING(day(TODAY - 1),"99") + ".xls".
+path = outdir + outfile. /* "\\qadtemp\INV\inner" + string(year(TODAY - 1),"9999") +  STRING(month(TODAY - 1),"99") + STRING(day(TODAY - 1),"99") + ".xls". */
 
 i = 2.
 FOR EACH ar_mstr WHERE ar_domain = global_domain and ar_date = TODAY - 1 AND ar_type = "I" .
