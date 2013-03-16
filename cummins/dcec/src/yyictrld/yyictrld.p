@@ -76,7 +76,7 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brList}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS fiFile hbtnOpen tnLoad btnXls brList 
+&Scoped-Define ENABLED-OBJECTS fiFile hbtnOpen tnLoad btnXls btnCtl brList 
 &Scoped-Define DISPLAYED-OBJECTS fiFile 
 
 /* Custom List Definitions                                              */
@@ -100,8 +100,8 @@ DEFINE MENU POPUP-MENU-brList
 
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON btnGenCimFile 
-     LABEL "测试程序" 
+DEFINE BUTTON btnCtl 
+     LABEL "清除批号" 
      SIZE 9 BY 1.21.
 
 DEFINE BUTTON btnXls 
@@ -156,8 +156,8 @@ DEFINE FRAME fMain
      fiFile AT ROW 1.58 COL 5.13 COLON-ALIGNED
      hbtnOpen AT ROW 1.58 COL 59.38
      tnLoad AT ROW 1.53 COL 71
-     btnXls AT ROW 1.53 COL 82
-     btnGenCimFile AT ROW 1.53 COL 94.5
+     btnXls AT ROW 1.53 COL 94.13
+     btnCtl AT ROW 1.53 COL 82.5
      brList AT ROW 3.21 COL 2
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
          SIDE-LABELS NO-UNDERLINE THREE-D 
@@ -219,15 +219,10 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
   VISIBLE,,RUN-PERSISTENT                                               */
 /* SETTINGS FOR FRAME fMain
    FRAME-NAME Custom                                                    */
-/* BROWSE-TAB brList btnGenCimFile fMain */
+/* BROWSE-TAB brList btnCtl fMain */
 ASSIGN 
        brList:POPUP-MENU IN FRAME fMain             = MENU POPUP-MENU-brList:HANDLE
        brList:NUM-LOCKED-COLUMNS IN FRAME fMain     = 2.
-
-/* SETTINGS FOR BUTTON btnGenCimFile IN FRAME fMain
-   NO-ENABLE                                                            */
-ASSIGN 
-       btnGenCimFile:HIDDEN IN FRAME fMain           = TRUE.
 
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
 THEN wWin:HIDDEN = yes.
@@ -290,6 +285,25 @@ DO:
     FRAME fmain:VIRTUAL-HEIGHT-CHARS = wWin:HEIGHT NO-ERROR.
     brList:HEIGHT = wWin:HEIGHT - 2.64 NO-ERROR.
 
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME btnCtl
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btnCtl wWin
+ON CHOOSE OF btnCtl IN FRAME fMain /* 清除批号 */
+DO:
+  DEFINE VARIABLE ret AS LOGICAL INITIAL NO.
+  MESSAGE "清除移入库位的批号?" VIEW-AS ALERT-BOX QUESTION BUTTON YES-NO-CANCEL  UPDATE ret  .
+  IF ret  THEN DO:
+      for each xic:
+        assign xic_tlot = "".
+    end.
+  END.
+    OPEN QUERY brlist FOR EACH xic .
+    IF CAN-FIND(FIRST xic) THEN brList:REFRESH().
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -918,7 +932,7 @@ PROCEDURE enable_UI :
 ------------------------------------------------------------------------------*/
   DISPLAY fiFile 
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE fiFile hbtnOpen tnLoad btnXls brList 
+  ENABLE fiFile hbtnOpen tnLoad btnXls btnCtl brList 
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.
