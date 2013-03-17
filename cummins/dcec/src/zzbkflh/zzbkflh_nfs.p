@@ -35,10 +35,39 @@ disable triggers for load of wo_mstr.
 disable triggers for load of wod_det.
 disable triggers for load of spt_det.
 disable triggers for load of wr_route.
-disable triggers for load of tr_hist.
+/*JJ disable triggers for load of tr_hist. */
 disable triggers for load of in_mstr.
 disable triggers for load of ld_det.
-disable triggers for load of op_hist.
+/*JJ*/ disable triggers for load of op_hist.
+
+define temp-table tw9 no-undo
+     fields tw9_file as character format "x(40)"
+     fields tw9_date as character format "x(12)"
+     fields tw9_time as character format "x(12)".
+
+/*JJ*/ define temp-table tt no-undo /* like tr_hist */
+		field tr_domain 	like tr_hist.tr_domain
+		field tr_trnbr 		like tr_hist.tr_trnbr
+		field tr_part 		like tr_hist.tr_part
+		field tr_type 		like tr_hist.tr_type
+		field tr_qty_loc 	like tr_hist.tr_qty_loc
+		field tr_site 		like tr_hist.tr_site
+		field tr_loc 		like tr_hist.tr_loc
+		field tr_serial 	like tr_hist.tr_serial
+		field tr_ref 		like tr_hist.tr_ref
+	index tt_p 
+		tr_domain tr_part tr_type tr_qty_loc tr_site tr_loc
+	index tt_trnbr is unique primary
+		tr_domain tr_trnbr.
+
+	on write of tr_hist do:
+		find first tt where tt.tr_domain = tr_hist.tr_domain and
+			tt.tr_trnbr = tr_hist.tr_trnbr no-error.
+		if not avail tt then do:
+			create tt.
+		end.
+		buffer-copy tr_hist to tt.
+/*JJ*/	end.
 
 session:date-format = 'mdy'.
 {mfdeclre.i "new global"}
@@ -54,9 +83,6 @@ global_db = "DCEC".
 execname = "zzbkflh.p".
 
 /*G1MN*/ {gpglefv.i}
-define variable wkdir as char format "x(20)" initial "/data3/batch/bkfl/test/".     /*work file directory*/
-define variable nnable as logical initial no . /* 允许负数回冲 */
-
 define variable srcdir as char format "x(20)".    /*source file directory*/
 define variable okdir as char format "x(20)".     /*verified file directory*/
 define variable errdir as char format "x(20)".    /*incorrect file directory*/
@@ -122,7 +148,19 @@ for each xxld_wkfl:
     delete xxld_wkfl.
 end.
 /*judy*/
-
+for each tw9: delete tw9. end.
+for each usrw_wkfl exclusive-lock where usrw_domain = global_domain
+             and usrw_key1 = "BACKFLASHEDFILELIST":
+    if usrw_datefld[1] <= today - 7 then do:
+       delete usrw_wkfl.
+    end.
+    else do:
+       create tw9.
+       assign tw9_file = usrw_key2
+              tw9_date = usrw_key3
+              tw9_time = usrw_key4.
+    end.
+end.
 
 find first usrw_wkfl where usrw_domain = global_domain
        and usrw_key1 = "BKFLH-CTRL" no-lock no-error.
@@ -135,21 +173,17 @@ srcdir = usrw_charfld[10].
 okdir = usrw_charfld[11].
 errdir = usrw_charfld[12].
 logfile = usrw_charfld[13] + "xxbkflh.log".
+bkflh_file = usrw_charfld[14] + "bkflh_file.in".
 bkflh_filecim = usrw_charfld[14] + "bkflh_file.in".
 listfile = usrw_charfld[14] + "list.txt".
 
-srcdir = wkdir + "source/".
-okdir = wkdir + "correct/".
-errdir = wkdir + "error/".
-logfile = wkdir + "/log/xxbkflh_nfs_" + string(today,"99-99-99") + "_" + replace(string(time,"hh:mm:ss"),":",".") + ".log".
-bkflh_filecim = wkdir +  "temp/".
-listfile = wkdir + "temp/" + "list_nfs.txt".
-
-for each usrw_wkfl exclusive-lock where usrw_domain = global_domain
-             and usrw_key1 = "BACKFLASHEDFILELIST"
-             and usrw_datefld[1] <= today - 7:
-    delete usrw_wkfl.
-end.
+srcdir        = "/data3/batch/bkfl/test/source/".
+okdir         = "/data3/batch/bkfl/test/correct".
+errdir        = "/data3/batch/bkfl/test/error".
+logfile       = "/data3/batch/bkfl/test/log" + "/xxbkflh_nfs_" + string(today,"99-99-99") + "_" + replace(string(time,"hh:mm:ss"),":",".") + ".log".
+bkflh_file    = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
+bkflh_filecim = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
+listfile      = "/data3/batch/bkfl/test/temp/" + "list_nfs.txt".
 
 /*******To get the backflush source file list***********/
 if opsys = "UNIX" then
@@ -177,30 +211,26 @@ if not available list then do:
      put stream chklog unformat "Error: No source file for backflush!" at 1.
      leave.
 end.
+
 put stream chklog unformat "begin List: " string(time,"HH:MM:SS") skip.
 for each list where list.filename <> "" no-lock:
 
-output stream bkflh close.
-assign bkflh_file = bkflh_filecim + list.filename + ".in".
-output stream bkflh to value(bkflh_file).
-      for each xxwk exclusive-lock: delete xxwk. end.
+	output stream bkflh close.
+	assign bkflh_file = bkflh_filecim + list.filename + ".in".
+	output stream bkflh to value(bkflh_file).
+/*JJ*/  for each xxwk : delete xxwk. end.
 
-      ok_yn = yes.
-      put stream chklog unformat skip(1) "Now process file: " + list.filename + ":" + string(time,"HH:MM:SS") at 1 skip.
+      	ok_yn = yes.
+      	put stream chklog unformat skip(1).
+      	put stream chklog unformat "Now process file: " + list.filename at 1 skip.
          /*for log file*/
-         
-         /*记录下已回冲的文件防止重复回冲*/
-      find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
-             and usrw_key1 = "BACKFLASHEDFILELIST"
-             and usrw_key2 = list.filename no-error.
-      if available usrw_wkfl then do:
-         put stream chklog unformat "File: " list.filename " processed by" usrw_key3 " " usrw_key4 "This file skiped." at 5 skip.
-         ok_yn = no.
-         next.
-      end.
-         
+       find first tw9 no-lock where tw9_file = list.filename no-error.
+       if available tw9 then do:
+           put stream chklog unformat "File: " at 5 list.filename " 已在 " tw9_date " " trim(tw9_time) " 成功处理过.此文件跳过."  skip.
+           ok_yn = no.
+           next.
+       end.
        xxinfile = srcdir + list.filename.
-       if ok_yn then do:
        if opsys = "UNIX" then
        input stream src through value("cat '" + xxinfile + "' |" +  "tr -d '\015'").
        else
@@ -240,15 +270,15 @@ output stream bkflh to value(bkflh_file).
 
          end. /*if i > 1*/
 
-       end. /*repeat #1*/
-      input stream src close.
-      end. /* if  ok_yn then do: */
-       find first xxwk no-lock no-error.
-       if not available xxwk then do:
+      	end. /*repeat #1*/
+      	input stream src close.
+
+       	find first xxwk no-lock no-error.
+       	if not available xxwk then do:
             put stream chklog unformat "Error: No data need to process!" at 5 skip.
             ok_yn = no.
-       end.
-/* put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip. */
+       	end.
+	put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip.
 /***********************
 if ok_yn = no then do:
   if opsys = "UNIX" then
@@ -258,22 +288,22 @@ if ok_yn = no then do:
          next.
 end.
 ***********************/
-       /*verify every field before cimload*/
-        find emp_mstr where emp_domain = global_domain and
+	/*verify every field before cimload*/
+	find emp_mstr where emp_domain = global_domain and
              emp_addr = xxwk.emp no-lock no-error.
-       if not available emp_mstr then do:
+       	if not available emp_mstr then do:
               put stream chklog unformat "错误: 雇员号不存在 " xxwk.emp at 5 skip.
               ok_yn = no.
-       end.
+       	end.
 
-               /*verify the site*/
-               find si_mstr where si_domain = global_domain and
+        /*verify the site*/
+        find si_mstr where si_domain = global_domain and
                     si_site = xxwk.site no-lock no-error.
 
-               if not available si_mstr then do:
+        if not available si_mstr then do:
                     put stream chklog unformat "错误: 地点不存在" at 5 skip.
                     ok_yn = no.
-               end.
+        end.
 /*
 /*J04T*/       {gprun.i ""gpsiver.p"" "(input site,
                                         input recid(si_mstr),
@@ -286,14 +316,14 @@ end.
 /*J04T*/       end.
 */
 
-          /*verify the GL period*/
-          /* VALIDATE OPEN GL PERIOD FOR SPECIFIED ENTITY */
-          /* DEFINE VALIDATION PARAMETERS */
-          gpglef_tr_type  = "IC".
-          gpglef_entity   = si_entity.
-          gpglef_effdate  = xxwk.effdate.
-          global_user_lang_dir = "ch/" .
-          {gprun.i ""gpglef1.p""
+        /*verify the GL period*/
+        /* VALIDATE OPEN GL PERIOD FOR SPECIFIED ENTITY */
+        /* DEFINE VALIDATION PARAMETERS */
+        gpglef_tr_type  = "IC".
+        gpglef_entity   = si_entity.
+        gpglef_effdate  = xxwk.effdate.
+        global_user_lang_dir = "ch/" .
+        {gprun.i ""gpglef1.p""
                 "( input  gpglef_tr_type,
                    input  gpglef_entity,
                    input  gpglef_effdate,
@@ -301,8 +331,8 @@ end.
                    output gpglef_msg_nbr
                  )" }
 
-          /* PROCESS VALIDATION RESULTS */
-          if gpglef_result > 0 then do:
+	/* PROCESS VALIDATION RESULTS */
+        if gpglef_result > 0 then do:
 
              /* INVALID PERIOD */
              if gpglef_result = 1 then do:
@@ -314,20 +344,21 @@ end.
                 put stream chklog unformat "错误: 会计单位的期间已经结束" at 5 skip.
                 ok_yn = no.
              end.
-          end.
+        end.
 
           /*verify the parent number*/
-/*确认父零件及状态*/
+        if SESSION:PARAMETER = "" then do:
            find pt_mstr where pt_domain = global_domain and
                 pt_part = xxwk.par no-lock no-error.
            if not available pt_mstr then do:
                 put stream chklog unformat "错误: 父零件号 " + xxwk.par + " 不存在" at 5 skip.
                 ok_yn = no.
            end.
+        end.
 /*G1ZV*/   if can-find(first isd_det where isd_domain = global_domain and
 /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
 /*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE")) then do:
-                put stream chklog unformat "错误: 零件" + xxwk.par + "状态代码的限定过程 " + pt_status at 5 skip.
+                put stream chklog unformat "错误: 零件状态代码的限定过程 " + pt_status at 5 skip.
               ok_yn = no.
 /*F089*/   end.
 
@@ -376,32 +407,32 @@ end.
          end.
 
          /*verify the op*/
-      if xxwk.routing > "" then
-        find ro_det where ro_domain = global_domain and
-          ro_routing = xxwk.routing and
-          ro_op      = xxwk.lastop and
-          (ro_start = ? or ro_start  <= xxwk.effdate) and
-          (ro_end = ? or ro_end    >= xxwk.effdate)
-          no-lock no-error.
-      else
-        find ro_det where ro_domain = global_domain and
-          ro_routing = xxwk.par and
-          ro_op      = xxwk.lastop and
-          (ro_start = ? or ro_start  <= xxwk.effdate) and
-          (ro_end = ? or ro_end    >= xxwk.effdate)
-          no-lock no-error.
-     if not available ro_det then do:
-        put stream chklog unformat "错误: 输入的最后一道工序在工艺流程中不存在" at 5 skip.
-        ok_yn = no.
-    end.
+      	if xxwk.routing > "" then
+        	find ro_det where ro_domain = global_domain and
+          		ro_routing = xxwk.routing and
+          		ro_op      = xxwk.lastop and
+          		(ro_start = ? or ro_start  <= xxwk.effdate) and
+          		(ro_end = ? or ro_end    >= xxwk.effdate)
+          		no-lock no-error.
+      	else
+        	find ro_det where ro_domain = global_domain and
+          		ro_routing = xxwk.par and
+          		ro_op      = xxwk.lastop and
+          		(ro_start = ? or ro_start  <= xxwk.effdate) and
+          		(ro_end = ? or ro_end    >= xxwk.effdate)
+          		no-lock no-error.
+     	if not available ro_det then do:
+        	put stream chklog unformat "错误: 输入的最后一道工序在工艺流程中不存在" at 5 skip.
+        	ok_yn = no.
+    	end.
 
-      /*verify the routing code and bom code*/
-         find ptp_det no-lock where ptp_domain = global_domain and ptp_part = xxwk.par
+      	/*verify the routing code and bom code*/
+        find ptp_det no-lock where ptp_domain = global_domain and ptp_part = xxwk.par
            and ptp_site = xxwk.site no-error.
 
-         /* IF BOTH THE ROUTING AND BOM_CODE ARE DEFAULTS, THEN NO      */
-         /* ALTERNATE ROUTING OR BOM_CODE IS REQURIED.                  */
-         if not
+        /* IF BOTH THE ROUTING AND BOM_CODE ARE DEFAULTS, THEN NO      */
+        /* ALTERNATE ROUTING OR BOM_CODE IS REQURIED.                  */
+        if not
            (xxwk.routing = ""
              or xxwk.routing = xxwk.par
              or (not available ptp_det
@@ -416,73 +447,74 @@ end.
                  and available pt_mstr and xxwk.bom_code = pt_bom_code )
              or (available ptp_det and xxwk.bom_code = ptp_bom_code)
             )
-         then do:
+        then do:
                put stream chklog unformat "错误: 工艺流程代码或产品结构代码无效" at 5 skip.
                ok_yn = no.
-         end.
+        end.
 
 
-    /*FIND CUM ORDER. */
-    cumwo_lot = ?.
-    {gprun.i ""regetwo.p"" "(xxwk.site, xxwk.par, xxwk.effdate,
-       xxwk.line, xxwk.routing, xxwk.bom_code, output cumwo_lot)"}
-    if cumwo_lot <> ? then do:
-       find wo_mstr where wo_domain = global_domain and wo_lot = cumwo_lot no-lock no-error.
-       if wo_status = "C" then do:
-             put stream chklog unformat "错误: 累计加工单,标" + wo_lot + " 已结" at 5 skip.
-             ok_yn = no.
-       end.
-    end.
+    	/*FIND CUM ORDER. */
+    	cumwo_lot = ?.
+    	{gprun.i ""regetwo.p"" "(xxwk.site, xxwk.par, xxwk.effdate,
+       		xxwk.line, xxwk.routing, xxwk.bom_code, output cumwo_lot)"}
+    	if cumwo_lot <> ? then do:
+       		find wo_mstr where wo_domain = global_domain and wo_lot = cumwo_lot no-lock no-error.
+       		if wo_status = "C" then do:
+       		      	put stream chklog unformat "错误: 累计加工单,标" + wo_lot + " 已结" at 5 skip.
+             		ok_yn = no.
+       		end.
+    	end.
 
-      /*verify whether the input last op is the actual last one*/
-      if cumwo_lot <> ? then do:
-        find first wr_route where wr_domain = global_domain and
+      	/*verify whether the input last op is the actual last one*/
+      	if cumwo_lot <> ? then do:
+        	find first wr_route where wr_domain = global_domain and
                    wr_lot = cumwo_lot and wr_op = xxwk.lastop no-lock no-error.
-        if not available wr_route then do:
-            put stream chklog unformat "错误: 输入的最后一道工序在加工单工艺流程中不存在" at 5 skip.
-            ok_yn = no.
-        end.
+        	if not available wr_route then do:
+            		put stream chklog unformat "错误: 输入的最后一道工序在加工单工艺流程中不存在" at 5 skip.
+            		ok_yn = no.
+        	end.
 
-        find last wr_route where wr_domain = global_domain and
+        	find last wr_route where wr_domain = global_domain and
                   wr_lot = cumwo_lot no-lock no-error.
-        if available wr_route then do:
-           if wr_op <> xxwk.lastop then do:
-              put stream chklog unformat "错误: 输入的最后一道工序不是加工单工艺流程中的最后一道工序" at 5 skip.
-              ok_yn = no.
-           end.
-        end.
-     end.
-     else do:
-         if xxwk.routing = "" then
-             find last ro_det where ro_domain = global_domain and
-                       ro_routing = xxwk.par no-lock no-error.
-         else find last ro_det where ro_domain = global_domain and
+        	if available wr_route then do:
+           		if wr_op <> xxwk.lastop then do:
+              			put stream chklog unformat "错误: 输入的最后一道工序不是加工单工艺流程中的最后一道工序" at 5 skip.
+              			ok_yn = no.
+           		end.
+        	end.
+     	end.
+     	else do:
+         	if xxwk.routing = "" then
+             		find last ro_det where ro_domain = global_domain and
+                       	ro_routing = xxwk.par no-lock no-error.
+         	else find last ro_det where ro_domain = global_domain and
                         ro_routing = xxwk.routing no-lock no-error.
-         if available ro_det then do:
-               if ro_op <> xxwk.lastop then do:
-                      put stream chklog unformat "错误: 输入的最后一道工序不是工艺流程中的最后一道工序" at 5 skip.
-                      ok_yn = no.
-               end.
-         end.
-      end.
+         	if available ro_det then do:
+               		if ro_op <> xxwk.lastop then do:
+                      		put stream chklog unformat "错误: 输入的最后一道工序不是工艺流程中的最后一道工序" at 5 skip.
+                      		ok_yn = no.
+               		end.
+         	end.
+      	end.
 
-         /*verify the work center*/
-         find wc_mstr where wc_domain = global_domain and
+        /*verify the work center*/
+        find wc_mstr where wc_domain = global_domain and
               wc_wkctr = xxwk.wkctr and wc_mch = xxwk.mch no-lock no-error.
-         if not available wc_mstr then do:
+        if not available wc_mstr then do:
                put stream chklog unformat "错误: 工作中心不存在" at 5 skip.
                ok_yn = no.
-         end.
-        
-        if nnable = no then do: /* 数量不允许为负数 */
+        end.
+
+        if SESSION:PARAMETER = "" then do:
           if xxwk.qty_comp <= 0 then do:
                put stream chklog unformat "错误: 完成数量必须大于零" at 5 skip.
                ok_yn = no.
           end.
         end.
-       /*verify the data of components*/
-      find first xxwk no-lock no-error.
-       repeat:
+
+       	/*verify the data of components*/
+      	find first xxwk no-lock no-error.
+       	repeat:
            if available xxwk then do:
               /*verify the components item number*/
               find pt_mstr where pt_domain = global_domain and
@@ -493,16 +525,15 @@ end.
               end.
 
 /*judy begin added*/
-            find pt_mstr where pt_domain = global_domain and
-                 pt_part = xxwk.comp no-lock no-error.
-      if avail pt_mstr then do:
-  /*G1ZV*/   if can-find(first isd_det where isd_domain = global_Domain and
+              find pt_mstr where pt_domain = global_domain and pt_part = xxwk.comp no-lock no-error.
+      	      if avail pt_mstr then do:
+  /*G1ZV*/         if can-find(first isd_det where isd_domain = global_Domain and
   /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
   /*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE")) then do:
-      put stream chklog unformat "错误: 零件" + xxwk.comp + "状态代码的限定过程 " + pt_status at 5 skip.
-          ok_yn = no.
-       end.
-     end.
+                      put stream chklog unformat "错误: 零件" + xxwk.comp + "状态代码的限定过程 " + pt_status at 5 skip.
+                      ok_yn = no.
+                   end.
+              end.
 /*judy end of added*/
 
               /*verify the components op*/
@@ -548,51 +579,50 @@ end.
               end.
 
 /*judy begin added*/
-             FIND FIRST IS_mstr WHERE is_domain = global_domain and
+              FIND FIRST IS_mstr WHERE is_domain = global_domain and
                         IS_status = (if available loc_mstr and loc_status <> "" then loc_status
                                       else si_status) NO-LOCK NO-ERROR.
-             IF IS_overissue = NO and avail loc_mstr then DO:
-          for each ld_det  WHERE ld_domain = global_domain and
+              IF IS_overissue = NO and avail loc_mstr then DO:
+             	for each ld_det  WHERE ld_domain = global_domain and
                    ld_site = xxwk.site AND ld_part = xxwk.comp
-          AND ld_loc = xxwk.comploc AND ld_lot = xxwk.complot
-          AND ld_ref = xxwk.compref no-lock:
-       find first xxld_wkfl where xxld_part = ld_part
-        and xxld_loc = ld_loc
-        and xxld_site = ld_site
-        and xxld_lot = ld_lot
-        and xxld_ref = ld_ref no-error.
+          	AND ld_loc = xxwk.comploc AND ld_lot = xxwk.complot
+          	AND ld_ref = xxwk.compref no-lock:
+       			find first xxld_wkfl where xxld_part = ld_part 
+				and xxld_loc = ld_loc 
+				and xxld_site = ld_site
+        			and xxld_lot = ld_lot
+        			and xxld_ref = ld_ref no-error.
 
-       if not avail xxld_wkfl then do:
-          create xxld_wkfl.
-          assign xxld_part = ld_part
-           xxld_site = ld_site
-           xxld_loc = ld_loc
-           xxld_lot = ld_lot
-           xxld_ref = ld_ref
-           xxld_qty_oh = ld_qty_oh.
-              end.
-           end.
-           find first xxld_wkfl where xxld_site = xxwk.site
-        and xxld_loc = xxwk.comploc
-        and xxld_lot = xxwk.complot
-        and xxld_ref = xxwk.compref
-        and xxld_part = xxwk.comp  no-error.
-     if avail xxld_wkfl then do:
-       xxld_qty_oh = xxld_qty_oh  -  xxwk.qty_iss.
-       if xxld_qty_oh < 0 then  do:
-           put stream chklog unformat "错误: 子零件 " + xxwk.comp + " 所对应的库位 " + xxwk.site + ","
-             + xxwk.comploc + "发放数量大于库存量" + STRING( xxld_qty_oh)  at 5 skip.
-           ok_yn = no.
-        END.
+       			if not avail xxld_wkfl then do:
+          			create xxld_wkfl.
+          			assign xxld_part = ld_part
+           			xxld_site = ld_site
+           			xxld_loc = ld_loc
+           			xxld_lot = ld_lot
+           			xxld_ref = ld_ref
+           			xxld_qty_oh = ld_qty_oh.
+              		end.
+                end.
+                find first xxld_wkfl where xxld_site = xxwk.site 
+			and xxld_loc = xxwk.comploc
+        		and xxld_lot = xxwk.complot
+        		and xxld_ref = xxwk.compref
+        		and xxld_part = xxwk.comp  no-error.
+                if avail xxld_wkfl then do:
+       			xxld_qty_oh = xxld_qty_oh  -  xxwk.qty_iss.
+       			if xxld_qty_oh < 0 then  do:
+           		put stream chklog unformat "错误: 子零件 " + xxwk.comp + " 所对应的库位 " + xxwk.site + ","
+             		+ xxwk.comploc + "发放数量大于库存量" + STRING( xxld_qty_oh)  at 5 skip.
+           		ok_yn = no.
+        		END.
+             	end.
+      	     	else if not avail xxld_wkfl then do:
+         		put stream chklog unformat "错误: 子零件 " + xxwk.comp + " 所对应的库位 " + xxwk.site + ","
+             		+ xxwk.comploc + "发放数量大于库存量" + "0"  at 5 skip.
+         		ok_yn = no.
+             	end.
 
-      end.
-      else if not avail xxld_wkfl then do:
-         put stream chklog unformat "错误: 子零件 " + xxwk.comp + " 所对应的库位 " + xxwk.site + ","
-             + xxwk.comploc + "发放数量大于库存量" + "0"  at 5 skip.
-         ok_yn = no.
-      end.
-
-     END.
+              END.
 
 /*judy end of added*/
 
@@ -609,16 +639,16 @@ end.
               find next xxwk no-lock no-error.
            end. /*if available xxwk*/
            else leave.
-      end.
+        end.
 
-      /*verify the data of final goods*/
-      count = 0.
-      find first xxwk where xxwk.par2 <> "" no-lock no-error.
-      if not available xxwk then do:
+      	/*verify the data of final goods*/
+      	count = 0.
+      	find first xxwk where xxwk.par2 <> "" no-lock no-error.
+      	if not available xxwk then do:
            put stream chklog unformat "错误: 没有发动机入库的信息" at 5 skip.
            ok_yn = no.
-      end.
-      repeat:
+      	end.
+      	repeat:
            if available xxwk then do:
                   count = count + 1.
                   /*verify the xxwk.par2 item number*/
@@ -630,156 +660,173 @@ end.
                   end.
 
                   /*verify the lot number*/
-                if nnable = no then do: /* 数量不允许为负数 */                  
                   if xxwk.parlot = "" then do:
                        put stream chklog unformat "错误: 存在无流水号的SO" at 5 skip.
                        ok_yn = no.
                   end.
-                end.
 
                   find loc_mstr where loc_domain = global_domain and
                        loc_site = xxwk.site and loc_loc = xxwk.parloc no-lock no-error.
                   if not available loc_mstr then do:
                          put stream chklog unformat "发动机所对应的库位 " + xxwk.site + "," + xxwk.parloc + " 不存在" at 5 skip.
                              ok_yn = no.
-                     end.
+                  end.
 
-                     find isd_det no-lock where isd_domain = global_domain and
+                  find isd_det no-lock where isd_domain = global_domain and
                           isd_tr_type = "rct-wo"
                                              and isd_status =
                                             (if available loc_mstr and loc_status <> "" then loc_status
                                             else si_status) no-error.
-                     if available isd_det then do:
+                  if available isd_det then do:
                            put stream chklog unformat "发动机所对应的库位 " + xxwk.site + "," + xxwk.comploc
                                          + " 的状态为限定状态" at 1 skip.
                            ok_yn = no.
-                    end.
+                  end.
                   find next xxwk where xxwk.par2 <> "" no-lock no-error.
            end.
            else leave.
-      end.
+      	end.
 
-     if nnable = no then do: /* 数量不允许为负数 */
-      find first xxwk where xxwk.par2 <> "" no-lock no-error.
-      if available xxwk then do:
+      	find first xxwk where xxwk.par2 <> "" no-lock no-error.
+      	if available xxwk then do:
            if count <> xxwk.qty_comp then do:
                  put stream chklog unformat "错误: 发动机流水号的个数与回报的完成量不一致" at 5 skip.
                  ok_yn = no.
            end.
-     end.
-    end.
-      /****exchange the list data to stream format data for batch input***/
+     	end.
+    	put stream chklog unformat "数据检查完成! " string(time,"HH:MM:SS") skip.
+      	/****exchange the list data to stream format data for batch input***/
 
-     /*create the header format*/
-     find first xxwk no-lock no-error.
-      put stream bkflh "~"" at 1 xxwk.emp "~"".
-      put stream bkflh UNFORMAT xxwk.effdate at 1.
-      put stream bkflh UNFORMAT " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"".
-      put stream bkflh UNFORMAT "~"" at 1 xxwk.par "~" " xxwk.lastop " ~"" xxwk.line "~"".
-      put stream bkflh UNFORMAT "~"" at 1 xxwk.routing "~"" " ~"" xxwk.bom_code "~"".
-      put stream bkflh UNFORMAT "~"" at 1 xxwk.wkctr "~"" " ~"" xxwk.mch "~"".
-      put stream bkflh UNFORMAT "~"" at 1 xxwk.dept "~" " xxwk.qty_comp " - - - - - - - - - Y Y".
+     	/*create the header format*/
+     	find first xxwk no-lock no-error.
+      	put stream bkflh "~"" at 1 xxwk.emp "~"".
+      	put stream bkflh UNFORMAT xxwk.effdate at 1.
+      	put stream bkflh UNFORMAT " ~"" xxwk.shift "~"" " ~"" xxwk.site "~"".
+      	put stream bkflh UNFORMAT "~"" at 1 xxwk.par "~" " xxwk.lastop " ~"" xxwk.line "~"".
+      	put stream bkflh UNFORMAT "~"" at 1 xxwk.routing "~"" " ~"" xxwk.bom_code "~"".
+      	put stream bkflh UNFORMAT "~"" at 1 xxwk.wkctr "~"" " ~"" xxwk.mch "~"".
+      	put stream bkflh UNFORMAT "~"" at 1 xxwk.dept "~" " xxwk.qty_comp " - - - - - - - - - Y Y".
 
-     /*create the detail components issue format*/
-      put stream bkflh UNFORMAT  "-" AT 1.
-      for each xxwk where xxwk.comp <> "" no-lock:
+     	/*create the detail components issue format*/
+      	put stream bkflh UNFORMAT  "-" AT 1.
+      	for each xxwk where xxwk.comp <> "" no-lock:
           put stream bkflh UNFORMAT "~"" at 1 xxwk.comp "~" " xxwk.compop.
           put stream bkflh UNFORMAT xxwk.qty_iss at 1 " N " "~"" xxwk.site "~"" " ~"" xxwk.comploc "~""
                               " ~"" xxwk.complot "~"" " ~"" xxwk.compref "~"".
-      end.
+      	end.
 
-      put stream bkflh UNFORMAT "." at 1 skip.
-      find first xxwk no-lock no-error.
-      put stream bkflh UNFORMAT xxwk.qty_comp at 1 " - - " "~"" xxwk.site "~"" " ~"" xxwk.parloc  "~"" " - - " "N N".
+      	put stream bkflh UNFORMAT "." at 1 skip.
+      	find first xxwk no-lock no-error.
+      	put stream bkflh UNFORMAT xxwk.qty_comp at 1 " - - " "~"" xxwk.site "~"" " ~"" xxwk.parloc  "~"" " - - " "N N".
 
-    put stream bkflh skip "yes" skip "yes" skip.
-    put stream bkflh "." at 1.
-    put stream bkflh "." at 1.
-    put stream bkflh "." at 1 skip.
-    output stream bkflh close.
-if ok_yn = no then do:
-   put stream chklog unformat "数据检查完成(失败)! 文件: " list.filename " 跳过装入 " string(time,"HH:MM:SS") skip.
-end.
-else do:
-    put stream chklog unformat "数据检查完成(成功)! CIM_LOAD处理: " string(time,"HH:MM:SS") skip.
-    cimrunprogramloop:
-    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
-        assign trrecid = current-value(tr_sq01).
-        input from value(bkflh_file).
-        output to value(bkflh_file + ".out").
-        batchrun = yes.
-        {gprun.i ""xxrebkfl1.p""}
-        batchrun = no.
-        output close.
-        input close.
-    /*    put stream chklog unformat "CIM_LOAD 完成,检查CIM结果:" string(time,"HH:MM:SS") skip. */
-        /* check cim_load status! */
-        assign cim_yn = yes.
-        find first tr_hist no-lock where tr_domain = global_domain and
-                   tr_trnbr > integer(trrecid) and tr_part = xxwk.par and
-                   tr_type = "rct-wo" and tr_qty_loc = xxwk.qty_comp and
-                   tr_site = xxwk.site and tr_loc = xxwk.parloc no-error.
-        if not available tr_hist then do:
-           put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5 skip.
-           put stream chklog unformat xxwk.par " " xxwk.parloc  " rct-wo " xxwk.qty_comp at 5 skip.
-           assign cim_yn = no.
-        end.
-        for each xxwk where xxwk.comp <> "" and xxwk.qty_iss <> 0 no-lock:
-            find first tr_hist no-lock where tr_domain = global_domain and
-                tr_trnbr > integer(trrecid) and tr_part = xxwk.comp and
-                tr_type = "iss-wo" and tr_qty_loc = -1 * xxwk.qty_iss and
-                tr_site = xxwk.site and tr_loc = xxwk.comploc and
-                tr_serial = xxwk.complot AND tr_ref = xxwk.compref
-                no-error.
-            if not availabl tr_hist then do:
-                if cim_yn then
-                put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5 skip.
-                put stream chklog unformat xxwk.comp " " xxwk.comploc " " xxwk.complot " iss-wo " xxwk.qty_iss at 5 skip.
-                assign  cim_yn = no.
-            end.
-        end.
-        if cim_yn = no then do:
-           put stream chklog unformat list.filename "处理失败!数据还原到装入前状态。 " string(time,"HH:MM:SS") skip.
-           undo cimrunprogramloop, leave.
-        end.
-    end.    /* cimrunprogramloop */
-    if cim_yn then do:
-        put stream chklog unformat list.filename " 成功处理完成! " string(time,"HH:MM:SS") skip.
-    end.
-end.  /* if ok_yn = no else do: */
-    if ok_yn = no or cim_yn = no then do:
-        if opsys = "UNIX" then do:
-           unix silent value("mv '" + srcdir + list.filename + "' " + errdir).
-        end.
-        else do:
-           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
-        end.
-    end.
-    else do:
-         /*记录下已回冲的文件防止重复回冲*/
-         find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
-                and usrw_key1 = "BACKFLASHEDFILELIST"
-                and usrw_key2 = list.filename no-error.
-         if not available usrw_wkfl then do:
-                create usrw_wkfl. usrw_domain = global_domain.
-                assign usrw_key1 = "BACKFLASHEDFILELIST"
-                       usrw_key2 = list.filename
-                       usrw_key3 = string(today)
-                       usrw_key4 = string(time,"HH:MM:SS")
-                       usrw_datefld[1] = today
-                       usrw_intfld[1] = time.
-         end.
-         if opsys = "UNIX" then do:
-            unix silent value("mv '" + srcdir + list.filename + "' " + okdir).
-         end.
-         else do:
-            Dos silent value("move " + "~"" + srcdir  + list.filename + "~"" + " " + okdir).
-         end.
-    end.
+    	put stream bkflh skip "yes" skip "yes" skip.
+    	put stream bkflh "." at 1.
+    	put stream bkflh "." at 1.
+    	put stream bkflh "." at 1 skip.
+    	output stream bkflh close.
+
+	if ok_yn = no then do:
+   		put stream chklog unformat "check error found" skip.
+	end.
+	else do:
+    		cimrunprogramloop:
+/*JJ*/    	repeat transaction on stop undo cimrunprogramloop, leave cimrunprogramloop:
+
+/*JJ*/			for each tt: delete tt. end.
+        		assign trrecid = current-value(tr_sq01). 
+        		input from value(bkflh_file).
+        		output to value(bkflh_filecim + ".out") append.
+        		put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
+        			batchrun = yes.
+        			{gprun.i ""xxrebkfl1.p""}
+        			batchrun = no.
+        	 put stream chklog unformat "CIM_LOAD COMPLATE: " string(time,"HH:MM:SS") skip.		
+        		output close.
+        		input close.
+
+        		/* check cim_load status! */
+
+        		assign cim_yn = yes.
+/*JJ
+			find first tr_hist no-lock where tr_domain = global_domain and
+				   tr_trnbr > integer(trrecid) and tr_part = xxwk.par and
+				   tr_type = "rct-wo" and tr_qty_loc = xxwk.qty_comp and
+				   tr_site = xxwk.site and tr_loc = xxwk.parloc no-error.
+*/
+			find first tt no-lock where tt.tr_domain = global_domain and
+                                   tt.tr_trnbr > integer(trrecid) and tt.tr_part = xxwk.par and
+                                   tt.tr_type = "rct-wo" and tt.tr_qty_loc = xxwk.qty_comp and
+                                   tt.tr_site = xxwk.site and tt.tr_loc = xxwk.parloc no-error.
+
+			if not available /* tr_hist */ tt then do:
+			   put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5.
+			   put stream chklog unformat xxwk.par " " xxwk.parloc  " rct-wo " xxwk.qty_comp at 5.
+			   assign cim_yn = no.
+			end.
+			for each xxwk where xxwk.comp <> "" and xxwk.qty_iss <> 0 no-lock:
+/*JJ
+			    find first tr_hist no-lock where tr_domain = global_domain and
+				tr_trnbr > integer(trrecid) and tr_part = xxwk.comp and
+				tr_type = "iss-wo" and tr_qty_loc = -1 * xxwk.qty_iss and
+				tr_site = xxwk.site and tr_loc = xxwk.comploc and
+				tr_serial = xxwk.complot AND tr_ref = xxwk.compref
+				no-error.
+*/
+			    find first tt no-lock where tt.tr_domain = global_domain and
+				tt.tr_trnbr > integer(trrecid) and tt.tr_part = xxwk.comp and
+				tt.tr_type = "iss-wo" and tt.tr_qty_loc = -1 * xxwk.qty_iss and
+				tt.tr_site = xxwk.site and tt.tr_loc = xxwk.comploc and
+				tt.tr_serial = xxwk.complot AND tt.tr_ref = xxwk.compref
+				no-error.
+
+			    if not availabl /* tr_hist */ tt then do:
+				put stream chklog unformatted "错误:" + srcdir + list.filename + "CIM_LOAD失败。" at 5.
+				put stream chklog unformat xxwk.comp " " xxwk.comploc " " xxwk.complot " iss-wo " xxwk.qty_iss at 5.
+				assign  cim_yn = no.
+			    end.
+			end.
+			if cim_yn = no then do:
+			   put stream chklog unformat "ROLL BACK: " string(time,"HH:MM:SS") skip.
+			   undo cimrunprogramloop, leave.
+			end.
+			leave.
+    		end.    /* cimrunprogramloop */
+        	put stream chklog unformat list.filename " 处理完成! " string(time,"HH:MM:SS") skip.
+	end.  /* if ok_yn = no else do: */
+    	if ok_yn = no or cim_yn = no then do:
+        	if opsys = "UNIX" then
+           		unix silent value("mv '" + srcdir + list.filename + "' '" + errdir).
+        	else
+           		Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
+    	end.
+    	else do:
+    	    create tw9.
+    	    assign tw9_file = list.filename
+    	           tw9_date = "today"
+    	           tw9_time = "time".
+         	if opsys = "UNIX" then
+            		unix silent value("mv '" + srcdir + list.filename + "' " + okdir).
+         	else
+            		Dos silent value("move " + "~"" + srcdir  + list.filename + "~"" + " " + okdir).
+    	end.
 end. /*for each list*/
+for each tw9 no-lock where tw9_date = "today" and tw9_time = "time":
+    find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+           and usrw_key1 = "BACKFLASHEDFILELIST"
+           and usrw_key2 = tw9_file no-error.
+    if not available usrw_wkfl then do:
+           create usrw_wkfl. usrw_domain = global_domain.
+           assign usrw_key1 = "BACKFLASHEDFILELIST"
+                  usrw_key2 = tw9_file
+                  usrw_key3 = string(today)
+                  usrw_key4 = string(time,"HH:MM:SS")
+                  usrw_datefld[1] = today
+                  usrw_intfld[1] = time.
+    end.
+end.
 put stream chklog skip(1).
 put stream chklog unformat "=======================  Run Date: " today.
 put stream chklog unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
 output stream chklog close.
 
-quit.
+/*JJ*/ quit.
