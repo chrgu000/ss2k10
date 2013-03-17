@@ -309,7 +309,7 @@ end.
         end.
 /*G1ZV*/   if can-find(first isd_det where isd_domain = global_domain and
 /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
-/*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE")) then do:
+/*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE" )) then do:
                 put stream chklog unformat "错误: 零件状态代码的限定过程 " + pt_status at 5 skip.
               ok_yn = no.
 /*F089*/   end.
@@ -456,14 +456,14 @@ end.
                put stream chklog unformat "错误: 工作中心不存在" at 5 skip.
                ok_yn = no.
          end.
-
+/**120314***
        if SESSION:PARAMETER = "" then do:
           if xxwk.qty_comp <= 0 then do:
                put stream chklog unformat "错误: 完成数量必须大于零" at 5 skip.
                ok_yn = no.
           end.
        end.
-
+***********/
        /*verify the data of components*/
       find first xxwk no-lock no-error.
        repeat:
@@ -614,10 +614,13 @@ end.
                   end.
 
                   /*verify the lot number*/
+                  
+                  /*
                   if xxwk.parlot = "" then do:
                        put stream chklog unformat "错误: 存在无流水号的SO" at 5 skip.
                        ok_yn = no.
                   end.
+                  fm268*/
 
                   find loc_mstr where loc_domain = global_domain and
                        loc_site = xxwk.site and loc_loc = xxwk.parloc no-lock no-error.
@@ -640,7 +643,7 @@ end.
            end.
            else leave.
       end.
-
+/*
       find first xxwk where xxwk.par2 <> "" no-lock no-error.
       if available xxwk then do:
            if count <> xxwk.qty_comp then do:
@@ -648,6 +651,9 @@ end.
                  ok_yn = no.
            end.
      end.
+     
+fm268*/
+
     put stream chklog unformat "数据检查完成! " string(time,"HH:MM:SS") skip.
       /****exchange the list data to stream format data for batch input***/
 
@@ -684,7 +690,7 @@ end.
 else do:
     put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
     cimrunprogramloop:
-/*JJ*/    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
+    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
         assign trrecid = current-value(tr_sq01).
         input from value(bkflh_file).
         output to value(bkflh_filecim + ".out") append.
@@ -726,9 +732,9 @@ else do:
 end.  /* if ok_yn = no else do: */
     if ok_yn = no or cim_yn = no then do:
         if opsys = "UNIX" then
-           unix silent value("mv '" + srcdir + list.filename + "' '" + errdir).
+           unix silent value("mv '" + srcdir + list.filename + "' '" + errdir + list.filename + "'").
         else
-           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
+           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir + list.filename).
     end.
     else do:
          if opsys = "UNIX" then
@@ -743,4 +749,4 @@ put stream chklog unformat "=======================  Run Date: " today.
 put stream chklog unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
 output stream chklog close.
 
-/*JJ*/ quit.
+quit.

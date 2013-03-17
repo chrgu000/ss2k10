@@ -718,7 +718,9 @@ end.    /* cimrunprogramloop */
     end.
 end. /*for each list*/
 
+put stream chklog skip(1).
+put stream chklog unformat "=======================  Run Date: " today.
+put stream chklog unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
+output stream chklog close.
 
-put skip(1).
-put unformat "=======================  Run Date: " today.
-put unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
+quit.

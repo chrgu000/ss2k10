@@ -38,6 +38,7 @@ disable triggers for load of wr_route.
 disable triggers for load of tr_hist.
 disable triggers for load of in_mstr.
 disable triggers for load of ld_det.
+disable triggers for load of op_hist.
 /*JJ*/ disable triggers for load of op_hist.
 
 session:date-format = 'mdy'.
@@ -136,13 +137,13 @@ bkflh_file = usrw_charfld[14] + "bkflh_file.in".
 bkflh_filecim = usrw_charfld[14] + "bkflh_file.in".
 listfile = usrw_charfld[14] + "list.txt".
 
-srcdir = "/data3/batch/bkfl/source/".
-okdir = "/data3/batch/bkfl/correct".
-errdir = "/data3/batch/bkfl/error".
-logfile = "/data3/batch/bkfl/xxbkflh_nfs.log".
-bkflh_file = "/data3/batch/bkfl/temp/bkflh_file_nfs.in".
-bkflh_filecim = "/data3/batch/bkfl/temp/bkflh_file_nfs.in".
-listfile = "/data3/batch/bkfl/temp/" + "list_nfs.txt".
+srcdir = "/data3/batch/bkfl/test/source/".
+okdir = "/data3/batch/bkfl/test/correct".
+errdir = "/data3/batch/bkfl/test/error".
+logfile = "/data3/batch/bkfl/test/xxbkflh_nfs.log".
+bkflh_file = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
+bkflh_filecim = "/data3/batch/bkfl/test/temp/bkflh_file_nfs.in".
+listfile = "/data3/batch/bkfl/test/temp/" + "list_nfs.txt".
 
 /*******To get the backflush source file list***********/
 if opsys = "UNIX" then
@@ -684,7 +685,7 @@ end.
 else do:
     put stream chklog unformat "CIM_LOAD: " string(time,"HH:MM:SS") skip.
     cimrunprogramloop:
-/*JJ*/    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
+    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
         assign trrecid = current-value(tr_sq01).
         input from value(bkflh_file).
         output to value(bkflh_filecim + ".out") append.
@@ -726,9 +727,9 @@ else do:
 end.  /* if ok_yn = no else do: */
     if ok_yn = no or cim_yn = no then do:
         if opsys = "UNIX" then
-           unix silent value("mv '" + srcdir + list.filename + "' '" + errdir).
+           unix silent value("mv '" + srcdir + list.filename + "' '" + errdir + list.filename + "'").
         else
-           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
+           Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir + list.filename).
     end.
     else do:
          if opsys = "UNIX" then
@@ -743,4 +744,4 @@ put stream chklog unformat "=======================  Run Date: " today.
 put stream chklog unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
 output stream chklog close.
 
-/*JJ*/ quit.
+quit.

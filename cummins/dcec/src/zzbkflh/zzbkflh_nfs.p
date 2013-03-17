@@ -38,6 +38,7 @@ disable triggers for load of wr_route.
 disable triggers for load of tr_hist.
 disable triggers for load of in_mstr.
 disable triggers for load of ld_det.
+disable triggers for load of op_hist.
 
 session:date-format = 'mdy'.
 {mfdeclre.i "new global"}
@@ -53,7 +54,9 @@ global_db = "DCEC".
 execname = "zzbkflh.p".
 
 /*G1MN*/ {gpglefv.i}
-define variable wkdir as char format "x(20)".     /*work file directory*/
+define variable wkdir as char format "x(20)" initial "/data3/batch/bkfl/test/".     /*work file directory*/
+define variable nnable as logical initial no . /* 允许负数回冲 */
+
 define variable srcdir as char format "x(20)".    /*source file directory*/
 define variable okdir as char format "x(20)".     /*verified file directory*/
 define variable errdir as char format "x(20)".    /*incorrect file directory*/
@@ -134,13 +137,19 @@ errdir = usrw_charfld[12].
 logfile = usrw_charfld[13] + "xxbkflh.log".
 bkflh_filecim = usrw_charfld[14] + "bkflh_file.in".
 listfile = usrw_charfld[14] + "list.txt".
-wkdir = "/data3/batch/bkfl/test/".
+
 srcdir = wkdir + "source/".
 okdir = wkdir + "correct/".
 errdir = wkdir + "error/".
 logfile = wkdir + "/log/xxbkflh_nfs_" + string(today,"99-99-99") + "_" + replace(string(time,"hh:mm:ss"),":",".") + ".log".
 bkflh_filecim = wkdir +  "temp/".
 listfile = wkdir + "temp/" + "list_nfs.txt".
+
+for each usrw_wkfl exclusive-lock where usrw_domain = global_domain
+             and usrw_key1 = "BACKFLASHEDFILELIST"
+             and usrw_datefld[1] <= today - 7:
+    delete usrw_wkfl.
+end.
 
 /*******To get the backflush source file list***********/
 if opsys = "UNIX" then
@@ -179,7 +188,19 @@ output stream bkflh to value(bkflh_file).
       ok_yn = yes.
       put stream chklog unformat skip(1) "Now process file: " + list.filename + ":" + string(time,"HH:MM:SS") at 1 skip.
          /*for log file*/
+         
+         /*记录下已回冲的文件防止重复回冲*/
+      find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+             and usrw_key1 = "BACKFLASHEDFILELIST"
+             and usrw_key2 = list.filename no-error.
+      if available usrw_wkfl then do:
+         put stream chklog unformat "File: " list.filename " processed by" usrw_key3 " " usrw_key4 "This file skiped." at 5 skip.
+         ok_yn = no.
+         next.
+      end.
+         
        xxinfile = srcdir + list.filename.
+       if ok_yn then do:
        if opsys = "UNIX" then
        input stream src through value("cat '" + xxinfile + "' |" +  "tr -d '\015'").
        else
@@ -221,7 +242,7 @@ output stream bkflh to value(bkflh_file).
 
        end. /*repeat #1*/
       input stream src close.
-
+      end. /* if  ok_yn then do: */
        find first xxwk no-lock no-error.
        if not available xxwk then do:
             put stream chklog unformat "Error: No data need to process!" at 5 skip.
@@ -305,7 +326,7 @@ end.
            end.
 /*G1ZV*/   if can-find(first isd_det where isd_domain = global_domain and
 /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
-/*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO")) then do:
+/*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE")) then do:
                 put stream chklog unformat "错误: 零件" + xxwk.par + "状态代码的限定过程 " + pt_status at 5 skip.
               ok_yn = no.
 /*F089*/   end.
@@ -452,12 +473,13 @@ end.
                put stream chklog unformat "错误: 工作中心不存在" at 5 skip.
                ok_yn = no.
          end.
-
+        
+        if nnable = no then do: /* 数量不允许为负数 */
           if xxwk.qty_comp <= 0 then do:
                put stream chklog unformat "错误: 完成数量必须大于零" at 5 skip.
                ok_yn = no.
           end.
-
+        end.
        /*verify the data of components*/
       find first xxwk no-lock no-error.
        repeat:
@@ -476,7 +498,7 @@ end.
       if avail pt_mstr then do:
   /*G1ZV*/   if can-find(first isd_det where isd_domain = global_Domain and
   /*G1ZV*/              isd_status = string(pt_status,"x(8)") + "#"
-  /*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO")) then do:
+  /*G1ZV*/              and (isd_tr_type = "ISS-WO" or isd_tr_type = "RCT-WO" OR isd_tr_type = "ADD-RE")) then do:
       put stream chklog unformat "错误: 零件" + xxwk.comp + "状态代码的限定过程 " + pt_status at 5 skip.
           ok_yn = no.
        end.
@@ -608,10 +630,12 @@ end.
                   end.
 
                   /*verify the lot number*/
+                if nnable = no then do: /* 数量不允许为负数 */                  
                   if xxwk.parlot = "" then do:
                        put stream chklog unformat "错误: 存在无流水号的SO" at 5 skip.
                        ok_yn = no.
                   end.
+                end.
 
                   find loc_mstr where loc_domain = global_domain and
                        loc_site = xxwk.site and loc_loc = xxwk.parloc no-lock no-error.
@@ -635,6 +659,7 @@ end.
            else leave.
       end.
 
+     if nnable = no then do: /* 数量不允许为负数 */
       find first xxwk where xxwk.par2 <> "" no-lock no-error.
       if available xxwk then do:
            if count <> xxwk.qty_comp then do:
@@ -642,7 +667,7 @@ end.
                  ok_yn = no.
            end.
      end.
-
+    end.
       /****exchange the list data to stream format data for batch input***/
 
      /*create the header format*/
@@ -678,7 +703,7 @@ end.
 else do:
     put stream chklog unformat "数据检查完成(成功)! CIM_LOAD处理: " string(time,"HH:MM:SS") skip.
     cimrunprogramloop:
-    do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+    do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
         assign trrecid = current-value(tr_sq01).
         input from value(bkflh_file).
         output to value(bkflh_file + ".out").
@@ -731,6 +756,19 @@ end.  /* if ok_yn = no else do: */
         end.
     end.
     else do:
+         /*记录下已回冲的文件防止重复回冲*/
+         find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+                and usrw_key1 = "BACKFLASHEDFILELIST"
+                and usrw_key2 = list.filename no-error.
+         if not available usrw_wkfl then do:
+                create usrw_wkfl. usrw_domain = global_domain.
+                assign usrw_key1 = "BACKFLASHEDFILELIST"
+                       usrw_key2 = list.filename
+                       usrw_key3 = string(today)
+                       usrw_key4 = string(time,"HH:MM:SS")
+                       usrw_datefld[1] = today
+                       usrw_intfld[1] = time.
+         end.
          if opsys = "UNIX" then do:
             unix silent value("mv '" + srcdir + list.filename + "' " + okdir).
          end.
@@ -739,3 +777,9 @@ end.  /* if ok_yn = no else do: */
          end.
     end.
 end. /*for each list*/
+put stream chklog skip(1).
+put stream chklog unformat "=======================  Run Date: " today.
+put stream chklog unformat "   End Run Time: " string(time,"HH:MM:SS") "================" skip(1).
+output stream chklog close.
+
+quit.
