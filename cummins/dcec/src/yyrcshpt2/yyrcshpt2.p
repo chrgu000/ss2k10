@@ -231,7 +231,7 @@ DEF VAR v_fexcel     AS CHAR.
 DEF VAR v_fname      AS CHAR.
 DEF VAR v_ok         AS LOGICAL.
 
-DEF VAR v_shipper    AS CHAR.
+DEF VAR v_shipper    like abs_id.
 DEF VAR v_ship_fr     AS CHAR.
 DEF VAR v_bill_to     AS CHAR.
 DEF VAR v_ship_to     AS CHAR.
@@ -426,7 +426,7 @@ PROCEDURE xxpro-input:
         END.
     END.
 
-    FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_id = 's0' + v_shipper 
+    FIND FIRST ABS_mstr WHERE abs_domain = global_domain and ABS_id = 's' + v_shipper 
         AND abs_type = 's'
         NO-LOCK NO-ERROR.
     IF AVAILABLE ABS_mstr THEN DO:
