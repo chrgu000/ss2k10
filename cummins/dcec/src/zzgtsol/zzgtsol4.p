@@ -19,7 +19,7 @@ define  new shared var v_rpline as char format "x(100)".
 define  new shared variable v_postfile          as character.
 
 define  new shared var v_times  as integer.
-define new shared  var v_load   as logical .
+define new shared  var v_load   as logical initial yes.
 define  new shared var v_adj    as logical .
 define  new shared var v_post   as logical .
 
@@ -100,10 +100,12 @@ form
     v_rpfile   label "报告文件"          colon 20
 	  v_ptbox	   label "过账结果"			 colon 20
     v_times    label "上载次数"          colon 20 skip(1)
-    v_load     label "上载(Y)/预览(N)"   colon 20
+    v_load     label "上载(Y)/预览(N)"   colon 20 skip(2)
+/*
     v_adj      label "调整差异"          colon 20
     v_post     label "过帐"              colon 20 skip
     v_drange   label "容差"              colon 20
+*/
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
  DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -231,7 +233,7 @@ repeat:
                        else v_adname = "".
 
   display
-         v_gtaxid v_adname v_infile v_bkfile v_rpfile v_times v_drange v_ptbox
+         v_gtaxid v_adname v_infile v_bkfile v_rpfile v_times /* v_drange */ v_ptbox
   with frame a.
 
     assign /* v_adj = v_infixrd */
@@ -239,8 +241,10 @@ repeat:
     		   v_post = v_inpost. /*2004-09-02 14:10*/
   update
         v_load
+   /*
         v_adj
         v_post
+   */
   with frame a.
 
   if v_load = no then do:
@@ -258,7 +262,10 @@ repeat:
       message "错误:传入文件不存在.".
       undo , retry.
   end.
-
+/*
+  {mfselbpr.i "printer" 132}
+    {mfphead.i}
+*/
   /*load data to workfile*/
   input from value(v_infile) no-echo.
   repeat:
@@ -339,18 +346,18 @@ repeat:
   end.
   
   for each sotax exclusive-lock where sotax_part = "ZK":
-      find first sod_det no-lock where sod_domain = global_domain 
-             and sod_nbr = sotax_nbr and sod_part = sotax_part no-error.
-      if available sotax then do:
-         assign sotax_line = sod_line.
+      find last sod_det no-lock where sod_domain = global_domain 
+             and sod_nbr = sotax_nbr no-error.
+      if available sod_det then do:
+         if sod_part = sotax_part then do:  
+            assign sotax_line = sod_line.
+         end.
+         else do:
+            assign sotax_line = sod_line + 1.
+         end.
       end.
       else do:
-         for each sod_det no-lock where sod_domain = global_domain
-              and sod_nbr = sotax_nbr break by sod_nbr by sod_line:
-              if last-of(sod_nbr) then do:
-                 assign sotax_line = sod_line + 1.
-              end.
-         end.
+      	 assign sotax_line = 1.
       end.
   end.
 
@@ -359,8 +366,11 @@ if v_load then do:
         {gprun.i ""zzgtsoltc.P""}
 end.
 
-  {mfselbpr.i "printer" 132}
-    {mfphead.i}
+/******
+  for each sotax:
+  	disp sotax with stream-io width 250.
+  end.
+
   /*load into mfg*/
 /*  {zzgtsola.i}  */
 
@@ -368,6 +378,6 @@ end.
 		{gprun.i ""zzgtsoll.p""}
 	end.
   {mfrtrail.i}
-
+*******/
 end. /*main repeat*/
 

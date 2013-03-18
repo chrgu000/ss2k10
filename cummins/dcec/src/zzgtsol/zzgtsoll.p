@@ -63,12 +63,16 @@ define   shared workfile giv
  .
 
 define  shared variable xsonbr like so_nbr.
-define  shared workfile xinvd
-  field x_ref as char     /*lb02*/
-  field xnbr  like so_nbr
-  field xpart like sod_part
-  field xqty  like sod_qty_inv
- .
+
+define shared workfile xinvd
+	field x_ref	as char			/*lb02*/
+	field xnbr	like so_nbr
+	field xline like sod_line
+	field xpart	like sod_part
+	field xqty	like sod_qty_inv
+  field xtot  like tx2d_totamt 
+  field xtax  like tx2d_cur_tax_amt
+  .
 
 define   shared temp-table wrk_var        /*lb01*/
     field wrk_sonbr   like sod_nbr    /*lb01*/
