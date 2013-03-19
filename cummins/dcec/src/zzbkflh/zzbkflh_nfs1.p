@@ -206,6 +206,7 @@ for each list where list.filename <> "" no-lock:
       	ok_yn = yes.
       	put stream chklog unformat skip(1).
       	put stream chklog unformat "Now process file: " + list.filename at 1 skip.
+	put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip.
          /*for log file*/
        xxinfile = srcdir + list.filename.
        if opsys = "UNIX" then
@@ -243,7 +244,15 @@ for each list where list.filename <> "" no-lock:
                       xxwk.par2 = x_data[20]
                       xxwk.parloc = x_data[21]
                       xxwk.parlot = x_data[22]
-                      xxwk.parref = x_data[23].
+/*JJ*/                xxwk.parref = x_data[23] no-error.
+
+/*JJ*/                if xxwk.effdate = date(3,1,2013) then xxwk.effdate = today.
+
+/*JJ*/		if error-status:error then do:
+/*JJ*/			put stream chklog unformat "错误：文件格式问题 !" at 5 skip.
+/*JJ*/			ok_yn = no.
+/*JJ*/			leave.
+/*JJ*/		end.
 
          end. /*if i > 1*/
 
@@ -255,7 +264,6 @@ for each list where list.filename <> "" no-lock:
             put stream chklog unformat "Error: No data need to process!" at 5 skip.
             ok_yn = no.
        	end.
-	put stream chklog unformat "Start Progress " + list.filename + ":" + string(time,"HH:MM:SS") skip.
 /***********************
 if ok_yn = no then do:
   if opsys = "UNIX" then
@@ -281,6 +289,15 @@ end.
                     put stream chklog unformat "错误: 地点不存在" at 5 skip.
                     ok_yn = no.
         end.
+
+/*JJ*/	if ok_yn = no then do:
+/*JJ*/ 		if opsys = "UNIX" then
+/*JJ*/        	unix silent value("mv '" + srcdir + list.filename + "' " + errdir).
+/*JJ*/ 		else
+/*JJ*/         	Dos silent value("move " + "~"" + srcdir + list.filename + "~"" + " " + errdir).
+/*JJ*/         	next.
+/*JJ*/	end.
+
 /*
 /*J04T*/       {gprun.i ""gpsiver.p"" "(input site,
                                         input recid(si_mstr),
