@@ -67,6 +67,7 @@ define  shared variable xsonbr like so_nbr.
 define shared workfile xinvd
 	field x_ref	as char			/*lb02*/
 	field xnbr	like so_nbr
+	field xinv  like so_inv_nbr
 	field xline like sod_line
 	field xpart	like sod_part
 	field xqty	like sod_qty_inv

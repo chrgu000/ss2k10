@@ -1,6 +1,12 @@
   {mfdeclre.i}
   {zzgtsolt.i} 
   define stream bf.
+  define variable zkacct like sod_acct initial "600202".
+  find first code_mstr no-lock where code_domain = global_domain 
+         and code_fldname = "ZZGTSOL-ACCT" AND CODE_VALUE = "*" NO-ERROR.
+  IF AVAILABLE CODE_MSTR THEN DO:
+  	 ASSIGN ZKACCT = code_cmmt.
+  END.
   for each sotax no-lock break by sotax_nbr by sotax_line desc:
       if first-of(sotax_nbr) then do:
         assign cimmfname = execname + "." + trim(sotax_nbr).
@@ -11,7 +17,7 @@
         put stream bf unformat "-" skip.
         put stream bf unformat "-" skip.
         put stream bf unformat "-" skip.
-        put stream bf unformat "- - - - - - - - - - - N" skip.
+        put stream bf unformat "N - - - - - - - - - - N" skip.
         if sotax_part = "ZK" then do:
            put stream bf unformat "." skip.
            put stream bf unformat "S" skip.
@@ -31,23 +37,33 @@
            else do:
                 put stream bf unformat "-" skip.
            end.
-           put stream bf unformat trim(string(abs(sotax_tot))) skip.
+           if sotax_part = "ZK" then do: 
+                put stream bf unformat trim(string(abs(sotax_tot + sotax_tax))) skip.		
+           end.
+           else do:
+           		  put stream bf unformat trim(string(abs(sotax_tot))) skip.
+           end.
            put stream bf unformat "-" skip.
-           put stream bf unformat "-" skip. /*物料无库存*/
-           put stream bf unformat '- - - - - "600202" "' trim(sotax_sub) '"' skip.
+           if sotax_desc1 = "" then do:
+           		put stream bf unformat "-" skip. /*物料无库存*/
+           end.
+           else do:
+           	  put stream bf unformat '"' sotax_desc1 '"' skip. /*物料无库存*/
+           end.
+           put stream bf unformat '- - - - - "' trim(ZKACCT) '" "' trim(sotax_sub) '"' skip.
            put stream bf unformat "-" skip.
         end.
            put stream bf unformat "." skip.
            put stream bf unformat "." skip.
            put stream bf unformat "- - - - - - - Y" skip.
         end.
-           if sotax_part <> "ZK" then do:
+/*           if sotax_part = "ZK" then do:  */
               put stream bf unformat trim(string(sotax_line)) skip.
               put stream bf unformat trim(string(sotax_tot + sotax_tax,"->>>>>>>>>9.99")) " " trim(string(sotax_tot)) " " trim(string(sotax_tax)) skip.
-           end.        
+/*           end.          */
            if last-of(sotax_nbr) then do:
            put stream bf unformat "." skip.
-           put stream bf unformat "-" skip.
+           put stream bf unformat '- - - - "' sotax_inv '" N Y' skip.
           output stream bf close.
           input from value(cimmfname + ".bpi").
           output to value(cimmfname + ".bpo").
