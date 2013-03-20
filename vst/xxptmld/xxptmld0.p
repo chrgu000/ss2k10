@@ -38,7 +38,9 @@ repeat:
            xxpt_phantom = logical(entry(13,txt,","))
            xxpt_ord_min = dec(entry(14,txt,","))
            xxpt_ord_mult = dec(entry(15,txt,","))
-           xxpt_yld_pct = dec(entry(16,txt,",")) no-error.
+           xxpt_yld_pct = dec(entry(16,txt,","))
+           xxpt_routing = entry(17,txt,",")
+           xxpt_bom_code = entry(18,txt,",") no-error.
 end.
 input close.
 

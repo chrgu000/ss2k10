@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120704.1"}
+{mfdtitle.i "130320.1"}
 {xxptpld.i "new"}
 {gpcdget.i "UT"}
 
@@ -17,17 +17,15 @@ with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-/*
+assign flhload = os-getenv("HOME").
 find first qad_wkfl where
            qad_key1 = "xxunrcld.p_filename" and
            qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
-   if qad_key3 <> "" then do:
-      assign flhload =  qad_key3.
+   if qad_key4 <> "" then do:
+      assign flhload =  qad_key4.
    end.
 end.
-*/
-assign flhload = os-getenv("HOME").
 display flhload with frame a.
 
 {wbrp01.i}
@@ -69,20 +67,18 @@ repeat:
                &defineVariables = "yes"}
    {mfmsg.i 832 1}
    {mfphead.i}
-   /*
    find first qad_wkfl where
               qad_key1 = "xxunrcld.p_filename" and
               qad_key2 = global_userid no-error.
    if available qad_wkfl then do:
-          assign qad_key3 = flhload.
+          assign qad_key4 = flhload.
    end.
    else do:
        create qad_wkfl.
        assign qad_key1 = "xxunrcld.p_filename"
               qad_key2 = global_userid
-              qad_key3 = flhload.
+              qad_key4 = flhload.
    end.
-   */
    empty temp-table xxtmppt no-error.
    for each xxtmppt exclusive-lock: delete xxtmppt. end.
    {gprun.i ""xxptpld0.p""}
@@ -93,7 +89,7 @@ repeat:
      else do:
              {gprun.i ""xxptpld1.p""}
      end.
-     for each xxtmppt exclusive-lock with width 320 frame c:
+     for each xxtmppt no-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
          display xxtmppt.

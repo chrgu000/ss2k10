@@ -24,5 +24,7 @@ define {1} shared temp-table xxtmppt
        fields xxpt_ord_min like ptp_ord_min
        fields xxpt_ord_mult like ptp_ord_mult
        fields xxpt_yld_pct like ptp_yld_pct
+       fields xxpt_routing like ptp_routing
+       fields xxpt_bom_code like ptp_bom_code
        fields xxpt_chk as character format "x(40)"
        index xxpt_site_part xxpt_site xxpt_part.
