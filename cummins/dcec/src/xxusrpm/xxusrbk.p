@@ -4,7 +4,7 @@
 /*注意：这个CIM_LOAD是字符版程序的格式不能在GUI下运行                        */
 
 define variable expUser as character initial
-       "mfg,admin".
+       "不修改用户列表".
 define variable intI as integer.
 define variable intJ as integer.
 
@@ -37,7 +37,7 @@ else do:
      output close.
 end.
 OUTPUT TO u.bpi.
-put unformat '"mfg" "qadqad"' skip.
+put unformat '"mfg" "mfgtest"' skip.
 put unformat '"dcec"' skip.
 
 put unformat '"qxopm.p"' skip.

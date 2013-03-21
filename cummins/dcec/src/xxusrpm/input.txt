@@ -1,4 +1,4 @@
-mfg qadqad
+mfg mfgtest
 dcec
 xxusrbk.p
 .

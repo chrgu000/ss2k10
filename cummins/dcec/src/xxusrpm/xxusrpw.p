@@ -1,8 +1,10 @@
 define variable expUser as character initial
 			 "mfg,admin".
 define variable inti as integer.
+define variable intj as integer.
 define variable uid like usr_userid.
 define variable upwd like usr_passwd.
+define variable ucanrun like mnd_canrun.
 input from upwd.txt.
 inti = 0.
 repeat:
@@ -25,19 +27,26 @@ repeat:
 	 end.
 end.
 input close.
+output to value("./log.txt") append.
+put unformat "Total " + trim(string(inti)) + " users passwd restored." skip.
+output close.
+
 assign uid = ""
        inti = 0
+       intj = 0
        upwd = "".
+
 input from ucanr.txt.
 repeat:
-  import delimiter "," uid inti upwd.
-  find first mnd_det exclusive-lock where mnd_nbr = uid and mnd_select = inti no-error.
-  if available mnd_det and mnd_canrun <> upwd then do:
-     assign mnd_canrun = upwd.
+  import delimiter "," uid intj ucanrun.
+  find first mnd_det exclusive-lock where mnd_nbr = uid and mnd_select = intj no-error.
+  if available mnd_det then do:
+     assign inti = inti + 1.
+     assign mnd_canrun = ucanrun.
   end.
 end.
 input close.
 
 output to value("./log.txt") append.
-put unformat "Total " + trim(string(inti)) + " users passwd restored." skip.
+put unformat "Total " + trim(string(inti)) + " Menu access information restored." skip.
 output close.
