@@ -7,7 +7,7 @@
 /***************************************************************************/
 /*!
     txnew.i     Checks for the existence of the system setting
-		where the Tax Management module is in use.
+    where the Tax Management module is in use.
 */
 /***************************************************************************/
 
