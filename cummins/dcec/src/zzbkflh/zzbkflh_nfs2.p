@@ -44,6 +44,20 @@ session:date-format = 'mdy'.
 {mfdeclre.i "new global"}
 {mf1.i "new global"}
 
+define variable v_i as integer.
+do on error undo, return error {&GENERAL-APP-EXCEPT}:
+      hi_char = chr(1).
+
+      do v_i = 2 to 131071:
+         if chr(v_i) > hi_char then hi_char = chr(v_i).
+      end. /*DO i = 2 to 131071*/
+
+      assign
+         hi_date = 12/31/3999
+         low_date = 01/01/1900.
+end.
+
+
 base_curr = "RMB".
 global_userid = "MFG".
 mfguser = "".
