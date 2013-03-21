@@ -1,9 +1,9 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI ADM2
 &ANALYZE-RESUME
-/* Connected Databases 
+/* Connected Databases
 */
 &Scoped-define WINDOW-NAME wWin
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin
 /*------------------------------------------------------------------------
 
   File:
@@ -43,7 +43,7 @@ CREATE WIDGET-POOL.
 &ANALYZE-RESUME
 
 
-&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK
 
 /* ********************  Preprocessor Definitions  ******************** */
 
@@ -62,8 +62,8 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES xim
 
 /* Definitions for BROWSE brList                                        */
-&Scoped-define FIELDS-IN-QUERY-brList xim_part xim_qty xim_site xim_sojob xim_nbr xim_rmks xim_effdate xim_lot xim_chk xim_loc /*   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brList xim_qty_tr */   
+&Scoped-define FIELDS-IN-QUERY-brList xim_part xim_qty xim_site xim_sojob xim_nbr xim_rmks xim_effdate xim_lot xim_chk xim_loc /*
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brList xim_qty_tr */
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH xim
 &Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH xim.
@@ -76,8 +76,8 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brList}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS fiFile hbtnOpen tnLoad btnXls brList 
-&Scoped-Define DISPLAYED-OBJECTS fiFile 
+&Scoped-Define ENABLED-OBJECTS fiFile hbtnOpen tnLoad btnXls brList
+&Scoped-Define DISPLAYED-OBJECTS fiFile
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -93,37 +93,37 @@ CREATE WIDGET-POOL.
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
 /* Menu Definitions                                                     */
-DEFINE MENU POPUP-MENU-brList 
-       MENU-ITEM m_item         LABEL "刷新"          
+DEFINE MENU POPUP-MENU-brList
+       MENU-ITEM m_item         LABEL "刷新"
        RULE
        MENU-ITEM m_del          LABEL "删除"          .
 
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON btnGenCimFile 
-     LABEL "测试程序" 
+DEFINE BUTTON btnGenCimFile
+     LABEL "测试程序"
      SIZE 9 BY 1.21.
 
-DEFINE BUTTON btnXls 
-     LABEL "输出" 
+DEFINE BUTTON btnXls
+     LABEL "输出"
      SIZE 9 BY 1.21.
 
-DEFINE BUTTON hbtnOpen 
-     LABEL "浏览..." 
+DEFINE BUTTON hbtnOpen
+     LABEL "浏览..."
      SIZE 9 BY 1.21.
 
-DEFINE BUTTON tnLoad 
-     LABEL "装入" 
+DEFINE BUTTON tnLoad
+     LABEL "装入"
      SIZE 9 BY 1.21.
 
-DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U 
-     LABEL "文件" 
-     VIEW-AS FILL-IN 
+DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U
+     LABEL "文件"
+     VIEW-AS FILL-IN
      SIZE 51.9 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
-DEFINE QUERY brList FOR 
+DEFINE QUERY brList FOR
       xim SCROLLING.
 &ANALYZE-RESUME
 
@@ -157,8 +157,8 @@ DEFINE FRAME fMain
      btnXls AT ROW 1.53 COL 80
      btnGenCimFile AT ROW 1.53 COL 96
      brList AT ROW 3.21 COL 2
-    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
-         SIDE-LABELS NO-UNDERLINE THREE-D 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
+         SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
          SIZE 117.3 BY 33.68.
 
@@ -199,7 +199,7 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* END WINDOW DEFINITION                                                */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin
 /* ************************* Included-Libraries *********************** */
 
 {src/adm2/containr.i}
@@ -218,13 +218,13 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* SETTINGS FOR FRAME fMain
    FRAME-NAME Custom                                                    */
 /* BROWSE-TAB brList btnGenCimFile fMain */
-ASSIGN 
+ASSIGN
        brList:POPUP-MENU IN FRAME fMain             = MENU POPUP-MENU-brList:HANDLE
        brList:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
 
 /* SETTINGS FOR BUTTON btnGenCimFile IN FRAME fMain
    NO-ENABLE                                                            */
-ASSIGN 
+ASSIGN
        btnGenCimFile:HIDDEN IN FRAME fMain           = TRUE.
 
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
@@ -245,7 +245,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH xim.
 */  /* BROWSE brList */
 &ANALYZE-RESUME
 
- 
+
 
 
 
@@ -377,7 +377,7 @@ DO:
     end.
         assign usrw_charfld[2] = fifile.
         ASSIGN FN = fifile.
-
+    release usrw_wkfl.
     EMPTY TEMP-TABLE xim NO-ERROR.
     {GPRUN.I ""yyldicunld.p""}
     IF CAN-FIND (FIRST xim) THEN DO:
@@ -529,7 +529,7 @@ END.
 &Scoped-define BROWSE-NAME brList
 &UNDEFINE SELF-NAME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin
 
 
 /* ***************************  Main Block  *************************** */
@@ -571,7 +571,7 @@ PROCEDURE disable_UI :
   Purpose:     DISABLE the User Interface
   Parameters:  <none>
   Notes:       Here we clean-up the user-interface by deleting
-               dynamic widgets we have created and/or hide 
+               dynamic widgets we have created and/or hide
                frames.  This procedure is usually called when
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
@@ -592,12 +592,12 @@ PROCEDURE enable_UI :
   Notes:       Here we display/view/enable the widgets in the
                user-interface.  In addition, OPEN all queries
                associated with each FRAME and BROWSE.
-               These statements here are based on the "Other 
+               These statements here are based on the "Other
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-  DISPLAY fiFile 
+  DISPLAY fiFile
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE fiFile hbtnOpen tnLoad btnXls brList 
+  ENABLE fiFile hbtnOpen tnLoad btnXls brList
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.
@@ -606,7 +606,7 @@ END PROCEDURE.
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin
 PROCEDURE exitObject :
 /*------------------------------------------------------------------------------
   Purpose:  Window-specific override of this procedure which destroys
