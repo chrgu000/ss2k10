@@ -385,7 +385,7 @@ DO:
     FOR EACH xim EXCLUSIVE-LOCK WHERE xim_chk = "":
         FIND FIRST ld_det NO-LOCK WHERE ld_domain = GLOBAL_domain AND
                    ld_site = xim_site AND ld_loc = xim_loc AND 
-                   ld_part = ld_part AND ld_lot = xim_lot AND
+                   ld_part = xim_part AND ld_lot = xim_lot AND
                    ld_qty_oh >= xim_qty  NO-ERROR.
         
         IF NOT AVAILABLE ld_det THEN DO:
