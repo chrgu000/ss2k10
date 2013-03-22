@@ -1,5 +1,0 @@
-mfg mfgtest
-dcec
-xxusrbk.p
-.
-y

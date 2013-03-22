@@ -50,3 +50,4 @@ input close.
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " Menu access information restored." skip.
 output close.
+quit.

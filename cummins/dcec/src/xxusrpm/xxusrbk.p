@@ -2,7 +2,7 @@
 /*V8:ConvertMode=Maintenance                                                 */
 /* REVISION END                                                              */
 /*注意：这个CIM_LOAD是字符版程序的格式不能在GUI下运行                        */
-
+define variable v_key like usrw_key1 no-undo initial "xxusrpm.p_TESTENVUSRBAKREST-CTRL".
 define variable expUser as character initial
        "不修改用户列表".
 define variable intI as integer.
@@ -37,7 +37,13 @@ else do:
      output close.
 end.
 OUTPUT TO u.bpi.
-put unformat '"mfg" "mfgtest"' skip.
+find first usrw_wkfl no-lock where usrw_domain = "DCEC" and usrw_key1 = v_key no-error.
+if available usrw_wkfl then do:
+   put unformat '"' trim(usrw_key2) '" "' trim(usrw_key3) '"' skip.
+end.
+else do:
+  put unformat '"mfg" "qadqad"' skip.
+end.
 put unformat '"dcec"' skip.
 
 put unformat '"qxopm.p"' skip.
@@ -93,3 +99,4 @@ OUTPUT CLOSE.
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " users output(Not include " + expUser + ")." skip.
 output close.
+quit.
