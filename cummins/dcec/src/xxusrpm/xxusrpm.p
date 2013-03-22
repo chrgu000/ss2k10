@@ -5,9 +5,10 @@
 /* DISPLAY TITLE */
 {mfdtitle.i "121111.1"}
 define variable v_key like usrw_key1 no-undo initial "xxusrpm.p_TESTENVUSRBAKREST-CTRL".
-define variable vusr like usr_userid.
-define variable vprod like usr_passwd.
-define variable vtest like usr_passwd.
+define variable vusr like usr_userid no-undo.
+define variable vusn like usr_name no-undo.
+define variable vprod like usr_passwd case-sensitive no-undo.
+define variable vtest like usr_passwd case-sensitive no-undo.
 define variable del-yn like mfc_logical initial no.
 define variable i as integer.
 
@@ -28,7 +29,7 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
-   vusr colon 25 format "x(8)" skip(1)
+   vusr colon 25 format "x(8)" vusn no-label skip(1)
    vprod colon 25 format "x(24)" view-as fill-in size 24 by 1
    vtest colon 25 format "x(24)" view-as fill-in size 24 by 1 skip(1)
 
@@ -74,38 +75,58 @@ repeat with frame a:
          {mfnp05.i usrw_wkfl
              usrw_index1
             " usrw_domain = global_domain and usrw_key1 = v_key "
-             usrw_key2
-            " input vusr "}
+             usrw_key2 " input vusr "}
          if recno <> ? then do:
             assign vusr = usrw_key2
                    vprod = usrw_key3
                    vtest = usrw_key4.
-            display vusr vprod vtest with frame a.
+             find first usr_mstr no-lock where usr_userid = vusr no-error.
+             if available usr_mstr then do:
+                assign vusn = usr_name.
+             end.
+             else do:
+               assign vusn ="".
+             end.
+            display vusr vusn vprod vtest with frame a.
+         end.
+         else do:
+            assign vusn = "".
          end.
       end. /* editing: */
 
    end.
 /*GUI*/ if global-beam-me-up then undo, leave.
  /* do on error undo, retry: */
-   if input vusr = "" then do:
-     {mfmsg.i 2282 3}
-      undo,retry.
+   assign vusr.
+   find first usr_mstr no-lock where usr_userid = vusr no-error.
+   if available usr_mstr then do:
+      assign vusn = usr_name
+             vprod = ""
+             vtest = "".
+      find first usrw_wkfl no-lock where usrw_domain = global_domain and
+              usrw_key1 = v_key and
+              usrw_key2 = vusr no-error.
+      if available usrw_wkfl then do:
+      assign vprod = usrw_key3
+             vtest = usrw_key4.
+      end.
+      display vusr vprod vtest with frame a.
    end.
-   find first usr_mstr no-lock where usr_userid = input vusr no-error.
-   if not available usr_mstr then do:
+   else do:
       {mfmsg.i 2282 3}
       undo,retry.
    end.
+
    /* ADD/MOD/DELETE  */
 
    find first usrw_wkfl exclusive-lock where usrw_domain = global_domain and
               usrw_key1 = v_key and
-              usrw_key2 = input vusr no-error.
+              usrw_key2 = vusr no-error.
    if not available usrw_wkfl then do:
       {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
       create usrw_wkfl. usrw_domain = global_domain.
-      assign usrw_key1 = v_key 
-             usrw_key2 = input vusr.
+      assign usrw_key1 = v_key
+             usrw_key2 = vusr.
    end. /* if not available usrw_wkfl then do: */
 
    ststatus = stline[2].
@@ -113,8 +134,8 @@ repeat with frame a:
 
 /*  repeat with frame a: */
 /*GUI*/ if global-beam-me-up then undo, leave.
-         update vprod vtest go-on(F5 CTRL-D).
-        
+         update vprod blank vtest blank go-on(F5 CTRL-D).
+
         assign usrw_key3 = vprod
                usrw_key4 = vtest.
 /*           if usrw_key3 = "" then do:  */

@@ -36,6 +36,7 @@ else do:
      put unformat "not backup user passwd information." skip.
      output close.
 end.
+
 OUTPUT TO u.bpi.
 find first usrw_wkfl no-lock where usrw_domain = "DCEC" and usrw_key1 = v_key no-error.
 if available usrw_wkfl then do:
@@ -67,6 +68,7 @@ put unformat '"xxusrpw.p"' skip. /*create usr and change user password.*/
 
 put unformat 'mgurmt.p' skip. /* cim load user information */
 inti = 0.
+/*备份用户信息*/
 FOR EACH usr_mstr NO-LOCK WHERE usr_userid <> "" and
          index(expUser,usr_userid) = 0:
     inti = inti + 1.
@@ -93,10 +95,33 @@ FOR EACH usr_mstr NO-LOCK WHERE usr_userid <> "" and
     put unformat "y" skip.
 END.
 put unformat '.' skip.
+
+put unformat '"mgurgpmt.p"' skip.
+for each usrg_mstr no-lock:
+    put unformat '"' usrg_mstr.usrg_group_name '"' skip.
+    put unformat '"'  usrg_mstr.usrg_group_desc '"' skip.
+    for each usrgd_det no-lock where 
+             usrgd_det.oid_usrg_mstr = usrg_mstr.oid_usrg_mstr
+             break by usrgd_det.oid_usrg_mstr 
+                   by usrgd_det.usrgd_domain
+                   by usrgd_userid:
+         if first-of(usrgd_det.usrgd_domain) then do:
+            put unformat '"' usrgd_det.usrgd_domain '"' skip.
+         end.
+         put unformat '"' usrgd_userid '"' skip.
+         put unformat '-' skip.
+         put unformat '-' skip.
+         if last-of(usrgd_det.usrgd_domain) then do:
+            put unformat '.' skip.
+         end.
+    end.
+    put unformat '.' skip.
+end.
+put unformat '.' skip.
+
 put unformat '.' skip.
 put 'Y' skip.
 OUTPUT CLOSE.
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " users output(Not include " + expUser + ")." skip.
 output close.
-quit.

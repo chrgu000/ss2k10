@@ -1,10 +1,15 @@
 define variable expUser as character initial
-			 "mfg,admin".
+			 "排除用户列表".
 define variable inti as integer.
 define variable intj as integer.
 define variable uid like usr_userid.
 define variable upwd like usr_passwd.
 define variable ucanrun like mnd_canrun.
+define variable ugpn like usrg_group_name.
+define variable ugpd like usrg_group_desc.
+define variable ugid like usrg_mstr.oid_usrg_mstr.
+define variable udom like usrgd_domain.
+define variable usid like usrgd_userid.
 input from upwd.txt.
 inti = 0.
 repeat:
@@ -50,4 +55,3 @@ input close.
 output to value("./log.txt") append.
 put unformat "Total " + trim(string(inti)) + " Menu access information restored." skip.
 output close.
-quit.
