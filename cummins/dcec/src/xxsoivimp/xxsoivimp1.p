@@ -25,12 +25,6 @@ FOR EACH TMP-SO EXCLUSIVE-LOCK:
        END.
        if /* tso_ord_date = "" or */ tso_ord_date = ? then assign tso_ord_date = today.
        IF tso_rmks = ? THEN ASSIGN tso_rmks = "-".
-       IF tsod_acct = ? or tsod_acct = "" THEN do:
-         ASSIGN tsod_acct = "-".
-       END.
-       IF index(tsod_acct,".") > 0 THEN DO:
-           ASSIGN tsod_acct = substring(tsod_acct,1,index(tsod_acct,".") - 1).
-       END.
        IF tsod_sub = ? THEN ASSIGN tsod_sub = "-".
        IF tsod_cc = ? THEN ASSIGN tsod_sub = "-".
        IF tsod_project = ? THEN ASSIGN tsod_sub = "-".
@@ -44,6 +38,9 @@ for each tmp-so exclusive-lock:
     assign tsod_chk = "".
     if length(tso_nbr) > 8 then do:
        assign tsod_chk = "订单号长度大于8位限制;".
+    end.
+    if tsod_acct = "" or tsod_acct = ? then do:
+       assign tsod_chk = tsod_chk + "账户不允许为空;".
     end.
     find first so_mstr no-lock where so_domain = global_domain and so_nbr = tso_nbr no-error.
     if available so_mstr then do:

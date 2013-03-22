@@ -25,7 +25,7 @@ define variable I as integer.
    bsheet:cells(i,12) = "料号".
    bsheet:cells(i,13) = "地点".
    bsheet:cells(i,14) = "数量".
-   bsheet:cells(i,15) = "单价".
+   bsheet:cells(i,15) = "单价(含税)".
    bsheet:cells(i,16) = "账户".
    bsheet:cells(i,17) = "分账户".
    bsheet:cells(i,18) = "成本中心".

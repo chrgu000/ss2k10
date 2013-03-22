@@ -35,14 +35,14 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
                 END.
             END.
             if tso_tax_usage = "-" then do:
-               put unformat '- - - - ' tsod_tax_in skip.
+               put unformat '- - - Y ' tsod_tax_in skip.
             end.
             else do:
-               PUT UNFORMAT '"' tso_tax_usage '" - - - ' tsod_tax_in SKIP. /* 税 */
+               PUT UNFORMAT '"' tso_tax_usage '" - - Y ' tsod_tax_in SKIP. /* 税 */
             end.
-            PUT UNFORMAT '- NO - - - - - - - - - - NO' SKIP. /*推销员(无备注)*/
+            PUT UNFORMAT '"" NO - - - - - - - - - - NO' SKIP. /*推销员(无备注)*/
+            PUT "." SKIP "S" SKIP.  /*修改为单行模式*/
         END. /* if first-of tso_nbr */
-
         PUT UNFORMAT tsod_line SKIP.
         PUT UNFORMAT '"' tsod_part '"' SKIP.
         PUT UNFORMAT '"' tsod_site '"' SKIP.
@@ -53,9 +53,13 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
         PUT UNFORMAT '-' SKIP.  /*净价*/
         if not available pt_mstr then do:
            PUT UNFORMAT '-' SKIP.  /*描述 jordan 20130227*/
+           PUT UNFORMAT '"TEMP" - - - '.
+        end.
+        else do:
+           PUT UNFORMAT '"TEMP" - - '.
         end.
         /* PUT UNFORMAT '"' tsod_loc '" - - "' tsod_acct '" "' tsod_sub. */
-           PUT UNFORMAT '"TEMP" - - - - '.
+
         IF tsod_acct = "-" then
            PUT UNFORMAT "- ".
         ELSE
@@ -72,12 +76,11 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
            PUT UNFORMAT "- ".
         ELSE
            PUT UNFORMAT '"' tsod_project '" '.
+        PUT UNFORMAT '- - - - - - - - - '.
         if available pt_mstr then do:
-           put unformat '- - - - - - - - - M - - - - - N' SKIP.
+           put unformat 'M ' SKIP.
         end.
-        else do:
-          put unformat skip.
-        end.
+        put unformat '- - - - - N' SKIP.
         find first cm_mstr no-lock where cm_domain = global_domain and
                    cm_addr = tso_cust no-error.
         if available cm_mstr then do:
@@ -97,7 +100,7 @@ FOR EACH tmp-so NO-LOCK WHERE BREAK BY tso_nbr BY tsod_line:
             PUT UNFORMAT '- - - - ' tsod_tax_in SKIP. /*税*/
         end.
         if not available pt_mstr then do:
-             PUT UNFORMAT '- - - - ' tsod_tax_in SKIP.  /* ITEM_NOT_IN_INVENTORY */
+             PUT UNFORMAT '- - - Y ' tsod_tax_in SKIP.  /* ITEM_NOT_IN_INVENTORY */
         end.
 /*      IF tsod_rmks1 <> "-" THEN DO:                                        */
 /*         PUT UNFORMAT '- - - - - - - - - - y' skip.                        */
@@ -130,11 +133,12 @@ OUTPUT CLOSE.
 for each tmp-so exclusive-lock break by tso_nbr by tsod_line:
     if first-of(tso_nbr) then do:
        assign i = 0.
-       assign fn = "xxsoimp_" + tso_nbr.
+       assign fn = execname + "_" + tso_nbr.
     end.
      find first sod_det no-lock where sod_domain = global_domain
             and sod_nbr = tso_nbr and sod_line = tsod_line
             and sod_part = tsod_part and sod_qty_ord = tsod_qty_ord
+            and sod_acct = tsod_acct and sod_type = "M"
      no-error.
      if not available sod_det then do:
         assign tsod_chk = "ERROR......".
