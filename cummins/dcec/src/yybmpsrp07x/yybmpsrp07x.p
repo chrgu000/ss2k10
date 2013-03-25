@@ -53,6 +53,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
   RECT-FRAME:HEIGHT-PIXELS in frame a =
   FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
   RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+setFrameLabels(frame a:handle).
 
 effdate = today.
 
@@ -280,7 +281,7 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        
 end.       
 FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
-       and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1) NO-LOCK:
+       and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1) and  xxwk.pmcode <> "M"  NO-LOCK:
 
       FOR EACH qad_wkfl WHERE qad_domain = global_domain and qad_key1 = "poa_det" AND qad_charfld[2] = xxwk.comp AND qad_datefld[1] <= effdate BREAK BY qad_decfld[1].
             /*BY qad_decfld[1].*/
@@ -302,8 +303,6 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        END.
        IF v_per_price = 0 THEN v_per_price = partcost.
 
-/*322*/    if  xxwk.pmcode <> "M" then do:
-/*322*/
 /*322*/       partcost = 0.
 /*322*/       FOR EACH pc_mstr where pc_domain = global_domain and pc_part = xxwk.comp BREAK BY pc_start:
 /*322*/        IF LAST-OF(pc_start) THEN DO:
@@ -332,7 +331,7 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
 /*322*/           v_pc_expire = ?.
 /*322*/        END.
 /*322*/       END.
-/*322*/      end.
+
        
      disp xxwk.parent COLUMN-LABEL "机型"
             xxwk.par COLUMN-LABEL "父零件"
@@ -345,15 +344,15 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
             xxwk.desc2 COLUMN-LABEL "子零件描述"
             xxwk.pmcode COLUMN-LABEL "P/M"
             partcost COLUMN-LABEL "价格"
-            v_per_price COLUMN-LABEL "供货比最大价" format "->>>,>>>,>>>,>>9.99"
-            monkind  COLUMN-LABEL "Cur"
+            v_per_price COLUMN-LABEL "最大供比差" format "->>>,>>>,>>>,>>9.99"
+            monkind  COLUMN-LABEL "Curr"
             umcost   COLUMN-LABEL "单位"
             xxwk.ref COLUMN-LABEL "参考号"
             xxwk.qty COLUMN-LABEL "父件数量"
             xxwk.op COLUMN-LABEL "工序"
             v_pc_start COLUMN-LABEL "生效日期"
             v_pc_expire COLUMN-LABEL "截止日期"
-            with width 280 stream-io.
+            with width 300 stream-io.
 end.
 
    {mfreset.i}
