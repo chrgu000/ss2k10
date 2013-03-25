@@ -10,7 +10,7 @@ DEFINE VARIABLE parttype as CHARACTER.
 DEFINE VARIABLE part_from like tr_part.
 DEFINE VARIABLE part_to like tr_part.
 DEFINE VARIABLE line_from like tr_line.
-DEFINE VARIABLE line_to like tr_line.
+DEFINE VARIABLE line_to like tr_line INITIAL 999.
 DEFINE VARIABLE soddet as CHARACTER.
 DEFINE VARIABLE sonbr_from as CHARACTER .
 DEFINE VARIABLE sonbr_to     as CHARACTER .
@@ -180,7 +180,7 @@ procedure p-report:
                    and (tr_type = "iss-so" or tr_type = "iss-fas")
                    and ((not flag1) or tr__log02 = no)
                    no-lock use-index tr_nbr_eff,
-       each in_mstr where in_domain = global_domain
+       each in_mstr NO-LOCK where in_domain = global_domain
                          and (in_part = tr_part)
                          and in_site = tr_site
                          break  by tr_nbr by in__qadc01 by tr_part by tr_effdate by tr_serial
@@ -228,14 +228,14 @@ procedure p-report:
 
 
          i = i + 1.
-         qty = 0 - tr_qty_chg.
+         qty = 0 - tr_qty_loc.
          if SOAV = yes and soddet="Y" THEN
              disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"  sod_qty_ord format "->>>>>>>" sod_qty_ship  format "->>>>>>>" space(4)
-                    IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" AT 117  with no-box no-labels width 132 frame c down.
+                    IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" AT 105  with no-box no-labels width 132 frame c down.
          else
              if available(idh_hist) then
              disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"  IDH_qty_ord format "->>>>>>>" IDH_qty_ship  format "->>>>>>>" space(4)
-                     IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)"  AT 117 with no-box no-labels width 132 frame cIH down.
+                     IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)"  AT 105 with no-box no-labels width 132 frame cIH down.
              else
              disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"   "        "  "        " space(3)  /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame cIH down.
              disp "-----------------------------------------------------------------------------------------------------------------------"
@@ -262,7 +262,7 @@ procedure p-report:
                 disp "-----------------------------------------------------------------------------------------------------------------------"
                 with width 132 no-box frame f1.
             end.
-            if line-counter >= (page-size - 5)  then do:
+            if line-counter >= (page-size - 5)  OR LAST-OF(IN__qadc01) then do:
               display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
                   with width 132 no-box frame d.
               page.
@@ -270,7 +270,7 @@ procedure p-report:
               pageno = pageno + 1.
             end.
          end.
-         if line-counter >= (page-size - 5) or last-of(tr_nbr) or (last-of(tr_part) and parttype="S")  then do:
+         if line-counter >= (page-size - 5) or last-of(tr_nbr) or (last-of(tr_part) and parttype="S") OR LAST-OF(IN__qadc01) then do:
               if last-of(tr_part) and parttype ="S" then do:
                   disp tr_nbr tr_part pt_desc2 "合计:" sum format "->>>>>>>>" with no-box no-label width 132 frame hj down.
                   sum = 0.
