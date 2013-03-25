@@ -18,6 +18,7 @@ define variable i as integer.
 define variable batchdelete as character format "x(1)" no-undo.
 
 {gpfieldv.i}      /* var defs for gpfield.i */
+{gpcdget.i "UT"}
 
 /* DISPLAY SELECTION FORM */
 
