@@ -1,6 +1,6 @@
 /*zzbmpsrp01 for product structure report by op or by work center*/
 
-{mfdtitle.i "130311.1"}
+{mfdtitle.i "130311.2"}
 
 def var parent like bom_parent.
 def var site like pt_site.
@@ -8,13 +8,21 @@ def var op like opm_std_op.
 def var op1 like opm_std_op.
 def var wkctr like wc_wkctr.
 def var wkctr1 like wc_wkctr.
-def var effdate like tr_effdate.
+def var effdate like tr_effdate initial today.
 define variable record as integer extent 100.
 define variable comp like ps_comp.
 define variable level as integer.
 define variable maxlevel as integer format ">>>" label "层次".
 /*cj*/ DEF VAR xqty AS DECIMAL EXTENT 100 .
-
+define variable phantom like ptp_phantom.
+define variable l_phantom as character.
+define variable iss_pol like pt_iss_pol.
+define variable l_iss_pol as character.
+define variable lvl as character.
+define variable desc1 like pt_desc1.
+define variable um like pt_um.
+define variable eff_date like ps_start.
+define variable lines as integer.
 def workfile xxwk
     field parent like bom_parent
     field comp like ps_comp
@@ -26,8 +34,9 @@ def workfile xxwk
     field qty like ps_qty_per
     field op like ps_op
     field wkctr like opm_wkctr
-    field wcdesc like opm_desc.
-
+    field wcdesc like opm_desc
+    field rmks   like ps_rmks.
+{yybmpsrp01.i}
 FORM /*GUI*/
 
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
@@ -49,18 +58,22 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
  RECT-FRAME:HEIGHT-PIXELS in frame a =
   FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
  RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+/*V8! title color normal (getFrameTitle("LabelTerm",60)) */.
+setFrameLabels(frame a:handle).
 
-effdate = today.
+assign eff_date = effdate.
 
 repeat:
-
-   if op1 = hi_char then op1 = "".
+   if op  = "0"     then op = "".
+   if op1 = "99999999" then op1 = "".
    if wkctr1 = hi_char then wkctr1 = "".
-
+   for each xxwk exclusive-lock: delete xxwk. end.
    update parent site op op1 wkctr wkctr1 effdate with frame a.
-
-   if op1 = "" then op1 = hi_char.
+    
+   if op = "" then op = "0".
+   if op1 = "" then op1 = "99999999".
    if wkctr1 = "" then wkctr1 = hi_char.
+   if effdate = ? then effdate = today.
    if site = "" then do:
       {mfmsg.i 941 3}
       undo,retry.
@@ -94,89 +107,92 @@ repeat:
     maxlevel = min(maxlevel,99).
 
 /*cj*/ xqty[level] = 1 .
-
-   repeat: /*for expand the ps*/
-         if not available ps_mstr then do:
-      repeat:
-         level = level - 1.
-         if level < 1 then leave.
-         find ps_mstr where ps_domain = global_domain and
-                      recid(ps_mstr) = record[level]
-         no-lock no-error.
-         comp = ps_par.
-         find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
-               and ps_par = comp
-         no-lock no-error.
-         if available ps_mstr then leave.
-      end.
-         end.
-         if level < 1 then leave.
-
-         if effdate = ? or (effdate <> ? and
-         (ps_start = ? or ps_start <= effdate)
-         and (ps_end = ? or effdate <= ps_end)) then do:
-
-                find pt_mstr where pt_domain = global_domain and
-                     pt_part = ps_comp no-lock no-error.
-                find ptp_det where ptp_domain = global_domain and
-                     ptp_site = site and ptp_part = ps_comp no-lock no-error.
-
-                if available pt_mstr and
-                ((available ptp_det and not ptp_phantom)
-                  or
-                  (not available ptp_det and not pt_phantom)) then do:
-
-                      create xxwk.
-                      assign xxwk.parent = parent
-                             xxwk.comp = ps_comp
-                             xxwk.desc2 = pt_desc2
-                             xxwk.ref = ps_ref
-                             xxwk.pscode = ps_ps_code
-                             xxwk.sdate = ps_start
-                             xxwk.edate = ps_end
-                             xxwk.op = ps_op
-                             xxwk.qty = ps_qty_per /*cj*/ * xqty[level] .
-
-                      find first opm_mstr where opm_domain = global_domain
-                             and opm_std_op = string(ps_op) no-lock no-error.
-                      if available opm_mstr then do:
-                            assign xxwk.wkctr = opm_wkctr.
-
-                            find wc_mstr where wc_domain = global_domain and
-                                 wc_wkctr = opm_wkctr and wc_mch = opm_mch no-lock no-error.
-                            if available wc_mstr then
-                                   assign xxwk.wcdesc = wc_desc.
-                      end.
-
-                end.
-
-      record[level] = recid(ps_mstr).
-
-      if level < maxlevel or maxlevel = 0
-      and ((available ptp_det and ptp_phantom) or (not available ptp_det and available pt_mstr and pt_phantom)
-            or not available pt_mstr)
-      then do:
-         comp = ps_comp.
-         level = level + 1.
-/*cj*/       xqty[level] = ps_qty_per * xqty[level - 1] .
-         find first ps_mstr use-index ps_parcomp where ps_domain = global_domain
-                and ps_par = comp
-         no-lock no-error.
-      end.
-      else do:
-         find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
-               and ps_par = comp
-         no-lock no-error.
-      end.
-         end.
-         else do:
-      find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
-            and ps_par = comp
-      no-lock no-error.
-         end.
-
-   end. /*expand the ps*/
-
+          run process_report
+                  (input parent, input 1,input effdate ,input site).
+                  
+/*****************************************************************************
+ * repeat: /*for expand the ps*/
+ *       if not available ps_mstr then do:
+ *    repeat:
+ *       level = level - 1.
+ *       if level < 1 then leave.
+ *       find ps_mstr where ps_domain = global_domain and
+ *                    recid(ps_mstr) = record[level]
+ *       no-lock no-error.
+ *       comp = ps_par.
+ *       find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
+ *             and ps_par = comp
+ *       no-lock no-error.
+ *       if available ps_mstr then leave.
+ *    end.
+ *       end.
+ *       if level < 1 then leave.
+ *
+ *       if effdate = ? or (effdate <> ? and
+ *       (ps_start = ? or ps_start <= effdate)
+ *       and (ps_end = ? or effdate <= ps_end)) then do:
+ *
+ *              find pt_mstr where pt_domain = global_domain and
+ *                   pt_part = ps_comp no-lock no-error.
+ *              find ptp_det where ptp_domain = global_domain and
+ *                   ptp_site = site and ptp_part = ps_comp no-lock no-error.
+ *
+ *              if available pt_mstr and
+ *              ((available ptp_det and not ptp_phantom)
+ *                or
+ *                (not available ptp_det and not pt_phantom)) then do:
+ *
+ *                    create xxwk.
+ *                    assign xxwk.parent = parent
+ *                           xxwk.comp = ps_comp
+ *                           xxwk.desc2 = pt_desc2 when available pt_mstr.
+ *                           xxwk.ref = ps_ref
+ *                           xxwk.pscode = ps_ps_code
+ *                           xxwk.sdate = ps_start
+ *                           xxwk.edate = ps_end
+ *                           xxwk.op = ps_op
+ *                           xxwk.qty = ps_qty_per /*cj*/ * xqty[level] .
+ *
+ *                    find first opm_mstr where opm_domain = global_domain
+ *                           and opm_std_op = string(ps_op) no-lock no-error.
+ *                    if available opm_mstr then do:
+ *                          assign xxwk.wkctr = opm_wkctr.
+ *
+ *                          find wc_mstr where wc_domain = global_domain and
+ *                               wc_wkctr = opm_wkctr and wc_mch = opm_mch no-lock no-error.
+ *                          if available wc_mstr then
+ *                                 assign xxwk.wcdesc = wc_desc.
+ *                    end.
+ *
+ *              end.
+ *
+ *    record[level] = recid(ps_mstr).
+ *
+ *    if level < maxlevel or maxlevel = 0
+ *    and ((available ptp_det and ptp_phantom) or (not available ptp_det and available pt_mstr and pt_phantom)
+ *          or not available pt_mstr)
+ *    then do:
+ *       comp = ps_comp.
+ *       level = level + 1.
+ *  /*cj*/   xqty[level] = ps_qty_per * xqty[level - 1] .
+ *       find first ps_mstr use-index ps_parcomp where ps_domain = global_domain
+ *              and ps_par = comp
+ *       no-lock no-error.
+ *    end.
+ *    else do:
+ *       find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
+ *             and ps_par = comp
+ *       no-lock no-error.
+ *    end.
+ *       end.
+ *       else do:
+ *    find next ps_mstr use-index ps_parcomp where ps_domain = global_domain
+ *          and ps_par = comp
+ *    no-lock no-error.
+ *       end.
+ *
+ * end. /*expand the ps*/
+******************************************************************************/
    for each xxwk no-lock
        where (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1)
@@ -184,10 +200,16 @@ repeat:
        break by xxwk.wkctr by xxwk.comp:
        find first pt_mstr where pt_domain = global_domain
               and pt_part = xxwk.comp no-lock no-error .
+       find first ptp_det no-lock where ptp_domain = global_domain
+              and ptp_part = xxwk.comp and ptp_site = site no-error.
+        if (available ptp_det and not ptp_phantom) then do:  /*虚零件不显示*/
         disp xxwk.parent label "机型" xxwk.wkctr xxwk.wcdesc label "工作中心描述"
-               xxwk.comp xxwk.desc2 label "子零件描述"
-             xxwk.ref label "参考" xxwk.qty label "用量"  xxwk.op label "工序" xxwk.sdate xxwk.edate pt_status
+             xxwk.comp xxwk.desc2 label "子零件描述"
+             xxwk.ref label "参考" xxwk.qty label "用量"  xxwk.op label "工序"
+             xxwk.sdate xxwk.edate pt_status when available pt_mstr
+             xxwk.rmks
              with width 255 stream-io.
+        end.
    end. /*for each xxwk*/
 
    {mfreset.i}

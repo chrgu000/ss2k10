@@ -32,7 +32,7 @@ PROCEDURE process_report:
    define input parameter comp       like ps_comp     no-undo.
    define input parameter level      as   integer     no-undo.
    define input parameter skpge      like mfc_logical no-undo.
-
+   define variable site like si_site.
    define query q_ps_mstr            for ps_mstr
       fields( ps_domain ps_comp ps_end ps_lt_off ps_op ps_par ps_ps_code
       ps_qty_per
@@ -174,9 +174,11 @@ PROCEDURE process_report:
 
    repeat while available ps_mstr with frame det2 down:
 
-      if eff_date = ? or (eff_date <> ? and
-      (ps_start = ? or ps_start <= eff_date)
-      and  (ps_end = ? or eff_date <= ps_end))
+/*      if eff_date = ? or (eff_date <> ? and                                 */
+/*      (ps_start = ? or ps_start <= eff_date)                                */
+/*      and  (ps_end = ? or eff_date <= ps_end))                              */
+
+ if (ps_start = ? or ps_start <= eff_date) and (ps_end = ? or ps_end >= eff_date)      
       then do:
 
          assign
@@ -349,13 +351,21 @@ end.
          if level < maxlevel
          or maxlevel = 0
          then do:
-
+            if substring(trim(ps_comp),length(trim(ps_comp)) - 1,2) = "ZZ" then do:
+               assign site = "dcec-b".
+            end.
+            else do:
+               assign site = "dcec-c".
+            end.
             /* THIRD INPUT PARAMETER CHANGED FROM new_parent TO skpge */
-
-            run process_report
-               (input ps_comp,
-               input level + 1,
-               input skpge).
+            find first ptp_det no-lock where ptp_domain = global_domain 
+                   and ptp_part = ps_comp and ptp_site = site no-error.
+            if (available ptp_det and ptp_phantom) or not available ptp_det then do:
+                run process_report
+                   (input ps_comp,
+                   input level + 1,
+                   input skpge).
+            end.
 
             get next q_ps_mstr no-lock.
          end.  /* IF level < maxlevel ... */

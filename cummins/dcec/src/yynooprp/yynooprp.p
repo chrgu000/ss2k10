@@ -56,7 +56,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "130321"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
