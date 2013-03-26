@@ -1,9 +1,9 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI
 &ANALYZE-RESUME
-/* Connected Databases 
+/* Connected Databases
 */
 &Scoped-define WINDOW-NAME wWin
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin
 /*------------------------------------------------------------------------
 
   File:
@@ -40,12 +40,12 @@ CREATE WIDGET-POOL.
 {mfdeclre.i}
     {gplabel.i}
 {xxsocnimp.i "new"}
-
+{pppiwkpi.i "new"}
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
 
-&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK
 
 /* ********************  Preprocessor Definitions  ******************** */
 
@@ -60,8 +60,8 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES xsc_d
 
 /* Definitions for BROWSE brDet                                         */
-&Scoped-define FIELDS-IN-QUERY-brDet xsd_ship xsd_cust xsd_so xsd_line xsd_serial xsd_part xsd_desc1 xsd_desc2 xsd_qty_used xsd_site xsd_loc xsd_qty_keep xsd_lot xsd_ref xsd_eff xsd_price xsd_amt xsd_chk   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brDet   
+&Scoped-define FIELDS-IN-QUERY-brDet xsd_ship xsd_cust xsd_so xsd_line xsd_serial xsd_part xsd_desc1 xsd_desc2 xsd_qty_used xsd_site xsd_loc xsd_qty_keep xsd_lot xsd_ref xsd_eff xsd_price xsd_amt xsd_chk
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brDet
 &Scoped-define SELF-NAME brDet
 &Scoped-define QUERY-STRING-brDet FOR EACH xsc_d
 &Scoped-define OPEN-QUERY-brDet OPEN QUERY {&SELF-NAME} FOR EACH xsc_d.
@@ -74,8 +74,8 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brDet}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS vFile bChk bExp bLoad brDet 
-&Scoped-Define DISPLAYED-OBJECTS vFile 
+&Scoped-Define ENABLED-OBJECTS vFile bChk bExp bLoad brDet
+&Scoped-Define DISPLAYED-OBJECTS vFile
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -91,26 +91,26 @@ CREATE WIDGET-POOL.
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON bChk 
-     LABEL "检查" 
+DEFINE BUTTON bChk
+     LABEL "检查"
      SIZE 15 BY 1.31.
 
-DEFINE BUTTON bExp 
-     LABEL "输出" 
+DEFINE BUTTON bExp
+     LABEL "输出"
      SIZE 15 BY 1.31.
 
-DEFINE BUTTON bLoad 
-     LABEL "装入" 
+DEFINE BUTTON bLoad
+     LABEL "装入"
      SIZE 15 BY 1.31.
 
-DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U 
-     LABEL "文件名" 
-     VIEW-AS FILL-IN 
+DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U
+     LABEL "文件名"
+     VIEW-AS FILL-IN
      SIZE 26 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
-DEFINE QUERY brDet FOR 
+DEFINE QUERY brDet FOR
       xsc_d SCROLLING.
 &ANALYZE-RESUME
 
@@ -118,7 +118,7 @@ DEFINE QUERY brDet FOR
 DEFINE BROWSE brDet
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brDet wWin _FREEFORM
   QUERY brDet DISPLAY
-      xsd_ship     COLUMN-LABEL "发货至"
+    xsd_ship     COLUMN-LABEL "发货至"
     xsd_cust    COLUMN-LABEL "销往"
     xsd_so       COLUMN-LABEL "销售订单号"
     xsd_line     COLUMN-LABEL "项次"
@@ -149,8 +149,8 @@ DEFINE FRAME fMain
      bExp AT ROW 2 COL 52.5 WIDGET-ID 6
      bLoad AT ROW 2 COL 68.5 WIDGET-ID 8
      brDet AT ROW 3.69 COL 1.25 WIDGET-ID 200
-    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
-         SIDE-LABELS NO-UNDERLINE THREE-D 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
+         SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
          SIZE 106.75 BY 31.75 WIDGET-ID 100.
 
@@ -219,9 +219,6 @@ OPEN QUERY {&SELF-NAME} FOR EACH xsc_d.
 */  /* BROWSE brDet */
 &ANALYZE-RESUME
 
- 
-
-
 
 /* ************************  Control Triggers  ************************ */
 
@@ -280,7 +277,7 @@ DO:
   SESSION:SET-WAIT-STAT("general").
   FOR EACH xsc_d NO-LOCK BREAK BY xsd_ship:
       IF FIRST-OF(xsd_ship) THEN DO:
-         {gprun.i ""xxsocnuacz1.p"" "(input xsd_ship)"}
+         {gprun.i ""xxsocnuacz1.p"" "(input xsd_ship, input xsd_so)"}
       END.
   END.
   ASSIGN i = 1.
@@ -290,7 +287,7 @@ DO:
           NEXT.
       END.
 
-     FIND FIRST cm_mstr NO-LOCK WHERE cm_domain = GLOBAL_domain AND cm_addr = xsd_cust  NO-ERROR.
+     FIND FIRST cm_mstr NO-LOCK WHERE cm_domain = global_domain AND cm_addr = xsd_cust  NO-ERROR.
      IF AVAILABLE cM_mstr THEN DO:
          ASSIGN xsd_curr = cm_curr.
      END.
@@ -299,12 +296,20 @@ DO:
      END.
 
      FIND FIRST xsa_r EXCLUSIVE-LOCK USE-INDEX xsr_2 WHERE xsr_so = xsd_so AND
-           xsr_site = xsd_site AND xsr_loc = xsd_loc NO-ERROR.
+                xsr_part = xsd_part and xsr_site = xsd_site AND xsr_loc = xsd_loc
+                NO-ERROR.
       IF AVAILABLE xsa_r THEN DO:
          ASSIGN  xsd_line = xsr_line
                  xsd_qty_oh = xsr_oh
-                 xsd_um= xsr_um.
+                 xsd_um= xsr_um
+                 .
          ASSIGN  xsd_qty_keep = xsr_oh - xsd_qty_used .
+         find first ld_det no-lock where ld_domai = global_domain and ld_site = xsd_site
+                and ld_loc = xsd_loc and ld_part = xsd_part and ld_qty_oh >= xsd_qty_used no-error.
+         if available ld_det then do:
+            assign xsd_lot = ld_lot
+                    xsd_ref = ld_ref.
+         end.
          IF xsr_oh >= xsd_qty_used  THEN DO:
              ASSIGN xsr_oh = xsr_oh - xsd_qty_used.
          END.
@@ -320,7 +325,7 @@ DO:
       IF xsd_eff = ?  THEN DO:
           ASSIGN xsd_eff = TODAY.
       END.
-      FIND FIRST pt_mstr NO-LOCK WHERE pt_domain = GLOBAL_domain AND pt_part = xsd_part NO-ERROR.
+      FIND FIRST pt_mstr NO-LOCK WHERE pt_domain = global_domain AND pt_part = xsd_part NO-ERROR.
       IF AVAILABLE pt_mstr THEN DO:
           ASSIGN xsd_desc1 = pt_desc1
                  xsd_desc2 = pt_desc2.
@@ -330,16 +335,22 @@ DO:
       END.
       ASSIGN xsd_sn = i.
       i = i + 1.
-      FIND FIRST PI_MSTR NO-LOCK WHERE PI_DOMAIN = GLOBAL_domain AND pi_list <> ""
-           AND pi_cs_code = xsd_cust AND pi_PART_CODE = xSD_PART
-           AND pi_curr = xsd_curr AND pi_um = xsd_um
-           AND pi_start <= xsd_eff AND pi_expir >= xsd_eff NO-ERROR.
-      IF AVAILABLE pi_mstr THEN DO:
-          ASSIGN xsd_price = pi_list_price.
-      END.
-      ELSE DO:
-          ASSIGN xsd_chk = getmsg(2852).
-      END.
+      /***** 是否有价格表判定:如果是日程单取1.10.1.2普通采购单取1.10.1.1 ****/
+
+     {xxsocnimp01.i}
+
+/*                                                                                       */
+/*   FIND FIRST PI_MSTR NO-LOCK WHERE PI_DOMAIN = global_domain AND pi_list <> ""        */
+/*        AND pi_cs_code = xsd_cust AND pi_PART_CODE = xSD_PART                          */
+/*        AND pi_curr = xsd_curr AND pi_um = xsd_um                                      */
+/*        AND pi_start <= xsd_eff AND pi_expir >= xsd_eff NO-ERROR.                      */
+/*   IF AVAILABLE pi_mstr THEN DO:                                                       */
+/*       ASSIGN xsd_price = pi_list_price.                                               */
+/*   END.                                                                                */
+/*   ELSE DO:                                                                            */
+/*       ASSIGN xsd_chk = getmsg(2852).                                                  */
+/*   END.                                                                                */
+
       ASSIGN xsd_amt = xsd_price * xsd_qty_used.
   END.
   FOR EACH xsc_d EXCLUSIVE-LOCK WHERE xsd_chk = "":
@@ -431,14 +442,15 @@ DO:
 /*    END.                                                        */
 /*    EMPTY TEMP-TABLE xsc_m NO-ERROR. */
   IF vfile <> "" THEN DO:
-     FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = GLOBAL_domain AND usrw_key1 = execname
+     FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = global_domain AND usrw_key1 = execname
             AND usrw_key2 = global_userid NO-ERROR.
      IF NOT AVAILABLE usrw_wkfl THEN DO:
-        CREATE Usrw_wkfl. usrw_domain = GLOBAL_domain.
+        CREATE Usrw_wkfl. usrw_domain = global_domain.
         ASSIGN Usrw_key1 = execname
-               Usrw_key2 = GLOBAL_userid.
+               Usrw_key2 = global_userid.
      END.
      ASSIGN USrw_key3 = vfile.
+     release usrw_wkfl.
   END.
    EMPTY TEMP-TABLE xsc_d NO-ERROR.
    SESSION:SET-WAIT-STAT("general").
@@ -458,7 +470,7 @@ END.
 &Scoped-define BROWSE-NAME brDet
 &UNDEFINE SELF-NAME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin
 
 
 /* ***************************  Main Block  *************************** */
@@ -484,7 +496,7 @@ MAIN-BLOCK:
 DO ON ERROR   UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK
    ON END-KEY UNDO MAIN-BLOCK, LEAVE MAIN-BLOCK:
   RUN enable_UI.
-  FIND FIRST usrw_wkfl NO-LOCK WHERE usrw_domain = GLOBAL_domain AND usrw_key1 = execname AND usrw_key2 = global_userid NO-ERROR.
+  FIND FIRST usrw_wkfl NO-LOCK WHERE usrw_domain = global_domain AND usrw_key1 = execname AND usrw_key2 = global_userid NO-ERROR.
      IF AVAILABLE usrw_wkfl THEN DO:
          DISPLAY usrw_key3 @ vFile WITH FRAME fmain.
          ASSIGN vfile.
@@ -507,7 +519,7 @@ PROCEDURE disable_UI :
   Purpose:     DISABLE the User Interface
   Parameters:  <none>
   Notes:       Here we clean-up the user-interface by deleting
-               dynamic widgets we have created and/or hide 
+               dynamic widgets we have created and/or hide
                frames.  This procedure is usually called when
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
@@ -528,12 +540,12 @@ PROCEDURE enable_UI :
   Notes:       Here we display/view/enable the widgets in the
                user-interface.  In addition, OPEN all queries
                associated with each FRAME and BROWSE.
-               These statements here are based on the "Other 
+               These statements here are based on the "Other
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-  DISPLAY vFile 
+  DISPLAY vFile
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE vFile bChk bExp bLoad brDet 
+  ENABLE vFile bChk bExp bLoad brDet
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.

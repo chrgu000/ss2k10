@@ -2,7 +2,7 @@
 
 {mfdeclre.i}
 {xxsocnimp.i}
-	define variable stat as logical.
+  define variable stat as logical.
   DEFINE VARIABLE cfile AS CHARACTER.
   define variable trrecid as recid.
   define variable trref as integer.
@@ -33,28 +33,28 @@ FOR EACH xsc_d WHERE xsd_chk = "PASS":
     hide message no-pause.
     output close.
     input close.
-		stat = no.
+    stat = no.
     FIND FIRST tr_hist NO-LOCK WHERE tr_domain = GLOBAL_domain
            and tr_trnbr > integer(trrecid) AND tr_type = "CN-USE"
            and tr_part = xsd_part and tr_effdate = xsd_eff
            and tr_site = xsd_site and tr_loc = xsd_loc
            and tr_so_job = xsd_so and tr_line = xsd_line no-error.
     IF AVAILABLE tr_hist then do:
-    	 assign trref = integer(tr_rmks)
-    	 				ret = string(tr_trnbr).
-    	 find first tr_hist no-lock where tr_domain = global_domain
-    	 		    and tr_trnbr = trref and tr_type = "ISS-SO"
-    	 		    and tr_part = xsd_part and tr_effdate = xsd_eff
-    	 		    and tr_site = xsd_site and tr_loc = xsd_loc
-    	 		    and tr_qty_loc = - xsd_qty_used no-error.
-    	 if available tr_hist then do:
-    	 		assign stat = yes.
-    	 	  assign xsd_chk = "[CN-USE:" + ret + "]-[ISS-SO:" + string(tr_trnbr)+ "]".
-    	 	  os-delete value(cfile + ".bpi").
-    	 	  os-delete value(cfile + ".bpo").
-    	 end.
+       assign trref = integer(tr_rmks)
+              ret = string(tr_trnbr).
+       find first tr_hist no-lock where tr_domain = global_domain
+              and tr_trnbr = trref and tr_type = "ISS-SO"
+              and tr_part = xsd_part and tr_effdate = xsd_eff
+              and tr_site = xsd_site and tr_loc = xsd_loc
+              and tr_qty_loc = - xsd_qty_used no-error.
+       if available tr_hist then do:
+          assign stat = yes.
+          assign xsd_chk = "[CN-USE:" + ret + "]-[ISS-SO:" + string(tr_trnbr)+ "]".
+          os-delete value(cfile + ".bpi").
+          os-delete value(cfile + ".bpo").
+       end.
     end.
-	  if stat = no then do:
-	  	 assign xsd_chk = "CIM_LOAD FAIL.".
-	  end.
+    if stat = no then do:
+       assign xsd_chk = "CIM_LOAD FAIL.".
+    end.
 END.

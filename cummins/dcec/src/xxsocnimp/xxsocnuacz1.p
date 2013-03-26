@@ -45,10 +45,10 @@
 /* {mfdtitle.i "1+ "}       */
 /* {cxcustom.i "SOCNUAC.P"} */
 DEFINE INPUT PARAMETER ishipto LIKE so_ship.
+DEFINE INPUT PARAMETER iSo     like so_nbr.
 /*
 DEFINE INPUT PARAMETER iCust   like so_cust.
 DEFINE INPUT PARAMETER iSite   like si_site.
-DEFINE INPUT PARAMETER iSo     like so_nbr.
 DEFINE INPUT PARAMETER iPart   like pt_part.
 */
 {mfdeclre.i}
@@ -310,8 +310,8 @@ ASSIGN SHIPTO = ISHIPTO.
        input  hi_char,
        input  "",
        input  hi_char,
-       input  "",
-       input  hi_char,
+       input  iSo,
+       input  iSo,
        input  "",
        input  hi_char,
        input  invoice_domain,
@@ -321,18 +321,18 @@ ASSIGN SHIPTO = ISHIPTO.
        output ctr,
        input-output table tt_autocr,
        input-output table tt_so_update).
-
 for each tt_autocr no-lock:
-	  create xsa_r.
-		assign xsr_so = ac_order
-					 xsr_line = ac_line
-					 xsr_site = ac_site
-					 xsr_loc = ac_loc
-					 xsr_lot = ac_lotser
-					 xsr_ref = ac_ref
-					 xsr_eff = ac_eff
-					 xsr_oh = ac_tot_qty_oh
-					 xsr_um = ac_stock_um.
+    create xsa_r.
+    assign xsr_so = ac_order
+           xsr_line = ac_line
+           xsr_part = ac_part
+           xsr_site = ac_site
+           xsr_loc = ac_loc
+           xsr_lot = ac_lotser
+           xsr_ref = ac_ref
+           xsr_eff = ac_eff
+           xsr_oh = ac_tot_qty_oh
+           xsr_um = ac_stock_um.
 end.
 
 /*                                                                   */

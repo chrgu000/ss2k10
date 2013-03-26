@@ -440,9 +440,9 @@ do transaction:
       /* DISPLAY ITEMS BEING ISSUED */
       /*V8+*/
       if batchrun then do:
-      	 assign ok_to_display = no.
+         assign ok_to_display = no.
       end.
-			else do:
+      else do:
            {mfgmsg10.i 636 1 ok_to_display}
       end.
       if ok_to_display = ? then do:
