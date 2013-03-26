@@ -13,7 +13,7 @@
 define variable yn like mfc_logical initial yes.
 define variable l_prod as character format 'x(30)'.
 define variable uid    as character format "x(56)".
-define variable loc_phys_addr as character format "x(20)".
+define variable loc_phys_addr as character format "x(24)".
 define variable l_tot_usrs    as integer initial 1.
 define variable daysto        as integer initial 30.
 define variable days          as integer.
