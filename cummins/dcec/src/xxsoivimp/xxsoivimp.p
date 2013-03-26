@@ -298,22 +298,22 @@ DO:
     DEFINE VARIABLE GFILE AS CHARACTER NO-UNDO.
     DEFINE VARIABLE gfret AS LOGICAL NO-UNDO.
 
-  ASSIGN vfile.
-  ASSIGN GFILE = vfile.
-    SYSTEM-DIALOG GET-FILE gfile
-        TITLE      "另存为..."
-        FILTERS    "EXCEL工作簿(*.xls)" "*.xls"
-        MUST-EXIST
-        ASK-OVERWRITE
-        INITIAL-DIR "."
-        DEFAULT-EXTENSION ".xls"
-        SAVE-AS
-        USE-FILENAME
-        UPDATE gfret.
-        if gfret then do:
-           {gprun.i ""xxsoivimp2.p"" "(input gfile)"}
-        end.
-
+/*  ASSIGN vfile.                                                            */
+/*  ASSIGN GFILE = vfile.                                                    */
+/*    SYSTEM-DIALOG GET-FILE gfile                                           */
+/*        TITLE      "另存为..."                                             */
+/*        FILTERS    "EXCEL工作簿(*.xls)" "*.xls"                            */
+/*        MUST-EXIST                                                         */
+/*        ASK-OVERWRITE                                                      */
+/*        INITIAL-DIR "."                                                    */
+/*        DEFAULT-EXTENSION ".xls"                                           */
+/*        SAVE-AS                                                            */
+/*        USE-FILENAME                                                       */
+/*        UPDATE gfret.                                                      */
+/*        if gfret then do:                                                  */
+/*           {gprun.i ""xxsoivimp2.p"" "(input gfile)"}                      */
+/*        end.                                                               */
+     {gprun.i ""xxsoivimp2.p""}
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -366,6 +366,7 @@ DO:
            MUST-EXIST
        USE-FILENAME
        UPDATE selet.
+       display vfile with frame fMain.
        ASSIGN vfile.
    END.
    /* IF lower(ENTRY(2,VFILE,".")) <> "xls" AND lower(ENTRY(2,VFILE,".")) <> "xlsx" THEN DO: */
@@ -386,7 +387,9 @@ DO:
   ASSIGN FILE_name = vfile.
    EMPTY TEMP-TABLE tmp-so NO-ERROR.
    SESSION:SET-WAIT-STAT("general").
-   {gprun.i ""xxsoivimp0.p""}
+   if search(vfile) <> ? then do:
+      {gprun.i ""xxsoivimp0.p""}
+   end.
       IF CAN-FIND(FIRST tmp-so) THEN DO:
       OPEN QUERY brDet FOR EACH tmp-so.
 

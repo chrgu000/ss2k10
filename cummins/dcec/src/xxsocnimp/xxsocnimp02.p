@@ -1,7 +1,7 @@
 /* xxsocnimp02.p - export to xls                                              */
 {mfdeclre.i}
 {xxsocnimp.i}
-define input parameter thfile as CHAR FORMAT "x(50)".
+/* define input parameter thfile as CHAR FORMAT "x(50)".                     */
 define variable bexcel as com-handle.
 define variable bbook as com-handle.
 define variable bsheet as com-handle.
@@ -84,9 +84,9 @@ define variable I as integer.
   bsheet:Range("G3"):Select.
   bexcel:ActiveWindow:FreezePanes = True.
 
-bbook:SaveAs(thfile ,,,,,,1).
+/* bbook:SaveAs(thfile ,,,,,,1).                                            */
 bexcel:visible = true.
-bbook:saved = true.
+bbook:saved = false.
 
 RELEASE OBJECT bsheet NO-ERROR.
 RELEASE OBJECT bbook NO-ERROR.

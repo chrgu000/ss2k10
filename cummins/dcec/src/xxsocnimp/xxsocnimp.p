@@ -376,21 +376,21 @@ DO:
     DEFINE VARIABLE gfret AS LOGICAL NO-UNDO.
 
   ASSIGN vfile.
-  ASSIGN GFILE = vfile.
-    SYSTEM-DIALOG GET-FILE gfile
-        TITLE      "另存为..."
-        FILTERS    "EXCEL工作簿(*.xls)"   "*.xls"
-        MUST-EXIST
-        ASK-OVERWRITE
-        INITIAL-DIR "."
-        DEFAULT-EXTENSION ".xls"
-        SAVE-AS
-        USE-FILENAME
-        UPDATE gfret.
-        if gfret then do:
-           {gprun.i ""xxsocnimp02.p"" "(input gfile)"}
-        end.
-
+/*  ASSIGN GFILE = vfile.                                                    */
+/*    SYSTEM-DIALOG GET-FILE gfile                                           */
+/*        TITLE      "另存为..."                                             */
+/*        FILTERS    "EXCEL工作簿(*.xls)"   "*.xls"                          */
+/*        MUST-EXIST                                                         */
+/*        ASK-OVERWRITE                                                      */
+/*        INITIAL-DIR "."                                                    */
+/*        DEFAULT-EXTENSION ".xls"                                           */
+/*        SAVE-AS                                                            */
+/*        USE-FILENAME                                                       */
+/*        UPDATE gfret.                                                      */
+/*        if gfret then do:                                                  */
+ /*        {gprun.i ""xxsocnimp02.p"" "(input gfile)"}                       */
+/*        end.                                                               */
+       {gprun.i ""xxsocnimp02.p""}   
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -431,12 +431,19 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL vFile wWin
 ON RETURN OF vFile IN FRAME fMain /* 文件名 */
 DO:
+  DEFINE VARIABL selet AS LOGICAL .
       ASSIGN vfile.
   IF search(vfile) = ? THEN DO:
-     MESSAGE "文件不存在，请确认"  view-as ALERT-BOX ERROR.
-     LEAVE.
+       SYSTEM-DIALOG GET-FILE vfile
+           TITLE      "请选择导入文件..."
+           FILTERS    "Excel文件(*.xls)" "*.xls"
+           MUST-EXIST
+       USE-FILENAME
+       UPDATE selet.
+       display vfile with frame fMain.
+       ASSIGN vfile.
    END.
-   /* IF lower(ENTRY(2,VFILE,".")) <> "xls" AND lower(ENTRY(2,VFILE,".")) <> "xlsx" THEN DO: */
+/* IF lower(ENTRY(2,VFILE,".")) <> "xls" AND lower(ENTRY(2,VFILE,".")) <> "xlsx" THEN DO: */
 /*         MESSAGE "文件必须是Excel文件" VIEW-AS ALERT-BOX ERROR. */
 /*        LEAVE.                                                  */
 /*    END.                                                        */
@@ -454,8 +461,9 @@ DO:
   END.
    EMPTY TEMP-TABLE xsc_d NO-ERROR.
    SESSION:SET-WAIT-STAT("general").
-   {gprun.i ""xxsocnimp01.p"" "(input vfile)"}
-
+   IF vfile <> "" THEN DO:
+      {gprun.i ""xxsocnimp01.p"" "(input vfile)"}
+   end.
   OPEN QUERY brDet FOR EACH xsc_d.
       IF CAN-FIND(FIRST xsc_d) THEN DO:
            brdet:REFRESH().
