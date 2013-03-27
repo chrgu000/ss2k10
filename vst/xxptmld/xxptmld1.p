@@ -15,7 +15,20 @@ for each xxtmppt exclusive-lock where xxpt_chk = "".
     put unformat '"' xxpt_part '"' skip.
     put unformat xxpt_ms ' - ' xxpt_timefnce ' - - ' xxpt_ord_per ' ' xxpt_sfty_stk ' ' xxpt_sfty_tme ' - - - '.
     put unformat xxpt_buyer ' - - ' xxpt_pm_code ' - ' xxpt_mfg_lead ' '  xxpt_pur_lead ' ' xxpt_ins_rqd ' ' xxpt_ins_lead ' - - '.
-    put unformat xxpt_phantom ' ' xxpt_ord_min ' - '  xxpt_ord_mult  ' - ' xxpt_yld_pct ' - - - - - "' xxpt_routing '" "' xxpt_bom_code '"' skip.
+    put unformat xxpt_phantom ' ' xxpt_ord_min ' - '  xxpt_ord_mult  ' - ' xxpt_yld_pct ' - - - - - '.
+    if xxpt_routing = "-" then do:
+       put unformat "- ".
+    end.
+    else do:
+      put unformat '"' xxpt_routing '" '.
+    end.
+    if xxpt_bom_code = "-" then do:
+       put unformat "- ".
+    end.
+    else do:
+       put unformat '"' xxpt_bom_code '" '.
+    end.
+      put unformat skip.
     output close.
     batchrun = yes.
     input from value(vfile + ".bpi").
@@ -29,7 +42,7 @@ for each xxtmppt exclusive-lock where xxpt_chk = "".
     output close.
     input close.
     batchrun = no.
-    
+
     find first pt_mstr no-lock where pt_part = xxpt_part no-error.
        if available pt_mstr and
                     xxpt_ms = pt_ms  and
@@ -47,8 +60,8 @@ for each xxtmppt exclusive-lock where xxpt_chk = "".
                     xxpt_ord_min  = pt_ord_min and
                     xxpt_ord_mult = pt_ord_mult and
                     xxpt_yld_pct  = pt_yield_pct and
-                    xxpt_routing = pt_routing and
-                    xxpt_bom_code = pt_bom_code
+                    (xxpt_routing = pt_routing or xxpt_routing = "-") and
+                    (xxpt_bom_code = pt_bom_code or xxpt_bom_code = "-")
           then do:
           assign xxpt_chk = "OK".
 				   os-delete value(vfile + ".bpi").

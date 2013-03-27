@@ -15,7 +15,20 @@ for each xxtmppt no-lock where xxpt_chk = "".
     put unformat '"' xxpt_part '" "' xxpt_site '"' skip.
     put unformat xxpt_ms ' - ' xxpt_timefnce ' - - ' xxpt_ord_per ' ' xxpt_sfty_stk ' ' xxpt_sfty_tme ' - - - '.
     put unformat xxpt_buyer ' - - ' xxpt_pm_code ' - ' xxpt_mfg_lead ' '  xxpt_pur_lead ' ' xxpt_ins_rqd ' ' xxpt_ins_lead ' - - '.
-    put unformat xxpt_phantom ' ' xxpt_ord_min ' - '  xxpt_ord_mult  ' - ' xxpt_yld_pct ' - - - - - "' xxpt_routing '" "' xxpt_bom_code '"' skip.
+    put unformat xxpt_phantom ' ' xxpt_ord_min ' - '  xxpt_ord_mult  ' - ' xxpt_yld_pct ' - - - - - '.
+    if xxpt_routing = "-" then do:
+       put unformat "- ".
+    end.
+    else do:
+      put unformat '"' xxpt_routing '" '.
+    end.
+    if xxpt_bom_code = "-" then do:
+       put unformat "- ".
+    end.
+    else do:
+       put unformat '"' xxpt_bom_code '" '.
+    end.
+      put unformat skip.
 end.
 output close.
 
@@ -52,8 +65,8 @@ if cloadfile then do:
                     xxpt_ord_min  = ptp_ord_min and
                     xxpt_ord_mult = ptp_ord_mult and
                     xxpt_yld_pct  = ptp_yld_pct and
-                    xxpt_routing = ptp_routing and
-                    xxpt_bom_code = ptp_bom_code
+                    (xxpt_routing = ptp_routing or xxpt_routing = "-") and
+                    (xxpt_bom_code = ptp_bom_code or xxpt_bom_code = "-")
           then do:
           assign xxpt_chk = "OK".
        end.
