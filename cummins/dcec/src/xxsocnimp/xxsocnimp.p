@@ -294,7 +294,14 @@ DO:
      ELSE DO:
          ASSIGN xsd_curr = "".
      END.
+/***
+for each cncix_mstr no-lock where cncix_domain = "DCEC" 
+     and cncix_so_nbr = "JEPTEST3":
+DISPLAY cncix_mstr WITH 2 COLUMNS.
+    COLOR DISPLAY INPUT cncix_lotser.
+end.
 
+***/
      FIND FIRST xsa_r EXCLUSIVE-LOCK USE-INDEX xsr_2 WHERE xsr_so = xsd_so AND
                 xsr_part = xsd_part and xsr_site = xsd_site AND xsr_loc = xsd_loc
                 NO-ERROR.
@@ -304,11 +311,12 @@ DO:
                  xsd_um= xsr_um
                  .
          ASSIGN  xsd_qty_keep = xsr_oh - xsd_qty_used .
-         find first ld_det no-lock where ld_domai = global_domain and ld_site = xsd_site
-                and ld_loc = xsd_loc and ld_part = xsd_part and ld_qty_oh >= xsd_qty_used no-error.
-         if available ld_det then do:
-            assign xsd_lot = ld_lot
-                    xsd_ref = ld_ref.
+         find first cncix_mstr no-lock where cncix_domai = global_domain 
+                and cncix_so_nbr = xsd_so and cncix_sod_line = xsd_line
+                and cncix_site = xsd_site and cncix_part = xsd_part
+                and cncix_qty_stock >= xsd_qty_used no-error.
+         if available cncix_mstr then do:
+            assign xsd_lot = cncix_lotser.
          end.
          IF xsr_oh >= xsd_qty_used  THEN DO:
              ASSIGN xsr_oh = xsr_oh - xsd_qty_used.

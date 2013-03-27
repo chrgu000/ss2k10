@@ -4,6 +4,7 @@
 {xxsocnimp.i}
   define variable stat as logical.
   DEFINE VARIABLE cfile AS CHARACTER.
+  define variable errmsg as character.
   define variable trrecid as recid.
   define variable trref as integer.
   define variable ret as character.
@@ -55,6 +56,9 @@ FOR EACH xsc_d WHERE xsd_chk = "PASS":
        end.
     end.
     if stat = no then do:
-       assign xsd_chk = "CIM_LOAD FAIL.".
+        errmsg  = "".
+        cfile = cfile + ".bpo".
+       {gprun.i ""xxgetcimerr.p"" "(input cfile,output errmsg)"}
+       assign xsd_chk = "CIM´íÎó:" + errmsg.
     end.
 END.
