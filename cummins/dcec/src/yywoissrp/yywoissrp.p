@@ -6,7 +6,6 @@
 /* $Revision:eb21sp12  $ BY: Jordan Lin  DATE: 08/13/12  ECO: *SS-20120813.1***/
 /* 反映领料单实际转移量的报表                                                 */
 
-
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
@@ -26,8 +25,8 @@ define variable vqty like tr_qty_loc.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-       
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -112,9 +111,8 @@ repeat:
                &defineVariables = "yes"}
 /*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
 
-   {mfphead.i}
+{mfphead.i}
 
-   
 for each wo_mstr no-lock where wo_domain = global_domain and
          wo_nbr >= nbr and wo_nbr <= nbr1  AND wo_lot >= id and wo_lot <= id1
          AND  wo_site >= site and wo_site <= site1 with frame x width 160:
@@ -130,19 +128,20 @@ for each wo_mstr no-lock where wo_domain = global_domain and
            fields(tr_domain tr_qty_loc tr_nbr tr_type)
         no-lock where tr_domain = global_domain
              and tr_lot = wo_lot and tr_type = "iss-wo"
-             AND tr_effdate >= date1 AND  tr_effdate <= date2 and tr_part = wod_part:
+             AND tr_effdate >= date1 AND  tr_effdate <= date2 
+             and tr_part = wod_part:
              assign vqty = vqty + -1 * tr_qty_loc.
         end.
         find first pt_mstr no-lock where pt_domain = global_domain
                and pt_part = wod_part no-error.
+        if available pt_mstr and vqty <> 0 then do:
         display wod_part pt_desc2 pt_article column-label "保管员" pt_um
                 wod_qty_req vqty column-label "已发数量"
                 wod_qty_req - vqty column-label "差异量" with stream-io.
+        end.
     end.
 
-      
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-
 
    end.
 
