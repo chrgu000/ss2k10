@@ -66,7 +66,7 @@
 /*V8:ConvertMode=FullGUIReport                                              */
 /* ss - 130315.1 by: jack */
 /* ss - 130321.1 by: jack */
-/* ss - 130322.1 by: jack */ 
+/* ss - 130322.1 by: jack */
 /* DISPLAY TITLE */
 
 
@@ -77,9 +77,6 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-/*
-{mfdtitle.i "1+ "}
-*/
 {mfdtitle.i "130322.1 "}
 
 /*  DEFINING VARIABLES AS NO-UNDO */
@@ -172,7 +169,6 @@ define variable cost_qty       like mfc_logical initial yes
 {pocnvars.i}
 {pocnvar2.i}
 
-{xxptrp06a1.i}
 
 /* TEMP-TABLE STORING QUANTITY, ITEM NO. AND LOCATION         */
 /* FOR A SITE                                               */
@@ -289,8 +285,8 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
 /* ss - 130315.1 -b
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -388,8 +384,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
    &IF (DEFINED(SELECTION_CRITERIA) = 0)
    &THEN " Selection Criteria "
    &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
+   &ENDIF
+&ELSE
    getTermLabel("SELECTION_CRITERIA", 25).
 &ENDIF.
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -409,7 +405,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 setFrameLabels(frame a:handle).
 
 /* FORM FOR SITE AND LOCATION */
-FORM /*GUI*/ 
+FORM /*GUI*/
    site at 1
    loc  at 15
 with STREAM-IO /*GUI*/  frame phead1 side-labels width 132.
@@ -467,7 +463,7 @@ l_msg2 = "* " + l_msg2.
 /*GUI repeat : */
 /*GUI*/ procedure p-enable-ui:
 
-
+{xxptrp06a1.i}
    if part1 = hi_char then part1 = "".
    if line1 = hi_char then line1 = "".
    if vend1 = hi_char then vend1 = "".
@@ -480,7 +476,7 @@ l_msg2 = "* " + l_msg2.
 
    if c-application-mode <> 'web'
    then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -585,7 +581,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
       {mfquoter.i customer_consign}
       {mfquoter.i supplier_consign}
       {mfquoter.i l_recalculate}
-
+       {xxptrp06a2.i}
       if part1 = "" then part1 = hi_char.
       if line1 = "" then line1 = hi_char.
       if vend1 = "" then vend1 = hi_char.
@@ -595,10 +591,11 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
       if part_group1 = "" then part_group1 = hi_char.
       if part_type1 = "" then part_type1 = hi_char.
       if as_of_date = ? then as_of_date = today.
+
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -609,17 +606,16 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 define buffer trhist for tr_hist.
 /* ss - 130315.1 -b */
-    {xxptrp06a2.i}
- 
+
    {mfphead.i}
 
-   FORM /*GUI*/ 
+   FORM /*GUI*/
       header
       l_msg1
 
    with STREAM-IO /*GUI*/  frame pagefoot page-bottom width 132.
 
-   FORM /*GUI*/ 
+   FORM /*GUI*/
       header
       l_msg2
 
@@ -651,8 +647,8 @@ define buffer trhist for tr_hist.
        DELETE tt .
    END.
 
-  
-   
+
+
    assign
       cust_consign_qty = 0
       ext_std      = 0
@@ -729,8 +725,8 @@ define buffer trhist for tr_hist.
 
           /* ss - 130321.1 -b */
           IF cost_qty = NO  THEN DO:
-             FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain 
-                 AND pld_site = ld_site AND pld_loc = ld_loc 
+             FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain
+                 AND pld_site = ld_site AND pld_loc = ld_loc
                  AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain
                  AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR .
              IF AVAILABLE pld_det  THEN NEXT .
@@ -740,12 +736,12 @@ define buffer trhist for tr_hist.
          find first t_lddet exclusive-lock
             where t_lddet.t_lddet_part = ld_part
             and   t_lddet.t_lddet_site = ld_site
-            and   t_lddet.t_lddet_loc  = ld_loc 
-            AND t_lddet.t_lddet_lot = ld_lot    
+            and   t_lddet.t_lddet_loc  = ld_loc
+            AND t_lddet.t_lddet_lot = ld_lot
             no-error.
 
          if not available t_lddet then do:
-             
+
             create t_lddet.
             assign
                t_lddet.t_lddet_site             = ld_site
@@ -754,7 +750,7 @@ define buffer trhist for tr_hist.
                t_lddet.t_lddet_part             = ld_part
                t_lddet.t_lddet_loc              = ld_loc
                t_lddet.t_lddet_lot = ld_lot
-               t_lddet.t_lddet_ref = ld_ref 
+               t_lddet.t_lddet_ref = ld_ref
 	       t_lddet.t_lddet_date = ld_date
                 .
          end.
@@ -773,10 +769,10 @@ define buffer trhist for tr_hist.
             or (l_avail_stat and l_nettable) then
             t_lddet.t_lddet_qty = t_lddet.t_lddet_qty + ld_qty_oh.
 
-         /* ss - 130321.2 -b  
+         /* ss - 130321.2 -b
          MESSAGE "hi1"  t_lddet.t_lddet_loc  t_lddet.t_lddet_qty t_lddet.t_lddet_lot .
          */
-         
+
 
       end. /* FOR EACH LD_DET */
 
@@ -797,7 +793,7 @@ define buffer trhist for tr_hist.
             and tr_part       = pt_part
             and tr_effdate    > as_of_date
             and tr_site       = in_site
-            /* ss - 130315.1 -b 
+            /* ss - 130315.1 -b
             and (tr_loc      >= loc
             and  tr_loc      <= loc1)
             ss - 130315.1 -e */
@@ -865,8 +861,8 @@ define buffer trhist for tr_hist.
            IF FIRST-OF(tr_loc)  THEN DO:
             v_go = YES .
               IF cost_qty = NO  THEN DO:
-                 FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain 
-                     AND pld_site = tr_site AND pld_loc = tr_loc 
+                 FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain
+                     AND pld_site = tr_site AND pld_loc = tr_loc
                      AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain
                      AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR .
                  IF AVAILABLE pld_det  THEN v_go = NO . .
@@ -884,7 +880,7 @@ define buffer trhist for tr_hist.
                   and   t_lddet.t_lddet_site = tr_site
                   and   t_lddet.t_lddet_loc  = tr_loc
                    /* ss - 130321.1 -b */
-                    AND t_lddet.t_lddet_lot = tr_serial  
+                    AND t_lddet.t_lddet_lot = tr_serial
                    /* ss - 130321.1 -e */
                exclusive-lock no-error.
 
@@ -901,8 +897,8 @@ define buffer trhist for tr_hist.
                        t_lddet.t_lddet_ref = tr_ref
                       /* ss - 130321.1 -e */
                       .
-                   /* ss - 130321.2 -b 
-         MESSAGE "hi2"  t_lddet.t_lddet_loc  t_lddet.t_lddet_qty t_lddet.t_lddet_lot . 
+                   /* ss - 130321.2 -b
+         MESSAGE "hi2"  t_lddet.t_lddet_loc  t_lddet.t_lddet_qty t_lddet.t_lddet_lot .
          */
 
                end. /* IF NOT AVAILABLE t_lddet */
@@ -910,7 +906,7 @@ define buffer trhist for tr_hist.
             end. /* IF first-of(tr_loc) */
 
          end.  /* FOR EACH tr_hist.. */
-     /* ss - 130321.1 -b 
+     /* ss - 130321.1 -b
       end. /* IF l_recalculate */
       */
 
@@ -957,10 +953,10 @@ define buffer trhist for tr_hist.
 
                total_qty_oh = total_qty_oh + t_lddet.t_lddet_qty.
 
-                /* ss - 130321.2 -b 
-         MESSAGE "hi3"  t_lddet.t_lddet_loc  t_lddet.t_lddet_qty t_lddet.t_lddet_lot total_qty_oh . 
+                /* ss - 130321.2 -b
+         MESSAGE "hi3"  t_lddet.t_lddet_loc  t_lddet.t_lddet_qty t_lddet.t_lddet_lot total_qty_oh .
          */
-         
+
 
                /*DETERMINE CONSIGNMENT QUANTITIES */
                if using_cust_consignment
@@ -1197,7 +1193,7 @@ define buffer trhist for tr_hist.
                /* FROM ABOVE BECAUSE total_qty_oh WOULD HAVE THE CORRECT */
                /* VALUE ONLY AFTER BACKING OUT THE QTY.                  */
 
-                /* ss - 130321.1 -b 
+                /* ss - 130321.1 -b
                    MESSAGE "hi5" t_lddet.t_lddet_loc t_lddet.t_lddet_lot total_qty_oh .
                    */
 
@@ -1208,7 +1204,7 @@ define buffer trhist for tr_hist.
                       and neg_qty)
                then do:
 
-                   
+
                    /* ss - 130315.1 -b
 
                   if parts_printed = 0
@@ -1303,18 +1299,18 @@ define buffer trhist for tr_hist.
                      t_lddet.t_lddet_qty = total_qty_oh
                      t_lddet.t_lddet_std_as_of = t_sct_std_as_of
                          .
-                 /* ss - 130321.1 -b 
+                 /* ss - 130321.1 -b
                    MESSAGE "hi6" t_lddet.t_lddet_lot total_qty_oh .
                    */
-                  
+
                     CREATE tt .
                     BUFFER-COPY t_lddet TO tt .
-               
+
                    /* ss - 130315.1 -e */
-                
+
                end. /* IF total_qty_oh > 0 OR ... */
-                
-               
+
+
                 delete t_lddet.
 
             end. /* IF LAST-OF(t_lddet_lot) */
@@ -1344,7 +1340,7 @@ define buffer trhist for tr_hist.
                end. /* IF parts_printed >= 1 */
             end. /* IF LAST-OF(t_lddet_loc) */
 
-           
+
             if last(t_lddet_loc)
             then do:
                if locations_printed >= 1
@@ -1368,11 +1364,11 @@ define buffer trhist for tr_hist.
                end. /* IF locations_printed >= 1 */
             end. /* IF LAST(t_lddet_loc) */
             ss - 130315.1 -e */
-           
+
 
          end. /* FOR EACH T_LDDET */
 
-         /* ss - 130315.1 -e 
+         /* ss - 130315.1 -e
          if last(in_site) then do:
 
             if line-counter > page-size - 4 then page.
@@ -1395,17 +1391,17 @@ define buffer trhist for tr_hist.
          for each t_sct exclusive-lock:
             delete t_sct.
          end. /* FOR EACH T_SCT */
-         
+
 
       end. /* IF LAST-OF(IN_SITE) */
 
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
    end. /* FOR EACH IN_MSTR */
 
 
-       
+
      /* ss - 130315.1 -b */
       for each x_ret exclusive-lock :
        delete x_ret .
@@ -1416,40 +1412,40 @@ define buffer trhist for tr_hist.
               WHERE pt_domain = global_domain and
 	         pt_part = tt.t_lddet_part
                 BREAK BY tt.t_lddet_site BY tt.t_lddet_part  BY tt.t_lddet_loc BY  tt.t_lddet_lot /* BY tt.t_lddet_ref */
-                  
+
               :
-        
-            
+
+
 
                 IF FIRST-OF(tt.t_lddet_part)  THEN DO:
-                      find first x_ret exclusive-lock where 
-		      xr_site = tt.t_lddet_site and 
+                      find first x_ret exclusive-lock where
+		      xr_site = tt.t_lddet_site and
 		      xr_part = tt.t_lddet_part no-error.
                         if not available x_ret then do:
                            create x_ret.
-                           assign 
+                           assign
 			        xr_site = tt.t_lddet_site
                                xr_part = tt.t_lddet_part
                                xr_cst = tt.t_lddet_std_as_of
                                xr_desc1 = pt_desc1
-                               xr_prodline = pt_prod_line 
+                               xr_prodline = pt_prod_line
                                .
                         end.
-                
+
                     v_total_qty = 0 .
                 END.
-        
+
                 xr_qty_oh = xr_qty_oh + tt.t_lddet_qty .
-        
-              
+
+
               effdate = ?.
 	       /* ss - 130318.1 -b
               IF tt.t_lddet_lot <> "" THEN DO:
                ss -e */
 	       /*
                  FOR EACH tr_hist NO-LOCK
-                    WHERE 
-        		    tr_domain = global_domain and 
+                    WHERE
+        		    tr_domain = global_domain and
         		    tr_part = tt.t_lddet_part
                     AND tr_serial = tt.t_lddet_lot
                   /*  AND tr_ref = tt.t_lddet_ref */
@@ -1464,13 +1460,13 @@ define buffer trhist for tr_hist.
 		 /* ss - 130318.1 -b
               END.
 	      ss -e */
-        
+
                  /* ss - 130315.1 -b */
 
                 effdate = tt.t_lddet_date .
 
                 IF effdate <> ?  THEN DO:
-            
+
                     do i = 1 to 9:
                        if as_of_date - effdate >= days[i] then do:
                           assign inti = i.
@@ -1480,7 +1476,7 @@ define buffer trhist for tr_hist.
                        end.
                     end.
                 END.
-                /* ss - 130322.1 -b 
+                /* ss - 130322.1 -b
                 ELSE
                     i = 10 .
                 ss - 130322.1 -e */
@@ -1488,21 +1484,21 @@ define buffer trhist for tr_hist.
                 ELSE
                     i = 1 .
                /* ss - 130322.1 -e */
-                
+
                 if i = 9 and as_of_date - effdate > days[9] then do:
                    assign i  = i + 1.
                 end.
                 assign inti  = i.
-           
-                   assign 
+
+                   assign
                        xr_qty[inti] = xr_qty[inti] +  tt.t_lddet_qty
                        .
 
           END. /* EACH tt */
 
-            
+
      /* 计算发生日期账龄 */
-     
+
         if l_excel then do:
          {gprun.i ""xxptrp06x.p"" "(input fName)"}
       end.
@@ -1514,14 +1510,14 @@ define buffer trhist for tr_hist.
           FOR EACH tt NO-LOCK WITH WIDTH 300 :
                display tt with stream-io.
                */
-               
+
           /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
           end.
       end.
         /* ss - 130315.1 -e */
 
    /* REPORT TRAILER */
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/

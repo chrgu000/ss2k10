@@ -34,6 +34,8 @@ end.
           usrw_logfld[2] = net_qty
           usrw_logfld[3] = inc_zero_qty
           usrw_logfld[4] = zero_cost
+          usrw_logfld[5] = cost_qty
+          usrw_logfld[6] = l_excel
           usrw_charfld[11] = customer_consign
           usrw_charfld[12] = supplier_consign
           usrw_charfld[15] = fName.

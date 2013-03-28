@@ -30,7 +30,10 @@ if available usrw_wkfl then do:
            net_qty          = usrw_logfld[2]
            inc_zero_qty     = usrw_logfld[3]
            zero_cost        = usrw_logfld[4]
+           cost_qty         = usrw_logfld[5]
+           l_excel          = usrw_logfld[6]
            customer_consign = usrw_charfld[11]
            supplier_consign = usrw_charfld[12]
            fName            = usrw_charfld[15].
 end.
+release usrw_wkfl.
