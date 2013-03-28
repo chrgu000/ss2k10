@@ -130,9 +130,3 @@ FOR EACH ap_mstr NO-LOCK WHERE ap_domain = global_domain and ap_batch <=bh1
 END.
 
 startamt = endamt - peramt .
-
-
-
-
-
-

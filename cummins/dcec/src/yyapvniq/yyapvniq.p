@@ -105,13 +105,11 @@ repeat:
                 PUT "供应商"AT 2 "名称" AT 12 "开始日期" AT 42 "结束日期" AT 52 "期初金额" TO 82 "期末金额" TO 102 SKIP .
 
                 FIND ad_mstr NO-LOCK WHERE ad_domain = global_domain
-                                       and ad_addr = ap_vend NO-ERROR .
-
-                PUT ap_vend AT 2 ad_name AT 12 startdt AT 42 enddt AT 52 startamt TO 82 endamt TO 102 SKIP .
-
-              PUT "发票日期" AT 2 "生效日期" AT 12 "到期日期" at 22 "凭证号" at 31 "发票号" AT 41
-                  "类型" AT 62  "货币金额" TO 80  "货币" AT 82 "确认人" to 105 "人民币金额" TO 124  "余额" TO 144
-                       "三包" TO 164  "备注" AT 170  SKIP .
+                                       and ad_addr = ap_vend NO-ERROR.
+                PUT ap_vend AT 2 ad_name AT 12 startdt AT 42 enddt AT 52 startamt TO 82 endamt TO 102 SKIP.
+                PUT "发票日期" AT 2 "生效日期" AT 12 "到期日期" at 22 "凭证号" at 31 "发票号" AT 41
+                    "类型" AT 62  "货币金额" TO 80  "货币" AT 82 "确认人" to 105 "人民币金额" TO 124  "余额" TO 144
+                    "三包" TO 164  "备注" AT 170  SKIP .
 
                 amt0 = endamt .
 
@@ -129,17 +127,24 @@ repeat:
                 amt1 = ap_base_amt .
                 due_date = vo_due_date.
                 invoice = vo_invoice.
-                vconf = VO__QAD01.
+                /** vconf = VO__QAD01. */
+                vconf = vo_conf_by.
             END.
 
             amt6 = 0 .
             note = "" .
             IF ap_type = "CK" THEN DO :
+                FIND FIRST gltr_hist WHERE gltr_domain = global_domain
+                       and gltr_doc_typ = ap_type
+                      AND gltr_doc = ap_ref NO-ERROR.
+                IF AVAILABLE gltr_hist THEN do:
+                        vconf = gltr_user.
+                end.
                 FIND ck_mstr NO-LOCK WHERE ck_domain = global_domain and
                      ck_ref = ap_ref AND ck_status <> "void" NO-ERROR .
                 IF NOT AVAILABLE ck_mstr THEN NEXT .
                 FOR EACH ckd_det NO-LOCK WHERE ckd_domain = global_domain
-                     and ckd_ref = ap_ref :
+                     and ckd_ref = ap_ref:
                     FIND vo_mstr NO-LOCK WHERE vo_domain = global_domain and
                          vo_ref = ckd_voucher NO-ERROR .
                     IF AVAILABLE vo_mstr THEN DO :
@@ -149,7 +154,6 @@ repeat:
                             ELSE baseamt = ckd_amt .
                         END.
                         amt1 = amt1 - baseamt * vo_ex_rate2 / vo_ex_rate .
-                        vconf = VO__QAD01.
                     END.
                     ELSE DO :
                         amt1 = amt1 - ckd_amt * ap_ex_rate2 / ap_ex_rate .
@@ -206,4 +210,3 @@ repeat:
 end. /* REPEAT */
 
 {wbrp04.i &frame-spec = a}
-
