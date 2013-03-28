@@ -120,15 +120,17 @@ for each wo_mstr no-lock where wo_domain = global_domain and
          AND  wo_site >= site and wo_site <= site1 with frame x width 160:
          find first pt_mstr no-lock where pt_domain = global_domain
                 and pt_part = wo_part no-error.
+    setFrameLabels(frame x:handle).
     display wo_nbr wo_lot wo_part pt_desc1 when (avail pt_mstr) wo_qty_ord with stream-io .
     for each wod_det no-lock where wod_domain = global_domain and
              wod_lot = wo_lot with frame y width 240:
+             setFrameLabels(frame y:handle).
         assign vqty = 0.
         for each tr_hist
            fields(tr_domain tr_qty_loc tr_nbr tr_type)
         no-lock where tr_domain = global_domain
              and tr_lot = wo_lot and tr_type = "iss-wo"
-             AND tr_date >= date1 AND  tr_date <= date2 and tr_part = wod_part:
+             AND tr_effdate >= date1 AND  tr_effdate <= date2 and tr_part = wod_part:
              assign vqty = vqty + -1 * tr_qty_loc.
         end.
         find first pt_mstr no-lock where pt_domain = global_domain
