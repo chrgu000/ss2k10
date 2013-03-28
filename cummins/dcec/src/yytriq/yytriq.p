@@ -80,9 +80,9 @@ tr_hist.tr_slspsn[3] tr_hist.tr_slspsn[4] tr_hist.tr_xcr_acct ~
 tr_hist.tr_xcr_cc tr_hist.tr_xcr_proj tr_hist.tr_xdr_acct tr_hist.tr_xdr_cc ~
 tr_hist.tr_xdr_proj tr_hist.tr_xgl_ref
 &Scoped-define ENABLED-FIELDS-IN-QUERY-brMain
-&Scoped-define QUERY-STRING-brMain FOR EACH tr_hist NO-LOCK ~
+&Scoped-define QUERY-STRING-brMain FOR EACH tr_hist NO-LOCK use-index tr_eff_trnbr where tr_domain = global_domain and tr_effdate = today ~
     BY tr_hist.tr_trnbr DESCENDING INDEXED-REPOSITION
-&Scoped-define OPEN-QUERY-brMain OPEN QUERY brMain FOR EACH tr_hist NO-LOCK ~
+&Scoped-define OPEN-QUERY-brMain OPEN QUERY brMain FOR EACH tr_hist NO-LOCK use-index tr_eff_trnbr where tr_domain = global_domain and tr_effdate = today ~
     BY tr_hist.tr_trnbr DESCENDING INDEXED-REPOSITION.
 &Scoped-define TABLES-IN-QUERY-brMain tr_hist
 &Scoped-define FIRST-TABLE-IN-QUERY-brMain tr_hist
