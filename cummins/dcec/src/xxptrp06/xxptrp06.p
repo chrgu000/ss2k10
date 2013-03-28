@@ -77,7 +77,7 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-{mfdtitle.i "130322.1 "}
+{mfdtitle.i "130328.1 "}
 
 /*  DEFINING VARIABLES AS NO-UNDO */
 
@@ -785,10 +785,10 @@ define buffer trhist for tr_hist.
          l_trnbr = tr_trnbr .
 
       /*CREATING t_trhist RECORDS.*/
-      for each tr_hist
+      for each tr_hist 
          fields(tr_domain tr_part tr_effdate tr_site tr_loc tr_trnbr
          tr_ship_type tr_nbr tr_type tr_program tr_qty_loc tr_status
-         tr_rmks tr_rev tr_serial tr_ref )
+         tr_rmks tr_rev tr_serial tr_ref ) use-index tr_part_eff
          where  tr_domain     = global_domain
             and tr_part       = pt_part
             and tr_effdate    > as_of_date
@@ -841,6 +841,7 @@ define buffer trhist for tr_hist.
          for each tr_hist
             fields(tr_domain tr_part tr_site tr_loc tr_status tr_ship_type
                    tr_lot tr_ref tr_qty_loc tr_effdate tr_serial tr_ref )
+            use-index tr_part_eff
          no-lock
             where tr_domain     = global_domain
             and   tr_part       = pt_part

@@ -1,4 +1,4 @@
- find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+find first usrw_wkfl where usrw_domain = global_domain
         and usrw_key1 = execname
         and usrw_key2 = global_userid no-error.
 if not available usrw_wkfl then do:
@@ -6,6 +6,7 @@ if not available usrw_wkfl then do:
    assign usrw_key1 = execname
           usrw_key2 = global_userid.
 end.
+if locked(usrw_wkfl) then do:
    assign usrw_datefld[1] = as_of_date
           usrw_intfld[1] = days[1]
           usrw_intfld[2] = days[2]
@@ -39,3 +40,5 @@ end.
           usrw_charfld[11] = customer_consign
           usrw_charfld[12] = supplier_consign
           usrw_charfld[15] = fName.
+end.
+release usrw_wkfl.

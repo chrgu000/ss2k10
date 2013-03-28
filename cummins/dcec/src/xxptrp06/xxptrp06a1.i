@@ -1,4 +1,4 @@
-find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+find first usrw_wkfl no-lock where usrw_domain = global_domain
        and usrw_key1 = execname
        and usrw_key2 = global_userid no-error.
 if available usrw_wkfl then do:
@@ -36,4 +36,3 @@ if available usrw_wkfl then do:
            supplier_consign = usrw_charfld[12]
            fName            = usrw_charfld[15].
 end.
-release usrw_wkfl.
