@@ -58,14 +58,75 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
-/* TEMPORARILY TR_HIST RECORDS ARE NOT CREATED IN LD_DET.          */
-/* THIS LOGIC PREVENTS LD_DET LOCKING PROBLEM WITH ANY             */
-/* MAINTENANCE FUNCTION USING LD_DET                               */
+/* TEMPORARILY TR_HIST RECORDS ARE NOT CREATED IN LD_DET.                     */
+/* THIS LOGIC PREVENTS LD_DET LOCKING PROBLEM WITH ANY                        */
+/* MAINTENANCE FUNCTION USING LD_DET                                          */
 
-/*V8:ConvertMode=FullGUIReport                                          */
+/* zy:根据xxptrp06.p 获取指定时间库存成本及数量                               */
 
-{mfdtitle.i "1+ "}
+/******************************************************************************
+example:  xxppptrp07test.p
+
+{mfdeclre.i}
+{xxptrp07.i "new"}
+
+{gprun.i ""xxptrp07.p""
+        "(input '1',
+          input '2',
+          input '',
+          input 'ZZZZZZ',
+          input '',
+          input 'ZZZZZZ',
+          input '',
+          input 'ZZZZZZ',
+          input 'dcec-c',
+          input 'dcec-c',
+          input '',
+          input 'ZZZZZZ',
+          input '',
+          input 'ZZZZZZ',
+          input today - 10,
+          input yes,
+          input yes,
+          input yes,
+          input yes,
+          input 'Include',
+          input 'Exclude'
+        )"}
+output to tmpld03.txt.
+for each tmpld03 no-lock with width 80 frame x:
+  display tmpld03 with stream-io.
+end.
+output close.
+******************************************************************************/
+
+
+/*V8:Convert Mode=FullGUIReport                                               */
+{mfdeclre.i}
+/* {mfdtitle.i "1+ "}                                                         */
 /* DEFINING VARIABLES AS NO-UNDO */
+define input parameter ipart         like pt_part.
+define input parameter ipart1        like pt_part.
+define input parameter iline         like pt_prod_line.
+define input parameter iline1        like pt_prod_line.
+define input parameter ivend         like pt_vend.
+define input parameter ivend1        like pt_vend.
+define input parameter iabc          like pt_abc.
+define input parameter iabc1         like pt_abc.
+define input parameter isite         like in_site.
+define input parameter isite1        like in_site.
+define input parameter ipart_group   like pt_group.
+define input parameter ipart_group1  like pt_group.
+define input parameter ipart_type    like pt_part_type.
+define input parameter ipart_type1   like pt_part_type.
+define input parameter ias_of_date   like tr_effdate.
+define input parameter ineg_qty      like mfc_logical.
+define input parameter inet_qty      like mfc_logical.
+define input parameter iinc_zero_qty like mfc_logical.
+define input parameter izero_cost    like mfc_logical.
+define input parameter icustomer_consign as character.
+define input parameter isupplier_consign as character.
+{pocnvars.i}
 
 define variable abc     like pt_abc       no-undo.
 define variable abc1    like pt_abc       no-undo.
@@ -99,7 +160,7 @@ define variable inc_zero_qty like mfc_logical
 
 define variable tr_recno     as recid          no-undo.
 define variable trrecno      as recid          no-undo.
-define variable std_as_of    like glxcst       no-undo.
+define variable std_as_of    like sct_cst_tot       no-undo.
 define variable cst_date     like tr_effdate   no-undo.
 
 define variable zero_cost    like mfc_logical initial yes
@@ -109,7 +170,7 @@ define variable l_msg1 as character format "x(64)" no-undo.
 define variable l_msg2 as character format "x(64)" no-undo.
 
 /* CONSIGNMENT VARIABLES */
-{pocnvars.i}
+
 define variable using_cust_consignment like mfc_logical no-undo.
 define variable mnemonic_valid as logical no-undo.
 define variable ENABLE_CUSTOMER_CONSIGNMENT as character no-undo
@@ -142,50 +203,50 @@ define variable l_supp_consignqty  like in_qty_oh no-undo.
 /* THE NEXT 1 LINE WILL BE REMOVED WHEN */
 /* tr_qty_lotserial IS IN THE SCHEMA.   */
 define variable tr_qty_lotserial like tr_qty_loc no-undo.
-
+{xxptrp07.i}
 /* SELECT FORM */
-form
-   part           colon 15
-   part1          label {t001.i} colon 49 skip
-   line           colon 15
-   line1          label {t001.i} colon 49 skip
-   vend           colon 15
-   vend1          label {t001.i} colon 49 skip
-   abc            colon 15
-   abc1           label {t001.i} colon 49 skip
-   site           colon 15
-   site1          label {t001.i} colon 49 skip
-   part_group     colon 15
-   part_group1    label {t001.i} colon 49 skip
-   part_type      colon 15
-   part_type1     label {t001.i} colon 49 skip(1)
-
-   as_of_date     colon 35
-   neg_qty        colon 35
-   net_qty        colon 35
-   inc_zero_qty   colon 35
-   zero_cost      colon 35
-   customer_consign     colon 35
-   supplier_consign     colon 35
-with frame a side-labels width 80 attr-space.
-
-/* SET EXTERNAL LABELS */
-setFrameLabels(frame a:handle).
-
-/* REPORT BLOCK */
-
-{pxmsg.i
-   &MSGNUM = 3715
-   &MSGBUFFER = l_msg1
-   }
-l_msg1 = "* " + l_msg1.
-{pxmsg.i
-   &MSGNUM = 3716
-   &MSGBUFFER = l_msg2
-   }
-l_msg2 = "* " + l_msg2.
-
-{wbrp01.i}
+/* form                                                                      */
+/*    part           colon 15                                                */
+/*    part1          label {t001.i} colon 49 skip                            */
+/*    line           colon 15                                                */
+/*    line1          label {t001.i} colon 49 skip                            */
+/*    vend           colon 15                                                */
+/*    vend1          label {t001.i} colon 49 skip                            */
+/*    abc            colon 15                                                */
+/*    abc1           label {t001.i} colon 49 skip                            */
+/*    site           colon 15                                                */
+/*    site1          label {t001.i} colon 49 skip                            */
+/*    part_group     colon 15                                                */
+/*    part_group1    label {t001.i} colon 49 skip                            */
+/*    part_type      colon 15                                                */
+/*    part_type1     label {t001.i} colon 49 skip(1)                         */
+/*                                                                           */
+/*    as_of_date     colon 35                                                */
+/*    neg_qty        colon 35                                                */
+/*    net_qty        colon 35                                                */
+/*    inc_zero_qty   colon 35                                                */
+/*    zero_cost      colon 35                                                */
+/*    customer_consign     colon 35                                          */
+/*    supplier_consign     colon 35                                          */
+/* with frame a side-labels width 80 attr-space.                             */
+/*                                                                           */
+/* /* SET EXTERNAL LABELS */                                                 */
+/* setFrameLabels(frame a:handle).                                           */
+/*                                                                           */
+/* /* REPORT BLOCK */                                                        */
+/*                                                                           */
+/* {pxmsg.i                                                                  */
+/*    &MSGNUM = 3715                                                         */
+/*    &MSGBUFFER = l_msg1                                                    */
+/*    }                                                                      */
+/* l_msg1 = "* " + l_msg1.                                                   */
+/* {pxmsg.i                                                                  */
+/*    &MSGNUM = 3716                                                         */
+/*    &MSGBUFFER = l_msg2                                                    */
+/*    }                                                                      */
+/* l_msg2 = "* " + l_msg2.                                                   */
+/*                                                                           */
+/* {wbrp01.i}                                                                */
 
 /* DETERMINE IF CUSTOMER CONSIGNMENT IS ACTIVE */
 {gprun.i ""gpmfc01.p""
@@ -217,39 +278,61 @@ l_msg2 = "* " + l_msg2.
    &mnemonic = "supplier_consign"
    &label    = supplier_consign_label}
 
-repeat:
+/* repeat: */
 
-   if part1 = hi_char then part1 = "".
-   if line1 = hi_char then line1 = "".
-   if vend1 = hi_char then vend1 = "".
-   if abc1 = hi_char then abc1 = "".
-   if site1 = hi_char then site1 = "".
-   if part_group1 = hi_char then part_group1 = "".
-   if part_type1 = hi_char then part_type1 = "".
-   if as_of_date = ? then as_of_date = today.
+/*   if part1 = hi_char then part1 = "".                                     */
+/*   if line1 = hi_char then line1 = "".                                     */
+/*   if vend1 = hi_char then vend1 = "".                                     */
+/*   if abc1 = hi_char then abc1 = "".                                       */
+/*   if site1 = hi_char then site1 = "".                                     */
+/*   if part_group1 = hi_char then part_group1 = "".                         */
+/*   if part_type1 = hi_char then part_type1 = "".                           */
+/*   if as_of_date = ? then as_of_date = today.                              */
+/*                                                                           */
+/*   if c-application-mode <> 'web' then                                     */
+/*   update part                                                             */
+/*      part1                                                                */
+/*      line                                                                 */
+/*      line1                                                                */
+/*      vend                                                                 */
+/*      vend1                                                                */
+/*      abc                                                                  */
+/*      abc1                                                                 */
+/*      site site1                                                           */
+/*      part_group                                                           */
+/*      part_group1                                                          */
+/*      part_type                                                            */
+/*      part_type1                                                           */
+/*      as_of_date                                                           */
+/*      neg_qty                                                              */
+/*      net_qty                                                              */
+/*      inc_zero_qty                                                         */
+/*      zero_cost                                                            */
+/*      customer_consign                                                     */
+/*      supplier_consign                                                     */
+/*   with frame a.                                                           */
+    assign  part              = ipart
+            part1             = ipart1
+            line              = iline
+            line1             = iline1
+            vend              = ivend
+            vend1             = ivend1
+            abc               = iabc
+            abc1              = iabc1
+            site              = isite
+            site1             = isite1
+            part_group        = ipart_group
+            part_group1       = ipart_group1
+            part_type         = ipart_type
+            part_type1        = ipart_type1
+            as_of_date        = ias_of_date
+            neg_qty           = ineg_qty
+            net_qty           = inet_qty
+            inc_zero_qty      = iinc_zero_qty
+            zero_cost         = izero_cost
+            customer_consign  = icustomer_consign
+            supplier_consign  = isupplier_consign.
 
-   if c-application-mode <> 'web' then
-   update part
-      part1
-      line
-      line1
-      vend
-      vend1
-      abc
-      abc1
-      site site1
-      part_group
-      part_group1
-      part_type
-      part_type1
-      as_of_date
-      neg_qty
-      net_qty
-      inc_zero_qty
-      zero_cost
-      customer_consign
-      supplier_consign
-   with frame a.
 
    {gplngv.i
       &file = ""cncix_ref""
@@ -291,11 +374,11 @@ repeat:
 
    /* ADDED customer_consign, supplier_consign  */
 
-   {wbrp06.i &command = update &fields = "part part1 line line1 vend
-        vend1 abc abc1  site site1  part_group part_group1 part_type part_type1
-        as_of_date neg_qty  net_qty inc_zero_qty  zero_cost
-        customer_consign supplier_consign"
-      &frm = "a"}
+/* {wbrp06.i &command = update &fields = "part part1 line line1 vend            */
+/*      vend1 abc abc1  site site1  part_group part_group1 part_type part_type1 */
+/*      as_of_date neg_qty  net_qty inc_zero_qty  zero_cost                     */
+/*      customer_consign supplier_consign"                                      */
+/*    &frm = "a"}                                                               */
 
    if using_cust_consignment
       and using_supplier_consignment
@@ -309,32 +392,32 @@ repeat:
       undo, retry.
    end. /* IF using_cust_consignment */
 
-   if (c-application-mode <> 'web') or
-      (c-application-mode = 'web' and
-      (c-web-request begins 'data')) then do:
-
-      bcdparm = "".
-      {mfquoter.i part   }
-      {mfquoter.i part1  }
-      {mfquoter.i line   }
-      {mfquoter.i line1  }
-      {mfquoter.i vend   }
-      {mfquoter.i vend1  }
-      {mfquoter.i abc    }
-      {mfquoter.i abc1   }
-      {mfquoter.i site   }
-      {mfquoter.i site1  }
-      {mfquoter.i part_group  }
-      {mfquoter.i part_group1 }
-      {mfquoter.i part_type}
-      {mfquoter.i part_type1}
-      {mfquoter.i as_of_date}
-      {mfquoter.i neg_qty}
-      {mfquoter.i net_qty}
-      {mfquoter.i inc_zero_qty}
-      {mfquoter.i zero_cost}
-      {mfquoter.i customer_consign}
-      {mfquoter.i supplier_consign}
+/*   if (c-application-mode <> 'web') or                                    */
+/*      (c-application-mode = 'web' and                                     */
+/*      (c-web-request begins 'data')) then do:                             */
+/*                                                                          */
+/*      bcdparm = "".                                                       */
+/*      {mfquoter.i part   }                                                */
+/*      {mfquoter.i part1  }                                                */
+/*      {mfquoter.i line   }                                                */
+/*      {mfquoter.i line1  }                                                */
+/*      {mfquoter.i vend   }                                                */
+/*      {mfquoter.i vend1  }                                                */
+/*      {mfquoter.i abc    }                                                */
+/*      {mfquoter.i abc1   }                                                */
+/*      {mfquoter.i site   }                                                */
+/*      {mfquoter.i site1  }                                                */
+/*      {mfquoter.i part_group  }                                           */
+/*      {mfquoter.i part_group1 }                                           */
+/*      {mfquoter.i part_type}                                              */
+/*      {mfquoter.i part_type1}                                             */
+/*      {mfquoter.i as_of_date}                                             */
+/*      {mfquoter.i neg_qty}                                                */
+/*      {mfquoter.i net_qty}                                                */
+/*      {mfquoter.i inc_zero_qty}                                           */
+/*      {mfquoter.i zero_cost}                                              */
+/*      {mfquoter.i customer_consign}                                       */
+/*      {mfquoter.i supplier_consign}                                       */
 
       if part1 = "" then part1 = hi_char.
       if line1 = "" then line1 = hi_char.
@@ -344,43 +427,43 @@ repeat:
       if part_group1 = "" then part_group1 = hi_char.
       if part_type1 = "" then part_type1 = hi_char.
       if as_of_date = ? then as_of_date = today.
-   end.
+/*   end.                                                                    */
 
-   /* OUTPUT DESTINATION SELECTION */
-   {gpselout.i &printType = "printer"
-               &printWidth = 132
-               &pagedFlag = " "
-               &stream = " "
-               &appendToFile = " "
-               &streamedOutputToTerminal = " "
-               &withBatchOption = "yes"
-               &displayStatementType = 1
-               &withCancelMessage = "yes"
-               &pageBottomMargin = 6
-               &withEmail = "yes"
-               &withWinprint = "yes"
-               &defineVariables = "yes"}
-   {mfphead.i}
+/*   /* OUTPUT DESTINATION SELECTION */                                      */
+/*   {gpselout.i &printType = "printer"                                      */
+/*               &printWidth = 132                                           */
+/*               &pagedFlag = " "                                            */
+/*               &stream = " "                                               */
+/*               &appendToFile = " "                                         */
+/*               &streamedOutputToTerminal = " "                             */
+/*               &withBatchOption = "yes"                                    */
+/*               &displayStatementType = 1                                   */
+/*               &withCancelMessage = "yes"                                  */
+/*               &pageBottomMargin = 6                                       */
+/*               &withEmail = "yes"                                          */
+/*               &withWinprint = "yes"                                       */
+/*               &defineVariables = "yes"}                                   */
+/*   {mfphead.i}                                                             */
+/*                                                                           */
+/*   form                                                                    */
+/*      header                                                               */
+/*      l_msg1                                                               */
+/*                                                                           */
+/*   with frame pagefoot page-bottom width 132.                              */
 
-   form
-      header
-      l_msg1
-
-   with frame pagefoot page-bottom width 132.
-
-   form
-      header
-      l_msg2
-
-   with frame pagefoot1 page-bottom width 132.
-
-   hide frame pagefoot.
-   hide frame pagefoot1.
-   if net_qty then view frame pagefoot.
-   else view frame pagefoot1.
+/*   form                                                                    */
+/*      header                                                               */
+/*      l_msg2                                                               */
+/*                                                                           */
+/*   with frame pagefoot1 page-bottom width 132.                             */
+/*                                                                           */
+/*   hide frame pagefoot.                                                    */
+/*   hide frame pagefoot1.                                                   */
+/*   if net_qty then view frame pagefoot.                                    */
+/*   else view frame pagefoot1.                                              */
 
    /* FIND AND DISPLAY */
-
+  for each tmpld03: delete tmpld03. end.
    mainforloop:
    for each pt_mstr
          fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
@@ -402,10 +485,10 @@ repeat:
       no-lock
          break by pt_prod_line by pt_part
          by in_site
-      with frame b width 132 down:
-
+/*      with frame b width 132 down:                                         */
+        :
       /* SET EXTERNAL LABELS */
-      setFrameLabels(frame b:handle).
+/*      setFrameLabels(frame b:handle).                                      */
 
       if first-of(pt_prod_line) then do:
          pl-printed = no.
@@ -642,43 +725,42 @@ repeat:
                if pl-printed = no and (neg_qty or total_qty_oh >= 0)
                then do:
 
-                  if page-size - line-counter < 6 then page.
+/*                  if page-size - line-counter < 6 then page.               */
+/*                  if available pl_mstr then                                */
+/*                                                                           */
+/*                  put skip(1)                                              */
+/*                     {gplblfmt.i                                           */
+/*                     &FUNC=getTermLabel(""PRODUCT_LINE"",30)               */
+/*                     &CONCAT="': '"                                        */
+/*                     } pl_prod_line space(3)                               */
+/*                     pl_desc space(3)                                      */
+/*                     {gplblfmt.i                                           */
+/*                     &FUNC=getTermLabel(""INVENTORY_ACCT"",30)             */
+/*                     &CONCAT="': '"                                        */
+/*                     } pl_inv_acct                                         */
+/*                                                                           */
+/*                     space pl_inv_sub                                      */
+/*                     space pl_inv_cc skip.                                 */
 
-                  if available pl_mstr then
-
-                  put skip(1)
-                     {gplblfmt.i
-                     &FUNC=getTermLabel(""PRODUCT_LINE"",30)
-                     &CONCAT="': '"
-                     } pl_prod_line space(3)
-                     pl_desc space(3)
-                     {gplblfmt.i
-                     &FUNC=getTermLabel(""INVENTORY_ACCT"",30)
-                     &CONCAT="': '"
-                     } pl_inv_acct
-
-                     space pl_inv_sub
-                     space pl_inv_cc skip.
-
-                  if line-counter > 8 then put skip(1).
+/*                  if line-counter > 8 then put skip(1).                    */
 
                   assign
                      pl-printed = yes
                      first-prod = yes.
                end.
 
-               form
-                  header         skip (1)
-
-                  getTermLabel("PRODUCT_LINE",30) + ": " +
-                  pl_prod_line + "   " +
-                  pl_desc format "x(63)" skip
-
-               with frame phead1 page-top no-labels width 132 no-box.
-
-               if available pl_mstr and not first-prod then
-               view
-                  frame phead1.
+/*             form                                                          */
+/*                header         skip (1)                                    */
+/*                                                                           */
+/*                getTermLabel("PRODUCT_LINE",30) + ": " +                   */
+/*                pl_prod_line + "   " +                                     */
+/*                pl_desc format "x(63)" skip                                */
+/*                                                                           */
+/*             with frame phead1 page-top no-labels width 132 no-box.        */
+/*                                                                           */
+/*             if available pl_mstr and not first-prod then                  */
+/*             view                                                          */
+/*                frame phead1.                                              */
                first-prod = no.
 
                /*FIND THE STANDARD COST AS OF DATE*/
@@ -687,15 +769,29 @@ repeat:
                /* BEGIN CHANGE SECTION */
                /* CHANGED TO DISPLAY PT_DESC1 ON SEPARATE LINE */
 
-               display pt_part pt_desc1
-                  in_site in_abc
-                  total_qty_oh pt_um
-                  std_as_of
-                  ext_std
-               with frame b.
+/*               display pt_part pt_desc1                                   */
+/*                  in_site in_abc                                          */
+/*                  total_qty_oh pt_um                                      */
+/*                  std_as_of                                               */
+/*                  ext_std                                                 */
+/*               with frame b.                                              */
 
-               if pt_desc2 <> "" then
-                  put  pt_desc2 at 20.
+               if total_qty_oh <> 0 then do:
+                  find first tmpld03 exclusive-lock where t03_part = pt_part
+                         and t03_site = in_site no-error.
+                  if not available tmpld03 then do:
+                     create tmpld03.
+                     assign t03_part = pt_part
+                            t03_site = in_site.
+                  end.
+                     assign t03_um  = pt_um
+                            t03_qty = t03_qty + total_qty_oh
+                            t03_cst = std_as_of.
+               end.
+
+
+/*               if pt_desc2 <> "" then                                      */
+/*                  put  pt_desc2 at 20.                                     */
 
                if customer_consign_code = EXCLUDE
                then
@@ -714,40 +810,40 @@ repeat:
 
                /* END CHANGE SECTION */
 
-               if (tot_cust_consign_qty      <> 0
-                  or tot_supp_consign_qty    <> 0)
-                  and (customer_consign_code <> EXCLUDE
-                  or   supplier_consign_code <> EXCLUDE)
-               then do with frame b:
-                  underline total_qty_oh.
-                  down 1.
-                  display
-                     getTermLabelRtColon("NON-CONSIGNED",24) @ pt_desc1
-                     non_consign_qoh @ total_qty_oh.
+/*       if (tot_cust_consign_qty      <> 0                                  */
+/*          or tot_supp_consign_qty    <> 0)                                 */
+/*          and (customer_consign_code <> EXCLUDE                            */
+/*          or   supplier_consign_code <> EXCLUDE)                           */
+/*       then do with frame b:                                               */
+/*          underline total_qty_oh.                                          */
+/*          down 1.                                                          */
+/*          display                                                          */
+/*             getTermLabelRtColon("NON-CONSIGNED",24) @ pt_desc1            */
+/*             non_consign_qoh @ total_qty_oh.                               */
+/*                                                                           */
+/*          if tot_cust_consign_qty      <> 0                                */
+/*             and customer_consign_code <> EXCLUDE                          */
+/*          then do:                                                         */
+/*             down 1.                                                       */
+/*             display                                                       */
+/*                getTermLabelRtColon("CUSTOMER_CONSIGNED",24) @ pt_desc1    */
+/*                tot_cust_consign_qty @ total_qty_oh.                       */
+/*          end.  /* IF tot_cust_consign_qty <> 0 */                         */
+/*                                                                           */
+/*          if tot_supp_consign_qty      <> 0                                */
+/*             and supplier_consign_code <> EXCLUDE                          */
+/*          then do:                                                         */
+/*             down 1.                                                       */
+/*             display                                                       */
+/*                getTermLabelRtColon("SUPPLIER_CONSIGNED",24) @ pt_desc1    */
+/*                tot_supp_consign_qty @ total_qty_oh.                       */
+/*          end.  /* IF tot_supp_consign_qty <> 0 */                         */
+/*                                                                           */
+/*          down 1.                                                          */
+/*                                                                           */
+/*               end.  /* DO WITH frame b */                                 */
 
-                  if tot_cust_consign_qty      <> 0
-                     and customer_consign_code <> EXCLUDE
-                  then do:
-                     down 1.
-                     display
-                        getTermLabelRtColon("CUSTOMER_CONSIGNED",24) @ pt_desc1
-                        tot_cust_consign_qty @ total_qty_oh.
-                  end.  /* IF tot_cust_consign_qty <> 0 */
-
-                  if tot_supp_consign_qty      <> 0
-                     and supplier_consign_code <> EXCLUDE
-                  then do:
-                     down 1.
-                     display
-                        getTermLabelRtColon("SUPPLIER_CONSIGNED",24) @ pt_desc1
-                        tot_supp_consign_qty @ total_qty_oh.
-                  end.  /* IF tot_supp_consign_qty <> 0 */
-
-                  down 1.
-
-               end.  /* DO WITH frame b */
-
-               down.
+/*               down.                                                       */
 
             end. /*if inc_zero_qty*/
          end. /*setb*/
@@ -759,47 +855,47 @@ repeat:
       end. /* if available ptp_det  */
 
       if last-of(pt_prod_line)
-         and pl-printed then do with frame b:
+         and pl-printed then do  /* with frame b */ :
 
          acc = accum total by pt_prod_line ext_std.
-         down 1.
+/*         down 1.                                                           */
 
-         if page-size - line-counter < 1 then do with frame b:
-            page.
-            down 1.
-         end.
-
-         underline ext_std.
-         down 1.
-
-         display
-            caps(getTermLabel("PRODUCT_LINE_TOTAL",18))
-               format "x(18)" @ std_as_of
-            acc @ ext_std.
+/*       if page-size - line-counter < 1 then do with frame b:               */
+/*          page.                                                            */
+/*          down 1.                                                          */
+/*       end.                                                                */
+/*                                                                           */
+/*       underline ext_std.                                                  */
+/*       down 1.                                                             */
+/*                                                                           */
+/*       display                                                             */
+/*          caps(getTermLabel("PRODUCT_LINE_TOTAL",18))                      */
+/*             format "x(18)" @ std_as_of                                    */
+/*          acc @ ext_std.                                                   */
       end.
 
       if last (pt_prod_line) then do with frame b:
 
          acc = accum total ext_std.
 
-         down 1.
-         if page-size - line-counter < 2 then page.
-         down 1.
-         underline ext_std.
-         down 1.
-
-         display
-            caps(getTermLabel("REPORT_TOTAL",15))
-               format "x(15)" @ std_as_of
-            acc  @ ext_std.
+/*         down 1.                                                           */
+/*         if page-size - line-counter < 2 then page.                        */
+/*         down 1.                                                           */
+/*         underline ext_std.                                                */
+/*         down 1.                                                           */
+/*                                                                           */
+/*         display                                                           */
+/*            caps(getTermLabel("REPORT_TOTAL",15))                          */
+/*               format "x(15)" @ std_as_of                                  */
+/*            acc  @ ext_std.                                                */
       end.
 
-      {mfrpchk.i}
+/*      {mfrpchk.i}   */
    end.
 
-   /* REPORT TRAILER */
-   {mfrtrail.i}
+/*   /* REPORT TRAILER */                                                    */
+/*   {mfrtrail.i}                                                            */
 
-end.
+/* end. */
 
-{wbrp04.i &frame-spec = a}
+/* {wbrp04.i &frame-spec = a}                                                */
