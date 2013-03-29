@@ -119,6 +119,8 @@ define input parameter ipart_group   like pt_group.
 define input parameter ipart_group1  like pt_group.
 define input parameter ipart_type    like pt_part_type.
 define input parameter ipart_type1   like pt_part_type.
+define input parameter ikeep         like in__qadc01.
+define input parameter ikeep1        like in__qadc01.
 define input parameter ias_of_date   like tr_effdate.
 define input parameter ineg_qty      like mfc_logical.
 define input parameter inet_qty      like mfc_logical.
@@ -153,6 +155,8 @@ define variable part_type    like pt_part_type no-undo.
 define variable part_type1   like pt_part_type no-undo.
 define variable site         like in_site      no-undo.
 define variable site1        like in_site      no-undo.
+define variable keep         like in__qadc01   no-undo.
+define variable keep1        like in__qadc01   no-undo.
 define variable net_qty      like mfc_logical initial yes
    label "Include Non-nettable Inventory"      no-undo.
 define variable inc_zero_qty like mfc_logical
@@ -325,6 +329,8 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
             part_group1       = ipart_group1
             part_type         = ipart_type
             part_type1        = ipart_type1
+            keep              = ikeep
+            keep1             = ikeep1
             as_of_date        = ias_of_date
             neg_qty           = ineg_qty
             net_qty           = inet_qty
@@ -333,6 +339,10 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
             customer_consign  = icustomer_consign
             supplier_consign  = isupplier_consign.
 
+/* message Part part1 line line1 vend vend1 abc abc1 site site1 part_group     */
+/* 				part_group1 part_type part_type1 keep keep1 as_of_date neg_qty       */
+/* 				net_qty inc_zero_qty zero_cost customer_consign supplier_consign     */
+/* 				view-as alert-box.                                                   */
 
    {gplngv.i
       &file = ""cncix_ref""
@@ -427,6 +437,7 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
       if part_group1 = "" then part_group1 = hi_char.
       if part_type1 = "" then part_type1 = hi_char.
       if as_of_date = ? then as_of_date = today.
+      if keep1 = "" then keep1 = hi_char.
 /*   end.                                                                    */
 
 /*   /* OUTPUT DESTINATION SELECTION */                                      */
@@ -471,17 +482,16 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
       no-lock
           where pt_mstr.pt_domain = global_domain and  (pt_part >= part
           and pt_part <= part1)
-
          and   (pt_prod_line >= line    and pt_prod_line <= line1)
          and   (pt_group  >= part_group and pt_group <= part_group1)
          and (pt_part_type >= part_type and pt_part_type <= part_type1)
-
          , each in_mstr
          fields( in_domain in_part in_site in_abc in_cur_set in_gl_set
          in_qty_nonet in_qty_oh in_gl_cost_site)
           where in_mstr.in_domain = global_domain and  in_part  =  pt_part
          and   (in_abc  >= abc  and in_abc  <= abc1)
          and   (in_site >= site and in_site <= site1)
+         and   (in__qadc01 >= keep and in__qadc01 <= keep1)
       no-lock
          break by pt_prod_line by pt_part
          by in_site
@@ -561,6 +571,7 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
                       tr_qty_loc tr_bdn_std tr_lbr_std tr_trnbr
                       tr_mtl_std tr_ovh_std tr_sub_std tr_price
                       tr_domain  tr_status  tr_program tr_ship_type)
+                use-index tr_part_eff
                where tr_hist.tr_domain = global_domain
                and   tr_part           = pt_part
                and   tr_effdate        > as_of_date
@@ -776,7 +787,7 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
 /*                  ext_std                                                 */
 /*               with frame b.                                              */
 
-               if total_qty_oh <> 0 then do:
+/***            if total_qty_oh <> 0 then do:                               */
                   find first tmpld03 exclusive-lock where t03_part = pt_part
                          and t03_site = in_site no-error.
                   if not available tmpld03 then do:
@@ -787,9 +798,7 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
                      assign t03_um  = pt_um
                             t03_qty = t03_qty + total_qty_oh
                             t03_cst = std_as_of.
-               end.
-
-
+/***             end.                                                        */
 /*               if pt_desc2 <> "" then                                      */
 /*                  put  pt_desc2 at 20.                                     */
 
