@@ -6,7 +6,6 @@ if not available usrw_wkfl then do:
    assign usrw_key1 = execname
           usrw_key2 = global_userid.
 end.
-if locked(usrw_wkfl) then do:
    assign usrw_datefld[1] = as_of_date
           usrw_intfld[1] = days[1]
           usrw_intfld[2] = days[2]
@@ -29,8 +28,6 @@ if locked(usrw_wkfl) then do:
           usrw_charfld[6] = part_type1
           usrw_charfld[7] = part_group
           usrw_charfld[8] = part_group1
-/*          usrw_charfld[9] = loc           */
-/*          usrw_charfld[10] = loc1         */
           usrw_logfld[1] = neg_qty
           usrw_logfld[2] = net_qty
           usrw_logfld[3] = inc_zero_qty
@@ -39,6 +36,5 @@ if locked(usrw_wkfl) then do:
           usrw_logfld[6] = l_excel
           usrw_charfld[11] = customer_consign
           usrw_charfld[12] = supplier_consign
-          usrw_charfld[15] = fName.
-end.
+          usrw_charfld[15] = fName no-error.
 release usrw_wkfl.
