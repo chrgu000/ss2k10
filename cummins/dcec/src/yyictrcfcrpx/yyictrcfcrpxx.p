@@ -50,7 +50,7 @@ for each temptr no-lock break by ttr_part by ttr_site:
                and in_part = ttr_part and in_site = ttr_site.
                 bsheet:cells(i,1) = "'" + ttr_part.
                 if available pt_mstr then do:
-                   bsheet:cells(i,2) = "'" + pt_desc1.
+                   bsheet:cells(i,2) = "'" + pt_desc2.
                    bsheet:cells(i,3) = "'" + pt_prod_line.
                 end.
                 if available (in_mstr) then do:
@@ -82,7 +82,7 @@ for each temptr no-lock break by ttr_part by ttr_site:
                 bsheet:cells(i,26) = ttr_qtyt * ttr_cstt.
                 i = i + 1.
     end.
- 
+
   bsheet:Cells:EntireColumn:AutoFit.
   bsheet:Range("F2"):Select.
   bexcel:ActiveWindow:FreezePanes = True.

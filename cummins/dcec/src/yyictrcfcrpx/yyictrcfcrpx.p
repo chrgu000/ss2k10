@@ -284,7 +284,7 @@ if fname = "" then do:
         find first in_mstr no-lock where in_domain = global_domain
                and in_part = ttr_part and in_site = ttr_site.
         display ttr_part
-                pt_desc1 when available (pt_mstr)
+                pt_desc2 when available (pt_mstr)
                 pt_prod_line when available (pt_mstr)
                 in_abc when available (in_mstr)
                 in__qadc01 when available (in_mstr)
