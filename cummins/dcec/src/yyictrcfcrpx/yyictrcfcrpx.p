@@ -128,6 +128,7 @@ repeat:
 
     status input "Waiting for report process...".
 for each tmpld03: delete tmpld03. end.
+for each temptr: delete temptr. end.
 {gprun.i ""xxptrp07.p""
         "(input part,
           input part1,
