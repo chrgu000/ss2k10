@@ -3,28 +3,28 @@
 /*Last modified: 08/16/2012, By: Henri                                       */
 /*cj*convertion to eb2  menu 60.3.23                                         */
 
-{mfdtitle.i "328.2"}
+{mfdtitle.i "4.1"}
 {xxptrp07.i "new"}
 {yyictrcfcrpx.i "new"}
-def var site like si_site no-undo.
-def var site1 like si_site no-undo.
-def var effdate like tr_effdate no-undo initial today.
-def var effdate1 like tr_effdate no-undo initial today.
-def var line like pt_prod_line no-undo.
-def var line1 like pt_prod_line no-undo.
-def var type like pt_part_type no-undo.
-def var type1 like pt_part_type no-undo.
-def var group1 like pt_group no-undo.
-def var group2 like pt_group no-undo.
-def var part like pt_part no-undo.
-def var part1 like pt_part no-undo.
-DEF VAR loc LIKE tr_loc no-undo.
-DEF VAR loc1 LIKE tr_loc no-undo.
-def var keeper as char label "保管员" no-undo.
-def var keeper1 as char no-undo.
-def var fname   as char no-undo format "x(100)".
-def var amtf    as decimal format "->>>,>>>,>>>,>>>,>>>,>>>9.<<<".
-def var amtt    as decimal format "->>>,>>>,>>>,>>>,>>>,>>>9.<<<".
+define variable site like si_site no-undo.
+define variable site1 like si_site no-undo.
+define variable effdate like tr_effdate no-undo initial today.
+define variable effdate1 like tr_effdate no-undo initial today.
+define variable line like pt_prod_line no-undo.
+define variable line1 like pt_prod_line no-undo.
+define variable type like pt_part_type no-undo.
+define variable type1 like pt_part_type no-undo.
+define variable group1 like pt_group no-undo.
+define variable group2 like pt_group no-undo.
+define variable part like pt_part no-undo.
+define variable part1 like pt_part no-undo.
+define variable loc LIKE tr_loc no-undo.
+define variable loc1 LIKE tr_loc no-undo.
+define variable keeper as char label "保管员" no-undo.
+define variable keeper1 as char no-undo.
+define variable fname   as char no-undo format "x(100)".
+define variable amtf    as decimal format "->,>>>,>>>,>>9.<<<<".
+define variable amtt    as decimal format "->,>>>,>>>,>>9.<<<<".
 
 DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
      LABEL "Suppress Zero"
@@ -34,34 +34,32 @@ DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
 DEFINE VAR yn_total AS  LOGICAL INITIAL YES.
 
 define variable qty like tr_qty_loc.
-def var edqty like tr_qty_loc.
-def var bgqty like tr_qty_loc.
-def var inqty like tr_qty_loc.
-def var outqty like tr_qty_loc.
-def var tot_edqty like tr_qty_loc.
-def var tot_bgqty like tr_qty_loc.
-def var tot_inqty like tr_qty_loc.
-def var tot_outqty like tr_qty_loc.
-
-def var rctpo like tr_qty_loc.
-def var rcttr like tr_qty_loc.
-def var rctunp like tr_qty_loc.
-def var rctwo like tr_qty_loc.
-def var isspo like tr_qty_loc.
-def var isstr like tr_qty_loc.
-def var issunp like tr_qty_loc.
-def var issso like tr_qty_loc.
-def var isswo like tr_qty_loc.
-def var invadj like tr_qty_loc.
-def var oth like tr_qty_loc.
-
-def var cst like tr_qty_loc.
-def var edqty_amt like tr_qty_loc.
-
-def var msg-nbr as inte.
-
-DEF VAR I AS INTE.
-DEF VAR LINECOUNT AS INTE.
+define variable edqty like tr_qty_loc.
+define variable bgqty like tr_qty_loc.
+define variable inqty like tr_qty_loc.
+define variable outqty like tr_qty_loc.
+define variable tot_edqty like tr_qty_loc.
+define variable tot_bgqty like tr_qty_loc.
+define variable tot_inqty like tr_qty_loc.
+define variable tot_outqty like tr_qty_loc.
+define variable rctpo like tr_qty_loc.
+define variable rcttr like tr_qty_loc.
+define variable rctunp like tr_qty_loc.
+define variable rctwo like tr_qty_loc.
+define variable isspo like tr_qty_loc.
+define variable isstr like tr_qty_loc.
+define variable issunp like tr_qty_loc.
+define variable issso like tr_qty_loc.
+define variable isswo like tr_qty_loc.
+define variable invadj like tr_qty_loc.
+define variable oth like tr_qty_loc.
+define variable cst like tr_qty_loc.
+define variable edqty_amt like tr_qty_loc.
+define variable msg-nbr as inte.
+define variable I AS INTE.
+define variable LINECOUNT AS INTE.
+define variable ptdesc2 like pt_desc2.
+define variable ptprodline like pt_prod_line.
 
 Form
 /*GM65*/
@@ -126,28 +124,7 @@ repeat:
     if loc1 = "" then loc1 = hi_char.
     if keeper1 = "" then keeper1 = hi_char.
 
-/*   find si_mstr no-lock where si_domain = global_domain and si_site = site no-error.          */
-/*   if not available si_mstr or (si_db <> global_db) then do:                                  */
-/*       if not available si_mstr then msg-nbr = 708.                                           */
-/*       else msg-nbr = 5421.                                                                   */
-/*       /*tfq {mfmsg.i msg-nbr 3}*/                                                            */
-/*        {pxmsg.i &MSGNUM=msg-nbr &ERRORLEVEL=3}                                               */
-/*        undo, retry.                                                                          */
-/*   end.                                                                                       */
-/*                                                                                              */
-/*                 {gprun.i ""gpsiver.p""                                                       */
-/*                 "(input si_site, input recid(si_mstr), output return_int)"}                  */
-/* /*GUI*/ if global-beam-me-up then undo, leave.                                               */
-/*                                                                                              */
-/* /*J034*/          if return_int = 0 then do:                                                 */
-/* /*J034*/       /*tfq      {mfmsg.i 725 3}*/                                                  */
-/*         {pxmsg.i &MSGNUM=725 &ERRORLEVEL=3}                                                  */
-/*     /* USER DOES NOT HAVE */                                                                 */
-/* /*J034*/                                /* ACCESS TO THIS SITE*/                             */
-/* /*J034*/             undo,retry.                                                             */
-/* /*J034*/          end.                                                                       */
-
-    {mfselbpr.i "printer" 420}
+{mfselbpr.i "printer" 480}
 
     status input "Waiting for report process...".
 for each tmpld03: delete tmpld03. end.
@@ -168,7 +145,7 @@ for each tmpld03: delete tmpld03. end.
           input type1,
           input keeper,
           input keeper1,
-          input effdate,
+          input effdate - 1,
           input yes,
           input yes,
           input no,
@@ -227,32 +204,32 @@ for each tmpld03: delete tmpld03. end.
              ttr_cstt = t03_cst.
   end.
 
-  for each temptr exclusive-lock:
-      for each tr_hist
-         fields(tr_domain tr_part tr_effdate tr_site tr_type tr_qty_loc)
-         use-index tr_part_eff
-         where tr_domain = global_domain and
-               tr_part  = ttr_part and
-               tr_effdate >= effdate and tr_effdate <= effdate1 and
-               tr_site = ttr_site no-lock break by tr_type:
-         if first-of(tr_type) then assign qty = 0.
-         assign qty = qty + tr_qty_loc.
-         if last-of(tr_type) then do:
-            if tr_type = "rct-po" then ttr_rctpo = qty.
-             else if tr_type = "rct-tr" then ttr_rcttr = qty.
-             else if tr_type = "rct-unp" then ttr_rctunp = qty.
-             else if tr_type = "rct-wo" then ttr_rctwo = qty.
-             else if tr_type = "iss-prv" then ttr_isspo = - qty.
-             else if tr_type = "iss-tr" then ttr_isstr = - qty.
-             else if tr_type = "iss-unp" then ttr_issunp = - qty.
-             else if tr_type = "iss-so" then ttr_issso = - qty.
-             else if tr_type = "iss-wo" then ttr_isswo = - qty.
-             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
-                  then ttr_invadj = ttr_invadj + qty.
-             else ttr_oth = ttr_oth + qty.
-         end.
-      end.
-  end.
+for each temptr exclusive-lock:
+    for each tr_hist
+       fields(tr_domain tr_part tr_effdate tr_site tr_type tr_qty_loc)
+       use-index tr_part_eff
+       where tr_domain = global_domain and
+             tr_part  = ttr_part and
+             tr_effdate >= effdate and tr_effdate <= effdate1 and
+             tr_site = ttr_site no-lock break by tr_type:
+       if first-of(tr_type) then assign qty = 0.
+       assign qty = qty + tr_qty_loc.
+       if last-of(tr_type) then do:
+          if tr_type = "rct-po" then ttr_rctpo = qty.
+           else if tr_type = "rct-tr" then ttr_rcttr = qty.
+           else if tr_type = "rct-unp" then ttr_rctunp = qty.
+           else if tr_type = "rct-wo" then ttr_rctwo = qty.
+           else if tr_type = "iss-prv" then ttr_isspo = - qty.
+           else if tr_type = "iss-tr" then ttr_isstr = - qty.
+           else if tr_type = "iss-unp" then ttr_issunp = - qty.
+           else if tr_type = "iss-so" then ttr_issso = - qty.
+           else if tr_type = "iss-wo" then ttr_isswo = - qty.
+           else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
+                then ttr_invadj = ttr_invadj + qty.
+           else ttr_oth = ttr_oth + qty.
+       end.
+    end.
+end.
 /*********
 
 起始日期   截止日期
@@ -276,16 +253,23 @@ if fname = "" then do:
         with frame b width 420:
         setframelabels(frame b:handle).
         if first-of(ttr_part) then do:
+           assign ptdesc2 = ""
+                  ptprodline = "".
            find first pt_mstr no-lock where pt_domain = global_domain
                   and pt_part = ttr_part no-error.
+           if available pt_mstr then do:
+              assign ptdesc2 = pt_desc2
+                     ptprodline = pt_prod_line.
+           end.
         end.
         find first ptp_det no-lock where ptp_domain = global_domain
                and ptp_part = ttr_part and ptp_site = ttr_site no-error.
         find first in_mstr no-lock where in_domain = global_domain
-               and in_part = ttr_part and in_site = ttr_site.
+               and in_part = ttr_part and in_site = ttr_site no-error.
         display ttr_part
-                pt_desc2 when available (pt_mstr)
-                pt_prod_line when available (pt_mstr)
+                ttr_site @ pt_site
+                ptdesc2 @ pt_desc2
+                ptprodline @ pt_prod_line
                 in_abc when available (in_mstr)
                 in__qadc01 when available (in_mstr)
                 in_loc when available (in_mstr)

@@ -2,6 +2,8 @@
 {mfdeclre.i}
 {yyictrcfcrpx.i}
 define input parameter thfile as CHAR FORMAT "x(50)".
+define variable ptdesc2 like pt_desc2.
+define variable ptprodline like pt_prod_line.
 define variable bexcel as com-handle.
 define variable bbook as com-handle.
 define variable bsheet as com-handle.
@@ -12,74 +14,80 @@ define variable I as integer.
    bbook:Activate.
    assign i = 1.
    bsheet:cells(i,1)  = "零件号".
-   bsheet:cells(i,2)  = "零件描述".
-   bsheet:cells(i,3)  = "产品类".
-   bsheet:cells(i,4)  = "ABC类".
-   bsheet:cells(i,5)  = "保管员代码".
-   bsheet:cells(i,6)  = "默认库位".
-   bsheet:cells(i,7)  = "采购员代码".
-   bsheet:cells(i,8)  = "供应商代码".
-   bsheet:cells(i,9)  = "E&O".
-   bsheet:cells(i,10)  = "起始日库存".
-   bsheet:cells(i,11)  = "起始日成本".
-   bsheet:cells(i,12) = "起始日金额".
-   bsheet:cells(i,13) = "采购收货".
-   bsheet:cells(i,14) = "转移入库".
-   bsheet:cells(i,15) = "计划外入库".
-   bsheet:cells(i,16) = "加工单入库".
-   bsheet:cells(i,17) = "采购退货".
-   bsheet:cells(i,18) = "转移出库".
-   bsheet:cells(i,19) = "计划外出库".
-   bsheet:cells(i,20) = "销售出库".
-   bsheet:cells(i,21) = "加工单出库".
-   bsheet:cells(i,22) = "盘点调整".
-   bsheet:cells(i,23) = "其他".
-   bsheet:cells(i,24)  = "截至日库存".
-   bsheet:cells(i,25)  = "截至日成本".
-   bsheet:cells(i,26) = "截至日金额".
+   bsheet:cells(i,2)  = "地点".
+   bsheet:cells(i,3)  = "零件描述".
+   bsheet:cells(i,4)  = "产品类".
+   bsheet:cells(i,5)  = "ABC类".
+   bsheet:cells(i,6)  = "保管员代码".
+   bsheet:cells(i,7)  = "默认库位".
+   bsheet:cells(i,8)  = "采购员代码".
+   bsheet:cells(i,9)  = "供应商代码".
+   bsheet:cells(i,10) = "E&O".
+   bsheet:cells(i,11)  = "起始日库存".
+   bsheet:cells(i,12)  = "起始日成本".
+   bsheet:cells(i,13) = "起始日金额".
+   bsheet:cells(i,14) = "采购收货".
+   bsheet:cells(i,15) = "转移入库".
+   bsheet:cells(i,16) = "计划外入库".
+   bsheet:cells(i,17) = "加工单入库".
+   bsheet:cells(i,18) = "采购退货".
+   bsheet:cells(i,19) = "转移出库".
+   bsheet:cells(i,20) = "计划外出库".
+   bsheet:cells(i,21) = "销售出库".
+   bsheet:cells(i,22) = "加工单出库".
+   bsheet:cells(i,23) = "盘点调整".
+   bsheet:cells(i,24) = "其他".
+   bsheet:cells(i,25)  = "截至日库存".
+   bsheet:cells(i,26)  = "截至日成本".
+   bsheet:cells(i,27) = "截至日金额".
 
    i = i + 1.
 for each temptr no-lock break by ttr_part by ttr_site:
         if first-of(ttr_part) then do:
+           assign ptdesc2 = ""
+                  ptprodline = "".
            find first pt_mstr no-lock where pt_domain = global_domain
                   and pt_part = ttr_part no-error.
+           if available pt_mstr then do:
+              assign ptdesc2 = pt_desc2
+                     ptprodline = pt_prod_line.
+           end.
         end.
         find first ptp_det no-lock where ptp_domain = global_domain
                and ptp_part = ttr_part and ptp_site = ttr_site no-error.
         find first in_mstr no-lock where in_domain = global_domain
                and in_part = ttr_part and in_site = ttr_site.
                 bsheet:cells(i,1) = "'" + ttr_part.
-                if available pt_mstr then do:
-                   bsheet:cells(i,2) = "'" + pt_desc2.
-                   bsheet:cells(i,3) = "'" + pt_prod_line.
-                end.
+                bsheet:cells(i,2) = "'" + ttr_site.
+                bsheet:cells(i,3) = "'" + ptdesc2.
+                bsheet:cells(i,4) = "'" + ptprodline.
                 if available (in_mstr) then do:
-                   bsheet:cells(i,4) = "'" + in_abc.
-                   bsheet:cells(i,5) = "'" + in__qadc01.
-                   bsheet:cells(i,6) = "'" + in_loc.
+                   bsheet:cells(i,5) = "'" + in_abc.
+                   bsheet:cells(i,6) = "'" + in__qadc01.
+                   bsheet:cells(i,7) = "'" + in_loc.
                 end.
                 if available ptp_det then do:
-                   bsheet:cells(i,7) = "'" + ptp_buyer.
-                   bsheet:cells(i,8) = "'" + ptp_vend.
-                   bsheet:cells(i,9) = "'" + ptp_run_seq2.
+                   bsheet:cells(i,8) = "'" + ptp_buyer.
+                   bsheet:cells(i,9) = "'" + ptp_vend.
+                   bsheet:cells(i,10) = "'" + ptp_run_seq2.
                 end.
-                bsheet:cells(i,10) = ttr_qtyf.
-                bsheet:cells(i,11) = ttr_cstf.
-                bsheet:cells(i,12) = ttr_qtyf * ttr_cstf.
-                bsheet:cells(i,13) = ttr_rctpo.
-                bsheet:cells(i,14) = ttr_rcttr.
-                bsheet:cells(i,15) = ttr_rctunp.
-                bsheet:cells(i,16) = ttr_rctwo.
-                bsheet:cells(i,17) = ttr_isspo.
-                bsheet:cells(i,18) = ttr_isstr.
-                bsheet:cells(i,19) = ttr_issunp.
-                bsheet:cells(i,20) = ttr_issso.
-                bsheet:cells(i,21) = ttr_isswo.
-                bsheet:cells(i,22) = ttr_invadj.
-                bsheet:cells(i,23) = ttr_oth.
-                bsheet:cells(i,24) = ttr_qtyt.
-                bsheet:cells(i,25) = ttr_cstt.
-                bsheet:cells(i,26) = ttr_qtyt * ttr_cstt.
+                bsheet:cells(i,11) = ttr_qtyf.
+                bsheet:cells(i,12) = ttr_cstf.
+                bsheet:cells(i,13) = ttr_qtyf * ttr_cstf.
+                bsheet:cells(i,14) = ttr_rctpo.
+                bsheet:cells(i,15) = ttr_rcttr.
+                bsheet:cells(i,16) = ttr_rctunp.
+                bsheet:cells(i,17) = ttr_rctwo.
+                bsheet:cells(i,18) = ttr_isspo.
+                bsheet:cells(i,19) = ttr_isstr.
+                bsheet:cells(i,20) = ttr_issunp.
+                bsheet:cells(i,21) = ttr_issso.
+                bsheet:cells(i,22) = ttr_isswo.
+                bsheet:cells(i,23) = ttr_invadj.
+                bsheet:cells(i,24) = ttr_oth.
+                bsheet:cells(i,25) = ttr_qtyt.
+                bsheet:cells(i,26) = ttr_cstt.
+                bsheet:cells(i,27) = ttr_qtyt * ttr_cstt.
                 i = i + 1.
     end.
 
