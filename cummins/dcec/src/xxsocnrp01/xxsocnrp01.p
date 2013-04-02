@@ -28,8 +28,9 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "326"}
+{mfdtitle.i "327"}
 {xxsocnrp01.i "new"}
+{pppiwkpi.i "new"}
 define variable shipfrom_from like cncix_site label "Ship-From" no-undo.
 define variable shipfrom_to like cncix_site no-undo.
 define variable cust_from like cncix_cust no-undo.
@@ -88,8 +89,7 @@ shipfrom_from  colon 15
     date_from      colon 15
     date_to        colon 45 label {t001.i}
     skip(1)
-    show_amts       colon 35
-    skip(1)
+/*    show_amts       colon 35    */
   SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -155,7 +155,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
                  po_from po_to
                  order_from  order_to
                  date_from date_to
-                 show_amts "
+                 "
      &frm = "a"}
 
 
@@ -178,7 +178,6 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
        {mfquoter.i order_to     }
        {mfquoter.i date_from    }
        {mfquoter.i date_to      }
-       {mfquoter.i show_amts    }
 
 
    end. /* IF (c-application-mode */
@@ -220,7 +219,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
        input order_to,
        input date_from,
        input date_to,
-       input show_amts)"
+       input yes)"
       }
 
    /* REPORT TRAILER */
@@ -237,4 +236,4 @@ end. /*REPEAT*/
 {wbrp04.i &frame-spec = a}
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" shipfrom_from shipfrom_to cust_from cust_to shipto_from shipto_to part_from part_to po_from po_to order_from order_to date_from date_to show_amts "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" shipfrom_from shipfrom_to cust_from cust_to shipto_from shipto_to part_from part_to po_from po_to order_from order_to date_from date_to "} /*Drive the Report*/

@@ -205,46 +205,73 @@ for each tmpld03: delete tmpld03. end.
              ttr_cstt = t03_cst.
   end.
 
-for each temptr exclusive-lock:
-    for each tr_hist
+/******Test phease*******
+for each pt_mstr
+         fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
+         pt_desc1 pt_desc2 pt_um)
+      no-lock
+          where pt_mstr.pt_domain = global_domain and  (pt_part >= part
+          and pt_part <= part1)
+         and   (pt_prod_line >= line    and pt_prod_line <= line1)
+         and   (pt_group  >= part_group and pt_group <= part_group1)
+         and (pt_part_type >= part_type and pt_part_type <= part_type1)
+         , each in_mstr
+         fields( in_domain in_part in_site in_abc in_cur_set in_gl_set
+         in_qty_nonet in_qty_oh in_gl_cost_site)
+          where in_mstr.in_domain = global_domain and  in_part  =  pt_part
+         and   (in_abc  >= abc  and in_abc  <= abc1)
+         and   (in_site >= site and in_site <= site1)
+         and   (in__qadc01 >= keep and in__qadc01 <= keep1)
+      no-lock,
+******Test phease*******/
+
+      for each tr_hist
        fields(tr_domain tr_part tr_effdate tr_site tr_type tr_qty_loc)
        use-index tr_part_eff
        where tr_domain = global_domain and
-             tr_part  = ttr_part and
-             tr_effdate >= effdate and tr_effdate <= effdate1 and
-             tr_site = ttr_site no-lock break by tr_type:
-       if first-of(tr_type) then assign qty = 0.
-       assign qty = qty + tr_qty_loc.
-       if last-of(tr_type) then do:
-          if tr_type = "rct-po" then ttr_rctpo = qty.
-           else if tr_type = "rct-tr" then ttr_rcttr = qty.
-           else if tr_type = "rct-unp" then ttr_rctunp = qty.
-           else if tr_type = "rct-wo" then ttr_rctwo = qty.
-           else if tr_type = "iss-prv" then ttr_isspo = - qty.
-           else if tr_type = "iss-tr" then ttr_isstr = - qty.
-           else if tr_type = "iss-unp" then ttr_issunp = - qty.
-           else if tr_type = "iss-so" then ttr_issso = - qty.
-           else if tr_type = "iss-wo" then ttr_isswo = - qty.
+             (tr_part  >= part and tr_part <= part1) and
+             (tr_effdate >= effdate and tr_effdate <= effdate1) and
+             (tr_site >= site and tr_site <= site1) and tr_qty_loc <> 0 no-lock,
+      each pt_mstr
+         fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
+         pt_desc1 pt_desc2 pt_um)
+      no-lock
+          where pt_mstr.pt_domain = global_domain and (pt_part = tr_part)
+         and (pt_prod_line >= line    and pt_prod_line <= line1)
+         and (pt_group  >= group1 and pt_group <= group2)
+         and (pt_part_type >= type and pt_part_type <= type1),
+     each in_mstr
+         fields(in_domain in_part in_site in_abc in_cur_set in_gl_set
+         in_qty_nonet in_qty_oh in_gl_cost_site)
+          where in_mstr.in_domain = global_domain and in_part = pt_part
+          and (in_site = tr_site)
+          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)
+      no-lock:
+/*       break by tr_part by tr_type:                                        */
+/*        if first-of(tr_type) then assign qty = 0.                          */
+/*        assign qty = qty + tr_qty_loc.                                     */
+/*        if last-of(tr_type) then do:                                       */
+           find first temptr exclusive-lock where ttr_part = tr_part and
+                  ttr_site = tr_site no-error.
+           if not available temptr then do:
+              create temptr.
+              assign ttr_part = tr_part
+                     ttr_site = tr_site.
+           end.
+           if tr_type = "rct-po" then ttr_rctpo = ttr_rctpo + tr_qty_loc.
+           else if tr_type = "rct-tr" then ttr_rcttr = ttr_rcttr + tr_qty_loc.
+           else if tr_type = "rct-unp" then ttr_rctunp = ttr_rctunp + tr_qty_loc.
+           else if tr_type = "rct-wo" then ttr_rctwo = ttr_rctwo + tr_qty_loc.
+           else if tr_type = "iss-prv" then ttr_isspo = ttr_isspo - tr_qty_loc.
+           else if tr_type = "iss-tr" then ttr_isstr = ttr_isstr - tr_qty_loc.
+           else if tr_type = "iss-unp" then ttr_issunp = ttr_issunp - tr_qty_loc.
+           else if tr_type = "iss-so" then ttr_issso = ttr_issso - tr_qty_loc.
+           else if tr_type = "iss-wo" then ttr_isswo = ttr_isswo - tr_qty_loc.
            else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
-                then ttr_invadj = ttr_invadj + qty.
-           else ttr_oth = ttr_oth + qty.
-       end.
+                then ttr_invadj = ttr_invadj + tr_qty_loc.
+           else ttr_oth = ttr_oth + tr_qty_loc.
+/*       end. */
     end.
-end.
-/*********
-
-起始日期   截止日期
----------- ----------
-01/01/1900 31/12/3999
-
-Item Number        Description              Line ABC 保管员   缺省库位      期初库存     采购收货     转移入库   计划外入库   加工单入库     采购退货     转移出库   计划外出库     销售出库   加工单出库     盘点调整         其他     期末库存        GL Cost   期末库存金额
------------------- ------------------------ ---- --- -------- -------- ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ --------------- ------------
-178957             空气阻力指示器           1102 B   c113     b14g3         2,130.0          0.0         60.0          0.0          0.0          0.0        120.0          0.0          0.0        583.0      2,130.0          0.0      1,487.0           72.96   108,491.52
-181461             空压机卸荷压力调节器     1102 B   c111     A07I2           867.0          0.0        634.0          0.0          0.0          0.0        634.0          0.0          0.0        326.0        867.0        -16.0        525.0          152.32     79,968.0
-
-*****/
-
-
 
 if fname = "" then do:
  disp effdate column-label "起始日期" format "9999/99/99"

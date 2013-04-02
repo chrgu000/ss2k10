@@ -152,8 +152,8 @@ if can-find(first dyd_mstr where dyd_mstr.dyd_domain = global_domain ) then
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -470,11 +470,11 @@ repeat:
       end.
       if rpt_curr = base_curr or ac_curr = rpt_curr then do:
          asc_recno = recid(asc_mstr).
-         {gprun.i ""gldabrpa.p""}
+         {gprun.i ""yygldabrpa.p""}
 
       end.
 
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
    end.

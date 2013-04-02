@@ -1,4 +1,4 @@
-find first usrw_wkfl where usrw_domain = global_domain
+find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
         and usrw_key1 = execname
         and usrw_key2 = global_userid no-error.
 if not available usrw_wkfl then do:

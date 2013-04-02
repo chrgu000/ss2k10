@@ -6,6 +6,9 @@ the bom code against the 'M' type item
 *****************************************************************/
 /** ss 120815.1 zy - add domain                                          */
          /* DISPLAY TITLE */
+/** 03/28/13
+  * BOM Code自动生成菜单60.13.22,新增时，如果主料号地点不存在，就不允许生成BOM
+  */
 
 /*GI32*/ {mfdtitle.i "120815.1"}
 
@@ -90,7 +93,12 @@ repeat:
                            }
         undo,retry.
    end.
-
+   else do:
+      if pt_site = "" or not can-find(first si_mstr no-lock where si_domain = global_domain and si_site = PT_SITE) then do:
+         {pxmsg.i &MSGTEXT=""主料号地点不存在""
+                  &ERRORLEVEL=3}
+      end.
+   end.
    find first ptp_det where ptp_domain = global_domain and ptp_part = part no-lock no-error.
    if not available ptp_det then do:
         message "零件无地点-计划数据,请重新输入" view-as alert-box error.
@@ -138,12 +146,12 @@ repeat:
          new_yn = yes.
     end.
 
-		if substring(bomcode , length(bomcode) - 1,length(trim(code_cmmt))) = trim(code_cmmt) then do:
-    	  assign bom__chr02 = substring(bomcode , 1 , length(bomcode) - length(trim(code_cmmt))).
+    if substring(bomcode , length(bomcode) - 1,length(trim(code_cmmt))) = trim(code_cmmt) then do:
+        assign bom__chr02 = substring(bomcode , 1 , length(bomcode) - length(trim(code_cmmt))).
     end.
     else do:
         assign bom__chr02 = bomcode.
-	  end.
+    end.
 
     disp bom__chr01 when not new_yn @ site xxbomc_code_site when new_yn @ site
         bom_parent @ bomcode bom_batch_um bom_desc with frame a.
@@ -159,7 +167,7 @@ repeat:
                  set site with frame a.
 
                  find si_mstr no-lock where si_domain = global_domain and
-                 	    si_site = site no-error.
+                      si_site = site no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
                      if not available si_mstr then msg-nbr = 708.
                      else msg-nbr = 5421.
@@ -190,7 +198,7 @@ repeat:
                end.
 
     find first ptp_det where ptp_domain = global_domain and
-    				   ptp_part = part and ptp_site <> site no-lock no-error.
+               ptp_part = part and ptp_site <> site no-lock no-error.
     if not available ptp_det then do:
          message "不允许对零件: '" + part + "' 生成地点: '" + site + "' 的产品结构代码" view-as alert-box error.
          undo,retry.
@@ -199,23 +207,23 @@ repeat:
 
                  set bom_batch_um bom_desc go-on ("F5" "CTRL-D") with frame a.
 
-       	         assign
-	                 bom__chr01 = site
-	                 bom_userid = global_userid
-	                 bom_mod_date = today.
+                 assign
+                   bom__chr01 = site
+                   bom_userid = global_userid
+                   bom_mod_date = today.
 
-	       /* DELETE */
-	       if lastkey = keycode("F5")
-	       or lastkey = keycode("CTRL-D")
-	       then do:
+         /* DELETE */
+         if lastkey = keycode("F5")
+         or lastkey = keycode("CTRL-D")
+         then do:
 
 /*G309*/    /*PATCH G309 OVERRIDES PATCH F671.  IT WAS DEEMED BETTER TO      */
-	    /*TOTALLY PROHIBIT THE DELETION OF BOM CODES THAT ARE USED IN    */
-	    /*STRUCTURES RATHER THAN AUTOMATICALLY DELETE THE STRUCTURE.     */
+      /*TOTALLY PROHIBIT THE DELETION OF BOM CODES THAT ARE USED IN    */
+      /*STRUCTURES RATHER THAN AUTOMATICALLY DELETE THE STRUCTURE.     */
 /*G309*/    /*WHATEVER METHOD IS USED MUST BE THE SAME IN FMMAMT.P AS WELL   */
 
 /*G309*/            if can-find (first ps_mstr where ps_domain = global_domain
-																	 and ps_par = bom_parent)
+                                   and ps_par = bom_parent)
 /*FS62*  /*G309*/    or can-find (first ps_mstr where ps_domain = global_domain and ps_comp = bom_parent)  */
 /*F0SL*/            or (can-find (first ps_mstr where ps_domain = global_domain and ps_comp = bom_parent)
 /*F0SL*/                and not can-find(pt_mstr where pt_domain = global_domain and pt_part = bom_parent))
@@ -229,17 +237,17 @@ repeat:
 /*G309*/                undo mainloop, retry.
 /*G309*/            end.
 
-	           del-yn = yes.
-	         /*tfq  {mfmsg01.i 11 1 del-yn} */
-	          {pxmsg.i
+             del-yn = yes.
+           /*tfq  {mfmsg01.i 11 1 del-yn} */
+            {pxmsg.i
                &MSGNUM=11
                &ERRORLEVEL=1
                &CONFIRM=del-yn
             }
-	           if del-yn = no then undo, retry.
+             if del-yn = no then undo, retry.
 
-	           delete bom_mstr.
-	           del-yn = no.
+             delete bom_mstr.
+             del-yn = no.
 /*F671*/            if lines > 0 then do:
 /*F671*/               /*tfq {mfmsg02.i 24 1 lines}*/
                     {pxmsg.i
@@ -249,14 +257,14 @@ repeat:
             }
 /*F671*/            end.
 /*F671*/            else do:
-	                /*tfq {mfmsg.i 22 1}*/
-	                {pxmsg.i
+                  /*tfq {mfmsg.i 22 1}*/
+                  {pxmsg.i
                &MSGNUM=22
                &ERRORLEVEL=1
                            }
 /*F671*/            end.
 
-	       end.    /* if lastkey ... */
+         end.    /* if lastkey ... */
 
             end. /*do on error undo,retry*/
 

@@ -43,7 +43,7 @@
 
 {socnvars.i}
 {xxsocnrp01.i}
-
+{pppiwkpi.i}
 define input parameter shipfrom_from   like cncix_site no-undo.
 define input parameter shipfrom_to     like cncix_site no-undo.
 define input parameter cust_from       like cncix_cust no-undo.
@@ -77,6 +77,9 @@ define variable ex_rate2         like so_ex_rate no-undo.
 define variable mc-error-number  like msg_nbr no-undo.
 
 define buffer bf_sod_det for sod_det.
+
+define variable vprice like sod_price.
+define variable vcurr  like so_curr.
 
 /* HEADER FRAME */
 FORM /*GUI*/
@@ -312,6 +315,66 @@ for each cncix_mstr no-lock  where cncix_mstr.cncix_domain = global_domain and
 /*      cncix_aged_date     @ cncix_ship_date                               */
 /*   with frame detail STREAM-IO /*GUI*/ .                                  */
 /*   down 1 with frame detail.                                              */
+   assign vprice = 0
+          vcurr = "".
+   find first sod_det no-lock where sod_domain = global_domain and
+              sod_nbr = cncix_so_nbr and
+              sod_line = cncix_sod_line no-error.
+   find first so_mstr no-lock where so_domain = global_domain and
+              so_nbr = sod_nbr no-error.
+   if available sod_det then do:
+      if sod_sched then do:
+           find first pc_mstr
+               where pc_mstr.pc_domain = global_domain
+                and pc_list      =  sod_pr_list
+                and pc_curr      = so_curr
+                and pc_prod_line = ""
+                and pc_part      = sod_part
+                and pc_um        = sod_um
+              no-lock no-error.
+           if available pc_mstr then do:
+              assign vprice = pc_amt[1]
+                     vcurr = pc_curr.
+           end.
+/*         else do:                                                          */
+/*            /* Required price list for Item # in UM # not found            */
+/*            {pxmsg.i &MSGNUM=689 &ERRORLEVEL=3                             */
+/*                     &MSGARG1=sod_part &MSGARG2=sod_um}                    */
+/*            */                                                             */
+/*            assign xsd_chk = "价格表不存在".                               */
+/*         end.                                                              */
+      end. /*  if sod_sched then do: */
+      else do:
+           {gprun.i ""xxgppiwk01.p"" "(1, sod_nbr, sod_line)"}
+/*           find first pt_mstr no-lock where pt_domain = global_domain      */
+/*                  and pt_part = sod_part no-error.                         */
+           find first wkpi_wkfl where wkpi_parent   = ""  and
+                          wkpi_feature  = ""  and
+                          wkpi_option   = ""  and
+                          wkpi_amt_type = "1"
+                       no-lock no-error.
+           if not available wkpi_wkfl then do:
+/*              /* CHECK PRICE LIST AVAILABILITY FOR INVENTORY ITEMS */      */
+/*              if right-trim(sod_det.sod_type) = ""                         */
+/*                 or (right-trim(sod_det.sod_type) <> ""                    */
+/*                 and available pt_mstr)                                    */
+/*              then do:                                                     */
+/*                 /* REQUIRED PRICE TABLE FOR ITEM # IN UM # NOT FOUND */   */
+/*/*                  6231 零件 # 以 # 为单位的价格表未找到              */  */
+/*/*                     {pxmsg.i &MSGNUM=6231 &ERRORLEVEL=4             */  */
+/*/*                              &MSGARG1=sod_det.sod_part              */  */
+/*/*                              &MSGARG2=sod_det.sod_um}               */  */
+/*                 assign xsd_chk = "价格表不存在".                          */
+/*              end. /* IF RIGHT-TRIM(SOD_DET.SOD_TYPE) = "" OR ... */       */
+          end. /* IF AVAILABLE WKPI_WKFL ... */
+          else do:
+               assign vprice = wkpi_amt
+                      vcurr = so_curr.
+          end.
+     end. /* if sod_sched else do: */
+   end. /*  if available sod_det then do: */
+
+
 
    create temp0.
    assign t0_site        = cncix_site
@@ -337,8 +400,12 @@ for each cncix_mstr no-lock  where cncix_mstr.cncix_domain = global_domain and
           t0_ship_date   = cncix_ship_date
           t0_intransit   = cncix_intransit
           t0_aged_date   = cncix_aged_date
-          t0_price       = cncix_price
-          t0_curr        = cncix_curr.
+          t0_cixprice    = cncix_price
+          t0_cixcurr     = cncix_curr
+          t0_price       = vprice
+          t0_curr        = vcurr
+          t0_sodprice    = sod_price when(available sod_det)
+          t0_sodcurr     = so_curr  when(available so_mstr).
 
    if last-of(cncix_po) then do:
  /*     underline                                                            */

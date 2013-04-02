@@ -47,7 +47,7 @@ define input parameter toAsset      like fa_id       no-undo.
 define input parameter l-yrper      like fabd_yrper  no-undo.
 define input parameter l-yrper1     like fabd_yrper  no-undo.
 define input parameter Retire like mfc_logical no-undo.
-define input parameter tax_fa like mfc_logical no-undo. 
+define input parameter tax_fa like mfc_logical no-undo.
 
 define input parameter outpath     as char format "x(48)"  no-undo.
 
@@ -68,7 +68,7 @@ define variable fa_class like fa_facls_id no-undo.
 define variable fa_loc like fa_faloc_id no-undo.
 define variable last_yrper like fabd_yrper format "x(8)" no-undo.
 define variable used_yrper as integer initial 0  no-undo.
-define variable accDepr    like fabd_accamt no-undo.  
+define variable accDepr    like fabd_accamt no-undo.
 define variable expAmt     like fabd_peramt no-undo.
 define variable currexp    like fabd_peramt label "Curr Expense" no-undo .
 define variable assetCnt   as   integer     no-undo.
@@ -84,8 +84,8 @@ define var i as integer initial "1" no-undo.
 /* define variable accDeprTot like fabd_accamt no-undo.  */
 define variable expTot     like fabd_accamt no-undo.
 define variable expTot1     like fabd_accamt no-undo.
-/* define variable annTot     like fabd_accamt no-undo.  
-define variable annDepr    like fabd_accamt no-undo.     */ 
+/* define variable annTot     like fabd_accamt no-undo.
+define variable annDepr    like fabd_accamt no-undo.     */
 define variable service_date like fab_date no-undo.
 define variable ovrdt like fab_ovrdt no-undo.
 define var ovramt like fab_ovramt no-undo.
@@ -119,7 +119,7 @@ CREATE "Excel.Application" chExcelApplication.
 /*Create a new workbook based on the template chExcel file */
 
 /*  *SS-20121023.1*   chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\mfgguitest\template\fa-temp.xls"). */
-/*  *SS-20121023.1*  */ chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\fa-temp.xls").  
+/*  *SS-20121023.1*  */ chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\fa-temp.xls").
 
 define buffer fabd for fabd_det .
 define buffer fabd1 for fabd_det .
@@ -152,14 +152,14 @@ empty temp-table tt_fabddetail.
             else curryer = string(glc_year) +  string(glc_per).
         end.
 /* GET EACH ASSET ID WITHIN USER SELECTED RANGES */
-     for each fa_mstr where  /* *SS-20120821.1*   */ fa_mstr.fa_domain = global_domain and fa_id >= fromAsset and fa_id <= toAsset 
+     for each fa_mstr where  /* *SS-20120821.1*   */ fa_mstr.fa_domain = global_domain and fa_id >= fromAsset and fa_id <= toAsset
          and fa_entity >= fromEntity and fa_entity  <= toEntity
-         and fa_facls_id >= fromClass and fa_facls_id <= toClass 
-         and ( (not fa_id begins "T"  and not tax_fa) or (fa_id begins "T"  and  tax_fa) ) 
+         and fa_facls_id >= fromClass and fa_facls_id <= toClass
+         and ( (not fa_id begins "T"  and not tax_fa) or (fa_id begins "T"  and  tax_fa) )
          and  fa_dep
          and (Retire  or ((not Retire) and fa_disp_rsn = "") )
          break by fa_id:
-         
+
    /* ONLY FIND COST AMOUNT IF NEW ASSETid OR BOOK */
    /* ACCUMULATE DEPR AND NET BOOK AMOUNTS */
 
@@ -176,14 +176,14 @@ empty temp-table tt_fabddetail.
       else do:
          for first fabddet
             fields (fabd_fa_id fabd_fabk_id fabd_yrper)
-            where  /* *SS-20120821.1*   */ fabddet.fabd_domain = global_domain 
+            where  /* *SS-20120821.1*   */ fabddet.fabd_domain = global_domain
 	    and fabddet.fabd_fa_id   = fa_id  /* fabd_det.fabd_fa_id  */
         /*    and   fabddet.fabd_fabk_id = fabd_det.fabd_fabk_id  */
             no-lock:
             l_begyrper = fabddet.fabd_yrper.
           end. /*  FOR FIRST fabddet */
-      end.  /* ELSE */      
-       
+      end.  /* ELSE */
+
       /* GET THE ASSET COST AS OF TO YEAR/PERIOD */
       {gprunp.i "fapl" "p" "fa-get-cost-asof-date"
          "(input  fa_id,
@@ -208,43 +208,43 @@ empty temp-table tt_fabddetail.
           input  l-yrper1,
           input  l-yrper1,
           output currexp)"}
-         
+
       {gprunp.i "fapl" "p" "fa-get-perdep"
          "(input  fa_id,
            input  bk_id,
            input  l_begyrper,
            output l_expamt)"}
-   
+
       {gprunp.i "fapl" "p" "fa-get-accdep"
          "(input  fa_id,
            input  bk_id,
            input  l_begyrper,
            output accDepr)"}
-  
+
       /* GET COST FROM fa_mstr FOR NON-DEPRECIATING ASSETS */
       if not fa_dep
       then
          costAmt = fa_puramt.
       assign
-         accDepr = accDepr  - l_expamt  
+         accDepr = accDepr  - l_expamt
          netBook = (costAmt - accDepr) - expAmt
          perBeg  = string(integer(substring(l_begyrper,1,4))
                    - 1) + "12"
          perEnd  = string(substring(l_begyrper,1,4)) + "12".
 
    end. /* ASSET AND BOOK COMPARISON */
-      
+
 
 
    /* PROCESS FOR EACH ASSET */
-   if last-of(fa_id) 
+   if last-of(fa_id)
    then do:
-     
-     
+
+
       ovramt = 0.
      find first facls_mstr where  /* *SS-20120821.1*   */ facls_mstr.facls_domain = global_domain and  facls_mstr.facls_id = fa_mstr.fa_facls_id no-lock no-error.
        if avail facls_mstr then cls_desc = facls_mstr.facls_desc.
-    
+
      find last fab_det where  /* *SS-20120821.1*   */ fab_det.fab_domain = global_domain and fab_fa_id = fa_id and fab_fabk_id = bk_id
              no-lock no-error.
       if avail fab_det then do:
@@ -252,77 +252,77 @@ empty temp-table tt_fabddetail.
         ovrdt = fab_det.fab_ovrdt .
         ovramt = fab_ovramt.
         service_date = fab_date.
-         end.    
+         end.
       find last fabd1 where  /* *SS-20120821.1*   */ fabd1.fabd_domain = global_domain and fabd1.fabd_fa_id =  fa_id  and fabd1.fabd_fabk_id =  bk_id
           no-lock no-error.
-        if avail fabd1 then last_yrper = fabd1.fabd_yrper.  
-        if l-yrper1 <= last_yrper then last_yrper =  l-yrper1 . 
+        if avail fabd1 then last_yrper = fabd1.fabd_yrper.
+        if l-yrper1 <= last_yrper then last_yrper =  l-yrper1 .
       if ovramt > 0 then do:
-           used_yrper = integer(fa__int01). 
-        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and glc_start > ovrdt and 
+           used_yrper = integer(fa__int01).
+        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and glc_start > ovrdt and
               ( glc_year < integer(substring(last_yrper,1,4))
                 or  (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
                  no-lock:
               used_yrper = used_yrper + 1.
-            end.  
-      end. 
-       
+            end.
+      end.
+
        if ovramt = 0 then do:
              used_yrper = 0.
-        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and  glc_start > service_date and 
+        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and  glc_start > service_date and
        ( glc_year < integer(substring(last_yrper,1,4))
                 or  (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
             no-lock:
               used_yrper = used_yrper + 1.
-         end.      
+         end.
    end.
-               
+
      find first  faloc_mstr where /* *SS-20120821.1*   */ faloc_mstr.faloc_domain = global_domain and  faloc_mstr.faloc_id =  fa_mstr.fa_faloc_id no-lock no-error.
         if avail faloc_mstr then loc_desc = trim(faloc_mstr.faloc_desc).
-        
+
      find first ad_mstr where /* *SS-20120821.1*   */ ad_mstr.ad_domain = global_domain and ad_addr = string(trim(fa_mstr.fa_faloc_id)) no-lock no-error.
-        if avail ad_mstr then loc_site = trim(ad_line1).    
+        if avail ad_mstr then loc_site = trim(ad_line1).
      if fa_mstr.fa__dte01 = ? then assign dte01 = "" .
         else  dte01 = string(fa_mstr.fa__dte01,"9999/99/99").
      if fa_mstr.fa_disp_dt = ? then assign disp_dt = "" .
-        else  disp_dt = string(fa_mstr.fa_disp_dt,"9999/99/99").   
-     find first code_mstr where /* *SS-20120821.1*   */ code_mstr.code_domain = global_domain and code_fldname = "fa_chr04" and trim(string(code_value))= 
+        else  disp_dt = string(fa_mstr.fa_disp_dt,"9999/99/99").
+     find first code_mstr where /* *SS-20120821.1*   */ code_mstr.code_domain = global_domain and code_fldname = "fa_chr04" and trim(string(code_value))=
           trim(string(fa__chr04)) no-lock no-error.
      if avail code_mstr then sup_name = trim(code_cmmt).
         else sup_name = "".
          i = i + 1.
 /*Fill*/
   chExcelWorkbook:Worksheets(1):Cells(i,1) = fa_id.
-  chExcelWorkbook:Worksheets(1):Cells(i,2) =  trim(string(fa_mstr.fa_desc1)).  
-  chExcelWorkbook:Worksheets(1):Cells(i,3) = string(fa_mstr.fa_startdt).   
-  chExcelWorkbook:Worksheets(1):Cells(i,4) = costAmt.     
-  chExcelWorkbook:Worksheets(1):Cells(i,5) = expAmt.  
-  chExcelWorkbook:Worksheets(1):Cells(i,6) = netBook.  
-  chExcelWorkbook:Worksheets(1):Cells(i,7) = currexp. 
-  chExcelWorkbook:Worksheets(1):Cells(i,8) = fa_mstr.fa_salvamt. 
+  chExcelWorkbook:Worksheets(1):Cells(i,2) =  trim(string(fa_mstr.fa_desc1)).
+  chExcelWorkbook:Worksheets(1):Cells(i,3) = string(fa_mstr.fa_startdt).
+  chExcelWorkbook:Worksheets(1):Cells(i,4) = costAmt.
+  chExcelWorkbook:Worksheets(1):Cells(i,5) = expAmt.
+  chExcelWorkbook:Worksheets(1):Cells(i,6) = netBook.
+  chExcelWorkbook:Worksheets(1):Cells(i,7) = currexp.
+  chExcelWorkbook:Worksheets(1):Cells(i,8) = fa_mstr.fa_salvamt.
   chExcelWorkbook:Worksheets(1):Cells(i,9) = fa_mstr.fa_facls_id.
-  chExcelWorkbook:Worksheets(1):Cells(i,10) = cls_desc.  
+  chExcelWorkbook:Worksheets(1):Cells(i,10) = cls_desc.
   chExcelWorkbook:Worksheets(1):Cells(i,11) = fa_mstr.fa_faloc_id.
-  chExcelWorkbook:Worksheets(1):Cells(i,12) = loc_desc.  
-  chExcelWorkbook:Worksheets(1):Cells(i,13) = loc_site.  
-  chExcelWorkbook:Worksheets(1):Cells(i,14) = fa_life.  
-  chExcelWorkbook:Worksheets(1):Cells(i,15) = used_yrper.           
-  chExcelWorkbook:Worksheets(1):Cells(i,16) = trim(string(fa_mstr.fa_auth_number)) .  
-  chExcelWorkbook:Worksheets(1):Cells(i,17) = trim(string(fa_mstr.fa_custodian)) .  
-  chExcelWorkbook:Worksheets(1):Cells(i,18) = trim(string(fa_mstr.fa__chr01)).  
-  chExcelWorkbook:Worksheets(1):Cells(i,19) = trim(string(fa_mstr.fa__chr02)).  
-  chExcelWorkbook:Worksheets(1):Cells(i,20) = trim(string(fa__chr04)).  
+  chExcelWorkbook:Worksheets(1):Cells(i,12) = loc_desc.
+  chExcelWorkbook:Worksheets(1):Cells(i,13) = loc_site.
+  chExcelWorkbook:Worksheets(1):Cells(i,14) = fa_life.
+  chExcelWorkbook:Worksheets(1):Cells(i,15) = used_yrper.
+  chExcelWorkbook:Worksheets(1):Cells(i,16) = trim(string(fa_mstr.fa_auth_number)) .
+  chExcelWorkbook:Worksheets(1):Cells(i,17) = trim(string(fa_mstr.fa_custodian)) .
+  chExcelWorkbook:Worksheets(1):Cells(i,18) = trim(string(fa_mstr.fa__chr01)).
+  chExcelWorkbook:Worksheets(1):Cells(i,19) = trim(string(fa_mstr.fa__chr02)).
+  chExcelWorkbook:Worksheets(1):Cells(i,20) = trim(string(fa__chr04)).
   chExcelWorkbook:Worksheets(1):Cells(i,21) = sup_name.
-  chExcelWorkbook:Worksheets(1):Cells(i,22) = string(fa_mstr.fa__dte01).  
-  chExcelWorkbook:Worksheets(1):Cells(i,23) = fa_mstr.fa_disp_rsn .  
-  chExcelWorkbook:Worksheets(1):Cells(i,24) = string(fa_mstr.fa_disp_dt).                               
-                      
+  chExcelWorkbook:Worksheets(1):Cells(i,22) = string(fa_mstr.fa__dte01).
+  chExcelWorkbook:Worksheets(1):Cells(i,23) = fa_mstr.fa_disp_rsn .
+  chExcelWorkbook:Worksheets(1):Cells(i,24) = string(fa_mstr.fa_disp_dt).
+
  end.
 
-       
+
 end. /* FOR EACH fabd_det */
 
-   /*Save the new chExcel data workbook file */ 
+   /*Save the new chExcel data workbook file */
    chExcelWorkbook:SaveAs(outpath + "\" + "FA" + ".xls",,,,,,1).
 
  chExcelWorkbook:CLOSE.
@@ -332,5 +332,5 @@ end. /* FOR EACH fabd_det */
  RELEASE OBJECT chExcelApplication.
 
 
-/*GUI*/ {mfguichk.i } 
+/*GUI*/ {mfguichk.i }
 

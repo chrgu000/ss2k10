@@ -537,8 +537,8 @@ then do:
                      put
                         gltr_addr    at 37
                         gltr_batch   at 46
- /* *SS-20120820.1*                          gltr_doc_typ at 55      */  
-  /* *SS-20120820.1*                         gltr_doc     at 57.     */  
+ /* *SS-20120820.1*                          gltr_doc_typ at 55      */
+  /* *SS-20120820.1*                         gltr_doc     at 57.     */
   /* *SS-20120820.1*    */  gltr_desc at 55.
                      {&GLDABRPA-P-TAG33}
                   else

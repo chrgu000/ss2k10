@@ -23,6 +23,10 @@ define {1} shared workfile temp0
      fields t0_ship_date   like cncix_ship_date
      fields t0_intransit   like cncix_intransit
      fields t0_aged_date   like cncix_aged_date
+     fields t0_sodprice    like cncix_price
+     fields t0_sodcurr     like cncix_curr
+     fields t0_cixprice    like cncix_price
+     fields t0_cixcurr     like cncix_curr
      fields t0_price       like cncix_price
      fields t0_curr        like cncix_curr
      .

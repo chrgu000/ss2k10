@@ -43,7 +43,7 @@ define variable l-asset1     like fa_id       no-undo.
 define variable l-yrper      like fabd_yrper  no-undo.
 define variable l-yrper1     like fabd_yrper  label "Period " no-undo.
  define variable Retire     like mfc_logical label "是否包含处置资产" no-undo initial "yes".
-define variable tax_fa like mfc_logical label "包含税务资产" no-undo. 
+define variable tax_fa like mfc_logical label "包含税务资产" no-undo.
 
 define var outpath as char format "x(48)"   no-undo.
 
@@ -53,8 +53,8 @@ define var outpath as char format "x(48)"   no-undo.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -69,12 +69,12 @@ l-entity      colon 25
       label {t001.i}
    l-asset       colon 25
    l-asset1      colon 42
-      label {t001.i}   
-   l-yrper1      colon 25 
+      label {t001.i}
+   l-yrper1      colon 25
    Retire      colon 25
-    tax_fa        colon 25  
+    tax_fa        colon 25
    outpath  colon 22
-     
+
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -123,25 +123,25 @@ find first glc_cal where  /* *SS-20120821.1*   */ glc_cal.glc_domain = global_do
    if l-class1  = hi_char then l-class1  = "".
    if l-asset1  = hi_char then l-asset1  = "".
    if l-yrper1  = hi_char then l-yrper1  = "".
-   
+
    if c-application-mode <> "WEB"
    then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 /*GUI*/ procedure p-report-quote:
 
-      
-    /*verify whether the output path is existing*/    
-     
+
+    /*verify whether the output path is existing*/
+
     if outpath = "" then do:
           message "目录不允许为空,请重新输入!" view-as alert-box error.
           /*GUI NEXT-PROMPT removed */
           /*GUI UNDO removed */ RETURN ERROR.
     end.
-      file-info:FILENAME = outpath. 
+      file-info:FILENAME = outpath.
       if file-info:FILE-TYPE = ? or
       index(file-info:file-type,"D") = 0 then do:
           message "目录不存在,请重新输入!" view-as alert-box error.
@@ -182,9 +182,9 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
       {mfquoter.i l-asset1}
       {mfquoter.i l-yrper1}
       {mfquoter.i Retire}
-      {mfquoter.i tax_fa}  
+      {mfquoter.i tax_fa}
       {mfquoter.i outpath}
-           
+
 
       /* SET THE UPPER LIMITS TO MAX VALUES IF BLANK. */
       if l-entity1 = ""       then l-entity1 = hi_char.
@@ -202,7 +202,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
    /* ADDS PRINTER FOR OUTPUT WITH BATCH OPTION */
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -234,11 +234,11 @@ find first glc_cal where  /* *SS-20120821.1*   */ glc_cal.glc_domain = global_do
         input l-yrper,
         input l-yrper1,
         input Retire,
-        input tax_fa,  
+        input tax_fa,
         input outpath)"}
 
    /* ADDS REPORT TRAILER */
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
