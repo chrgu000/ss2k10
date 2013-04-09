@@ -1,6 +1,7 @@
-del D:\ss\trunk\common\xxvifile\xxecdc.i /s/q/f/a
-del D:\ss\trunk\common\xxvifile\xxchklv.i /s/q/f/a
-del D:\ss\trunk\common\xxvifile\xxusrwdom.i /s/q/f/a
-del D:\ss\trunk\common\xxvifile\xxusrwdom1.i /s/q/f/a
-del D:\ss\trunk\common\xxvifile\xxand.i /s/q/f/a
-del D:\ss\trunk\common\xxvifile\xxgetfilelst.p /s/q/f/a
+set wkdir=c:\ss\trunk\common\xxvifile
+del %wkdir%\xxecdc.i /s/q/f/a
+del %wkdir%\xxchklv.i /s/q/f/a
+del %wkdir%\xxusrwdom.i /s/q/f/a
+del %wkdir%\xxusrwdom1.i /s/q/f/a
+del %wkdir%\xxand.i /s/q/f/a
+del %wkdir%\xxgetfilelst.p /s/q/f/a

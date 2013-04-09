@@ -44,9 +44,9 @@ form
        usrw_key5 colon 16 format "x(20)"
        usrw_key6 colon 54 format "x(20)"
        usrw_intfld[1] colon 20
-       usrw_datefld[2] colon 20
+       usrw_datefld[2] format "9999/99/99" colon 20
        usrw_intfld[2] colon 54
-       usrw_datefld[1] colon 20
+       usrw_datefld[1] format "9999/99/99" colon 20
        usrw_charfld[10] colon 20 format "x(56)"
        fg no-label
 with frame b side-labels width 80 attr-space.

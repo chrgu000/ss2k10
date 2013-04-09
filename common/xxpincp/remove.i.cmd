@@ -1,5 +1,6 @@
-del D:\ss\trunk\common\xxpincp\xxecdc.i /s/q/f/a
-del D:\ss\trunk\common\xxpincp\xxchklv.i /s/q/f/a
-del D:\ss\trunk\common\xxpincp\xxusrwdom1.i /s/q/f/a
-del D:\ss\trunk\common\xxpincp\xxusrwdom.i /s/q/f/a
-del D:\ss\trunk\common\xxpincp\xxand.i /s/q/f/a
+set wkdir=c:\ss\trunk\common\xxpincp
+del %wkdir%\xxecdc.i /s/q/f/a
+del %wkdir%\xxchklv.i /s/q/f/a
+del %wkdir%\xxusrwdom1.i /s/q/f/a
+del %wkdir%\xxusrwdom.i /s/q/f/a
+del %wkdir%\xxand.i /s/q/f/a

@@ -17,7 +17,8 @@ define variable loc_phys_addr as character format "x(24)".
 define variable l_tot_usrs    as integer initial 1.
 define variable daysto        as integer initial 30.
 define variable days          as integer.
-define variable datet         as date.
+define variable datef         as date format "9999/99/99" initial today.
+define variable datet         as date format "9999/99/99".
 define variable datestr       as character.
 define variable key1          as character format "x(24)".
 define variable key2          as character format "x(24)".
@@ -35,7 +36,7 @@ form
    loc_phys_addr colon 20
    rev    colon 20 includedom no-label
    uid    colon 20
-   daysto colon 20
+   daysto colon 20 datef no-label {t001.i} datet no-label
    l_tot_usrs colon 20
    key1   colon 20
    key2   colon 20
@@ -77,12 +78,14 @@ repeat with frame a:
                        loc_phys_addr = usrw_key2
                        uid = usrw_key3
                        daysto = usrw_datefld[1] - today
+                       datef = usrw_datefld[2]
+                       datet = usrw_datefld[1]
                        l_tot_usrs = usrw_intfld[1]
                        key1 = usrw_key4
                        key2 = usrw_key5
                        key3 = usrw_key6
                        cmmt = usrw_charfld[10].
-                display l_prod loc_phys_addr uid daysto l_tot_usrs
+                display l_prod loc_phys_addr uid daysto datef datet l_tot_usrs
                         key1 key2 key3 cmmt with frame a.
              end.
         end.
@@ -97,12 +100,14 @@ repeat with frame a:
                        loc_phys_addr = usrw_key2
                        uid = usrw_key3
                        daysto = usrw_datefld[1] - today
+                       datef = usrw_datefld[2]
+                       datet = usrw_datefld[1]
                        l_tot_usrs = usrw_intfld[1]
                        key1 = usrw_key4
                        key2 = usrw_key5
                        key3 = usrw_key6
                        cmmt = usrw_charfld[10].
-                display l_prod loc_phys_addr uid daysto l_tot_usrs
+                display l_prod loc_phys_addr uid daysto datef datet l_tot_usrs
                         key1 key2 key3 cmmt with frame a.
            end.
         end.
@@ -120,6 +125,8 @@ repeat with frame a:
    if available usrw_wkfl then do:
       assign uid = usrw_key3
              daysto = usrw_datefld[1] - today
+             datef = usrw_datefld[2]
+             datet = usrw_datefld[1] 
              l_tot_usrs = usrw_intfld[1]
              key1 = usrw_key4
              key2 = usrw_key5
@@ -137,7 +144,7 @@ repeat with frame a:
    else
        assign histfn = "xx" + substring(l_prod,3,index(l_prod,".") - 3)
                      + "lv.p".
-   display uid daysto l_tot_usrs key1 key2 key3 cmmt histfn with frame a.
+   display uid daysto l_tot_usrs datef datet key1 key2 key3 cmmt histfn with frame a.
    update rev.
    if rev = "EB2.1" then do:
       includedom = getTermLabel("DOMAIN",20).
@@ -148,7 +155,7 @@ repeat with frame a:
    display includedom with frame a.
    lab001:
    repeat:
-      update  uid daysto l_tot_usrs key1 key2 key3 cmmt
+      update uid daysto l_tot_usrs key1 key2 key3 cmmt
               histfn cLoadFile with frame a.
       if daysto <= 0 then do:
         {pxmsg.i &MSGNUM=5904 &ERRORLEVEL=3}

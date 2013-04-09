@@ -1,4 +1,4 @@
-set src="D:\ss\trunk\common"
+set src="c:\ss\trunk\common"
 copy %src%\bbi\xxand.i %src%\xxbdpro\
 copy %src%\bbi\xxqaddom.i %src%\xxbdpro\
 copy %src%\bbi\xxusrwdom.i %src%\xxbdpro\

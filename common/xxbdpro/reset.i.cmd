@@ -1,4 +1,4 @@
-cd /d D:\ss\trunk\common\xxbdpro
+cd /d c:\ss\trunk\common\xxbdpro
 echo /*V8:ConvertMode=Maintenance                                                 */> xxand.i
 echo /*V8:ConvertMode=Maintenance                                                 */> xxqaddom.i
 echo /*V8:ConvertMode=Maintenance                                                 */> xxusrwdom.i

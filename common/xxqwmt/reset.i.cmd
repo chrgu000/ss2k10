@@ -1,3 +1,3 @@
-cd /d D:\ss\trunk\common\xxqwmt
+cd /d c:\ss\trunk\common\xxqwmt
 echo /*V8:ConvertMode=Maintenance                                                 */> xxand.i
 echo /*V8:ConvertMode=Maintenance                                                 */> xxqaddom.i

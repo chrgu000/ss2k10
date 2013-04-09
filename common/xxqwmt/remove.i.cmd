@@ -1,2 +1,3 @@
-del D:\ss\trunk\common\xxqwmt\xxand.i /s/q/f/a
-del D:\ss\trunk\common\xxqwmt\xxqaddom.i /s/q/f/a
+set wkdir=c:\ss\trunk\common\xxqwmt
+del %wkdir%\xxand.i /s/q/f/a
+del %wkdir%\xxqaddom.i /s/q/f/a

@@ -1,7 +1,8 @@
-del D:\ss\trunk\common\xxcomp\xxecdc.i /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxchklv.i /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxusrwdom1.i /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxusrwdom.i /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxand.i /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxgetfilelst.p /s/q/f/a
-del D:\ss\trunk\common\xxcomp\xxbw800.p /s/q/f/a
+set wkdir=C:\ss\trunk\common\xxcomp
+del %wkdir%\xxecdc.i /s/q/f/a
+del %wkdir%\xxchklv.i /s/q/f/a
+del %wkdir%\xxusrwdom1.i /s/q/f/a
+del %wkdir%\xxusrwdom.i /s/q/f/a
+del %wkdir%\xxand.i /s/q/f/a
+del %wkdir%\xxgetfilelst.p /s/q/f/a
+del %wkdir%\xxbw800.p /s/q/f/a
