@@ -7,6 +7,7 @@
 
 /*start of define the value */
 DEFINE VARIABLE parttype as CHARACTER.
+DEFINE VARIABLE consignment AS CHARACTER FORMAT "X(8)".
 DEFINE VARIABLE part_from like tr_part.
 DEFINE VARIABLE part_to like tr_part.
 DEFINE VARIABLE line_from like tr_line.
@@ -41,7 +42,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      so_cust      label "客户代码: "     at 1
      ad_zip label "邮    编: "   at  35
-     so_nbr     label "订 单 号: "   at 70
+     so_nbr     label "订 单 号: "   at 70  consignment NO-LABEL 
      "客户全称:" at 1  ad_name       no-labels  at 10
      so_ord_date  label "订单日期: "   at 72
       ad_attn  label "联 系 人:  " at 1
@@ -58,7 +59,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      ih_cust      label "客户代码:  "     at 1
      ad_zip label "邮    编: "   at  35
-     ih_nbr     label "订 单 号："   at 70
+     ih_nbr     label "订 单 号："   at 70 consignment NO-LABEL 
      "客户全称:" at 1     ad_name     no-labels  at 10
      ih_ord_date  label "订单日期:  "   at 72
      ad_attn label "联系人:  " at 1
@@ -189,6 +190,7 @@ procedure p-report:
     if available tr_hist then do:
       /*  MESSAGE "AA".
         PAUSE.*/
+         assign consignment = "".
          find first pt_mstr where pt_domain = global_domain and pt_part = tr_part.
       /*   find first in_mstr where in_domain = global_domain
                   and in_part = tr_part and in_site = site.*/
@@ -197,6 +199,7 @@ procedure p-report:
          find first so_mstr where so_domain = global_domain
                 and so_nbr = tr_nbr no-lock no-error.
          if available so_mstr then do:
+             IF so_consignment THEN assign consignment = "寄售".
              find first sod_det where sod_domain = global_domain
                     and sod_nbr = tr_nbr and sod_line = tr_line no-lock no-error.
              find first ad_mstr where ad_domain = global_domain
@@ -207,6 +210,7 @@ procedure p-report:
                 if tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
                 display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn ad_line1  so_ord_date ad_phone pdate so_rmks tr_ship_id with frame b.
+                display consignment with frame b.
              end.
              SOAV = yes.
          END.
