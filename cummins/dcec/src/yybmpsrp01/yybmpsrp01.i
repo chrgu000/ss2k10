@@ -31,8 +31,9 @@ PROCEDURE process_report:
 
    define input parameter comp       like ps_comp     no-undo.
    define input parameter level      as   integer     no-undo.
-   define input parameter effdate    like ps_start    no-undo.    
+   define input parameter effdate    like ps_start    no-undo.
    define input parameter isite      like si_site     no-undo.
+   define input parameter iqty       like ps_qty_per  no-undo.
 
    define query q_ps_mstr            for ps_mstr
       fields( ps_domain ps_comp ps_end ps_lt_off ps_op ps_par ps_ps_code
@@ -177,7 +178,7 @@ PROCEDURE process_report:
 /*        if eff_date = ? or (eff_date <> ? and                    */
 /*        (ps_start = ? or ps_start <= eff_date)                   */
 /*        and  (ps_end = ? or eff_date <= ps_end))                 */
-  if (ps_start = ? or ps_start <= effdate) and (ps_end = ? or ps_end >= effdate) 
+  if (ps_start = ? or ps_start <= effdate) and (ps_end = ? or ps_end >= effdate)
       then do:
 
          assign
@@ -272,8 +273,9 @@ PROCEDURE process_report:
            assign xxwk.parent = parent.
                   xxwk.comp = ps_comp.
                   xxwk.op = ps_op.
-                  xxwk.qty = ps_qty_per.
+                  xxwk.qty = iqty * ps_qty_per .
         end.
+           else assign xxwk.qty = xxwk.qty + iqty * ps_qty_per.
            assign xxwk.desc2 = pt_desc2 when available(pt_mstr).
                   xxwk.ref = ps_ref.
                   xxwk.pscode = ps_ps_code.
@@ -352,7 +354,8 @@ find first ptp_det no-lock where ptp_domain = global_domain
                (input ps_comp,
                input level + 1,
                input effdate,
-               input isite).
+               input isite,
+               input xxwk.qty).
 end.
             get next q_ps_mstr no-lock.
          end.  /* IF level < maxlevel ... */
@@ -380,3 +383,117 @@ end.
    close query q_ps_mstr.
 
 END PROCEDURE.
+/***
+procedure getSubQty:
+ /* -----------------------------------------------------------
+    Purpose: 计算BOM用量到table temp3
+    Parameters: vv_par:父零件,vv_eff_date:生效日
+    Notes:
+  -------------------------------------------------------------*/
+
+    define input  parameter vv_part     as character .
+    define input  parameter vv_site     like si_site.
+    define input  parameter vv_eff_date as date format "99/99/99" .
+
+    define var  vv_comp     like ps_comp no-undo.
+    define var  vv_level    as integer   no-undo.
+    define var  vv_record   as integer extent 500.
+    define var  vv_qty      as decimal initial 1  no-undo.
+    define var  vv_save_qty as decimal extent 500 no-undo.
+
+    assign vv_level = 1
+           vv_comp  = vv_part
+           vv_save_qty = 0
+           vv_qty      = 1 .
+
+find first ps_mstr use-index ps_parcomp where ps_domain = global_domain and
+           ps_par = vv_comp  no-lock no-error .
+repeat:
+       if not avail ps_mstr then do:
+             repeat:
+                vv_level = vv_level - 1.
+                if vv_level < 1 then leave .
+                find ps_mstr where recid(ps_mstr) = vv_record[vv_level]
+                             no-lock no-error.
+                vv_comp  = ps_par.
+                vv_qty = vv_save_qty[vv_level].
+                find next ps_mstr use-index ps_parcomp where ps_domain = global_domain and
+                          ps_par = vv_comp  no-lock no-error.
+                if avail ps_mstr then do:
+                     leave.
+                end.
+            end.
+        end.  /*if not avail ps_mstr*/
+
+        if vv_level < 1 then leave .
+        vv_record[vv_level] = recid(ps_mstr).
+
+
+        if (ps_end = ? or vv_eff_date <= ps_end) then do :
+                vv_save_qty[vv_level] = vv_qty.
+
+                vv_comp  = ps_comp .
+                vv_qty = vv_qty * ps_qty_per * (100 / (100 - ps_scrp_pct)).
+                vv_level = vv_level + 1.
+
+
+/*                find first temp3 where t3_part = vv_part and           */
+/*                           t3_comp = ps_comp no-error.                 */
+/*                if not available temp3 then do:                        */
+/*                    create temp3.                                      */
+/*                    assign                                             */
+/*                        t3_part     = caps(vv_part)                    */
+/*                        t3_comp     = caps(ps_comp)                    */
+/*                        t3_qty_per  = vv_qty                           */
+/*                        .                                              */
+/*                end.                                                   */
+/*                 else t3_qty_per   = t3_qty_per + vv_qty  .             */
+       find first pt_mstr where pt_domain = global_domain and
+                   pt_part = ps_comp no-lock no-error.
+        find first ptp_det where ptp_domain = global_domain and
+                   ptp_site = vv_site and ptp_part = ps_comp no-lock no-error.
+        find first xxwk exclusive-lock where xxwk.parent = parent
+               and xxwk.comp = ps_comp and xxwk.op = ps_op
+               and xxwk.qty = ps_qty_per no-error.
+        if not available xxwk then do:
+           create xxwk.
+           assign xxwk.parent = parent.
+                  xxwk.comp = ps_comp.
+                  xxwk.op = ps_op.
+                  xxwk.qty = vv_qty.
+        end.
+           else xxwk.qty = xxwk.qty + vv_qty.
+           assign xxwk.desc2 = pt_desc2 when available(pt_mstr).
+                  xxwk.ref = ps_ref.
+                  xxwk.pscode = ps_ps_code.
+                  xxwk.sdate = ps_start.
+                  xxwk.edate = ps_end.
+                  xxwk.rmks = ps_rmks.
+            find first opm_mstr where opm_domain = global_domain
+                   and opm_std_op = string(ps_op) no-lock no-error.
+            if available opm_mstr then do:
+                  assign xxwk.wkctr = opm_wkctr.
+                  find wc_mstr where wc_domain = global_domain and
+                       wc_wkctr = opm_wkctr and wc_mch = opm_mch no-lock no-error.
+                  if available wc_mstr then
+                         assign xxwk.wcdesc = wc_desc.
+            end.
+
+               find first ps_mstr use-index ps_parcomp where ps_domain = global_domain and
+                        ps_par = vv_comp  no-lock no-error.
+        end.   /*if (ps_end = ? or vv_eff_date <= ps_end)*/
+        else do:
+              repeat:
+              find next ps_mstr use-index ps_parcomp where ps_domain = global_domain and
+                        ps_par = vv_comp  no-lock no-error.
+                  find first ptp_det no-lock where ptp_domain = global_domain
+                         and ptp_part = ps_comp and ptp_site = vv_site no-error.
+                  if (available ptp_det and ptp_phantom) or not available ptp_det then do:
+                      leave.
+                  end.
+             end.
+        end.  /* not (ps_end = ? or vv_eff_date <= ps_end)  */
+end. /*repeat:*/
+
+end procedure. /*bom_down*/
+***/

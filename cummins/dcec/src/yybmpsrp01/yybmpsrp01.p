@@ -1,6 +1,6 @@
 /*zzbmpsrp01 for product structure report by op or by work center*/
 
-{mfdtitle.i "130311.2"}
+{mfdtitle.i "130407.1"}
 
 def var parent like bom_parent.
 def var site like pt_site.
@@ -23,6 +23,9 @@ define variable desc1 like pt_desc1.
 define variable um like pt_um.
 define variable eff_date like ps_start.
 define variable lines as integer.
+define variable vpar like bom_parent.
+define variable vcomp like ps_comp.
+define variable vqty like ps_qty_per.
 def workfile xxwk
     field parent like bom_parent
     field comp like ps_comp
@@ -36,6 +39,7 @@ def workfile xxwk
     field wkctr like opm_wkctr
     field wcdesc like opm_desc
     field rmks   like ps_rmks.
+
 {yybmpsrp01.i}
 FORM /*GUI*/
 
@@ -69,7 +73,7 @@ repeat:
    if wkctr1 = hi_char then wkctr1 = "".
    for each xxwk exclusive-lock: delete xxwk. end.
    update parent site op op1 wkctr wkctr1 effdate with frame a.
-    
+
    if op = "" then op = "0".
    if op1 = "" then op1 = "99999999".
    if wkctr1 = "" then wkctr1 = hi_char.
@@ -107,9 +111,9 @@ repeat:
     maxlevel = min(maxlevel,99).
 
 /*cj*/ xqty[level] = 1 .
+       vqty = 1.
           run process_report
-                  (input parent, input 1,input effdate ,input site).
-                  
+                  (input parent, input 1,input effdate ,input site, input vqty).
 /*****************************************************************************
  * repeat: /*for expand the ps*/
  *       if not available ps_mstr then do:
@@ -193,6 +197,9 @@ repeat:
  *
  * end. /*expand the ps*/
 ******************************************************************************/
+     /*
+   run getsubqty(input parent, input site,input effdate).
+   */
    for each xxwk no-lock
        where (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1)
