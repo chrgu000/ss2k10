@@ -7,13 +7,14 @@ the bom code against the 'M' type item
 /** ss 120815.1 zy - add domain                                          */
          /* DISPLAY TITLE */
 /** 03/28/13
-  * BOM Code自动生成菜单60.13.22,新增时，如果主料号地点不存在，就不允许生成BOM
+  * BOM Code自动生成菜单60.13.22,新增时，
+  * 必须在1.4.17下东西区两个地点下维护组件，才可以生成BOMcode
   */
 
-/*GI32*/ {mfdtitle.i "120815.1"}
+{mfdtitle.i "130409.1"}
 
 def var site like si_site.
-def var part like pt_part.
+def var part like pt_part no-undo.
 def var desc1 like pt_desc1.
 def var desc2 like pt_desc2.
 def var um like bom_batch_um.
@@ -99,12 +100,16 @@ repeat:
                   &ERRORLEVEL=3}
       end.
    end.
-   find first ptp_det where ptp_domain = global_domain and ptp_part = part no-lock no-error.
+   find first ptp_det where ptp_domain = global_domain and ptp_part = part and ptp_site = "DCEC-C" no-lock no-error.
    if not available ptp_det then do:
-        message "零件无地点-计划数据,请重新输入" view-as alert-box error.
+        message "零件无主地点[DCEC-C]-计划数据,请重新输入" view-as alert-box error.
         undo,retry.
    end.
-
+   find first ptp_det where ptp_domain = global_domain and ptp_part = part and ptp_site = "DCEC-B" no-lock no-error.
+   if not available ptp_det then do:
+        message "零件无主地点[DCEC-B]-计划数据,请重新输入" view-as alert-box error.
+        undo,retry.
+   end.
    if ptp_pm_code <> "m" then do:
        conf-yn = no.
        message "该零件的'采/制'类型为: '" + ptp_pm_code "',是否继续"
