@@ -119,7 +119,33 @@ CREATE "Excel.Application" chExcelApplication.
 /*Create a new workbook based on the template chExcel file */
 
 /*  *SS-20121023.1*   chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\qadtemp\mfgguitest\template\fa-temp.xls"). */
-/*  *SS-20121023.1*  */ chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\fa-temp.xls").
+/*  *SS-20121023.1*   chExcelWorkbook = chExcelApplication:Workbooks:ADD("\\dcecssy046\template\fa-temp.xls"). */
+   chExcelWorkbook = chExcelApplication:Workbooks:add().
+   chExcelWorkbook:worksheets(1):cells(1,1) = "固定资产编号".
+   chExcelWorkbook:worksheets(1):cells(1,2) = "固定资产名称".
+   chExcelWorkbook:worksheets(1):cells(1,3) = "服务日期".
+   chExcelWorkbook:worksheets(1):cells(1,4) = "原值".
+   chExcelWorkbook:worksheets(1):cells(1,5) = "累计折旧".
+   chExcelWorkbook:worksheets(1):cells(1,6) = "净值".
+   chExcelWorkbook:worksheets(1):cells(1,7) = "月折旧".
+   chExcelWorkbook:worksheets(1):cells(1,8) = "残值".
+   chExcelWorkbook:worksheets(1):cells(1,9) = "类别编码".
+   chExcelWorkbook:worksheets(1):cells(1,10) = "资产类别".
+   chExcelWorkbook:worksheets(1):cells(1,11) = "库位编码".
+   chExcelWorkbook:worksheets(1):cells(1,12) = "使用部门".
+   chExcelWorkbook:worksheets(1):cells(1,13) = "存放地点".
+   chExcelWorkbook:worksheets(1):cells(1,14) = "使用年限".
+   chExcelWorkbook:worksheets(1):cells(1,15) = "已提月份".
+   chExcelWorkbook:worksheets(1):cells(1,16) = "规格型号".
+   chExcelWorkbook:worksheets(1):cells(1,17) = "管理部门".
+   chExcelWorkbook:worksheets(1):cells(1,18) = "变动方式".
+   chExcelWorkbook:worksheets(1):cells(1,19) = "使用状态".
+   chExcelWorkbook:worksheets(1):cells(1,20) = "厂商编码".
+   chExcelWorkbook:worksheets(1):cells(1,21) = "厂商".
+   chExcelWorkbook:worksheets(1):cells(1,22) = "录入时间".
+   chExcelWorkbook:worksheets(1):cells(1,23) = "报废理由".
+   chExcelWorkbook:worksheets(1):cells(1,24) = "报废时间".
+   chExcelWorkbook:worksheets(1):cells(1,25) = "资产位置".
 
 define buffer fabd for fabd_det .
 define buffer fabd1 for fabd_det .
@@ -177,7 +203,7 @@ empty temp-table tt_fabddetail.
          for first fabddet
             fields (fabd_fa_id fabd_fabk_id fabd_yrper)
             where  /* *SS-20120821.1*   */ fabddet.fabd_domain = global_domain
-	    and fabddet.fabd_fa_id   = fa_id  /* fabd_det.fabd_fa_id  */
+      and fabddet.fabd_fa_id   = fa_id  /* fabd_det.fabd_fa_id  */
         /*    and   fabddet.fabd_fabk_id = fabd_det.fabd_fabk_id  */
             no-lock:
             l_begyrper = fabddet.fabd_yrper.
@@ -316,7 +342,7 @@ empty temp-table tt_fabddetail.
   chExcelWorkbook:Worksheets(1):Cells(i,22) = string(fa_mstr.fa__dte01).
   chExcelWorkbook:Worksheets(1):Cells(i,23) = fa_mstr.fa_disp_rsn .
   chExcelWorkbook:Worksheets(1):Cells(i,24) = string(fa_mstr.fa_disp_dt).
-
+  chExcelWorkbook:Worksheets(1):Cells(i,25) = fa_ins_co.
  end.
 
 
