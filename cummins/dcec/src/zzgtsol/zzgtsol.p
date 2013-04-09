@@ -3,46 +3,48 @@
 /*  LAST MODIFIED   DAT:2004-09-01 20:04  BY: *LB01* LONG BO         */
 /*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO         */
 
+{mfdtitle.i "1346"}
+
 define new shared stream rpt .
 define new shared stream bf.
-define  new shared var v_bkbox  as char format "x(50)".
-define  new shared var v_inbox  as char format "x(50)".
+define new shared var v_bkbox  as char format "x(50)".
+define new shared var v_inbox  as char format "x(50)".
 define new shared  var v_rpbox  as char format "x(50)".
 define new shared  var v_ptbox  as char format "x(50)".  /*过账结果数据*/
 
-define  new shared var v_bkfile as char format "x(50)".
+define new shared var v_bkfile as char format "x(50)".
 define new shared  var v_infile as char format "x(50)".
-define  new shared var v_infilex as char format "x(12)".
-define  new shared var v_rpfile as char format "x(50)".
-define  new shared var v_rpline as char format "x(100)".
+define new shared var v_infilex as char format "x(12)".
+define new shared var v_rpfile as char format "x(50)".
+define new shared var v_rpline as char format "x(100)".
 
-define  new shared variable v_postfile          as character.
+define new shared variable v_postfile          as character.
 
-define  new shared var v_times  as integer.
+define new shared var v_times  as integer.
 define new shared  var v_load   as logical initial yes.
-define  new shared var v_adj    as logical .
-define  new shared var v_post   as logical .
+define new shared var v_adj    as logical .
+define new shared var v_post   as logical .
 
-define  new shared var type     as char.
-define  new shared var nbr      like so_nbr.
-define  new shared var v_dt       as date.
-define  new shared var v_site   like so_site.
-define  new shared var i        as char format "x(70)" extent 48.
+define new shared var type     as char.
+define new shared var nbr      like so_nbr.
+define new shared var v_dt       as date.
+define new shared var v_site   like so_site.
+define new shared var i        as char format "x(70)" extent 48.
 
-DEFINE  new shared VAR savepos AS INT.
+DEFINE new shared VAR savepos AS INT.
 define new shared  var strdummy as char.
 
-define  new shared var invsite  as char.
+define new shared var invsite  as char.
 define new shared var v_totso  as integer.
 define new shared  variable i3            as integer  no-undo.
-define  new shared variable i2            as integer  no-undo.
+define new shared variable i2            as integer  no-undo.
 define variable subacct like  sod_sub.
 define variable vpart like pt_part.
 define variable vinv  like so_inv_nbr.
 
 {zzgtsolt.i "new"}
 
-define  new shared workfile giv
+define new shared workfile giv
  field ginv              as char
  field ginvx             as char
  field gdate             like gltr_eff_dt
@@ -76,7 +78,7 @@ define new shared workfile xinvd
   field xtax  like tx2d_cur_tax_amt
   .
 
-define  new shared temp-table wrk_var       /*lb01*/
+define new shared temp-table wrk_var       /*lb01*/
     field wrk_sonbr   like sod_nbr    /*lb01*/
     field wrk_line    like sod_line   /*lb01*/
     field wrk_qty_inv   like sod_qty_inv /*lb01*/
@@ -86,8 +88,6 @@ define  new shared temp-table wrk_var       /*lb01*/
 
 {zzgtos01.i}
 {zzgt002.i new}
-
-{mfdtitle.i "b"}
 
 /* DISPLAY SELECTION FORM */
 /*GUI preprocessor Frame A define */
@@ -158,7 +158,6 @@ repeat:
     end.
   end.
 
-
   v_dt = today.
   v_inbox = v_box[2].
   v_bkbox = v_box[3].
@@ -167,7 +166,6 @@ repeat:
 
   if v_name_date[1] <> today then v_times = 1.
                               else v_times = v_name_seq[1] + 1.
-
 
   if opsys = "unix" then do:
     if substr(v_bkbox,length(v_bkbox),1) <> "/" then v_bkbox = substr(v_bkbox,1,length(v_bkbox)) + "/".
@@ -308,10 +306,10 @@ repeat:
   /*发动机分账户为M7000 备件分账户为M1000*/
       vpart = xpart.
       find first sod_det no-lock where sod_domain = global_domain and sod_nbr = xnbr
-	         and sod_line = 1 no-error.
+           and sod_line = 1 no-error.
       if available sod_det then do:
          assign vpart = sod_part.
-      end.      
+      end.
 
       find first code_mstr no-lock where code_domain = global_domain
             and code_fldname = "ZZGTSOL-SUB-ACCT"
@@ -356,7 +354,8 @@ repeat:
 
   for each xinvd:
       find first sod_det no-lock where sod_domain = global_domain
-             and sod_nbr = xnbr and sod_part = xpart no-error.
+             and sod_nbr = xnbr and sod_part = xpart
+             and sod_qty_inv = xqty no-error.
       if available sod_det then do:
       create sotax.
       assign sotax_nbr = xnbr
@@ -389,7 +388,7 @@ repeat:
 
 if v_load then do:
          /*CIM_LOAD 到soivmt.p修改税信息*/
-        {gprun.i ""zzgtsoltc.P""}
+        {gprun.i ""zzgtsoltc.p""}
 end.
 
   {mfselbpr.i "printer" 132}
