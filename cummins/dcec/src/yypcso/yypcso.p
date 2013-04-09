@@ -38,7 +38,7 @@
 define variable pclist like pc_list.
 define variable part like pc_part.
 define variable star like pc_start INITIAL TODAY.
-
+define variable cmsort like cm_sort.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
@@ -135,10 +135,17 @@ repeat:
 
 
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-
-
+      find first cm_mstr no-lock where cm_domain = global_domain 
+             and cm_addr = pc_list no-error.
+      if available cm_mstr then do:
+         assign cmsort = cm_sort.
+      end.
+      else do:
+         assign cmsort = "".
+      end.   
       display
           pc_list
+          cmsort @ cm_sort
           pc_part
           pc_um
           pc_start
