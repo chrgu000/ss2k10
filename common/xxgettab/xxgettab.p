@@ -82,7 +82,7 @@ end.
 /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "Printer"
       &printWidth = 254
-      &pagedFlag = "nopage"
+      &pagedFlag = " "
       &stream = " "
       &appendToFile = " "
       &streamedOutputToTerminal = " "
@@ -94,10 +94,11 @@ end.
       &withWinprint = "yes"
       &defineVariables = "yes"}
 
-   {mfphead2.i}
+/*   {mfphead2.i} */
 create alias dictdb for database value(sdb).
   {xxgettabd.i dictdb sfile}
 create alias dictdb for database value(db_hold).
-   {mftrl080.i}
+/*  {mftrl080.i} */
+{mfreset.i}
 end.
 {wbrp04.i &frame-spec = a}
