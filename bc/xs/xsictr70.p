@@ -787,7 +787,7 @@ If AVAILABLE ( poc_ctrl ) then
         V1510 = PV1510 .
         V1510 = ENTRY(1,V1510,"@").
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
-        V1510 = "".
+        V1510 = "ZZ".
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
                 display "[ZZµ÷µ½EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
@@ -807,7 +807,7 @@ If AVAILABLE ( poc_ctrl ) then
                       L15102 = "" .
                       L15103 = "" .
                       L15104 = "" .
-                for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_lot = V1500 and ld_qty_oh > 0:
+                for each ld_det use-index ld_part_lot no-lock where ld_part = V1300 and ld_loc = "ZZ" and ld_lot = V1500 and ld_qty_oh > 0:
                     if i < 3 then do:
                        if L15102 = "" then
                            assign L15102 = ld_loc + "/" + string(ld_qty_oh).
