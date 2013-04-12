@@ -18,6 +18,7 @@ for each xxtmppt no-lock where xxpt_chk = "".
     put unformat xxpt_abc ' - ' xxpt_site ' ' xxpt_loc skip.
     put unformat '-' skip.
     put unformat '-' skip.
+    put unformat '.' skip.
 end.
 output close.
 for each xxtmppt exclusive-lock:
