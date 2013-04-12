@@ -33,9 +33,9 @@ repeat:
            xxpt_ins_rqd = logical(entry(12,txt,","))
            xxpt_ins_lead = int(entry(13,txt,","))
            xxpt_phantom = logical(entry(14,txt,","))
- /*          xxpt_ord_min = dec(entry(15,txt,","))
+           xxpt_ord_min = dec(entry(15,txt,","))
            xxpt_ord_mult = dec(entry(16,txt,","))
- */          xxpt_yld_pct = dec(entry(17,txt,","))
+           xxpt_yld_pct = dec(entry(17,txt,","))
            xxpt_routing = entry(18,txt,",")
            xxpt_bom_code = entry(19,txt,",").
   end.
