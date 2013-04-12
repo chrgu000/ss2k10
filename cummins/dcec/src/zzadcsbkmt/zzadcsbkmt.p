@@ -15,7 +15,7 @@
 /*J1VT*/ /* CHANGING THE PATCH MARKER FROM G1L3 TO G 1 L 3 DUE TO       */
 /*J1VT*/ /* PROBLEMS DURING SUBMISSION                                  */
 
-/*H286*/ {mfdtitle.i "121020.1"}
+{mfdtitle.i "121020.1"}
 
    define variable del-yn like mfc_logical.
 /*H506*/ define variable ec_ok  like mfc_logical.
@@ -30,7 +30,7 @@
 FORM /*GUI*/
 
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+ RECT-FRME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
 
 /*H560*/    ad_addr        colon 10 label "金税代码"
@@ -46,7 +46,8 @@ FORM /*GUI*/
       ad_zip
       ad_format  */
 /*judy*/    /*ad_user1*/
-/*judy*/ ad_user1         colon 10  label "开户行" format "x(48)" /* ad_ctry no-label */
+/*judy*/ ad_user1 colon 10  view-as fill-in size 40 by 1
+                  label "开户行" format "x(120)" /* ad_ctry no-label */
 /*      ad_county      colon 10
       ad_attn        colon 10  */
 /*      ad_attn2       label "[2]" colon 43 */
@@ -146,7 +147,7 @@ with frame b side-labels width 80 attr-space
         ad_zip
         ad_format */
         /*ad_user1*/
-                ad_user1    /*judy*/
+        ad_user1    /*judy*/
 /*H506*                         ad_ctry when ({txnew.i}) */
 /*H506*/                 /*       ad_ctry when ({txnew.i} or ec_ok )
         ad_county
