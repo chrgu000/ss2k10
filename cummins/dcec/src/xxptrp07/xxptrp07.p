@@ -282,7 +282,7 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
    &mnemonic = "supplier_consign"
    &label    = supplier_consign_label}
 
-/* repeat: */
+/*  repeat:   */
 
 /*   if part1 = hi_char then part1 = "".                                     */
 /*   if line1 = hi_char then line1 = "".                                     */
@@ -478,28 +478,31 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
    mainforloop:
    for each pt_mstr
          fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
-         pt_desc1 pt_desc2 pt_um)
-      no-lock
-          where pt_mstr.pt_domain = global_domain and  (pt_part >= part
+         pt_desc1 pt_desc2 pt_um)  no-lock
+         where pt_mstr.pt_domain = global_domain and  (pt_part >= part
           and pt_part <= part1)
          and   (pt_prod_line >= line    and pt_prod_line <= line1)
          and   (pt_group  >= part_group and pt_group <= part_group1)
          and (pt_part_type >= part_type and pt_part_type <= part_type1)
          , each in_mstr
          fields( in_domain in_part in_site in_abc in_cur_set in_gl_set
-         in_qty_nonet in_qty_oh in_gl_cost_site)
-          where in_mstr.in_domain = global_domain and  in_part  =  pt_part
+         in_qty_nonet in_qty_oh in_gl_cost_site) no-lock
+          where in_mstr.in_domain = global_domain and in_part = pt_part
          and   (in_abc  >= abc  and in_abc  <= abc1)
          and   (in_site >= site and in_site <= site1)
          and   (in__qadc01 >= keep and in__qadc01 <= keep1)
-      no-lock
+/*0410 , each tmploc01 no-lock where t01_site = in_site and t01_loc = in_loc    */   
          break by pt_prod_line by pt_part
          by in_site
 /*      with frame b width 132 down:                                         */
         :
       /* SET EXTERNAL LABELS */
 /*      setFrameLabels(frame b:handle).                                      */
-
+/*fyk*/  find first tmploc01 no-lock where t01_site = in_site and t01_loc = in_loc 
+/*fyk*/       no-error.
+/*fyk*/  if not available tmploc01 then do:
+/*fyk*/     next.
+/*fyk*/  end.
       if first-of(pt_prod_line) then do:
          pl-printed = no.
       end.
