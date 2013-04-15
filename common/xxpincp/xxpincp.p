@@ -232,7 +232,7 @@ Procedure genPinfile:
       put unformat 'input from value(vf + ".bpi").' skip.
       put unformat 'output to value(vf + ".bpo") keep-messages.' skip.
       put unformat 'hide message no-pause.' skip.
-      put unformat '\{gprun.i ""mgurmt.p""}' skip.
+      put unformat '~{gprun.i ""mgurmt.p""}' skip.
       put unformat 'hide message no-pause.' skip.
       put unformat 'output close.' skip.
       put unformat 'input close.' skip.
