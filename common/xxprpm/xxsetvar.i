@@ -34,6 +34,7 @@
                 &C01=""CHARACTER01""}
  *
  *----------------------------------------------------------------------------*/
+do transaction:
 &IF (DEFINED(KEY1) = 2) and (DEFINED(KEY2) = 2) &THEN
     find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
                usrw_key1 = {&KEY1} and usrw_key2 = {&KEY2} no-error.
@@ -257,3 +258,4 @@
     &ENDIF
     release usrw_wkfl.
 &ENDIF   /*&IF (DEFINED(KEY1) = 2) and (DEFINED(KEY2) = 2) &THEN*/
+end.
