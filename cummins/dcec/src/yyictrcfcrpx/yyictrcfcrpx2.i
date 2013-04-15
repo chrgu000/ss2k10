@@ -1,4 +1,5 @@
-find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
+do transaction:
+find first usrw_wkfl where usrw_domain = global_domain
         and usrw_key1 = global_userid
         and usrw_key2 = execname no-error.
 if not available usrw_wkfl then do:
@@ -27,3 +28,4 @@ end.
            usrw_charfld[15] = fName no-error.
 /*end. */
 release usrw_wkfl.
+end.
