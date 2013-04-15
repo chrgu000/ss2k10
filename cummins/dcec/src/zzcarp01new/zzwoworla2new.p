@@ -33,7 +33,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
+/**4/11由于PK_DET互锁 屏蔽一段程序*********************************************/
 /* DECLARE COMMON VARIABLES */
 {mfdeclre.i}
 
@@ -87,8 +87,7 @@ hide message no-pause.
    &op=?
    &phantom=yes
    }
-
-for each pk_det exclusive-lock where pk_user = mfguser:
+for each pk_det exclusive-lock where pk_domain = global_domain and pk_user = mfguser:
    find first pkwkfl where pkrecid = recid(pk_det).
    create pkdet.
    assign
@@ -99,7 +98,10 @@ for each pk_det exclusive-lock where pk_user = mfguser:
       pkqty = pk_qty
       pkbombatch = bombatch
       pkltoff = ltoff.
-   delete pk_det.
+/****由于互锁把这段屏蔽，不知道有什么影响。
+   delete pk_det. 
+********/
    delete pkwkfl.
 end.
+
 

@@ -5,27 +5,26 @@
 ------------------------------------------------------------------------------------*/
 /* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 09/19/12  ECO: *SS-20120919.1*   */
 	
-define NEW shared workfile pkdet no-undo
-        field pkpart like ps_comp
-        field pkop as integer
-                          format ">>>>>9"
-        field pkstart like pk_start
-        field pkend like pk_end
-        field pkqty like pk_qty
-        field pkbombatch like bom_batch
+define NEW shared workfile pkdet no-undo
+        field pkpart like ps_comp
+        field pkop as integer format ">>>>>9"
+        field pkstart like pk_start
+        field pkend like pk_end
+        field pkqty like pk_qty
+        field pkbombatch like bom_batch
         field pkltoff like ps_lt_off
         FIELD pkdate1 LIKE pk_start.
-define new shared variable transtype as character format "x(4)".
+define new shared variable transtype as character format "x(4)".
 define new shared variable errmsg as integer .
 transtype = "BM" . 
 
-	for each xxwk:
+	for each xxwk exclusive-lock:
 		delete xxwk.
 	end.
 
-	FOR EACH pkdet:
+	FOR EACH pkdet exclusive-lock:
         DELETE pkdet.
-        END.
+  END.
 	
 	for each yyusrw_wkfl no-lock where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr 
 	and yyusrw_key3 = "ORDER-TEST-DET" BREAK by yyusrw_key2 by yyusrw_datefld[1]:
@@ -41,15 +40,15 @@ transtype = "BM" .
 
                 date1 = yyusrw_datefld[1].
 
-       {gprun.i ""zzbmpkiqbnew.p"" "(input comp,
-                               INPUT site,
+       {gprun.i ""zzbmpkiqbnew.p"" "(input comp,
+                               INPUT site,
                                INPUT TODAY,
                                INPUT date1)"}
            end.
 
-
-         for each pkdet BREAK BY pkpart BY pkdate1 :
-              message yyusrw_key2 yyusrw_datefld[1] pkpart pkdate1.  
+
+         for each pkdet no-lock BREAK BY pkpart BY pkdate1 :
+              message yyusrw_key2 yyusrw_datefld[1] pkpart pkdate1.  
               find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = pkpart no-lock no-error.
 				find ptp_det where ptp_det.ptp_domain = global_domain and ptp_site = site  and ptp_part = pkpart  no-lock no-error.
 		

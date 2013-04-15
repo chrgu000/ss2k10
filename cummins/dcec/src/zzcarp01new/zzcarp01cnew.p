@@ -323,7 +323,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
                 if (not last-of(mrp_due_date)) then next.
 
-             chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (mrp_due_date - mstart))) = mrpqty1.
+               chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (mrp_due_date - mstart))) = mrpqty1. 
 
            end.
 
@@ -342,7 +342,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
                 if (not last-of(schd_date))  then next.
 
             IF mrpqty2 <> 0 THEN DO:
-                chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (schd_date - mstart))) = mrpqty2.
+                 chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (schd_date - mstart))) = mrpqty2. 
             END.
     end.
 
@@ -350,8 +350,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
 
           for each xxwk1 NO-LOCK WHERE xxwk1.xxpart = xxwk.xxpart break by xxwk1.xxdate1:
-
-                chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (xxwk1.xxdate1 - mstart))) = xxwk1.xxqtytest.
+/*                 chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (xxwk1.xxdate1 - mstart))) = xxwk1.xxqtytest.  */
                 mrpqty4 = mrpqty4 + xxwk1.xxqtytest.
           end.
 
@@ -369,7 +368,7 @@ DEFINE VARIABLE iLoop1 AS INTEGER.
 
                  if (not last-of(yyinvpro_date)) then next.
 
-                 chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (yyinvpro_date - mstart))) = mrpqty3.
+                   chExcelWorkbook:Worksheets(1):Cells(iRow,iCol + (5 * (yyinvpro_date - mstart))) = mrpqty3. 
              END.
          END.
          end.

@@ -8,7 +8,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-/*GI32*/ {mfdtitle.i "120919.1"}
+{mfdtitle.i "130411.1"}
 
 
 /* DEFINITION */
@@ -176,10 +176,10 @@ IF global-tool-bar AND global-tool-bar-handle <> ? THEN
 					del-yn = yes.
 					{mfmsg01.i 11 1 del-yn}
 					if del-yn then do:
-						for each yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
+						for each yyusrw_wkfl exclusive-lock where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key3 = "ORDER-TEST-DET":
 							delete yyusrw_wkfl. /*detail*/
 						end.
-						for each yyusrw_wkfl where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
+						for each yyusrw_wkfl exclusive-lock where yyusrw_wkfl.yyusrw_domain = global_domain and yyusrw_key1 = nbr and yyusrw_key2 = "ORDER-TEST-MSTR":
 							delete yyusrw_wkfl.
 						end.
 						clear frame a.		
