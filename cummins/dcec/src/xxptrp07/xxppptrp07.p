@@ -70,7 +70,7 @@
 
 {mfdeclre.i}
 /* {gplabel.i} */
-{xxptrp07.i}
+{xxppptrp07.i}
 define input parameter ipart         like pt_part.
 define input parameter ipart1        like pt_part.
 define input parameter iline         like pt_prod_line.
@@ -270,6 +270,7 @@ PROCEDURE ck_status:
 
 END PROCEDURE. /* PROCEDURE CK_STATUS */
 
+
 /* SELECT FORM */
 /*14 form                                              */
 /*14    part           colon 15                        */
@@ -353,6 +354,33 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
    &code = supplier_consign_code
    &mnemonic = "supplier_consign"
    &label    = supplier_consign_label}
+
+
+    assign  part              = ipart
+            part1             = ipart1
+            line              = iline
+            line1             = iline1
+            vend              = ivend
+            vend1             = ivend1
+            abc               = iabc
+            abc1              = iabc1
+            site              = isite
+            site1             = isite1
+            loc               = iloc
+            loc1              = iloc1
+            part_group        = ipart_group
+            part_group1       = ipart_group1
+            part_type         = ipart_type
+            part_type1        = ipart_type1
+            keep              = ikeep
+            keep1             = ikeep1
+            as_of_date        = ias_of_date
+            neg_qty           = ineg_qty
+            net_qty           = inet_qty
+            inc_zero_qty      = iinc_zero_qty
+            zero_cost         = izero_cost
+            customer_consign  = icustomer_consign
+            supplier_consign  = isupplier_consign.
 
 /*14 repeat:                                            */
 /*14                                                    */
@@ -483,32 +511,6 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
 /*14      {mfquoter.i supplier_consign}                   */
 /*14      {mfquoter.i l_recalculate}                      */
 /*14                                                      */
-    assign  part              = ipart
-            part1             = ipart1
-            line              = iline
-            line1             = iline1
-            vend              = ivend
-            vend1             = ivend1
-            abc               = iabc
-            abc1              = iabc1
-            site              = isite
-            site1             = isite1
-            loc               = iloc
-            loc1              = iloc1
-            part_group        = ipart_group
-            part_group1       = ipart_group1
-            part_type         = ipart_type
-            part_type1        = ipart_type1
-            keep              = ikeep
-            keep1             = ikeep1
-            as_of_date        = ias_of_date
-            neg_qty           = ineg_qty
-            net_qty           = inet_qty
-            inc_zero_qty      = iinc_zero_qty
-            zero_cost         = izero_cost
-            customer_consign  = icustomer_consign
-            supplier_consign  = isupplier_consign.
-            
       if part1 = "" then part1 = hi_char.
       if line1 = "" then line1 = hi_char.
       if vend1 = "" then vend1 = hi_char.
@@ -519,6 +521,7 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
       if part_type1 = "" then part_type1 = hi_char.
       if keep1 = "" then keep1 = hi_char.
       if as_of_date = ? then as_of_date = today.
+
   /*    ≤‚ ‘≥Ã–Ú£¨
       message "part             " part              skip
               "part1            " part1             skip
