@@ -1,7 +1,7 @@
 /* zzgtsod.p - dump soinvoice into a ascii file                           */
 /*                                                                        */
 
-/* VERSION 	LAST MODIFIED    2004-08-30 11:07    	*LB01*	LONG BO		  */
+/* VERSION  LAST MODIFIED    2004-08-30 11:07     *LB01*  LONG BO     */
 /*ss2012-8-16 升级*/
 {mfdtitle.i "121017.1"}
 define stream   soivdat.
@@ -27,13 +27,13 @@ define new shared variable v_dt         as   date.
 DEFINE new shared VARIABLE v_flag1      AS LOGICAL INITIAL NO.
 define new shared variable i            as   integer.
 
-define new shared variable iCount		as integer. /*LB01*/
+define new shared variable iCount   as integer. /*LB01*/
 define new shared variable sLnHeaderDesc as char.
 
 define new shared variable strOutMstr as char format "x(600)".   /*lb01*/
 define new shared variable strOutDet  as char format "x(400)".   /*lb01*/
 
-define new shared variable sonbr	like so_nbr.
+define new shared variable sonbr  like so_nbr.
 
 /*F348*/ define new shared variable next_inv_nbr like soc_inv.
 /*G692*/ define new shared variable next_inv_pre like soc_inv_pre.
@@ -50,7 +50,7 @@ define new shared variable inv_date like ar_date.
 
 find first gl_ctrl no-lock where gl_domain = global_domain no-error.
 
-    
+
 v_dt = today.
 
 /* DISPLAY SELECTION FORM */
@@ -59,22 +59,22 @@ v_dt = today.
 
 
 form
-	RECT-FRAME       AT ROW 1 COLUMN 1.25
-	RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
-	skip(1)
+  RECT-FRAME       AT ROW 1 COLUMN 1.25
+  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+  skip(1)
    v_gtaxid        colon 15  label "接口代码"  space(2) v_adname no-label skip
    v_times            colon 15  label "传出次数"   skip
    v_outfile          colon 15  label "数据文件名" skip(1)
    v_sonbr1           colon 15  label "订单"
    v_sonbr2           label {t001.i} colon 45 skip
-   v_date1            colon 15	label "发货日期"
+   v_date1            colon 15  label "发货日期"
    v_date2            label {t001.i} colon 45 skip
-   v_cust1            colon 15	label "销往"
+   v_cust1            colon 15  label "销往"
    v_cust2            label {t001.i} colon 45 skip
-   v_bill1            colon 15	label "票据开往"
+   v_bill1            colon 15  label "票据开往"
    v_bill2            label {t001.i} colon 45 skip
 
-	skip(1)
+  skip(1)
 
 /*   v_flag1            LABEL "包括修正的已下载订单" colon 45 SKIP */
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
@@ -93,7 +93,7 @@ loopa:
 repeat on error undo,retry:
 
   v_curr = "".
-  
+
   find first gl_ctrl no-lock no-error.
   if available gl_ctrl then v_curr = gl_base_curr.
   if v_curr = "" then do:
@@ -101,10 +101,10 @@ repeat on error undo,retry:
     pause 3.
     leave.
   end.
-  
 
-  find first usrw_wkfl 
-       where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL" 
+
+  find first usrw_wkfl
+       where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL"
        and   lookup(global_userid,usrw_charfld[1]) <> 0
        no-lock no-error.
   if not available usrw_wkfl then do:
@@ -115,10 +115,10 @@ repeat on error undo,retry:
   else do:
     {zzgt003.i}
     if v_box[1] = "" or
-       v_box[2] = "" or 
-       v_box[3] = "" or 
+       v_box[2] = "" or
+       v_box[3] = "" or
        v_box[4] = "" or
-       v_box[5] = "" 
+       v_box[5] = ""
     then do:
       message "错误:下载控制数据错误,请联系系统管理员.".
       pause 3.
@@ -126,10 +126,10 @@ repeat on error undo,retry:
     end.
   end.
 
-   
+
   /** VAR INITIALIZATION **/
   if opsys = "unix" then do:
-    if substr(v_box[1],length(v_box[1]),1) <> "/" then 
+    if substr(v_box[1],length(v_box[1]),1) <> "/" then
        v_box[1] = substr(v_box[1],1,length(v_box[1])) + "/".
   end.
 
@@ -138,15 +138,15 @@ repeat on error undo,retry:
                  string(time,"99999") + "." + string(random(0,999),"999").
   {gprun.i ""zzgtosdexi.p"" "(l_out, output l_dir_ok)"}.
   if not l_dir_ok then do:
-    message "警告: 不能输出到:" + trim(v_box[1]). 
+    message "警告: 不能输出到:" + trim(v_box[1]).
     pause 3.
     leave.
   end.
-        
+
   if v_name_date[2] <> today then v_times = 1.
                               else v_times = integer(v_name_seq[2]) + 1.
 
-  v_outfile = substr(v_box[1],1,length(v_box[1])) 
+  v_outfile = substr(v_box[1],1,length(v_box[1]))
            + "SO"
            + string(month(v_dt),"99")
            + string(day(v_dt),"99")
@@ -171,7 +171,7 @@ repeat on error undo,retry:
     v_date1    v_date2
     v_cust1    v_cust2
     v_bill1    v_bill2
-    
+
 /*    v_flag1 */
   with frame a.
 
@@ -183,7 +183,7 @@ repeat on error undo,retry:
   if v_bill2 = "" then v_bill2 = hi_char .
 
   find first so_mstr
-       where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/ so_invoiced = no   
+       where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/ so_invoiced = no
        and so_to_inv = yes
        and so_curr = v_curr
        and lookup(so_site,v_sitestr) <> 0
@@ -197,7 +197,7 @@ repeat on error undo,retry:
     message "错误:所选范围没有待开发票数据!".
     undo, retry.
   end.
-	
+
   bcdparm = "".
   {mfquoter.i v_sonbr1  }
   {mfquoter.i v_sonbr2  }
@@ -211,7 +211,7 @@ repeat on error undo,retry:
 
   /* SELECT PRINTER  */
   {mfselbpr.i "printer" 132}
-    {mfphead.i}         
+    {mfphead.i}
   mainloop:
   do transaction on error undo, leave on endkey undo, leave:
 
@@ -219,13 +219,13 @@ repeat on error undo,retry:
     { gprun.i ""sorp10a.p"" }
 
 /** UPDATE CONTROL FILE **/
-    find first usrw_wkfl 
-         where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL"	
+    find first usrw_wkfl
+         where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL"
          and   usrw_key2 = v_gtaxid
          exclusive-lock no-error.
     if available usrw_wkfl then do:
       overlay(usrw_charfld[7],31,6) = string(v_times,"999999").
-      overlay(usrw_charfld[7],21,8) =   string(year(today),"9999") 
+      overlay(usrw_charfld[7],21,8) =   string(year(today),"9999")
                                       + string(month(today),"99")
                                       + string(day(today),"99").
     end.
@@ -236,27 +236,27 @@ repeat on error undo,retry:
     for each wkgtd:
       delete wkgtd.
     end.
-  
-   {gprun.i ""yygtsoda.p""}   
+
+   {gprun.i ""yygtsoda.p""}
   /*   {yygtsoda.i}  */
-   
+
     output stream soivdat to value(v_outfile).
-    {yygtsodb.i}        
+    {yygtsodb.i}
     output stream soivdat close.
-    
+
     for each wkgtm with frame bx width 180 stream-io down :
-      display wkgtm_ref 
+      display wkgtm_ref
               wkgtm_bill
               wkgtm_name   format "x(28)"
               wkgtm_line
-              wkgtm_totamt 
+              wkgtm_totamt
               wkgtm_msg
               .
-    end. 
+    end.
   end.  /*mainloop*/
-  
+
   /* REPORT TRAILER */
-  {mfrtrail.i} 
+  {mfrtrail.i}
 end.  /*repeat*/
 
 

@@ -1,7 +1,7 @@
 /* zzgtsod.p - dump soinvoice into a ascii file                           */
 /*                                                                        */
 
-/* VERSION 	LAST MODIFIED    2004-08-30 11:07    	*LB01*	LONG BO		  */
+/* VERSION  LAST MODIFIED    2004-08-30 11:07     *LB01*  LONG BO     */
 
 
 define stream   soivdat.
@@ -27,13 +27,13 @@ define new shared variable v_dt         as   date.
 DEFINE new shared VARIABLE v_flag1      AS LOGICAL INITIAL NO.
 define new shared variable i            as   integer.
 
-define new shared variable iCount		as integer. /*LB01*/
+define new shared variable iCount   as integer. /*LB01*/
 define new shared variable sLnHeaderDesc as char.
 
 define new shared variable strOutMstr as char format "x(600)".   /*lb01*/
 define new shared variable strOutDet  as char format "x(400)".   /*lb01*/
 
-define new shared variable sonbr	like so_nbr.
+define new shared variable sonbr  like so_nbr.
 
 /*F348*/ define new shared variable next_inv_nbr like soc_inv.
 /*G692*/ define new shared variable next_inv_pre like soc_inv_pre.
@@ -61,22 +61,22 @@ v_dt = today.
 
 
 form
-	RECT-FRAME       AT ROW 1 COLUMN 1.25
-	RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
-	skip(1)
+  RECT-FRAME       AT ROW 1 COLUMN 1.25
+  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+  skip(1)
    v_gtaxid        colon 15  label "接口代码"  space(2) v_adname no-label skip
    v_times            colon 15  label "传出次数"   skip
    v_outfile          colon 15  label "数据文件名" skip(1)
    v_sonbr1           colon 15  label "订单"
    v_sonbr2           label {t001.i} colon 45 skip
-   v_date1            colon 15	label "发货日期"
+   v_date1            colon 15  label "发货日期"
    v_date2            label {t001.i} colon 45 skip
-   v_cust1            colon 15	label "销往"
+   v_cust1            colon 15  label "销往"
    v_cust2            label {t001.i} colon 45 skip
-   v_bill1            colon 15	label "票据开往"
+   v_bill1            colon 15  label "票据开往"
    v_bill2            label {t001.i} colon 45 skip
 
-	skip(1)
+  skip(1)
 
 /*   v_flag1            LABEL "包括修正的已下载订单" colon 45 SKIP */
 with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
@@ -155,7 +155,7 @@ repeat on error undo,retry:
            + string(v_times,"99") + ".txt".
 
   find first ad_mstr where ad_domain = global_domain and
-  	         ad_addr = v_companyid no-lock no-error.
+             ad_addr = v_companyid no-lock no-error.
   if available ad_mstr then v_adname = ad_name.
                        else v_adname = "".
   display v_gtaxid v_adname

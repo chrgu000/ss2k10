@@ -6,6 +6,6 @@
 do i = 1 to length({1}):
   if substring({1},i,1) = '~~' then substring({1},i,1) = "#".
 end.
-  
+
 
 

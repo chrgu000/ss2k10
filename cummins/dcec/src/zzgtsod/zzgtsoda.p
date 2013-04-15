@@ -7,7 +7,7 @@
 define TEMP-TABLE sodet like sod_det.  /*2004-09-01 13:18*/
 define buffer sodet2 for sodet.
 /* define variable gdinvmaxamt as decimal initial 11000000. /*一千一百万*/  */
-define variable tmpqty  as integer.
+define variable tmpqty  as decimal   format "->>>>>>>>>>>>>>9.9<<<<<".
 
 define shared variable so_recno as recid.
 define shared variable inv_date like ar_date.
@@ -326,10 +326,10 @@ for each so_mstr
                    ss - 130219.1 -e */
                    /* ss - 130219.1 -b */
                IF AVAILABLE cp_mstr THEN do:
-               	assign
+                assign
                    wkgtd.wkgtd_spec = cp_cust_part .
-                   
-                   if cp_comment <> "" then 
+
+                   if cp_comment <> "" then
                    wkgtd.wkgtd_item = cp_comment.
                 end .
                  /*  ss - 130219.1 -e */
@@ -354,10 +354,10 @@ for each so_mstr
         wkgtm_msg    = wkgtm_msg + "/订单行计税为NO".
         next.
       end.
-    /*  
+    /*
       message "vt_tax_pct=" + string(vt_tax_pct) view-as alert-box.
       pause.
-    */  
+    */
       /*check*/
         {zzgt001.i wkgtd_item}
         {zzgt001.i wkgtd_spec}
@@ -373,7 +373,7 @@ for each so_mstr
 
         if not v_outtaxin then do:
           if sodet2.sod_tax_in then do:
-          	/* ss - 130219.1 -b
+            /* ss - 130219.1 -b
             wkgtd_netamt  = round((sodet2.sod_qty_inv * sodet2.sod_price / (1 + wkgtd_taxpct)),2).
             wkgtd_discamt = round((sodet2.sod_qty_inv * sodet2.sod_list_pr / (1 + wkgtd_taxpct)  * sodet2.sod_disc_pct / 100),2).
             ss - 130219.1 -e */
@@ -381,7 +381,7 @@ for each so_mstr
             wkgtd_netamt  = round((sodet2.sod_qty_inv * ( sodet2.sod_price / (1 + wkgtd_taxpct) )),2).
             wkgtd_discamt = round((sodet2.sod_qty_inv * ( ( sodet2.sod_list_pr / (1 + wkgtd_taxpct) )  * sodet2.sod_disc_pct / 100 ) ),2).
            /* ss - 130219.1 -e */
-            
+
             wkgtd_totamt  = round((wkgtd_netamt + wkgtd_discamt),2).
           end.
           else do:
@@ -397,7 +397,7 @@ for each so_mstr
             wkgtd_totamt  = round((wkgtd_netamt + wkgtd_discamt),2).
           end.
           else do:
-          	/* ss - 130219.1 -b
+            /* ss - 130219.1 -b
             wkgtd_netamt  = round(round((sodet2.sod_qty_inv * sodet2.sod_price),2) * (1 + wkgtd_taxpct) , 2).
             wkgtd_discamt = round(round(sodet2.sod_qty_inv * sodet2.sod_list_pr * sodet2.sod_disc_pct / 100 ,2) * (1 + wkgtd_taxpct) ,2).
            ss - 130219.1 -e */
@@ -405,7 +405,7 @@ for each so_mstr
             wkgtd_netamt  = round(sodet2.sod_qty_inv *  ( sodet2.sod_price * (1 + wkgtd_taxpct) ) , 2).
             wkgtd_discamt = round(sodet2.sod_qty_inv *  ( ( sodet2.sod_list_pr * sodet2.sod_disc_pct / 100 )  * (1 + wkgtd_taxpct) ) ,2).
           /* ss - 130219.1 -e */
-           
+
             wkgtd_totamt  = round((wkgtd_netamt + wkgtd_discamt),2).
           end.
         end. /*taxin*/
