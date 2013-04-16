@@ -238,11 +238,11 @@ repeat:
 
     assign /* v_adj = v_infixrd */
            v_adj = no
-           v_post = v_inpost. /*2004-09-02 14:10*/
+           v_post = no.   /* v_inpost. /_*2004-09-02 14:10*/
   update
         v_load
         v_adj
-        v_post
+ /*      v_post    */
   with frame a.
 
   if v_load = no then do:

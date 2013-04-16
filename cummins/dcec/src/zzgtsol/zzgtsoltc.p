@@ -1,11 +1,12 @@
   {mfdeclre.i}
-  {zzgtsolt.i} 
+  {zzgtsolt.i}
   define stream bf.
+  define variable rid as RECID.
   define variable zkacct like sod_acct initial "600202".
-  find first code_mstr no-lock where code_domain = global_domain 
+  find first code_mstr no-lock where code_domain = global_domain
          and code_fldname = "ZZGTSOL-ACCT" AND CODE_VALUE = "*" NO-ERROR.
   IF AVAILABLE CODE_MSTR THEN DO:
-  	 ASSIGN ZKACCT = code_cmmt.
+     ASSIGN ZKACCT = code_cmmt.
   END.
   for each sotax no-lock break by sotax_nbr by sotax_line desc:
       if first-of(sotax_nbr) then do:
@@ -37,18 +38,18 @@
            else do:
                 put stream bf unformat "-" skip.
            end.
-           if sotax_part = "ZK" then do: 
-                put stream bf unformat trim(string(abs(sotax_tot + sotax_tax))) skip.		
+           if sotax_part = "ZK" then do:
+                put stream bf unformat trim(string(abs(sotax_tot + sotax_tax))) skip.
            end.
            else do:
-           		  put stream bf unformat trim(string(abs(sotax_tot))) skip.
+                put stream bf unformat trim(string(abs(sotax_tot))) skip.
            end.
            put stream bf unformat "-" skip.
            if sotax_desc1 = "" then do:
-           		put stream bf unformat "-" skip. /*物料无库存*/
+              put stream bf unformat "-" skip. /*物料无库存*/
            end.
            else do:
-           	  put stream bf unformat '"' sotax_desc1 '"' skip. /*物料无库存*/
+              put stream bf unformat '"' sotax_desc1 '"' skip. /*物料无库存*/
            end.
            put stream bf unformat '- - - - - "' trim(ZKACCT) '" "' trim(sotax_sub) '"' skip.
            put stream bf unformat "-" skip.
@@ -63,7 +64,13 @@
 /*           end.          */
            if last-of(sotax_nbr) then do:
            put stream bf unformat "." skip.
-           put stream bf unformat '- - - - "' sotax_inv '" N Y' skip.
+           put stream bf unformat '- - '.
+           find first so_mstr no-lock where so_domain = global_domain 
+                  and so_nbr = sotax_nbr no-error.
+           if available so_mstr and so_stat = "" then do:
+              put stream bf unformat '- '.
+           end.
+           put stream bf unformat '- - "' sotax_inv '" N Y' skip.
           output stream bf close.
           input from value(cimmfname + ".bpi").
           output to value(cimmfname + ".bpo").
