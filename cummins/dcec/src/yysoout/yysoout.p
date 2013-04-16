@@ -34,6 +34,9 @@ DEFINE VARIABLE qty_cri like tr_qty_chg label "应发数量".
 DEFINE VARIABLE SOAV AS LOGICAL.
 DEFINE VARIABLE sum as integer initial 0.
 DEFINE VARIABLE loc LIKE tr_loc.
+
+define buffer trhist for tr_hist.
+define variable rec_id as recid.
 /*end of define the value*/
 
 /*start report title*/
@@ -42,7 +45,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      so_cust      label "客户代码: "     at 1
      ad_zip label "邮    编: "   at  35
-     so_nbr     label "订 单 号: "   at 70  consignment NO-LABEL 
+     so_nbr     label "订 单 号: "   at 70  consignment NO-LABEL
      "客户全称:" at 1  ad_name       no-labels  at 10
      so_ord_date  label "订单日期: "   at 72
       ad_attn  label "联 系 人:  " at 1
@@ -59,7 +62,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      ih_cust      label "客户代码:  "     at 1
      ad_zip label "邮    编: "   at  35
-     ih_nbr     label "订 单 号："   at 70 consignment NO-LABEL 
+     ih_nbr     label "订 单 号："   at 70 consignment NO-LABEL
      "客户全称:" at 1     ad_name     no-labels  at 10
      ih_ord_date  label "订单日期:  "   at 72
      ad_attn label "联系人:  " at 1
@@ -187,11 +190,10 @@ procedure p-report:
                          break  by tr_nbr by in__qadc01 by tr_part by tr_effdate by tr_serial
                with width 132 no-attr-space:
 
-    if available tr_hist then do:
       /*  MESSAGE "AA".
         PAUSE.*/
          assign consignment = "".
-         find first pt_mstr where pt_domain = global_domain and pt_part = tr_part.
+         find first pt_mstr no-lock where pt_domain = global_domain and pt_part = tr_part no-error.
       /*   find first in_mstr where in_domain = global_domain
                   and in_part = tr_part and in_site = site.*/
          if available(pt_mstr) then parttype = pt_lot_ser.
@@ -234,14 +236,15 @@ procedure p-report:
          i = i + 1.
          qty = 0 - tr_qty_loc.
          if SOAV = yes and soddet="Y" THEN
-             disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"  sod_qty_ord format "->>>>>>>" sod_qty_ship  format "->>>>>>>" space(4)
-                    IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" AT 105  with no-box no-labels width 132 frame c down.
+             disp tr_part pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"  sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(4)
+                   IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" /* AT 104 */  with no-box no-labels width 132 frame c down.
          else
              if available(idh_hist) then
-             disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"  IDH_qty_ord format "->>>>>>>" IDH_qty_ship  format "->>>>>>>" space(4)
-                     IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)"  AT 105 with no-box no-labels width 132 frame cIH down.
+             disp tr_part pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"  IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(4)
+                     IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)" /* AT 104 */ with no-box no-labels width 132 frame c down.
              else
-             disp tr_part  pt_desc2 tr_effdate qty "  " tr_serial format "x(8)"  tr_line format ">>>"   "        "  "        " space(3)  /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame cIH down.
+             disp tr_part  pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"   "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship  format "->>>>>>"  SPACE(4)
+                 in_user1 format "x(8)" /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame c down.
              disp "-----------------------------------------------------------------------------------------------------------------------"
                   with width 132 no-box frame f.
          sum = sum + 1.
@@ -285,29 +288,51 @@ procedure p-report:
               i=1.
               pageno = pageno + 1.
          end.
+   assign rec_id = recid(tr_hist).
+   if dev = "printer" or dev="print-sm" or dev="PRNT88" or
+      dev = "PRNT80" or dev="printer" or dev="print-sm" then do:
+        find first trhist exclusive-lock where recid(trhist) = rec_id no-error.
+        if available trhist then do:
+           assign trhist.tr__log02 = yes.
+        end.
     end.
-  end.
+  end. /* for each tr_hist*/
 
   {mfgrptrm.i}
   {mfphead.i}
-
-/* start of flag of printed */
-  if dev = "printer" or dev="print-sm" or dev="PRNT88" or dev="PRNT80" or dev="printer" or dev="print-sm" then do:
-    for each tr_hist where tr_domain = global_domain
-                         and (tr_effdate >= duedate_from)
-                         and (tr_effdate <= duedate_to)
-                         and tr_ship_id >= ship
-                         and tr_ship_id <= ship1
-                         and (tr_nbr >= sonbr_from)
-                         and (tr_nbr <= sonbr_to)
-                         and (tr_type = "iss-so" or tr_type = "iss-fas")
-                         and (tr_site = site or site = "")
-                         and ((not flag1) or tr__log02 = no)
-                         use-index tr_nbr:
-          tr__log02 = yes.
-    end.
-  end.
-/* end of flag of printed */
+/*                                                                                                                               */
+/*   /* start of flag of printed */                                                                                              */
+/*     if dev = "printer" or dev="print-sm" or dev="PRNT88" or dev="PRNT80" or dev="printer" or dev="print-sm" then do:          */
+/*   /*  for each tr_hist where tr_domain = global_domain                         */                                             */
+/*   /*                       and (tr_effdate >= duedate_from)                    */                                             */
+/*   /*                       and (tr_effdate <= duedate_to)                      */                                             */
+/*   /*                       and tr_ship_id >= ship                              */                                             */
+/*   /*                       and tr_ship_id <= ship1                             */                                             */
+/*   /*                       and (tr_nbr >= sonbr_from)                          */                                             */
+/*   /*                       and (tr_nbr <= sonbr_to)                            */                                             */
+/*   /*                       and (tr_type = "iss-so" or tr_type = "iss-fas")     */                                             */
+/*   /*                       and (tr_site = site or site = "")                   */                                             */
+/*   /*                       and ((not flag1) or tr__log02 = no)                 */                                             */
+/*   /*                       use-index tr_nbr:                                   */                                             */
+/*       for each tr_hist where tr_domain = global_domain                                                                        */
+/*                      and (tr_effdate >= duedate_from)                                                                         */
+/*                      and (tr_effdate <= duedate_to)                                                                           */
+/*                      and tr_ship_id >= ship                                                                                   */
+/*                      and tr_ship_id <= ship1                                                                                  */
+/*                      and (tr_part >= part_from)                                                                               */
+/*                      and (tr_part <= part_to)                                                                                 */
+/*                      and (tr_nbr >= sonbr_from)                                                                               */
+/*                      and (tr_nbr <= sonbr_to)                                                                                 */
+/*                      and (tr_line >= line_from)                                                                               */
+/*                      and (tr_line <= line_to)                                                                                 */
+/*                      and (tr_site = site or site = "")                                                                        */
+/*                      and (tr_type = "iss-so" or tr_type = "iss-fas")                                                          */
+/*                      and ((not flag1) or tr__log02 = no)                                                                      */
+/*                      use-index tr_nbr:                                                                                        */
+/*             tr__log02 = yes.                                                                                                  */
+/*       end.                                                                                                                    */
+/*     end.                                                                                                                      */
+/* end of flag of printed                                                                                                        */
 /*judy 05/06/28*/ {mfreset.i}
 end procedure.
 /* end report out put */
