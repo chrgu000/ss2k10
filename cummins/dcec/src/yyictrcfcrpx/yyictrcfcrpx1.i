@@ -1,3 +1,7 @@
+/* yyictrcfcrpx1.i - parameter file                                          */
+/*V8:ConvertMode=Maintenance                                                 */
+/* REVISION END                                                              */
+
 find first usrw_wkfl no-lock where usrw_domain = global_domain
        and usrw_key1 = global_userid
        and usrw_key2 = execname no-error.
@@ -18,6 +22,11 @@ if available usrw_wkfl then do:
            loc1     = usrw_charfld[8]
            keeper   = usrw_charfld[9]
            keeper1  = usrw_charfld[10]
-           yn_zero  = usrw_logfld[1]
-           fName    = usrw_charfld[15].
+           yn_zero  = usrw_logfld[1].
+           if opsys = "unix" then do:
+              fName    = usrw_charfld[14].
+           end.
+           else if opsys = "msdos" or opsys = "win32" then do:
+              fName    = usrw_charfld[15].
+           end.
 end.

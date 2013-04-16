@@ -1,3 +1,7 @@
+/* yyictrcfcrpx2.i - parameter file                                          */
+/*V8:ConvertMode=Maintenance                                                 */
+/* REVISION END                                                              */
+
 do transaction:
 find first usrw_wkfl where usrw_domain = global_domain
         and usrw_key1 = global_userid
@@ -25,7 +29,13 @@ end.
            usrw_charfld[9]  = keeper
            usrw_charfld[10] = keeper1
            usrw_logfld[1]   = yn_zero
-           usrw_charfld[15] = fName no-error.
+           no-error.
+           if opsys = "unix" then do:
+              usrw_charfld[14] = fName.
+           end.
+           else if opsys = "msdos" or opsys = "win32" then do:
+              usrw_charfld[15] = fName.
+           end.
 /*end. */
 release usrw_wkfl.
 end.
