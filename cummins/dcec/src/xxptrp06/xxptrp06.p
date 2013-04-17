@@ -532,7 +532,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
       ss - 130315.1 -e */
        /* ss -130315.1 -b */
        {wbrp06.i &command = update &fields = " as_of_date days part part1 line line1
-        abc abc1 site site1 part_type part_type1 part_group part_group1
+        abc abc1 site site1 part_type part_group part_group1 part_type1
          neg_qty  net_qty inc_zero_qty zero_cost
         customer_consign supplier_consign cost_qty l_excel fName"
       &frm = "a"}
@@ -751,7 +751,7 @@ define buffer trhist for tr_hist.
                t_lddet.t_lddet_loc              = ld_loc
                t_lddet.t_lddet_lot = ld_lot
                t_lddet.t_lddet_ref = ld_ref
-	       t_lddet.t_lddet_date = ld_date
+         t_lddet.t_lddet_date = ld_date
                 .
          end.
          else
@@ -785,7 +785,7 @@ define buffer trhist for tr_hist.
          l_trnbr = tr_trnbr .
 
       /*CREATING t_trhist RECORDS.*/
-      for each tr_hist 
+      for each tr_hist
          fields(tr_domain tr_part tr_effdate tr_site tr_loc tr_trnbr
          tr_ship_type tr_nbr tr_type tr_program tr_qty_loc tr_status
          tr_rmks tr_rev tr_serial tr_ref ) use-index tr_part_eff
@@ -1411,7 +1411,7 @@ define buffer trhist for tr_hist.
          FOR EACH tt NO-LOCK
               ,EACH pt_mstr NO-LOCK
               WHERE pt_domain = global_domain and
-	         pt_part = tt.t_lddet_part
+           pt_part = tt.t_lddet_part
                 BREAK BY tt.t_lddet_site BY tt.t_lddet_part  BY tt.t_lddet_loc BY  tt.t_lddet_lot /* BY tt.t_lddet_ref */
 
               :
@@ -1420,12 +1420,12 @@ define buffer trhist for tr_hist.
 
                 IF FIRST-OF(tt.t_lddet_part)  THEN DO:
                       find first x_ret exclusive-lock where
-		      xr_site = tt.t_lddet_site and
-		      xr_part = tt.t_lddet_part no-error.
+          xr_site = tt.t_lddet_site and
+          xr_part = tt.t_lddet_part no-error.
                         if not available x_ret then do:
                            create x_ret.
                            assign
-			        xr_site = tt.t_lddet_site
+              xr_site = tt.t_lddet_site
                                xr_part = tt.t_lddet_part
                                xr_cst = tt.t_lddet_std_as_of
                                xr_desc1 = pt_desc1
@@ -1440,14 +1440,14 @@ define buffer trhist for tr_hist.
 
 
               effdate = ?.
-	       /* ss - 130318.1 -b
+         /* ss - 130318.1 -b
               IF tt.t_lddet_lot <> "" THEN DO:
                ss -e */
-	       /*
+         /*
                  FOR EACH tr_hist NO-LOCK
                     WHERE
-        		    tr_domain = global_domain and
-        		    tr_part = tt.t_lddet_part
+                tr_domain = global_domain and
+                tr_part = tt.t_lddet_part
                     AND tr_serial = tt.t_lddet_lot
                   /*  AND tr_ref = tt.t_lddet_ref */
                     AND tr_site = tt.t_lddet_site
@@ -1457,10 +1457,10 @@ define buffer trhist for tr_hist.
                     effdate = tr_effdate.
                     LEAVE.
                  END.
-		 */
-		 /* ss - 130318.1 -b
+     */
+     /* ss - 130318.1 -b
               END.
-	      ss -e */
+        ss -e */
 
                  /* ss - 130315.1 -b */
 
@@ -1530,8 +1530,8 @@ end. /* REPEAT */
 
 /*GUI*/ end procedure. /*p-report*/
 /* ss - 130315.1 -b
-/*GUI*/ {mfguirpb.i &flds=" part part1 line line1 vend vend1 abc abc1 site site1 loc loc1 part_group part_group1 part_type part_type1 as_of_date neg_qty net_qty inc_zero_qty zero_cost customer_consign supplier_consign l_recalculate "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" part part1 line line1 vend vend1 abc abc1 site site1 loc loc1 part_type part_type1 part_group part_group1 as_of_date neg_qty net_qty inc_zero_qty zero_cost customer_consign supplier_consign l_recalculate "} /*Drive the Report*/
    ss - 130315.1 -e */
 /* ss - 130315.1 -b */
-/*GUI*/ {mfguirpb.i &flds=" as_of_date days part part1 line line1 /* vend vend1 */ abc abc1 site site1 part_group part_group1 part_type part_type1 neg_qty net_qty inc_zero_qty zero_cost customer_consign supplier_consign cost_qty l_excel fname "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" as_of_date days part part1 line line1 /* vend vend1 */ abc abc1 site site1 part_type part_type1 part_group part_group1 neg_qty net_qty inc_zero_qty zero_cost customer_consign supplier_consign cost_qty l_excel fname "} /*Drive the Report*/
 /* ss - 130315.1 -e */

@@ -1,3 +1,4 @@
+do transaction:
 find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
         and usrw_key1 = execname
         and usrw_key2 = global_userid no-error.
@@ -38,3 +39,4 @@ end.
           usrw_charfld[12] = supplier_consign
           usrw_charfld[15] = fName no-error.
 release usrw_wkfl.
+end.
