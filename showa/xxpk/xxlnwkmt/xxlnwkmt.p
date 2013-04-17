@@ -33,7 +33,12 @@ form
    xxlnw_sn colon 20
    xxlnw_on colon 20
    xxlnw_Start   colon 20
-   xxlnw_End     at 41
+   xxlnw_End     colon 46  
+   xxlnw_pick    colon 20 
+   xxlnw_picks   colon 20 
+   xxlnw_picke   colon 46
+   xxlnw_sends   colon 20
+   xxlnw_sende   colon 46
    xxlnw_rstmin  colon 20
    xxlnw_shift    colon 20 shiftdesc no-label at 26
    xxlnw_wktime  colon 20
@@ -221,6 +226,11 @@ repeat:
                     xxlnw_on
                     xxlnw_start
                     xxlnw_end
+                    xxlnw_pick
+                    xxlnw_picks
+                    xxlnw_picke
+                    xxlnw_sends
+                    xxlnw_sende
                     xxlnw_rstmin
                     xxlnw_wktime
                     xxlnw_shift
@@ -262,6 +272,11 @@ repeat:
               xxlnw_on
               xxlnw_start
               xxlnw_end
+						  xxlnw_pick
+						  xxlnw_picks
+              xxlnw_picke
+              xxlnw_sends
+              xxlnw_sende
               xxlnw_rstmin
               xxlnw_wktime
               xxlnw_shift
@@ -278,11 +293,22 @@ repeat:
          set xxlnw_on
              xxlnw_start
              xxlnw_end
+				     xxlnw_pick
+				     xxlnw_picks
+             xxlnw_picke
+             xxlnw_sends
+             xxlnw_sende
              xxlnw_rstmin
              xxlnw_shift
          go-on (F5 CTRL-D) with frame bb.
          assign xxlnw_stime = s2t(xxlnw_start)
-                xxlnw_etime = s2t(xxlnw_end).
+                xxlnw_etime = s2t(xxlnw_end)
+                xxlnw_ptime = s2t(xxlnw_pick)
+                xxlnw_pstime = s2t(xxlnw_picks)
+								xxlnw_petime = s2t(xxlnw_picke)
+								xxlnw_sstime = s2t(xxlnw_sends)
+								xxlnw_setime = s2t(xxlnw_sende)            
+                .
          if xxlnw_stime > xxlnw_etime and xxlnw_shift = "N" then do:
             assign xxlnw_etime = xxlnw_etime + con24h.
          end.
@@ -294,6 +320,11 @@ repeat:
               xxlnw_on
               xxlnw_start
               xxlnw_end
+              xxlnw_pick
+              xxlnw_picks
+              xxlnw_picke
+              xxlnw_sends
+              xxlnw_sende
               xxlnw_rstmin
               xxlnw_wktime
               xxlnw_shift

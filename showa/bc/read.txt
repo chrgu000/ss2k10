@@ -1,0 +1,17 @@
+/*how to  加菜单.......
+1.程序必须是xs开头
+2.加菜单mgmemt.p
+3.qad_wkfl加菜单权限
+        
+FOR EACH qad_wkfl NO-LOCK WHERE qad_key1 = "barcodemenu" :
+    DISPLAY qad_key1 FORMAT "x(14)" qad_key2 FORMAT "x(14)" qad_charfld[1]
+            qad_charfld[2] qad_charfld[3].
+END.
+*/
+
+/* CREATE qad_wkfl.                */
+/* ASSIGN qad_key1 = "BARCODEMENU" */
+/*        qad_key2 = ""            */
+/*        qad_charfld[1] = "*"     */
+/*        qad_charfld[2] = ""      */
+/*        qad_charfld[3] = "" .    */

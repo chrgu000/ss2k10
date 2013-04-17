@@ -1,0 +1,3 @@
+Q: 测试时Qty Scheduled有负数
+A: 由于物料产能开始日期不同有多笔资料，调整程序OK。	
+	 改FOR EACH lnd_det 为 for Last lnd_det where lnd_rel_date <= vdate.

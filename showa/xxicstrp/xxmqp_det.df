@@ -1,0 +1,46 @@
+xxgettab 15YP                        .0 主菜单                    日期: 11/07/04
+页:      1                 广州昭和汽车零部件有限公司             时间: 14:12:18
+
+
+File-Name: xxmqp_det                        Desc:                                                                          Tbl-Type: T Frozen: no
+
+Order Field-Name                       Format                         Extent Data-Type Initial                        Label                          Col-label                      Desc
+----- -------------------------------- ------------------------------ ------ --------- ------------------------------ ------------------------------ ------------------------------ ------------------------------------------------------------------------
+   10 xxmqp_date                       99/99/99                            0 date      ?                              检验日期                       ?
+   20 xxmqp_vend                       x(8)                                0 character                                供应商                         ?
+   30 xxmqp_part                       x(18)                               0 character                                零件                           ?
+   40 xxmqp_serial                     x(18)                               0 character                                批序号                         ?
+   50 xxmqp_rcp_date                   99/99/99                            0 date      ?                              收货日期                       ?
+   60 xxmqp_status                     x(1)                                0 character                                状态                           ?
+   70 xxmqp_qty                        ->,>>>,>>9.9<<<                     0 decimal   0                              数量                           ?
+   80 xxmqp_deci                       ->>,>>9.99                         10 decimal   0                              ?                              ?
+   90 xxmqp_date1                      99/99/99                            5 date      ?                              ?                              ?
+  100 xxmqp_char                       x(8)                               10 character                                ?                              ?
+  110 xxmqp_logi                       yes/no                              5 logical   no                             ?                              ?
+  120 xxmqp_int                        ->,>>>,>>9                         10 integer   0                              ?                              ?
+  130 xxmqp_receiver                   x(8)                                0 character                                收货单                         ?
+  140 xxmqp_line                       >>9                                 0 integer   0                              订单项次                       ?
+  150 xxmqp_nbr                        x(8)                                0 character                                采购单                         ?
+  160 xxmqp_loc                        x(8)                                0 character                                库位                           ?
+
+Index-Name                       Primary-idx Unique _Idxowner                        Active Index-Seq Field-Name                       Ascending
+-------------------------------- ----------- ------ -------------------------------- ------ --------- -------------------------------- ---------
+xxmqp_part_serial                            no     PUB                              yes            1 xxmqp_part                       yes
+                                                                                                    2 xxmqp_serial                     yes
+xxmqp_receiver                   yes         yes    PUB                              yes            1 xxmqp_receiver                   yes
+                                                                                                    2 xxmqp_line                       yes
+xxmqp_vend                                   no     PUB                              yes            1 xxmqp_vend                       yes
+                                                                                                    2 xxmqp_part                       yes
+                                                                                                    3 xxmqp_rcp_date                   yes
+
+
+                                报表结束
+
+
+
+
+报表选择条件:                           报表提交人:                admin
+
+           文件名称: xxmqp_det
+         数据库名称: qaddb                                     输出: printer
+

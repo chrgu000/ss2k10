@@ -20,6 +20,7 @@
 /* $Revision: 1.3.2.14 $  BY: Binoy John     DATE: 12/09/04 ECO: *P2YT* */
 
 /* SS - 090707.1 By: Roger Xiao */ /*内文无ECO标志*/
+/* ss - 110104.1 by: jack */ /* 修改返回*/
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -62,6 +63,7 @@ form with frame {&framename} {&framesize} down scroll 1.
 
 sw-main-loop:
 repeat with frame {&framename}:
+    
    clear frame {&framename} all no-pause.
    sw_frame_recid = ?.
 
@@ -78,6 +80,7 @@ repeat with frame {&framename}:
       repeat with frame {&framename}:
          /* Special processing on each rec */
          /* Perform only for the first record upon screen init*/
+
 
          if frame-line = 1 or {&logical1} = true then do:
             {&exec_cursor}
@@ -100,9 +103,11 @@ repeat with frame {&framename}:
             {&index-phrase} no-lock no-error.
 
          if not available {&buffer} then leave.
-         down 1.
+         down 1.  
       end.
    end. /* available {&buffer} */
+
+   
 
    /* exit loop if display-only flag is set */
 &IF DEFINED(display-only) <> 0 &THEN
@@ -117,6 +122,8 @@ repeat with frame {&framename}:
       down 1.
    end.
    up frame-line - 1.
+
+  
 
    sw_new = ?.
 

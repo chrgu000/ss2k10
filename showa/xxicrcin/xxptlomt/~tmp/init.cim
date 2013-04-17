@@ -1,0 +1,7220 @@
+@@batchload xxptlomt.p
+M52009-388-1-CK
+"gsa01" "XN-2-08"
+"N" "1" 1 90000
+@@end
+@@batchload xxptlomt.p
+M52009-388-1-CK
+"gsa01" "XN-3-08"
+"N" "1" 1 90000
+@@end
+@@batchload xxptlomt.p
+M5A009-250-0
+"gsa01" "XD-2-10"
+"N" "1" 1 288000
+@@end
+@@batchload xxptlomt.p
+M5A009-773-00-CK
+"gsa01" "XG-2-01"
+"N" "1" 1 20736
+@@end
+@@batchload xxptlomt.p
+M5A109-232-0
+"gsa01" "XN-2-09"
+"N" "1" 1 54000
+@@end
+@@batchload xxptlomt.p
+M5A109-773-01-CK
+"gsa01" "XG-2-04"
+"N" "1" 1 11520
+@@end
+@@batchload xxptlomt.p
+M5A109-773-01-CKG1
+"gsa01" "XH-2-04"
+"N" "1" 1 15360
+@@end
+@@batchload xxptlomt.p
+M5A109-773-01-CS
+"gsa01" "XG-2-08"
+"N" "1" 1 17280
+@@end
+@@batchload xxptlomt.p
+M5A109-773-01-CS
+"gsa01" "XG-2-09"
+"N" "1" 1 17280
+@@end
+@@batchload xxptlomt.p
+M5A129-250-0
+"gsa01" "XD-2-11"
+"N" "1" 1 288000
+@@end
+@@batchload xxptlomt.p
+M5A229-250-0
+"gsa01" "XD-2-04"
+"N" "1" 1 120000
+@@end
+@@batchload xxptlomt.p
+M5C059-250-0-JP
+"gsa01" "XD-2-13"
+"N" "1" 1 288000
+@@end
+@@batchload xxptlomt.p
+M5C109-246-Z-CK
+"gsa01" "XN-1-16"
+"Y" "1" 1 8820
+@@end
+@@batchload xxptlomt.p
+M5C109-246-Z-CK
+"gsa01" "XN-2-16"
+"Y" "1" 1 8820
+@@end
+@@batchload xxptlomt.p
+M5C109-246-Z-CK
+"gsa01" "XN-3-16"
+"Y" "1" 1 8820
+@@end
+@@batchload xxptlomt.p
+M5C109-246-Z-CK
+"gsa01" "XN-4-16"
+"Y" "1" 1 8820
+@@end
+@@batchload xxptlomt.p
+M5C159-250-0-JP
+"gsa01" "XD-2-12"
+"N" "1" 1 288000
+@@end
+@@batchload xxptlomt.p
+M62019-773-2
+"gsa01" "XG-2-10"
+"N" "1" 1 25200
+@@end
+@@batchload xxptlomt.p
+M62019-773-2
+"gsa01" "XG-2-11"
+"N" "1" 1 25200
+@@end
+@@batchload xxptlomt.p
+M62019-773-2
+"gsa01" "XG-2-12"
+"N" "1" 1 25200
+@@end
+@@batchload xxptlomt.p
+M6202G-773-20-CH
+"gsa01" "XG-2-05"
+"N" "1" 1 8640
+@@end
+@@batchload xxptlomt.p
+M6202G-773-3
+"gsa01" "XD-3-04"
+"N" "1" 1 6912
+@@end
+@@batchload xxptlomt.p
+M6202G-773-4-CH
+"gsa01" "XG-2-03"
+"N" "1" 1 11520
+@@end
+@@batchload xxptlomt.p
+M62049-275-0-CK
+"gsa01" "XN-2-06"
+"Y" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+M62049-275-0-CK
+"gsa01" "XN-3-06"
+"Y" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+M63009-388-0
+"gsa01" "XN-2-10"
+"N" "1" 1 32000
+@@end
+@@batchload xxptlomt.p
+M63009-388-0
+"gsa01" "XN-2-11"
+"N" "1" 1 90000
+@@end
+@@batchload xxptlomt.p
+M63A10-773-4
+"gsa01" "XD-2-06"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63A10-773-4
+"gsa01" "XD-3-06"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63S08-773-2
+"gsa01" "XD-2-09"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63S08-773-2
+"gsa01" "XD-3-09"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63S08-773-2
+"gsa01" "XD-4-09"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63S10-773-2
+"gsa01" "XE-2-11"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M63S10-773-2
+"gsa01" "XE-3-11"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+M6A009-351-0-LX
+"gsa01" "XN-2-04"
+"N" "1" 1 27000
+@@end
+@@batchload xxptlomt.p
+M6A009-351-0-LX
+"gsa01" "XN-3-04"
+"N" "1" 1 27000
+@@end
+@@batchload xxptlomt.p
+M6A009-351-0-LX
+"gsa01" "XN-4-04"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+M6A149-275-1-CK
+"gsa01" "XN-2-05"
+"Y" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+M6A149-275-1-CK
+"gsa01" "XN-3-05"
+"Y" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+M6A149-275-1-CK
+"gsa01" "XN-4-05"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+M6A209-273-1-CK
+"gsa01" "XN-1-17"
+"Y" "1" 1 6720
+@@end
+@@batchload xxptlomt.p
+M6A209-273-1-CK
+"gsa01" "XN-2-17"
+"Y" "1" 1 6720
+@@end
+@@batchload xxptlomt.p
+M6A209-273-1-CK
+"gsa01" "XN-3-17"
+"Y" "1" 1 6720
+@@end
+@@batchload xxptlomt.p
+M6A209-273-1-CK
+"gsa01" "XN-4-17"
+"Y" "1" 1 6720
+@@end
+@@batchload xxptlomt.p
+M6A259-320-1
+"gsa01" "XN-2-02"
+"Y" "1" 1 18000
+@@end
+@@batchload xxptlomt.p
+M6A259-320-1
+"gsa01" "XN-3-02"
+"N" "1" 1 18000
+@@end
+@@batchload xxptlomt.p
+M6A259-320-1
+"gsa01" "XN-4-02"
+"N" "1" 1 18000
+@@end
+@@batchload xxptlomt.p
+M72009-446-2
+"gsa01" "XC-2-09"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+M72009-446-20-CKG1
+"gsa01" "XH-2-02"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+M73049-407-20-CK
+"gsa01" "XD-5-12"
+"N" "1" 1 1600
+@@end
+@@batchload xxptlomt.p
+M73049-407-20-CKG1
+"gsa01" "XH-2-07"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MF7511-388-1
+"gsa01" "XN-2-12"
+"N" "1" 1 96000
+@@end
+@@batchload xxptlomt.p
+MFXA03-341-0-JP
+"gsa01" "XAC-2-02"
+"Y" "1" 1 32000
+@@end
+@@batchload xxptlomt.p
+MHP727-555-0-JP
+"gsa01" "XAA-2-13"
+"N" "2" 1 41600
+@@end
+@@batchload xxptlomt.p
+MHRFE7-N9B-0-CK-HD
+"gsa01" "XB-2-10"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHRFE7-N9B-0-CK3CR
+"gsa01" "XB-1-03"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHS0A2-627-0
+"gsa01" "XK-6-06"
+"Y" "1" 1 1560
+@@end
+@@batchload xxptlomt.p
+MHS0A2-627-0
+"gsa01" "XK-6-07"
+"Y" "1" 1 1560
+@@end
+@@batchload xxptlomt.p
+MHS0A2-627-0
+"gsa01" "XK-6-08"
+"Y" "1" 1 1560
+@@end
+@@batchload xxptlomt.p
+MHS0A2-627-0
+"gsa01" "XK-6-09"
+"Y" "1" 1 1560
+@@end
+@@batchload xxptlomt.p
+MHS0AX-340-01G1
+"gsa01" "XT-2-07"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHS0L1-300-00-SZ
+"gsa01" "XC-1-11"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHS0L1-408-00-CK
+"gsa01" "XF-4-02"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHS0L1-408-10-CK
+"gsa01" "XE-5-01"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHS0L1-408-10-CK
+"gsa01" "XE-6-01"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHS0L1-717-01-CK
+"gsa01" "XH-2-06"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS0L1-718-01-CK
+"gsa01" "XH-2-08"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS0L1-720-00-CK
+"gsa01" "XE-5-08"
+"Y" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHS0L1-720-00-CK
+"gsa01" "XE-5-09"
+"Y" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHS0L1-720-00-CK
+"gsa01" "XE-5-10"
+"Y" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHS0L1-720-00-CK
+"gsa01" "XE-5-11"
+"Y" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHS0L1-720-00-CK
+"gsa01" "XE-5-12"
+"Y" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHS0L1-785-00-CK
+"gsa01" "XH-2-09"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS0L1-786-00-CK
+"gsa01" "XH-2-12"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS0LX-266-00
+"gsa01" "XC-2-11"
+"Y" "1" 1 1048
+@@end
+@@batchload xxptlomt.p
+MHS0LX-266-00
+"gsa01" "XC-2-12"
+"Y" "1" 1 1048
+@@end
+@@batchload xxptlomt.p
+MHS0LX-266-00
+"gsa01" "XC-2-13"
+"Y" "1" 1 1048
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-01"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-02"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-03"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-04"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-05"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-06"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-07"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-08"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-09"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-727-00-CD
+"gsa01" "XAD-1-10"
+"Y" "1" 1 750
+@@end
+@@batchload xxptlomt.p
+MHS0LX-904-10
+"gsa01" "XS-1-06"
+"N" "1" 1 26880
+@@end
+@@batchload xxptlomt.p
+MHS0LX-993-10
+"gsa01" "XAC-4-11"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHS0LX-993-10
+"gsa01" "XAC-4-12"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHS0LX-993-10
+"gsa01" "XAC-4-13"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHS0LX-993-10
+"gsa01" "XAC-4-14"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHS0LX-G79-10
+"gsa01" "XAC-4-08"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHS0LX-G79-10
+"gsa01" "XAC-4-09"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHS0LX-G79-10
+"gsa01" "XAC-4-10"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-01
+"gsa01" "XBC-3-01"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-01
+"gsa01" "XBC-3-02"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-01
+"gsa01" "XBC-3-03"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-01
+"gsa01" "XBC-3-04"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-11
+"gsa01" "XBC-3-05"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-11
+"gsa01" "XBC-3-06"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-11
+"gsa01" "XBC-3-07"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhs0lx-n60-11
+"gsa01" "XBC-3-08"
+"y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NA3-10
+"gsa01" "XAC-4-01"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NA3-10
+"gsa01" "XAC-4-02"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NA3-10
+"gsa01" "XAC-4-03"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NA3-10
+"gsa01" "XAC-4-04"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NA3-10
+"gsa01" "XT-1-06"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NCB-00
+"gsa01" "XAC-4-05"
+"N" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NCB-00
+"gsa01" "XAC-4-06"
+"N" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHS0LX-NCB-00
+"gsa01" "XAC-4-07"
+"N" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHS0LX-P01-10
+"gsa01" "XAI-4-01"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHS0LX-P01-10
+"gsa01" "XAI-4-02"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHS0LX-P01-10
+"gsa01" "XAI-4-03"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHS0LX-P01-50
+"gsa01" "XAH-4-01"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHS0LX-P01-50
+"gsa01" "XAH-4-02"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHS0LX-WC4-00-CD
+"gsa01" "XAD-1-11"
+"Y" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS0LX-WC4-00-CD
+"gsa01" "XAD-1-12"
+"Y" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-06"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-07"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-08"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-09"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-10"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-11"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-12"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-13"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-14"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06
+"gsa01" "XBD-3-15"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06G1
+"gsa01" "XBC-4-11"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06G1
+"gsa01" "XBC-4-12"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06G1
+"gsa01" "XBC-4-13"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06G1
+"gsa01" "XBC-4-14"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-669-06G1
+"gsa01" "XBC-4-15"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS2AX-N5K-0-CK
+"gsa01" "XAA-2-01"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHS2AX-N5K-0-CK
+"gsa01" "XAA-3-01"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHS2X1-388-0
+"gsa01" "XN-2-13"
+"N" "1" 1 32000
+@@end
+@@batchload xxptlomt.p
+MHS303-341-01-CK
+"gsa01" "XAC-2-12"
+"N" "1" 1 5000
+@@end
+@@batchload xxptlomt.p
+MHS3N1-783-0
+"gsa01" "XK-5-17"
+"Y" "1" 1 3360
+@@end
+@@batchload xxptlomt.p
+MHS3N1-783-0
+"gsa01" "XK-5-18"
+"Y" "1" 1 3360
+@@end
+@@batchload xxptlomt.p
+MHS3N1-784-0
+"gsa01" "XK-5-19"
+"Y" "1" 1 3360
+@@end
+@@batchload xxptlomt.p
+MHS3N1-784-0
+"gsa01" "XK-5-20"
+"Y" "1" 1 3360
+@@end
+@@batchload xxptlomt.p
+MHS3N3-320-0-CK
+"gsa01" "XBC-1-03"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHS3N3-320-0-CK
+"gsa01" "XBC-1-04"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHS3N3-N6G-0-CK
+"gsa01" "XBC-1-05"
+"N" "1" 1 18900
+@@end
+@@batchload xxptlomt.p
+MHS3YX-10A-0
+"gsa01" "XAB-2-11"
+"N" "2" 1 5760
+@@end
+@@batchload xxptlomt.p
+MHS3YX-10A-0
+"gsa01" "XAB-3-09"
+"N" "2" 1 5760
+@@end
+@@batchload xxptlomt.p
+MHS3YX-10A-0
+"gsa01" "XAB-3-10"
+"N" "2" 1 5760
+@@end
+@@batchload xxptlomt.p
+MHS3YX-10A-0
+"gsa01" "XAB-3-11"
+"N" "2" 1 5760
+@@end
+@@batchload xxptlomt.p
+MHS3YX-S66-0
+"gsa01" "XS-2-06"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHS503-410-0-CK-CY
+"gsa01" "XB-1-11"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHS503-410-0-CK3CR
+"gsa01" "XAB-2-14"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHS503-410-0-CK3CR
+"gsa01" "XAB-3-14"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHS503-410-0-CK3Cr
+"gsa01" "XB-1-05"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHS5A3-55E-0
+"gsa01" "XAA-2-08"
+"N" "2" 1 48000
+@@end
+@@batchload xxptlomt.p
+MHS5AX-341-0-CK
+"gsa01" "XAB-2-09"
+"N" "1" 1 20000
+@@end
+@@batchload xxptlomt.p
+MHS5AX-K80-0-ZF
+"gsa01" "XS-1-06"
+"N" "1" 1 30000
+@@end
+@@batchload xxptlomt.p
+MHS5AX-K80-0-ZF
+"gsa01" "XS-3-06"
+"N" "1" 1 24000
+@@end
+@@batchload xxptlomt.p
+MHS5AX-K80-0-ZF
+"gsa01" "XS-4-06"
+"N" "1" 1 24000
+@@end
+@@batchload xxptlomt.p
+MHS5H2-446-0-CK
+"gsa01" "XF-2-04"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHS5H2-446-0-SSM
+"gsa01" "XD-6-05"
+"N" "1" 1 8000
+@@end
+@@batchload xxptlomt.p
+MHS7A2-435-0
+"gsa01" "XD-6-04"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHS7A2-435-0-CK
+"gsa01" "XF-2-07"
+"N" "1" 1 5400
+@@end
+@@batchload xxptlomt.p
+MHS7A2-435-0-CK
+"gsa01" "XF-3-07"
+"n" "1" 1 5400
+@@end
+@@batchload xxptlomt.p
+MHS7A3-R48-04-CK
+"gsa01" "XAC-2-03"
+"Y" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHS841-407-0
+"gsa01" "XD-6-12"
+"N" "1" 1 1600
+@@end
+@@batchload xxptlomt.p
+MHS841-408-0
+"gsa01" "XD-6-12"
+"N" "1" 1 1600
+@@end
+@@batchload xxptlomt.p
+MHS841-578-0-3CrLX
+"gsa01" "XB-1-01"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHS841-578-0-SZ-LX
+"gsa01" "XB-1-10"
+"N" "1" 1 32400
+@@end
+@@batchload xxptlomt.p
+MHS841-627-0
+"gsa01" "XK-5-15"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS841-627-0
+"gsa01" "XK-5-16"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHS841-783-0
+"gsa01" "XK-6-03"
+"Y" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHS841-783-0
+"gsa01" "XK-6-04"
+"Y" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHS841-784-0
+"gsa01" "XK-6-01"
+"Y" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHS841-784-0
+"gsa01" "XK-6-02"
+"Y" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHS842-435-0
+"gsa01" "XC-2-10"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHS842-435-0-JP
+"gsa01" "XC-2-10"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-14"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-15"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-16"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-17"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-18"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-19"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS842-761-0
+"gsa01" "XK-6-20"
+"Y" "1" 1 2040
+@@end
+@@batchload xxptlomt.p
+MHS843-240-0-CK
+"gsa01" "XR-1-02"
+"N" "1" 1 18000
+@@end
+@@batchload xxptlomt.p
+MHS843-341-0-CK
+"gsa01" "XBD-1-03"
+"N" "1" 1 5000
+@@end
+@@batchload xxptlomt.p
+MHS843-410-0-CK-LX
+"gsa01" "XB-1-11"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHS843-410-0-CK3CR
+"gsa01" "XB-1-05"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHS843-551-0
+"gsa01" "XAC-2-14"
+"N" "1" 1 24000
+@@end
+@@batchload xxptlomt.p
+MHS843-N5F-1
+"gsa01" "XAC-2-12"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHS843-N5K-0-CK
+"gsa01" "XBC-1-01"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHS843-N5K-0-CK
+"gsa01" "XBC-1-02"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHS843-N6C-0
+"gsa01" "XBD-1-04"
+"N" "1" 1 5000
+@@end
+@@batchload xxptlomt.p
+MHS843-N6G-0-CK
+"gsa01" "XBD-1-03"
+"N" "1" 1 6300
+@@end
+@@batchload xxptlomt.p
+MHS9H2-888-0
+"gsa01" "XD-6-06"
+"N" "1" 1 4704
+@@end
+@@batchload xxptlomt.p
+MHS9H2-888-0-CK
+"gsa01" "XF-2-06"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHS9H2-888-0-CK
+"gsa01" "XF-3-06"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-4-01"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-01"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-02"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-03"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-04"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-05"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-06"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-746-0-CK
+"gsa01" "XN-5-07"
+"Y" "1" 1 480
+@@end
+@@batchload xxptlomt.p
+MHSAA1-785-0
+"gsa01" "XC-2-04"
+"N" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSAA1-785-1
+"gsa01" "XC-2-08"
+"N" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSAA1-786-0
+"gsa01" "XC-2-03"
+"N" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSAA1-786-1
+"gsa01" "XC-2-07"
+"N" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-0-JP
+"gsa01" "XC-2-02"
+"N" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-1-CK
+"gsa01" "XE-2-06"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-1-CK
+"gsa01" "XE-3-06"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-1-CK
+"gsa01" "XE-3-07"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-1-CK
+"gsa01" "XE-4-06"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-11-CHG1
+"gsa01" "XH-2-10"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAA2-435-11-CHG1
+"gsa01" "XH-2-11"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHSAEX-H49-14G1
+"gsa01" "XT-2-10"
+"N" "1" 1 5000
+@@end
+@@batchload xxptlomt.p
+MHSB01-447-0-MK3Cr
+"gsa01" "XB-1-02"
+"Y" "1" 1 30400
+@@end
+@@batchload xxptlomt.p
+MHSB01-447-0-SZ
+"gsa01" "XB-2-12"
+"Y" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSB01-447-0-SZ
+"gsa01" "XB-3-12"
+"Y" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSB01-447-0-SZ
+"gsa01" "XB-4-11"
+"Y" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSB01-447-0-SZ
+"gsa01" "XB-4-12"
+"Y" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSB02-552-0
+"gsa01" "XD-2-04"
+"N" "1" 1 60000
+@@end
+@@batchload xxptlomt.p
+MHSB22-447-0
+"gsa01" "XB-2-11"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSB22-447-0-CR3+
+"gsa01" "XN-2-01"
+"N" "1" 1 20520
+@@end
+@@batchload xxptlomt.p
+MHSB22-447-0-CR3+
+"gsa01" "XN-3-01"
+"N" "1" 1 20520
+@@end
+@@batchload xxptlomt.p
+MHSCC1-408-0
+"gsa01" "XD-5-12"
+"N" "1" 1 1600
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-0
+"gsa01" "XD-6-10"
+"N" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-02"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-03"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-04"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-05"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-06"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCC1-761-00-CK
+"gsa01" "XE-5-07"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHSCCX-517-01G1
+"gsa01" "XT-2-09"
+"N" "1" 1 5760
+@@end
+@@batchload xxptlomt.p
+MHSCCX-845-0
+"gsa01" "XT-2-12"
+"N" "2" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSCCX-K80-01G1
+"gsa01" "XT-2-22"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSCCX-K80-12G1
+"gsa01" "XT-2-23"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHSCCX-N6F-0-CK
+"gsa01" "XAB-2-02"
+"N" "1" 1 9000
+@@end
+@@batchload xxptlomt.p
+MHSD41-446-0
+"gsa01" "XF-2-01"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSD41-446-0
+"gsa01" "XF-3-01"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSDA1-794-0
+"gsa01" "XB-3-03"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHSDA1-794-0
+"gsa01" "XB-3-04"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHSDA3-320-3
+"gsa01" "XBD-1-01"
+"N" "2" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHSDA3-320-3
+"gsa01" "XBD-1-02"
+"N" "2" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHSDA3-727-1-FW
+"gsa01" "XAA-1-13"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSDA3-727-1-FW
+"gsa01" "XAA-1-14"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSDA3-N5Y-01
+"gsa01" "XBD-1-04"
+"N" "1" 1 20000
+@@end
+@@batchload xxptlomt.p
+MHSDA3-R48-04-CK
+"gsa01" "XAB-2-07"
+"N" "1" 1 32000
+@@end
+@@batchload xxptlomt.p
+MHSDE1-300-0-CT
+"gsa01" "XF-1-01"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSDE1-719-0
+"gsa01" "XF-2-02"
+"N" "1" 1 4500
+@@end
+@@batchload xxptlomt.p
+MHSDE1-719-0
+"gsa01" "XF-3-02"
+"N" "1" 1 4500
+@@end
+@@batchload xxptlomt.p
+MHSDE2-300-0-CT
+"gsa01" "XF-1-02"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSDE2-761-0
+"gsa01" "XG-6-13"
+"N" "1" 1 1280
+@@end
+@@batchload xxptlomt.p
+MHSDG1-265-0
+"gsa01" "XD-5-13"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSDG1-265-0
+"gsa01" "XD-6-13"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSDG2-265-00-CK
+"gsa01" "XG-6-11"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSDG2-265-00-CK
+"gsa01" "XG-6-12"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSE01-138-0-WE
+"gsa01" "XB-2-01"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE01-407-0
+"gsa01" "XD-3-11"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-138-00
+"gsa01" "XB-1-06"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-407-0
+"gsa01" "XC-2-01"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-407-0-LX
+"gsa01" "XF-2-12"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSE02-407-0-LX
+"gsa01" "XF-3-12"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSE02-407-0-LX
+"gsa01" "XF-4-12"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSE02-408-0
+"gsa01" "XF-5-03"
+"Y" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-408-01-CK
+"gsa01" "XF-4-03"
+"Y" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-730-0-CK
+"gsa01" "XN-1-19"
+"Y" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSE02-730-0-CK
+"gsa01" "XN-2-19"
+"Y" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSE02-730-0-CK
+"gsa01" "XN-3-19"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSE02-732-0-DD3CR
+"gsa01" "XB-1-04"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-732-0-DD3CR
+"gsa01" "XB-1-08"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSE02-732-11-89
+"gsa01" "XB-1-13"
+"Y" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHSE02-732-11-89
+"gsa01" "XB-2-13"
+"Y" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-CK2SZ
+"gsa01" "XC-1-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-CK2SZ
+"gsa01" "XC-1-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-CK2SZ
+"gsa01" "XC-1-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-CK2SZ
+"gsa01" "XC-1-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-CK2SZ
+"gsa01" "XC-1-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-SZ
+"gsa01" "XD-4-11"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSEL1-300-0-SZ
+"gsa01" "XD-5-11"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSEL1-717-0
+"gsa01" "XC-2-05"
+"N" "1" 1 8000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-718-0
+"gsa01" "XC-2-06"
+"N" "1" 1 8000
+@@end
+@@batchload xxptlomt.p
+MHSEL1-720-0
+"gsa01" "XD-5-10"
+"N" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEL2-446-0
+"gsa01" "XF-2-05"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSEL2-446-0
+"gsa01" "XF-4-05"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSEL2-446-00-CKG1
+"gsa01" "XH-2-01"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHSELX-520-12-MNG1
+"gsa01" "XB-2-10"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHSELX-520-12G1
+"gsa01" "XT-2-19"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHSELX-555-0
+"gsa01" "XT-2-15"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSELX-669-0
+"gsa01" "XBD-1-13"
+"N" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSELX-669-0
+"gsa01" "XBD-1-14"
+"N" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSELX-727-10-CD
+"gsa01" "XAM-3-05"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+MHSELX-727-10-CD
+"gsa01" "XAM-3-06"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+MHSELX-727-10-CD
+"gsa01" "XAM-4-06"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+MHSELX-N34-0
+"gsa01" "XBD-1-15"
+"N" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhselx-n60-0-ck
+"gsa01" "XBE-1-01"
+"n" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+mhselx-n60-1-ck
+"gsa01" "XBE-1-02"
+"n" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-00-FG
+"gsa01" "XAM-1-02"
+"Y" "1" 2 2000
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-00-FG
+"gsa01" "XAM-2-02"
+"Y" "1" 2 2000
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-00-FG
+"gsa01" "XAM-3-02"
+"Y" "1" 2 2000
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-00-FG
+"gsa01" "XAM-4-02"
+"Y" "1" 2 2000
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-00-FG
+"gsa01" "XAM-5-02"
+"Y" "1" 2 2000
+@@end
+@@batchload xxptlomt.p
+MHSELX-N6B-1
+"gsa01" "XAM-5-06"
+"N" "1" 1 3240
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-0
+"gsa01" "XBD-1-05"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-0
+"gsa01" "XBD-1-06"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-0
+"gsa01" "XBD-1-07"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-0
+"gsa01" "XBD-1-08"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-1
+"gsa01" "XBD-1-09"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-1
+"gsa01" "XBD-1-10"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-1
+"gsa01" "XBD-1-11"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-NE0-1
+"gsa01" "XBD-1-12"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSELX-WAG-0
+"gsa01" "XAM-5-05"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHSELX-WC4-0-SZ
+"gsa01" "XAM-4-05"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHSEN1-300-0-SZ
+"gsa01" "XD-3-13"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-300-0-SZ
+"gsa01" "XD-4-13"
+"N" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-01"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-02"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-03"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-04"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-05"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-415-0
+"gsa01" "XAG-4-06"
+"Y" "1" 7 600
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-01"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-02"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-03"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-04"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-05"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-06"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-07"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-CT
+"gsa01" "XD-5-08"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-JP
+"gsa01" "XD-5-09"
+"N" "1" 1 1080
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-00-JP
+"gsa01" "XD-6-09"
+"N" "1" 1 1080
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-10-CT
+"gsa01" "XG-3-10"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-10-CT
+"gsa01" "XG-3-11"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-10-JP
+"gsa01" "XD-3-12"
+"N" "1" 1 1080
+@@end
+@@batchload xxptlomt.p
+MHSEN1-714-10-JP
+"gsa01" "XD-4-12"
+"N" "1" 1 1080
+@@end
+@@batchload xxptlomt.p
+MHSEN2-300-1-SZ-BT
+"gsa01" "XC-1-12"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSEN2-300-1-SZ-BT
+"gsa01" "XC-1-13"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSEN2-300-2-SZ
+"gsa01" "XC-1-05"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSEN2-447-0-SZ
+"gsa01" "XB-3-11"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-1
+"gsa01" "XC-6-01"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-1
+"gsa01" "XC-6-02"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-01"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-02"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-03"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-04"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-05"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-06"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-07"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-11-CT
+"gsa01" "XD-4-08"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-2-CK2CT
+"gsa01" "XG-3-12"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-2-CK2CT
+"gsa01" "XG-3-13"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-20-CT
+"gsa01" "XC-4-06"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSEN2-714-20-CT
+"gsa01" "XC-4-07"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSENX-340-00-CKG1
+"gsa01" "XT-2-07"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-340-10-CKG1
+"gsa01" "XT-2-07"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-340-20-CKG1
+"gsa01" "XT-2-08"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-341-00-CKG1
+"gsa01" "XT-2-08"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-342-00-CKG1
+"gsa01" "XT-2-08"
+"N" "1" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-555-0
+"gsa01" "XT-2-15"
+"N" "2" 1 10000
+@@end
+@@batchload xxptlomt.p
+MHSENX-H87-50G1
+"gsa01" "XAB-2-02"
+"N" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHSENX-N58-00-CKG1
+"gsa01" "XT-2-11"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHSENX-N5B-00-CKG1
+"gsa01" "XT-2-18"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-02-CK
+"gsa01" "XBC-2-11"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-02-CK
+"gsa01" "XBC-2-12"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-02-CK
+"gsa01" "XBC-2-13"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-02-CK
+"gsa01" "XBC-2-14"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-02-CK
+"gsa01" "XBC-2-15"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-01"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-02"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-03"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-04"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-05"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-06"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-07"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-08"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-09"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-10"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-11"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-12"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-13"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-14"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSENX-W48-03-CKG1
+"gsa01" "XBE-2-15"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHSFA1-517-0-CK
+"gsa01" "XN-1-20"
+"Y" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSFA1-517-0-CK
+"gsa01" "XN-2-20"
+"Y" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSFA1-517-0-CK
+"gsa01" "XN-3-20"
+"Y" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSFA1-517-0-CK
+"gsa01" "XN-5-19"
+"Y" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSFA1-517-0-CK
+"gsa01" "XN-5-20"
+"Y" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHSFAX-K80-0
+"gsa01" "XAA-2-03"
+"N" "1" 1 15120
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-265-0
+"gsa01" "XD-6-11"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-03"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-04"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-05"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-06"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-07"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-08"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ1-300-0-SZ
+"gsa01" "XF-1-09"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ2-300-1A-SZ
+"gsa01" "XG-1-13"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSFJ2-714-0
+"gsa01" "XD-6-01"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSFJ2-714-10-CK
+"gsa01" "XC-4-08"
+"N" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHSFJ2-761-0
+"gsa01" "XD-6-02"
+"N" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHSFJ2-761-0
+"gsa01" "XD-6-03"
+"N" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHSG01-398-00-YW
+"gsa01" "XB-3-09"
+"N" "1" 1 60000
+@@end
+@@batchload xxptlomt.p
+MHSH31-570-1-ZX
+"gsa01" "XB-2-03"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHSH31-732-0-SZ
+"gsa01" "XB-1-09"
+"N" "1" 1 12600
+@@end
+@@batchload xxptlomt.p
+MHSJF2-559-10
+"gsa01" "XK-6-05"
+"N" "1" 1 50000
+@@end
+@@batchload xxptlomt.p
+MHSJK3-NCB-01-CK
+"gsa01" "XAC-2-04"
+"N" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHSL0X-551-0
+"gsa01" "XT-2-21"
+"N" "2" 1 18000
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-01"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-02"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-03"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-04"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-05"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-06"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-07"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-08"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-09"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-10"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-11"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLA1-759-0-CK
+"gsa01" "XH-6-12"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-01"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-02"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-03"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-04"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-05"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-265-01-CT
+"gsa01" "XH-3-06"
+"Y" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHSLG1-407-0-CK
+"gsa01" "XF-2-08"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSLG1-719-0-CK
+"gsa01" "XF-2-03"
+"N" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSLG1-719-0-CK
+"gsa01" "XF-3-03"
+"N" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSLG1-761-0-CK
+"gsa01" "XF-4-01"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG1-761-0-CK
+"gsa01" "XF-5-01"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG1-761-0-CK
+"gsa01" "XF-5-02"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-07"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-08"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-09"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-10"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-11"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-265-01-CT
+"gsa01" "XH-3-12"
+"Y" "1" 1 1024
+@@end
+@@batchload xxptlomt.p
+MHSLG2-300-0-SZ
+"gsa01" "XF-1-11"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSLG2-300-0-SZ
+"gsa01" "XF-1-12"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSLG2-723-0-CK
+"gsa01" "XF-3-04"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHSLG2-761-0-CK
+"gsa01" "XF-4-04"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG2-761-0-CK
+"gsa01" "XF-5-04"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-01"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-02"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-03"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-04"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-05"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-06"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-07"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-08"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-09"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-10"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-11"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-12"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-13"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-125-0-JP
+"gsa01" "XAC-3-14"
+"Y" "1" 1 384
+@@end
+@@batchload xxptlomt.p
+MHSLG3-240-1
+"gsa01" "XR-1-05"
+"N" "1" 1 18000
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-2-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-727-1-WF
+"gsa01" "XAJ-3-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-1-01"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-1-02"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-2-01"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-2-02"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-3-01"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N52-1-CK
+"gsa01" "XAK-3-02"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N60-01-CK
+"gsa01" "XBC-1-12"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N60-01-CK
+"gsa01" "XBC-1-13"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N60-01-CK
+"gsa01" "XBC-1-14"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N60-01-CK
+"gsa01" "XBC-1-15"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N60-01-CK
+"gsa01" "XT-1-05"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N62-1-CK
+"gsa01" "XAC-2-08"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N62-1-CK
+"gsa01" "XAC-2-09"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N63-1-CK
+"gsa01" "XAC-2-10"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N63-1-CK
+"gsa01" "XAC-2-11"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHSLG3-N6E-0-CK
+"gsa01" "XR-1-06"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-01"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-02"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-03"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-04"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-05"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-06"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-07"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-08"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-09"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-10"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-11"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-12"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-13"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-NE0-0-JP
+"gsa01" "XAC-5-14"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHSLG3-P01-1-GZ
+"gsa01" "XAG-2-05"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHSLJ2-794-0-CK
+"gsa01" "XN-1-10"
+"Y" "1" 1 4860
+@@end
+@@batchload xxptlomt.p
+MHSLJ2-794-0-CK
+"gsa01" "XN-1-11"
+"Y" "1" 1 4860
+@@end
+@@batchload xxptlomt.p
+MHSLJ2-794-0-CK
+"gsa01" "XN-1-12"
+"Y" "1" 1 4860
+@@end
+@@batchload xxptlomt.p
+MHSLJ2-794-0-CK
+"gsa01" "XN-1-13"
+"Y" "1" 1 4860
+@@end
+@@batchload xxptlomt.p
+MHSM41-138-01-CK
+"gsa01" "XB-2-04"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSM41-408-0
+"gsa01" "XF-6-10"
+"Y" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSM41-408-0
+"gsa01" "XF-6-11"
+"Y" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSM41-408-0
+"gsa01" "XF-6-12"
+"Y" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSMA2-408-0-CK
+"gsa01" "XF-3-08"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHSNA1-138-0-DD-CK
+"gsa01" "XB-4-06"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-138-0-DD-CK
+"gsa01" "XB-4-07"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-138-0-DD-CK
+"gsa01" "XB-4-08"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-138-0-DD-CK
+"gsa01" "XB-4-09"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-138-0-DD-CK
+"gsa01" "XB-4-10"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-407-0-CK
+"gsa01" "XE-2-01"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHSNA1-407-0-CK
+"gsa01" "XE-3-01"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSNA2-794-0-TZ-CK
+"gsa01" "XB-3-01"
+"Y" "1" 1 6600
+@@end
+@@batchload xxptlomt.p
+MHSNA2-794-0-TZ-CK
+"gsa01" "XB-3-02"
+"Y" "1" 1 6600
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-01"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-02"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-03"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-04"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-05"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-06"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-07"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-08"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-09"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-10"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-11"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-12"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-13"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSNA3-727-10 WF
+"gsa01" "XAB-1-14"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSTK1-138-1-3CR
+"gsa01" "XB-4-01"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSTK1-138-1-3CR
+"gsa01" "XB-4-02"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSTK1-138-1-3CR
+"gsa01" "XB-4-03"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSTK1-138-1-3CR
+"gsa01" "XB-4-04"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSTK1-138-1-3CR
+"gsa01" "XB-4-05"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MHSTK1-407-1
+"gsa01" "XF-2-11"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSTK1-407-1
+"gsa01" "XF-3-11"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-06"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-07"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-08"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-09"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-10"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK1-408-1
+"gsa01" "XF-4-11"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHSTK3-N5K-1-CK
+"gsa01" "XAC-2-07"
+"N" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-12"
+"y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-13"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-14"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-15"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-16"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-17"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-18"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-19"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSW51-758-0-JP
+"gsa01" "XN-6-20"
+"Y" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-01"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-02"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-03"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-04"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-05"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-11"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-300-0-SZ
+"gsa01" "XH-1-12"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-01"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-02"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-03"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-04"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-05"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA1-626-0-TZ-CK
+"gsa01" "XK-4-06"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHSWA2-408-0-CK-CY
+"gsa01" "XB-3-13"
+"Y" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSWA2-408-0-CK-CY
+"gsa01" "XB-4-13"
+"Y" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHSWA2-408-0-CK3CR
+"gsa01" "XB-2-02"
+"N" "1" 1 8000
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-01"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-02"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-03"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-04"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-05"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-06"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-07"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-08"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-09"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-10"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-11"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-12"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-13"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA2-627-0-TZ
+"gsa01" "XK-5-14"
+"Y" "1" 1 560
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-01"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-02"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-03"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-04"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-05"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-06"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-07"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-08"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-09"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-10"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-11"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSWA3-727-0-FW
+"gsa01" "XAA-1-12"
+"Y" "1" 2 800
+@@end
+@@batchload xxptlomt.p
+MHSX02-627-0
+"gsa01" "XK-6-10"
+"Y" "1" 1 2160
+@@end
+@@batchload xxptlomt.p
+MHSX02-627-0
+"gsa01" "XK-6-11"
+"Y" "1" 1 2160
+@@end
+@@batchload xxptlomt.p
+MHSX02-627-0
+"gsa01" "XK-6-12"
+"Y" "1" 1 2160
+@@end
+@@batchload xxptlomt.p
+MHSX02-627-0
+"gsa01" "XK-6-13"
+"Y" "1" 1 2160
+@@end
+@@batchload xxptlomt.p
+MHSZ53-320-02-CK
+"gsa01" "XAC-2-06"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHSZ53-N6G-02-CK
+"gsa01" "XAC-2-07"
+"N" "1" 1 8640
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-10"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-11"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-12"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-13"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-14"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-15"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-16"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-17"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-18"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-19"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-627-0-CK
+"gsa01" "XL-1-20"
+"Y" "1" 1 672
+@@end
+@@batchload xxptlomt.p
+MHTA01-747-0-CK
+"gsa01" "XB-2-05"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTA01-747-0-CK
+"gsa01" "XB-2-06"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTA01-748-0-CK
+"gsa01" "XB-2-07"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTA01-748-0-CK
+"gsa01" "XB-2-08"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-05"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-11"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-435-0-CK-LX
+"gsa01" "XF-5-12"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTA02-552-0-JP
+"gsa01" "XD-3-05"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-01"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-02"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-03"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-04"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-05"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-06"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0
+"gsa01" "XL-1-07"
+"Y" "1" 1 864
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-01"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-02"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-03"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-04"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-05"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-06"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-07"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-08"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-09"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-10"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-11"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-12"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-5-13"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-01"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-02"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-03"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-04"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-05"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-06"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-07"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-08"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-09"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-10"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-11"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-12"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-668-0-JPBP
+"gsa01" "XB-6-13"
+"Y" "1" 1 1680
+@@end
+@@batchload xxptlomt.p
+MHTA02-794-0-CK
+"gsa01" "XB-3-05"
+"Y" "1" 1 5400
+@@end
+@@batchload xxptlomt.p
+MHTA02-794-0-CK
+"gsa01" "XB-3-06"
+"Y" "1" 1 5400
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-01"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-02"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-03"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-04"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-05"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAG-1-06"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-1-01"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-1-02"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-1-03"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-2-01"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-2-02"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-125-00-JP
+"gsa01" "XAI-2-03"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTA03-342-20
+"gsa01" "XBC-1-05"
+"N" "1" 1 30000
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-2-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-3-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-4-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XR-5-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-2-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-3-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-01"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-02"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-03"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-04"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-05"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-727-1-WF
+"gsa01" "XS-4-06"
+"Y" "1" 1 400
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-01"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-02"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-03"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-04"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-05"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-06"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-07"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-08"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-09"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-10"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-11"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-12"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-13"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-4-14"
+"Y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-07"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-08"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-09"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-10"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-11"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-12"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-13"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N52-10
+"gsa01" "XAB-5-14"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-01"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-02"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-03"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-04"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-05"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-06"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-07"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-08"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-09"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XBC-4-10"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XT-1-01"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N60-0-CK
+"gsa01" "XT-1-02"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6E-1-CK
+"gsa01" "XS-1-01"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6E-1-CK
+"gsa01" "XS-2-01"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6E-1-CK
+"gsa01" "XS-3-01"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6E-1-CK
+"gsa01" "XS-4-01"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6E-1-CK
+"gsa01" "XS-5-01"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTA03-N6F-0-JP
+"gsa01" "XR-1-03"
+"N" "1" 1 40500
+@@end
+@@batchload xxptlomt.p
+MHTA03-S71-0-MN
+"gsa01" "XB-2-09"
+"N" "1" 1 14700
+@@end
+@@batchload xxptlomt.p
+MHTA13-N62-1
+"gsa01" "XAC-2-01"
+"Y" "1" 1 600
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-01"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-02"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-03"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-04"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-05"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-06"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-07"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-08"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-09"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-10"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-11"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-12"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-13"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-14"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-15"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-16"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-17"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB01-265-11-CT
+"gsa01" "XL-4-18"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-01"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-02"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-03"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-04"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-05"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-06"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-07"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-4-08"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-01"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-02"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-03"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-04"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-05"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-06"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-07"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-08"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-09"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-10"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-11"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTB02-265-03-CT
+"gsa01" "XH-5-12"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTC01-71E-0-CK
+"gsa01" "XD-2-07"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-71E-0-CK
+"gsa01" "XD-3-07"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-71E-0-CK
+"gsa01" "XD-6-07"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-71E-0-CK
+"gsa01" "XD-6-08"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-71F-0-CK
+"gsa01" "XD-2-08"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-71F-0-CK
+"gsa01" "XD-3-08"
+"Y" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-01"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-02"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-03"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-04"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-05"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC01-761-0-CK
+"gsa01" "XF-6-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-02"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-03"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-04"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-05"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-06"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-07"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-08"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-09"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-10"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-11"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTC02-761-0-CK
+"gsa01" "XE-6-12"
+"Y" "1" 1 1800
+@@end
+@@batchload xxptlomt.p
+MHTE13-125-0
+"gsa01" "XAG-2-01"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTE13-125-0
+"gsa01" "XAG-2-02"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTE13-125-0
+"gsa01" "XAG-2-03"
+"Y" "1" 6 1920
+@@end
+@@batchload xxptlomt.p
+MHTF01-407-00-CK
+"gsa01" "XE-2-12"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF01-407-00-CK
+"gsa01" "XE-3-12"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF01-407-00-CKG1
+"gsa01" "XH-2-03"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-07"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-08"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-09"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-10"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-11"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-408-10-CK
+"gsa01" "XE-4-12"
+"Y" "1" 1 3200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-01"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-02"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-03"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-04"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-05"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-06"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-415-1
+"gsa01" "XN-6-07"
+"Y" "1" 1 4200
+@@end
+@@batchload xxptlomt.p
+MHTF01-446-0-CK
+"gsa01" "XE-2-05"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF01-446-0-CK
+"gsa01" "XE-3-05"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF01-446-0-CK
+"gsa01" "XE-4-05"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF01-465-0-CK
+"gsa01" "XE-2-03"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF01-465-0-CK
+"gsa01" "XE-3-03"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF01-466-0-CK
+"gsa01" "XE-2-09"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF01-466-0-CK
+"gsa01" "XE-3-09"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-01"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-02"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-03"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-04"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-05"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-06"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-07"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-08"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-09"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-10"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-11"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-12"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-3-13"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-4-09"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-4-10"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-4-11"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-4-12"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-720-0-CK
+"gsa01" "XC-4-13"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTF01-785-0-CK
+"gsa01" "XE-2-02"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF01-785-0-CK
+"gsa01" "XE-3-02"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF01-786-0-CK
+"gsa01" "XE-2-04"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF01-786-0-CK
+"gsa01" "XE-3-04"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF02-138-00-CK
+"gsa01" "XB-1-07"
+"N" "1" 1 16000
+@@end
+@@batchload xxptlomt.p
+MHTF02-138-00-CK
+"gsa01" "XN-2-07"
+"Y" "1" 1 9000
+@@end
+@@batchload xxptlomt.p
+MHTF02-138-00-CK
+"gsa01" "XN-3-07"
+"N" "1" 1 9000
+@@end
+@@batchload xxptlomt.p
+MHTF02-138-00-CK
+"gsa01" "XN-4-06"
+"Y" "1" 1 9000
+@@end
+@@batchload xxptlomt.p
+MHTF02-138-00-CK
+"gsa01" "XN-4-07"
+"Y" "1" 1 9000
+@@end
+@@batchload xxptlomt.p
+MHTF02-407-00-CH
+"gsa01" "XF-2-09"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHTF02-407-00-CH
+"gsa01" "XF-3-09"
+"N" "1" 1 19600
+@@end
+@@batchload xxptlomt.p
+MHTF02-407-00-CHG1
+"gsa01" "XH-2-05"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHTF02-408-00-CH
+"gsa01" "XF-2-10"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHTF02-408-00-CH
+"gsa01" "XF-3-10"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-01"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-02"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-03"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-04"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-05"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-06"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-07"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-08"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-09"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XG-6-10"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-415-0-CK
+"gsa01" "XN-1-09"
+"Y" "1" 1 2400
+@@end
+@@batchload xxptlomt.p
+MHTF02-472-0-CK
+"gsa01" "XN-1-15"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTF02-472-0-CK
+"gsa01" "XN-2-15"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTF02-472-0-CK
+"gsa01" "XN-3-15"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTF02-472-0-CK
+"gsa01" "XN-4-15"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTF02-746-0-CK
+"gsa01" "XN-6-08"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHTF02-746-0-CK
+"gsa01" "XN-6-09"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHTF02-746-0-CK
+"gsa01" "XN-6-10"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHTF02-746-0-CK
+"gsa01" "XN-6-11"
+"Y" "1" 1 1200
+@@end
+@@batchload xxptlomt.p
+MHTF02-K40-1-CH
+"gsa01" "XG-2-06"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF02-K40-1-CH
+"gsa01" "XG-2-07"
+"N" "1" 1 28800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-340-0-CK
+"gsa01" "XAB-2-08"
+"N" "1" 1 20000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-469-0-CK
+"gsa01" "XAB-2-06"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-0-CK
+"gsa01" "XAA-2-05"
+"N" "1" 1 7680
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-0-CK
+"gsa01" "XAA-3-05"
+"N" "1" 1 7680
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-1-CK
+"gsa01" "XAA-2-04"
+"N" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-1-CK
+"gsa01" "XAA-3-02"
+"N" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-1-CK
+"gsa01" "XAA-3-03"
+"N" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHTF0X-517-1-CK
+"gsa01" "XAA-3-04"
+"N" "1" 1 3840
+@@end
+@@batchload xxptlomt.p
+MHTF0X-532-11
+"gsa01" "XAB-2-13"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-532-11
+"gsa01" "XAB-3-12"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-532-11
+"gsa01" "XAB-3-13"
+"N" "1" 1 9600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-532-11-MNLX
+"gsa01" "XB-1-12"
+"N" "1" 1 10800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-01"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-02"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-03"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-04"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-05"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-06"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-07"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-08"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-09"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-10"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-11"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-12"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-13"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-14"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-15"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-727-0-CD
+"gsa01" "XK-1-16"
+"Y" "1" 3 1500
+@@end
+@@batchload xxptlomt.p
+MHTF0X-732-12
+"gsa01" "XAA-2-06"
+"N" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHTF0X-732-12
+"gsa01" "XAA-3-06"
+"N" "1" 1 6400
+@@end
+@@batchload xxptlomt.p
+MHTF0X-904-X0
+"gsa01" "XAM-1-06"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-904-X0
+"gsa01" "XAM-2-06"
+"N" "1" 1 15360
+@@end
+@@batchload xxptlomt.p
+MHTF0X-J17-0-JP
+"gsa01" "XAB-2-10"
+"N" "2" 1 6720
+@@end
+@@batchload xxptlomt.p
+MHTF0X-K80-1-CK
+"gsa01" "XAA-2-02"
+"N" "1" 1 14400
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N2F-0-CK
+"gsa01" "XAB-2-12"
+"N" "1" 1 12000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-1-CK
+"gsa01" "XAI-3-01"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-1-CK
+"gsa01" "XAI-3-02"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-1-CK
+"gsa01" "XAI-3-03"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-01"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-02"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-03"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-04"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-05"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-1-06"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-01"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-02"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-03"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-04"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-05"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-2-06"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-01"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-02"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-03"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-04"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-05"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-3-06"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-4-03"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-4-04"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-4-05"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N51-3-CK
+"gsa01" "XAH-4-06"
+"Y" "1" 1 288
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N58-03-CK
+"gsa01" "XAB-2-03"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N58-03-CK
+"gsa01" "XAB-3-01"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N58-03-CK
+"gsa01" "XAB-3-02"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N60-0-CK
+"gsa01" "XT-1-03"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N60-0-CK
+"gsa01" "XT-1-04"
+"Y" "1" 1 960
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-2-02"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-2-03"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-2-04"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-2-05"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-2-06"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-01"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-02"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-03"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-04"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-05"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAF-3-06"
+"Y" "1" 2 1200
+@@end
+@@batchload xxptlomt.p
+MHTF0X-N6B-1-VR-JP
+"gsa01" "XAJ-1-03"
+"Y" "1" 3 1800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-NA3-X1
+"gsa01" "XAB-2-05"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-NA3-X1
+"gsa01" "XAB-3-05"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-NA3-X1
+"gsa01" "XAB-3-06"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-NA3-X1
+"gsa01" "XAB-3-07"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-NA3-X1
+"gsa01" "XAB-3-08"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-01"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-02"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-03"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-04"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-05"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-06"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-07"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-08"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-09"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-10"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-11"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-12"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-13"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-14"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-3-15"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-01"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-02"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-03"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-04"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-05"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-06"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-07"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-08"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-09"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-10"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-11"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-12"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-13"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-14"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-W48-3
+"gsa01" "XBE-4-15"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-01"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-02"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-03"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-04"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-05"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-06"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-07"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-08"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-09"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-10"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-11"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-12"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-13"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-14"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-1-15"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-01"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-02"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-03"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-04"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-05"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-06"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-07"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-08"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-09"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-10"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-11"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-12"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-13"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-14"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-2-15"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-01"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-02"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-03"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-04"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-05"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-06"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-07"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-08"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-09"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-10"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-11"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-12"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-13"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-14"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-3-15"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-01"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-02"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-03"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-04"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-05"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-06"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-07"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-08"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-09"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-10"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-11"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-12"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-13"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-14"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+mhtf0x-w48-3
+"gsa01" "XBF-4-15"
+"y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-1-05"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-2-05"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-3-05"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-4-05"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-5-05"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WAG-0
+"gsa01" "XS-5-06"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WC4-0-CD
+"gsa01" "XS-1-02"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WC4-0-CD
+"gsa01" "XS-2-02"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WC4-0-CD
+"gsa01" "XS-3-02"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WC4-0-CD
+"gsa01" "XS-4-02"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-WC4-0-CD
+"gsa01" "XS-5-02"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MHTF0X-YEF-0
+"gsa01" "XAA-2-14"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-YEF-0
+"gsa01" "XAA-3-12"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-YEF-0
+"gsa01" "XAA-3-13"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTF0X-YEF-0
+"gsa01" "XAA-3-14"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-01"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-02"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-03"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-04"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-05"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-11"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-300-0-SZ
+"gsa01" "XG-1-12"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-1-18"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-2-18"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-3-18"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-4-18"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-5-15"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-5-16"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-5-17"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTG51-533-0-CK
+"gsa01" "XN-5-18"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTG51-611-0-LX
+"gsa01" "XE-2-08"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTG51-611-0-LX
+"gsa01" "XE-3-08"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTG51-612-0-LX
+"gsa01" "XE-2-10"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTG51-612-0-LX
+"gsa01" "XE-3-10"
+"N" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-01"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-02"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-03"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-04"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-05"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-06"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-07"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-08"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-3-09"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-01"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-02"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-03"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-04"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-05"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-06"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-07"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-08"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-09"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-10"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-11"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-12"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-4-13"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-01"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-02"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-03"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-04"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-05"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-06"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-07"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-08"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-09"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-10"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-11"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-12"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-714-10-CT
+"gsa01" "XG-5-13"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-4-01"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-4-02"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-4-03"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-4-04"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-4-05"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-01"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-02"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-03"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-04"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-05"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-06"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-07"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-08"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-09"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-10"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-11"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-12"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG51-761-0-CK
+"gsa01" "XC-5-13"
+"Y" "1" 1 1050
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-3-09"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-3-10"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-3-11"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-3-12"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-3-13"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-08"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-09"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-10"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-11"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-12"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-4-13"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-08"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-09"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-10"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-11"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-12"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-714-11-CT
+"gsa01" "XN-5-13"
+"Y" "1" 1 1500
+@@end
+@@batchload xxptlomt.p
+MHTG52-758-03-CK
+"gsa01" "XN-1-14"
+"Y" "1" 1 10080
+@@end
+@@batchload xxptlomt.p
+MHTG52-758-03-CK
+"gsa01" "XN-2-14"
+"Y" "1" 1 10080
+@@end
+@@batchload xxptlomt.p
+MHTG52-758-03-CK
+"gsa01" "XN-3-14"
+"Y" "1" 1 10080
+@@end
+@@batchload xxptlomt.p
+MHTG52-758-03-CK
+"gsa01" "XN-4-14"
+"Y" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MHTG52-758-03-CK
+"gsa01" "XN-5-14"
+"Y" "1" 1 7200
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0
+"gsa01" "XK-4-11"
+"Y" "1" 1 880
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0
+"gsa01" "XK-4-12"
+"Y" "1" 1 880
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0
+"gsa01" "XK-4-13"
+"Y" "1" 1 880
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0
+"gsa01" "XK-4-14"
+"Y" "1" 1 880
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-15"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-16"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-17"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-18"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-19"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-4-20"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-09"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-10"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-11"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-12"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-13"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTL12-668-0-JP
+"gsa01" "XK-5-14"
+"Y" "1" 1 1440
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-01"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-02"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-03"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-04"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-05"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-06"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-07"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM41-626-01-CK
+"gsa01" "XN-1-08"
+"Y" "1" 1 1728
+@@end
+@@batchload xxptlomt.p
+MHTM51-300-0-SZ
+"gsa01" "XF-1-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTM51-714-10-CT
+"gsa01" "XH-4-09"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTM51-714-10-CT
+"gsa01" "XH-4-10"
+"Y" "1" 1 780
+@@end
+@@batchload xxptlomt.p
+MHTP62-435-0-CK
+"gsa01" "XD-2-01"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTP62-435-0-CK
+"gsa01" "XD-3-01"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTP63-727-1-FW
+"gsa01" "XK-1-17"
+"Y" "1" 3 1200
+@@end
+@@batchload xxptlomt.p
+MHTP63-727-1-FW
+"gsa01" "XK-1-18"
+"Y" "1" 3 1200
+@@end
+@@batchload xxptlomt.p
+MHTP63-727-1-FW
+"gsa01" "XK-1-19"
+"Y" "1" 3 1200
+@@end
+@@batchload xxptlomt.p
+MHTP63-727-1-FW
+"gsa01" "XK-1-20"
+"Y" "1" 3 1200
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-01"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-02"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-03"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-04"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-05"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTP63-N52-1
+"gsa01" "XAB-5-06"
+"y" "1" 1 240
+@@end
+@@batchload xxptlomt.p
+MHTR02-447-0-CH
+"gsa01" "XB-1-03"
+"N" "1" 1 15200
+@@end
+@@batchload xxptlomt.p
+MHTR02-447-0-CH-MN
+"gsa01" "XB-3-10"
+"N" "1" 1 36000
+@@end
+@@batchload xxptlomt.p
+MHTR02-794-00-CH
+"gsa01" "XB-3-07"
+"Y" "1" 1 6600
+@@end
+@@batchload xxptlomt.p
+MHTR02-794-00-CH
+"gsa01" "XB-3-08"
+"Y" "1" 1 6600
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-07"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-08"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-09"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-10"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-11"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-12"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-13"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-14"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-15"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-16"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-17"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-18"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-19"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-20"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-21"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-22"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-1-23"
+"Y" "1" 3 900
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-01"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-02"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-03"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-04"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-05"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-727-10-WF
+"gsa01" "XT-2-06"
+"Y" "1" 1 300
+@@end
+@@batchload xxptlomt.p
+MHTR0X-904-00
+"gsa01" "XAJ-4-05"
+"N" "1" 1 23040
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-01"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-02"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-03"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-04"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-05"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-06"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-07"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-08"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-09"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-10"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-11"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-12"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-13"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-14"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-15"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-16"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-17"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-18"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-19"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-20"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-21"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-22"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-N6B-10-VR
+"gsa01" "XT-5-23"
+"Y" "1" 1 700
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-01"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-02"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-03"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-04"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-05"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-06"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-07"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-08"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-09"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-10"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-11"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-12"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-13"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-14"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-15"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-16"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-17"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-18"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-19"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-20"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-21"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-22"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-3-23"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-01"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-02"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-03"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-04"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-05"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-06"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-07"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-08"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-09"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-10"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-11"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-12"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-13"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-14"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-15"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-16"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-17"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-18"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-19"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-20"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-21"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-22"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-P01-10-T
+"gsa01" "XT-4-23"
+"Y" "1" 1 48
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-01"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-02"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-03"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-04"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-05"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-06"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-07"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-08"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-09"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-10"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-11"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-12"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-13"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-14"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-W48-02
+"gsa01" "XBD-2-15"
+"Y" "1" 1 192
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WAG-01
+"gsa01" "XAJ-1-02"
+"N" "1" 1 3072
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WAG-01
+"gsa01" "XAJ-4-02"
+"N" "1" 1 3072
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WAG-01
+"gsa01" "XAJ-4-03"
+"N" "1" 1 3072
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WAG-01
+"gsa01" "XAJ-4-04"
+"N" "1" 1 3072
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WC4-00-CD
+"gsa01" "XAD-1-13"
+"Y" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTR0X-WC4-00-CD
+"gsa01" "XAD-1-14"
+"Y" "1" 1 6000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-01"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-02"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-03"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-04"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-05"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-06"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-07"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-08"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-09"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-10"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-11"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-12"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-300-00-SZ
+"gsa01" "XD-1-13"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTS61-626-00-CK
+"gsa01" "XK-4-07"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHTS61-626-00-CK
+"gsa01" "XK-4-08"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHTS61-626-00-CK
+"gsa01" "XK-4-09"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHTS61-626-00-CK
+"gsa01" "XK-4-10"
+"Y" "1" 1 2100
+@@end
+@@batchload xxptlomt.p
+MHTS61-773-00-CK
+"gsa01" "XG-2-02"
+"N" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW01-265-0-CT
+"gsa01" "XH-4-11"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTW01-265-0-CT
+"gsa01" "XH-4-12"
+"Y" "1" 1 800
+@@end
+@@batchload xxptlomt.p
+MHTW01-761-0-CK
+"gsa01" "XD-2-03"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW01-761-0-CK
+"gsa01" "XD-3-03"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW02-265-0-CT
+"gsa01" "XD-3-10"
+"N" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW02-265-0-CT
+"gsa01" "XD-4-10"
+"N" "1" 1 1152
+@@end
+@@batchload xxptlomt.p
+MHTW02-300-0-SZ
+"gsa01" "XC-1-03"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTW02-300-0-SZ
+"gsa01" "XC-1-04"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTW02-446-0-CK
+"gsa01" "XE-2-07"
+"N" "1" 1 12800
+@@end
+@@batchload xxptlomt.p
+MHTW02-761-0-CK
+"gsa01" "XD-2-02"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW02-761-0-CK
+"gsa01" "XD-3-02"
+"Y" "1" 1 0
+@@end
+@@batchload xxptlomt.p
+MHTW03-N5F-0
+"gsa01" "XAC-2-02"
+"Y" "1" 1 5000
+@@end
+@@batchload xxptlomt.p
+MHTX31-300-00-SZ
+"gsa01" "XC-1-01"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MHTX31-300-00-SZ
+"gsa01" "XC-1-02"
+"Y" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MSYN2X-904-8
+"gsa01" "XS-1-03"
+"N" "1" 1 26800
+@@end
+@@batchload xxptlomt.p
+MSYN2X-S71-0-JP
+"gsa01" "XAB-2-04"
+"N" "2" 2 3072
+@@end
+@@batchload xxptlomt.p
+MSYN2X-S71-0-JP
+"gsa01" "XAB-3-03"
+"N" "2" 2 3072
+@@end
+@@batchload xxptlomt.p
+MSYN2X-S71-0-JP
+"gsa01" "XAB-3-04"
+"N" "2" 2 3072
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WAG-0
+"gsa01" "XAM-3-03"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WAG-0
+"gsa01" "XAM-4-03"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WAG-0
+"gsa01" "XAM-5-03"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WAG-0
+"gsa01" "XR-1-04"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WC4-0-CD
+"gsa01" "XAM-1-03"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WC4-0-CD
+"gsa01" "XAM-2-03"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MSYN2X-WC4-0-HT
+"gsa01" "XS-1-04"
+"N" "1" 1 5040
+@@end
+@@batchload xxptlomt.p
+MSYN5X-N6B-1-VR
+"gsa01" "XAM-1-05"
+"N" "1" 1 3000
+@@end
+@@batchload xxptlomt.p
+MSYN5X-N6B-1-VR
+"gsa01" "XAM-2-05"
+"N" "1" 1 2000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-01"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-02"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-03"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-04"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-05"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-06"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-07"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-08"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-09"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-10"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-11"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-12"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-13"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-727-0A-CD
+"gsa01" "XAC-1-14"
+"Y" "1" 2 1000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N5B-0-CK
+"gsa01" "XAC-2-13"
+"N" "1" 1 19200
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N6B-1-VR
+"gsa01" "XS-1-03"
+"Y" "1" 2 1308
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N6B-1-VR
+"gsa01" "XS-2-03"
+"Y" "1" 2 1308
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N6B-1-VR
+"gsa01" "XS-3-03"
+"Y" "1" 2 1308
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N6B-1-VR
+"gsa01" "XS-4-03"
+"Y" "1" 2 1308
+@@end
+@@batchload xxptlomt.p
+MSYY5X-N6B-1-VR
+"gsa01" "XS-5-03"
+"Y" "1" 2 1308
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WAG-0
+"gsa01" "XAM-3-04"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WAG-0
+"gsa01" "XAM-4-04"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WAG-0
+"gsa01" "XAM-5-04"
+"N" "1" 1 3600
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WAG-0
+"gsa01" "XR-1-01"
+"N" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WC4-1-CD
+"gsa01" "XAM-1-04"
+"Y" "1" 2 4000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WC4-1-CD
+"gsa01" "XAM-2-04"
+"Y" "1" 1 4000
+@@end
+@@batchload xxptlomt.p
+MSYY5X-WC4-1-HT
+"gsa01" "XS-1-02"
+"N" "1" 1 5040
+@@end
+@@batchload xxptlomt.p
+MWRG97-555-02
+"gsa01" "XT-2-14"
+"N" "2" 1 32000
+@@end
+@@batchload xxptlomt.p
+MX6402-398-0
+"gsa01" "XN-2-03"
+"N" "1" 1 96000
+@@end
+@@batchload xxptlomt.p
+MX6402-398-0
+"gsa01" "XN-3-03"
+"N" "1" 1 96000
+@@end
+@@batchload xxptlomt.p
+MX6402-398-0
+"gsa01" "XN-4-03"
+"N" "1" 1 90000
+@@end
+@@batchload xxptlomt.p
+MXJ61X-N58-11
+"gsa01" "XAC-2-05"
+"Y" "1" 1 4800
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-1-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-4-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-5-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-5-02"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-5-03"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-5-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2026
+"gsa01" "XAJ-5-05"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2GU6
+"gsa01" "XS-1-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2GU6
+"gsa01" "XS-2-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2GU6
+"gsa01" "XS-3-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2GU6
+"gsa01" "XS-4-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-2GU6
+"gsa01" "XS-5-04"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-TW34
+"gsa01" "XAM-1-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-TW34
+"gsa01" "XAM-2-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-TW34
+"gsa01" "XAM-3-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-TW34
+"gsa01" "XAM-4-01"
+"Y" "1" 1 500
+@@end
+@@batchload xxptlomt.p
+NZ0413-010-00-TW34
+"gsa01" "XAM-5-01"
+"Y" "1" 1 500
+@@end

@@ -83,7 +83,7 @@ put unformat "提货指示书-资料表" skip.
 export delimiter "~011" "生效日期" xdate2c(effdate)
                  "供应商" vend + "至" + vend1.
 export delimiter "~t" "生效日期" "供应商" "名称" "图号"
-       "订单数量" "定单倍数" "托盘数量" "保险价" skip.
+       "订单数量" "定单倍数" "托盘数量" "保险价" "托数" skip.
 for each pod_det no-lock where pod_due_date = effdate and
          pod_stat <> "X" and pod_stat <> "C"
    ,each po_mstr no-lock where po_nbr = pod_nbr and
@@ -108,7 +108,8 @@ for each pod_det no-lock where pod_due_date = effdate and
 /*          assign vprice = vp__dec01.                                       */
 /*       end.                                                                */
        export Delimiter "~t" xdate2c(effdate) po_vend vd_sort pod_part
-              qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice.
+              qty_ord - qty_rcvd pt_ord_mult pt__dec01 vprice
+              (qty_ord - qty_rcvd) / pt__dec01 when pt__dec01 <> 0.
     end.
 end.
 /* put unformatted skip(1) "报表结束" skip. */
@@ -134,7 +135,6 @@ for each xxcn_det no-lock:
 end.
 put unformatted skip(1) "报表结束" skip.
 end. /* mainloop: */
-/* {mfrtrail.i}  *REPORT TRAILER  */
 {mfreset.i}
 {pxmsg.i &MSGNUM=9 &ERRORLEVEL=1}
 end.  /* repeat */

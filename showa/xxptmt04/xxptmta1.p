@@ -141,6 +141,9 @@ do transaction on endkey undo, leave:
       pt__chr09
       pt__chr10
       pt__qad18
+      pt__dec01
+      pt__qad20
+      pt__qad19
    with frame a1.
 
    assign
@@ -174,6 +177,9 @@ do transaction on endkey undo, leave:
          pt__chr09
          pt__chr10
          pt__qad18
+			   pt__dec01
+			   pt__qad20
+			   pt__qad19
       with frame a1 no-validate.
 
       /* VALIDATE PRODUCT LINE */
