@@ -64,19 +64,19 @@ define variable cost_qty like mfc_logical initial yes.
 
 /* SELECT FORM */
 form
- SKIP(.1)  
- site colon 22          site1 colon 49 label {t001.i}
- effdate colon 22       effdate1 colon 49 label {t001.i}
- line colon 22          line1 colon 49 label {t001.i}
- type colon 22          type1 colon 49 label {t001.i}
- group1 colon 22        group2 colon 49 label {t001.i}
- part colon 22          part1 colon 49 label {t001.i}
- loc colon 22           loc1 colon 49 label {t001.i}
- keeper colon 22        keeper1 colon 49 label {t001.i}
+ SKIP(.1)
+ site colon 22    site1 colon 49 label {t001.i}
+ effdate colon 22 effdate1 colon 49 label {t001.i}
+ line colon 22    line1 colon 49 label {t001.i}
+ type colon 22    type1 colon 49 label {t001.i}
+ group1 colon 22  group2 colon 49 label {t001.i}
+ part colon 22    part1 colon 49 label {t001.i}
+ loc colon 22     loc1 colon 49 label {t001.i}
+ keeper colon 22  keeper1 colon 49 label {t001.i}
  cost_qty colon 22 skip(1)
  yn_zero colon 22  label "抑制为零数据"
  fname colon 22 view-as fill-in size 50 by 1
- SKIP(.4)   
+ SKIP(.4)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -125,7 +125,6 @@ for each tmpld03: delete tmpld03. end.
 for each tmploc01: delete tmploc01. end.
 for each temptr: delete temptr. end.
 
- 
 if cost_qty = no then do:  /*费用类库位列表*/
    for each code_mstr no-lock where code_domain = global_domain
         and code_fldname = "INVTR",
@@ -143,119 +142,119 @@ if cost_qty = no then do:  /*费用类库位列表*/
        end.
    end.
 end.
-{gprun.i ""xxppptrp07.p""
-        "(input part,
-          input part1,
-          input line,
-          input line1,
-          input ''  /*vend*/,
-          input hi_char,
-          input ''  /*abc*/,
-          input hi_char,
-          input site,
-          input site1,
-          input '' /*loc*/,
-          input hi_char,
-          input group1,
-          input group2,
-          input type,
-          input type1,
-          input keeper,
-          input keeper1,
-          input effdate - 1,
-          input yes,
-          input yes,
-          input no,
-          input yes,
-          input cost_qty,
-          input 'Include',
-          input 'Exclude'
-        )"}
-
-  for each tmpld03 no-lock:
-      find first temptr exclusive-lock where ttr_part = t03_part
-             and ttr_site = t03_site no-error.
-      if not available temptr then do:
-         create temptr.
-         assign ttr_part = t03_part
-                ttr_site = t03_site.
-      end.
-      assign ttr_qtyf = t03_qty
-             ttr_cstf = t03_cst.
-  end.
-for each tmpld03: delete tmpld03. end.
-/*  {gprun.i ""xxptrp07.p""       */
-/*          "(input part,         */
-/*            input part1,        */
-/*            input line,         */
-/*            input line1,        */
-/*            input '',           */
-/*            input hi_char,      */
-/*            input '',           */
-/*            input hi_char,      */
-/*            input site,         */
-/*            input site1,        */
-/*            input group1,       */
-/*            input group2,       */
-/*            input type,         */
-/*            input type1,        */
-/*            input keeper,       */
-/*            input keeper1,      */
-/*            input effdate1,     */
-/*            input yes,          */
-/*            input yes,          */
-/*            input no,           */
-/*            input yes,          */
-/*            input 'Include',    */
-/*            input 'Exclude'     */
-/*          )"}                   */
-
-{gprun.i ""xxppptrp07.p""
-        "(input part,
-          input part1,
-          input line,
-          input line1,
-          input ''  /*vend*/,
-          input hi_char,
-          input ''  /*abc*/,
-          input hi_char,
-          input site,
-          input site1,
-          input '' /*loc*/,
-          input hi_char,
-          input group1,
-          input group2,
-          input type,
-          input type1,
-          input keeper,
-          input keeper1,
-          input effdate1,
-          input yes,
-          input yes,
-          input no,
-          input yes,
-          input cost_qty,
-          input 'Include',
-          input 'Exclude'
-        )"}
-
-  for each tmpld03 no-lock:
-      find first temptr exclusive-lock where ttr_part = t03_part
-             and ttr_site = t03_site no-error.
-      if not available temptr then do:
-         create temptr.
-         assign ttr_part = t03_part
-                ttr_site = t03_site.
-      end.
-      assign ttr_qtyt = t03_qty
-             ttr_cstt = t03_cst.
-  end.
+/*   {gprun.i ""xxppptrp07.p""                                               */
+/*           "(input part,                                                   */
+/*             input part1,                                                  */
+/*             input line,                                                   */
+/*             input line1,                                                  */
+/*             input ''  /*vend*/,                                           */
+/*             input hi_char,                                                */
+/*             input ''  /*abc*/,                                            */
+/*             input hi_char,                                                */
+/*             input site,                                                   */
+/*             input site1,                                                  */
+/*             input '' /*loc*/,                                             */
+/*             input hi_char,                                                */
+/*             input group1,                                                 */
+/*             input group2,                                                 */
+/*             input type,                                                   */
+/*             input type1,                                                  */
+/*             input keeper,                                                 */
+/*             input keeper1,                                                */
+/*             input effdate - 1,                                            */
+/*             input yes,                                                    */
+/*             input yes,                                                    */
+/*             input no,                                                     */
+/*             input yes,                                                    */
+/*             input cost_qty,                                               */
+/*             input 'Include',                                              */
+/*             input 'Exclude'                                               */
+/*           )"}                                                             */
+/*                                                                           */
+/*     for each tmpld03 no-lock:                                             */
+/*         find first temptr exclusive-lock where ttr_part = t03_part        */
+/*                and ttr_site = t03_site no-error.                          */
+/*         if not available temptr then do:                                  */
+/*            create temptr.                                                 */
+/*            assign ttr_part = t03_part                                     */
+/*                   ttr_site = t03_site.                                    */
+/*         end.                                                              */
+/*         assign ttr_qtyf = t03_qty                                         */
+/*                ttr_cstf = t03_cst.                                        */
+/*     end.                                                                  */
+/*   for each tmpld03: delete tmpld03. end.                                  */
+/*   /*  {gprun.i ""xxptrp07.p""       */                                    */
+/*   /*          "(input part,         */                                    */
+/*   /*            input part1,        */                                    */
+/*   /*            input line,         */                                    */
+/*   /*            input line1,        */                                    */
+/*   /*            input '',           */                                    */
+/*   /*            input hi_char,      */                                    */
+/*   /*            input '',           */                                    */
+/*   /*            input hi_char,      */                                    */
+/*   /*            input site,         */                                    */
+/*   /*            input site1,        */                                    */
+/*   /*            input group1,       */                                    */
+/*   /*            input group2,       */                                    */
+/*   /*            input type,         */                                    */
+/*   /*            input type1,        */                                    */
+/*   /*            input keeper,       */                                    */
+/*   /*            input keeper1,      */                                    */
+/*   /*            input effdate1,     */                                    */
+/*   /*            input yes,          */                                    */
+/*   /*            input yes,          */                                    */
+/*   /*            input no,           */                                    */
+/*   /*            input yes,          */                                    */
+/*   /*            input 'Include',    */                                    */
+/*   /*            input 'Exclude'     */                                    */
+/*   /*          )"}                   */                                    */
+/*                                                                           */
+/*   {gprun.i ""xxppptrp07.p""                                               */
+/*           "(input part,                                                   */
+/*             input part1,                                                  */
+/*             input line,                                                   */
+/*             input line1,                                                  */
+/*             input ''  /*vend*/,                                           */
+/*             input hi_char,                                                */
+/*             input ''  /*abc*/,                                            */
+/*             input hi_char,                                                */
+/*             input site,                                                   */
+/*             input site1,                                                  */
+/*             input '' /*loc*/,                                             */
+/*             input hi_char,                                                */
+/*             input group1,                                                 */
+/*             input group2,                                                 */
+/*             input type,                                                   */
+/*             input type1,                                                  */
+/*             input keeper,                                                 */
+/*             input keeper1,                                                */
+/*             input effdate1,                                               */
+/*             input yes,                                                    */
+/*             input yes,                                                    */
+/*             input no,                                                     */
+/*             input yes,                                                    */
+/*             input cost_qty,                                               */
+/*             input 'Include',                                              */
+/*             input 'Exclude'                                               */
+/*           )"}                                                             */
+/*                                                                           */
+/*     for each tmpld03 no-lock:                                             */
+/*         find first temptr exclusive-lock where ttr_part = t03_part        */
+/*                and ttr_site = t03_site no-error.                          */
+/*         if not available temptr then do:                                  */
+/*            create temptr.                                                 */
+/*            assign ttr_part = t03_part                                     */
+/*                   ttr_site = t03_site.                                    */
+/*         end.                                                              */
+/*         assign ttr_qtyt = t03_qty                                         */
+/*                ttr_cstt = t03_cst.                                        */
+/*     end.                                                                  */
       for each tr_hist
-       fields(tr_domain tr_part tr_effdate tr_site tr_type tr_qty_loc tr_price)
-       use-index tr_part_eff
+       fields(tr_domain tr_part tr_effdate tr_loc tr_site tr_type tr_qty_loc tr_price)
+       use-index tr_eff_trnbr
        where tr_domain = global_domain and
-             (tr_part  >= part and tr_part <= part1) and
              (tr_effdate >= effdate and tr_effdate <= effdate1) and
+             (tr_part >= part and tr_part <= part1) and
              (tr_site >= site and tr_site <= site1) and tr_qty_loc <> 0 no-lock,
 /*      each tmploc01 no-lock where t01_site = in_site and t01_loc = in_loc, */
       each pt_mstr
@@ -266,12 +265,12 @@ for each tmpld03: delete tmpld03. end.
          and (pt_prod_line >= line    and pt_prod_line <= line1)
          and (pt_group  >= group1 and pt_group <= group2)
          and (pt_part_type >= type and pt_part_type <= type1)
-/*     ,each in_mstr                                                         */
-/*         fields(in_domain in_part in_site in_abc in_cur_set in_gl_set     */
-/*         in_qty_nonet in_qty_oh in_gl_cost_site) no-lock                  */
-/*          where in_mstr.in_domain = global_domain and in_part = pt_part   */
-/*          and (in_site = tr_site)                                         */
-/*          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)            */
+       ,each in_mstr
+           fields(in_domain in_part in_site in_abc in_cur_set in_gl_set
+           in_qty_nonet in_qty_oh in_gl_cost_site) no-lock
+            where in_mstr.in_domain = global_domain and in_part = pt_part
+            and (in_site = tr_site)
+            and (in__qadc01 >= keeper and in__qadc01 <= keeper1)
           break by tr_part by tr_type:
 
           if first-of(tr_type) then assign qty = 0.
@@ -327,15 +326,7 @@ for each tmpld03: delete tmpld03. end.
            end.
          end. /*if last-of(tr_type) */
     end.
-/*
-for each temptr exclusive-lock:
-    assign ttr_qtyf = ttr_qtyt - ttr_rctpo - ttr_rcttr - ttr_rctunp - ttr_rctwo - ttr_invadj - ttr_oth
-                    + ttr_isspo + ttr_isstr + ttr_issunp + ttr_issso + ttr_isswo.
-    assign ttr_cstf = ttr_cstt - ttr_rctpoc - ttr_rcttrc - ttr_rctunpc - ttr_rctwoc - ttr_invadjc - ttr_othc 
-                    + ttr_isspoc + ttr_isstrc + ttr_issunpc + ttr_isssoc + ttr_isswoc.
-end.
-*/
-    
+
 if fname = "" then do:
  disp effdate column-label "起始日期" format "9999/99/99"
       effdate1 column-label "截止日期" format "9999/99/99" with frame x.
@@ -367,9 +358,6 @@ if fname = "" then do:
                 ptp_buyer when available ptp_det
                 ptp_vend when available ptp_det
                 ptp_run_seq2 when available ptp_det
-                ttr_qtyf
-                ttr_cstf
-                ttr_qtyf * ttr_cstf @ amtf
                 ttr_rctpo
                 ttr_rcttr
                 ttr_rctunp
@@ -381,15 +369,13 @@ if fname = "" then do:
                 ttr_isswo
                 ttr_invadj
                 ttr_oth
-                ttr_qtyt
-                ttr_cstt
-                ttr_qtyt * ttr_cstt @ amtt.
+                .
     {mfrpchk.i}
     end.
 end.
 else do:
    if opsys = "unix" then do:
-      {gprun.i ""yyictrcfcp-2c.p"" "(input fname)"} 
+      {gprun.i ""yyictrcfcp-2c.p"" "(input fname)"}
    end.
    else if opsys = "msdos" or opsys = "win32" then do:
       {gprun.i ""yyictrcfcp-2x.p"" "(input fname)"}

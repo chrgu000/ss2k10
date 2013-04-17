@@ -25,23 +25,17 @@ define variable I as integer.
    bsheet:cells(i,8)  = "采购员代码".
    bsheet:cells(i,9)  = "供应商代码".
    bsheet:cells(i,10) = "E&O".
-   bsheet:cells(i,11)  = "起始日库存".
-   bsheet:cells(i,12)  = "起始日成本".
-   bsheet:cells(i,13) = "起始日金额".
-   bsheet:cells(i,14) = "采购收货".
-   bsheet:cells(i,16) = "转移入库".
-   bsheet:cells(i,18) = "计划外入库".
-   bsheet:cells(i,20) = "加工单入库".
-   bsheet:cells(i,22) = "采购退货".
-   bsheet:cells(i,24) = "转移出库".
-   bsheet:cells(i,26) = "计划外出库".
-   bsheet:cells(i,28) = "销售出库".
-   bsheet:cells(i,30) = "加工单出库".
-   bsheet:cells(i,32) = "盘点调整".
-   bsheet:cells(i,34) = "其他".
-   bsheet:cells(i,36)  = "截至日库存".
-   bsheet:cells(i,37)  = "截至日成本".
-   bsheet:cells(i,38) = "截至日金额".
+   bsheet:cells(i,11) = "采购收货".
+   bsheet:cells(i,12) = "转移入库".
+   bsheet:cells(i,13) = "计划外入库".
+   bsheet:cells(i,14) = "加工单入库".
+   bsheet:cells(i,15) = "采购退货".
+   bsheet:cells(i,16) = "转移出库".
+   bsheet:cells(i,17) = "计划外出库".
+   bsheet:cells(i,18) = "销售出库".
+   bsheet:cells(i,19) = "加工单出库".
+   bsheet:cells(i,20) = "盘点调整".
+   bsheet:cells(i,21) = "其他".
 
    i = i + 1.
 for each temptr no-lock break by ttr_part by ttr_site:
@@ -73,24 +67,18 @@ for each temptr no-lock break by ttr_part by ttr_site:
                    bsheet:cells(i,9) = "'" + ptp_vend.
                    bsheet:cells(i,10) = "'" + ptp_run_seq2.
                 end.
-                bsheet:cells(i,11) = ttr_qtyf.
-                bsheet:cells(i,12) = ttr_cstf.
-                bsheet:cells(i,13) = ttr_qtyf * ttr_cstf.
-                bsheet:cells(i,14) = ttr_rctpo.
-                bsheet:cells(i,16) = ttr_rcttr.
-                bsheet:cells(i,18) = ttr_rctunp.
-                bsheet:cells(i,20) = ttr_rctwo.
-                bsheet:cells(i,22) = ttr_isspo.
-                bsheet:cells(i,24) = ttr_isstr.
-                bsheet:cells(i,26) = ttr_issunp.
-                bsheet:cells(i,28) = ttr_issso.
-                bsheet:cells(i,30) = ttr_isswo.
-                bsheet:cells(i,32) = ttr_invadj.
-                bsheet:cells(i,34) = ttr_oth.
-                bsheet:cells(i,36) = ttr_qtyt.
-                bsheet:cells(i,37) = ttr_cstt.
-                bsheet:cells(i,38) = ttr_qtyt * ttr_cstt.
-                i = i + 1.
+                bsheet:cells(i,11) = ttr_rctpo.
+                bsheet:cells(i,12) = ttr_rcttr.
+                bsheet:cells(i,13) = ttr_rctunp.
+                bsheet:cells(i,14) = ttr_rctwo.
+                bsheet:cells(i,15) = ttr_isspo.
+                bsheet:cells(i,16) = ttr_isstr.
+                bsheet:cells(i,17) = ttr_issunp.
+                bsheet:cells(i,18) = ttr_issso.
+                bsheet:cells(i,19) = ttr_isswo.
+                bsheet:cells(i,20) = ttr_invadj.
+                bsheet:cells(i,21) = ttr_oth.
+                i = i + 1.      
     end.
 
   bsheet:Cells:EntireColumn:AutoFit.
