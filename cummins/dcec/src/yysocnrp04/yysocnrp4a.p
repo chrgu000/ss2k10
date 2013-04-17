@@ -104,7 +104,7 @@ END PROCEDURE. /*getShipToName*/
 
 
 /* FRAMES */
-FORM /*GUI*/ 
+FORM /*GUI*/
    cncu_batch label "Batch ID"
    space(2)
    cncu_eff_date
@@ -119,7 +119,7 @@ with STREAM-IO /*GUI*/  frame xref_header width 152.
 setFrameLabels(frame xref_header:handle).
 
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    space(3)
    cncu_part
    cncu_lotser           column-label "Lot/Serial!Ref"
@@ -210,7 +210,7 @@ for each cncu_mstr no-lock  where cncu_mstr.cncu_domain = global_domain and
    down with frame part_detail.
 
 
-   
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
 end. /*FOR EACH CNCU_MSTR*/

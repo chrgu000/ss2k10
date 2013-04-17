@@ -44,30 +44,51 @@
 
 
 /* INPUT PARAMETERS */
-define input parameter shipfrom_from like cncu_site no-undo.
-define input parameter shipfrom_to   like cncu_site no-undo.
-define input parameter cust_from     like cncu_cust no-undo.
-define input parameter cust_to       like cncu_cust no-undo.
-define input parameter shipto_from   like cncu_shipto no-undo.
-define input parameter shipto_to     like cncu_shipto no-undo.
-define input parameter part_from     like cncu_part no-undo.
-define input parameter part_to       like cncu_part no-undo.
-define input parameter po_from       like cncu_po no-undo.
-define input parameter po_to         like cncu_po no-undo.
-define input parameter order_from    like cncu_so_nbr no-undo.
-define input parameter order_to      like cncu_so_nbr no-undo.
-define input parameter date_from     like cncu_eff_date no-undo.
-define input parameter date_to       like cncu_eff_date no-undo.
-define input parameter usage_id_from like cncu_batch no-undo.
-define input parameter usage_id_to   like cncu_batch no-undo.
-define input parameter cust_usage_ref_from like cncu_cust_usage_ref no-undo.
-define input parameter cust_usage_ref_to like cncu_cust_usage_ref no-undo.
+define input parameter ishipfrom_from like cncu_site no-undo.
+define input parameter ishipfrom_to   like cncu_site no-undo.
+define input parameter icust_from     like cncu_cust no-undo.
+define input parameter icust_to       like cncu_cust no-undo.
+define input parameter ishipto_from   like cncu_shipto no-undo.
+define input parameter ishipto_to     like cncu_shipto no-undo.
+define input parameter ipart_from     like cncu_part no-undo.
+define input parameter ipart_to       like cncu_part no-undo.
+define input parameter ipo_from       like cncu_po no-undo.
+define input parameter ipo_to         like cncu_po no-undo.
+define input parameter iorder_from    like cncu_so_nbr no-undo.
+define input parameter iorder_to      like cncu_so_nbr no-undo.
+define input parameter idate_from     like cncu_eff_date no-undo.
+define input parameter idate_to       like cncu_eff_date no-undo.
+define input parameter iusage_id_from like cncu_batch no-undo.
+define input parameter iusage_id_to   like cncu_batch no-undo.
+define input parameter icust_usage_ref_from like cncu_cust_usage_ref no-undo.
+define input parameter icust_usage_ref_to like cncu_cust_usage_ref no-undo.
+
+define variable shipfrom_from like cncu_site no-undo.
+define variable shipfrom_to   like cncu_site no-undo.
+define variable cust_from     like cncu_cust no-undo.
+define variable cust_to       like cncu_cust no-undo.
+define variable shipto_from   like cncu_shipto no-undo.
+define variable shipto_to     like cncu_shipto no-undo.
+define variable part_from     like cncu_part no-undo.
+define variable part_to       like cncu_part no-undo.
+define variable po_from       like cncu_po no-undo.
+define variable po_to         like cncu_po no-undo.
+define variable order_from    like cncu_so_nbr no-undo.
+define variable order_to      like cncu_so_nbr no-undo.
+define variable date_from     like cncu_eff_date no-undo.
+define variable date_to       like cncu_eff_date no-undo.
+define variable usage_id_from like cncu_batch no-undo.
+define variable usage_id_to   like cncu_batch no-undo.
+define variable cust_usage_ref_from like cncu_cust_usage_ref no-undo.
+define variable cust_usage_ref_to like cncu_cust_usage_ref no-undo.
+
 
 {yysocnrp4b.i}
+{pppiwkpi.i "new"}
 /* LOCAL VARIABLES */
 define variable shipto_name like ad_name no-undo.
 define variable cust_name  like ad_name no-undo.
-
+define variable vprice     like sod_list_pr no-undo.
 /* ========================================================================= */
 PROCEDURE getShipToName:
 /* -------------------------------------------------------------------------
@@ -101,7 +122,24 @@ History:
    return {&SUCCESS-RESULT}.
 
 END PROCEDURE. /*getShipToName*/
-
+assign shipfrom_from       = ishipfrom_from
+       shipfrom_to         = ishipfrom_to
+       cust_from           = icust_from
+       cust_to             = icust_to
+       shipto_from         = ishipto_from
+       shipto_to           = ishipto_to
+       part_from           = ipart_from
+       part_to             = ipart_to
+       po_from             = ipo_from
+       po_to               = ipo_to
+       order_from          = iorder_from
+       order_to            = iorder_to
+       date_from           = idate_from
+       date_to             = idate_to
+       usage_id_from       = iusage_id_from
+       usage_id_to         = iusage_id_to
+       cust_usage_ref_from = icust_usage_ref_from
+       cust_usage_ref_to   = icust_usage_ref_to.
 
 /*   /* FRAMES */                                                           */
 /*   FORM /*GUI*/                                                           */
@@ -181,20 +219,17 @@ for each cncu_mstr no-lock  where cncu_mstr.cncu_domain = global_domain and
       /*      cncu_cust                                       */
       /*      cust_name                                       */
       /*   with frame xref_header STREAM-IO /*GUI*/ .         */
-      assign  v_cncu_batch    =  cncu_batch   
+      assign  v_cncu_batch    =  cncu_batch
               v_cncu_eff_date =  cncu_eff_date
-              v_cncu_shipto   =  cncu_shipto  
-              v_shipto_name   =  shipto_name  
-              v_cncu_cust     =  cncu_cust    
+              v_cncu_shipto   =  cncu_shipto
+              v_shipto_name   =  shipto_name
+              v_cncu_cust     =  cncu_cust
               v_cust_name     =  cust_name.
- 
+
    end.
-
-   for first sod_det
-        where sod_det.sod_domain = global_domain and  sod_nbr = cncu_so_nbr
-         and sod_line = cncu_sod_line
-       no-lock: end.
-
+   /*查找价格单价格*/
+   assign  vprice = 0.
+   {yysocnrp4p.i}
 /*   display                                                  */
 /*      cncu_part                                             */
 /*      cncu_lotser                                           */
@@ -215,36 +250,32 @@ for each cncu_mstr no-lock  where cncu_mstr.cncu_domain = global_domain and
 /*      cncu_cust_usage_ref @ cncu_cust_usage_date            */
 /*   with frame part_detail STREAM-IO /*GUI*/ .               */
 /*   down with frame part_detail.                             */
-		create tmp_t.
-	  assign t_cncu_batch              = v_cncu_batch    
-					 t_cncu_eff_date           = v_cncu_eff_date 
-					 t_cncu_shipto             = v_cncu_shipto   
-					 t_shipto_name             = v_shipto_name   
-					 t_cncu_cust               = v_cncu_cust     
-					 t_cust_name               = v_cust_name     
-					 t_cncu_part               = cncu_part                
-					 t_cncu_lotser             = cncu_lotser             
-					 t_cncu_so_nbr             = cncu_so_nbr             
-					 t_cncu_usage_qty          = cncu_usage_qty          
-					 t_cncu_usage_um           = cncu_usage_um           
-					 t_cncu_cum_qty            = cncu_cum_qty            
-					 t_sod_um                  = sod_um      when (available sod_det)          
-					 t_sod_list_pr             = sod_list_pr when (available sod_det)          
-					 t_cncu_cust_usage_date    = cncu_cust_usage_date    
-					 t_cncu_selfbill_auth      = cncu_selfbill_auth      
-					 t_cncu_ref                = cncu_ref
-					 t_cncu_sod_line           = cncu_sod_line
-					 t_cncu_cust_usage_ref     = cncu_cust_usage_ref.
+    create tmp_t.
+    assign t_cncu_batch              = v_cncu_batch
+           t_cncu_eff_date           = v_cncu_eff_date
+           t_cncu_shipto             = v_cncu_shipto
+           t_shipto_name             = v_shipto_name
+           t_cncu_cust               = v_cncu_cust
+           t_cust_name               = v_cust_name
+           t_cncu_part               = cncu_part
+           t_cncu_lotser             = cncu_lotser
+           t_cncu_so_nbr             = cncu_so_nbr
+           t_cncu_usage_qty          = cncu_usage_qty
+           t_cncu_usage_um           = cncu_usage_um
+           t_cncu_cum_qty            = cncu_cum_qty
+           t_sod_um                  = sod_um      when (available sod_det)
+           t_sod_list_pr             = sod_list_pr when (available sod_det)
+           t_sod_tax_in              = sod_tax_in  when (available sod_det) 
+           t_sod_type                = sod_type    when (available sod_det)
+           t_cncu_cust_usage_date    = cncu_cust_usage_date
+           t_cncu_selfbill_auth      = cncu_selfbill_auth
+           t_cncu_ref                = cncu_ref
+           t_cncu_sod_line           = cncu_sod_line
+           t_cncu_cust_usage_ref     = cncu_cust_usage_ref
+           t_pc_price                = vprice.
 
 
-   
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
 end. /*FOR EACH CNCU_MSTR*/
-
-for each tmp_t  with frame t_tmpdet width 432:
- /* SET EXTERNAL LABELS */
-      setFrameLabels(frame t_tmpdet:handle).
-      display  tmp_t with stream-io.
-/*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-end.

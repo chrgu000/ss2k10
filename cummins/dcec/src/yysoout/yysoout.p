@@ -181,7 +181,7 @@ procedure p-report:
                    and (tr_line >= line_from)
                    and (tr_line <= line_to)
                    and (tr_site = site or site = "")
-                   and (tr_type = "iss-so" or tr_type = "iss-fas")
+                   and (tr_type = "iss-so" or tr_type = "iss-fas" or tr_type = "cn-ship")
                    and ((not flag1) or tr__log02 = no)
                    no-lock use-index tr_nbr_eff,
        each in_mstr NO-LOCK where in_domain = global_domain

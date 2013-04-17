@@ -27,8 +27,9 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "2+ "}
+{mfdtitle.i "412.1"}
 
+{yysocnrp4b.i "new"}
 
 define variable shipfrom_from like cncu_site no-undo.
 define variable shipfrom_to   like cncu_site no-undo.
@@ -50,19 +51,42 @@ define variable cust_usage_ref_from like cncu_cust_usage_ref
                              label "Cust Usage Ref" no-undo.
 define variable cust_usage_ref_to
                               like cncu_cust_usage_ref no-undo.
-
+define variable fname   as char no-undo format "x(100)".
 
 /* SELECTION FORM A */
+
+{xxgetvar.i &KEY1   = global_userid
+            &KEY2   = execname
+            &CHAR1  = shipfrom_from
+            &CHAR2  = shipfrom_to
+            &CHAR3  = cust_from
+            &CHAR4  = cust_to
+            &CHAR5  = shipto_from
+            &CHAR6  = shipto_to
+            &CHAR7  = part_from
+            &CHAR8  = part_to
+            &CHAR9  = po_from
+            &CHAR10 = po_to
+            &CHAR11 = order_from
+            &CHAR12 = order_to
+            &DATE1  = effdate
+            &DATE2  = effdate1
+            &INT1   = usage_id_from
+            &INT2   = usage_id_to
+            &KEY3   = cust_usage_ref_from
+            &KEY4   = cust_usage_ref_to
+            &C01    = fname}
+
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-shipfrom_from        colon 23
+   shipfrom_from        colon 23
    shipfrom_to          colon 52 label {t001.i}
    cust_from            colon 23
    cust_to              colon 52 label {t001.i}
@@ -81,6 +105,7 @@ shipfrom_from        colon 23
    cust_usage_ref_from  colon 23  view-as fill-in size 20 by 1
    cust_usage_ref_to    colon 52 label {t001.i}
                                   view-as fill-in size 20 by 1
+   fname colon 22 view-as fill-in size 50 by 1
    skip(1)
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
@@ -90,8 +115,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
    &IF (DEFINED(SELECTION_CRITERIA) = 0)
    &THEN " Selection Criteria "
    &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
+   &ENDIF
+&ELSE
    getTermLabel("SELECTION_CRITERIA", 25).
 &ENDIF.
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -132,7 +157,7 @@ setFrameLabels(frame a:handle).
    if usage_id_to = 999999999  then usage_id_to = 0.
 
    if (c-application-mode <> "WEB") then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -149,7 +174,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
                  order_from  order_to
                  effdate effdate1
                  usage_id_from usage_id_to
-                 cust_usage_ref_from cust_usage_ref_to"
+                 cust_usage_ref_from cust_usage_ref_to fname"
 
       &frm = "a"}
 
@@ -180,6 +205,29 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
    end. /* IF (c-application-mode */
 
+  {xxsetvar.i &KEY1   = global_userid
+              &KEY2   = execname
+              &CHAR1  = shipfrom_from
+              &CHAR2  = shipfrom_to
+              &CHAR3  = cust_from
+              &CHAR4  = cust_to
+              &CHAR5  = shipto_from
+              &CHAR6  = shipto_to
+              &CHAR7  = part_from
+              &CHAR8  = part_to
+              &CHAR9  = po_from
+              &CHAR10 = po_to
+              &CHAR11 = order_from
+              &CHAR12 = order_to
+              &DATE1  = effdate
+              &DATE2  = effdate1
+              &INT1   = usage_id_from
+              &INT2   = usage_id_to
+              &KEY3   = cust_usage_ref_from
+              &KEY4   = cust_usage_ref_to
+              &C01    = fname}
+
+
    if  shipfrom_to = "" then shipfrom_to = hi_char.
    if  cust_to = ""     then cust_to = hi_char.
    if  shipto_to = ""   then shipto_to = hi_char.
@@ -192,7 +240,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    if  usage_id_to = 0  then usage_id_to = 999999999.
 
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -205,7 +253,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 
    {mfphead.i}
-
+   FOR EACH tmp_t EXCLUSIVE-LOCK: DELETE tmp_t. END.
    {gprun.i ""yysocnrp4b.p""
      "(input shipfrom_from,
        input shipfrom_to,
@@ -227,8 +275,18 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
        input cust_usage_ref_to)"
       }
 
+if fname = "" then do:
    /* REPORT TRAILER */
-   
+  for each tmp_t  with frame t_tmpdet width 432:
+   /* SET EXTERNAL LABELS */
+        setFrameLabels(frame t_tmpdet:handle).
+        display  tmp_t with stream-io.
+  /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
+  end.
+end.
+else do:
+  {gprun.i ""yysocnrp04x.p"" "(input fname)"}
+end.
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
@@ -239,4 +297,4 @@ end. /*REPEAT*/
 {wbrp04.i &frame-spec = a}
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" shipfrom_from shipfrom_to cust_from cust_to shipto_from shipto_to part_from part_to po_from po_to order_from order_to effdate effdate1 usage_id_from usage_id_to cust_usage_ref_from cust_usage_ref_to "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" shipfrom_from shipfrom_to cust_from cust_to shipto_from shipto_to part_from part_to po_from po_to order_from order_to effdate effdate1 usage_id_from usage_id_to cust_usage_ref_from cust_usage_ref_to fname "} /*Drive the Report*/
