@@ -59,7 +59,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
- 
+
 
 /*GUI preprocessor directive settings */
  &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
@@ -128,15 +128,15 @@ define variable ext_line_charge as decimal initial 0
 define variable c-add-line-charges as character format "x(32)" no-undo.
 
 /*judy 07/06/05*/  define variable saleattn like ad_attn.
-/*judy 07/06/05*/ define variable salephn	 like ad_phone.
+/*judy 07/06/05*/ define variable salephn  like ad_phone.
 /*judy 07/06/05*/ define variable salephn2 like ad_phone2.
-/*judy 07/06/05*/ define variable salefax	 like ad_fax.
-/*judy 07/06/05*/ define variable saleqry	 like ad_fax2.		
-/*judy 07/06/05*/  define    shared        variable comp_addr like soc_company.  
-/*judy 07/06/05*/   define variable shipfax like ad_fax.	  
-/*judy 07/06/05*/  define variable billfax like ad_fax. 
+/*judy 07/06/05*/ define variable salefax  like ad_fax.
+/*judy 07/06/05*/ define variable saleqry  like ad_fax2.
+/*judy 07/06/05*/  define    shared        variable comp_addr like soc_company.
+/*judy 07/06/05*/   define variable shipfax like ad_fax.
+/*judy 07/06/05*/  define variable billfax like ad_fax.
 /*judy 07/06/05*/  DEFINE VARIABLE xxcucon AS CHAR .
-/*judy 07/06/05*/  DEFINE VARIABLE xxdraf AS CHAR. 
+/*judy 07/06/05*/  DEFINE VARIABLE xxdraf AS CHAR.
 
 
 /* CONSIGNMENT VARIABLES */
@@ -162,22 +162,22 @@ assign cont_lbl = dynamic-function('getTermLabelFillCentered' in h-label,
 
 FORM /*GUI*/  with STREAM-IO /*GUI*/  frame ceuro width 132 down.
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    space(46)
    total-lbl
    space(4)
    ext_price_total
 with STREAM-IO /*GUI*/  frame no_trailer down width 80 no-labels no-box.
-		
- 
 
-/*judy 07/06/05*/ 
+
+
+/*judy 07/06/05*/
     FORM
-    			"客户确认意见：" skip(2)
-    			so_shipvia no-label skip
-    			"火车零担/中铁到付/经济快件/汽运/自提" skip     /*DCEC*/
-    			"汇款内容:"
-    		with stream-io frame so_tr_add1 side-label width 80 no-box.
+          "客户确认意见：" skip(2)
+          so_shipvia no-label skip
+          "火车零担/中铁到付/经济快件/汽运/自提" skip     /*DCEC*/
+          "汇款内容:"
+        with stream-io frame so_tr_add1 side-label width 80 no-box.
 /*judy 07/06/05*/
 /*judy 07/06/05*/     /* SET EXTERNAL LABELS */
 /*judy 07/06/05*/     setFrameLabels(frame so_tr_add1:handle).
@@ -198,14 +198,14 @@ assign
    container_old = container_charge_total:format
    line_charge_old = line_charge_total:format.
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    prepaid-lbl at 2
    so_prepaid
 with STREAM-IO /*GUI*/  frame prepd width 80 no-labels.
 
 oldsession = SESSION:numeric-format.
 {so05f01.i}               /* INCLUDE FILE FOR FRAME C */
-   
+
 /* SET PREPAID OLD TO PREPAID:FORMAT AND EXT_PRICE:FORMAT */
 assign
    prepaid_old = so_prepaid:format
@@ -244,9 +244,9 @@ for each so_mstr where so_domain = global_domain and (so_nbr >= nbr)
    and (so_lang >= lang and so_lang <= lang1)
    and not so_sched
    and so_fsm_type = ""
-no-lock by so_nbr with frame b no-box: 
- 
- 
+no-lock by so_nbr with frame b no-box:
+
+
    assign
       et_new_page = true
       so_recno = recid(so_mstr).
@@ -277,8 +277,8 @@ no-lock by so_nbr with frame b no-box:
       end.
 
       /* DETERMINE CURRENCY DISPLAY AMERICAN OR EUROPEAN  */
-      find rnd_mstr where rnd_domain = global_domain and 
-      		 rnd_rnd_mthd = rndmthd no-lock no-error.
+      find rnd_mstr where rnd_domain = global_domain and
+           rnd_rnd_mthd = rndmthd no-lock no-error.
       if not available rnd_mstr then do:
          {pxmsg.i &MSGNUM=863 &ERRORLEVEL=4}
          /* ROUND METHOD RECORD NOT FOUND */
@@ -310,12 +310,12 @@ no-lock by so_nbr with frame b no-box:
 
    first_line = yes.
    termsdesc = "".
-   find ct_mstr where ct_domain = global_domain and 
-   			ct_code = so_cr_terms no-lock no-error.
+   find ct_mstr where ct_domain = global_domain and
+        ct_code = so_cr_terms no-lock no-error.
    if available ct_mstr then termsdesc = ct_desc.
 
    so_recno = recid(so_mstr).
- 
+
    assign
       billto = ""
       shipto = "".
@@ -368,10 +368,10 @@ no-lock by so_nbr with frame b no-box:
 /*judy 07/06/05*/      shipfax = ad_fax .
    end.
 
-   
+
    /* GET VAT REG NO AND COUNTRY CODE FOR SHIP-TO */
-   find ad_mstr where ad_domain = global_domain and 
-   			ad_addr = so_ship no-lock no-wait no-error.
+   find ad_mstr where ad_domain = global_domain and
+        ad_addr = so_ship no-lock no-wait no-error.
    if available ad_mstr then do:
       if ad_pst_id = "" then do:
          find ad_mstr where ad_domain = global_domain and ad_addr = so_bill
@@ -390,32 +390,32 @@ no-lock by so_nbr with frame b no-box:
    {etdcra.i so_curr so_bill}
 
    resale = "".
- 
-   find cm_mstr where cm_domain = global_domain and 
-   		  cm_addr = so_cust no-lock no-error.
+
+   find cm_mstr where cm_domain = global_domain and
+        cm_addr = so_cust no-lock no-error.
    if available cm_mstr then resale = cm_resale.
 
- 
+
    /*judy 07/06/05*/  /*   {so05a01.i}
    /*judy 07/06/05*/      {so05c01.i}*/
    /*judy 07/06/05*/    {yyso05a01.i}
-   /*judy 07/06/05*/      {yyso05c01.i} 
- 
+   /*judy 07/06/05*/      {yyso05c01.i}
+
 
    hide frame phead1.
-  view frame phead1.  
+  view frame phead1.
 
    pages = page-number - 1.
 
    hide frame phead2.
 
    do with frame phead2:
- 
+
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame phead2:handle).
- 
+
       display
-          so_cust
+         so_cust
          so_ship
          billto[1] shipto[1]
          billto[2] shipto[2]
@@ -425,8 +425,8 @@ no-lock by so_nbr with frame b no-box:
          billto[6] shipto[6]
       with frame phead2 STREAM-IO /*GUI*/ .
   end. /* do with */
- 
- 
+
+
 
    /* DISPLAY VAT REG NO & COUNTRY CODE */
    put
@@ -439,15 +439,15 @@ no-lock by so_nbr with frame b no-box:
  /*judy 07/06/05*/     find first ad_mstr no-lock where ad_domain = global_domain and
  /*judy 07/06/05*/     ad_addr = so_slspsn[1] and ad_type = "SLSPRSN" no-error.
  /*judy 07/06/05*/     if available ad_mstr then
-  /*judy 07/06/05*/        	assign
-  /*judy 07/06/05*/				saleattn= ad_attn 
-  /*judy 07/06/05*/  			salephn	= ad_phone
- /*judy 07/06/05*/   			salephn2= ad_phone2
-  /*judy 07/06/05*/  			salefax	= ad_fax  
- /*judy 07/06/05*/   			saleqry	= ad_fax2.
+  /*judy 07/06/05*/         assign
+  /*judy 07/06/05*/       saleattn= ad_attn
+  /*judy 07/06/05*/       salephn = ad_phone
+ /*judy 07/06/05*/        salephn2= ad_phone2
+  /*judy 07/06/05*/       salefax = ad_fax
+ /*judy 07/06/05*/        saleqry = ad_fax2.
 
    do:
- 
+
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame phead3:handle).
       display
@@ -458,11 +458,11 @@ no-lock by so_nbr with frame b no-box:
 /*judy 07/06/05*/         so_slspsn[2]
 /*judy 07/06/05*/         so_slspsn[3]
 /*judy 07/06/05*/         so_slspsn[4]*/
-/*judy 07/06/05*/  	saleattn
-/*judy 07/06/05*/    salephn	
-/*judy 07/06/05*/  	salephn2
-/*judy 07/06/05*/  	salefax	
-/*judy 07/06/05*/  	saleqry	
+/*judy 07/06/05*/   saleattn
+/*judy 07/06/05*/    salephn
+/*judy 07/06/05*/   salephn2
+/*judy 07/06/05*/   salefax
+/*judy 07/06/05*/   saleqry
          so_po
          so_cr_terms
          so_shipvia
@@ -473,7 +473,7 @@ no-lock by so_nbr with frame b no-box:
       with frame phead3 STREAM-IO /*GUI*/ .
       hide frame phead3.
    end.
- 
+
    if print_trlr then
       view frame continue.
 
@@ -496,12 +496,12 @@ no-lock by so_nbr with frame b no-box:
    assign
       et_ext_price_total = 0
       ext_price_total = 0.
-     
-   for each sod_det where sod_domain = global_domain 
-   	    and sod_nbr = so_nbr and not sod_sched
+
+   for each sod_det where sod_domain = global_domain
+        and sod_nbr = so_nbr and not sod_sched
    no-lock by sod_nbr by sod_line:
- 
- 
+
+
       assign
          desc1 = sod_desc
          desc2 = ""
@@ -509,12 +509,12 @@ no-lock by so_nbr with frame b no-box:
          qty_open = sod_qty_ord - sod_qty_ship
          ext_price = qty_open * net_price.
 
-  
+
       {gprunp.i "mcpl" "p" "mc-curr-rnd"
          "(input-output ext_price,
            input rndmthd,
            output mc-error-number)"}
-  
+
 
       if mc-error-number <> 0 then do:
          {pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
@@ -536,22 +536,22 @@ no-lock by so_nbr with frame b no-box:
             desc1 = pt_desc1
             desc2 = pt_desc2.
       end.
- 
-   
+
+
       first_line = no.
 
       if page-size - line-counter < 3 then page.
-   
+
       ext_price:format = ext_price_fmt.
-      {etdcrd.i so_curr 75 91} 
+      {etdcrd.i so_curr 75 91}
       {so05b01.i} /*Display Line*/
-    
+
 
 
       if page-size - line-counter < 1 then do:
          page.
-         {so05e01.i} 
-    
+         {so05e01.i}
+
       end.
       put desc1 at 5 skip.
 
@@ -562,7 +562,7 @@ no-lock by so_nbr with frame b no-box:
           end.
          put desc2 at 5 skip.
       end.
-  
+
 
         if using_cust_consignment then do:
          consign_flag = no.
@@ -613,8 +613,8 @@ no-lock by so_nbr with frame b no-box:
                   ext_price_total = ext_price_total + ext_line_charge
                   line_total = line_total + ext_line_charge.
 
-               for first trl_mstr where trl_domain = global_domain and 
-               					 trl_code = sodlc_trl_code
+               for first trl_mstr where trl_domain = global_domain and
+                         trl_code = sodlc_trl_code
                no-lock: end.
 
                if available trl_mstr then do:
@@ -667,7 +667,7 @@ no-lock by so_nbr with frame b no-box:
       *******************************************/
 
       if print_options and
-         can-find(first sob_det where sob_domain = global_domain 
+         can-find(first sob_det where sob_domain = global_domain
                     and sob_nbr = so_nbr and sob_line = sod_line)
       then do:
 
@@ -681,18 +681,18 @@ no-lock by so_nbr with frame b no-box:
             &confg_disc="no"
             &command="~{so05e01.i~}"}
 
-         find first sob_det where sob_domain = global_domain 
-         				and sob_nbr = sod_nbr and sob_line = sod_line
+         find first sob_det where sob_domain = global_domain
+                and sob_nbr = sod_nbr and sob_line = sod_line
          no-lock no-error.
 
          /* NEW STYLE sob_det CONTAIN A
             SYMBOLIC REFERENCE IDENTIFIED BY BYTES 11-14 IN sob_serial.
          */
-  
+
          {gprun.i ""sorp5a01.p""
             "(input """", input 0,
               input sod_nbr, input sod_line)"}
-      
+
       end.
 
       /*ADDED TILDE BEFORE CURLY BRACES SO FILE WOULD COMPILE*/
@@ -701,13 +701,13 @@ no-lock by so_nbr with frame b no-box:
 
          pm_code = pt_pm_code.
 
-         find ptp_det where ptp_domain = global_domain and 
-         			ptp_part = sod_part and ptp_site = sod_site
+         find ptp_det where ptp_domain = global_domain and
+              ptp_part = sod_part and ptp_site = sod_site
          no-lock no-error.
          if available ptp_det then
             pm_code = ptp_pm_code.
          if pm_code = "C" and
-            not can-find(first sob_det where sob_domain = global_domain and 
+            not can-find(first sob_det where sob_domain = global_domain and
                 sob_nbr  = sod_nbr and sob_line = sod_line)
          then do:
             {sopiprn1.i &doctype="1" &nbr=sod_nbr &line=sod_line
@@ -733,11 +733,11 @@ no-lock by so_nbr with frame b no-box:
       {gpcmtprt.i &type=SO &id=sod_cmtindx &pos=5
          &command="~{so05e01.i~}"}
 
-      
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
- 
+
    end. /* for each sod_det */
- 
+
    /*Establish the label for the display of discounts*/
    if disc_sum_key <> "1" and
       disc_sum_key <> disc_det_key
@@ -791,7 +791,7 @@ no-lock by so_nbr with frame b no-box:
       end.
 
    end.
- 
+
    if et_dc_print then do:
       if page-size - line-counter < 3 then page.
       do while page-size - line-counter > 3:
@@ -799,8 +799,8 @@ no-lock by so_nbr with frame b no-box:
       end.
       {etdcrh.i so_curr}
    end.
- 
- /*judy 07/06/05*/     {yysorp05.i}		        
+
+ /*judy 07/06/05*/     {yysorp05.i}
  /*judy 07/06/05*/    {gprun.i ""yysorp05t.p"" "(input comp_addr)"}
 
    {gprun.i ""sosorp5a.p""}

@@ -111,7 +111,7 @@ define new shared variable l_cr_ord_amt   as   decimal no-undo.
 define variable disc_det like lngd_translation label "Discount Detail" no-undo.
 define variable disc_sum like disc_det         label "Discount Summary" no-undo.
 /*judy 07/06/05*/  /*define variable comp_addr like soc_company no-undo.*/
-/*judy 07/06/05*/  define   NEW  shared        variable comp_addr like soc_company. 
+/*judy 07/06/05*/  define   NEW  shared        variable comp_addr like soc_company.
 define variable update_yn like mfc_logical INITIAL no label "Update" no-undo.
 define variable form_code as character format "x(2)" label "Form Code" no-undo.
 define variable run_file as character format "x(12)" no-undo.
@@ -136,8 +136,8 @@ define variable report_width like mfc_integer.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -331,11 +331,11 @@ repeat:
 
       if comp_addr <> "" then do:
 
-         find ad_mstr where ad_domain = global_domain and 
-         		 ad_addr = comp_addr no-lock no-error.
+         find ad_mstr where ad_domain = global_domain and
+             ad_addr = comp_addr no-lock no-error.
          if available ad_mstr then do:
-            find ls_mstr where ls_domain = global_domain and 
-            		 ls_addr = ad_addr and ls_type = "company"
+            find ls_mstr where ls_domain = global_domain and
+                 ls_addr = ad_addr and ls_type = "company"
             no-lock no-error.
 
             if not available ls_mstr then do:
@@ -399,31 +399,31 @@ repeat:
    do transaction:
 
       if false then do:
-          
+
   /*judy 07/06/05*/     /* {gprun.i ""sorp0501.p""*/
   /*judy 07/06/05*/       /*    "(input update_yn,*/
   /*judy 07/06/05*/        /*     input print_line_charges)"}*/
   /*judy 07/06/05*/      {gprun.i ""yysorp0501.p""
                                        "(input update_yn,
-                                          input print_line_charges)"}  
- 
+                                          input print_line_charges)"}
+
       end.
 
       {&SOSORP05-P-TAG9}
 
       /*RUN SELECTED FORMAT */
       {gprfile.i}
- 
- 
+
+
    /*judy 07/06/05*/      /*{gprun.i " ""sorp05"" + run_file + "".p"""
     /*judy 07/06/05*/        "(input update_yn,
     /*judy 07/06/05*/          input print_line_charges)"}*/
    /*judy 07/06/05*/      {gprun.i " ""yysorp05"" + run_file + "".p"""
                                         "(input update_yn,
-                                       input print_line_charges)"}  
+                                       input print_line_charges)"}
       {&SOSORP05-P-TAG10}
 
-      {mfreset.i}       
+      {mfreset.i}
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 
 

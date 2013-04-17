@@ -29,19 +29,19 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
- 
+
 
 /*GUI preprocessor directive settings */
- &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT   
+ &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
 define variable c-cont as character format "x(35)" no-undo.
- 
+
 
 c-cont = CAPS(dynamic-function('getTermLabelFillCentered' in h-label,
               input "CONTINUED",
               input 35,
               input '*')).
-   
+
 FORM /*GUI*/  header
    skip (3)
    company[1]     at 4
@@ -67,13 +67,15 @@ FORM /*GUI*/  header
    company[5]  at 4
    getTermLabelRtColon("PRINT_DATE",14) to 56 format "x(14)"
    today       at 58
-   company[6]  at 4   
-/*judy 07/06/05*/ getTermLabelRtColon("xxfax_date",14) to 56 format "x(14)"     /*"传真日期:"*/
+   company[6]  at 4
+/*judy 07/06/05*/ getTermLabelRtColon("xxfax_date",12) to 56 format "x(14)"  skip   /*"传真日期:"*/
+   trim(getTermLabelRtColon("CONSIGNED",12)) + string(so_consignment) format "x(30)" at 4
+   trim(getTermLabelRtColon("CONSIGNMENT_LOCATION",22)) + so_consign_loc format "x(22)" colon 44
    skip (1)
 /*judy 07/06/05*/ /*with STREAM-IO /*GUI*/  frame phead1 page-top width 90.*/
 /*judy 07/06/05*/ with STREAM-IO /*GUI*/  frame phead1 /*page-top*/ width 90.
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    so_cust        colon 15
    so_ship        colon 53 skip (1)
    billto[1]      at 8 no-label
@@ -89,8 +91,8 @@ FORM /*GUI*/
    billto[6]      at 8  no-label
    shipto[6]      at 46 no-label
    skip(1)
-/*judy 07/06/05*/ /*with STREAM-IO /*GUI*/  frame phead2 side-labels page-top width 90.	*/
-/*judy 07/06/05*/ with STREAM-IO /*GUI*/  frame phead2 side-labels /*page-top*/ width 90.	 
+/*judy 07/06/05*/ /*with STREAM-IO /*GUI*/  frame phead2 side-labels page-top width 90. */
+/*judy 07/06/05*/ with STREAM-IO /*GUI*/  frame phead2 side-labels /*page-top*/ width 90.
 
 
 /* SET EXTERNAL LABELS */

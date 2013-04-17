@@ -25,24 +25,24 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    billattn       colon 15 /* label "Contact"  */
    shipattn       colon 53 /* label "Contact" */
    billphn        colon 15 /* label "Telephone" */
    shipphn        colon 53 /* label "Telephone"  skip (1)*/
-/*judy 07/06/05*/  billfax		  colon 15  label "传真"  
-/*judy 07/06/05*/  shipfax		  colon 53  label "传真"   
-	       skip (1)
+/*judy 07/06/05*/  billfax      colon 15  label "传真"
+/*judy 07/06/05*/  shipfax      colon 53  label "传真"
+         skip (1)
 /*judy 07/06/05*//*so_slspsn[1]   colon 15    label "Salesperson(s)"
 /*judy 07/06/05*/   so_slspsn[2]               no-label
 /*judy 07/06/05*/   so_slspsn[3]   at 17       no-label
-/*judy 07/06/05*/   so_slspsn[4]               no-label	*/
+/*judy 07/06/05*/   so_slspsn[4]               no-label */
 
-/*judy 07/06/05*/ 	saleattn colon 15    label "销售工程师"   
-			salephn	 colon 15	 label "电话"	
-			salephn2 no-label
-			salefax	 colon 15    label "传真" 
-			saleqry	 colon 15    label "发货查询电话" 
+/*judy 07/06/05*/   saleattn colon 15    label "销售工程师"
+      salephn  colon 15  label "电话"
+      salephn2 no-label
+      salefax  colon 15    label "传真"
+      saleqry  colon 15    label "发货查询电话"
 /*judy 07/06/05*/
    so_po          colon 59 /* label "Purchase Order" */
    so_cr_terms    colon 15 /* label "Credit Terms" */
