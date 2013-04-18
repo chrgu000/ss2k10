@@ -17,7 +17,7 @@ with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-/*
+assign flhload = os-getenv("HOME").
 find first qad_wkfl where
            qad_key1 = "xxunrcld.p_filename" and
            qad_key2 = global_userid no-error.
@@ -26,8 +26,7 @@ if available qad_wkfl then do:
       assign flhload =  qad_key3.
    end.
 end.
-*/
-assign flhload = os-getenv("HOME").
+
 display flhload with frame a.
 
 {wbrp01.i}
@@ -69,20 +68,20 @@ repeat:
                &defineVariables = "yes"}
    {mfmsg.i 832 1}
    {mfphead.i}
-   /*
-   find first qad_wkfl where
-              qad_key1 = "xxunrcld.p_filename" and
-              qad_key2 = global_userid no-error.
-   if available qad_wkfl then do:
-          assign qad_key3 = flhload.
+   do transaction:
+      find first qad_wkfl where
+                 qad_key1 = "xxunrcld.p_filename" and
+                 qad_key2 = global_userid no-error.
+      if available qad_wkfl then do:
+             assign qad_key3 = flhload.
+      end.
+      else do:
+          create qad_wkfl.
+          assign qad_key1 = "xxunrcld.p_filename"
+                 qad_key2 = global_userid
+                 qad_key3 = flhload.
+      end.
    end.
-   else do:
-       create qad_wkfl.
-       assign qad_key1 = "xxunrcld.p_filename"
-              qad_key2 = global_userid
-              qad_key3 = flhload.
-   end.
-   */
    empty temp-table xxwoload no-error.
    for each xxwoload exclusive-lock: delete xxwoload. end.
    {gprun.i ""xxwold0.p""}

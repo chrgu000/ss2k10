@@ -13,17 +13,15 @@ form
    flhload colon 14  view-as fill-in size 40 by 1 skip(1)
    cloadfile colon 14 skip(2)
 with frame a side-labels width 80.
-/*
-find first usrw_wkfl no-lock where 
-           usrw_key1 = "xxpopoim.p" and usrw_key2 = global_userid no-error.
+assign flhload = OS-GETENV("HOME").
+find first usrw_wkfl no-lock where
+           usrw_key1 = global_userid and usrw_key2 = execname no-error.
 if available usrw_wkfl then do:
    assign flhload = usrw_key3.
 end.
-*/
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 {wbrp01.i}
-assign flhload = OS-GETENV("HOME").
 display flhload with frame a.
 repeat on error undo, retry:
        if c-application-mode <> 'web' then
@@ -40,7 +38,17 @@ repeat on error undo, retry:
          next-prompt flhload.
          undo, retry.
      END.
-
+     do transaction:
+        find first usrw_wkfl exclusive-lock where
+                   usrw_key1 = global_userid and usrw_key2 = execname no-error.
+        if not available usrw_wkfl then do:
+           create usrw_wkfl.
+           assign usrw_key1 = global_userid
+                  usrw_key2 = execname.
+        end.
+        assign  usrw_key3 = flhload.
+        release usrw_wkfl.
+     end.
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "window"
                &printWidth = 80
@@ -63,16 +71,16 @@ repeat on error undo, retry:
      FIND FIRST xxpod_det  NO-ERROR.
      IF NOT AVAIL xxpod_det THEN DO:
         v_flag = "1".
-     END. 
-     IF v_flag = "1" THEN DO: 
-     	  {pxmsg.i &MSGNUM=2482 
-     	           &ERRORLEVEL=3
-     	           &MSGARG1=""flhload""}
-     END.	
+     END.
+     IF v_flag = "1" THEN DO:
+        {pxmsg.i &MSGNUM=2482
+                 &ERRORLEVEL=3
+                 &MSGARG1=""flhload""}
+     END.
      ELSE DO:
           {gprun.i ""xxpodld1.p""}
           for each xxpod_det no-lock with frame x width 130:
-          	  display xxpod_det.
+              display xxpod_det.
           end.
      END.
 

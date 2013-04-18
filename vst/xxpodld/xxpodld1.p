@@ -117,7 +117,7 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
             batchrun = yes.
             INPUT FROM VALUE( fn_i + ".bpi" ) .
             OUTPUT TO VALUE( fn_i + ".bpo" ) keep-messages.
-            {gprun.i ""popomt.p""}
+            {gprun.i ""xxpopomt.p""}
             INPUT CLOSE .
             OUTPUT CLOSE .
             batchrun = NO.
