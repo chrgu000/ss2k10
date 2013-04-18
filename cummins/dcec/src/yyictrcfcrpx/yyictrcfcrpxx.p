@@ -117,8 +117,8 @@ for each temptr no-lock break by ttr_part by ttr_site:
   bsheet:Cells:EntireColumn:AutoFit.
   bsheet:Range("F2"):Select.
   bexcel:ActiveWindow:FreezePanes = True.
-
-bbook:SaveAs(thfile ,,,,,,1).
+if search(thfile) = "" and search(thfile) = ? then
+   bbook:SaveAs(thfile ,,,,,,1).
 bexcel:visible = true.
 bbook:saved = true.
 
