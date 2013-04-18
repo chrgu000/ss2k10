@@ -251,7 +251,7 @@ for each tmpld03: delete tmpld03. end.
              ttr_cstt = t03_cst.
   end.
       for each tr_hist
-       fields(tr_domain tr_part tr_effdate tr_site tr_type tr_qty_loc tr_price)
+       fields(tr_domain tr_part tr_effdate tr_loc tr_site tr_type tr_qty_loc tr_price)
        use-index tr_part_eff
        where tr_domain = global_domain and
              (tr_part  >= part and tr_part <= part1) and
