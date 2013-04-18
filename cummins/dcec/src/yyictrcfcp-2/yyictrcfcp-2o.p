@@ -256,7 +256,9 @@ repeat:
                rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
                issunp label "计划外出库" issso label "销售出库"
                isswo label "加工单出库" invadj label "盘点调整" oth label "其他"
-               edqty label "期末库存" glxcst edqty_amt label "期末库存金额" with width 300 stream-io.
+               edqty label "期末库存" 
+               /* glxcst edqty_amt label "期末库存金额" */ 
+               with width 300 stream-io.
                END.
             ELSE DO:
 
@@ -274,7 +276,8 @@ repeat:
                  rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
                  issunp label "计划外出库" issso label "销售出库"
                  isswo label "加工单出库" invadj label "盘点调整" oth label "其他"
-                 edqty label "期末库存" glxcst edqty_amt label "期末库存金额" with width 300 stream-io.
+                 edqty label "期末库存"
+                 /* glxcst edqty_amt label "期末库存金额" */ with width 300 stream-io.
                END.
            END.
         end.

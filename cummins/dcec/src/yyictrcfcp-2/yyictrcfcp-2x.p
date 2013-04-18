@@ -1,6 +1,5 @@
-/* yyictrcfcp-2x.p - Export Data to XLS Format                               */
+/* xxsocnimp02.p - export to xls                                             */
 /*V8:ConvertMode=Maintenance                                                 */
-/* REVISION END                                                              */
 {mfdeclre.i}
 {yyictrcfcp-2.i}
 define input parameter thfile as CHAR FORMAT "x(50)".
@@ -25,17 +24,19 @@ define variable I as integer.
    bsheet:cells(i,8)  = "采购员代码".
    bsheet:cells(i,9)  = "供应商代码".
    bsheet:cells(i,10) = "E&O".
-   bsheet:cells(i,11) = "采购收货".
-   bsheet:cells(i,12) = "转移入库".
-   bsheet:cells(i,13) = "计划外入库".
-   bsheet:cells(i,14) = "加工单入库".
-   bsheet:cells(i,15) = "采购退货".
-   bsheet:cells(i,16) = "转移出库".
-   bsheet:cells(i,17) = "计划外出库".
-   bsheet:cells(i,18) = "销售出库".
-   bsheet:cells(i,19) = "加工单出库".
-   bsheet:cells(i,20) = "盘点调整".
-   bsheet:cells(i,21) = "其他".
+   bsheet:cells(i,11) = "起始日库存".
+   bsheet:cells(i,12) = "采购收货".
+   bsheet:cells(i,13) = "转移入库".
+   bsheet:cells(i,14) = "计划外入库".
+   bsheet:cells(i,15) = "加工单入库".
+   bsheet:cells(i,16) = "采购退货".
+   bsheet:cells(i,17) = "转移出库".
+   bsheet:cells(i,18) = "计划外出库".
+   bsheet:cells(i,19) = "销售出库".
+   bsheet:cells(i,20) = "加工单出库".
+   bsheet:cells(i,21) = "盘点调整".
+   bsheet:cells(i,22) = "其他".
+   bsheet:cells(i,23) = "截至日库存".
 
    i = i + 1.
 for each temptr no-lock break by ttr_part by ttr_site:
@@ -67,25 +68,28 @@ for each temptr no-lock break by ttr_part by ttr_site:
                    bsheet:cells(i,9) = "'" + ptp_vend.
                    bsheet:cells(i,10) = "'" + ptp_run_seq2.
                 end.
-                bsheet:cells(i,11) = ttr_rctpo.
-                bsheet:cells(i,12) = ttr_rcttr.
-                bsheet:cells(i,13) = ttr_rctunp.
-                bsheet:cells(i,14) = ttr_rctwo.
-                bsheet:cells(i,15) = ttr_isspo.
-                bsheet:cells(i,16) = ttr_isstr.
-                bsheet:cells(i,17) = ttr_issunp.
-                bsheet:cells(i,18) = ttr_issso.
-                bsheet:cells(i,19) = ttr_isswo.
-                bsheet:cells(i,20) = ttr_invadj.
-                bsheet:cells(i,21) = ttr_oth.
-                i = i + 1.      
+                bsheet:cells(i,11) = ttr_qtyf.
+                bsheet:cells(i,12) = ttr_rctpo.
+                bsheet:cells(i,13) = ttr_rcttr.
+                bsheet:cells(i,14) = ttr_rctunp.
+                bsheet:cells(i,15) = ttr_rctwo.
+                bsheet:cells(i,16) = ttr_isspo.
+                bsheet:cells(i,17) = ttr_isstr.
+                bsheet:cells(i,18) = ttr_issunp.
+                bsheet:cells(i,19) = ttr_issso.
+                bsheet:cells(i,20) = ttr_isswo.
+                bsheet:cells(i,21) = ttr_invadj.
+                bsheet:cells(i,22) = ttr_oth.
+                bsheet:cells(i,23) = ttr_qtyt.
+                i = i + 1.
     end.
 
   bsheet:Cells:EntireColumn:AutoFit.
   bsheet:Range("F2"):Select.
   bexcel:ActiveWindow:FreezePanes = True.
 
-bbook:SaveAs(thfile ,,,,,,1).
+if search(thfile) = "" and search(thfile) = ? then 
+   bbook:SaveAs(thfile ,,,,,,1).
 bexcel:visible = true.
 bbook:saved = true.
 
