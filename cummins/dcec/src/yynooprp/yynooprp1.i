@@ -3,4 +3,5 @@ define temp-table xbop
        fields xbop_op   like ps_op
        fields xbop_iss_pol like pt_iss_pol
        fields xbop_phantom like pt_phantom
+       fields xbpo_flag as logical
        index xbop_comp xbop_op xbop_comp.

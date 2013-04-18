@@ -244,16 +244,17 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
          (input comp,
          input level,
          input skpge).
-
 for each xbop exclusive-lock:
  find first ro_det no-lock where ro_domain = global_domain 
         and ro_routing = parent1 and ro_op = xbop_op no-error. 
         if available ro_det then do:
-           delete xbop.
+           assign xbpo_flag = yes.
         end.                                                         
 end.
-for each xbop no-lock:
-      display xbop with stream-io.
+
+for each xbop no-lock break by xbpo_flag with frame x:
+   setFrameLabels(frame x:handle).
+      display xbop_comp xbop_op xbop_iss_pol xbop_phantom  with stream-io.
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 end.
    end.   /* for each bom_mstr */
