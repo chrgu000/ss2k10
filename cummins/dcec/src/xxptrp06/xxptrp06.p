@@ -157,6 +157,9 @@ define variable cost_qty       like mfc_logical initial yes
    label "Include Cost Inventory" no-undo.
 /* ss - 130321.1 -e */
 {xxptrp06.i "new"}
+define  temp-table tmploc01  /*费用类库位列表*/
+     fields t01_site like loc_site
+     fields t01_lock like loc_loc.
 /* SELECT FORM */
 /* s s- 130315.1 -e */
    /* ss - 130321.1 -b */
@@ -191,8 +194,8 @@ define temp-table t_trhist no-undo
    field t_trhist_rev                like tr_rev
    field t_trhist_qty_cn_adj         like tr_qty_lotserial
    index t_trhist is primary unique
-      t_trhist_domain t_trhist_part t_trhist_effdate t_trhist_site
-      t_trhist_loc t_trhist_trnbr t_trhist_ship_type.
+         t_trhist_domain t_trhist_part t_trhist_effdate t_trhist_site
+         t_trhist_loc t_trhist_trnbr t_trhist_ship_type.
 
 /* TEMP-TABLE STORING QUANTITY ON HAND, ITEM NO. AND LOCATION */
 /* FOR A SITE                                                 */
@@ -210,8 +213,7 @@ define temp-table t_lddet no-undo
    FIELD t_lddet_date AS DATE
    FIELD t_lddet_std_as_of LIKE std_as_of
    index t_lddet is primary unique
- t_lddet_site t_lddet_part t_lddet_loc
-   t_lddet_lot .
+         t_lddet_site t_lddet_part t_lddet_loc t_lddet_lot .
 
 DEFINE TEMP-TABLE tt LIKE t_lddet .
 
@@ -647,6 +649,27 @@ define buffer trhist for tr_hist.
        DELETE tt .
    END.
 
+   FOR EACH tmploc01 EXCLUSIVE-LOCK:
+       DELETE tmploc01.
+   END.
+
+   if cost_qty = no then do:  /*费用类库位列表*/
+       for each code_mstr no-lock where code_domain = global_domain
+            and code_fldname = "INVTR",
+           each pld_det no-lock where pld_domain = global_domain and
+                pld_inv_acct = code_value
+           break by pld_site by pld_loc:
+           if first-of(pld_loc) then do:
+              find first tmploc01 exclusive-lock where t01_site = pld_site
+                     and t01_loc = pld_loc no-error.
+              if not available tmploc01 then do:
+                 create tmploc01.
+                 assign t01_site = pld_site
+                        t01_loc = pld_loc.
+              end.
+           end.
+       end.
+   end.
 
 
    assign
@@ -723,14 +746,20 @@ define buffer trhist for tr_hist.
            /* ss - 130315.1 -b and   (ld_loc >= loc and ld_loc <= loc1)
            ss - 130315.1 -e */:
 
+/*fyk*/  find first tmploc01 no-lock where t01_site = ld_site and t01_loc = ld_loc
+/*fyk*/       no-error.
+/*fyk*/  if available tmploc01 then do:
+/*fyk*/     next.
+/*fyk*/  end.
+
           /* ss - 130321.1 -b */
-          IF cost_qty = NO  THEN DO:
-             FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain
-                 AND pld_site = ld_site AND pld_loc = ld_loc
-                 AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain
-                 AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR .
-             IF AVAILABLE pld_det  THEN NEXT .
-          END.
+            /* IF cost_qty = NO  THEN DO:                                                           */
+            /*    FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain                               */
+            /*        AND pld_site = ld_site AND pld_loc = ld_loc                                   */
+            /*        AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain              */
+            /*        AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR . */
+            /*    IF AVAILABLE pld_det  THEN NEXT .                                                 */
+            /* END.                                                                                 */
           /* ss - 130321.1 -e */
 
          find first t_lddet exclusive-lock
@@ -802,6 +831,11 @@ define buffer trhist for tr_hist.
       no-lock:
          /* NEXT SECTION WILL BE REMOVED WHEN   */
          /* tr_qty_lotserial  IS IN THE SCHEMA  */
+/*fyk*/  find first tmploc01 no-lock where t01_site = ld_site and t01_loc = ld_loc
+/*fyk*/       no-error.
+/*fyk*/  if available tmploc01 then do:
+/*fyk*/     next.
+/*fyk*/  end.         
          tr_qty_lotserial = 0.
          {gpextget.i &OWNER     = 'T2:T3'
                      &TABLENAME = 'tr_hist'
@@ -857,20 +891,24 @@ define buffer trhist for tr_hist.
                          and   ld_loc    = tr_loc
                          AND ld_lot = tr_serial)
          break by tr_part by tr_site by tr_loc BY tr_serial /* ss - 130321.1 -e */:
-
+/*fyk*/  find first tmploc01 no-lock where t01_site = ld_site and t01_loc = ld_loc
+/*fyk*/       no-error.
+/*fyk*/  if available tmploc01 then do:
+/*fyk*/     next.
+/*fyk*/  end.
               /* ss - 130321.1 -b */
-           IF FIRST-OF(tr_loc)  THEN DO:
-            v_go = YES .
-              IF cost_qty = NO  THEN DO:
-                 FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain
-                     AND pld_site = tr_site AND pld_loc = tr_loc
-                     AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain
-                     AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR .
-                 IF AVAILABLE pld_det  THEN v_go = NO . .
-              END.
-           END.
-
-           IF v_go = NO  THEN NEXT .
+         /*  IF FIRST-OF(tr_loc)  THEN DO:                                                               */
+         /*   v_go = YES .                                                                               */
+         /*     IF cost_qty = NO  THEN DO:                                                               */
+         /*        FIND FIRST pld_det WHERE pld_domain = GLOBAL_domain                                   */
+         /*            AND pld_site = tr_site AND pld_loc = tr_loc                                       */
+         /*            AND CAN-FIND ( FIRST CODE_mstr WHERE CODE_domain = GLOBAL_domain                  */
+         /*            AND CODE_fldname = "InvTR" AND CODE_value = pld_inv_acct ) NO-LOCK NO-ERROR .     */
+         /*        IF AVAILABLE pld_det  THEN v_go = NO . .                                              */
+         /*     END.                                                                                     */
+         /*  END.                                                                                        */
+         /*                                                                                              */
+         /*  IF v_go = NO  THEN NEXT .                                                                   */
           /* ss - 130321.1 -e */
 
             if first-of(tr_serial)
