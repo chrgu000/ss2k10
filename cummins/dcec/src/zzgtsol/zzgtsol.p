@@ -5,7 +5,7 @@
 
 {mfdtitle.i "1346"}
 
-define new shared stream rpt .
+define new shared stream rpt.
 define new shared stream bf.
 define new shared var v_bkbox  as char format "x(50)".
 define new shared var v_inbox  as char format "x(50)".
@@ -41,6 +41,9 @@ define new shared variable i2            as integer  no-undo.
 define variable subacct like  sod_sub.
 define variable vpart like pt_part.
 define variable vinv  like so_inv_nbr.
+define variable inti as integer.
+define temp-table solist
+       fields solist_nbr like so_nbr.
 
 {zzgtsolt.i "new"}
 
@@ -75,6 +78,7 @@ define new shared workfile xinvd
   field xpart like sod_part
   field xqty  like sod_qty_inv
   field xtot  like tx2d_totamt
+  field xpric like sod_price
   field xtax  like tx2d_cur_tax_amt
   .
 
@@ -134,7 +138,9 @@ repeat:
   for each sotax:
     delete sotax.
   end.
-
+  for each solist:
+    delete solist.
+  end.
   find first usrw_wkfl where usrw_domain = global_domain
        and   usrw_key1 = "GOLDTAX-CTRL"
        and   lookup(global_userid,usrw_charfld[1]) <> 0
@@ -326,10 +332,10 @@ repeat:
       if vpart = "" then do:
          if vpart begins "so" then subacct = "M7000". else subacct = "M1000".
       end.
-
       xqty = decimal(i[9]).
       xtot = decimal(i[11]).
       xtax = decimal(i[15]).
+      xpric = DECIMAL(i[17]).
     seek input to savepos.
     import  unformatted strdummy.
     end.
@@ -343,53 +349,119 @@ repeat:
             sotax_qty = -1.
             sotax_tot = decimal(i[11]).
             sotax_tax = decimal(i[15]).
+            sotax_price = DECIMAL(i[17]).
             sotax_sub = subacct.
         gerrflag = yes.
-        gerrmsg = "存在折扣项，请手工处理".
+        gerrmsg = "存在折扣项，请确认处理状况".
     seek input to savepos.
     import  unformatted strdummy.
     end.
   end.
   input close.
 
-  for each xinvd:
-      find first sod_det no-lock where sod_domain = global_domain
-             and sod_nbr = xnbr and sod_part = xpart
-             and sod_qty_inv = xqty no-error.
-      if available sod_det then do:
-      create sotax.
-      assign sotax_nbr = xnbr
-             sotax_line = sod_line
-             sotax_inv = xinv
-             sotax_part = xpart
-             sotax_qty = xqty
-             sotax_tot = xtot
-             sotax_tax = xtax.
+  for each xinvd no-lock break by xnbr:
+      if first-of(xnbr) then do:
+         create solist.
+         assign solist_nbr = xnbr.
       end.
   end.
 
+for each solist no-lock,
+    each sod_det no-lock where sod_domain = global_domain
+     and sod_nbr = solist_nbr break by sod_nbr by sod_line:
+      find first xinvd exclusive-lock where xnbr = sod_nbr
+             and xpart = sod_part and xqty = sod_qty_inv and xline = 0 no-error.
+      if available xinvd then do:
+         assign xline = sod_line.
+      end.
+end.
 
-  for each sotax exclusive-lock where sotax_part = "ZK":
-      find last sod_det no-lock where sod_domain = global_domain
-             and sod_nbr = sotax_nbr no-error.
-      if available sod_det then do:
+/* output to xinvd.txt.                         */
+  for each xinvd no-lock:
+/*      display xinvd with width 300 stream-io. */
+      find first sod_det no-lock where sod_domain = global_domain
+             and sod_nbr = xnbr and sod_line = xline no-error.
+      find first sotax exclusive-lock where sotax_nbr = xnbr
+             and sotax_line = xline no-error.
+      if not available sotax then do:
+      create sotax.
+      assign sotax_nbr  = xnbr
+             sotax_line = xline
+             sotax_inv  = xinv
+             sotax_part = xpart
+             sotax_qty  = xqty
+             sotax_tot  = xtot
+             sotax_price = xpric
+             sotax_so_price = sod_price when available sod_det.
+             sotax_tax  = xtax.
+      end.
+  end.
+/* output close. */
+
+for each sotax exclusive-lock where sotax_part = "ZK":
+    for each sod_det no-lock WHERE sod_domain = global_domain
+         and sod_nbr = sotax_nbr break by sod_nbr by sod_line:
+         if first-of(sod_nbr) then do:
+            assign inti = 0.
+         end.
+         if inti <= sod_line then inti = sod_line.
          if sod_part = sotax_part then do:
             assign sotax_line = sod_line.
          end.
-         else do:
+         if last-of(sod_nbr) and sotax_line = 0 then do:
             assign sotax_line = sod_line + 1.
          end.
-      end.
-      else do:
-         assign sotax_line = 1.
-      end.
-  end.
+    end.
+    if sotax_line = 0 then assign sotax_line = 999.
+end.
 
+/*   output to sotax.txt.                                        */
+/*      for each sotax no-lock:                                  */
+/*          display sotax with width 300 stream-io.              */
+/*      end.                                                     */
+/*   output close.                                               */
+
+/* FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = "dcec"                                         */
+/*      AND tx2d_ref = "30410KF1" AND tx2d_tr_type = "13":                                      */
+/*     DISPLAY tx2d_Line tx2d_totamt tx2d_tottax tx2d_cur_tax_amt tx2d_cur_recov_amt.           */
+/* END.                                                                                         */
 
 if v_load then do:
          /*CIM_LOAD 到soivmt.p修改税信息*/
         {gprun.i ""zzgtsoltc.p""}
 end.
+
+/* output to sotaxdiff.txt.                                                                      */
+/* for each solist no-lock,                                                                      */
+/*     each tx2d_det no-lock where tx2d_domain = global_domain                                   */
+/*          and tx2d_ref = solist_nbr and tx2d_tr_type = "13",                                   */
+/*     each sod_det no-lock where sod_domain = global_domain                                     */
+/*          and sod_nbr = solist_nbr and sod_line = tx2d_line                                    */
+/*     with frame sotaxdif width 300:                                                            */
+/*     find first sotax no-lock where sotax_nbr = solist_nbr                                     */
+/*            and sotax_line = tx2d_line no-error.                                               */
+/*     if available sotax then do:                                                               */
+/*         display tx2d_ref tx2d_line sod_part                                                   */
+/*             sotax_tot + sotax_tax label "total A"                                             */
+/*             tx2d_totamt when available tx2d_det                                               */
+/*             sotax_tot + sotax_tax - tx2d_totamt label "TOT_DIF" when available tx2d_det       */
+/*             sotax_tot tx2d_tottax when available tx2d_det                                     */
+/*             sotax_tot - tx2d_tottax label "TAXBASE_DIF" when available tx2d_det               */
+/*             sotax_tax tx2d_cur_tax_amt when available tx2d_det                                */
+/*             sotax_tax - tx2d_cur_tax_amt label "TAX_DIF" when available tx2d_det              */
+/*             sotax_price sotax_so_price @ sod_price                                            */
+/*             sotax_price - sotax_so_price label "Price_Dif"                                    */
+/*              with stream-io.                                                                  */
+/*      end.                                                                                     */
+/*      else do:                                                                                 */
+/*         display tx2d_ref tx2d_line sod_part                                                   */
+/*                 tx2d_totamt                                                                   */
+/*                 tx2d_tottax                                                                   */
+/*                 tx2d_cur_tax_amt                                                              */
+/*                 sod_price with stream-io.                                                     */
+/*      end.                                                                                     */
+/* end.                                                                                          */
+/* output close.                                                                                 */
 
   {mfselbpr.i "printer" 132}
     {mfphead.i}
@@ -399,6 +471,13 @@ end.
   do transaction: /*2004-09-02 11:07 */
     {gprun.i ""zzgtsoll.p""}
   end.
+
+/*   output stream rpt to xinvd2.txt.                                 */
+/*     for each xinvd:                                                */
+/*         display stream rpt xinvd with width 300 stream-io.         */
+/*     end.                                                           */
+/*   output stream rpt close.                                         */
+
   {mfrtrail.i}
 
 end. /*main repeat*/

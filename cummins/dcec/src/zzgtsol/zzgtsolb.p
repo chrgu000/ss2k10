@@ -16,7 +16,7 @@
 /*F017*/  {fsdeclr.i new}
 /*F458    define new shared variable tax_date like tax_effdate. */
 /*G2CR*/  define new shared variable prog_name as character
-						  initial "soivpst.p" no-undo.
+              initial "soivpst.p" no-undo.
 
           /* DEFINE VARIABLES USED IN GPGLEF1.P (GL CALENDAR VALIDATION) */
 /*J0DV*/  {gpglefv.i}
@@ -28,39 +28,39 @@
 
 
 
-	/*GUI preprocessor Frame A define */
-	&SCOPED-DEFINE PP_FRAME_NAME A
+  /*GUI preprocessor Frame A define */
+  &SCOPED-DEFINE PP_FRAME_NAME A
 
-	FORM /*GUI*/
+  FORM /*GUI*/
 
-	 RECT-FRAME       AT ROW 1.4 COLUMN 1.25
-	 RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
-	 SKIP(.1)  /*GUI*/
-	inv                  colon 15
-	             inv1                 label {t001.i} colon 49 skip
-	/*G047*/     cust                 colon 15
-	/*G047*/     cust1                label {t001.i} colon 49 skip
-	/*G047*/     bill                 colon 15
-	/*G047*/     bill1                label {t001.i} colon 49 skip(1)
-	             eff_date             colon 33 label "总帐生效日期" skip
-	             gl_sum               colon 33 label "总帐合并/明细(C/D)" skip
-	             print_lotserials     colon 33
-	/*H0F0*   with frame a side-labels.       */
-	/*H0F0*/   SKIP(.4)  /*GUI*/
-	with frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
+   RECT-FRAME       AT ROW 1.4 COLUMN 1.25
+   RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
+   SKIP(.1)  /*GUI*/
+  inv                  colon 15
+               inv1                 label {t001.i} colon 49 skip
+  /*G047*/     cust                 colon 15
+  /*G047*/     cust1                label {t001.i} colon 49 skip
+  /*G047*/     bill                 colon 15
+  /*G047*/     bill1                label {t001.i} colon 49 skip(1)
+               eff_date             colon 33 label "总帐生效日期" skip
+               gl_sum               colon 33 label "总帐合并/明细(C/D)" skip
+               print_lotserials     colon 33
+  /*H0F0*   with frame a side-labels.       */
+  /*H0F0*/   SKIP(.4)  /*GUI*/
+  with frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
 
-	 DEFINE VARIABLE F-a-title AS CHARACTER.
-	 F-a-title = " 选择条件 ".
-	 RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
-	 RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
-	  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
-	  RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
-	 RECT-FRAME:HEIGHT-PIXELS in frame a =
-	  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
-	 RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
+   DEFINE VARIABLE F-a-title AS CHARACTER.
+   F-a-title = " 选择条件 ".
+   RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
+   RECT-FRAME-LABEL:WIDTH-PIXELS in frame a =
+    FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
+    RECT-FRAME-LABEL:SCREEN-VALUE in frame a + " ", RECT-FRAME-LABEL:FONT).
+   RECT-FRAME:HEIGHT-PIXELS in frame a =
+    FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
+   RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5. /*GUI*/
 
-	/*GUI preprocessor Frame A undefine */
-	&UNDEFINE PP_FRAME_NAME
+  /*GUI preprocessor Frame A undefine */
+  &UNDEFINE PP_FRAME_NAME
 
 
 
@@ -110,26 +110,26 @@
           end.
 
 /*          origin
-				/*GUI*/ {mfguirpa.i true  "printer" 132 }
-				/*GUI repeat : */
-				/*GUI*/ procedure p-enable-ui:
+        /*GUI*/ {mfguirpa.i true  "printer" 132 }
+        /*GUI repeat : */
+        /*GUI*/ procedure p-enable-ui:
 */
 
              assign
                 expcount = 999
                 pageno   = 0.
 /*****
-				             if eff_date = ? then eff_date = today.
-				             if inv1 = hi_char then inv1 = "".
-				/*G047*/     if cust1 = hi_char then cust1 = "".
-				/*G047*/     if bill1 = hi_char then bill1 = "".
+                     if eff_date = ? then eff_date = today.
+                     if inv1 = hi_char then inv1 = "".
+        /*G047*/     if cust1 = hi_char then cust1 = "".
+        /*G047*/     if bill1 = hi_char then bill1 = "".
 
 
-				run p-action-fields (input "display").
-				run p-action-fields (input "enable").
-				end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
+        run p-action-fields (input "display").
+        run p-action-fields (input "enable").
+        end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
-				/*GUI*/ procedure p-report-quote:
+        /*GUI*/ procedure p-report-quote:
 ******/
 
 /*origin*begin**********/
@@ -265,7 +265,7 @@ find first fac_ctrl where fac_ctrl.fac_domain = global_domain no-lock no-error.
        /*
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
-		 2004-09-02 14:08 *lb01*
+     2004-09-02 14:08 *lb01*
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 
 */

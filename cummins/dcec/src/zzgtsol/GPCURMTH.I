@@ -11,16 +11,16 @@
 /*           it is also possible to use this to return a flag           */
 /************************************************************************/
 
-          if {1} = gl_base_curr then
-             rndmthd = gl_rnd_mthd.
-          else do:
-             find first cu_mstr /*ex_mstr*/ where  cu_curr /*ex_curr*/ = {1} no-lock no-error.
-             if not available cu_mstr /*ex_mstr*/ then do:
-                /* CURRENCY EXCHANGE MASTER DOES NOT EXIST */
-                {mfmsg.i 964 {2} }
-		{4}.
-		{3}.
-             end.
-             else
-                rndmthd = cu_rnd_mthd /*ex_rnd_mthd*/.
-          end.
+if {1} = gl_base_curr then
+   rndmthd = gl_rnd_mthd.
+else do:
+   find first cu_mstr /*ex_mstr*/ where  cu_curr /*ex_curr*/ = {1} no-lock no-error.
+   if not available cu_mstr /*ex_mstr*/ then do:
+      /* CURRENCY EXCHANGE MASTER DOES NOT EXIST */
+      {mfmsg.i 964 {2} }
+    {4}.
+    {3}.
+   end.
+   else
+      rndmthd = cu_rnd_mthd /*ex_rnd_mthd*/.
+end.

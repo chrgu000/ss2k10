@@ -72,6 +72,7 @@ define shared workfile xinvd
 	field xpart	like sod_part
 	field xqty	like sod_qty_inv
   field xtot  like tx2d_totamt 
+  field xpric like sod_price
   field xtax  like tx2d_cur_tax_amt
   .
 

@@ -1,7 +1,7 @@
 /* zzGTSOL.P - UPLOAD INVOICE DATA GENERATE BY GOLD-TAX INTO MFG/PRO       */
 /*                                                                         */
-/*	LAST MODIFIED 	DAT:2004-09-01 20:04	BY: *LB01* LONG BO 			   */
-/*	LAST MODIFIED 	DAT:2005-01-07 09:52	BY: *LB02* LONG BO 			   */
+/*  LAST MODIFIED   DAT:2004-09-01 20:04  BY: *LB01* LONG BO         */
+/*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO         */
 
 define new shared stream rpt .
 define new shared stream bf.
@@ -47,7 +47,7 @@ define  new shared workfile giv
  field gref              as char
  field gtotamt           like glt_amt column-label "gtotamt"
  field gtaxamt           like glt_amt column-label "gtaxamt"
- field gnetamt           like glt_amt column-label "gnetamt" 
+ field gnetamt           like glt_amt column-label "gnetamt"
  field gtaxpct           like usrw_decfld[1]
  field gcust             as   char format "x(8)"
  field gbill             as   char format "x(8)"
@@ -63,20 +63,20 @@ define  new shared workfile giv
 
 define new shared variable xsonbr like so_nbr.
 define new shared workfile xinvd
-	field x_ref	as char			/*lb02*/
-	field xnbr	like so_nbr
-	field xline like sod_line
-	field xpart	like sod_part
-	field xqty	like sod_qty_inv
-  field xtot  like tx2d_totamt 
+  field x_ref as char     /*lb02*/
+  field xnbr  like so_nbr
+  field xline like sod_line
+  field xpart like sod_part
+  field xqty  like sod_qty_inv
+  field xtot  like tx2d_totamt
   field xtax  like tx2d_cur_tax_amt
   .
 
-define  new shared temp-table wrk_var				/*lb01*/
-    field wrk_sonbr  	like sod_nbr		/*lb01*/
-    field wrk_line   	like sod_line		/*lb01*/
-    field wrk_qty_inv  	like sod_qty_inv /*lb01*/
-    field wrk_sched    	like sod_sched   /*lb01*/
+define  new shared temp-table wrk_var       /*lb01*/
+    field wrk_sonbr   like sod_nbr    /*lb01*/
+    field wrk_line    like sod_line   /*lb01*/
+    field wrk_qty_inv   like sod_qty_inv /*lb01*/
+    field wrk_sched     like sod_sched   /*lb01*/
     index wrk_sonbr wrk_sonbr.          /*lb01*/
 
 
@@ -91,14 +91,14 @@ define  new shared temp-table wrk_var				/*lb01*/
 
 
 form
-	RECT-FRAME       AT ROW 1 COLUMN 1.25
-	RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
-	skip(1)
+  RECT-FRAME       AT ROW 1 COLUMN 1.25
+  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
+  skip(1)
     v_gtaxid   label "接口单位"          colon 20 space(2) v_adname no-label
     v_infile   label "上载数据文件"  colon 20
     v_bkfile   label "备份至"            colon 20
     v_rpfile   label "报告文件"          colon 20
-	  v_ptbox	   label "过账结果"			 colon 20
+    v_ptbox    label "过账结果"      colon 20
     v_times    label "上载次数"          colon 20 skip(1)
     v_load     label "上载(Y)/预览(N)"   colon 20 skip(2)
 /*
@@ -127,7 +127,7 @@ repeat:
     delete giv.
   end.
   for each xinvd:
-  	delete xinvd.
+    delete xinvd.
   end.
   for each sotax:
     delete sotax.
@@ -228,7 +228,7 @@ repeat:
             + string(v_times,"99") + ".rpt".
 
   find first ad_mstr where ad_domain = global_domain and
-  					 ad_addr = v_companyid no-lock no-error.
+             ad_addr = v_companyid no-lock no-error.
   if available ad_mstr then v_adname = ad_name.
                        else v_adname = "".
 
@@ -238,7 +238,7 @@ repeat:
 
     assign /* v_adj = v_infixrd */
            v_adj = no
-    		   v_post = v_inpost. /*2004-09-02 14:10*/
+           v_post = v_inpost. /*2004-09-02 14:10*/
   update
         v_load
    /*
@@ -252,10 +252,10 @@ repeat:
     v_post = no.
   end.
   else do: /*lb01*2004-09-02 09:18*/
-  	if v_post and (not v_adj) then do:
-  		message "准备过账，自动调节差异".
-  		pause.
-  	end.
+    if v_post and (not v_adj) then do:
+      message "准备过账，自动调节差异".
+      pause.
+    end.
   end.
 
   if search(v_infile) = ? then do:
@@ -273,22 +273,22 @@ repeat:
     savepos = SEEK(input).
     import delimiter "~~" i.
     if substring(i[17],1,3) = "DC@" then do:  /* this is the headline */
-    
-	  if i[1] <> "0" then  do:        /*作废*/
-	  	 next.
+
+    if i[1] <> "0" then  do:        /*作废*/
+       next.
      end.
       create giv.
       ginv = substr(i[9],1,length(i[9])).
       gdate = date(int(substr(i[13],5,2)),
                    int(substr(i[13],7,2)),
                    int(substr(i[13],1,4))).
-      gref = substr(i[17],1,length(i[17])).	/*单据号*/
-		/*
+      gref = substr(i[17],1,length(i[17])). /*单据号*/
+    /*
       gtotamt = decimal(i[19]).
       gtaxpct = decimal(i[21]).
       gtaxamt = round(gtotamt / ( 1 + gtaxpct) * gtaxpct ,2).
       gnetamt = gtotamt - gtaxamt.
-		*/
+    */
       gnetamt = decimal(i[19]).
       gtaxpct = decimal(i[21]).
       gtaxamt = decimal(i[23]).
@@ -303,36 +303,36 @@ repeat:
     else if (available giv)
     and (substring(i[1],1,1) = "0")
     then do:  /*发票明细行*/
-    	create xinvd.
-    	xnbr = substring(gref,4,8).
-    	x_ref = gref.	/*lb02*/
-    	xpart = substr(i[5],1,length(i[5])).
-    	if xpart begins "so" then subacct = "M1000". else subacct = "M7000".
-    	xqty = decimal(i[9]).
-    	xtot = decimal(i[11]).
-    	xtax = decimal(i[15]).
-		seek input to savepos.
-		import  unformatted strdummy.
+      create xinvd.
+      xnbr = substring(gref,4,8).
+      x_ref = gref. /*lb02*/
+      xpart = substr(i[5],1,length(i[5])).
+      if xpart begins "so" then subacct = "M1000". else subacct = "M7000".
+      xqty = decimal(i[9]).
+      xtot = decimal(i[11]).
+      xtax = decimal(i[15]).
+    seek input to savepos.
+    import  unformatted strdummy.
     end.
     else if (available giv) and
      (substring(i[1],1,1) = "1") then do:
             create sotax.
-          	sotax_nbr = substring(gref,4,8).
-          	sotax_part = "ZK".
-          	sotax_qty = -1.
-          	sotax_tot = decimal(i[11]).
-          	sotax_tax = decimal(i[15]).
-          	sotax_sub = subacct.
+            sotax_nbr = substring(gref,4,8).
+            sotax_part = "ZK".
+            sotax_qty = -1.
+            sotax_tot = decimal(i[11]).
+            sotax_tax = decimal(i[15]).
+            sotax_sub = subacct.
         gerrflag = yes.
         gerrmsg = "存在折扣项，请手工处理".
-		seek input to savepos.
-		import  unformatted strdummy.
+    seek input to savepos.
+    import  unformatted strdummy.
     end.
   end.
   input close.
-  
+
   for each xinvd:
-      find first sod_det no-lock where sod_domain = global_domain 
+      find first sod_det no-lock where sod_domain = global_domain
              and sod_nbr = xnbr and sod_part = xpart no-error.
       if available sod_det then do:
       create sotax.
@@ -344,12 +344,12 @@ repeat:
              sotax_tax = xtax.
       end.
   end.
-  
+
   for each sotax exclusive-lock where sotax_part = "ZK":
-      find last sod_det no-lock where sod_domain = global_domain 
+      find last sod_det no-lock where sod_domain = global_domain
              and sod_nbr = sotax_nbr no-error.
       if available sod_det then do:
-         if sod_part = sotax_part then do:  
+         if sod_part = sotax_part then do:
             assign sotax_line = sod_line.
          end.
          else do:
@@ -357,7 +357,7 @@ repeat:
          end.
       end.
       else do:
-      	 assign sotax_line = 1.
+         assign sotax_line = 1.
       end.
   end.
 
@@ -368,15 +368,15 @@ end.
 
 /******
   for each sotax:
-  	disp sotax with stream-io width 250.
+    disp sotax with stream-io width 250.
   end.
 
   /*load into mfg*/
 /*  {zzgtsola.i}  */
 
-	do transaction: /*2004-09-02 11:07 */
-		{gprun.i ""zzgtsoll.p""}
-	end.
+  do transaction: /*2004-09-02 11:07 */
+    {gprun.i ""zzgtsoll.p""}
+  end.
   {mfrtrail.i}
 *******/
 end. /*main repeat*/

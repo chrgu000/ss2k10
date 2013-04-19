@@ -65,12 +65,13 @@
            if last-of(sotax_nbr) then do:
            put stream bf unformat "." skip.
            put stream bf unformat '- - '.
-           find first so_mstr no-lock where so_domain = global_domain 
-                  and so_nbr = sotax_nbr no-error.
-           if available so_mstr and so_stat = "" then do:
-              put stream bf unformat '- '.
-           end.
+               find first so_mstr no-lock where so_domain = global_domain
+                      and so_nbr = sotax_nbr no-error.
+               if available so_mstr and so_stat = "" then do:
+                  put stream bf unformat '- '.
+               end.
            put stream bf unformat '- - "' sotax_inv '" N Y' skip.
+
           output stream bf close.
           input from value(cimmfname + ".bpi").
           output to value(cimmfname + ".bpo").
@@ -79,9 +80,7 @@
           batchrun = no.
           output close.
           input close.
-          /*
           os-delete value(cimmfname + ".bpi").
           os-delete value(cimmfname + ".bpo").
-          */
       end.
   end.
