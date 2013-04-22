@@ -21,6 +21,7 @@ define new shared var effdate1 like ps_start.
 define new shared var effdate2 like ps_start.
 def var strdate as char.
 define variable vqty like ps_qty_per.
+define variable vsite as character.
 
 define new shared work-table mybomcmp
   field bcomp like ps_comp
@@ -166,16 +167,21 @@ repeat:
     end.
     empty temp-table tmpbom1 no-error.
     vqty = 1.
-    run process_report (input parent1,input effdate1).
-
-/*    for each tmpbom1 exclusive-lock:                                        */
-/*       find first ps_mstr no-lock where ps_domain = global_domain           */
-/*       and ps_par = tb2_comp no-error.                                      */
-/*       if available ps_mstr then do:                                        */
-/*          delete tmpbom1.                                                   */
-/*       end.                                                                 */
-/*    end.                                                                    */
-
+    if substring(trim(parent1),length(trim(parent1)) - 1) = "ZZ" then do:
+       assign vsite = "dcec-b".
+    end.
+    else do:
+       assign vsite = "dcec-c".
+    end.
+    message vsite view=as alert-box.
+    run process_report (input parent1 ,input parent1 ,input effdate1,input 1).
+    for each tmpbom1 exclusive-lock:
+       find first ptp_det no-lock where pt_domain = global_domain
+       and ptp_part = tb1_comp and ptp_site = vsite no-error.
+       if available ptp_det and ptp_pm_code <> "P" or not available ptp_det then do:
+          delete tmpbom1.
+       end.
+    end.
     for each tmpbom1 no-lock:
         find first mybomcmp exclusive-lock where
                    bcomp = tb1_comp no-error.
@@ -188,17 +194,23 @@ repeat:
     end.
 
     empty temp-table tmpbom1 no-error.
+    if substring(trim(parent2),length(trim(parent2)) - 1) = "ZZ" then do:
+       assign vsite = "dcec-b".
+    end.
+    else do:
+       assign vsite = "dcec-c".
+    end.
+      message vsite view=as alert-box.
     vqty = 1.
     run process_report
-            (input parent2, input effdate2).
-/*    for each tmpbom1 exclusive-lock:                                       */
-/*       find first ps_mstr no-lock where ps_domain = global_domain          */
-/*       and ps_par = tb2_comp no-error.                                     */
-/*       if available ps_mstr then do:                                       */
-/*          delete tmpbom1.                                                  */
-/*       end.                                                                */
-/*    end.                                                                   */
-
+            (input parent2,input parent2, input effdate2,input 1).
+    for each tmpbom1 exclusive-lock:
+       find first ptp_det no-lock where pt_domain = global_domain
+       and ptp_part = tb1_comp and ptp_site = vsite no-error.
+       if available ptp_det and ptp_pm_code <> "P" or not available ptp_det then do:
+          delete tmpbom1.
+       end.
+    end.
     for each tmpbom1 no-lock:
         find first mybomcmp exclusive-lock where
                    bcomp = tb1_comp no-error.
@@ -216,6 +228,9 @@ repeat:
         if available pt_mstr then do:
            assign bdesc = pt_desc1
                   bdesc2 = pt_desc2.
+        end.
+        else do:
+             delete mybomcmp.
         end.
     end.
 

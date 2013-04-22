@@ -335,7 +335,7 @@ Procedure schedule_check_upload:
                {gprun.i ""rerpmt.p""}
                input close .
                output close .
-
+                batchrun = no.
                 end.   /*first-of(xxwk1_ponbr)*/
 
 

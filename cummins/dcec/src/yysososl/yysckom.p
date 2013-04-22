@@ -46,14 +46,13 @@ find first ptp_det where ptp_det.ptp_domain = global_domain and   ptp_part = sod
 			end.
 	end.
 
-find first in_mstr where in_mstr.in_domain = global_domain and  in_site = sod_site and in_part = sod_part no-lock no-error.
+find first in_mstr where in_mstr.in_domain = global_domain and in_part = sod_part and in_site = sod_site  no-lock no-error.
 
 if bb > 0 then do:
 	aa = open_qty mod bb.
 	if aa > 0  then do:
 	   open_qty = open_qty - aa .
 	end.
-
 	for each lad_det where lad_det.lad_domain = global_domain
 					 and  lad_part = sod_part
 			 and  lad_site = sod_site
@@ -61,17 +60,13 @@ if bb > 0 then do:
 		avl_qoh = avl_qoh + lad_qty_pick.
 	end.
 	  avl_alloc = in_qty_oh - avl_qoh.
-
 	if open_qty > 0 and avl_alloc < open_qty then do:
 	   aa = avl_alloc mod bb.
 	   if aa > 0 then do :
 	   open_qty = avl_alloc - aa .
 	   end.
 	end.
-
 	if open_qty < 0 then open_qty = 0.
-
-
 end.
 
 

@@ -92,7 +92,9 @@
 /*J3J4*/ define buffer ptmstr1 for pt_mstr.
 /*J3J4*/ define buffer psmstr  for ps_mstr.
 
-
+define temp-table xxrec
+       fields xxrec_level as integer
+       fields xxrec_part like pt_part.
 
 
 /*GUI preprocessor Frame A define */
@@ -125,7 +127,7 @@ o_char:ADD-LAST("非O","非O") .
 
 /*K124*/ {wbrp02.i}
      repeat:
-
+        empty temp-table xxrec no-error.
 /*K124*/ if c-application-mode <> 'web':u then
         update parent eff_date maxlevel /*hj01*/ o_char VALIDATE(o_char = "ALL" OR substring(o_char,1,1) = "!" OR
                          CAN-FIND(qad_wkfl NO-LOCK where qad_domain = global_domain
@@ -212,11 +214,11 @@ o_char:ADD-LAST("非O","非O") .
 /*J3J4*/ assign
 /*J3J4*/    l_next    = yes
 /*J3J4*/    l_nextptp = no
-                level     = 0
+            level     = 0
 /*G265      comp = pt_part.  */
 /*G265*/    comp      = parent
-            maxlevel  = min(maxlevel,99)
-            level     = 1.
+            maxlevel  = min(maxlevel,99).
+            level     = 1. 
 
         find first ps_mstr use-index ps_comp where ps_domain = global_domain
         			 and ps_comp = comp
@@ -375,6 +377,9 @@ o_char:ADD-LAST("非O","非O") .
                 (substring(o_char,1,1) <> "!" and index(o_char,xxstatus) > 0 ) or
                 (substring(o_char,1,1) = "!" and index(substring(o_char,2), xxstatus) = 0)
              then do:
+               find first xxrec no-lock where xxrec_level = level
+                      and xxrec_part = ps_par no-error.
+               if not available xxrec then do:
               display lvl ps_par desc1 ps_qty_per um
                       l_phantom @ phantom
                       ps_ps_code
@@ -382,12 +387,19 @@ o_char:ADD-LAST("非O","非O") .
     /*judy*/          xxstatus
                       ps_rmks
                      with frame bm STREAM-IO /*GUI*/ .
-
+               find first xxrec exclusive-lock where xxrec_level = level
+                      and xxrec_part = ps_par no-error.
+               if not available xxrec then do:
+                  create xxrec.
+                  assign xxrec_level = level
+                         xxrec_part = ps_par.
+               end.
 
 
 /*G265*/             if available bom_mstr and not available pt_mstr then
 /*N0F3 /*G265*/      display {&bmwuiqa_p_5} @ phantom with frame bm. */
 /*N0F3*/             /*hj01 IF yn = NO THEN */ display getTermLabel("BOM",3) FORMAT "x(3)" @ phantom with frame bm STREAM-IO /*GUI*/ .
+                end. /* if not available xxrec then do:*/
                end. /* if o_char = "ALL" or */
 /********
 	     if available pt_mstr and pt_desc2 > ""
@@ -413,7 +425,7 @@ o_char:ADD-LAST("非O","非O") .
                    ps_qty_per_b ps_qty_type um
                    l_phantom @ phantom
                     ps_ps_code   /*y0301*/
-                   /*judy*/   xxstatus  
+                   /*judy*/   xxstatus /*  + "xxx" @ xxstatus  */
                    ps_rmks
                    with frame fm STREAM-IO /*GUI*/ .
 

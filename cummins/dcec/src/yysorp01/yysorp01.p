@@ -4,23 +4,24 @@
 
 {mfdtitle.i "120816.1"}
 
-def var nbr     like so_nbr.
-def var nbr1    like so_nbr.
-def var region    like cm_region.
-def var region1   like cm_region.
-def var cust    like cm_addr.
-def var cust1   like cm_addr.
-def var slspsn    like cm_slspsn[1].
-def var cumdate   like sod_cum_date[1].
-def var cumdate1  like sod_cum_date[1].
-def var part    like pt_part.
-def var part1   like pt_part.
-def var sorttype  as logical format "A-区域/C-客户".
-def var amt     as decimal label "总价" format ">>>>,>>>,>>9.99".
-def var site    like si_site initial "DCEC-SV".
-def var site1   like si_site initial "DCEC-SV".
-def var allamt    as decimal.
-/*cj*/ DEF VAR cmtype LIKE cm_type .
+define variable nbr      like so_nbr.
+define variable nbr1     like so_nbr.
+define variable region   like cm_region.
+define variable region1  like cm_region.
+define variable cust     like cm_addr.
+define variable cust1    like cm_addr.
+define variable slspsn   like cm_slspsn[1].
+define variable cumdate  like sod_cum_date[1].
+define variable cumdate1 like sod_cum_date[1].
+define variable part     like pt_part.
+define variable part1    like pt_part.
+define variable sorttype as logical format "A-区域/C-客户".
+define variable amt      as decimal label "总价" format ">>>>,>>>,>>9.99".
+define variable site     like si_site initial "DCEC-SV".
+define variable site1    like si_site initial "DCEC-SV".
+define variable allamt   as decimal.
+DEFine VARiable cmtype   LIKE cm_type .
+define variable incso    like mfc_logical initial NO.
 
 def temp-table zzwkso
   field sonbr   like so_nbr
@@ -57,9 +58,9 @@ FORM /*GUI*/
     part1 colon 50
     site  colon 20
     site1 colon 50
-    sorttype  colon 20 label "排序选项"
-    "A-区域/C-客户"
-/*cj*/  cmtype COLON 50
+    sorttype  colon 20 label "排序选项" "A-区域/C-客户"
+    cmtype COLON 50
+    incso  colon 20
 
   SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space THREE-D /*GUI*/.
@@ -117,32 +118,33 @@ DEFINE VARIABLE iTotalLine AS INTEGER.
       site
       site1
       sorttype
-/*cj*/      cmtype
+      cmtype
+      incso
     with frame a.
 
         {mfquoter.i  nbr     }
         {mfquoter.i  nbr1    }
-        {mfquoter.i  region    }
-        {mfquoter.i  region1     }
-        {mfquoter.i  cust      }
-        {mfquoter.i  cust1       }
-        {mfquoter.i  slspsn      }
-        {mfquoter.i  cumdate   }
-        {mfquoter.i  cumdate1    }
-        {mfquoter.i  part      }
-        {mfquoter.i  part1       }
+        {mfquoter.i  region  }
+        {mfquoter.i  region1 }
+        {mfquoter.i  cust    }
+        {mfquoter.i  cust1   }
+        {mfquoter.i  slspsn  }
+        {mfquoter.i  cumdate }
+        {mfquoter.i  cumdate1}
+        {mfquoter.i  part    }
+        {mfquoter.i  part1   }
         {mfquoter.i  site    }
-        {mfquoter.i  site1       }
-        {mfquoter.i  sorttype    }
-        {mfquoter.i  cmtype    }
-
-    if nbr1   = ""      then nbr1     = hi_char .
-    if region1  = ""        then region1      = hi_char   .
-    if cust1  = ""        then cust1        = hi_char   .
-    if cumdate  = ?         then cumdate      = low_date  .
-    if cumdate1 = ?         then cumdate1       = hi_date   .
-    if part1  = ""        then part1        = hi_char   .
-    if site1  = ""        then site1        = hi_char   .
+        {mfquoter.i  site1   }
+        {mfquoter.i  sorttype}
+        {mfquoter.i  cmtype  }
+        {mfquoter.i  incso   }
+    if nbr1     = "" then nbr1     = hi_char.
+    if region1  = "" then region1  = hi_char.
+    if cust1    = "" then cust1    = hi_char.
+    if cumdate  = ?  then cumdate  = low_date.
+    if cumdate1 = ?  then cumdate1 = hi_date.
+    if part1    = "" then part1    = hi_char.
+    if site1    = "" then site1    = hi_char.
 
 /*
     {mfselprt.i "printer" 132}
@@ -162,7 +164,7 @@ DEFINE VARIABLE iTotalLine AS INTEGER.
     iLine = 2.
     chExcelWorkbook:Worksheets(1):Cells(iLine,1) = "客户".
     chExcelWorkbook:Worksheets(1):Cells(iLine,2) = "客户名".
-/*cj*/  chExcelWorkbook:Worksheets(1):Cells(iLine,3) = "区域-客户类型".
+    chExcelWorkbook:Worksheets(1):Cells(iLine,3) = "区域-客户类型".
     chExcelWorkbook:Worksheets(1):Cells(iLine,4) = "零件号".
     chExcelWorkbook:Worksheets(1):Cells(iLine,5) = "零件名".
     chExcelWorkbook:Worksheets(1):Cells(iLine,6) = "产品类库位".
@@ -175,8 +177,6 @@ DEFINE VARIABLE iTotalLine AS INTEGER.
     chExcelWorkbook:Worksheets(1):Cells(iLine,13) = "金额".
     chExcelWorkbook:Worksheets(1):Cells(iLine,14) = "发票号".
     chExcelWorkbook:Worksheets(1):Cells(iLine,15) = "地点".
-
-
 
     if sorttype then
       {yysorps.i "soregion"}
@@ -192,9 +192,8 @@ DEFINE VARIABLE iTotalLine AS INTEGER.
     /*release object chexcelworkbooktemp .*/
     RELEASE OBJECT chExcelApplication.
 
-  /*
+/*
     {mfreset.i}
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
+  /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 */
   end. /*repeat*/

@@ -8,7 +8,7 @@ the bom code against the 'M' type item
          /* DISPLAY TITLE */
 /** 03/28/13
   * BOM Code自动生成菜单60.13.22,新增时，
-  * 必须在1.4.17下东西区两个地点下维护组件，才可以生成BOMcode
+  * 必须在1.4.17下维护组件，才可以生成BOMcode
   */
 
 {mfdtitle.i "130409.1"}
@@ -100,22 +100,6 @@ repeat:
                   &ERRORLEVEL=3}
       end.
    end.
-   find first ptp_det where ptp_domain = global_domain and ptp_part = part and ptp_site = "DCEC-C" no-lock no-error.
-   if not available ptp_det then do:
-        message "零件无主地点[DCEC-C]-计划数据,请重新输入" view-as alert-box error.
-        undo,retry.
-   end.
-   find first ptp_det where ptp_domain = global_domain and ptp_part = part and ptp_site = "DCEC-B" no-lock no-error.
-   if not available ptp_det then do:
-        message "零件无主地点[DCEC-B]-计划数据,请重新输入" view-as alert-box error.
-        undo,retry.
-   end.
-   if ptp_pm_code <> "m" then do:
-       conf-yn = no.
-       message "该零件的'采/制'类型为: '" + ptp_pm_code "',是否继续"
-              view-as alert-box question button yes-no update conf-yn.
-        if conf-yn <> yes then undo,retry.
-   end.
 
     /*******************search the suffix for the bom code which users want to execute**********/
     find first code_mstr where code_domain = global_domain and code_fldname = "cust-control-file" and
@@ -203,12 +187,18 @@ repeat:
                end.
 
     find first ptp_det where ptp_domain = global_domain and
-               ptp_part = part and ptp_site <> site no-lock no-error.
+               ptp_part = part and ptp_site = site no-lock no-error.
     if not available ptp_det then do:
-         message "不允许对零件: '" + part + "' 生成地点: '" + site + "' 的产品结构代码" view-as alert-box error.
+        message "零件无主地点[" site "]-计划数据,请重新输入" view-as alert-box error.
          undo,retry.
     end.
-
+ 
+   if ptp_pm_code <> "m" then do:
+       conf-yn = no.
+       message "该零件的'采/制'类型为: '" + ptp_pm_code "',是否继续"
+              view-as alert-box question button yes-no update conf-yn.
+        if conf-yn <> yes then undo,retry.
+   end.
 
                  set bom_batch_um bom_desc go-on ("F5" "CTRL-D") with frame a.
 
@@ -234,10 +224,7 @@ repeat:
 /*F0SL*/                and not can-find(pt_mstr where pt_domain = global_domain and pt_part = bom_parent))
 /*G309*/            then do:
 /*G309*/             /*tfq   {mfmsg.i 226 3} */
-                     {pxmsg.i
-               &MSGNUM=226
-               &ERRORLEVEL=3
-                        }
+                     {pxmsg.i &MSGNUM=226 &ERRORLEVEL=3}
 /*Delete not allowed, product structure exists*/
 /*G309*/                undo mainloop, retry.
 /*G309*/            end.
