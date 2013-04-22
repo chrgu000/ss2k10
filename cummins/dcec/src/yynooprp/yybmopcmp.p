@@ -119,8 +119,8 @@ eff_date = today.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -140,8 +140,8 @@ with frame a width 80 side-labels attr-space NO-BOX THREE-D /*GUI*/.
    &IF (DEFINED(SELECTION_CRITERIA) = 0)
    &THEN " Selection Criteria "
    &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
+   &ENDIF
+&ELSE
    getTermLabel("SELECTION_CRITERIA", 25).
 &ENDIF.
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -174,7 +174,7 @@ setFrameLabels(frame a:handle).
 
    if c-application-mode <> 'web'
    then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -206,7 +206,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
    end.
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -240,26 +240,37 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
       /* THIRD INPUT PARAMETER CHANGED FROM new_parent TO skpge */
 
-      run process_report
+     run process_report
          (input comp,
          input level,
          input skpge).
+
 for each xbop exclusive-lock:
- find first ro_det no-lock where ro_domain = global_domain 
-        and ro_routing = parent1 and ro_op = xbop_op no-error. 
-        if available ro_det then do:
-           assign xbop_stat = "OK".
-        end.                                                         
+       assign xbop_stat = "BOM".
+end.
+
+for each ro_det no-lock where ro_domain = global_domain
+     and ro_rout = parent1:
+     find first xbop exclusive-lock where xbop_op = ro_op no-error.
+     if available xbop then do:
+        assign xbop_stat = "OK".
+     end.
+     else do:
+        create xbop.
+        assign xbop_comp = parent1
+               xbop_op = ro_op
+               xbop_stat = "Routing".
+     end.
 end.
 
 for each xbop no-lock break by xbop_stat with frame x:
    setFrameLabels(frame x:handle).
-      display xbop_comp xbop_op xbop_iss_pol xbop_phantom  with stream-io.
+      display xbop_comp xbop_op xbop_iss_pol xbop_phantom xbop_stat with stream-io.
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 end.
    end.   /* for each bom_mstr */
    /* REPORT TRAILER */
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
