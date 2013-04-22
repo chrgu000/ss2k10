@@ -272,9 +272,11 @@ for each tmpld03: delete tmpld03. end.
 /*          where in_mstr.in_domain = global_domain and in_part = pt_part   */
 /*          and (in_site = tr_site)                                         */
 /*          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)            */
-          break by tr_part by tr_type:
+          break by tr_site by tr_part by tr_type:
 
-          if first-of(tr_type) then assign qty = 0.
+          if first-of(tr_type) then do:
+             assign qty = 0.
+          end.
 
 /*fyk*/  find first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc
 /*fyk*/       no-error.
@@ -292,48 +294,48 @@ for each tmpld03: delete tmpld03. end.
                      ttr_site = tr_site.
            end.
            if tr_type = "rct-po" then do:
-                ttr_rctpo = ttr_rctpo + tr_qty_loc.
+                ttr_rctpo = ttr_rctpo + qty.
 /*                ttr_rctpoc = ttr_rctpoc + tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "rct-tr" then do:
-                ttr_rcttr = ttr_rcttr + tr_qty_loc.
+                ttr_rcttr = ttr_rcttr + qty.
 /*                ttr_rcttrc = ttr_rcttrc + tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "rct-unp" then do:
-                ttr_rctunp = ttr_rctunp + tr_qty_loc.
+                ttr_rctunp = ttr_rctunp + qty.
 /*                ttr_rctunpc = ttr_rctunpc + tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "rct-wo" then do:
-                ttr_rctwo = ttr_rctwo + tr_qty_loc.
+                ttr_rctwo = ttr_rctwo + qty.
 /*                ttr_rctwoc = ttr_rctwoc + tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "iss-prv" then do:
-                ttr_isspo = ttr_isspo - tr_qty_loc.
+                ttr_isspo = ttr_isspo - qty.
 /*                ttr_isspoc = ttr_isspoc - tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "iss-tr" then do:
-                ttr_isstr = ttr_isstr - tr_qty_loc.
+                ttr_isstr = ttr_isstr - qty.
 /*                ttr_isstrc = ttr_isstrc - tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "iss-unp" then do:
-                ttr_issunp = ttr_issunp - tr_qty_loc.
+                ttr_issunp = ttr_issunp - qty.
 /*                ttr_issunpc = ttr_issunpc - tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "iss-so" then do:
-                ttr_issso = ttr_issso - tr_qty_loc.
+                ttr_issso = ttr_issso - qty.
 /*                ttr_isssoc = ttr_isssoc - tr_price * tr_qty_loc.  */
            end.
            else if tr_type = "iss-wo" then do:
-                ttr_isswo = ttr_isswo - tr_qty_loc.
+                ttr_isswo = ttr_isswo - qty.
 /*                ttr_isswoc = ttr_isswoc - tr_price * tr_qty_loc.  */
            end.
            else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
                 then do:
-                     ttr_invadj = ttr_invadj + tr_qty_loc.
+                     ttr_invadj = ttr_invadj + qty.
 /*                     ttr_invadjc = ttr_invadjc + tr_price * tr_qty_loc.  */
                 end.
            else do:
-                ttr_oth = ttr_oth + tr_qty_loc.
+                ttr_oth = ttr_oth + qty.
 /*                ttr_othc = ttr_othc + tr_price * tr_qty_loc.  */
            end.
          end. /*if last-of(tr_type) */

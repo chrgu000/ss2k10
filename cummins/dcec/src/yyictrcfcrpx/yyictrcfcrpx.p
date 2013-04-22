@@ -3,7 +3,7 @@
 /*ps:This report only save character version GUI version will be converted    */
 /******************************************************************************/
 
-{mfdtitle.i "4.2"}
+{mfdtitle.i "4.22"}
 {xxppptrp07.i "new"}
 {yyictrcfcrpx.i "new"}
 define variable site like si_site no-undo.
@@ -23,8 +23,8 @@ define variable loc1 LIKE tr_loc no-undo.
 define variable keeper as char label "保管员" no-undo.
 define variable keeper1 as char no-undo.
 define variable fname   as char no-undo format "x(100)".
-define variable amtf    as decimal format "->,>>>,>>>,>>9.<<<<".
-define variable amtt    as decimal format "->,>>>,>>>,>>9.<<<<".
+define variable amtf    as decimal format "->>>>>>>>>9.<<".
+define variable amtt    as decimal format "->>>>>>>>>9.<<".
 
 DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
      LABEL "Suppress Zero"
@@ -64,7 +64,7 @@ define variable cost_qty like mfc_logical initial yes.
 
 /* SELECT FORM */
 form
- SKIP(.1)  
+ SKIP(.1)
  site colon 22          site1 colon 49 label {t001.i}
  effdate colon 22       effdate1 colon 49 label {t001.i}
  line colon 22          line1 colon 49 label {t001.i}
@@ -76,7 +76,7 @@ form
  cost_qty colon 22 skip(1)
  yn_zero colon 22  label "抑制为零数据"
  fname colon 22 view-as fill-in size 50 by 1
- SKIP(.4)   
+ SKIP(.4)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
@@ -125,7 +125,7 @@ for each tmpld03: delete tmpld03. end.
 for each tmploc01: delete tmploc01. end.
 for each temptr: delete temptr. end.
 
- 
+
 if cost_qty = no then do:  /*费用类库位列表*/
    for each code_mstr no-lock where code_domain = global_domain
         and code_fldname = "INVTR",
@@ -272,9 +272,12 @@ for each tmpld03: delete tmpld03. end.
 /*          where in_mstr.in_domain = global_domain and in_part = pt_part   */
 /*          and (in_site = tr_site)                                         */
 /*          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)            */
-          break by tr_part by tr_type:
+          break by tr_site by tr_part by tr_type:
 
-          if first-of(tr_type) then assign qty = 0.
+          if first-of(tr_type) then do:
+             assign qty = 0
+                    amtf = 0.
+          end.
 
 /*fyk*/  find first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc
 /*fyk*/       no-error.
@@ -283,6 +286,7 @@ for each tmpld03: delete tmpld03. end.
 /*fyk*/  end.
 
          assign qty = qty + tr_qty_loc.
+                amtf = amtf + tr_price * tr_qty_loc.
           if last-of(tr_type) then do:
            find first temptr exclusive-lock where ttr_part = tr_part and
                   ttr_site = tr_site no-error.
@@ -292,49 +296,49 @@ for each tmpld03: delete tmpld03. end.
                      ttr_site = tr_site.
            end.
            if tr_type = "rct-po" then do:
-                ttr_rctpo = ttr_rctpo + tr_qty_loc.
-                ttr_rctpoc = ttr_rctpoc + tr_price * tr_qty_loc.
+                ttr_rctpo = ttr_rctpo + qty.
+                ttr_rctpoc = ttr_rctpoc + amtf.
            end.
            else if tr_type = "rct-tr" then do:
-                ttr_rcttr = ttr_rcttr + tr_qty_loc.
-                ttr_rcttrc = ttr_rcttrc + tr_price * tr_qty_loc.
+                ttr_rcttr = ttr_rcttr + qty.
+                ttr_rcttrc = ttr_rcttrc + amtf.
            end.
            else if tr_type = "rct-unp" then do:
-                ttr_rctunp = ttr_rctunp + tr_qty_loc.
-                ttr_rctunpc = ttr_rctunpc + tr_price * tr_qty_loc.
+                ttr_rctunp = ttr_rctunp + qty.
+                ttr_rctunpc = ttr_rctunpc + amtf.
            end.
            else if tr_type = "rct-wo" then do:
-                ttr_rctwo = ttr_rctwo + tr_qty_loc.
-                ttr_rctwoc = ttr_rctwoc + tr_price * tr_qty_loc.
+                ttr_rctwo = ttr_rctwo + qty.
+                ttr_rctwoc = ttr_rctwoc + amtf.
            end.
            else if tr_type = "iss-prv" then do:
-                ttr_isspo = ttr_isspo - tr_qty_loc.
-                ttr_isspoc = ttr_isspoc - tr_price * tr_qty_loc.
+                ttr_isspo = ttr_isspo - qty.
+                ttr_isspoc = ttr_isspoc - amtf.
            end.
            else if tr_type = "iss-tr" then do:
-                ttr_isstr = ttr_isstr - tr_qty_loc.
-                ttr_isstrc = ttr_isstrc - tr_price * tr_qty_loc.
+                ttr_isstr = ttr_isstr - qty.
+                ttr_isstrc = ttr_isstrc - amtf.
            end.
            else if tr_type = "iss-unp" then do:
-                ttr_issunp = ttr_issunp - tr_qty_loc.
-                ttr_issunpc = ttr_issunpc - tr_price * tr_qty_loc.
+                ttr_issunp = ttr_issunp - qty.
+                ttr_issunpc = ttr_issunpc - amtf.
            end.
            else if tr_type = "iss-so" then do:
-                ttr_issso = ttr_issso - tr_qty_loc.
-                ttr_isssoc = ttr_isssoc - tr_price * tr_qty_loc.
+                ttr_issso = ttr_issso - qty.
+                ttr_isssoc = ttr_isssoc - amtf.
            end.
            else if tr_type = "iss-wo" then do:
-                ttr_isswo = ttr_isswo - tr_qty_loc.
-                ttr_isswoc = ttr_isswoc - tr_price * tr_qty_loc.
+                ttr_isswo = ttr_isswo - qty.
+                ttr_isswoc = ttr_isswoc - amtf.
            end.
            else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
                 then do:
-                     ttr_invadj = ttr_invadj + tr_qty_loc.
-                     ttr_invadjc = ttr_invadjc + tr_price * tr_qty_loc.
+                     ttr_invadj = ttr_invadj + qty.
+                     ttr_invadjc = ttr_invadjc + amtf.
                 end.
            else do:
-                ttr_oth = ttr_oth + tr_qty_loc.
-                ttr_othc = ttr_othc + tr_price * tr_qty_loc.
+                ttr_oth = ttr_oth + qty.
+                ttr_othc = ttr_othc + amtf.
            end.
          end. /*if last-of(tr_type) */
     end.
@@ -342,11 +346,11 @@ for each tmpld03: delete tmpld03. end.
 for each temptr exclusive-lock:
     assign ttr_qtyf = ttr_qtyt - ttr_rctpo - ttr_rcttr - ttr_rctunp - ttr_rctwo - ttr_invadj - ttr_oth
                     + ttr_isspo + ttr_isstr + ttr_issunp + ttr_issso + ttr_isswo.
-    assign ttr_cstf = ttr_cstt - ttr_rctpoc - ttr_rcttrc - ttr_rctunpc - ttr_rctwoc - ttr_invadjc - ttr_othc 
+    assign ttr_cstf = ttr_cstt - ttr_rctpoc - ttr_rcttrc - ttr_rctunpc - ttr_rctwoc - ttr_invadjc - ttr_othc
                     + ttr_isspoc + ttr_isstrc + ttr_issunpc + ttr_isssoc + ttr_isswoc.
 end.
 */
-    
+
 if fname = "" then do:
  disp effdate column-label "起始日期" format "9999/99/99"
       effdate1 column-label "截止日期" format "9999/99/99" with frame x.
@@ -380,7 +384,7 @@ if fname = "" then do:
                 ptp_run_seq2 when available ptp_det
                 ttr_qtyf
                 ttr_cstf
-                ttr_qtyf * ttr_cstf @ amtf
+                round(ttr_qtyf * ttr_cstf,2) @ amtf format "->>>>>>>>>9.<<"
                 ttr_rctpo
                 ttr_rctpoc
                 ttr_rcttr
@@ -405,14 +409,14 @@ if fname = "" then do:
                 ttr_othc
                 ttr_qtyt
                 ttr_cstt
-                ttr_qtyt * ttr_cstt @ amtt.
+                round(ttr_qtyt * ttr_cstt,2) @ amtt format "->>>>>>>>>9.<<".
 
     {mfrpchk.i}
     end.
 end.
 else do:
    if opsys = "UNIX" then do:
-      {gprun.i ""yyictrcfcrpxc.p"" "(input fname)"} 
+      {gprun.i ""yyictrcfcrpxc.p"" "(input fname)"}
    end.
    else if opsys = "msdos" or opsys = "win32" then do:
       {gprun.i ""yyictrcfcrpxx.p"" "(input fname)"}
