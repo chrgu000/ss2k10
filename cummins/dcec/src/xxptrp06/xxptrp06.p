@@ -77,7 +77,7 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-{mfdtitle.i "130328.1 "}
+{mfdtitle.i "130420.1 "}
 
 /*  DEFINING VARIABLES AS NO-UNDO */
 
@@ -835,7 +835,7 @@ define buffer trhist for tr_hist.
 /*fyk*/       no-error.
 /*fyk*/  if available tmploc01 then do:
 /*fyk*/     next.
-/*fyk*/  end.         
+/*fyk*/  end.
          tr_qty_lotserial = 0.
          {gpextget.i &OWNER     = 'T2:T3'
                      &TABLENAME = 'tr_hist'
