@@ -153,8 +153,8 @@ DEFINE VAR v_total_qty LIKE ld_qty_oh .
 DEFINE VAR effdate LIKE tr_effdate .
 define variable i as integer.
 /* ss - 130321.1 -b */
-define variable cost_qty       like mfc_logical initial yes
-   label "Include Cost Inventory" no-undo.
+define variable cost_qty like mfc_logical initial NO 
+       label "Include Cost Inventory" no-undo.
 /* ss - 130321.1 -e */
 {xxptrp06.i "new"}
 define  temp-table tmploc01  /*费用类库位列表*/
