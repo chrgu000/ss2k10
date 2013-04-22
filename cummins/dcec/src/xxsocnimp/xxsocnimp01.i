@@ -7,9 +7,10 @@ find first so_mstr no-lock where so_domain = global_domain
        and so_nbr = xsd_so no-error.
 if available sod_det then do:
     if sod_sched then do:
+      message "test" view-as alert-box.
          find first pc_mstr
              where pc_mstr.pc_domain = global_domain
-              and pc_list      =  sod_pr_list
+              and pc_list      = sod_pr_list
               and pc_curr      = so_curr
               and pc_prod_line = ""
               and pc_part      = sod_part
@@ -17,7 +18,7 @@ if available sod_det then do:
             no-lock no-error.
          if available pc_mstr then do:
             assign xsd_price = pc_amt[1]
-                   xsd_amt = pc_amt[1] * xsd_qty_oh.
+                   xsd_amt = pc_amt[1] * xsd_qty_used.
          end.
          else do:
             /* Required price list for Item # in UM # not found
@@ -53,7 +54,7 @@ if available sod_det then do:
         end. /* IF AVAILABLE WKPI_WKFL ... */
         else do:
              assign xsd_price = wkpi_amt
-                   xsd_amt = wkpi_amt * xsd_qty_oh.
+                   xsd_amt = wkpi_amt * xsd_qty_used.
         end.
    end. /* if sod_sched else do: */
 end.

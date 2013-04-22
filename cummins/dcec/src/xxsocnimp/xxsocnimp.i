@@ -1,55 +1,56 @@
 define {1} shared temp-table xsa_r
-    fields xsr_so like so_nbr
-    fields xsr_line like sod_line
-    fields xsr_part like sod_part
-    fields xsr_site like sod_site
-    fields xsr_loc  like ld_loc
-    fields xsr_lot  like ld_lot
-    fields xsr_ref like ld_ref
-    fields xsr_eff   as date
-    fields xsr_oh like ld_qty_oh
-    fields xsr_um like um_um
+    fields xsr_ship like so_ship column-label "xsr_ship"
+    fields xsr_so like so_nbr column-label "xsr_so"
+    fields xsr_line like sod_line column-label "xsr_line"
+    fields xsr_part like sod_part column-label "xsr_part"
+    fields xsr_site like sod_site column-label "xsr_site"
+    fields xsr_loc  like ld_loc column-label "xsr_loc"
+    fields xsr_lot  like ld_lot column-label "xsr_lot"
+    fields xsr_ref like ld_ref column-label "xsr_ref"
+    fields xsr_eff   as date column-label "xsr_eff"
+    fields xsr_oh like ld_qty_oh column-label "xsr_oh"
+    fields xsr_um like um_um column-label "xsr_um"
     index xsr_1 is primary xsr_so xsr_part
     index xsr_2 xsr_so xsr_part xsr_site xsr_loc xsr_lot xsr_ref.
     .
-/*
 define {1} shared temp-table xsc_m
-    fields xsm_ship like so_ship
-    fields xsm_cust like so_cust
-    fields xsm_so   like so_nbr
-    fields xsm_part like pt_part
-    fields xsm_qty  like sod_qty_ord
-    fields xsm_oh   like ld_qty_oh
-    fields xsm_eff_price as logical
-    fields xsm_site like sod_site
-    fields xsm_loc  like ld_loc
-    fields xsm_ref  like ld_ref
-    fields xsm_eff  like tr_effdate
-    fields xsm_chk  as   character format "x(40)".
-*/
+    fields xsm_ship like so_ship column-label "xsm_ship"
+    fields xsm_cust like so_cust column-label "xsm_cust"
+    fields xsm_so   like so_nbr  column-label "xsm_so"
+    fields xsm_serial as character column-label "xsm_serial"
+    fields xsm_part like pt_part column-label "xsm_part"
+    fields xsm_qty_used  like sod_qty_ord column-label "xsm_qty_used"
+    fields xsm_site like sod_site column-label "xsm_site"
+    fields xsm_loc  like ld_loc column-label "xsm_loc"
+    fields xsm_lot  like ld_lot column-label "xsm_lot"
+    fields xsm_ref  like ld_ref column-label "xsm_ref"
+    fields xsm_eff  like tr_effdate column-label "xsm_eff"
+    fields xsm_stat as   character column-label "xsm_stat".
+
 define {1} shared temp-table xsc_d
-    fields xsd_ship like so_cust
-    fields xsd_cust like so_ship
-    fields xsd_so   like so_nbr
-    fields xsd_line like sod_line
-    fields xsd_serial as character
-    fields xsd_part like pt_part
-    fields xsd_desc1 like pt_desc1
-    fields xsd_desc2 like pt_desc2
-    fields xsd_qty_used as decimal format "->,>>>,>>9.9<<<<"  label "Usage Qty"
-    fields xsd_site like si_site
-    fields xsd_loc  like loc_loc
-    fields xsd_qty_keep as decimal format "->,>>>,>>9.9<<<<"  label "Keep Qty"
-    fields xsd_lot  like ld_lot
-    fields xsd_ref  like ld_ref
-    fields xsd_eff  as   date
-    fields xsd_curr like cu_curr
-    fields xsd_um   like pt_um
-    fields xsd_price like sod_price
+    fields xsd_ship like so_cust column-label "xsd_ship"
+    fields xsd_cust like so_ship column-label "xsd_cust"
+    fields xsd_so   like so_nbr column-label "xsd_so"
+    fields xsd_line like sod_line column-label "xsd_line"
+    fields xsd_serial as character format "x(24)" column-label "xsd_serial"
+    fields xsd_part like pt_part column-label "xsd_part"
+    fields xsd_desc1 like pt_desc1 column-label "xsd_desc1"
+    fields xsd_desc2 like pt_desc2 column-label "xsd_desc2"
+    fields xsd_qty_used as decimal format "->,>>>,>>9.9<<<<"  label "Usage Qty" column-label "xsd_qty_used"
+    fields xsd_site like si_site column-label "xsd_site"
+    fields xsd_loc  like loc_loc column-label "xsd_loc"
+    fields xsd_qty_keep as decimal format "->,>>>,>>9.9<<<<"  label "Keep Qty" column-label "xsd_loc"
+    fields xsd_lot  like ld_lot column-label "xsd_lot"
+    fields xsd_ref  like ld_ref column-label "xsd_ref"
+    fields xsd_eff  as   date column-label "xsd_eff"
+    fields xsd_curr like cu_curr column-label "xsd_curr"
+    fields xsd_um   like pt_um column-label "xsd_um"
+    fields xsd_price like sod_price column-label "xsd_price"
     fields xsd_amt   as decimal format "->,>>>,>>>,>>9.9<"  label "EXTENDED_AMOUNT"
-    fields xsd_chk  as character format "x(40)"
     fields xsd_qty_oh as decimal format "->,>>>,>>9.9<<<<" label "Qty on Hand"
-    fields xsd_sn   as integer.
+    fields xsd_chk  as character format "x(40)" column-label "xsd_chk"
+    fields xsd_sn   as integer column-label "xsd_sn"
+    fields xsd_mid  as integer column-label "xsd_mid_recid(xsc_m)".
 
 
 FUNCTION getMsg RETURNS character(inbr as integer):

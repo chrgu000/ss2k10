@@ -41,6 +41,7 @@ CREATE WIDGET-POOL.
     {gplabel.i}
 {xxsocnimp.i "new"}
 {pppiwkpi.i "new"}
+
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
@@ -93,15 +94,15 @@ DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON bChk
      LABEL "检查"
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE BUTTON bExp
      LABEL "输出"
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE BUTTON bLoad
      LABEL "装入"
-     SIZE 15 BY 1.31.
+     SIZE 15 BY 1.32.
 
 DEFINE VARIABLE vFile AS CHARACTER FORMAT "X(256)":U
      LABEL "文件名"
@@ -124,8 +125,8 @@ DEFINE BROWSE brDet
     xsd_line     COLUMN-LABEL "项次"
     xsd_serial   COLUMN-LABEL "序号"
     xsd_part     COLUMN-LABEL "物料"
-    xsd_desc1    COLUMN-LABEL "中文名称"
-    xsd_desc2    COLUMN-LABEL "英文名称"
+    xsd_desc2    COLUMN-LABEL "中文名称"
+/*    xsd_desc1    COLUMN-LABEL "英文名称" */
     xsd_qty_used COLUMN-LABEL "使用数量"
     xsd_site     COLUMN-LABEL "地点"
     xsd_loc      COLUMN-LABEL "库位"
@@ -138,21 +139,21 @@ DEFINE BROWSE brDet
     xsd_chk      COLUMN-LABEL "结果"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
-    WITH NO-ROW-MARKERS SEPARATORS SIZE 106.5 BY 28.75 FIT-LAST-COLUMN.
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 97.78 BY 24.32 FIT-LAST-COLUMN.
 
 
 /* ************************  Frame Definitions  *********************** */
 
 DEFINE FRAME fMain
-     vFile AT ROW 2.25 COL 7 COLON-ALIGNED WIDGET-ID 2
+     vFile AT ROW 2.27 COL 7 COLON-ALIGNED WIDGET-ID 2
      bChk AT ROW 2 COL 36 WIDGET-ID 4
-     bExp AT ROW 2 COL 52.5 WIDGET-ID 6
-     bLoad AT ROW 2 COL 68.5 WIDGET-ID 8
-     brDet AT ROW 3.69 COL 1.25 WIDGET-ID 200
+     bExp AT ROW 2 COL 52.56 WIDGET-ID 6
+     bLoad AT ROW 2 COL 68.56 WIDGET-ID 8
+     brDet AT ROW 3.68 COL 1.22 WIDGET-ID 200
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
          SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
-         SIZE 106.75 BY 31.75 WIDGET-ID 100.
+         SIZE 98.33 BY 27 WIDGET-ID 100.
 
 
 /* *********************** Procedure Settings ************************ */
@@ -172,12 +173,12 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
   CREATE WINDOW wWin ASSIGN
          HIDDEN             = YES
          TITLE              = "客户寄售库存使用装入（xxsocnimp.p）"
-         HEIGHT             = 31.75
-         WIDTH              = 106.75
-         MAX-HEIGHT         = 44.13
-         MAX-WIDTH          = 170.75
-         VIRTUAL-HEIGHT     = 44.13
-         VIRTUAL-WIDTH      = 170.75
+         HEIGHT             = 27
+         WIDTH              = 98.33
+         MAX-HEIGHT         = 44.14
+         MAX-WIDTH          = 170.78
+         VIRTUAL-HEIGHT     = 44.14
+         VIRTUAL-WIDTH      = 170.78
          RESIZE             = yes
          SCROLL-BARS        = no
          STATUS-AREA        = yes
@@ -201,6 +202,9 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* SETTINGS FOR FRAME fMain
    FRAME-NAME Custom                                                    */
 /* BROWSE-TAB brDet bLoad fMain */
+ASSIGN
+       brDet:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
+
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
 THEN wWin:HIDDEN = no.
 
@@ -218,6 +222,9 @@ OPEN QUERY {&SELF-NAME} FOR EACH xsc_d.
      _Query            is OPENED
 */  /* BROWSE brDet */
 &ANALYZE-RESUME
+
+
+
 
 
 /* ************************  Control Triggers  ************************ */
@@ -270,66 +277,28 @@ END.
 ON CHOOSE OF bChk IN FRAME fMain /* 检查 */
 DO:
     DEFINE VARIABLE i AS INTEGER.
+    EMPTY TEMP-TABLE xsc_d NO-ERROR.
     EMPTY TEMP-TABLE xsa_r NO-ERROR.
-  IF NOT CAN-FIND(FIRST xsc_d) THEN DO:
-      LEAVE.
-  END.
-  SESSION:SET-WAIT-STAT("general").
-  FOR EACH xsc_d NO-LOCK BREAK BY xsd_ship:
-      IF FIRST-OF(xsd_ship) THEN DO:
-         {gprun.i ""xxsocnuacz1.p"" "(input xsd_ship, input xsd_so)"}
-      END.
-  END.
-  ASSIGN i = 1.
-  FOR EACH xsc_d EXCLUSIVE-LOCK:
-      IF xsd_qty_used = 0 THEN DO:
-          xsd_chk = getmsg(7100).
-          NEXT.
-      END.
+    SESSION:SET-WAIT-STAT("general").
+    APPLY "RETURN" TO vFile.
 
-     FIND FIRST cm_mstr NO-LOCK WHERE cm_domain = global_domain AND cm_addr = xsd_cust  NO-ERROR.
-     IF AVAILABLE cM_mstr THEN DO:
-         ASSIGN xsd_curr = cm_curr.
-     END.
-     ELSE DO:
-         ASSIGN xsd_curr = "".
-     END.
-/***
-for each cncix_mstr no-lock where cncix_domain = "DCEC" 
-     and cncix_so_nbr = "JEPTEST3":
-DISPLAY cncix_mstr WITH 2 COLUMNS.
-    COLOR DISPLAY INPUT cncix_lotser.
-end.
+    FIND FIRST xsc_m NO-LOCK NO-ERROR.
+    IF AVAILABLE xsc_m THEN DO:
+        FOR EACH xsc_m NO-LOCK BREAK BY xsm_ship:
+            assign xsm_stat = "".
+            IF FIRST-OF(xsm_ship) THEN DO:
+               {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
+            END.
+        END.
+        {xxsocnimp01a.i}
+    END.
 
-***/
-     FIND FIRST xsa_r EXCLUSIVE-LOCK USE-INDEX xsr_2 WHERE xsr_so = xsd_so AND
-                xsr_part = xsd_part and xsr_site = xsd_site AND xsr_loc = xsd_loc
-                NO-ERROR.
-      IF AVAILABLE xsa_r THEN DO:
-         ASSIGN  xsd_line = xsr_line
-                 xsd_qty_oh = xsr_oh
-                 xsd_um= xsr_um
-                 .
-         ASSIGN  xsd_qty_keep = xsr_oh - xsd_qty_used .
-         find first cncix_mstr no-lock where cncix_domai = global_domain 
-                and cncix_so_nbr = xsd_so and cncix_sod_line = xsd_line
-                and cncix_site = xsd_site and cncix_part = xsd_part
-                and cncix_qty_stock >= xsd_qty_used no-error.
-         if available cncix_mstr then do:
-            assign xsd_lot = cncix_lotser.
-         end.
-         IF xsr_oh >= xsd_qty_used  THEN DO:
-             ASSIGN xsr_oh = xsr_oh - xsd_qty_used.
-         END.
-         ELSE DO:
-             ASSIGN xsr_oh = 0.
-             ASSIGN xsd_chk = getmsg(6754).
-         END.
-      END.
-      ELSE DO:
-          ASSIGN xsd_qty_oh = 0
-                 xsd_chk = getmsg(6754).
-      END.
+  assign i = 1.
+  for each xsc_d exclusive-lock break by xsd_mid:
+      ASSIGN xsd_sn = i.
+      i = i + 1.
+      /***** 是否有价格表判定:如果是日程单取1.10.1.2普通采购单取1.10.1.1 ****/
+     {xxsocnimp01.i}
       IF xsd_eff = ?  THEN DO:
           ASSIGN xsd_eff = TODAY.
       END.
@@ -341,34 +310,17 @@ end.
       ELSE DO:
           ASSIGN xsd_chk = getmsg(16).
       END.
-      ASSIGN xsd_sn = i.
-      i = i + 1.
-      /***** 是否有价格表判定:如果是日程单取1.10.1.2普通采购单取1.10.1.1 ****/
-
-     {xxsocnimp01.i}
-
-/*                                                                                       */
-/*   FIND FIRST PI_MSTR NO-LOCK WHERE PI_DOMAIN = global_domain AND pi_list <> ""        */
-/*        AND pi_cs_code = xsd_cust AND pi_PART_CODE = xSD_PART                          */
-/*        AND pi_curr = xsd_curr AND pi_um = xsd_um                                      */
-/*        AND pi_start <= xsd_eff AND pi_expir >= xsd_eff NO-ERROR.                      */
-/*   IF AVAILABLE pi_mstr THEN DO:                                                       */
-/*       ASSIGN xsd_price = pi_list_price.                                               */
-/*   END.                                                                                */
-/*   ELSE DO:                                                                            */
-/*       ASSIGN xsd_chk = getmsg(2852).                                                  */
-/*   END.                                                                                */
-
       ASSIGN xsd_amt = xsd_price * xsd_qty_used.
   END.
   FOR EACH xsc_d EXCLUSIVE-LOCK WHERE xsd_chk = "":
       ASSIGN xsd_chk = "PASS".
   END.
     OPEN QUERY brDet FOR EACH xsc_d.
-      IF CAN-FIND(FIRST xsc_d) THEN DO:
-           brdet:REFRESH().
-      END.
-      SESSION:SET-WAIT-STAT("").
+    IF CAN-FIND(FIRST xsc_d) THEN DO:
+         brdet:REFRESH().
+    END.
+    SESSION:SET-WAIT-STAT("").
+
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -398,7 +350,7 @@ DO:
 /*        if gfret then do:                                                  */
  /*        {gprun.i ""xxsocnimp02.p"" "(input gfile)"}                       */
 /*        end.                                                               */
-       {gprun.i ""xxsocnimp02.p""}   
+       {gprun.i ""xxsocnimp02.p""}
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -467,15 +419,19 @@ DO:
      ASSIGN USrw_key3 = vfile.
      release usrw_wkfl.
   END.
-   EMPTY TEMP-TABLE xsc_d NO-ERROR.
+
    SESSION:SET-WAIT-STAT("general").
+   EMPTY TEMP-TABLE xsc_m NO-ERROR.
+   EMPTY TEMP-TABLE xsa_r NO-ERROR.
+   EMPTY TEMP-TABLE xsc_d NO-ERROR.
    IF vfile <> "" THEN DO:
       {gprun.i ""xxsocnimp01.p"" "(input vfile)"}
    end.
-  OPEN QUERY brDet FOR EACH xsc_d.
-      IF CAN-FIND(FIRST xsc_d) THEN DO:
-           brdet:REFRESH().
-      END.
+       APPLY "CHOOSE" TO bChk.
+    OPEN QUERY brDet FOR EACH xsc_d.
+    IF CAN-FIND(FIRST xsc_d) THEN DO:
+         brdet:REFRESH().
+    END.
    SESSION:SET-WAIT-STAT("").
 END.
 

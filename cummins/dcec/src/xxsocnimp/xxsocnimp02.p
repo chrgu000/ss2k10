@@ -49,9 +49,20 @@ define variable I as integer.
    bsheet:cells(i,17) = "合计".
    bsheet:cells(i,18) = "结果".
    i = i + 1.
-   bsheet:Range("A1:C2"):Interior:ColorIndex = 6.
+   bsheet:Range("A1:B2"):Interior:ColorIndex = 6.
+   bsheet:Range("A1"):AddComment NO-ERROR.
+   bsheet:Range("A1"):Comment:TEXT("必填") NO-ERROR.
+   bsheet:Range("B1"):AddComment NO-ERROR.
+   bsheet:Range("B1"):Comment:TEXT("必填") NO-ERROR.
+   bsheet:Range("C1:C2"):Interior:ColorIndex = 7.
+   bsheet:Range("C1"):AddComment NO-ERROR.
+   bsheet:Range("C1"):Comment:TEXT("必填") NO-ERROR.
    bsheet:Range("F1:F2"):Interior:ColorIndex = 6.
-   bsheet:Range("I1:K2"):Interior:ColorIndex = 6.
+   bsheet:Range("F1"):AddComment NO-ERROR.
+   bsheet:Range("F1"):Comment:TEXT("必填") NO-ERROR.
+   bsheet:Range("I1:I2"):Interior:ColorIndex = 6.
+   bsheet:Range("I1"):AddComment NO-ERROR.
+   bsheet:Range("I1"):Comment:TEXT("必填") NO-ERROR.
    for each xsc_d no-lock:
        bsheet:cells(i,1) = "'" + xsd_ship.
        bsheet:cells(i,2) = "'" + xsd_cust.
