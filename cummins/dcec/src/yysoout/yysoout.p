@@ -1,4 +1,4 @@
-/* xxunrp.p  - UNPLANNED RECEIPTS PRINT                                      */
+/* yysoout.p  - salse order print.                                           */
 /* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.         */
 /* V1                 Developped: 07/19/01      BY: Kang Jian                */
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu              */
@@ -13,8 +13,8 @@ DEFINE VARIABLE part_to like tr_part.
 DEFINE VARIABLE line_from like tr_line.
 DEFINE VARIABLE line_to like tr_line INITIAL 999.
 DEFINE VARIABLE soddet as CHARACTER.
-DEFINE VARIABLE sonbr_from as CHARACTER .
-DEFINE VARIABLE sonbr_to     as CHARACTER .
+DEFINE VARIABLE sonbr_from as CHARACTER.
+DEFINE VARIABLE sonbr_to     as CHARACTER.
 DEFINE VARIABLE duedate_from   as date .
 DEFINE VARIABLE duedate_to     as date .
 DEFINE VARIABLE ship like abs_id.
@@ -34,6 +34,7 @@ DEFINE VARIABLE qty_cri like tr_qty_chg label "应发数量".
 DEFINE VARIABLE SOAV AS LOGICAL.
 DEFINE VARIABLE sum as integer initial 0.
 DEFINE VARIABLE loc LIKE tr_loc.
+DEFINE VARIABLE serial LIKE tr_serial.
 
 define buffer trhist for tr_hist.
 define variable rec_id as recid.
@@ -54,8 +55,8 @@ form "出库单"      at 33
     /* "客户地址:"*/      ad_line1 label "客户地址:  "   at  1
      so_rmks     label "备注:  "   at 70
      "运输方式:" at 1       "运费承担单位:" at 30  tr_ship_id label "货运单: " at 70 skip(1)
-     "零件号           零件名称                 日期     实发数量 流水号       序号 合同数量    累计      库位      保管员"
-     skip "-----------------------------------------------------------------------------------------------------------------------"
+     "零件号           零件名称                 日期         实发数量   流水号     序号 合同数量    累计      库位      保管员"
+     skip "-------------------------------------------------------------------------------------------------------------------------"
      with no-box side-labels width 180 frame b.
 form "出库单"      at 33
      pageno        label "页号"       at 42
@@ -72,8 +73,8 @@ form "出库单"      at 33
      ih_rmks     label "备注:  "   at 70 skip(.1)
      "运输方式:" at 1       "运费承担单位:" at 30  tr_ship_id label "货运单: " at 70  skip(1)
 
-     "零件号           零件名称                 日期     实发数量 流水号       序号 合同数量     累计      库位      保管员"
-     skip "-----------------------------------------------------------------------------------------------------------------------"
+     "零件号           零件名称                 日期         实发数量   流水号     序号 合同数量     累计      库位      保管员"
+     skip "-------------------------------------------------------------------------------------------------------------------------"
      with no-box side-labels width 180 frame bih.
 /*end of report title*/
 
@@ -235,37 +236,50 @@ procedure p-report:
 
          i = i + 1.
          qty = 0 - tr_qty_loc.
+         serial = tr_serial.
+         if tr_type = "cn-ship" then do:
+            find first trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
+                   AND trhist.tr_trnbr = integer(tr_hist.tr_rmks) - 1 no-error.
+                 if available trhist and trhist.tr_effdate = tr_hist.tr_effdate
+                   and trhist.tr_part = tr_hist.tr_part
+                   and trhist.tr_type = "ISS-TR"
+                   and trhist.tr_nbr = tr_hist.tr_nbr
+                   and trhist.tr_so_job = tr_hist.tr_so_job then do:
+                   assign qty = - trhist.tr_qty_loc.
+                          serial = trhist.tr_serial.
+                end.
+         end.
          if SOAV = yes and soddet="Y" THEN
-             disp tr_part pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"  sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(4)
+             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"  sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(4)
                    IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" /* AT 104 */  with no-box no-labels width 132 frame c down.
          else
              if available(idh_hist) then
-             disp tr_part pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"  IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(4)
+             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"  IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(4)
                      IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)" /* AT 104 */ with no-box no-labels width 132 frame c down.
              else
-             disp tr_part  pt_desc2 tr_effdate qty tr_serial format "x(8)" tr_line format ">>>"   "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship  format "->>>>>>"  SPACE(4)
+             disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"   "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship  format "->>>>>>"  SPACE(4)
                  in_user1 format "x(8)" /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame c down.
              disp "-----------------------------------------------------------------------------------------------------------------------"
                   with width 132 no-box frame f.
          sum = sum + 1.
          if pt_pm_code = "C" then do:
             for each ps_mstr where ps_domain = global_domain
-                 and ps_par = tr_part and (pdate>=ps_start or ps_start=?)
+                 and ps_par = tr_hist.tr_part and (pdate>=ps_start or ps_start=?)
                  and (ps_end=? or ps_end>=pdate)
              no-lock:
                 if  i = 1 then  do:
-                   if tr__log02 = No then duplicate = "原本".
+                   if tr_hist.tr__log02 = No then duplicate = "原本".
                    else duplicate = "副本".
                    if soav = yes then
-                       display pageno duplicate so_cust so_nbr ad_name so_ord_date ad_phone pdate so_rmks tr_ship_id with frame b.
+                       display pageno duplicate so_cust so_nbr ad_name so_ord_date ad_phone pdate so_rmks tr_hist.tr_ship_id with frame b.
                    else
-                       display pageno duplicate ih_cust ih_nbr ad_name ih_ord_date ad_phone pdate ih_rmks tr_ship_id with frame bih.
+                       display pageno duplicate ih_cust ih_nbr ad_name ih_ord_date ad_phone pdate ih_rmks tr_hist.tr_ship_id with frame bih.
                 end.
                 i = i + 1.
                 find pt_mstr where pt_domain = global_domain
                  and pt_part = ps_comp no-lock no-error.
                 qty_cri = qty * ps_qty_per.
-                disp ps_comp pt_desc2 tr_effdate space(32) qty_cri format "->>>>>>>" with no-box no-label width 132 frame c2 down.
+                disp ps_comp pt_desc2 tr_hist.tr_effdate space(32) qty_cri format "->>>>>>>" with no-box no-label width 132 frame c2 down.
                 disp "-----------------------------------------------------------------------------------------------------------------------"
                 with width 132 no-box frame f1.
             end.
@@ -277,9 +291,9 @@ procedure p-report:
               pageno = pageno + 1.
             end.
          end.
-         if line-counter >= (page-size - 5) or last-of(tr_nbr) or (last-of(tr_part) and parttype="S") OR LAST-OF(IN__qadc01) then do:
-              if last-of(tr_part) and parttype ="S" then do:
-                  disp tr_nbr tr_part pt_desc2 "合计:" sum format "->>>>>>>>" with no-box no-label width 132 frame hj down.
+         if line-counter >= (page-size - 5) or last-of(tr_hist.tr_nbr) or (last-of(tr_hist.tr_part) and parttype="S") OR LAST-OF(IN__qadc01) then do:
+              if last-of(tr_hist.tr_part) and parttype ="S" then do:
+                  disp tr_hist.tr_nbr tr_hist.tr_part pt_desc2 "合计:" sum format "->>>>>>>>" with no-box no-label width 132 frame hj down.
                   sum = 0.
               end.
               display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
