@@ -4,7 +4,7 @@
  /* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
  /* REVISION END                                                              */
 
-{mfdtitle.i "130110.1"}
+{mfdtitle.i "130110.2"}
 {xxbkmg.i}
 /* DISPLAY SELECTION FORM */
 define variable vstat as character.
@@ -32,7 +32,7 @@ repeat with frame a:
       editing:
          if frame-field = "xxbl_bkid" then do:
             /* FIND NEXT/PREVIOUS RECORD */
-             {mfnp.i xxbk_lst xxbl_bkid xxbk_id xxbl_bcid xxbk_id xxbk_id}
+             {mfnp.i xxbk_lst xxbl_bkid xxbk_id xxbl_bkid xxbk_id xxbk_id}
             if recno <> ? then do:
                assign vstat = "".
                find first usrw_wkfl no-lock where usrw_key1 = v_key_book02
@@ -44,7 +44,7 @@ repeat with frame a:
                        with frame a.
             end.
          end.
-         if frame-field = "xxbl_start" then do:
+         else if frame-field = "xxbl_start" then do:
             /* FIND NEXT/PREVIOUS RECORD */
          {mfnp06.i xxbl_hst xxbl_bkstart " xxbl_bkid  = input xxbl_bkid"
             xxbl_start "input xxbl_start" xxbl_start "input xxbl_start"}

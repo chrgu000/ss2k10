@@ -44,7 +44,7 @@ repeat with frame a:
                        with frame a.
             end.
          end.
-         if frame-field = "xxbl_start" then do:
+         else if frame-field = "xxbl_start" then do:
             /* FIND NEXT/PREVIOUS RECORD */
          {mfnp06.i xxbl_hst xxbl_bkstart " xxbl_bkid  = input xxbl_bkid"
             xxbl_start "input xxbl_start" xxbl_start "input xxbl_start"}
