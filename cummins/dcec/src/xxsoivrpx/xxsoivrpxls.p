@@ -11,39 +11,41 @@ define variable I as integer.
    bsheet = bexcel:sheets:item(1) no-error.
    bbook:Activate.
    assign i = 1.
-   bsheet:cells(i,1)  = "发票号".     
-   bsheet:cells(i,2)  = "票据开往".       
-   bsheet:cells(i,3)  = "开往名称".  
-   bsheet:cells(i,4)  = "客户".       
-   bsheet:cells(i,5)  = "客户名称".  
-   bsheet:cells(i,6)  = "推销员".     
-   bsheet:cells(i,7)  = "应收帐户".    
-   bsheet:cells(i,8)  = "应收分账户".     
-   bsheet:cells(i,9)  = "成本中心".      
-   bsheet:cells(i,10) = "纳税环境".    
-   bsheet:cells(i,11) = "税用途".  
-   bsheet:cells(i,12) = "订单号".        
-   bsheet:cells(i,13) = "发货至".       
-   bsheet:cells(i,14) = "发货地名称".     
-   bsheet:cells(i,15) = "订单日".   
-   bsheet:cells(i,16) = "采购单".         
-   bsheet:cells(i,17) = "项次".      
-   bsheet:cells(i,18) = "料号".      
-   bsheet:cells(i,19) = "料号说明".     
-   bsheet:cells(i,20) = "单位".        
-   bsheet:cells(i,21) = "销售帐户".      
-   bsheet:cells(i,22) = "销售分帐户".       
-   bsheet:cells(i,23) = "成本中心".        
-   bsheet:cells(i,24) = "发票数量".   
-   bsheet:cells(i,25) = "应纳税".   
-   bsheet:cells(i,26) = "税".      
-   bsheet:cells(i,27) = "税用途". 
-   bsheet:cells(i,28) = "纳税环境".   
-   bsheet:cells(i,29) = "价格".                      
-   bsheet:cells(i,30) = "合计价格".    
-   bsheet:cells(i,31) = "毛利合计".                     
-                    
-   i = i + 1.          
+   bsheet:cells(i,1)  = "发票号".
+   bsheet:cells(i,2)  = "票据开往".
+   bsheet:cells(i,3)  = "开往名称".
+   bsheet:cells(i,4)  = "客户".
+   bsheet:cells(i,5)  = "客户名称".
+   bsheet:cells(i,6)  = "推销员".
+   bsheet:cells(i,7)  = "应收帐户".
+   bsheet:cells(i,8)  = "应收分账户".
+   bsheet:cells(i,9)  = "成本中心".
+   bsheet:cells(i,10) = "纳税环境".
+   bsheet:cells(i,11) = "税用途".
+   bsheet:cells(i,12) = "订单号".
+   bsheet:cells(i,13) = "发货至".
+   bsheet:cells(i,14) = "发货地名称".
+   bsheet:cells(i,15) = "订单日".
+   bsheet:cells(i,16) = "采购单".
+   bsheet:cells(i,17) = "项次".
+   bsheet:cells(i,18) = "料号".
+   bsheet:cells(i,19) = "料号说明".
+   bsheet:cells(i,20) = "单位".
+   bsheet:cells(i,21) = "销售帐户".
+   bsheet:cells(i,22) = "销售分帐户".
+   bsheet:cells(i,23) = "成本中心".
+   bsheet:cells(i,24) = "发票数量".
+   bsheet:cells(i,25) = "类型".
+   bsheet:cells(i,26) = "应纳税".
+   bsheet:cells(i,27) = "含税".
+   bsheet:cells(i,28) = "税".
+   bsheet:cells(i,29) = "税用途".
+   bsheet:cells(i,30) = "纳税环境".
+   bsheet:cells(i,31) = "价格".
+   bsheet:cells(i,32) = "合计价格".
+   bsheet:cells(i,33) = "毛利合计".
+
+   i = i + 1.
 
    for each tmp-soivdet36 no-lock:
        bsheet:cells(i,1) =  t36_so_invnbr.
@@ -70,13 +72,15 @@ define variable I as integer.
        bsheet:cells(i,22) = t36_sod_sub.
        bsheet:cells(i,23) = t36_sod_cc.
        bsheet:cells(i,24) = t36_sod_qty_inv.
-       bsheet:cells(i,25) = string(t36_sod_taxable).
-       bsheet:cells(i,26) = t36_sod_taxc.
-       bsheet:cells(i,27) = t36_sod_tax_usage.
-       bsheet:cells(i,28) = t36_sod_tax_env.
-       bsheet:cells(i,29) = t36_net_price.
-       bsheet:cells(i,30) = t36_ext_price.
-       bsheet:cells(i,31) = t36_ext_gr_margin.
+       bsheet:cells(i,25) = t36_sod_type.
+       bsheet:cells(i,26) = string(t36_sod_taxable).
+       bsheet:cells(i,27) = string(t36_sod_tax_in).
+       bsheet:cells(i,28) = t36_sod_taxc.
+       bsheet:cells(i,29) = t36_sod_tax_usage.
+       bsheet:cells(i,30) = t36_sod_tax_env.
+       bsheet:cells(i,31) = t36_net_price.
+       bsheet:cells(i,32) = t36_ext_price.
+       bsheet:cells(i,33) = t36_ext_gr_margin.
 
        i = i + 1.
    end.

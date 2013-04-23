@@ -870,16 +870,16 @@ nbr) and (so_nbr <= nbr1)
    /* PRINT TAX DETAIL FOR ALL SALES ORDERS */
    /* FOR THIS INVOICE NUMBER USING 132 COL */
    /* AND NO FORCED PAGE BREAK              */
-   undo_txdetrp = true.   
-   /*36   txdetrp1.p     xxgetsotxdetrp1.p  */                                             
-         {gprun.i ""txdetrp1.p"" "(input '',                                       
-                                input '',                                              
-                                input '',                                              
-                                input col-80,                                          
-                                input 0,                                               
-                                input l_accumonly /*l_printonly*/,                                     
-                                input l_mixed_rpt                                      
-                                )"}                                
+   undo_txdetrp = true.
+   /*36   txdetrp1.p     xxgetsotxdetrp1.p  */
+         {gprun.i ""txdetrp1.p"" "(input '',
+                                input '',
+                                input '',
+                                input col-80,
+                                input 0,
+                                input l_accumonly /*l_printonly*/,
+                                input l_mixed_rpt
+                                )"}
    if undo_txdetrp then undo, next.
    assign
       tot_ptax_amt    = tot_ptax_amt + so_prep_tax

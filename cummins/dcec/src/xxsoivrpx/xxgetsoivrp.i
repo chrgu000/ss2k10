@@ -1,3 +1,8 @@
+/* xxgetsoivrp.i - temp-table for soivrp                                     */
+/*V8:ConvertMode=Maintenance                                                 */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
+/* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
+/* REVISION END                                                              */
 
 define {1} shared variable v36_so_invnbr      like so_inv_nbr.
 define {1} shared variable v36_so_bill        like so_bill.
@@ -41,6 +46,8 @@ define {1} shared temp-table tmp-soivdet36
        fields t36_sod_sub        like sod_sub
        fields t36_sod_cc         like sod_cc
        fields t36_sod_qty_inv    like sod_qty_inv
+       fields t36_sod_type       like sod_type
+       fields t36_sod_tax_in     like sod_tax_in
        fields t36_sod_taxable    like sod_taxable
        fields t36_sod_taxc       like sod_taxc
        fields t36_sod_tax_usage  like sod_tax_usage

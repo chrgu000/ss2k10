@@ -119,7 +119,7 @@ FORM /*GUI*/  header
    skip(8)
 with STREAM-IO /*GUI*/  frame continue page-bottom width 80.
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    taxdesc        column-label "Tax Type Description!Tax Rate Description"
    taxclass at 28 column-label "Tax Class!Tax Usage"
    taxtotal       column-label "Tax Amount"
@@ -130,7 +130,7 @@ with STREAM-IO /*GUI*/  frame det_80 width 80 down.
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame det_80:handle).
 
-FORM /*GUI*/ 
+FORM /*GUI*/
    typedesc    column-label "Tax Type!Description"
    l-taxdesc   column-label "Tax!Description"
    l-taxclass  column-label "Tax!Class"
@@ -203,12 +203,12 @@ do on endkey undo, leave:
    {gprun.i ""gpcurfmt.p"" "(input-output gtm_nontax_fmt,
         input rndmthd)"}
 
-   /* DISPLAY TAX DETAILS                
-      if l_control = 2 or l_control = 3     
-      then do:                              
-         {txdetrpb.i}                       
-      end.                                  
-     */                                        
+   /* DISPLAY TAX DETAILS
+      if l_control = 2 or l_control = 3
+      then do:
+         {txdetrpb.i}
+      end.
+     */
    undo_txdetrp = false.
 
 end. /* end mainloop do */
