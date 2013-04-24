@@ -22,6 +22,7 @@
          assign xsd_ship = xsm_ship
                 xsd_cust = xsm_cust
                 xsd_so = xsm_so
+                xsd_line = 0
                 xsd_serial = xsm_serial
                 xsd_part = xsm_part
                 xsd_qty_used = xsm_qty_used
@@ -50,6 +51,7 @@
          assign xsd_ship = so_ship when available so_mstr
                 xsd_cust = so_cust when available so_mstr
                 xsd_so = xsr_so
+                xsd_line = xsr_line
                 xsd_serial = xsm_serial
                 xsd_part = xsr_part
                 xsd_site = xsr_site
