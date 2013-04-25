@@ -47,11 +47,13 @@ define variable I as integer.
    bsheet:cells(i,31) = "加工单出库额".
    bsheet:cells(i,32) = "盘点调整".
    bsheet:cells(i,33) = "盘点调整额".
-   bsheet:cells(i,34) = "其他".
-   bsheet:cells(i,35) = "其他额".
-   bsheet:cells(i,36)  = "截至日库存".
-   bsheet:cells(i,37)  = "截至日成本".
-   bsheet:cells(i,38) = "截至日金额".
+   bsheet:cells(i,34) = "成本调整".
+   bsheet:cells(i,35) = "成本调整额".
+   bsheet:cells(i,36) = "其他".
+   bsheet:cells(i,37) = "其他额".
+   bsheet:cells(i,38)  = "截至日库存".
+   bsheet:cells(i,39)  = "截至日成本".
+   bsheet:cells(i,40) = "截至日金额".
 
    i = i + 1.
 for each temptr no-lock break by ttr_part by ttr_site:
@@ -106,11 +108,13 @@ for each temptr no-lock break by ttr_part by ttr_site:
                 bsheet:cells(i,31) = ttr_isswoc.
                 bsheet:cells(i,32) = ttr_invadj.
                 bsheet:cells(i,33) = ttr_invadjc.
-                bsheet:cells(i,34) = ttr_oth.
-                bsheet:cells(i,35) = ttr_othc.
-                bsheet:cells(i,36) = ttr_qtyt.
-                bsheet:cells(i,37) = ttr_cstt.
-                bsheet:cells(i,38) = ttr_qtyt * ttr_cstt.
+                bsheet:cells(i,34) = ttr_cstadj.
+                bsheet:cells(i,35) = ttr_cstadjc.
+                bsheet:cells(i,36) = ttr_oth.
+                bsheet:cells(i,37) = ttr_othc.
+                bsheet:cells(i,38) = ttr_qtyt.
+                bsheet:cells(i,39) = ttr_cstt.
+                bsheet:cells(i,40) = ttr_qtyt * ttr_cstt.
                 i = i + 1.
     end.
 

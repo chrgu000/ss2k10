@@ -45,6 +45,8 @@ output to value(thfile).
                     "加工单出库额"
                     "盘点调整"
                     "盘点调整额"
+                    "成本调整"
+                    "成本调整额"
                     "其他"
                     "其他额"
                     "截至日库存"
@@ -109,6 +111,8 @@ for each temptr no-lock break by ttr_part by ttr_site:
                 put unformat ttr_isswoc  ",".
                 put unformat ttr_invadj  ",".
                 put unformat ttr_invadjc ",".
+                put unformat ttr_cstadj  ",".
+                put unformat ttr_cstadjc ",".
                 put unformat ttr_oth     ",".
                 put unformat ttr_othc    ",".
                 put unformat ttr_qtyt    ",".

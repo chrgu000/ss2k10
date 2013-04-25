@@ -3,7 +3,7 @@
 /*ps:This report only save character version GUI version will be converted    */
 /******************************************************************************/
 
-{mfdtitle.i "4.22"}
+{mfdtitle.i "4.24"}
 {xxppptrp07.i "new"}
 {yyictrcfcrpx.i "new"}
 define variable site like si_site no-undo.
@@ -125,7 +125,6 @@ for each tmpld03: delete tmpld03. end.
 for each tmploc01: delete tmploc01. end.
 for each temptr: delete temptr. end.
 
-
 if cost_qty = no then do:  /*费用类库位列表*/
    for each code_mstr no-lock where code_domain = global_domain
         and code_fldname = "INVTR",
@@ -143,72 +142,6 @@ if cost_qty = no then do:  /*费用类库位列表*/
        end.
    end.
 end.
-{gprun.i ""xxppptrp07.p""
-        "(input part,
-          input part1,
-          input line,
-          input line1,
-          input ''  /*vend*/,
-          input hi_char,
-          input ''  /*abc*/,
-          input hi_char,
-          input site,
-          input site1,
-          input '' /*loc*/,
-          input hi_char,
-          input group1,
-          input group2,
-          input type,
-          input type1,
-          input keeper,
-          input keeper1,
-          input effdate - 1,
-          input yes,
-          input yes,
-          input no,
-          input yes,
-          input cost_qty,
-          input 'Include',
-          input 'Exclude'
-        )"}
-
-  for each tmpld03 no-lock:
-      find first temptr exclusive-lock where ttr_part = t03_part
-             and ttr_site = t03_site no-error.
-      if not available temptr then do:
-         create temptr.
-         assign ttr_part = t03_part
-                ttr_site = t03_site.
-      end.
-      assign ttr_qtyf = t03_qty
-             ttr_cstf = t03_cst.
-  end.
-for each tmpld03: delete tmpld03. end.
-/*  {gprun.i ""xxptrp07.p""       */
-/*          "(input part,         */
-/*            input part1,        */
-/*            input line,         */
-/*            input line1,        */
-/*            input '',           */
-/*            input hi_char,      */
-/*            input '',           */
-/*            input hi_char,      */
-/*            input site,         */
-/*            input site1,        */
-/*            input group1,       */
-/*            input group2,       */
-/*            input type,         */
-/*            input type1,        */
-/*            input keeper,       */
-/*            input keeper1,      */
-/*            input effdate1,     */
-/*            input yes,          */
-/*            input yes,          */
-/*            input no,           */
-/*            input yes,          */
-/*            input 'Include',    */
-/*            input 'Exclude'     */
-/*          )"}                   */
 
 {gprun.i ""xxppptrp07.p""
         "(input part,
@@ -250,88 +183,151 @@ for each tmpld03: delete tmpld03. end.
       assign ttr_qtyt = t03_qty
              ttr_cstt = t03_cst.
   end.
-      for each tr_hist
-       fields(tr_domain tr_part tr_effdate tr_loc tr_site tr_type tr_qty_loc tr_price)
-       use-index tr_part_eff
-       where tr_domain = global_domain and
-             (tr_part  >= part and tr_part <= part1) and
-             (tr_effdate >= effdate and tr_effdate <= effdate1) and
-             (tr_site >= site and tr_site <= site1) and tr_qty_loc <> 0 no-lock,
-/*      each tmploc01 no-lock where t01_site = in_site and t01_loc = in_loc, */
-      each pt_mstr
-         fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend
-         pt_desc1 pt_desc2 pt_um)
-      no-lock
-          where pt_mstr.pt_domain = global_domain and (pt_part = tr_part)
-         and (pt_prod_line >= line    and pt_prod_line <= line1)
-         and (pt_group  >= group1 and pt_group <= group2)
-         and (pt_part_type >= type and pt_part_type <= type1)
-/*     ,each in_mstr                                                         */
-/*         fields(in_domain in_part in_site in_abc in_cur_set in_gl_set     */
-/*         in_qty_nonet in_qty_oh in_gl_cost_site) no-lock                  */
-/*          where in_mstr.in_domain = global_domain and in_part = pt_part   */
-/*          and (in_site = tr_site)                                         */
-/*          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)            */
-          break by tr_site by tr_part by tr_type:
 
-          if first-of(tr_type) then do:
+for each tmpld03: delete tmpld03. end.
+
+{gprun.i ""xxppptrp07.p""
+        "(input part,
+          input part1,
+          input line,
+          input line1,
+          input ''  /*vend*/,
+          input hi_char,
+          input ''  /*abc*/,
+          input hi_char,
+          input site,
+          input site1,
+          input '' /*loc*/,
+          input hi_char,
+          input group1,
+          input group2,
+          input type,
+          input type1,
+          input keeper,
+          input keeper1,
+          input effdate - 1,
+          input yes,
+          input yes,
+          input no,
+          input yes,
+          input cost_qty,
+          input 'Include',
+          input 'Exclude'
+        )"}
+
+  for each tmpld03 no-lock:
+      find first temptr exclusive-lock where ttr_part = t03_part
+             and ttr_site = t03_site no-error.
+      if not available temptr then do:
+         create temptr.
+         assign ttr_part = t03_part
+                ttr_site = t03_site.
+      end.
+      assign ttr_qtyf = t03_qty
+             ttr_cstf = t03_cst.
+  end.
+
+/*  {gprun.i ""xxptrp07.p""       */
+/*          "(input part,         */
+/*            input part1,        */
+/*            input line,         */
+/*            input line1,        */
+/*            input '',           */
+/*            input hi_char,      */
+/*            input '',           */
+/*            input hi_char,      */
+/*            input site,         */
+/*            input site1,        */
+/*            input group1,       */
+/*            input group2,       */
+/*            input type,         */
+/*            input type1,        */
+/*            input keeper,       */
+/*            input keeper1,      */
+/*            input effdate1,     */
+/*            input yes,          */
+/*            input yes,          */
+/*            input no,           */
+/*            input yes,          */
+/*            input 'Include',    */
+/*            input 'Exclude'     */
+/*          )"}                   */
+
+
+  for each t_trhist
+       fields(t_trhis_domain t_trhist_effdate t_trhist_site t_trhist_part
+              t_trhist_type t_trhist_price t_trhist_qty_loc)
+       where t_trhist_domain = global_domain and
+             (t_trhist_effdate >= effdate and t_trhist_effdate <= effdate1) no-lock
+       break by t_trhist_site by t_trhist_part by t_trhist_type:
+
+          if first-of(t_trhist_type) then do:
              assign qty = 0
                     amtf = 0.
           end.
 
-/*fyk*/  find first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc
+/*fyk*/  find first tmploc01 no-lock where t01_site = t_trhist_site
+/*fyk*/                                and t01_loc = t_trhist_loc
 /*fyk*/       no-error.
 /*fyk*/  if available tmploc01 then do:
 /*fyk*/     next.
 /*fyk*/  end.
-
-         assign qty = qty + tr_qty_loc.
-                amtf = amtf + tr_price * tr_qty_loc.
-          if last-of(tr_type) then do:
-           find first temptr exclusive-lock where ttr_part = tr_part and
-                  ttr_site = tr_site no-error.
+          if t_trhist_type = "CST-ADJ" then do:
+             amtf = amtf + t_trhist_price * t_trhist_begin_qoh.
+          end.
+          else do:
+             assign qty = qty + t_trhist_qty_loc.
+                    amtf = amtf + t_trhist_price * t_trhist_qty_loc.
+          end.
+          if last-of(t_trhist_type) then do:
+           find first temptr exclusive-lock where ttr_part = t_trhist_part and
+                  ttr_site = t_trhist_site no-error.
            if not available temptr then do:
               create temptr.
-              assign ttr_part = tr_part
-                     ttr_site = tr_site.
+              assign ttr_part = t_trhist_part
+                     ttr_site = t_trhist_site.
            end.
-           if tr_type = "rct-po" then do:
+           if t_trhist_type = "rct-po" then do:
                 ttr_rctpo = ttr_rctpo + qty.
                 ttr_rctpoc = ttr_rctpoc + amtf.
            end.
-           else if tr_type = "rct-tr" then do:
+           else if t_trhist_type = "rct-tr" then do:
                 ttr_rcttr = ttr_rcttr + qty.
                 ttr_rcttrc = ttr_rcttrc + amtf.
            end.
-           else if tr_type = "rct-unp" then do:
+           else if t_trhist_type = "rct-unp" then do:
                 ttr_rctunp = ttr_rctunp + qty.
                 ttr_rctunpc = ttr_rctunpc + amtf.
            end.
-           else if tr_type = "rct-wo" then do:
+           else if t_trhist_type = "rct-wo" then do:
                 ttr_rctwo = ttr_rctwo + qty.
                 ttr_rctwoc = ttr_rctwoc + amtf.
            end.
-           else if tr_type = "iss-prv" then do:
-                ttr_isspo = ttr_isspo - qty.
-                ttr_isspoc = ttr_isspoc - amtf.
+           else if t_trhist_type = "iss-prv" then do:
+                ttr_isspo = ttr_isspo + qty.
+                ttr_isspoc = ttr_isspoc + amtf.
            end.
-           else if tr_type = "iss-tr" then do:
-                ttr_isstr = ttr_isstr - qty.
-                ttr_isstrc = ttr_isstrc - amtf.
+           else if t_trhist_type = "iss-tr" then do:
+                ttr_isstr = ttr_isstr + qty.
+                ttr_isstrc = ttr_isstrc + amtf.
            end.
-           else if tr_type = "iss-unp" then do:
-                ttr_issunp = ttr_issunp - qty.
-                ttr_issunpc = ttr_issunpc - amtf.
+           else if t_trhist_type = "iss-unp" then do:
+                ttr_issunp = ttr_issunp + qty.
+                ttr_issunpc = ttr_issunpc + amtf.
            end.
-           else if tr_type = "iss-so" then do:
-                ttr_issso = ttr_issso - qty.
-                ttr_isssoc = ttr_isssoc - amtf.
+           else if t_trhist_type = "iss-so" then do:
+                ttr_issso = ttr_issso + qty.
+                ttr_isssoc = ttr_isssoc + amtf.
            end.
-           else if tr_type = "iss-wo" then do:
-                ttr_isswo = ttr_isswo - qty.
-                ttr_isswoc = ttr_isswoc - amtf.
+           else if t_trhist_type = "iss-wo" then do:
+                ttr_isswo = ttr_isswo + qty.
+                ttr_isswoc = ttr_isswoc + amtf.
            end.
-           else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
+           else if t_trhist_type = "CST-ADJ" then do:
+                ttr_cstadj = ttr_cstadj + qty.
+                ttr_cstadjc = ttr_cstadjc + amtf.
+           end.
+           else if (t_trhist_type = "tag-cnt" or t_trhist_type = "cyc-cnt" or t_trhist_type = "cyc-rcnt")
                 then do:
                      ttr_invadj = ttr_invadj + qty.
                      ttr_invadjc = ttr_invadjc + amtf.
@@ -340,8 +336,101 @@ for each tmpld03: delete tmpld03. end.
                 ttr_oth = ttr_oth + qty.
                 ttr_othc = ttr_othc + amtf.
            end.
-         end. /*if last-of(tr_type) */
+         end. /*if last-of(t_trhist_type) */
     end.
+
+/**      for each tr_hist                                                                        **/
+/**       fields(tr_domain tr_part tr_effdate tr_loc tr_site tr_type tr_qty_loc tr_price)        **/
+/**       use-index tr_part_eff                                                                  **/
+/**       where tr_domain = global_domain and                                                    **/
+/**             (tr_part  >= part and tr_part <= part1) and                                      **/
+/**             (tr_effdate >= effdate and tr_effdate <= effdate1) and                           **/
+/**             (tr_site >= site and tr_site <= site1) and tr_qty_loc <> 0 no-lock,              **/
+/** /*      each tmploc01 no-lock where t01_site = in_site and t01_loc = in_loc, */              **/
+/**      each pt_mstr                                                                            **/
+/**         fields( pt_domain pt_part pt_group pt_part_type pt_prod_line pt_vend                 **/
+/**         pt_desc1 pt_desc2 pt_um)                                                             **/
+/**      no-lock                                                                                 **/
+/**          where pt_mstr.pt_domain = global_domain and (pt_part = tr_part)                     **/
+/**         and (pt_prod_line >= line    and pt_prod_line <= line1)                              **/
+/**         and (pt_group  >= group1 and pt_group <= group2)                                     **/
+/**         and (pt_part_type >= type and pt_part_type <= type1)                                 **/
+/** /*     ,each in_mstr                                                         */              **/
+/** /*         fields(in_domain in_part in_site in_abc in_cur_set in_gl_set     */               **/
+/** /*         in_qty_nonet in_qty_oh in_gl_cost_site) no-lock                  */               **/
+/** /*          where in_mstr.in_domain = global_domain and in_part = pt_part   */               **/
+/** /*          and (in_site = tr_site)                                         */               **/
+/** /*          and (in__qadc01 >= keeper and in__qadc01 <= keeper1)            */               **/
+/**          break by tr_site by tr_part by tr_type:                                             **/
+/**                                                                                              **/
+/**          if first-of(tr_type) then do:                                                       **/
+/**             assign qty = 0                                                                   **/
+/**                    amtf = 0.                                                                 **/
+/**          end.                                                                                **/
+/**                                                                                              **/
+/** /*fyk*/  find first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc           **/
+/** /*fyk*/       no-error.                                                                      **/
+/** /*fyk*/  if available tmploc01 then do:                                                      **/
+/** /*fyk*/     next.                                                                            **/
+/** /*fyk*/  end.                                                                                **/
+/**                                                                                              **/
+/**         assign qty = qty + tr_qty_loc.                                                       **/
+/**                amtf = amtf + tr_price * tr_qty_loc.                                          **/
+/**          if last-of(tr_type) then do:                                                        **/
+/**           find first temptr exclusive-lock where ttr_part = tr_part and                      **/
+/**                  ttr_site = tr_site no-error.                                                **/
+/**           if not available temptr then do:                                                   **/
+/**              create temptr.                                                                  **/
+/**              assign ttr_part = tr_part                                                       **/
+/**                     ttr_site = tr_site.                                                      **/
+/**           end.                                                                               **/
+/**           if tr_type = "rct-po" then do:                                                     **/
+/**                ttr_rctpo = ttr_rctpo + qty.                                                  **/
+/**                ttr_rctpoc = ttr_rctpoc + amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "rct-tr" then do:                                                **/
+/**                ttr_rcttr = ttr_rcttr + qty.                                                  **/
+/**                ttr_rcttrc = ttr_rcttrc + amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "rct-unp" then do:                                               **/
+/**                ttr_rctunp = ttr_rctunp + qty.                                                **/
+/**                ttr_rctunpc = ttr_rctunpc + amtf.                                             **/
+/**           end.                                                                               **/
+/**           else if tr_type = "rct-wo" then do:                                                **/
+/**                ttr_rctwo = ttr_rctwo + qty.                                                  **/
+/**                ttr_rctwoc = ttr_rctwoc + amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "iss-prv" then do:                                               **/
+/**                ttr_isspo = ttr_isspo - qty.                                                  **/
+/**                ttr_isspoc = ttr_isspoc - amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "iss-tr" then do:                                                **/
+/**                ttr_isstr = ttr_isstr - qty.                                                  **/
+/**                ttr_isstrc = ttr_isstrc - amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "iss-unp" then do:                                               **/
+/**                ttr_issunp = ttr_issunp - qty.                                                **/
+/**                ttr_issunpc = ttr_issunpc - amtf.                                             **/
+/**           end.                                                                               **/
+/**           else if tr_type = "iss-so" then do:                                                **/
+/**                ttr_issso = ttr_issso - qty.                                                  **/
+/**                ttr_isssoc = ttr_isssoc - amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if tr_type = "iss-wo" then do:                                                **/
+/**                ttr_isswo = ttr_isswo - qty.                                                  **/
+/**                ttr_isswoc = ttr_isswoc - amtf.                                               **/
+/**           end.                                                                               **/
+/**           else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")       **/
+/**                then do:                                                                      **/
+/**                     ttr_invadj = ttr_invadj + qty.                                           **/
+/**                     ttr_invadjc = ttr_invadjc + amtf.                                        **/
+/**                end.                                                                          **/
+/**           else do:                                                                           **/
+/**                ttr_oth = ttr_oth + qty.                                                      **/
+/**                ttr_othc = ttr_othc + amtf.                                                   **/
+/**           end.                                                                               **/
+/**         end. /*if last-of(tr_type) */                                                        **/
+/**    end.                                                                                      **/
 /*
 for each temptr exclusive-lock:
     assign ttr_qtyf = ttr_qtyt - ttr_rctpo - ttr_rcttr - ttr_rctunp - ttr_rctwo - ttr_invadj - ttr_oth
@@ -405,6 +494,8 @@ if fname = "" then do:
                 ttr_isswoc
                 ttr_invadj
                 ttr_invadjc
+                ttr_cstadj
+                ttr_cstadjc
                 ttr_oth
                 ttr_othc
                 ttr_qtyt

@@ -29,6 +29,8 @@ define {1} shared temp-table temptr
     fields ttr_isswoc  like sct_cst_tot
     fields ttr_invadj  like ld_qty_oh
     fields ttr_invadjc like sct_cst_tot
+    fields ttr_cstadj  like ld_qty_oh
+    fields ttr_cstadjc like sct_cst_tot
     fields ttr_oth     like ld_qty_oh
     fields ttr_othc    like sct_cst_tot
     index ttr_part_site is primary ttr_part ttr_site.
