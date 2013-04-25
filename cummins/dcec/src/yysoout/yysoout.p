@@ -56,7 +56,7 @@ form "出库单"      at 33
      so_rmks     label "备注:  "   at 70
      "运输方式:" at 1       "运费承担单位:" at 30  tr_ship_id label "货运单: " at 70 skip(1)
      "零件号           零件名称                 日期         实发数量   流水号     序号 合同数量    累计      库位      保管员"
-     skip "-------------------------------------------------------------------------------------------------------------------------"
+     skip "-----------------------------------------------------------------------------------------------------------------------"
      with no-box side-labels width 180 frame b.
 form "出库单"      at 33
      pageno        label "页号"       at 42
@@ -72,9 +72,8 @@ form "出库单"      at 33
     /* "客户地址:"*/     ad_line1 label "客户地址: " at  1
      ih_rmks     label "备注:  "   at 70 skip(.1)
      "运输方式:" at 1       "运费承担单位:" at 30  tr_ship_id label "货运单: " at 70  skip(1)
-
      "零件号           零件名称                 日期         实发数量   流水号     序号 合同数量     累计      库位      保管员"
-     skip "-------------------------------------------------------------------------------------------------------------------------"
+     skip "-----------------------------------------------------------------------------------------------------------------------"
      with no-box side-labels width 180 frame bih.
 /*end of report title*/
 
@@ -239,12 +238,13 @@ procedure p-report:
          serial = tr_serial.
          if tr_type = "cn-ship" then do:
             find first trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
-                   AND trhist.tr_trnbr = integer(tr_hist.tr_rmks) - 1 no-error.
-                 if available trhist and trhist.tr_effdate = tr_hist.tr_effdate
+                   AND trhist.tr_trnbr < integer(tr_hist.tr_rmks) 
+                   and trhist.tr_effdate = tr_hist.tr_effdate
                    and trhist.tr_part = tr_hist.tr_part
                    and trhist.tr_type = "ISS-TR"
                    and trhist.tr_nbr = tr_hist.tr_nbr
-                   and trhist.tr_so_job = tr_hist.tr_so_job then do:
+                   and trhist.tr_so_job = tr_hist.tr_so_job no-error.
+            if available trhist then do:
                    assign qty = - trhist.tr_qty_loc.
                           serial = trhist.tr_serial.
                 end.
