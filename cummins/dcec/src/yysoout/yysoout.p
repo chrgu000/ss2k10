@@ -2,6 +2,9 @@
 /* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.         */
 /* V1                 Developped: 07/19/01      BY: Kang Jian                */
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu              */
+/* zy 4/26/13                                                                */
+/* 1.显示CN-SHIP对应的交易(注：数量是与之相对应的ISS-TR的数量)               */
+/* 2.如果做了CN-USE的交易类型则不打印相应的ISS-SO记录                        */
 
 {mfdtitle.i "121002.1"}
 
@@ -37,6 +40,7 @@ DEFINE VARIABLE loc LIKE tr_loc.
 DEFINE VARIABLE serial LIKE tr_serial.
 
 define buffer trhist for tr_hist.
+define buffer tr1 for tr_hist.
 define variable rec_id as recid.
 /*end of define the value*/
 
@@ -169,49 +173,60 @@ procedure p-report:
   i = 1.
 
 /*start of for each*/
-  for each tr_hist where tr_domain = global_domain
-                   and (tr_effdate >= duedate_from)
-                   and (tr_effdate <= duedate_to)
-                   and tr_ship_id >= ship
-                   and tr_ship_id <= ship1
-                   and (tr_part >= part_from)
-                   and (tr_part <= part_to)
-                   and (tr_nbr >= sonbr_from)
-                   and (tr_nbr <= sonbr_to)
-                   and (tr_line >= line_from)
-                   and (tr_line <= line_to)
-                   and (tr_site = site or site = "")
-                   and (tr_type = "iss-so" or tr_type = "iss-fas" or tr_type = "cn-ship")
-                   and ((not flag1) or tr__log02 = no)
-                   no-lock use-index tr_nbr_eff,
+  for each tr_hist use-index tr_nbr_eff where tr_hist.tr_domain = global_domain
+                   and (tr_hist.tr_effdate >= duedate_from)
+                   and (tr_hist.tr_effdate <= duedate_to)
+                   and tr_hist.tr_ship_id >= ship
+                   and tr_hist.tr_ship_id <= ship1
+                   and (tr_hist.tr_part >= part_from)
+                   and (tr_hist.tr_part <= part_to)
+                   and (tr_hist.tr_nbr >= sonbr_from)
+                   and (tr_hist.tr_nbr <= sonbr_to)
+                   and (tr_hist.tr_line >= line_from)
+                   and (tr_hist.tr_line <= line_to)
+                   and (tr_hist.tr_site = site or site = "")
+                   and ((tr_hist.tr_type = "ISS-SO" and
+                         not can-find (tr1 use-index tr_part_eff no-lock
+                                where tr1.tr_domain = global_domain
+                                  and tr1.tr_part = tr_hist.tr_part
+                                  and tr1.tr_effdate = tr_hist.tr_effdate
+                                  and tr1.tr_type = "CN-USE"
+                                  and tr1.tr_nbr = tr_hist.tr_nbr
+                                  and tr1.tr_line = tr_hist.tr_line)
+                         )
+                      or tr_hist.tr_type = "iss-fas"
+                      or tr_hist.tr_type = "cn-ship"
+                       )
+                   and ((not flag1) or tr_hist.tr__log02 = no)
+                   no-lock ,
        each in_mstr NO-LOCK where in_domain = global_domain
-                         and (in_part = tr_part)
-                         and in_site = tr_site
-                         break  by tr_nbr by in__qadc01 by tr_part by tr_effdate by tr_serial
+                         and (in_part = tr_hist.tr_part)
+                         and in_site = tr_hist.tr_site
+                         break  by tr_hist.tr_nbr by in__qadc01 by tr_hist.tr_part by tr_hist.tr_effdate by tr_hist.tr_serial
                with width 132 no-attr-space:
 
       /*  MESSAGE "AA".
         PAUSE.*/
          assign consignment = "".
-         find first pt_mstr no-lock where pt_domain = global_domain and pt_part = tr_part no-error.
+         find first pt_mstr no-lock where pt_domain = global_domain and pt_part = tr_hist.tr_part no-error.
       /*   find first in_mstr where in_domain = global_domain
-                  and in_part = tr_part and in_site = site.*/
+                  and in_part = tr_hist.tr_part and in_site = site.*/
          if available(pt_mstr) then parttype = pt_lot_ser.
          else parttype = "".
          find first so_mstr where so_domain = global_domain
-                and so_nbr = tr_nbr no-lock no-error.
+                and so_nbr = tr_hist.tr_nbr no-lock no-error.
          if available so_mstr then do:
              IF so_consignment THEN assign consignment = "寄售".
              find first sod_det where sod_domain = global_domain
-                    and sod_nbr = tr_nbr and sod_line = tr_line no-lock no-error.
+                    and sod_nbr = tr_hist.tr_nbr and sod_line = tr_hist.tr_line no-lock no-error.
              find first ad_mstr where ad_domain = global_domain
                     and ad_addr = so_cust no-lock no-error.
              if available(sod_det) then soddet="Y".
              else soddet="N".
              if  i = 1 then  do:
-                if tr__log02 = No then duplicate = "原本".
+                if tr_hist.tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
-                display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn ad_line1  so_ord_date ad_phone pdate so_rmks tr_ship_id with frame b.
+                display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn ad_line1  so_ord_date ad_phone pdate so_rmks tr_hist.tr_ship_id with frame b.
                 display consignment with frame b.
              end.
              SOAV = yes.
@@ -219,26 +234,26 @@ procedure p-report:
          else do:
              soddet="N".
              find first ih_hist where ih_domain = global_domain
-                    and ih_inv_nbr = tr_rmks no-lock no-error.
+                    and ih_inv_nbr = tr_hist.tr_rmks no-lock no-error.
              find first IDH_HIST where idh_domain = global_domain
-                    and iDH_nbr = tr_NBR and iDH_line = tr_line no-lock no-error.
+                    and iDH_nbr = tr_hist.tr_NBR and iDH_line = tr_hist.tr_line no-lock no-error.
              find first ad_mstr where ad_domain = global_domain
                     and ad_addr = ih_cust no-lock no-error.
              if  i = 1 then  do:
-                if tr__log02 = No then duplicate = "原本".
+                if tr_hist.tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
-                display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn ad_line1 ih_ord_date ad_phone pdate ih_rmks tr_ship_id with frame bih.
+                display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn ad_line1 ih_ord_date ad_phone pdate ih_rmks tr_hist.tr_ship_id with frame bih.
              end.
              SOAV = no.
          end.
 
 
          i = i + 1.
-         qty = 0 - tr_qty_loc.
-         serial = tr_serial.
-         if tr_type = "cn-ship" then do:
+         qty = 0 - tr_hist.tr_qty_loc.
+         serial = tr_hist.tr_serial.
+         if tr_hist.tr_type = "cn-ship" then do:
             find first trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
-                   AND trhist.tr_trnbr < integer(tr_hist.tr_rmks) 
+                   AND trhist.tr_trnbr < integer(tr_hist.tr_rmks)
                    and trhist.tr_effdate = tr_hist.tr_effdate
                    and trhist.tr_part = tr_hist.tr_part
                    and trhist.tr_type = "ISS-TR"
