@@ -250,14 +250,14 @@ procedure p-report:
                 end.
          end.
          if SOAV = yes and soddet="Y" THEN
-             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"  sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(4)
+             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(2)
                    IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" /* AT 104 */  with no-box no-labels width 132 frame c down.
          else
              if available(idh_hist) then
-             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"  IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(4)
+             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(2)
                      IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)" /* AT 104 */ with no-box no-labels width 132 frame c down.
              else
-             disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>"   "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship  format "->>>>>>"  SPACE(4)
+             disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship format "->>>>>>" SPACE(2)
                  in_user1 format "x(8)" /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame c down.
              disp "-----------------------------------------------------------------------------------------------------------------------"
                   with width 132 no-box frame f.
