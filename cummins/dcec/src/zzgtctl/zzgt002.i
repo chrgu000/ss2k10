@@ -17,7 +17,7 @@ define {1} shared variable v_outtaxin   as logical.
 define {1} shared variable v_intaxin    as logical.
 define {1} shared variable v_infixrd    as logical.
 define {1} shared variable v_inpost     as logical.
-define {1} shared variable v_drange     as decimal format "9.999".
+define {1} shared variable v_drange     as decimal format ">>>9.999".
 define {1} shared variable v_max_amt    as decimal format "->>>,>>>,>>9.9<<<<<".
 define {1} shared variable v_invprex    as character.
 
