@@ -2,7 +2,8 @@
 /*                                                                          */
 /*  LAST MODIFIED   DAT:2004.5.27 BY: *LB01* LONG BO                        */
 /*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO                */
-/*313 解决过账后帐户错误问题                                                 */
+/*313 解决过账后帐户错误问题                                                */
+/*326 允许重复导入                                                          */
   {mfdeclre.i }
 
 define shared stream rpt .
@@ -120,20 +121,22 @@ define variable tmpnetamt like glt_amt.
       next.
     end.
     else do:  /* reference nbr is not blank */
-          find first usrw_wkfl
-               where usrw_wkfl.usrw_domain = global_domain and  usrw_key1 = "GOLDTAX-MSTR"
-               and   usrw_key5 = gref
-               no-lock no-error.
-          if available usrw_wkfl then do:  /*load before*/
-        put stream rpt
-          "发票 " at 1
-          ginv at 10
-          ": 订单发票号已经上载过!" AT 20.
-        gerrflag = yes.
-        gerrmsg  = "发票号已经上载过!".
-        next.
-          end.
-          else do: /*will be load*/
+            find first usrw_wkfl
+                 where usrw_wkfl.usrw_domain = global_domain
+                   and usrw_key1 = "GOLDTAX-MSTR"
+/*326*/            and usrw_key2 = gref
+/*326                 and   usrw_key5 = gref                                */
+                 no-lock no-error.
+            if available usrw_wkfl then do:  /*load before*/
+          put stream rpt
+            "发票 " at 1
+            ginv at 10
+            ": 订单发票号已经上载过!" AT 20.
+          gerrflag = yes.
+          gerrmsg  = "发票号已经上载过!".
+          next.
+            end.
+            else do: /*will be load*/
 
         find first so_mstr
            where so_mstr.so_domain = global_domain and so_inv_nbr = ginv
@@ -177,7 +180,7 @@ define variable tmpnetamt like glt_amt.
                 next.
               END.
             END.
-          end.
+         end.
 
                 v_site  = so_site.
                 v_totso = v_totso + 1.
@@ -199,12 +202,19 @@ define variable tmpnetamt like glt_amt.
 
                 /*create goldtax-mstr*/
                 if v_load = yes then do:
+                find first usrw_wkfl exclusive-lock where
+                           usrw_domain = global_domain and
+                           usrw_key1   = "GOLDTAX-MSTR" and
+                           usrw_key2   = v_gtaxid + "-" + gref + "-" + ginv + "-" + ginvx
+                no-error.
+                if not available usrw_wkfl then do:
                   create usrw_wkfl.
                   assign
                      usrw_domain = global_domain
-                     usrw_key1    = "GOLDTAX-MSTR"
-                     usrw_key2        = v_gtaxid + "-" + gref + "-" + ginv + "-" + ginvx
-                     usrw_key3        = v_gtaxid
+                     usrw_key1   = "GOLDTAX-MSTR"
+                     usrw_key2   = v_gtaxid + "-" + gref + "-" + ginv + "-" + ginvx.
+                 end.
+              assign usrw_key3        = v_gtaxid
                      usrw_key4        = gnbr
                      usrw_key5        = gref
                      usrw_key6        = ginv
@@ -311,10 +321,12 @@ define variable tmpnetamt like glt_amt.
                      output gmfgtotamt,output  gmfgtaxamt,output  gmfgnetamt
                     )"}
       if (ABSOLUTE(gtotamt - gmfgtotamt) <= v_drange) or (v_drange = 0) then do:
+
         /*在容差范围内，调整*/
               find first so_mstr
                    where so_mstr.so_domain = global_domain and so_nbr = gnbr
                    and   so_inv_nbr = ginvx
+                   exclusive-lock
                    no-error.
               if available so_mstr then do:
           FIND FIRST trl_mstr WHERE trl_mstr.trl_domain = global_domain and  trl_code = so_trl2_cd NO-LOCK NO-ERROR.
@@ -326,8 +338,23 @@ define variable tmpnetamt like glt_amt.
             {zzgtsolr.i no}   /*2004-09-02 10:16*/
             next.
           END.
-/*313*/         so_trl2_amt = gnetamt - gmfgnetamt.
-/*313*/         so_trl3_amt = gtaxamt - gmfgtaxamt.
+          /*调整尾差*/
+          for each xinvd no-lock where xnbr = so_nbr and xline <> 0:
+             accum xtot (total).
+             accum xtax (total).
+          end.
+          FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = global_domain
+              AND tx2d_ref = so_nbr AND tx2d_tr_type = "13":
+             accum tx2d_tottax(total).
+             accum tx2d_cur_tax_amt (total).
+          END.
+          assign so_trl2_amt = (accum total(xtax)) - (accum total(tx2d_cur_tax_amt))
+                 so_trl3_amt = (accum total(xtot)) - (accum total(tx2d_tottax)).
+
+
+
+/*313        so_trl2_amt = gnetamt - gmfgnetamt.                     */
+/*313        so_trl3_amt = gtaxamt - gmfgtaxamt.                     */
           end.
       end.
       else do:
@@ -427,8 +454,21 @@ define variable tmpnetamt like glt_amt.
               gerrmsg  = "ERROR:尾栏代码错误.".
               next.
             END.
-/*313 */            so_trl2_amt = tmpnetamt - gmfgnetamt.
-/*313 */            so_trl3_amt = tmptaxamt - gmfgtaxamt.
+            /*调整尾差*/
+          for each xinvd no-lock where xnbr = so_nbr and xline <> 0:
+             accum xtot (total).
+             accum xtax (total).
+          end.
+          FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = global_domain
+               AND tx2d_ref = so_nbr AND tx2d_tr_type = "13":
+             accum tx2d_tottax(total).
+             accum tx2d_cur_tax_amt (total).
+          END.
+          assign so_trl2_amt = (accum total(xtax)) - (accum total(tx2d_cur_tax_amt))
+                 so_trl3_amt = (accum total(xtot)) - (accum total(tx2d_tottax)).
+
+/*313          so_trl2_amt = tmpnetamt - gmfgnetamt.                    */
+/*313          so_trl3_amt = tmptaxamt - gmfgtaxamt.                    */
                 end.
         end.
         else do:

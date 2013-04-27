@@ -4,7 +4,7 @@
 /*  LAST MODIFIED   DAT:2005-01-07 09:52  BY: *LB02* LONG BO         */
 
 /**************
-FOR EACH usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = "dcec" 
+FOR EACH usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = "dcec"
     AND usrw_key1 = "GOLDTAX-MSTR" AND usrw_key5 = "DC@30416K1 0425371":
     DELETE usrw_wkfl.
 END.
@@ -49,10 +49,13 @@ define variable subacct like  sod_sub.
 define variable vpart like pt_part.
 define variable vinv  like so_inv_nbr.
 define variable inti as integer.
-/*
+
+define variable vtrl2_amt like so_trl2_amt.
+define variable vtrl3_amt like so_trl3_amt.
+
  define temp-table solist
        fields solist_nbr like so_nbr.
-
+/*
 {zzgtsolt.i "new"}
 */
 
@@ -148,9 +151,9 @@ repeat:
 /*  for each sotax:   */
 /*    delete sotax.   */
 /*  end.              */
-/*  for each solist:  */
-/*    delete solist.  */
-/*  end.              */
+    for each solist:
+      delete solist.
+    end.
   find first usrw_wkfl where usrw_domain = global_domain
        and   usrw_key1 = "GOLDTAX-CTRL"
        and   lookup(global_userid,usrw_charfld[1]) <> 0
@@ -252,7 +255,7 @@ repeat:
          v_gtaxid v_adname v_infile v_bkfile v_rpfile v_times v_drange v_ptbox
   with frame a.
 
-    assign v_adj = v_infixrd
+    assign v_adj  = v_infixrd
            v_post = no.      /* v_inpost.2004-09-02 14:10*/
   update
         v_load
@@ -270,7 +273,6 @@ repeat:
       pause.
     end.
   end.
-
   if search(v_infile) = ? then do:
       message "错误:传入文件不存在.".
       undo , retry.
@@ -368,23 +370,66 @@ repeat:
   end.
   input close.
 
-/*   for each xinvd no-lock break by xnbr:                                                */
-/*       if first-of(xnbr) then do:                                                       */
-/*          create solist.                                                                */
-/*          assign solist_nbr = xnbr.                                                     */
-/*       end.                                                                             */
-/*   end.                                                                                 */
-/*                                                                                        */
-/* for each solist no-lock,                                                               */
-/*     each sod_det no-lock where sod_domain = global_domain                              */
-/*      and sod_nbr = solist_nbr break by sod_nbr by sod_line:                            */
-/*       find first xinvd exclusive-lock where xnbr = sod_nbr                             */
-/*              and xpart = sod_part and xqty = sod_qty_inv and xline = 0 no-error.       */
-/*       if available xinvd then do:                                                      */
-/*          assign xline = sod_line.                                                      */
-/*       end.                                                                             */
-/* end.                                                                                   */
-/*                                                                                        */
+     for each xinvd no-lock break by xnbr:
+         if first-of(xnbr) then do:
+            create solist.
+            assign solist_nbr = xnbr.
+         end.
+     end.
+
+   for each solist no-lock,
+       each sod_det exclusive-lock where sod_domain = global_domain
+        and sod_nbr = solist_nbr break by sod_nbr by sod_line:
+         find first xinvd exclusive-lock where xnbr = sod_nbr
+                and xpart = sod_part and xqty = sod_qty_inv and xline = 0 no-error.
+         if available xinvd then do:
+            assign xline = sod_line.
+/*           调整账户/分账户     */
+
+            find first code_mstr no-lock where code_domain = global_domain
+              and code_fldname = "ZZGTSOL-ACCT" AND CODE_VALUE = "*" NO-ERROR.
+            IF AVAILABLE CODE_MSTR THEN DO:
+               ASSIGN sod_acct = code_cmmt when sod_acct <> code_cmmt.
+            END.
+
+            find first code_mstr no-lock where code_domain = global_domain
+                  and code_fldname = "ZZGTSOL-SUB-ACCT"
+                  and sod_part begins code_value no-error.
+            if available code_mstr then do:
+               assign sod_sub = code_cmmt when sod_sub <> code_cmmt.
+            end.
+            else do:
+                 find first code_mstr no-lock where code_domain = global_domain
+                        and code_fldname = "ZZGTSOL-SUB-ACCT"
+                       and code_value = "*" no-error.
+                 if available code_mstr then do:
+                   assign sod_sub = code_cmmt when sod_sub <> code_cmmt.
+                 end.
+            end.
+       end. /*if available xinvd*/
+   end.
+
+  /*------------------------
+
+OUTPUT TO "clipboard".
+DO WITH FRAME a:
+
+        FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = "dcec"
+         AND tx2d_ref = "30416K1" AND tx2d_tr_type = "13"  :
+        DISPLAY tx2d_Line tx2d_totamt tx2d_tottax tx2d_cur_tax_amt tx2d_cur_recov_amt WITH STREAM-IO.
+        ACCUM tx2d_cur_tax_amt(TOTAL).
+        ACCUM tx2d_tottax(TOTAL).
+    END.
+      DOWN 5.
+    DISPLAY ACCUM TOTAL(tx2d_tottax) WITH FRAME a.
+    DISPLAY ACCUM TOTAL(tx2d_cur_tax_amt) LABEL "TEST" WITH FRAME a.
+
+
+    END.
+ ------------------------*/
+
+
+
 /* /* output to xinvd.txt.                         */                                     */
 /*   for each xinvd no-lock:                                                              */
 /* /*      display xinvd with width 300 stream-io. */                                     */
@@ -406,7 +451,7 @@ repeat:
 /*       end.                                                                             */
 /*   end.                                                                                 */
 /* /* output close. */                                                                    */
- 
+
 /* for each sotax exclusive-lock where sotax_part = "ZK":                                 */
 /*     for each sod_det no-lock WHERE sod_domain = global_domain                          */
 /*          and sod_nbr = sotax_nbr break by sod_nbr by sod_line:                         */
@@ -430,10 +475,10 @@ repeat:
 /* /*      end.                                                     */                    */
 /* /*   output close.                                               */                    */
 /*                                                                                        */
-/* /* FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = "dcec"                                */  */        
-/* /*      AND tx2d_ref = "30410KF1" AND tx2d_tr_type = "13":                             */  */        
-/* /*     DISPLAY tx2d_Line tx2d_totamt tx2d_tottax tx2d_cur_tax_amt tx2d_cur_recov_amt.  */  */        
-/* /* END.                                                                                */  */        
+/* /* FOR EACH tx2d_det NO-LOCK WHERE tx2d_domain = "dcec"                                */  */
+/* /*      AND tx2d_ref = "30410KF1" AND tx2d_tr_type = "13":                             */  */
+/* /*     DISPLAY tx2d_Line tx2d_totamt tx2d_tottax tx2d_cur_tax_amt tx2d_cur_recov_amt.  */  */
+/* /* END.                                                                                */  */
 /*                                                                                        */
 /* if v_load then do:                                                                     */
 /*          /*CIM_LOAD 到soivmt.p修改税信息*/                                             */
