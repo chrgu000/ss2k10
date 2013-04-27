@@ -247,7 +247,7 @@ repeat:
            v_post = no.   /* v_inpost. /_*2004-09-02 14:10*/
   update
         v_load
-        v_adj
+ /*     v_adj      */
  /*      v_post    */
   with frame a.
 
