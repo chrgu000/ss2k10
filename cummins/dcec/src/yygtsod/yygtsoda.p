@@ -163,7 +163,8 @@ for each so_mstr
   end.
 
   /*check sod_det*/
-  find first sod_det where /*ss2012-8-16 b*/ sod_det.sod_domain = global_domain and /*ss2012-8-16 e*/ sod_nbr = so_nbr and sod_qty_inv <> 0
+  find first sod_det where sod_det.sod_domain = global_domain and
+             sod_nbr = so_nbr and sod_qty_inv <> 0
             no-lock no-error.
   if not available sod_det then do:
     wkgtm_status = "X".
@@ -180,7 +181,7 @@ for each so_mstr
   /*check trl*/
     if so_trl2_amt <> 0 then do:
       find first trl_mstr
-           where /*ss2012-8-16 b*/ trl_mstr.trl_domain = global_domain and /*ss2012-8-16 e*/ trl_code = so_trl2_cd
+           where trl_mstr.trl_domain = global_domain and trl_code = so_trl2_cd
            no-lock no-error.
       if available trl_mstr then do:
         find first vt_mstr where vt_class = trl_taxc
@@ -196,7 +197,7 @@ for each so_mstr
     end.
     if so_trl3_amt <> 0 then do:
       find first trl_mstr
-           where /*ss2012-8-16 b*/ trl_mstr.trl_domain = global_domain and /*ss2012-8-16 e*/ trl_code = so_trl3_cd
+           where trl_mstr.trl_domain = global_domain and trl_code = so_trl3_cd
            no-lock no-error.
       if available trl_mstr then do:
         find first vt_mstr
@@ -219,7 +220,7 @@ for each so_mstr
     delete sodet.
   end.
 
-  for each sod_det where /*ss2012-8-16 b*/ sod_det.sod_domain = global_domain and /*ss2012-8-16 e*/ sod_nbr = so_nbr
+  for each sod_det where sod_det.sod_domain = global_domain and sod_nbr = so_nbr
     and sod_qty_inv <> 0
     and (sod_qty_inv * sod_price) <> 0   /*suspend price as 0*/
     no-lock:
@@ -297,7 +298,7 @@ for each so_mstr
         sodet2.sod__log01 = yes.
 
 
-        find pt_mstr where /*ss2012-8-16 b*/ pt_mstr.pt_domain = global_domain and /*ss2012-8-16 e*/ pt_part = sodet2.sod_part
+        find pt_mstr where pt_mstr.pt_domain = global_domain and pt_part = sodet2.sod_part
             no-lock no-error.
         create wkgtd.
         assign wkgtd_ref  = wkgtm_ref
@@ -319,7 +320,8 @@ for each so_mstr
           wkgtd_um = "¼þ".
 
  /*frk*     remove the following code
-            FIND cp_mstr WHERE cp_part =pt_part AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
+            FIND cp_mstr WHERE cp_domain = global_domain and
+                 cp_part =pt_part AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
                IF AVAILABLE cp_mstr THEN
                    wkgtd.wkgtd_item= cp_cust_part.
             END.
@@ -396,7 +398,7 @@ for each so_mstr
     end.
                         /* Add by Robin 20050912*/
       find first usrw_wkfl exclusive-lock
-      where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLD-TAX-SO"
+      where usrw_wkfl.usrw_domain = global_domain and usrw_key1 = "GOLD-TAX-SO"
       and usrw_key2 = wkgtm_ref no-error.
       if not available usrw_wkfl then
         create usrw_wkfl. usrw_wkfl.usrw_domain = global_domain.

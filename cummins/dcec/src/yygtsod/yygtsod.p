@@ -62,17 +62,17 @@ form
   RECT-FRAME       AT ROW 1 COLUMN 1.25
   RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
   skip(1)
-   v_gtaxid        colon 15  label "接口代码"  space(2) v_adname no-label skip
-   v_times            colon 15  label "传出次数"   skip
-   v_outfile          colon 15  label "数据文件名" skip(1)
-   v_sonbr1           colon 15  label "订单"
-   v_sonbr2           label {t001.i} colon 45 skip
-   v_date1            colon 15  label "发货日期"
-   v_date2            label {t001.i} colon 45 skip
-   v_cust1            colon 15  label "销往"
-   v_cust2            label {t001.i} colon 45 skip
-   v_bill1            colon 15  label "票据开往"
-   v_bill2            label {t001.i} colon 45 skip
+   v_gtaxid  colon 15  label "接口代码"  space(2) v_adname no-label skip
+   v_times   colon 15  label "传出次数"   skip
+   v_outfile colon 15  label "数据文件名" skip(1)
+   v_sonbr1  colon 15  label "订单"
+   v_sonbr2  label {t001.i} colon 45 skip
+   v_date1   colon 15  label "发货日期"
+   v_date2   label {t001.i} colon 45 skip
+   v_cust1   colon 15  label "销往"
+   v_cust2   label {t001.i} colon 45 skip
+   v_bill1   colon 15  label "票据开往"
+   v_bill2   label {t001.i} colon 45 skip
 
   skip(1)
 
@@ -104,7 +104,7 @@ repeat on error undo,retry:
 
 
   find first usrw_wkfl
-       where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL"
+       where usrw_wkfl.usrw_domain = global_domain and usrw_key1 = "GOLDTAX-CTRL"
        and   lookup(global_userid,usrw_charfld[1]) <> 0
        no-lock no-error.
   if not available usrw_wkfl then do:
@@ -152,7 +152,7 @@ repeat on error undo,retry:
            + string(day(v_dt),"99")
            + string(v_times,"9999") + ".txt".
 
-  find first ad_mstr where /*ss2012-8-16 b*/ ad_mstr.ad_domain = global_domain and /*ss2012-8-16 e*/ ad_addr = v_companyid no-lock no-error.
+  find first ad_mstr where ad_mstr.ad_domain = global_domain and ad_addr = v_companyid no-lock no-error.
   if available ad_mstr then v_adname = ad_name.
                        else v_adname = "".
   display v_gtaxid v_adname
@@ -183,7 +183,7 @@ repeat on error undo,retry:
   if v_bill2 = "" then v_bill2 = hi_char .
 
   find first so_mstr
-       where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/ so_invoiced = no
+       where so_mstr.so_domain = global_domain and so_invoiced = no
        and so_to_inv = yes
        and so_curr = v_curr
        and lookup(so_site,v_sitestr) <> 0
@@ -220,7 +220,7 @@ repeat on error undo,retry:
 
 /** UPDATE CONTROL FILE **/
     find first usrw_wkfl
-         where /*ss2012-8-16 b*/ usrw_wkfl.usrw_domain = global_domain and /*ss2012-8-16 e*/ usrw_key1 = "GOLDTAX-CTRL"
+         where usrw_wkfl.usrw_domain = global_domain and usrw_key1 = "GOLDTAX-CTRL"
          and   usrw_key2 = v_gtaxid
          exclusive-lock no-error.
     if available usrw_wkfl then do:

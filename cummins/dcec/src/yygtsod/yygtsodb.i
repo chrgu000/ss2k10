@@ -10,7 +10,7 @@
 /*frk*/ define variable v_sum  like sod_price.
 define variable vcpart like cp_cust_part.
 
-find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/ code_fldname = "zz-gt-ctrl"
+find first code_mstr no-lock where code_mstr.code_domain = global_domain and code_fldname = "zz-gt-ctrl"
 and code_value = "header" no-error.
 
 if available code_mstr then
@@ -18,7 +18,7 @@ if available code_mstr then
 else
   put stream soivdat "SJJK0101~~~~销售单据传入".
 
-find first code_mstr no-lock where /*ss2012-8-16 b*/ code_mstr.code_domain = global_domain and /*ss2012-8-16 e*/ code_fldname = "zz-gt-ctrl"
+find first code_mstr no-lock where code_mstr.code_domain = global_domain and code_fldname = "zz-gt-ctrl"
 and code_value = "line header" no-error.
 
 if available code_mstr then
@@ -74,12 +74,15 @@ for each wkgtm
           v_sum = round(((wkgtd_totamt - wkgtd_discamt) / wkgtd_qty),9).
 
 /*frk* modify rmks from self item code to customer item code*/
-          find first so_mstr no-lock where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 e*/ so_nbr = substring(wkgtd_ref,4,8)
+          find first so_mstr no-lock where so_mstr.so_domain = global_domain and so_nbr = substring(wkgtd_ref,4,8)
                   no-error no-wait.
 
-          FIND FIRST cp_mstr WHERE cp_cust = so_cust AND cp_part = wkgtd_spec NO-LOCK NO-ERROR.
-                   IF AVAIL cp_mstr THEN ASSIGN vcpart = substring(cp_cust_part,4,LENGTH(cp_cust_part) - 3).
-                   ELSE assign vcpart = "".
+          FIND FIRST cp_mstr WHERE cp_domain = global_domain and cp_cust = so_cust AND cp_part = wkgtd_spec NO-LOCK NO-ERROR.
+               IF AVAIL cp_mstr THEN DO:
+/*                ASSIGN vcpart = substring(cp_cust_part,4,LENGTH(cp_cust_part) - 3).    */
+                  ASSIGN vcpart =  trim(cp_cust_part).
+               END.
+               ELSE assign vcpart = "".
 
     strOutDet =  wkgtd_item  +  "~~~~" +
         wkgtd_um   +   "~~~~" +
@@ -108,7 +111,7 @@ for each wkgtm
   end.
 
   find first so_mstr
-       where /*ss2012-8-16 b*/ so_mstr.so_domain = global_domain and /*ss2012-8-16 b*/ so_nbr = substring(wkgtm_ref,4,8)
+       where so_mstr.so_domain = global_domain and so_nbr = substring(wkgtm_ref,4,8)
              no-error.
   if available so_mstr then do:
     so_to_inv = no.
