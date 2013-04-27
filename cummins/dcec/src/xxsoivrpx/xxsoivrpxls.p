@@ -85,7 +85,7 @@ define variable I as integer.
        i = i + 1.
    end.
   bsheet:Cells:EntireColumn:AutoFit.
-  bsheet:Range("F2"):Select.
+  bsheet:Range("E2"):Select.
   bexcel:ActiveWindow:FreezePanes = True.
 if thfile <> "" then do:
   if search(thfile) = "" or search(thfile) = ? then bbook:SaveAs(thfile ,,,,,,1).

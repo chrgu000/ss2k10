@@ -145,7 +145,7 @@ define variable rptstr as character format "x(19)" no-undo.
 define variable l_cnt as integer no-undo.
 define variable l_ref like so_inv_nbr no-undo.
 define new shared variable m_cons_cnt as int init 0 no-undo.
-define variable fname as character format "x(120)" initial "invoice.xls" no-undo.
+define variable fname as character format "x(120)" initial "c:\invoice.xls" no-undo.
 
 
 /*GUI preprocessor Frame A define */
