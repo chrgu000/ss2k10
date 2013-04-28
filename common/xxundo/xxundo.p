@@ -86,8 +86,9 @@ repeat:
       assign usrw_key1 = global_userid
              usrw_key2 = execname + "-PROGRAM_NAME".
    end.
+   do transaction:
    assign usrw_key3 = program no-error.
-
+   end.
    hide frame a.
    undoprog:
    do transaction on stop undo undoprog,leave undoprog:
