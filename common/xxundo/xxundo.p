@@ -3,12 +3,12 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
 /* REVISION END                                                              */
-
 {mfdtitle.i "27YC"}
 
 define variable program as character format "x(40)"
-                        label "Execute Program".
+                        label "Execute Program" no-undo.
 define variable prg as character.
+define variable can_do_menu as logical.
 define variable i as integer.
 /* define variable offset  as integer. */
 
@@ -20,9 +20,10 @@ with frame a width 80 attr-space side-labels no-underline.
 setFrameLabels(frame a:handle).
 
 find first usrw_wkfl no-lock where {xxusrwdom.i} {xxand.i}
-           usrw_key1 = execname + "-PROGRAM_NAME" no-error.
+           usrw_key1 = global_userid and
+           usrw_key2 = execname + "-PROGRAM_NAME" no-error.
 if available usrw_wkfl then do:
-   assign program = usrw_key2.
+   assign program = usrw_key3.
 end.
 display program with frame a.
 /*V8-*/
@@ -30,60 +31,71 @@ display program with frame a.
 repeat:
 
    update program with frame a.
-
+   assign prg = program.
    DO i = 1 to length(program).
       If index("0987654321.", substring(program,i,1)) = 0 then do:
          assign i = -1.
          leave.
       end.
    end.
-
    if i > 0 then do:
+      if substring(program,1,1) = "." then do:
+         assign prg = substring(program,2,r-index(program,".") - 2).
+      end.
+      else do:
+         assign prg = substring(program,1,r-index(program,".") - 1).
+      end.
       find first mnd_det no-lock where
-                 mnd_nbr = substring(program,1,r-index(program,".") - 1) and
+                 mnd_nbr = prg and
                  mnd_select = int(substring(program,r-index(program,".") + 1))
            no-error.
       if available mnd_det then do:
          assign prg = mnd_exec.
       end.
+      else do:
+          {pxmsg.i &MSGNUM=13 &ERRORLEVEL=3}
+           undo, retry .
+      end.
    end.
    else do:
-        if index(program,".") = 0 then do:
-            assign prg = global_user_lang_dir + substring(program,1,2) + '/' +
-                         program + ".r".
-        end.
-        else if substring(program,r-index(program,".")) = ".p" then do:
-            assign prg = global_user_lang_dir + substring(program,1,2) + '/' +
-                         substring(program,1,r-index(program,".") - 1) + ".r".
-        end.
-        else if substring(program,r-index(program,".")) = ".r" then do:
-            assign prg = global_user_lang_dir + substring(program,1,2) + '/' +
-                        program.
-        end.
+     if index(prg,".") = 0 then do:
+         find first mnd_det no-lock where mnd_exec = prg + ".p" no-error.
+     end.
+     else if substring(prg,r-index(prg,".")) = ".p" then do:
+         find first mnd_det no-lock where mnd_exec = prg no-error.
+     end.
+     else if substring(prg,r-index(prg,".")) = ".r" then do:
+         find first mnd_det no-lock where
+              mnd_exec = substring(prg,1,r-index(prg,".") - 1) + ".p" no-error.
+     end.
    end.
-   if search(prg) = ? then do:
-      /* Program # not currently installed */
-      {pxmsg.i &MSGNUM=5012 &ERRORLEVEL=3 &MSGARG1=program}
-      undo, retry.
+   if available mnd_det then do:
+       {gprun1.i ""mfsec.p"" "(input mnd_det.mnd_nbr,
+           input mnd_det.mnd_select,
+           input true,
+           output can_do_menu)"}
+
+        if can_do_menu = false
+           then undo, retry .
    end.
    find first usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
-              usrw_key1 = execname + "-PROGRAM_NAME" no-error.
+              usrw_key1 = global_userid and
+              usrw_key2 = execname + "-PROGRAM_NAME" no-error.
    if not available usrw_wkfl then do:
       create usrw_wkfl. {xxusrwdom.i}.
-      assign usrw_key1 = execname + "-PROGRAM_NAME".
+      assign usrw_key1 = global_userid
+             usrw_key2 = execname + "-PROGRAM_NAME".
    end.
-   assign usrw_key2 = program no-error.
+   assign usrw_key3 = program no-error.
 
    hide frame a.
    undoprog:
-   do transaction:
-      run value(prg).
-      undo undoprog,leave.
+   do transaction on stop undo undoprog,leave undoprog:
+      {gprun.i prg}
+      undo undoprog,leave undoprog.
    end.
    hide all no-pause.
-
    view frame dtitle.
-
 end.
 /*V8+*/
 /*V8!
