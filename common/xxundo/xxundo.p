@@ -26,8 +26,8 @@ if available usrw_wkfl then do:
    assign program = usrw_key3.
 end.
 display program with frame a.
-/*V8-*/
 
+{xxchklv.i 'MODEL-CAN-RUN' 10}
 repeat:
 
    update program with frame a.
@@ -98,11 +98,14 @@ repeat:
    hide all no-pause.
    view frame dtitle.
 end.
-/*V8+*/
-/*V8!
+
+/*V8-*/
 do:
 /*Program not available in MFG/PRO V8*/
 {pxmsg.i &MSGNUM=7735 &ERRORLEVEL=1 &MSGARG1=program-name(1)}
 pause.
 end.
+/*V8+*/
+/*V8!
+
 */
