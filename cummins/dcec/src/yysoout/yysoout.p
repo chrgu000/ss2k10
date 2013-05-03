@@ -202,13 +202,16 @@ procedure p-report:
        each in_mstr NO-LOCK where in_domain = global_domain
                          and (in_part = tr_hist.tr_part)
                          and in_site = tr_hist.tr_site
-                         break  by tr_hist.tr_nbr by in__qadc01 by tr_hist.tr_part by tr_hist.tr_effdate by tr_hist.tr_serial
+        break  by tr_hist.tr_nbr by in__qadc01 by tr_hist.tr_loc
+               by tr_hist.tr_part by tr_hist.tr_effdate
+               by tr_hist.tr_serial
                with width 132 no-attr-space:
 
       /*  MESSAGE "AA".
         PAUSE.*/
          assign consignment = "".
-         find first pt_mstr no-lock where pt_domain = global_domain and pt_part = tr_hist.tr_part no-error.
+         find first pt_mstr no-lock where pt_domain = global_domain
+                and pt_part = tr_hist.tr_part no-error.
       /*   find first in_mstr where in_domain = global_domain
                   and in_part = tr_hist.tr_part and in_site = site.*/
          if available(pt_mstr) then parttype = pt_lot_ser.
@@ -218,7 +221,9 @@ procedure p-report:
          if available so_mstr then do:
              IF so_consignment THEN assign consignment = "寄售".
              find first sod_det where sod_domain = global_domain
-                    and sod_nbr = tr_hist.tr_nbr and sod_line = tr_hist.tr_line no-lock no-error.
+                    and sod_nbr = tr_hist.tr_nbr
+                    and sod_line = tr_hist.tr_line
+             no-lock no-error.
              find first ad_mstr where ad_domain = global_domain
                     and ad_addr = so_cust no-lock no-error.
              if available(sod_det) then soddet="Y".
@@ -226,7 +231,9 @@ procedure p-report:
              if  i = 1 then  do:
                 if tr_hist.tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
-                display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn ad_line1  so_ord_date ad_phone pdate so_rmks tr_hist.tr_ship_id with frame b.
+                display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn
+                        ad_line1 so_ord_date ad_phone pdate so_rmks
+                        tr_hist.tr_ship_id with frame b.
                 display consignment with frame b.
              end.
              SOAV = yes.
@@ -236,13 +243,16 @@ procedure p-report:
              find first ih_hist where ih_domain = global_domain
                     and ih_inv_nbr = tr_hist.tr_rmks no-lock no-error.
              find first IDH_HIST where idh_domain = global_domain
-                    and iDH_nbr = tr_hist.tr_NBR and iDH_line = tr_hist.tr_line no-lock no-error.
+                    and iDH_nbr = tr_hist.tr_NBR and iDH_line = tr_hist.tr_line
+             no-lock no-error.
              find first ad_mstr where ad_domain = global_domain
                     and ad_addr = ih_cust no-lock no-error.
              if  i = 1 then  do:
                 if tr_hist.tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
-                display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn ad_line1 ih_ord_date ad_phone pdate ih_rmks tr_hist.tr_ship_id with frame bih.
+                display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn
+                        ad_line1 ih_ord_date ad_phone pdate ih_rmks
+                        tr_hist.tr_ship_id with frame bih.
              end.
              SOAV = no.
          end.
@@ -265,17 +275,33 @@ procedure p-report:
                 end.
          end.
          if SOAV = yes and soddet="Y" THEN
-             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" sod_qty_ord format "->>>>>>" sod_qty_ship format "->>>>>>" SPACE(2)
-                   IN_user1 FORMAT "x(8)" /*pt_article*/ in__qadc01 FORMAT "x(4)" /* AT 104 */  with no-box no-labels width 132 frame c down.
+             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " "
+                  serial @ tr_hist.tr_serial format "x(8)"
+                  tr_hist.tr_line format ">>>" sod_qty_ord format "->>>>>>"
+                  sod_qty_ship format "->>>>>>" SPACE(2)
+                  IN_user1 FORMAT "x(8)" /*pt_article*/
+                  in__qadc01 FORMAT "x(4)" /* AT 104 */
+             with no-box no-labels width 132 frame c down.
          else
              if available(idh_hist) then
-             disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" IDH_qty_ord @ sod_qty_ord format "->>>>>>" IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(2)
-                     IN_user1  FORMAT "x(8)"  /*pt_article*/ in__qadc01  FORMAT "x(4)" /* AT 104 */ with no-box no-labels width 132 frame c down.
+                disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " "
+                     serial @ tr_hist.tr_serial format "x(8)"
+                     tr_hist.tr_line format ">>>"
+                     IDH_qty_ord @ sod_qty_ord format "->>>>>>"
+                     IDH_qty_ship @ sod_qty_ship  format "->>>>>>" SPACE(2)
+                     IN_user1  FORMAT "x(8)"  /*pt_article*/
+                     in__qadc01 FORMAT "x(4)" /* AT 104 */
+                with no-box no-labels width 132 frame c down.
              else
-             disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " " serial @ tr_hist.tr_serial format "x(8)" tr_hist.tr_line format ">>>" "" @ sod_qty_ord  format "->>>>>>" "" @ sod_qty_ship format "->>>>>>" SPACE(2)
-                 in_user1 format "x(8)" /*pt_article*/ in__qadc01  with no-box no-labels width 132 frame c down.
-             disp "-----------------------------------------------------------------------------------------------------------------------"
-                  with width 132 no-box frame f.
+                disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " "
+                     serial @ tr_hist.tr_serial format "x(8)"
+                     tr_hist.tr_line format ">>>"
+                     "" @ sod_qty_ord format "->>>>>>"
+                     "" @ sod_qty_ship format "->>>>>>" SPACE(2)
+                     in_user1 format "x(8)" /*pt_article*/
+                     in__qadc01
+                with no-box no-labels width 132 frame c down.
+             disp fill("-",120) format "x(120)" with width 132 no-box frame f.
          sum = sum + 1.
          if pt_pm_code = "C" then do:
             for each ps_mstr where ps_domain = global_domain
@@ -286,17 +312,22 @@ procedure p-report:
                    if tr_hist.tr__log02 = No then duplicate = "原本".
                    else duplicate = "副本".
                    if soav = yes then
-                       display pageno duplicate so_cust so_nbr ad_name so_ord_date ad_phone pdate so_rmks tr_hist.tr_ship_id with frame b.
+                       display pageno duplicate so_cust so_nbr
+                               ad_name so_ord_date ad_phone pdate
+                               so_rmks tr_hist.tr_ship_id with frame b.
                    else
-                       display pageno duplicate ih_cust ih_nbr ad_name ih_ord_date ad_phone pdate ih_rmks tr_hist.tr_ship_id with frame bih.
+                       display pageno duplicate ih_cust ih_nbr ad_name
+                               ih_ord_date ad_phone pdate ih_rmks
+                               tr_hist.tr_ship_id with frame bih.
                 end.
                 i = i + 1.
                 find pt_mstr where pt_domain = global_domain
                  and pt_part = ps_comp no-lock no-error.
                 qty_cri = qty * ps_qty_per.
-                disp ps_comp pt_desc2 tr_hist.tr_effdate space(32) qty_cri format "->>>>>>>" with no-box no-label width 132 frame c2 down.
-                disp "-----------------------------------------------------------------------------------------------------------------------"
-                with width 132 no-box frame f1.
+                disp ps_comp pt_desc2 tr_hist.tr_effdate space(32)
+                     qty_cri format "->>>>>>>"
+                with no-box no-label width 132 frame c2 down.
+                disp fill("-",120) format "x(120)" with width 132 no-box frame f1.
             end.
             if line-counter >= (page-size - 5)  OR LAST-OF(IN__qadc01) then do:
               display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
@@ -306,9 +337,14 @@ procedure p-report:
               pageno = pageno + 1.
             end.
          end.
-         if line-counter >= (page-size - 5) or last-of(tr_hist.tr_nbr) or (last-of(tr_hist.tr_part) and parttype="S") OR LAST-OF(IN__qadc01) then do:
+         if line-counter >= (page-size - 5) or
+            last-of(tr_hist.tr_nbr) or
+            (last-of(tr_hist.tr_part) and parttype="S") OR
+            LAST-OF(IN__qadc01) then do:
               if last-of(tr_hist.tr_part) and parttype ="S" then do:
-                  disp tr_hist.tr_nbr tr_hist.tr_part pt_desc2 "合计:" sum format "->>>>>>>>" with no-box no-label width 132 frame hj down.
+                  disp tr_hist.tr_nbr tr_hist.tr_part pt_desc2
+                       "合计:" sum format "->>>>>>>>"
+                  with no-box no-label width 132 frame hj down.
                   sum = 0.
               end.
               display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
@@ -329,45 +365,10 @@ procedure p-report:
 
   {mfgrptrm.i}
   {mfphead.i}
-/*                                                                                                                               */
-/*   /* start of flag of printed */                                                                                              */
-/*     if dev = "printer" or dev="print-sm" or dev="PRNT88" or dev="PRNT80" or dev="printer" or dev="print-sm" then do:          */
-/*   /*  for each tr_hist where tr_domain = global_domain                         */                                             */
-/*   /*                       and (tr_effdate >= duedate_from)                    */                                             */
-/*   /*                       and (tr_effdate <= duedate_to)                      */                                             */
-/*   /*                       and tr_ship_id >= ship                              */                                             */
-/*   /*                       and tr_ship_id <= ship1                             */                                             */
-/*   /*                       and (tr_nbr >= sonbr_from)                          */                                             */
-/*   /*                       and (tr_nbr <= sonbr_to)                            */                                             */
-/*   /*                       and (tr_type = "iss-so" or tr_type = "iss-fas")     */                                             */
-/*   /*                       and (tr_site = site or site = "")                   */                                             */
-/*   /*                       and ((not flag1) or tr__log02 = no)                 */                                             */
-/*   /*                       use-index tr_nbr:                                   */                                             */
-/*       for each tr_hist where tr_domain = global_domain                                                                        */
-/*                      and (tr_effdate >= duedate_from)                                                                         */
-/*                      and (tr_effdate <= duedate_to)                                                                           */
-/*                      and tr_ship_id >= ship                                                                                   */
-/*                      and tr_ship_id <= ship1                                                                                  */
-/*                      and (tr_part >= part_from)                                                                               */
-/*                      and (tr_part <= part_to)                                                                                 */
-/*                      and (tr_nbr >= sonbr_from)                                                                               */
-/*                      and (tr_nbr <= sonbr_to)                                                                                 */
-/*                      and (tr_line >= line_from)                                                                               */
-/*                      and (tr_line <= line_to)                                                                                 */
-/*                      and (tr_site = site or site = "")                                                                        */
-/*                      and (tr_type = "iss-so" or tr_type = "iss-fas")                                                          */
-/*                      and ((not flag1) or tr__log02 = no)                                                                      */
-/*                      use-index tr_nbr:                                                                                        */
-/*             tr__log02 = yes.                                                                                                  */
-/*       end.                                                                                                                    */
-/*     end.                                                                                                                      */
-/* end of flag of printed                                                                                                        */
-/*judy 05/06/28*/ {mfreset.i}
+  {mfreset.i}
 end procedure.
 /* end report out put */
-
 /* cycle drive the query output */
 {mfguirpb.i &flds="sonbr_from sonbr_to ship ship1 part_from part_to line_from line_to  duedate_from duedate_to site flag1 "}
-
 /* reset variable */
 
