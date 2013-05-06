@@ -65,12 +65,12 @@
 /*V8:ConvertMode=FullGUIReport                                              */
 
 /* DISPLAY TITLE */
-/*   {mfdtitle.i "1+ "} */                                                  
+/*   {mfdtitle.i "1+ "} */
 /*  DEFINING VARIABLES AS NO-UNDO */
 
 {mfdeclre.i}
 /* {gplabel.i} */
-{xxppptrp07.i}
+
 define input parameter ipart         like pt_part.
 define input parameter ipart1        like pt_part.
 define input parameter iline         like pt_prod_line.
@@ -168,28 +168,28 @@ define variable tr_qty_lotserial like tr_qty_loc no-undo.
 /* CONSIGNMENT VARIABLES */
 {pocnvars.i}
 {pocnvar2.i}
-
-/* TEMP-TABLE STORING QUANTITY, ITEM NO. AND LOCATION         */
-/* FOR A SITE                                               */
-define temp-table t_trhist no-undo
-   field t_trhist_domain             like tr_domain
-   field t_trhist_part               like tr_part
-   field t_trhist_effdate            like tr_effdate
-   field t_trhist_site               like tr_site
-   field t_trhist_loc                like tr_loc
-   field t_trhist_trnbr              like tr_trnbr
-   field t_trhist_ship_type          like tr_ship_type
-   field t_trhist_nbr                like tr_nbr
-   field t_trhist_type               like tr_type
-   field t_trhist_program            like tr_program
-   field t_trhist_qty_loc            like tr_qty_loc
-   field t_trhist_status             like tr_status
-   field t_trhist_rmks               like tr_rmks
-   field t_trhist_rev                like tr_rev
-   field t_trhist_qty_cn_adj         like tr_qty_lotserial
-   index t_trhist is primary unique
-      t_trhist_domain t_trhist_part t_trhist_effdate t_trhist_site
-      t_trhist_loc t_trhist_trnbr t_trhist_ship_type.
+{xxppptrp07.i}
+/*   /* TEMP-TABLE STORING QUANTITY, ITEM NO. AND LOCATION         */        */
+/*   /* FOR A SITE                                               */          */
+/*   define temp-table t_trhist no-undo                                      */
+/*      field t_trhist_domain             like tr_domain                     */
+/*      field t_trhist_part               like tr_part                       */
+/*      field t_trhist_effdate            like tr_effdate                    */
+/*      field t_trhist_site               like tr_site                       */
+/*      field t_trhist_loc                like tr_loc                        */
+/*      field t_trhist_trnbr              like tr_trnbr                      */
+/*      field t_trhist_ship_type          like tr_ship_type                  */
+/*      field t_trhist_nbr                like tr_nbr                        */
+/*      field t_trhist_type               like tr_type                       */
+/*      field t_trhist_program            like tr_program                    */
+/*      field t_trhist_qty_loc            like tr_qty_loc                    */
+/*      field t_trhist_status             like tr_status                     */
+/*      field t_trhist_rmks               like tr_rmks                       */
+/*      field t_trhist_rev                like tr_rev                        */
+/*      field t_trhist_qty_cn_adj         like tr_qty_lotserial              */
+/*      index t_trhist is primary unique                                     */
+/*         t_trhist_domain t_trhist_part t_trhist_effdate t_trhist_site      */
+/*         t_trhist_loc t_trhist_trnbr t_trhist_ship_type.                   */
 
 /* TEMP-TABLE STORING QUANTITY ON HAND, ITEM NO. AND LOCATION */
 /* FOR A SITE                                                 */
@@ -546,17 +546,17 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
               "net_qty          " net_qty           skip
               "inc_zero_qty     " inc_zero_qty      skip
               "zero_cost        " zero_cost         skip
-              "customer_consign " customer_consign  skip 
+              "customer_consign " customer_consign  skip
               "supplier_consign " supplier_consign  skip
               view-as alert-box.
    */
-      
-      
+
+
 /*
       ASSIGN part1 = "3"
             customer_consign  = "Include"
               AS_of_date = DATE(3,31,2013).
-*/              
+*/
 /*    end.                                               */
 
    /* OUTPUT DESTINATION SELECTION */
@@ -646,10 +646,7 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
                           and   ptp_site           = in_site)
                           and   (pt_vend  >= vend and pt_vend  <= vend1))))
    break by in_site by in_part :
-       
-/*14                                       */
 /*14        with frame b width 132:        */
-/*14                                       */
 /*14       /* SET EXTERNAL LABELS */       */
 /*14       setFrameLabels(frame b:handle). */
 
@@ -686,7 +683,7 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
 /*fyk*/       no-error.
 /*fyk*/  if available tmploc01 then do:
 /*fyk*/     next.
-/*fyk*/  end.        
+/*fyk*/  end.
          find first t_lddet exclusive-lock
             where t_lddet_part = ld_part
             and   t_lddet_site = ld_site
@@ -730,7 +727,7 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
       for each tr_hist
          fields(tr_domain tr_part tr_effdate tr_site tr_loc tr_trnbr
          tr_ship_type tr_nbr tr_type tr_program tr_qty_loc tr_status
-         tr_rmks tr_rev)
+         tr_rmks tr_rev tr_price /* */ tr_begin_qoh)
          where  tr_domain     = global_domain
             and tr_part       = pt_part
             and tr_effdate    > as_of_date
@@ -740,13 +737,13 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
             and tr_trnbr     <= l_trnbr
             and tr_ship_type  = ""
       no-lock:
-      
+
 /*fyk*/  find first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc
 /*fyk*/       no-error.
 /*fyk*/  if available tmploc01 then do:
 /*fyk*/     next.
-/*fyk*/  end.         
-         
+/*fyk*/  end.
+
          /* NEXT SECTION WILL BE REMOVED WHEN   */
          /* tr_qty_lotserial  IS IN THE SCHEMA  */
          tr_qty_lotserial = 0.
@@ -769,6 +766,8 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
             t_trhist_type               = tr_type
             t_trhist_program            = tr_program
             t_trhist_qty_loc            = tr_qty_loc
+            t_trhist_begin_qoh          = tr_begin_qoh
+            t_trhist_price              = tr_price
             t_trhist_status             = tr_status
             t_trhist_rmks               = tr_rmks
             t_trhist_rev                = tr_rev
@@ -797,7 +796,7 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
                          and   ld_part   = pt_part
                          and   ld_site   = in_site
                          and   ld_loc    = tr_loc)
-/*fyk*/     and not can-find (first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc)                         
+/*fyk*/     and not can-find (first tmploc01 no-lock where t01_site = tr_site and t01_loc = tr_loc)
          break by tr_part by tr_site by tr_loc :
 
             if first-of(tr_loc)
@@ -897,7 +896,8 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
                   and   t_trhist_loc       = t_lddet_loc
                   and   t_trhist_trnbr    <= l_trnbr
                   and   t_trhist_ship_type = ""
-               no-lock:
+                  /* no-lock : */
+               exclusive-lock:
 
                   if t_trhist_qty_loc = 0
                      and t_trhist_type <> "CN-SHIP"
@@ -909,21 +909,23 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
                   run ck_status(input  t_trhist_status,
                                 output l_avail_stat,
                                 output l_nettable).
-
                   if (net_qty = yes
                      or not l_avail_stat
                      or (l_avail_stat
                      and l_nettable))
-                  then
+                  then do:
                      if t_trhist_type <> "CN-ADJ"
-                     then
+                     then do:                          
                         total_qty_oh = total_qty_oh - t_trhist_qty_loc.
-                     else
-                     if   ( t_trhist_type    = "CN-ADJ"
-                        and t_trhist_qty_loc <> 0)
-                     then
+                        t_trhist_flag = yes.
+                     end.
+                     else if ( t_trhist_type    = "CN-ADJ"
+                           and t_trhist_qty_loc <> 0)
+                     then do:
                         total_qty_oh = total_qty_oh - t_trhist_qty_loc.
-
+                        t_trhist_flag = yes.
+                     end.
+                 end.
                   /* NOTE: CN-ADJ DOES NOT UPDATE THE tr_qty_loc AND NO */
                   /* OTHER TRANSACTIONS ARE CREATED LIKE THOSE CREATED  */
                   /* AT THE TIME OF CN-SHIP OR CN-USE                   */
@@ -1104,9 +1106,6 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
                   or (total_qty_oh < 0
                       and neg_qty)
                then do:
-   
-
-                   
          find first tmpld03 exclusive-lock where t03_part = t_lddet_part
                  and t03_site = in_site no-error.
           if not available tmpld03 then do:
@@ -1117,9 +1116,6 @@ END PROCEDURE. /* PROCEDURE CK_STATUS */
              assign t03_um  = pt_um
                     t03_qty = t03_qty + total_qty_oh
                     t03_cst = t_sct_std_as_of.
-
-
-
 
 /*14            if parts_printed = 0                                         */
 /*14            then do:                                                     */
