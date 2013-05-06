@@ -164,56 +164,54 @@ do transaction:
       view frame c.
       clear frame d all.
 
-      /*
-      scroll_loop:
-      do with frame b
-      on error undo, return error {&GENERAL-APP-EXCEPT}:
-         {swview.i &domain        = "true and "
-                   &buffer        = tt_autocr
-                   &scroll-field  = ac_part
-                   &searchkey     = "ac_cncixrecid <> 0"
-                   &index-phrase  = "use-index sort_order"
-                   &framename     = "b"
-                   &framesize     = 5
-                   &display1      = ac_part
-                   &display2      = ac_order
-                   &display3      = ac_line
-                   &display4      = ac_tot_qty_oh
-                   &display5      = ac_stock_um
-                   &display6      = ac_tot_qty_consumed
-                   &display7      = ac_consumed_um
-                   &display8      = ac_loc
-                   &exitlabel     = shiploop
-                   &exit-flag     = "true"
-                   &record-id     = ac_recid
-                   &first-recid   = ac_first_recid
-                   &exec_cursor   =
-                       " run displayConsignmentDetails
-                            (input  ip_invoice_domain,
-                             buffer tt_autocr).
-
-                         if return-value <> {&SUCCESS-RESULT} then do:
-                            hide frame c.
-                            hide frame b.
-                            undo shiploop, return.
-                         end. "
-
-                   &logical1      = true}
-
-      end. /* DO WITH FRAME b */
-      */
-      for first tt_autocr: end.
-      run displayConsignmentDetails (input  ip_invoice_domain, buffer tt_autocr).
-      if return-value <> {&SUCCESS-RESULT} then do:
-        hide frame c.
-        hide frame b.
-        undo shiploop, return.
-      end.
-      if keyfunction(lastkey) = "END-ERROR" then do:
-               op_continue-yn = ?.
-         leave shiploop.
-      end.
-
+/*8u   scroll_loop:                                                                 */
+/*8u   do with frame b                                                              */
+/*8u   on error undo, return error {&GENERAL-APP-EXCEPT}:                           */
+/*8u      {swview.i &domain        = "true and "                                    */
+/*8u                &buffer        = tt_autocr                                      */
+/*8u                &scroll-field  = ac_part                                        */
+/*8u                &searchkey     = "ac_cncixrecid <> 0"                           */
+/*8u                &index-phrase  = "use-index sort_order"                         */
+/*8u                &framename     = "b"                                            */
+/*8u                &framesize     = 5                                              */
+/*8u                &display1      = ac_part                                        */
+/*8u                &display2      = ac_order                                       */
+/*8u                &display3      = ac_line                                        */
+/*8u                &display4      = ac_tot_qty_oh                                  */
+/*8u                &display5      = ac_stock_um                                    */
+/*8u                &display6      = ac_tot_qty_consumed                            */
+/*8u                &display7      = ac_consumed_um                                 */
+/*8u                &display8      = ac_loc                                         */
+/*8u                &exitlabel     = shiploop                                       */
+/*8u                &exit-flag     = "true"                                         */
+/*8u                &record-id     = ac_recid                                       */
+/*8u                &first-recid   = ac_first_recid                                 */
+/*8u                &exec_cursor   =                                                */
+/*8u                    " run displayConsignmentDetails                             */
+/*8u                         (input  ip_invoice_domain,                             */
+/*8u                          buffer tt_autocr).                                    */
+/*8u                                                                                */
+/*8u                      if return-value <> {&SUCCESS-RESULT} then do:             */
+/*8u                         hide frame c.                                          */
+/*8u                         hide frame b.                                          */
+/*8u                         undo shiploop, return.                                 */
+/*8u                      end. "                                                    */
+/*8u                                                                                */
+/*8u                &logical1      = true}                                          */
+/*8u                                                                                */
+/*8u   end. /* DO WITH FRAME b */                                                   */
+/*8u                                                                                */
+/*8u   for first tt_autocr: end.                                                    */
+/*8u   run displayConsignmentDetails (input  ip_invoice_domain, buffer tt_autocr).  */
+/*8u   if return-value <> {&SUCCESS-RESULT} then do:                                */
+/*8u     hide frame c.                                                              */
+/*8u     hide frame b.                                                              */
+/*8u     undo shiploop, return.                                                     */
+/*8u   end.                                                                         */
+/*8u   if keyfunction(lastkey) = "END-ERROR" then do:                               */
+/*8u            op_continue-yn = ?.                                                 */
+/*8u      leave shiploop.                                                           */
+/*8u   end.                                                                         */
       setloop1:
       do on error undo shiploop, leave shiploop :
 
