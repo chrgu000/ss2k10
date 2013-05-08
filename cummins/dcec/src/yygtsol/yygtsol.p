@@ -377,6 +377,15 @@ repeat:
        end.
    end.
 
+  for each solist no-lock,
+      each sod_det no-lock where sod_domain = global_domain
+       and sod_nbr = solist_nbr break by sod_nbr by sod_line:
+        find first xinvd exclusive-lock where xnbr = sod_nbr
+               and xpart = sod_part and xqty = sod_qty_inv and xline = 0 no-error.
+        if available xinvd then do:
+           assign xline = sod_line.
+        end.
+  end.
   {mfselbpr.i "printer" 132}
     {mfphead.i}
   /*load into mfg*/
