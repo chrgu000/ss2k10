@@ -38,6 +38,7 @@ CREATE WIDGET-POOL.
 
 /* Local Variable Definitions ---                                       */
 {mfdeclre.i}
+ASSIGN execname = "xxpodiq.p".
 {src/adm2/widgetprto.i}
 DEFINE VARIABLE vkey1 AS CHARACTER INITIAL "Trace_pod__chr01".
 
@@ -68,7 +69,7 @@ DEFINE VARIABLE vkey1 AS CHARACTER INITIAL "Trace_pod__chr01".
 &Scoped-define ENABLED-FIELDS-IN-QUERY-brList
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH usrw_wkfl NO-LOCK WHERE usrw_domain = GLOBAL_domain AND usrw_key1 = vkey1 BY usrw_datefld[1] DESC BY usrw_intfld[1] DESC
-&Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH usrw_wkfl NO-LOCK WHERE usrw_domain = GLOBAL_domain AND usrw_key1 = vkey1 AND usrw_datefld[1] >= TODAY - 31 BY usrw_datefld[1] DESC BY usrw_intfld[1] DESC.
+&Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH usrw_wkfl NO-LOCK WHERE usrw_domain = GLOBAL_domain AND usrw_key1 = vkey1 BY usrw_datefld[1] DESC BY usrw_intfld[1] DESC.
 &Scoped-define TABLES-IN-QUERY-brList usrw_wkfl
 &Scoped-define FIRST-TABLE-IN-QUERY-brList usrw_wkfl
 
@@ -119,16 +120,16 @@ DEFINE QUERY brList FOR
 DEFINE BROWSE brList
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brList wWin _FREEFORM
   QUERY brList DISPLAY
-        usrw_key3                          column-label "采购单" format "x(8)"
+      usrw_key3                          column-label "采购单" format "x(8)"
         usrw_key4                          column-label "项次" format "x(4)"
         usrw_key5                          column-label "料号" FORMAT "x(18)"
         usrw_key6                          column-label "地点"
-        usrw_charfld[1]                    column-label "pod__chr01"
-        usrw_charfld[2]                    column-label "修改前"
+        usrw_charfld[1]                    column-label "改为" format "x(4)"
+        usrw_charfld[2]                    column-label "改前" format "x(4)"
         usrw_charfld[3]                    column-label "执行程序" FORMAT "x(14)"
-        usrw_charfld[5]                    column-label "链接名称"
+        usrw_charfld[5]                    column-label "OS用户"
         usrw_charfld[6]                    column-label "用户ID"
-        usrw_charfld[7]                    column-label "链接设备" FORMAT "x(14)"
+        usrw_charfld[7]                    column-label "终端名称" FORMAT "x(14)"
         usrw_charfld[8]                    column-label "界面"  FORMAT "x(8)"
         usrw_datefld[2]                    column-label "开始日期"
         usrw_charfld[10]                   column-label "监控程序" FORMAT "x(14)"
@@ -192,6 +193,17 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin
 /* ************************* Included-Libraries *********************** */
+
+
+FIND FIRST mnd_det NO-LOCK WHERE mnd_exec = execname NO-ERROR.
+IF AVAILABLE mnd_det THEN DO:
+   FIND FIRST mnt_det NO-LOCK WHERE mnt_nbr = mnd_nbr AND mnt_select = mnd_select
+          AND mnt_lang = GLOBAL_user_lang NO-ERROR.
+   IF AVAILABLE mnt_det THEN DO:
+       wwin:TITLE = mnt_label + "(" + mnt_nbr + "." + STRING(mnt_select)
+                  + "-" + execname + ")".
+   END.
+END.
 
 {src/adm2/containr.i}
 
@@ -282,6 +294,24 @@ END.
 &Scoped-define BROWSE-NAME brList
 &Scoped-define SELF-NAME brList
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL brList wWin
+ON LEFT-MOUSE-CLICK OF brList IN FRAME fMain
+DO:
+    DEFINE VARIABLE ibrowse       AS INTEGER NO-UNDO.
+  DEFINE VARIABLE method-return AS LOGICAL NO-UNDO.
+  DEFINE VARIABLE v AS CHARACTER.
+  OPEN QUERY querybrowse1 FOR EACH usrw_wkfl no-lock.
+  DO ibrowse = 1 TO  brList:NUM-SELECTED-ROWS IN FRAME fmain :
+      method-return = brList:FETCH-SELECTED-ROW(ibrowse).
+     ASSIGN finbr:SCREEN-VALUE IN FRAME fmain = usrw_key3.
+     ASSIGN finbr.
+  END.
+END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL brList wWin
 ON LEFT-MOUSE-DBLCLICK OF brList IN FRAME fMain
 DO:
   DEFINE VARIABLE ibrowse       AS INTEGER NO-UNDO.
@@ -290,10 +320,8 @@ DO:
   OPEN QUERY querybrowse1 FOR EACH usrw_wkfl no-lock.
   DO ibrowse = 1 TO  brList:NUM-SELECTED-ROWS IN FRAME fmain :
       method-return = brList:FETCH-SELECTED-ROW(ibrowse).
-     ASSIGN finbr:SCREEN-VALUE IN FRAME fmain = usrw_key3.
-     ASSIGN finbr.
      ASSIGN v = usrw_charfld[15].
-     MESSAGE REPLACE(v,";",CHR(10)) VIEW-AS ALERT-BOX INFORMATION TITLE "Call Statck:" .
+     MESSAGE "" REPLACE(v,";",CHR(10)) VIEW-AS ALERT-BOX INFORMATION TITLE "程序调用" .
   END.
 END.
 
@@ -331,9 +359,6 @@ DO:
           ASSIGN strSQL = strSQL + ' and (integer(trim(usrw_key4) ) = ' + trim(fiLine) + ' or ' + trim(filine) + ' = "") '.
       END.
       ASSIGN strSQL = strSQL + ' by usrw_datefld[1] descending by usrw_intfld[1] descending.'.
-      OUTPUT TO "CLIPBOARD".
-      PUT UNFORMAT strsql.
-      OUTPUT CLOSE.
       hQuery:QUERY-PREPARE(strSQL) NO-ERROR.
       hQuery:QUERY-OPEN NO-ERROR.
 END.

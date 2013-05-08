@@ -84,21 +84,20 @@ do transaction:
              usrw_charfld[1] = pod_det.pod__chr01
              usrw_charfld[2] = old_pod_det.pod__chr01
              usrw_charfld[3] = execname
-             usrw_charfld[4] = mfguser.
+             usrw_charfld[4] = mfguser
+             usrw_charfld[6]  = global_userid
+             usrw_datefld[1]  = today
+             usrw_intfld[1]   = time.
     FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
         EACH qaddb._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
       assign usrw_charfld[5]  = _connect-name
-             usrw_charfld[6]  = global_userid
              usrw_charfld[7]  = _connect-device
              usrw_charfld[8]  = mon_interface
              usrw_datefld[4]  = mon_date_start
              usrw_charfld[10] = mon_program
-             usrw_datefld[1]  = today
-             usrw_intfld[1]   = time
              usrw_datefld[2]  = mon_login_date
              usrw_intfld[2]   = mon_login_time.
     END.
-
       vlvl = 2.
       REPEAT WHILE (PROGRAM-NAME(vlvl) <> ?):
         usrw_charfld[15] = usrw_charfld[15] + string(vlvl - 1, "99")
