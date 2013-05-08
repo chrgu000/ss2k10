@@ -18,13 +18,27 @@ define output parameter oerr as character.
 
 define variable verr as character.
 
-input from value(ifile).
+assign verr = trim(getTermLabel("ERROR",24)).
+if opsys = "unix" then do:
+     input through grep -e verr value(ifile) 2> /dev/null no-echo.
+end.
+else if opsys = "msdos" or opsys = "win32" then do:
+     input from value(ifile).
+end.
 repeat:
   import unformat verr.
-  if index(verr,getTermLabel("ERROR",12)) > 0 then do:
-     oerr = substring(verr,index(verr,trim(getTermLabel("ERROR",12)))
-          + length(trim(getTermLabel("ERROR",12)),"RAW")).
-     leave.
+  if index(verr,trim(getTermLabel("ERROR",24))) > 0 then do:
+     if oerr = "" then
+        oerr = trim(substring(verr,index(verr,trim(getTermLabel("ERROR",24)))
+            + length(trim(getTermLabel("ERROR",24)),"RAW"))).
+     else
+        /*重复的错误只显示一次*/
+        if index(oerr,trim(substring(verr,index(verr,trim(getTermLabel("ERROR",24)))
+             + length(trim(getTermLabel("ERROR",24)),"RAW")))) = 0 then do:
+           oerr = oerr + " ; " + trim(substring(verr,index(verr,trim(getTermLabel("ERROR",24)))
+                + length(trim(getTermLabel("ERROR",24)),"RAW"))).
+        end.
   end.
 end.
 input close.
+assign oerr = replace(oerr,"请重新输入。","").
