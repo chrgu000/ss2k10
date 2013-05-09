@@ -6,6 +6,13 @@
 /* BY: Cosesa Yang          DATE: 12/03/12  ECO: *SS - 20121203.1* */
 /* BY: Cosesa Yang          DATE: 12/04/12  ECO: *SS - 20121204.1* */
 /* BY: Cosesa Yang          DATE: 12/05/12  ECO: *SS - 20121205.1* */
+/* Revision: eb21sp7  BY: Cosesa Yang     DATE: 12/20/12  ECO: *SS - 20121220.1* */
+/* Revision: eb21sp7  BY: Cosesa Yang     DATE: 12/21/12  ECO: *SS - 20121221.1* */
+/* Revision: eb21sp7  BY: Cosesa Yang     DATE: 12/25/12  ECO: *SS - 20121225.1* */
+/* Revision: eb21sp7  BY: Cosesa Yang     DATE: 12/26/12  ECO: *SS - 20121226.1* */
+/* Revision: eb21sp7  BY: Cosesa Yang     DATE: 12/27/12  ECO: *SS - 20121227.1* */
+/* $Revision: eb21sp7 BY: Cosesa Yang     DATE: 03/12/13  $ECO: *SS - 20130312.1* */
+/* $Revision: eb21sp7  $BY: Cosesa Yang     $DATE: 03/29/13  $ECO: *SS - 20130329.1* */
 /* SS - 20080222.1 - B */
 /* 1)      增加以下输入条件:发票号,订单号 
 */                                                                          
@@ -40,7 +47,18 @@
 3、输入参数增加地点 放在cust前面
 */
 /* SS - 20121204.1 - E */
-{mfdtitle.i "121205.1 "}
+/* SS - 20121220.1 - B */
+/*
+  含税不包括返利
+  121220.1 总额取小数位问题 round()实现
+   121227.1 含税总金额 = 金额 + round(税额,2) - round(返利额,2) （last总数值计算）
+   金额 = 金额 + round(每项价格 * 数量,2)
+   税额 = 税额 + round((每项价格 * 数量 - 每项价格 * 数量 * 返利率) ,2) * 税率
+   返利额 = 返利额 + 每项价格 * 数量 * 返利率
+*/
+/* SS - 20121220.1 - E 
+{mfdtitle.i "130319.1 "}*/
+{mfdtitle.i "130329.1 "}
 define var v_nbr01 like xxrqm_nbr.
 define var v_nbr02 like xxrqm_nbr.
 define var cust    like so_cust.
@@ -74,19 +92,22 @@ define buffer absmstr for abs_mstr .
  def var adname    like ad_name format "x(30)".
  def var ptdesc1   like pt_desc1 format "x(30)".
  def var taxin     as char format "x(1)" init "N".
- def var taxprice like sod_price format "->,>>>,>>9.99" .
- def var zkprice   like sod_price format "->,>>>,>>9.99" .
- def var zkcount   like sod_price format "->,>>>,>>9.99" .
- def var replaced  like sod_price format "->,>>>,>>9.99" .
- def var listpr    like sod_price format "->,>>>,>>9.99" .
+ def var taxprice like sod_price format "->,>>>,>>9.99" init 0 .
+ def var zkprice   like sod_price format "->,>>>,>>9.99" init 0 .
+ def var zkcount   like sod_price format "->,>>>,>>9.99" init 0 .
+ def var replaced  like sod_price format "->,>>>,>>9.99" init 0 .
+ def var listpr    like sod_price format "->,>>>,>>9.99" init 0 .
  def var listprqty  like sod_price format "->,>>>,>>9.99" init 0.
  /* SS - 20121128.1 - E */
 
  /* SS - 20121204.1 - B */
  def var sssite1 like sod_site init "nsza" .
  def var sssite2 like sod_site init "nsza" .
- def var lstlnpc  like sod_price format "->,>>>,>>9.99" init 0.
- def var lstttpc  like sod_price format "->,>>>,>>9.99" init 0.
+ def var ttlistpr  like sod_price format "->,>>>,>>9.99" init 0.
+ def var ttlistprqty  like sod_price format "->,>>>,>>9.99" init 0.
+def var total1225 like sod_price format "->,>>>,>>9.99" init 0.
+def var zktotal  like sod_price init 0.
+def var hstotal  like sod_price init 0.
  /* SS - 20121204.1 - B */
 
 /* SS - 20080222.1 - B */
@@ -94,7 +115,10 @@ DEF VAR inv LIKE ih_inv_nbr.
 DEF VAR inv1 LIKE ih_inv_nbr.
 DEF VAR v1_nbr LIKE so_nbr.
 DEF VAR v1_nbr1 LIKE so_nbr.
-/* SS - 20080222.1 - B */
+/* SS - 20080222.1 - E */
+/* ss - 20130301.1 - b*/
+def var v_go as logical.
+/* ss - 20130301.1 - e*/
 
 form 
    v_nbr01  colon 12 label "申请号"
@@ -140,6 +164,9 @@ repeat :
    /* SS - 20080222.1 - B */
    IF inv1 = hi_char THEN inv1 = "" .
    IF v1_nbr1 = hi_char THEN v1_nbr1 = "" .
+       /* SS - 20130319.1 - B */
+        if  sssite2 = hi_char then sssite2 = "".
+       /* SS - 20130319.1 - E */
    /* SS - 20080222.1 - B */
    update v_nbr01 v_nbr02
        /* SS - 20080222.1 - B */
@@ -166,7 +193,6 @@ setFrameLabels(frame b:handle).
        
    if date1 = ? then date1 = low_date.
    if date2 = ? then date2 = hi_date.
-   if sssite2 = "" then sssite2 = hi_char.
    if v_nbr02 = "" then v_nbr02 = hi_char.
    if cust1 = "" then cust1 = hi_char.
    if ship1 = "" then ship1 = hi_char.
@@ -175,7 +201,10 @@ setFrameLabels(frame b:handle).
    /* SS - 20080222.1 - B */
    IF inv1 = "" THEN inv1 = hi_char.
    IF v1_nbr1 = "" THEN v1_nbr1 = hi_char.
-   /* SS - 20080222.1 - B */
+   /* SS - 20080222.1 - E */
+       /* SS - 20130319.1 - B */
+        if sssite2 = "" then sssite2 = hi_char.
+       /* SS - 20130319.1 - E */
    
  {mfselprt.i "printer" 320}
 
@@ -218,7 +247,8 @@ setFrameLabels(frame b:handle).
                else desc1 = sod_desc .
                
 /*RCUR* **********************************************/ 
-	curr_price = sod_price * xxabs_ship_qty / sod_um_conv. /*交易金额*/
+	/* curr_price = sod_price * xxabs_ship_qty / sod_um_conv.  */ /*交易金额*/
+	curr_price = round(sod_price * xxabs_ship_qty / sod_um_conv , 2). 
 	base_price = curr_price.
 	
 	if so_curr <> report_curr
@@ -294,9 +324,23 @@ setFrameLabels(frame b:handle).
 	  taxprice = 0.17 .
 	  end.
 	  
-        /* SS - 20121205.1 - B */
-       accumulate ( sod_list_pr * (1 + taxprice) * xxabs_ship_qty ) (total by xxrqm_nbr) . 
-       /* SS - 20121205.1 - E */
+	/* SS - 20121227.1 - B */
+	zkprice = round((sod_list_pr / sod_um_conv ) , 2) 
+	          - round((sod_list_pr / sod_um_conv * sod_disc_pct / 100) , 2) .
+	replaced = (sod_price * xxabs_ship_qty / sod_um_conv 
+	           - sod_price / sod_um_conv * (sod_disc_pct / 100) * xxabs_ship_qty) .  
+	ttlistpr = sod_price / sod_um_conv - sod_price / sod_um_conv * (so_disc_pct / 100) + 
+	           round((sod_price / sod_um_conv - sod_price / sod_um_conv * so_disc_pct / 100) , 2) * taxprice .
+	ttlistprqty = round(sod_price * xxabs_ship_qty / sod_um_conv , 2) + 
+	              round((sod_price / sod_um_conv * xxabs_ship_qty
+		      - sod_price / sod_um_conv * xxabs_ship_qty * so_disc_pct / 100) , 2) * taxprice 
+		      - sod_price / sod_um_conv * (so_disc_pct / 100) * xxabs_ship_qty .
+		    
+        accumulate (sod_price / sod_um_conv * xxabs_ship_qty
+		    - sod_price / sod_um_conv * xxabs_ship_qty * so_disc_pct / 100) (total by xxrqm_nbr) . 
+	accumulate sod_price * xxabs_ship_qty / sod_um_conv * so_disc_pct / 100     (total by xxrqm_nbr) .    
+
+       /* SS - 20121227.1 - E */
        
        find first cm_mstr no-lock where cm_addr = xxrqm_cust no-error.
 	  if avail cm_mstr then do:
@@ -329,36 +373,63 @@ setFrameLabels(frame b:handle).
             sod_price * xxabs_ship_qty / sod_um_conv
             @ v_price label "金额"   /*RCUR*/ format "->>,>>>,>>9.99"
 	     /* SS - 20121128.1 - B */
-	    sod_list_pr * (1 - so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkprice label "折扣单价" 
-	    sod_list_pr * (so_disc_pct / 100) * xxabs_ship_qty format "->>,>>>,>>9.99" @ zkcount label "折扣金额" 
-	    sod_list_pr * (1 - so_disc_pct / 100) * xxabs_ship_qty format "->>,>>>,>>9.99" @ replaced label "折扣后金额" 
-	    so_disc_pct label "折扣%"  
-	    sod_list_pr * (1 + taxprice) format "->>,>>>,>>9.99" @ listpr label "含税单价"
-	    sod_list_pr * (1 + taxprice) * xxabs_ship_qty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
+	     /* SS - 20121221.1 - B */
+	    zkprice format "->>,>>>,>>9.9999" @ zkprice label "折扣单价" 
+	    sod_list_pr / sod_um_conv * (so_disc_pct / 100) * xxabs_ship_qty format "->>,>>>,>>9.99" @ zkcount label "返利金额" 
+	    replaced format "->>,>>>,>>9.99" @ replaced label "折扣后金额" 
+	    /* SS - 20121221.1 - E */
+	    so_disc_pct label "返利%"  
+	    /* SS - 20121219.1 - B */
+	    ttlistpr format "->>,>>>,>>9.9999" @ listpr label "含税单价"
+	    ttlistprqty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
+	    /* SS - 20121219.1 - E */
 	    /* SS - 20121128.1 - E */
 /*RCUR*/    base_price format "->>,>>>,>>9.99" label "报告货币"
             with width 320.
             down .
         if last-of( xxrqm_nbr ) then do:
-           disp "  合计 : "  @ sod_price  
+           /* SS - 20121227.1 - B */
+	   zktotal = ( accum total by xxrqm_nbr 
+	               (sod_price * xxabs_ship_qty / sod_um_conv * so_disc_pct / 100) ).
+           hstotal = ( accum total by xxrqm_nbr 
+	               (sod_price / sod_um_conv * xxabs_ship_qty
+		        - sod_price / sod_um_conv * xxabs_ship_qty * so_disc_pct / 100) ).
+	   zktotal = round(zktotal,2).
+	   hstotal = round(hstotal * taxprice , 2).
+	   total1225 = ( accum total by xxrqm_nbr 
+                       ( sod_price * xxabs_ship_qty / sod_um_conv ) ).
+	   total1225 = round(total1225 , 2).
+           /* SS - 20121227.1 - E */
+
+	   disp "  合计 : "  @ sod_price  
              ( accum total by xxrqm_nbr 
                     ( sod_price * xxabs_ship_qty / sod_um_conv ) )
               @ v_price /*RCUR*/ format "->>,>>>,>>9.99" 
 	   
             /* SS - 20121205.1 - B */
-	    (accum total by xxrqm_nbr ( sod_list_pr * (1 + taxprice) * xxabs_ship_qty ) ) @ listprqty format "->>,>>>,>>9.99" 
+	    (total1225 + hstotal - zktotal) @ listprqty format "->>,>>>,>>9.99" 
 	    /* SS - 20121205.1 - E */
 /*RCUR*/    ( accum total by xxrqm_nbr base_price) @ base_price format "->>,>>>,>>9.99" .
            down 1 .           
         end. 
         if last( xxrqm_nbr ) then do:
-        	 down 1.
+           /* SS - 20121227.1 - B */
+	   zktotal = ( accum total (sod_price * xxabs_ship_qty / sod_um_conv * so_disc_pct / 100) ).
+           hstotal = ( accum total (sod_price / sod_um_conv * xxabs_ship_qty
+		        - sod_price / sod_um_conv * xxabs_ship_qty * so_disc_pct / 100) ).
+	   zktotal = round(zktotal,2).
+	   hstotal = round(hstotal * taxprice , 2).
+	   total1225 = ( accum total ( sod_price * xxabs_ship_qty / sod_um_conv ) ).
+	   total1225 = round(total1225 , 2).
+           /* SS - 20121227.1 - E */
+		 
+		 down 1.
            put  report_curr  "           总合计:           "
 /*RCUR**    ( accum total ( sod_price * xxabs_ship_qty / sod_um_conv ) )  /*RCUR*/ format "->>,>>>,>>9.99<<"  */
 /*RCUR*/    ( accum total base_price ) format "->>,>>>,>>9.99" at 60     
             /* SS - 20121204.1 - B */
 	    "                  含税总金额：     " 
-	    ( accum total ( sod_list_pr * (1 + taxprice) * xxabs_ship_qty ) ) format "->>,>>>,>>9.99" 
+	    (total1225 + hstotal - zktotal) format "->>,>>>,>>9.99" 
 	    /* SS - 20121204.1 - E */
             skip .
         end.
@@ -404,7 +475,8 @@ setFrameLabels(frame b:handle).
                else desc1 = idh_desc .
 
 /*RCUR* **********************************************/ 
-	curr_price = idh_price * xxabs_ship_qty / idh_um_conv. /*交易金额*/
+	/* curr_price = idh_price * xxabs_ship_qty / idh_um_conv. */ /*交易金额*/
+	curr_price = round(idh_price * xxabs_ship_qty / idh_um_conv , 2 ). 
 	base_price = curr_price.
 	
 	if ih_curr <> report_curr
@@ -472,7 +544,7 @@ setFrameLabels(frame b:handle).
                   (total by xxrqm_nbr) .    
        
        /* SS - 20121128.1 - B */
-
+       
         /*  taxin = "N" . */
 	  taxprice = 0 .
        if xxrqm_site = "nsza" then do:
@@ -481,8 +553,24 @@ setFrameLabels(frame b:handle).
 	  end.
 
 	/* SS - 20121205.1 - B */
-       accumulate ( idh_list_pr * (1 + taxprice) * xxabs_ship_qty ) (total by xxrqm_nbr) . 
-       /* SS - 20121205.1 - E */
+	/* SS - 20121221.1 - B */
+	zkprice = round( (idh_list_pr / idh_um_conv ) , 2 ) - round((idh_list_pr / idh_um_conv * idh_disc_pct / 100) , 2 ).
+	replaced = idh_price * xxabs_ship_qty / idh_um_conv 
+	           - idh_price / idh_um_conv * xxabs_ship_qty * (idh_disc_pct / 100) .           
+	ttlistpr = idh_price / idh_um_conv - idh_price / idh_um_conv * (ih_disc_pct / 100)
+	          + round((idh_price / idh_um_conv - idh_price / idh_um_conv * ih_disc_pct / 100) , 2) * taxprice.
+	ttlistprqty = round(idh_price * xxabs_ship_qty / idh_um_conv , 2) + 
+	              round((idh_price / idh_um_conv * xxabs_ship_qty
+		    - idh_price / idh_um_conv * xxabs_ship_qty * ih_disc_pct / 100) , 2) * taxprice
+		      - idh_price / idh_um_conv * xxabs_ship_qty * (ih_disc_pct / 100).
+		    
+        accumulate (idh_price / idh_um_conv * xxabs_ship_qty
+		    - idh_price / idh_um_conv * xxabs_ship_qty * ih_disc_pct / 100) (total by xxrqm_nbr) . 
+	accumulate idh_price * xxabs_ship_qty / idh_um_conv * ih_disc_pct / 100     (total by xxrqm_nbr) .    
+       /* SS - 20121221.1 - E */
+     /*  accumulate (round(( idh_list_pr * xxabs_ship_qty / idh_um_conv * (1 - ih_disc_pct / 100 ) ) , 2 )
+          + round(( idh_list_pr * xxabs_ship_qty / idh_um_conv * taxprice  * (1 - ih_disc_pct / 100 ) ) , 2 )) (total by xxrqm_nbr) . 
+        SS - 20121205.1 - E */
 
        find first cm_mstr no-lock where cm_addr = xxrqm_cust no-error.
 	  if avail cm_mstr then do:
@@ -513,37 +601,58 @@ setFrameLabels(frame b:handle).
             idh_price * xxabs_ship_qty / idh_um_conv
             @ v_price label "金额"   /*RCUR*/ format "->>,>>>,>>9.99"	    
 	     /* SS - 20121128.1 - B */
-	    idh_list_pr * (1 - idh_disc_pct / 100) format "->>,>>>,>>9.99" @ zkprice label "折扣单价" 
-	    idh_list_pr * xxabs_ship_qty * (idh_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "折扣金额" 
-	    idh_list_pr * xxabs_ship_qty * (1 - idh_disc_pct / 100) format "->>,>>>,>>9.99" @ replaced label "折扣后金额" 
-	    idh_disc_pct label "折扣%"
-	    idh_list_pr * (1 + taxprice) format "->>,>>>,>>9.99" @ listpr label "含税单价"
-	    idh_list_pr * (1 + taxprice) * xxabs_ship_qty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
-	     /* SS - 20121128.1 - E */
+	    zkprice format "->>,>>>,>>9.9999" @ zkprice label "折扣单价" 
+	    idh_list_pr / idh_um_conv * xxabs_ship_qty * (ih_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "返利金额" 
+	    replaced format "->>,>>>,>>9.99" @ replaced label "折扣后金额" 
+	    ih_disc_pct label "返利%"
+    	    ttlistpr  format "->>,>>>,>>9.9999" @ listpr label "含税单价"
+	    ttlistprqty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
+	    /* SS - 20121128.1 - E */
 /*RCUR*/    base_price format "->>,>>>,>>9.99" label "报告货币"
             with width 320 .
             down .
         if last-of( xxrqm_nbr ) then do:
-           disp "  合计 : "  @ sod_price  
+	   /* SS - 20121227.1 - B */
+	   zktotal = ( accum total by xxrqm_nbr 
+	               (idh_price * xxabs_ship_qty / idh_um_conv * ih_disc_pct / 100) ).
+           hstotal = ( accum total by xxrqm_nbr 
+	               (idh_price / idh_um_conv * xxabs_ship_qty
+		        - idh_price / idh_um_conv * xxabs_ship_qty * ih_disc_pct / 100) ).
+	   zktotal = round(zktotal,2).
+	   hstotal = round(hstotal * taxprice , 2).
+	   total1225 = ( accum total by xxrqm_nbr 
+                       ( idh_price * xxabs_ship_qty / idh_um_conv ) ).
+	   total1225 = round(total1225 , 2).
+           /* SS - 20121227.1 - E */
+	   disp "  合计 : "  @ sod_price  
              ( accum total by xxrqm_nbr 
                     ( idh_price * xxabs_ship_qty / idh_um_conv ) )
               @ v_price /*RCUR*/ format "->>,>>>,>>9.99"
 	      
              /* SS - 20121204.1 - B */
-	    (accum total by xxrqm_nbr ( idh_list_pr * (1 + taxprice) * xxabs_ship_qty ) ) @ listprqty format "->>,>>>,>>9.99" 
+	    (total1225 + hstotal - zktotal)  @ listprqty format "->>,>>>,>>9.99" 
 	    /* SS - 20121204.1 - E */   
 
 /*RCUR*/     ( accum total by xxrqm_nbr base_price) @ base_price format "->>,>>>,>>9.99" .         
            down 1.           
         end. 
         if last( xxrqm_nbr ) then do:
+	   /* SS - 20121227.1 - B */
+	   zktotal = ( accum total (idh_price * xxabs_ship_qty / idh_um_conv * ih_disc_pct / 100) ).
+           hstotal = ( accum total (idh_price / idh_um_conv * xxabs_ship_qty
+		        - idh_price / idh_um_conv * xxabs_ship_qty * ih_disc_pct / 100) ).
+	   zktotal = round(zktotal,2).
+	   hstotal = round(hstotal * taxprice , 2).
+	   total1225 = ( accum total ( idh_price * xxabs_ship_qty / idh_um_conv ) ).
+	   total1225 = round(total1225 , 2).
+           /* SS - 20121227.1 - E */
         	 down 1.
            put report_curr "            总合计:           "   
 /*RCUR**     ( accum total ( idh_price * xxabs_ship_qty / idh_um_conv ) ) /*RCUR*/ format "->>,>>>,>>9.99<<" **/
 /*RCUR*/    ( accum total base_price ) format "->>,>>>,>>9.99" at 60
             /* SS - 20121204.1 - B */
 	    "                  含税总金额：     " 
-	    ( accum total ( idh_list_pr * (1 + taxprice) * xxabs_ship_qty )) format "->>,>>>,>>9.99" 
+	    (total1225 + hstotal - zktotal)  format "->>,>>>,>>9.99"
 	    /* SS - 20121204.1 - E */
 	    skip .
         end.
@@ -585,21 +694,26 @@ setFrameLabels(frame b:handle).
        first sod_det where sod_nbr = abs_mstr.abs_order 
              and sod_line = int(abs_mstr.abs_line) no-lock 
              break by absmstr.abs_shipto /* SS - 20121205.1 */ by abs_mstr.abs_shp_date:      
-          
-        /* SS - 20121203.1 - B */
-        for each ih_hist no-lock where ih_nbr = so_nbr and ih_po = so_po 
-	     and ih_cust = so_cust and substring(ih_inv_nbr,1,2) = "SI" , 
+
+        /* ss - 130312.1 -b */
+	  v_go  = yes .
+        for each ih_hist no-lock where ih_nbr = so_nbr
+	    and substring(ih_inv_nbr,1,2) = "SI" , 
             each idh_hist where  idh_nbr = ih_nbr
       	     and idh_inv_nbr = ih_inv_nbr
-      	     and idh_line = sod_line no-lock : end.
-	   
+      	     and idh_line = sod_line no-lock :
+	     
 	   find first tr_hist no-lock 
 	  /*  where tr_nbr = so_nbr and tr_line = sod_line and substring(tr_rmks,1,2) = "SI" */
    	    where tr_rmks = ih_inv_nbr and tr_nbr = ih_nbr and tr_line = idh_line
 	    and tr_ship_id = substring(abs_mstr.abs_par_id,2) no-error.
-	     if not avail tr_hist then do: 
-	    
-	/* SS - 20121203.1 - E */
+	     if avail tr_hist then do: 
+              v_go = no .
+	    end .     
+	  end.
+	   
+	 if v_go then do:
+	 /* ss - 130312.1 - e*/
 
 /*       
        find first pt_mstr where pt_part = abs_mstr.abs_item no-lock no-error.
@@ -612,6 +726,11 @@ setFrameLabels(frame b:handle).
             and xxabs_line  = abs_mstr.abs_line no-lock :          
             v_qty = v_qty + xxabs_mstr.xxabs_ship_qty .          
        end . 
+       
+         /* ss - 130312.1 -b */
+	  end.
+	 /* ss - 130312.1 - e*/
+
        find first xxabs_mstr where xxabs_id = abs_mstr.abs_id
           and xxabs_shipfrom =abs_mstr.abs_shipfrom
           and xxabs_order = abs_mstr.abs_order
@@ -624,6 +743,26 @@ setFrameLabels(frame b:handle).
                 and xxabs_line  = abs_mstr.abs_line 
                 and xxabs_mstr.xxabs_canceled no-lock )
           then do :
+
+	  /* ss - 130306.1 -b */
+	  v_go  = yes .
+        for each ih_hist no-lock where ih_nbr = so_nbr
+	    and substring(ih_inv_nbr,1,2) = "SI" , 
+            each idh_hist where  idh_nbr = ih_nbr
+      	     and idh_inv_nbr = ih_inv_nbr
+      	     and idh_line = sod_line no-lock :
+	     
+	   find first tr_hist no-lock 
+	  /*  where tr_nbr = so_nbr and tr_line = sod_line and substring(tr_rmks,1,2) = "SI" */
+   	    where tr_rmks = ih_inv_nbr and tr_nbr = ih_nbr and tr_line = idh_line
+	    and tr_ship_id = substring(abs_mstr.abs_par_id,2) no-error.
+	     if avail tr_hist then do: 
+              v_go = no .
+	    end .     
+	  end.
+	   
+	 if v_go then do:
+	   /* ss - 130306.1 - e*/
 
   /* SS - 20121128.1 - B */
 
@@ -646,8 +785,11 @@ setFrameLabels(frame b:handle).
    /* SS - 20121128.1 - E */
 
 /*RCUR* **********************************************/ 
-	curr_price = (abs_mstr.abs_ship_qty - v_qty )
+	/* curr_price = (abs_mstr.abs_ship_qty - v_qty )
                     * sod_price / sod_um_conv . /*交易金额*/
+	*/
+	curr_price = round((abs_mstr.abs_ship_qty - v_qty )
+                    * sod_price / sod_um_conv , 2 ) . /*交易金额*/
 	base_price = curr_price.
 	
 	if so_curr <> report_curr
@@ -709,12 +851,33 @@ setFrameLabels(frame b:handle).
 	
 	tv_price = tv_price + base_price.
 /*RCUR* **********************************************/              
-          
+         /* 
           v_price = v_price + (abs_mstr.abs_ship_qty - v_qty )
                     * sod_price / sod_um_conv .
+		    */
+          v_price = v_price + round((abs_mstr.abs_ship_qty - v_qty )
+                    * sod_price / sod_um_conv  , 2 ).
 
           /* SS - 20121204.1 - B */
-	  listprqty = listprqty + sod_list_pr * (1 + taxprice) * (abs_mstr.abs_ship_qty - v_qty ) .
+	  /* SS - 20121221.1 - B */
+	  zkprice = round(( sod_list_pr / sod_um_conv ) , 2) - round(( sod_list_pr / sod_um_conv * sod_disc_pct / 100) , 2).
+	  replaced = (abs_mstr.abs_ship_qty - v_qty ) * sod_price / sod_um_conv -
+	             sod_price / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) * (sod_disc_pct / 100).  
+	  ttlistpr = sod_price / sod_um_conv - sod_price / sod_um_conv * so_disc_pct / 100
+	            + taxprice * round((sod_price / sod_um_conv - sod_price / sod_um_conv * so_disc_pct / 100) , 2). 
+	  ttlistprqty = round((abs_mstr.abs_ship_qty - v_qty )* sod_price / sod_um_conv  , 2 )
+	               + taxprice * round((sod_price / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) 
+		    - sod_price / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) * so_disc_pct / 100) , 2)
+		       - sod_price * (abs_mstr.abs_ship_qty - v_qty ) / sod_um_conv * so_disc_pct / 100 .
+                   
+	  zktotal = zktotal + sod_price * (abs_mstr.abs_ship_qty - v_qty ) / sod_um_conv * so_disc_pct / 100  .
+	 
+	  hstotal = hstotal + taxprice * round((sod_price / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) 
+		    - sod_price / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) * so_disc_pct / 100) , 2) .
+
+	  listprqty = v_price .
+
+	  /* SS - 20121221.1 - E */
 	  /* SS - 20121204.1 - E */
 
 /* SS - 20120625.1 - B */
@@ -747,23 +910,49 @@ setFrameLabels(frame b:handle).
                (abs_mstr.abs_ship_qty - v_qty ) * 
                sod_price / sod_um_conv  format "->,>>>,>>9.99" @ v_price label "金额"  /*RCUR*/ format "->>,>>>,>>9.99"
                 /* SS - 20121128.1 - B */
-	       sod_list_pr * (1 - so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkprice label "折扣单价" 
-	       sod_list_pr * (abs_mstr.abs_ship_qty - v_qty ) * (so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "折扣金额" 
-	       sod_list_pr * (abs_mstr.abs_ship_qty - v_qty ) * (1 - so_disc_pct / 100) format "->>,>>>,>>9.99" @ replaced label "折扣后金额"
-	       so_disc_pct label "折扣%"
-	       sod_list_pr * (1 + taxprice) format "->>,>>>,>>9.99" @ listpr label "含税单价"
-	       sod_list_pr * (1 + taxprice) * (abs_mstr.abs_ship_qty - v_qty ) format "->>,>>>,>>9.99" @ listprqty label "含税金额"
-	        /* SS - 20121128.1 - E */
+	       zkprice format "->>,>>>,>>9.9999" @ zkprice label "折扣单价" 
+	       sod_list_pr / sod_um_conv * (abs_mstr.abs_ship_qty - v_qty ) * (so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "返利金额" 
+	       replaced format "->>,>>>,>>9.99" @ replaced label "折扣后金额"
+	       so_disc_pct label "返利%"
+	       ttlistpr format "->>,>>>,>>9.9999" @ listpr label "含税单价"
+	       ttlistprqty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
+	       /* SS - 20121128.1 - E */
 /*RCUR*/        base_price format "->>,>>>,>>9.99" label "报告货币"
                substring(abs_mstr.abs_par_id,2) format "x(12)" @ abs_mstr.abs_shipto label "货运单" 
                 abs_mstr.abs_shp_date label "发货日期"
                with width 320. 
             down. 
-        
+            
+	  /* ss - 130306.1 -b */
+	    end.
+	  /* ss - 130306.1 -e */
+
           end.  
        if not avail xxabs_mstr then do:
 /*RCUR* **********************************************/ 
-	curr_price = abs_mstr.abs_ship_qty * sod_price / sod_um_conv . /*交易金额*/
+         
+	  /* ss - 130306.1 -b */
+	  v_go  = yes .
+        for each ih_hist no-lock where ih_nbr = so_nbr
+	    and substring(ih_inv_nbr,1,2) = "SI" , 
+            each idh_hist where  idh_nbr = ih_nbr
+      	     and idh_inv_nbr = ih_inv_nbr
+      	     and idh_line = sod_line no-lock :
+	     
+	   find first tr_hist no-lock 
+	  /*  where tr_nbr = so_nbr and tr_line = sod_line and substring(tr_rmks,1,2) = "SI" */
+   	    where tr_rmks = ih_inv_nbr and tr_nbr = ih_nbr and tr_line = idh_line
+	    and tr_ship_id = substring(abs_mstr.abs_par_id,2) no-error.
+	     if avail tr_hist then do: 
+              v_go = no .
+	    end .     
+	  end.
+	   
+	 if v_go then do:
+	   /* ss - 130306.1 - e*/
+         
+	/* curr_price = abs_mstr.abs_ship_qty * sod_price / sod_um_conv .  */ /*交易金额*/
+	curr_price = round(abs_mstr.abs_ship_qty * sod_price / sod_um_conv , 2) . /*交易金额*/
 	base_price = curr_price.
 	
 	if so_curr <> report_curr
@@ -826,7 +1015,8 @@ setFrameLabels(frame b:handle).
 	tv_price = tv_price + base_price.
 /*RCUR* **********************************************/   
        
-          v_price = v_price + abs_mstr.abs_ship_qty * sod_price / sod_um_conv .
+        /*  v_price = v_price + abs_mstr.abs_ship_qty * sod_price / sod_um_conv . */
+	 v_price = v_price + round(abs_mstr.abs_ship_qty * sod_price / sod_um_conv , 2 ) .
 
 /* SS - 20120625.1 - B */
 /* 1)      增加客户编码 
@@ -849,10 +1039,25 @@ setFrameLabels(frame b:handle).
 	  taxprice = 0.17 .
 	  end. 
 
-	  
-	  /* SS - 20121204.1 - B */
-	  listprqty = listprqty + sod_list_pr * (1 + taxprice) * abs_mstr.abs_ship_qty .
-	  /* SS - 20121204.1 - E */
+	  /* SS - 20121227.1 - B */
+	  zkprice = round(( sod_list_pr / sod_um_conv ) , 2) - round(( sod_list_pr / sod_um_conv * sod_disc_pct / 100) , 2).
+	  replaced = abs_mstr.abs_ship_qty * sod_price / sod_um_conv -
+	             sod_price / sod_um_conv * abs_mstr.abs_ship_qty * (sod_disc_pct / 100). 
+	  ttlistpr =  sod_price / sod_um_conv - sod_price / sod_um_conv * (so_disc_pct / 100)
+	            + taxprice * round((sod_price / sod_um_conv - sod_price / sod_um_conv * so_disc_pct / 100) , 2). 
+	  ttlistprqty = round(abs_mstr.abs_ship_qty * sod_price / sod_um_conv , 2) 
+	                + taxprice * round((sod_price / sod_um_conv * abs_mstr.abs_ship_qty 
+		          - sod_price / sod_um_conv * abs_mstr.abs_ship_qty * so_disc_pct / 100) , 2)
+			- sod_price / sod_um_conv * abs_mstr.abs_ship_qty * (so_disc_pct / 100) .
+                   
+	  zktotal = zktotal + sod_price * abs_mstr.abs_ship_qty / sod_um_conv * so_disc_pct / 100  .
+	 
+	  hstotal = hstotal + taxprice * round((sod_price / sod_um_conv * abs_mstr.abs_ship_qty 
+		    - sod_price / sod_um_conv * abs_mstr.abs_ship_qty * so_disc_pct / 100) , 2) .
+
+	  listprqty = v_price .
+
+	  /* SS - 20121227.1 - E */
 	  
 	  find first pt_mstr no-lock where pt_part = sod_part no-error.
 	  if avail pt_mstr then ptdesc1 = pt_desc1.
@@ -883,12 +1088,18 @@ setFrameLabels(frame b:handle).
 /*RCUR*/	so_curr   COLUMN-LABEL "币别"            
                abs_mstr.abs_ship_qty * sod_price / sod_um_conv format "->,>>>,>>9.99" @ v_price label "金额" /*RCUR*/ format "->>,>>>,>>9.99"
                 /* SS - 20121128.1 - B */
-	       sod_list_pr * (1 - so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkprice label "折扣单价" 
-	       sod_list_pr * abs_mstr.abs_ship_qty * (so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "折扣金额"
-	       sod_list_pr * abs_mstr.abs_ship_qty * (1 - so_disc_pct / 100) format "->>,>>>,>>9.99" @ replaced label "折扣后金额"
-	       so_disc_pct label "折扣%"
+	       zkprice format "->>,>>>,>>9.9999" @ zkprice label "折扣单价" 
+	       sod_list_pr / sod_um_conv * abs_mstr.abs_ship_qty * (so_disc_pct / 100) format "->>,>>>,>>9.99" @ zkcount label "返利金额"
+	       replaced format "->>,>>>,>>9.99" @ replaced label "折扣后金额"
+	       so_disc_pct label "返利%"
+	       /* SS - 20121219.1 - B */
+	       /*
 	       sod_list_pr * (1 + taxprice) format "->>,>>>,>>9.99" @ listpr label "含税单价"
 	       sod_list_pr * (1 + taxprice) * abs_mstr.abs_ship_qty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
+	       */
+	       /* SS - 20121219.1 - E */
+	       ttlistpr  format "->>,>>>,>>9.9999" @ listpr label "含税单价"
+	       ttlistprqty format "->>,>>>,>>9.99" @ listprqty label "含税金额"
 	        /* SS - 20121128.1 - E */
 /*RCUR*/	base_price format "->>,>>>,>>9.99" label "报告货币"
                 substring(abs_mstr.abs_par_id,2) format "x(12)" @ abs_mstr.abs_shipto label "货运单"
@@ -896,28 +1107,40 @@ setFrameLabels(frame b:handle).
                with width 320 . 
            down .  
 
+	  /* ss - 130306.1 -b */
+	  end.
+	   /* ss - 130306.1 - e*/
        end.               
        
-     if last( absmstr.abs_shipto ) and v_price <> 0 then do:
+     if last( absmstr.abs_shipto ) /* ss - 130329.1  and v_price <> 0 */then do:
+          /*20121227*/
+	  zktotal = round(zktotal , 2).
+	  hstotal = round(hstotal , 2).
+	  listprqty = listprqty + hstotal - zktotal .
+	  /*20121227*/
+
           down 1.
           put report_curr "              总合计:          "  
 /*RCUR***      	v_price /*RCUR*/ format "->>,>>>,>>9.99<<" **/
 /*RCUR*/  	v_price format "->>,>>>,>>9.99" at 60 
-                /* SS - 20121204.1 - B */
+               
 	        "                  含税总金额：     " 
-		listprqty  format "->>,>>>,>>9.99" . 
-	        /* SS - 20121204.1 - E */ 
+		 listprqty  format "->>,>>>,>>9.99" .
+		 /*
+		 "                 合计税款：       " hstotal
+		 "                 合计返利：       " zktotal. */  
+		/* SS - 20121227.1 - E */
 
 /*RCUR*/  tv_price = 0.
           v_price = 0 .
 	  /* SS - 20121204.1 - B */
 	  listprqty = 0 .
+	  zktotal = 0.
+	  hstotal = 0.
 	  /* SS - 20121204.1 - E */ 
+	  
      end .           
-   end. /* for each absmstr */ 
-   /* SS - 20121203.1 - B */
-	end.
-   /* SS - 20121203.1 - E */
+   end. /* for each absmstr */
  end. /* else do: */
   {mfreset.i}
   {mfgrptrm.i}
