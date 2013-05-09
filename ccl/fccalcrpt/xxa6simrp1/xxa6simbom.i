@@ -1,7 +1,8 @@
 define {1} shared temp-table temp3
         field t3_part        like pt_part
         field t3_comp        like ps_comp
-        field t3_qty_per     like ps_qty_per.
+        field t3_qty_per     like ps_qty_per
+        field t3_ps_code     like ps_ps_code.
 
 procedure getSubQty:
  /* -----------------------------------------------------------
@@ -61,6 +62,7 @@ repeat:
                         t3_part     = caps(vv_part)
                         t3_comp     = caps(ps_comp)
                         t3_qty_per  = vv_qty
+                        t3_ps_code  = ps_ps_code.
                         .
                 end.
                 else t3_qty_per   = t3_qty_per + vv_qty  .

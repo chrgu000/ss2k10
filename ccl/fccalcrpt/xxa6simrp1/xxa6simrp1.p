@@ -4,10 +4,10 @@
 /* ss - 130301.1 by: jack */
 /* ss - 130507.1 by: zy
  *  1.OPPO 数量,需要做转换. 若采购单位和PO单位不一致时,需要转换为库存单位.( G栏,牵涉到此栏位的计算不用更改)
- *  2.虚零件不显示
+ *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "130301.1"}
+{mfdtitle.i "130206.1"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -43,7 +43,7 @@ define variable sStatus like pt_status no-undo.
 define variable decBomSummary as decimal format "->>>>>9.999<<" no-undo.
 define variable decSaftyStock as decimal no-undo.
 define variable mrpqty as decimal no-undo.
-DEFINE VARIABLE v_phantom LIKE pt_phantom NO-UNDO.
+DEFINE VARIABLE v_ps_code LIKE ps_ps_code NO-UNDO.
 define variable before_simdate_demand as decimal no-undo.
 define variable after_simdate_oppo as decimal no-undo.
 define variable before_simdate_oppo as decimal no-undo.
@@ -73,12 +73,12 @@ v_disp2    colon 24 no-label skip
 with  frame  a side-labels  width  80 attr-space.
 setframelabels(frame  a:handle ).
 {wbrp01.i}
-{mfdemo.i 05/01/2013 08/30/2013}
+{mfdemo.i 05/01/2013 09/30/2013}
 repeat :
-    if  site1      = hi_char  then site1        =  "".
-    if  cust1      = hi_char  then cust1        =  "".
-    if  creatdate1 = hi_date  then creatdate1   =  ?.
-    if  creatdate  = low_date then creatdate    =  ?.
+    if site1      = hi_char  then site1      = "".
+    if cust1      = hi_char  then cust1      = "".
+    if creatdate1 = hi_date  then creatdate1 = ?.
+    if creatdate  = low_date then creatdate  = ?.
 
     display v_disp1 v_disp2 with frame a.
 
@@ -140,8 +140,7 @@ repeat :
                 v_buyer = ptp_buyer
                 v_pm_code = ptp_pm_code
                 v_ord_min = ptp_ord_min
-                v_ord_mult = ptp_ord_mult
-                v_phantom = ptp_phantom.
+                v_ord_mult = ptp_ord_mult.
         end.
 
         find pt_mstr where pt_part = a6rq_part no-lock no-error.
@@ -155,8 +154,7 @@ repeat :
                 v_buyer = pt_buyer
                 v_pm_code = pt_pm_code
                 v_ord_min = pt_ord_min
-                v_ord_mult = pt_ord_mult
-                v_phantom = pt_phantom.
+                v_ord_mult = pt_ord_mult.
         end.
         /*ss-130206.1 -b *
         put skip (2).
@@ -185,9 +183,10 @@ repeat :
                 and a6rqd_custpoln = a6rq_custpoln
             no-lock
             break by a6rqd_custpono by a6rqd_custpoln by a6rqd_part: /* by a6rqd_sort */
-            if first-of(a6rqd_part) then
+            if first-of(a6rqd_part) then do:
                v_a6rqd_rq_qty = 0.
-
+               decOpenPOQtyum = 0.
+            end.
             v_a6rqd_rq_qty = v_a6rqd_rq_qty + a6rqd_rq_qty.
             if last-of(a6rqd_part) then do:
             /*ss-130129.1 -e */
@@ -197,7 +196,6 @@ repeat :
                      assign
                      desc1 = pt_desc1
                      sStatus = pt_status.
-                     v_phantom = pt_phantom.
                  end.
 
                  find first ptp_det where ptp_site = a6rqd_site and ptp_part = a6rqd_part no-lock no-error.
@@ -209,7 +207,6 @@ repeat :
                      v_ord_mult = ptp_ord_mult.
                      decSaftyStock = ptp_sfty_stk.
                      dMOQ = ptp_ord_min.
-                     v_phantom = ptp_phantom.
                  end.
 
                  if available(pt_mstr) and (not(available(ptp_det))) then do:
@@ -219,8 +216,7 @@ repeat :
                          v_ord_min = pt_ord_min
                          v_ord_mult = pt_ord_mult
                          decSaftyStock = pt_sfty_stk
-                         dMOQ = pt_ord_min
-                         v_phantom = pt_phantom.
+                         dMOQ = pt_ord_min.
                  end.
 
                  if (a6rqd_rq_qty - a6rqd_short_qty ) >= 0 then assign qty_oh = a6rqd_rq_qty - a6rqd_short_qty.
@@ -689,10 +685,12 @@ repeat :
                  /*ss-130206.1-e*/
                  if v_sort_opt = 1 then do:
                      assign mrpqty = 0
-                            decBomSummary = 0.
+                            decBomSummary = 0
+                            v_ps_code = "".
                      find first temp3 no-lock where t3_comp = a6rqd_part no-error.
                      if available temp3 then do:
-                        assign decBomSummary = t3_qty_per.
+                        assign decBomSummary = t3_qty_per
+                               v_ps_code = t3_ps_code.
                      end.
                      for each mrp_det
                             no-lock
@@ -705,7 +703,7 @@ repeat :
                      end.
                      put skip (1).
                      /*v_rmks = convRemark(input v_pm_code,input a6rqd_zone). ss-130129.1 */
-/*130507.1_2*/       if v_phantom = NO then do:
+/*130507.1_2*/       if v_ps_code <> "X" then do:
                         put /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */
                         a6rqd_part                   '$'
                         desc1                        '$'
@@ -743,7 +741,7 @@ repeat :
                         v_rmks
                         /*ss-130129.1 -e */
                         skip.
-/*130507.1_2*/       end. /* if v_phantom = NO then do: */
+/*130507.1_2*/       end. /* if v_ps_code <> "X" then do: */
                      for each a6rrd_det where a6rrd_site = a6rqd_site and a6rrd_cust = a6rqd_cust
                          and a6rrd_custpono = a6rqd_custpono and a6rrd_custpoln = a6rqd_custpoln
                          and a6rrd_part = a6rqd_part no-lock
@@ -849,7 +847,7 @@ repeat :
                                 (decInventory - decDemandQty - v_a6rrd_rq_qty >= 0)
                              then v_rmks = "安全区,库存足".
                              /*ss-130129.1 -e */
-/*130507.1_2*/       if v_phantom = NO then do:
+/*130507.1_2*/       if v_ps_code <> "X" then do:
                              put  /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */
                              a6rrd_part                       '$'
                              desc1                            '$'
@@ -886,7 +884,7 @@ repeat :
                              v_rmks
                              /*ss-130129.1 -e */
                              skip.
-/*130507.1_2*/              end. /*if v_phantom = NO then do:*/
+/*130507.1_2*/              end. /* if v_ps_code <> "X" then do:*/
                          end. /*if last-of(a6rrd_part)*/
                      end. /*for each a6rrd_det*/
                  end. /*if v_sort_opt = 1*/
