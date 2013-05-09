@@ -95,6 +95,11 @@ DEFINE VARIABLE vkey1 AS CHARACTER INITIAL "Trace_pod__chr01".
 /* Define the widget handle for the window                              */
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
+/* Menu Definitions                                                     */
+DEFINE MENU POPUP-MENU-brList
+       MENU-ITEM m_del          LABEL "删除"          .
+
+
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON btnQuery
      LABEL "查询"
@@ -139,7 +144,7 @@ DEFINE BROWSE brList
         usrw_charfld[15]                   column-label "程序调用" FORMAT "x(600)"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
-    WITH NO-ROW-MARKERS SEPARATORS SIZE 98 BY 20.18 FIT-LAST-COLUMN.
+    WITH NO-ROW-MARKERS SEPARATORS MULTIPLE SIZE 98 BY 20.18 FIT-LAST-COLUMN.
 
 
 /* ************************  Frame Definitions  *********************** */
@@ -200,8 +205,7 @@ IF AVAILABLE mnd_det THEN DO:
    FIND FIRST mnt_det NO-LOCK WHERE mnt_nbr = mnd_nbr AND mnt_select = mnd_select
           AND mnt_lang = GLOBAL_user_lang NO-ERROR.
    IF AVAILABLE mnt_det THEN DO:
-       wwin:TITLE = mnt_label + "(" + mnt_nbr + "." + STRING(mnt_select)
-                  + "-" + execname + ")".
+       wwin:TITLE = mnt_label + "(" + mnt_nbr + "."+ STRING(mnt_select) + "-" + execname + ")".
    END.
 END.
 
@@ -222,6 +226,7 @@ END.
    FRAME-NAME                                                           */
 /* BROWSE-TAB brList btnQuery fMain */
 ASSIGN
+       brList:POPUP-MENU IN FRAME fMain             = MENU POPUP-MENU-brList:HANDLE
        brList:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
 
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
@@ -362,6 +367,43 @@ DO:
       hQuery:QUERY-PREPARE(strSQL) NO-ERROR.
       hQuery:QUERY-OPEN NO-ERROR.
 END.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+
+
+&Scoped-define SELF-NAME m_del
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_del wWin
+ON CHOOSE OF MENU-ITEM m_del /* 删除 */
+DO:
+  DEFINE VARIABLE ibrowse       AS INTEGER NO-UNDO.
+  DEFINE VARIABLE method-return AS LOGICAL NO-UNDO.
+  DEFINE VARIABLE i AS INTEGER.
+  DEFINE VARIABLE v AS CHARACTER.
+  ASSIGN v = "".
+  OPEN QUERY querybrowse1 FOR EACH usrw_wkfl no-lock.
+  DO ibrowse = 1 TO  brList:NUM-SELECTED-ROWS IN FRAME fmain :
+      method-return = brList:FETCH-SELECTED-ROW(ibrowse).
+      IF v = "" THEN
+          ASSIGN v = STRING(RECID(usrw_wkfl)).
+      ELSE
+          ASSIGN v = v + ";" + STRING(RECID(usrw_wkfl)).
+  END.
+  i = NUM-ENTRIES(v,";").
+  MESSAGE "确定要删除选定的资料吗" VIEW-AS ALERT-BOX  QUESTION BUTTON YES-NO TITLE "系统提示" UPDATE method-return .
+  IF method-return = NO THEN DO:
+      LEAVE.
+  END.
+  DO ibrowse = 1 TO i:
+     FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE recid(usrw_wkfl) = integer(SUBSTRING(v,1,INDEX(v,";") - 1)) NO-ERROR.
+     IF AVAILABLE usrw_wkfl THEN DO:
+         DELETE usrw_wkfl.
+     END.
+     ASSIGN v = SUBSTRING(v,INDEX(v,";") + 1).
+
+  END.
+  brList:REFRESH() NO-ERROR.
+ END.
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
