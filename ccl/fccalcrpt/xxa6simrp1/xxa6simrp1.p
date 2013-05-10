@@ -7,7 +7,7 @@
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "130206.1"}
+{mfdtitle.i "130301.1"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -59,14 +59,14 @@ assign
 v_disp1 = "1 = " + gettermlabel("v_disp1",15)
 v_disp2 = "2 = " + gettermlabel("v_disp2",15).
 form
-site  colon 20
-site1 label {t001.i} colon  38 skip
-cust  colon 20
-cust1 label {t001.i} colon  38 skip
-creatdate   colon 20
-creatdate1  label  {t001.i} colon  38 skip
-custpono  colon 20
-custpoln  colon 20  skip
+site       colon 20
+site1      colon 38 label {t001.i} skip
+cust       colon 20
+cust1      colon 38 label {t001.i} skip
+creatdate  colon 20
+creatdate1 colon 38 label {t001.i} skip
+custpono   colon 20
+custpoln   colon 20 skip
 v_sort_opt colon 20
 v_disp1    colon 24 no-label
 v_disp2    colon 24 no-label skip
@@ -185,7 +185,6 @@ repeat :
             break by a6rqd_custpono by a6rqd_custpoln by a6rqd_part: /* by a6rqd_sort */
             if first-of(a6rqd_part) then do:
                v_a6rqd_rq_qty = 0.
-               decOpenPOQtyum = 0.
             end.
             v_a6rqd_rq_qty = v_a6rqd_rq_qty + a6rqd_rq_qty.
             if last-of(a6rqd_part) then do:
@@ -228,7 +227,6 @@ repeat :
 
                  dtePeriodStart = getStart(a6rqd_rq_date).
                  dtePeriodFinish = dtePeriodStart + 6.
-
                  {xxa6simrp1openpo.i
                      a6rqd_part
                      a6rqd_site
@@ -709,7 +707,7 @@ repeat :
                         desc1                        '$'
                         a6rqd_lt                     '$'
                         "'" + string(a6rqd_rq_date)  '$'
-                        pt_um  '$'
+                        pt_um                        '$'
                         decBomSummary                format "->,>>>,>>>,>>9.<<<<<<" '$'
                         decOpenPOQtyum               format "->,>>>,>>>,>>9.<<<<<<" '$'
                         decInventory                 format "->,>>>,>>>,>>9.<<<<<<" '$'
@@ -774,7 +772,6 @@ repeat :
 
                              dtePeriodStart  = getStart(a6rrd_rq_date).
                              dtePeriodFinish = dtePeriodStart + 6.
-
                              {xxa6simrp1openpo.i
                                  a6rrd_part
                                  a6rrd_site
