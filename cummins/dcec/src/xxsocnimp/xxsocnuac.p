@@ -343,12 +343,17 @@ repeat with frame a:
       cust_name
    with frame a1.
 
-   FOR EACH tt_autocr :
-       IF (ac_line = thline OR thline = 0 ) AND
-          (ac_site = site OR site = "") AND
-          (ac_loc = location OR location = "")  THEN NEXT.
-       DELETE tt_autocr.
-   END.
+/*   FOR EACH tt_autocr :                                                    */
+/*       IF (ac_line = thline OR thline = 0 ) AND                            */
+/*          (ac_site = site OR site = "") AND                                */
+/*          (ac_loc = location OR location = "")  THEN NEXT.                 */
+/*       DELETE tt_autocr.                                                   */
+/*   END.                                                                    */
+
+   for each tt_autocr where 
+       not (ac_order = nbr and ac_order = nbr1 and ac_line = thLINE):
+           delete tt_autocr.
+   end.
 
    /* IF USER CHOOSE NO FOR                     */
    /* QUERY 'IS ALL INFORMATION CORRECT'        */
