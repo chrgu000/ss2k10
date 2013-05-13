@@ -24,8 +24,8 @@ DEFINE WORKFILE xxwkso
 
 /* 查询零件回冲的数量和冲到的发动机*/
 
-FORM /*GUI*/ 
-            
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
  SKIP(.1)  /*GUI*/
@@ -67,12 +67,12 @@ REPEAT:
    END.
 
    FOR EACH xxwkpt.
-    FOR EACH tr_hist WHERE tr_hist.tr_domain = global_domain and tr_type ="rct-wo" AND  tr_effdate >= bedate AND tr_effdate <=eddate AND tr_lot = xxwkpt.lot USE-INDEX tr_type BREAK BY tr_lot. 
+    FOR EACH tr_hist WHERE tr_hist.tr_domain = global_domain and tr_type ="rct-wo" AND  tr_effdate >= bedate AND tr_effdate <=eddate AND tr_lot = xxwkpt.lot USE-INDEX tr_type BREAK BY tr_lot.
         IF FIRST-OF (tr_lot) THEN sosum =0.
         sosum= sosum + tr_qty_loc.
         IF LAST-OF(tr_lot) THEN do:
-           FIND FIRST ps_mstr WHERE ps_mstr.ps_domain = global_domain and ps_comp = tr_part OR SUBSTRING(ps_comp , 1 , LENGTH(ps_comp) - 2) = tr_part NO-LOCK NO-ERROR.
-           IF AVAIL ps_mstr THEN v_power = ps_par.
+           FIND FIRST pt_mstr WHERE pt_domain = global_domain and pt_part = tr_part  NO-LOCK NO-ERROR.
+           IF AVAIL pt_mstr THEN v_power = pt__chr09.
            ELSE v_power = "".
            CREATE xxwkso.
            ASSIGN xxwkso.partpt = xxwkpt.part
@@ -97,8 +97,8 @@ REPEAT:
     PUT xxwkso.partpt ";" xxwkso.partsum ";" xxwkso.partso ";" xxwkso.qty ";" xxwkso.lot SKIP.
   END.*/
 
-    {mfguitrl.i} 
-    {mfreset.i}  
+    {mfguitrl.i}
+    {mfreset.i}
     {mfgrptrm.i}
 
 END.
