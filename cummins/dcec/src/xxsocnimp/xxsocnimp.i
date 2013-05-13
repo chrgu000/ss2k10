@@ -13,6 +13,21 @@ define {1} shared temp-table xsa_r
     index xsr_1 is primary xsr_so xsr_part
     index xsr_2 xsr_so xsr_part xsr_site xsr_loc xsr_lot xsr_ref.
     .
+define {1} shared temp-table xsa_r1
+    fields xsr1_ship like so_ship column-label "xsr_ship"
+    fields xsr1_so like so_nbr column-label "xsr_so"
+    fields xsr1_line like sod_line column-label "xsr_line"
+    fields xsr1_part like sod_part column-label "xsr_part"
+    fields xsr1_site like sod_site column-label "xsr_site"
+    fields xsr1_loc  like ld_loc column-label "xsr_loc"
+    fields xsr1_lot  like ld_lot column-label "xsr_lot"
+    fields xsr1_ref like ld_ref column-label "xsr_ref"
+    fields xsr1_eff   as date column-label "xsr_eff"
+    fields xsr1_oh like ld_qty_oh column-label "xsr_oh"
+    fields xsr1_um like um_um column-label "xsr_um"
+    index xsr_1 is primary xsr1_so xsr1_part
+    index xsr_2 xsr1_so xsr1_part xsr1_site xsr1_loc xsr1_lot xsr1_ref.
+    .
 define {1} shared temp-table xsc_m
     fields xsm_ship like so_ship column-label "xsm_ship"
     fields xsm_cust like so_cust column-label "xsm_cust"
@@ -36,6 +51,7 @@ define {1} shared temp-table xsc_d
     fields xsd_part like pt_part column-label "xsd_part"
     fields xsd_desc1 like pt_desc1 column-label "xsd_desc1"
     fields xsd_desc2 like pt_desc2 column-label "xsd_desc2"
+    fields xsd_sched like sod_sched column-label "xsd_sched"
     fields xsd_qty_used as decimal format "->,>>>,>>9.9<<<<"  label "Usage Qty" column-label "xsd_qty_used"
     fields xsd_site like si_site column-label "xsd_site"
     fields xsd_loc  like loc_loc column-label "xsd_loc"

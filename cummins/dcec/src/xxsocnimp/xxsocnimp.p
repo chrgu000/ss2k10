@@ -124,6 +124,7 @@ DEFINE BROWSE brDet
     xsd_so       COLUMN-LABEL "销售订单号"
     xsd_line     COLUMN-LABEL "项次"
     xsd_serial   COLUMN-LABEL "序号"
+    xsd_sched     COLUMN-LABEL "日程单"
     xsd_part     COLUMN-LABEL "物料"
     xsd_desc2    COLUMN-LABEL "中文名称"
 /*    xsd_desc1    COLUMN-LABEL "英文名称" */
@@ -279,6 +280,7 @@ DO:
     DEFINE VARIABLE i AS INTEGER.
     EMPTY TEMP-TABLE xsc_d NO-ERROR.
     EMPTY TEMP-TABLE xsa_r NO-ERROR.
+    EMPTY TEMP-TABLE xsa_r1 no-error.
     SESSION:SET-WAIT-STAT("general").
     APPLY "RETURN" TO vFile.
 
@@ -290,6 +292,23 @@ DO:
                {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
             END.
         END.
+        for each xsa_r1 no-lock,
+            each ld_det no-lock where ld_domain = global_domain and
+                 ld_site = xsr1_site and ld_loc = xsr1_loc and
+                 ld_part = xsr1_part:
+            create xsa_r.
+            assign xsr_ship = xsr1_ship
+                   xsr_so = xsr1_so
+                   xsr_line = xsr1_line
+                   xsr_part = xsr1_part
+                   xsr_site = xsr1_site
+                   xsr_loc = xsr1_loc
+                   xsr_lot = ld_lot
+                   xsr_ref = ld_ref
+                   xsr_eff = xsr1_eff
+                   xsr_oh = ld_qty_oh
+                   xsr_um = xsr_um.
+        end.
         {xxsocnimp01a.i}
     END.
 

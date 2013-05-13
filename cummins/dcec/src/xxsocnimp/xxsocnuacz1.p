@@ -322,18 +322,18 @@ ASSIGN SHIPTO = ISHIPTO.
        input-output table tt_autocr,
        input-output table tt_so_update).
 for each tt_autocr no-lock:
-    create xsa_r.
-    assign xsr_ship = ac_ship
-           xsr_so = ac_order
-           xsr_line = ac_line
-           xsr_part = ac_part
-           xsr_site = ac_site
-           xsr_loc = ac_loc
-           xsr_lot = ac_lotser
-           xsr_ref = ac_ref
-           xsr_eff = ac_eff
-           xsr_oh = ac_tot_qty_oh
-           xsr_um = ac_stock_um.
+    create xsa_r1.
+    assign xsr1_ship = ac_ship
+           xsr1_so = ac_order
+           xsr1_line = ac_line
+           xsr1_part = ac_part
+           xsr1_site = ac_site
+           xsr1_loc = ac_loc
+           xsr1_lot = ac_lotser
+           xsr1_ref = ac_ref
+           xsr1_eff = ac_eff
+           xsr1_oh = ac_tot_qty_oh
+           xsr1_um = ac_stock_um.
 end.
 
 /*                                                                   */

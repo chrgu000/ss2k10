@@ -103,8 +103,23 @@
             end.
       end.
   end.
-/*  output to D:\dcec\src\SRC-2011SE\xxsocnimp\xsc_d.txt.                 */
-/*  for each xsc_d with width 300:                                        */
-/*      display xsc_d with stream-io.                                     */
-/*  end.                                                                  */
-/*  output close.                                                         */
+  for each xsc_d exclusive-lock:
+      find first sod_det exclusive-lock where sod_domain = global_domain
+             and sod_nbr = xsd_so and sod_line = xsd_line no-error.
+      if available sod_det then do:
+         assign xsd_sched = sod_sched.
+      end.
+  end.
+/*
+    output to D:\dcec\src\SRC-2011SE\xxsocnimp\xsa_r.txt.
+    for each xsa_r with width 300:
+        display xsa_r with stream-io.
+    end.
+    output close.
+
+    output to D:\dcec\src\SRC-2011SE\xxsocnimp\xsc_d.txt.
+    for each xsc_d with width 300:
+        display xsc_d with stream-io.
+    end.
+    output close.
+*/
