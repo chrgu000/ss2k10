@@ -5,17 +5,25 @@
 {mfdtitle.i "13410.1"}
 
 define variable key1 like code_fldname initial "INVTR" no-undo.
-define variable showdet as Logical no-undo.
+define variable loc  like loc_loc.
+define variable loc1 like loc_loc.
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
+
+define temp-table tmploc01
+       fields t01_site like loc_site
+       fields t01_loc like loc_loc
+       fields t01_stat as logical initial yes.
 
 FORM /*GUI*/
 
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-    key1           colon 25 skip(2)
-    showdet        colon 25
+    key1  colon 25  skip(1)
+    loc   colon 25
+    loc1  colon 42 label {t001.i}
+    skip(2)
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -60,7 +68,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*GUI*/ procedure p-report-quote:
 
 
-   {wbrp06.i &command = update &fields = " key1 showdet" &frm = "a"}
+   {wbrp06.i &command = update &fields = " key1 loc loc1 " &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -79,34 +87,36 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*GUI*/   mainloop: do on error undo, return error on endkey undo, return error:
 
    {mfphead.i}
+empty temp-table tmploc01 no-error.
 
    for each code_mstr no-lock where code_domain = global_domain
         and code_fldname = key1,
        each pld_det no-lock where pld_domain = global_domain and
             pld_inv_acct = code_value
-       break by pld_site by pld_loc
+       break by pld_site by pld_loc:  
+     if first-of(pld_loc) then do:
+        find first tmploc01 exclusive-lock where t01_site = pld_site
+               and t01_loc = pld_loc no-error.
+        if not available tmploc01 then do:
+           create tmploc01.
+           assign t01_site = pld_site
+                  t01_loc  = pld_loc.
+        end.
+     end.
+   end.
+
+   for each loc_mstr no-lock where loc_domain = global_domain 
+        and loc_loc >= loc and (loc_loc <= loc1 or loc1 = "")
    with frame b width 80 no-attr-space:
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
-     if first-of(pld_loc) then do:
-        find first loc_mstr no-lock where loc_domain = global_domain and
-                   loc_site = pld_site and loc_loc = pld_loc no-error.
-        if available loc_mstr then do:
-            display pld_site pld_loc loc_desc pld_inv_acct.
-        end.
-        else do:
-            display pld_site pld_loc "" @ loc_desc pld_inv_acct.
-        end.
-     end.
-      if showdet then do:
-         display pld_prodline.
-      end.
-
+      find first tmploc01 where t01_site = loc_site and t01_loc = loc_loc no-error.
+      display loc_site loc_loc loc_desc t01_stat when available tmploc01 with stream-io .
+   
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
-   end.
-
+end.
 
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
@@ -118,4 +128,4 @@ end.
 {wbrp04.i &frame-spec = a}
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" key1 showdet "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" key1 loc loc1 "} /*Drive the Report*/
