@@ -1,23 +1,24 @@
-/* xxpirp01.p  - Production Issue Report                              */
+/* xxpirp01.p  - Production Issue Report                                 */
 /* COPYRIGHT DCEC. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.     */
-/* V1                 Developped: 20/05/02      BY: Rao Haobin          */
-/* V1.1               Developped: 16/06/02      BY: Rao Haobin          */
+/* V1                 Developped: 20/05/02      BY: Rao Haobin           */
+/* V1.1               Developped: 16/06/02      BY: Rao Haobin           */
 /* RHB 生产材料领用报表，按零件-产成品分类统计 */
 
 {mfdtitle.i "1304.24"}
 
-define variable site like pt_site.
+define variable site  like pt_site.
 define variable site1 like pt_site.
-define variable part like pt_part.
+define variable part  like pt_part.
 define variable part1 like pt_part.
-define variable line2 like tr_prod_line.
+define variable line  like tr_prod_line.
 define variable line1 like tr_prod_line.
-define variable date2 like tr_effdate.
 define variable date1 like tr_effdate.
+define variable date2 like tr_effdate.
 define variable so_prodline like pt_prod_line.
 define variable part_prodline like pt_prod_line.
 define variable ws_sum_all as decimal  label "发放金额合计"  format "->,>>>,>>>,>>9.99" initial 0.
-define workfile wo_sum field ws_part like pt_part
+define temp-table wo_sum
+     field ws_part like pt_part
       field ws_prod_line like pt_prod_line
       field ws_so like wo_part label "SO号"
       field ws_qty like tr_qty_chg label "数量"
@@ -33,12 +34,12 @@ define workfile wo_sum field ws_part like pt_part
  SKIP(.1)  /*GUI*/
        site   colon 18
        site1  label {t001.i} colon 49 skip
-       line2  colon 18
+       line   colon 18
        line1  label {t001.i} colon 49 skip
        part   colon 18
        part1  label {t001.i} colon 49 skip
-       date2  colon 18
-       date1  label {t001.i} colon 49 skip
+       date1  colon 18
+       date2  label {t001.i} colon 49 skip
   skip
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -68,8 +69,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 /*GUI*/ procedure p-enable-ui:
 
        if part1 = hi_char then part1 = "".
-       if date2 = low_date then date2 = date(month(today),1,year(today)).
-       if date1 = hi_date then date1 = today.
+       if date1 = low_date then date1 = date(month(today),1,year(today)).
+       if date2 = hi_date then date2 = today.
        if site1 = hi_char then site1 = "".
        if line1 = hi_char then line1 = "".
        display date2 date1 with frame a.
@@ -88,14 +89,14 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
        {mfquoter.i date1   }
        {mfquoter.i site   }
        {mfquoter.i site1   }
-       {mfquoter.i line2   }
+       {mfquoter.i line    }
        {mfquoter.i line1   }
 
        if  part1 = "" then part1 = hi_char.
        if  site1 = "" then site1 = hi_char.
        if  line1 = "" then line1 = hi_char.
-       if  date2 = ? then date2 = low_date.
-       if  date1 = ? then date1 = hi_date.
+       if  date1 = ? then date1 = low_date.
+       if  date2 = ? then date2 = hi_date.
        /* SELECT PRINTER */
 
 /*GUI*/ end procedure. /* p-report-quote */
@@ -113,19 +114,17 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
        end.
 {gpprtrpa.i  "printer" 132}
 {mfphead.i}
-
 for each wo_sum exclusive-lock: delete wo_sum. end.
-
 for each tr_hist fields(tr_domain tr_effdate tr_part tr_type tr_site
          tr_prod_line tr_qty_loc tr_mtl_std tr_lbr_std tr_ovh_std
          tr_bdn_std tr_sub_std tr_qty_chg)
          no-lock where tr_domain = global_domain and
+         tr_effdate >= date1 and tr_effdate <= date2 AND
          tr_type = "iss-wo" and
-         tr_effdate >= date2 and tr_effdate <= date1  AND
          tr_part >= part AND tr_part <= part1 AND
          tr_site >= site and tr_site <= site1 AND
-         tr_prod_line >= LINE2 AND
-         tr_prod_line <= line1 USE-INDEX tr_type
+         tr_prod_line >= line AND
+         tr_prod_line <= line1 USE-INDEX tr_eff_trnbr
 ,each wo_mstr fields(wo_domain wo_lot wo_part) no-lock where wo_domain = global_domain
   and wo_lot = tr_lot USE-INDEX wo_lot:
 
@@ -143,7 +142,7 @@ ws_sum = ws_sum + round(tr_qty_chg * (tr_mtl_std + tr_lbr_std + tr_ovh_std + tr_
 end. /* for each tr_hist */
 
 ws_sum_all = 0.
-for each wo_sum where ws_part >= part and ws_part <= part1 and ws_prod_line >=line2 and ws_prod_line <=line1 break by ws_part :
+for each wo_sum where ws_part >= part and ws_part <= part1 and ws_prod_line >=line and ws_prod_line <=line1 break by ws_part :
 ACCUMULATE ws_sum (TOTAL BY ws_part).
 ACCUMULATE ws_qty (TOTAL BY ws_part).
 find pt_mstr where pt_domain = global_domain and pt_part = ws_part no-error.
@@ -175,16 +174,14 @@ ws_sum_all = ws_sum_all + ws_sum.
 /*judy 07/05/05*/     ws_sum_all = 0.
 /*judy 07/05/05*/  END.
 end. /* for each wo_sum */
-
 /*judy 07/05/05*/   /*disp ws_sum_all. */
-
 {mfguitrl.i}
 
 /*judy 07/05/05*/  {mfreset.i}
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 end procedure.
 
-/*GUI*/ {mfguirpb.i &flds=" site site1 line2 line1 part part1 date2 date1 "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" site site1 line line1 part part1 date1 date2 "} /*Drive the Report*/
 
 
 /*judy 07/05/05*/ /* {mfreset.i}*/
