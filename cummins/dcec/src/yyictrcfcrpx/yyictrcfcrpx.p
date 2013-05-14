@@ -253,7 +253,11 @@ for each tmpld03: delete tmpld03. end.
 /*            input 'Exclude'     */
 /*          )"}                   */
 
-
+  output to /home/mfg/n/t_trhist.txt.
+  for each t_trhist no-lock with width 400:
+  display t_trhist.
+  end.
+  output close.
   for each t_trhist
        fields(t_trhis_domain t_trhist_effdate t_trhist_site t_trhist_part
               t_trhist_type t_trhist_price t_trhist_qty_loc)
