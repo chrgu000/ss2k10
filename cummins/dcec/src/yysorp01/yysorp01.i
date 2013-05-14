@@ -7,20 +7,21 @@
     iTotalLine = 0.
 
     for each idh_hist no-lock where idh_domain = global_domain
-    and idh_nbr >= nbr and idh_nbr <= nbr1
-    and idh_part >= part and idh_part <= part1
-    and idh_cum_date[2] >= cumdate and idh_cum_date[2] <= cumdate1
-    and idh_site >= site and idh_site <= site1 use-index idh_invln,
-    each pt_mstr no-lock
-    where pt_domain = global_domain and pt_part = idh_part,
-    each ih_hist no-lock
-    where ih_domain = global_domain and ih_nbr = idh_nbr
-    and ih_cust >= cust and ih_cust <= cust1
-    and (ih_slspsn[1] = slspsn or slspsn = "") use-index ih_cust,
-    each cm_mstr no-lock
-    where cm_domain = global_domain and cm_addr = ih_cust
-    and cm_region >= region and cm_region <= region1
-    AND (cm_type = cmtype OR cmtype = "")
+         and idh_nbr >= nbr and idh_nbr <= nbr1
+         and idh_part >= part and idh_part <= part1
+         and idh_cum_date[2] >= cumdate and idh_cum_date[2] <= cumdate1
+         and idh_site >= site and idh_site <= site1 use-index idh_invln,
+        each pt_mstr no-lock where pt_domain = global_domain
+         and pt_part = idh_part,
+        each ih_hist no-lock where ih_domain = global_domain
+         and ih_nbr = idh_nbr
+         and ih_inv_nbr = idh_inv_nbr
+         and ih_cust >= cust and ih_cust <= cust1
+         and (ih_slspsn[1] = slspsn or slspsn = "") use-index ih_cust,
+    each cm_mstr no-lock where cm_domain = global_domain
+     and cm_addr = ih_cust
+     and cm_region >= region and cm_region <= region1
+     AND (cm_type = cmtype OR cmtype = "")
             use-index cm_addr:
       create zzwkso.
       assign
@@ -28,6 +29,8 @@
         sopart      = idh_part
         invqty      = idh_qty_inv
         soprice     = idh_price
+        socon       = idh_consume
+/*        soconloc    =                                        */
         soregion    = cm_region
         socmtype    =   cm_type
         socust      = ih_cust
@@ -40,23 +43,23 @@
       iTotalLine = iTotalLine + 1.
     end.
 if incso then do:
-    for each sod_det no-lock
-    where sod_domain = global_domain and sod_nbr >= nbr and sod_nbr <= nbr1
-    and sod_part >= part and sod_part <= part1
-      and sod_cum_date[2] >= cumdate and sod_cum_date[2] <= cumdate1
-      and sod_site >= site and sod_site <= site1
-      and sod_qty_inv <> 0
-      use-index sod_nbrln,
-    each pt_mstr no-lock
-    where pt_domain = global_domain and pt_part = sod_part,
-    each so_mstr no-lock
-    where so_domain = global_domain and so_nbr = sod_nbr
-    and so_cust >= cust and so_cust <= cust1
-    and (so_slspsn[1] >= slspsn or slspsn = "") use-index so_cust,
-    each cm_mstr no-lock
-    where cm_domain = global_domain and cm_addr = so_cust
-    and cm_region >= region and cm_region <= region1
-    AND (cm_type = cmtype OR cmtype = "")
+    for each sod_det no-lock where sod_domain = global_domain
+         and sod_nbr >= nbr and sod_nbr <= nbr1
+         and sod_part >= part and sod_part <= part1
+         and sod_cum_date[2] >= cumdate and sod_cum_date[2] <= cumdate1
+         and sod_site >= site and sod_site <= site1
+         and sod_qty_inv <> 0
+         use-index sod_nbrln,
+    each pt_mstr no-lock where pt_domain = global_domain
+     and pt_part = sod_part,
+    each so_mstr no-lock where so_domain = global_domain
+     and so_nbr = sod_nbr
+     and so_cust >= cust and so_cust <= cust1
+     and (so_slspsn[1] >= slspsn or slspsn = "") use-index so_cust,
+    each cm_mstr no-lock where cm_domain = global_domain
+     and cm_addr = so_cust
+     and cm_region >= region and cm_region <= region1
+     AND (cm_type = cmtype OR cmtype = "")
             use-index cm_addr:
       create zzwkso.
       assign
@@ -67,7 +70,7 @@ if incso then do:
         socon       = sod_consignment
         soconloc    = sod_consign_loc
         soregion    = cm_region
-        socmtype    =   cm_type
+        socmtype    = cm_type
         socust      = so_cust
         ptline      = pt_prod_line
         soslspsn    = so_slspsn[1]

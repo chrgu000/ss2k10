@@ -36,8 +36,8 @@
       allamt = allamt + invqty * soprice.
     end.
     iLine = iLine + 1.
-    chExcelWorkbook:Worksheets(1):Cells(iLine,11) = "总计".
-    chExcelWorkbook:Worksheets(1):Cells(iLine,12) = allamt.
+    chExcelWorkbook:Worksheets(1):Cells(iLine,12) = "总计".
+    chExcelWorkbook:Worksheets(1):Cells(iLine,13) = allamt.
   end.
 
 
