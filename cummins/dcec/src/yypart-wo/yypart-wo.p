@@ -1,11 +1,13 @@
-/* yypart-wo.p - yypart wo                                                 */
-/*V8:ConvertMode=report                                                 */
+/* yypart-wo.p - yypart wo                                                   */
+/*V8:ConvertMode=Report                                                      */
 /* REVISION: 120713.1 LAST MODIFIED: 07/13/12 BY: zy                         */
 /* REVISION END                                                              */
+/*此程序是字符版-不提供GUI的程序                                             */
 
 {mfdtitle.i "121021.1"}
 
 DEFINE VAR itpart LIKE tr_part.
+define variable part1 like pt_part.
 DEFINE VAR bedate LIKE tr_date INIT TODAY.
 DEFINE VAR eddate LIKE tr_date INIT TODAY.
 DEFINE VAR partsum LIKE tr_qty_loc INIT 0.
@@ -14,7 +16,6 @@ DEFINE WORKFILE xxwkpt
        FIELD part LIKE  tr_part
        FIELD lot LIKE  tr_lot
        FIELD qty LIKE  tr_qty_loc. /*part*/
-
 
 DEFINE WORKFILE xxwkso
        FIELD partpt LIKE tr_part
@@ -25,35 +26,26 @@ DEFINE WORKFILE xxwkso
 
 /* 查询零件回冲的数量和冲到的发动机*/
 
-FORM /*GUI*/ 
-            
- RECT-FRAME       AT ROW 1 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
- SKIP(.1)  /*GUI*/
- itpart colon 22   LABEL "零件号"
- bedate colon 22 LABEL "开始日期"  eddate colon 49 label "结束日期"
- SKIP(.4)  /*GUI*/
-with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
-
- DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:HIDDEN in frame a = yes.
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
+FORM
+ itpart colon 12   part1 colon 42 label {t001.i}
+ bedate colon 12   eddate colon 42 skip(1)
+with frame a side-label.
 setframelabels(frame a:handle) .
 
 REPEAT:
-		
-		if bedate = low_date then bedate = ?.
-		if eddate = hi_date  then eddate = ?.
-		
-    update itpart bedate eddate with frame a.
-    
+
+    if bedate = low_date then bedate = ?.
+    if eddate = hi_date  then eddate = ?.
+    if part1 = hi_char then part1 = "".
+
+    update itpart part1 bedate eddate with frame a.
+
+    if part1 = "" then part1 = hi_char.
     if bedate = ? then bedate = low_date.
     if eddate = ? then eddate = hi_date.
-    
+
     {mfquoter.i itpart}
+    {mfquoter.i part1}
     {mfquoter.i bedate}
     {mfquoter.i eddate}
     {mfselbpr.i "printer" 132}
@@ -65,9 +57,9 @@ REPEAT:
    END.
 
    FOR EACH tr_hist WHERE tr_domain = global_domain and
-   				  tr_part = itpart AND 
-/* 				  tr_userid ="mrp" AND  */
-   				  tr_date >=bedate AND tr_date <= eddate BREAK BY tr_lot .
+            tr_part >= itpart AND tr_part <= part1 and
+/*          tr_userid ="mrp" AND  */
+            tr_date >=bedate AND tr_date <= eddate BREAK BY tr_lot .
     IF FIRST-OF (tr_lot) THEN partsum =0.
     partsum= partsum + tr_qty_loc.
     IF LAST-OF(tr_lot) THEN do:
@@ -79,10 +71,10 @@ REPEAT:
    END.
 
    FOR EACH xxwkpt.
-    FOR EACH tr_hist WHERE tr_domain = global_domain and tr_lot = xxwkpt.lot AND 
+    FOR EACH tr_hist WHERE tr_domain = global_domain and tr_lot = xxwkpt.lot AND
 /*         tr_userid="mrp" AND   */
         tr_type ="rct-wo" AND  tr_date >= bedate AND tr_date <=eddate
-      BREAK BY tr_lot. 
+      BREAK BY tr_lot.
         IF FIRST-OF (tr_lot) THEN sosum =0.
         sosum= sosum + tr_qty_loc.
         IF LAST-OF(tr_lot) THEN do:
@@ -96,18 +88,15 @@ REPEAT:
     END.
   END.
 
-  PUT "零件号           ;零件回冲数量  ;发动机号          ;发动机回冲数量 ;事务号" skip.
-  PUT "________________________________________________________________________" skip.
-  FOR EACH xxwkso.
-    PUT xxwkso.partpt ";" xxwkso.partsum ";" xxwkso.partso ";" xxwkso.qty ";" xxwkso.lot SKIP.
+  PUT "零件号;零件回冲数量;发动机号;发动机回冲数量;事务号" skip.
+  PUT fill("_",84) skip.
+  FOR EACH xxwkso no-lock.
+    PUT unformat xxwkso.partpt ";"
+                 xxwkso.partsum ";"
+                 xxwkso.partso ";"
+                 xxwkso.qty ";"
+                 xxwkso.lot SKIP.
   END.
-
-    {mfguitrl.i} 
-    {mfreset.i}  
-    {mfgrptrm.i}
+    {mfreset.i}
 
 END.
-
-
-
-
