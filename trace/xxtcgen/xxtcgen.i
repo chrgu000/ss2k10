@@ -26,6 +26,7 @@ procedure genTrig:
   define input parameter key9 as character.
   define variable vbef as character.
   define variable vaft as character.
+  define variable i    as integer.
   output to value(ifilename) append.
     put skip.
     if incmfdeclre = 0 then do: /**not found*/
@@ -80,6 +81,7 @@ procedure genTrig:
        for each qaddb._field no-lock of qaddb._file:
            assign vaft = itab + "." + _field-name
                   vbef = 'old_' + itab + "." + _field-name.
+           if _Extent = 0 then do:
            PUT UNFORMAT fill(" ",14) 'when "' _field-name '" then' SKIP.
            run printdet(input itab,
                         input _field-name,
@@ -101,6 +103,32 @@ procedure genTrig:
                         input key8,
                         input key9
                         ).
+           end.
+           else do:
+                do i = 1 to _Extent:
+                 PUT UNFORMAT fill(" ",14) 'when "' _field-name '[' string(i) '] " then' SKIP.
+                    run printdet(input itab,
+                        input _field-name + "[" + string(i) + "]",
+                        input itype,
+                        input vaft,
+                        input vbef,
+                        input idomain,
+                        input ipart,
+                        input isite,
+                        input inbr,
+                        input key0,
+                        input key1,
+                        input key2,
+                        input key3,
+                        input key4,
+                        input key5,
+                        input key6,
+                        input key7,
+                        input key8,
+                        input key9
+                        ).
+                end.
+           end.
        end.
        end.
        PUT UNFORMAT FILL(" ",9) 'END. /*CASE*/' SKIP.

@@ -300,6 +300,5 @@ ADD INDEX "tce_userid_date_time" ON "tce_hist"
 
 .
 PSC
-cpstream=CP936
 .
 0000005948

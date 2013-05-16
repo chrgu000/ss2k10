@@ -67,6 +67,5 @@ ADD INDEX "tcr_table" ON "tcr_reg"
 
 .
 PSC
-cpstream=CP936
 .
 0000001353

@@ -6,185 +6,183 @@
 
 /* DISPLAY TITLE */
 {mfdtitle.i "11YK"}
+{gplabel.i}
+define variable sfile like _file-name format "x(30)"
+                label "Table" no-undo initial "".
+define variable fieldname like _FIELD-NAME format "x(30)"
+                 label "Field" no-undo initial "".
+define variable sel-all as character no-undo format "x(3)".
+define variable v_sel like mfc_logical.
 
-define variable del-yn like mfc_logical initial no.
-define variable typedesc as character format "x(20)".
-define variable bfldname as handle.
-define variable bfld as handle.
-define variable tcrtabfld like tcr_field.
-define variable tcrtype like tcr_type.
-define variable tcrmemo like tcr_memo.
-define variable titlet0 as character format "x(16)".
-define variable titlea0 as character format "x(16)".
-
-assign titlet0 = getTermLabel("TRACE_DETAIL",20)
-       titlea0 = getTermLabel("MAINTENANCE",20)
-               + getTermLabel("TRACE_DETAIL",20).
-form
-     titlet0 colon 26 no-labels
-with frame t0 side-labels width 80 attr-space.
-setFrameLabels(frame t0:handle).
-display titlet0 with frame t0.
-
-form
-    titlea0 colon 4 no-labels
-with frame a0 side-labels width 34 attr-space.
-setFrameLabels(frame t0:handle).
-display titlea0 with frame a0.
-
-form
-  tcrtabfld tcrtype tcrmemo format "x(18)"
-with overlay frame b 13 down with width 46 column 35 title color
-       normal(getFrameTitle("TRACE_DETAIL",25))   attr-space.
-setFrameLabels(Frame b:handle).
+define temp-table tab_list
+       fields tab_sel as character label "Sel" format "x(4)"
+       fields tab_name like _file-name label "Table" format "x(12)"
+       fields tab_fld  like _field-name label "Field" format "x(12)"
+       fields tab_type as   character format "x(1)" label "T"
+       fields tab_desc as   character format "x(42)" label "Description".
 /* DISPLAY SELECTION FORM */
 form
-   tcr_table  colon 10 format "x(16)"
-   tcr_field  colon 10 skip(1)
-   tcr_type   colon 10
-   typedesc   colon 10 no-label skip(1)
-   tcr_memo   colon 8 format "x(22)" skip(2)
-   tcr_date   colon 10
-   tcr_userid colon 10
-   usr_name   colon 6 format "x(22)" no-label
-with frame a side-labels width 34 attr-space.
+  sfile colon 12 view-as fill-in size 14 by 1
+  fieldname view-as fill-in size 14 by 1
+  sel-all
+with frame a side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
 
-/* DISPLAY */
-view frame t0.
-view frame a0.
+form tab_sel      column-label "sel"
+     tab_name     colon 5
+     tab_fld      colon 18
+     tab_type     colon 32
+     tab_desc     colon 34
+With frame selfld no-validate with title color
+normal(getFrameTitle("FIELD",30)) 13 down width 80.
+setFrameLabels(frame selfld:handle).
+
 view frame a.
-view frame b.
 repeat with frame a:
-
-   prompt-for tcr_table tcr_field editing:
-      /* FIND NEXT/PREVIOUS RECORD */
-      if frame-field = "tcr_table" then do:
-         {mfnp01.i tcr_reg tcr_table " tcr_table "
-                 tcr_table tcr_table tcr_table}
-         if recno <> ? then do:
-            display tcr_table tcr_field tcr_type tcr_memo tcr_date tcr_userid.
-            run dispTypeDesc(input tcr_field).
-            find first usr_mstr no-lock where usr_userid = tcr_userid no-error.
-            if available usr_mstr then do:
-               display usr_name.
-            end.
-            else do:
-               display "" @ usr_name.
-            end.
-            run dispFrameb(input tcr_table:screen-value,
-                           input tcr_field:screen-value).
-         end.
-         if input tcr_table = "" then do:
-            {mfmsg.i 40 3}
-            undo, retry.
-         end.
-      end.
-      else do:
-         {mfnp01.i tcr_reg tcr_field tcr_field tcr_table
-              " tcr_table:screen-value " tcr_table}
-         if recno <> ? then do:
-            display tcr_table tcr_field tcr_type tcr_memo tcr_userid tcr_date.
-            run dispTypeDesc(input tcr_type).
-         end.
-         else do:
-            display "" @ tcr_memo
-                    global_userid @ tcr_userid
-                    today @ tcr_date with frame a.
-         end.
-      end.
-   end.  /* prompt-for tcr_table tcr_field editing: */
-
-  if not can-find(first qaddb._file no-lock where _file-name =
-         tcr_table:screen-value)
-      then do:
-      {mfmsg.i 6098 3}
-      undo,retry.
-  end.
-  if tcr_field:screen-value <> "" then do:
-     tcr_type:screen-value = "W".
-     create buffer bfldname for table input tcr_table.
-     bfld = bfldname:buffer-field(input tcr_field) no-error.
-     if bfld=? then do:
-        {pxmsg.i &MSGNUM=2275 &ERRORLEVEL=3}
-         undo, retry.
-     end.
-  end.
-  run dispFrameb(input tcr_table:screen-value,
-                 input tcr_field:screen-value).
-   /* ADD/MOD/DELETE  */
-   find tcr_reg using tcr_table where tcr_table = input tcr_table and
-   tcr_field = input tcr_field no-error.
-   if not available tcr_reg then do:
-      {mfmsg.i 1 1}
-      create tcr_reg.
-      assign tcr_table tcr_field tcr_memo
-             tcr_userid = global_userid
-             tcr_date = today.
-      if tcr_field:screen-value = "" then assign tcr_type = "D".
-                                     else assign tcr_type = "W".
-      run dispTypeDesc(input tcr_type).
-      display tcr_type "" @ tcr_memo.
+   do on error undo,retry:
+      update sfile fieldname sel-all with frame a
+          editing:
+             if frame-field = "sfile" then do:
+                {mfnp.i _file sfile _file-name sfile _file-name _file-name}
+                if recno <> ? then do:
+                   sfile = _file-name.
+                   display
+                      sfile
+                   with frame a.
+                end.
+             end.
+             else do:
+                status input.
+                readkey.
+                apply lastkey.
+             end.
+          end.
    end.
-   else do:
-       display tcr_table tcr_field tcr_type tcr_memo tcr_userid tcr_date.
-   end.
-   recno = recid(tcr_reg).
-
-   find first tcr_reg exclusive-lock where recid(tcr_reg) = recno no-error.
 
    ststatus = stline[2].
    status input ststatus.
-   del-yn = no.
+   display sfile with frame a.
 
-   do on error undo, retry:
-      set tcr_memo go-on("F5" "CTRL-D" ).
-
-      /* DELETE */
-      if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
-      then do:
-         del-yn = yes.
-         {mfmsg01.i 11 1 del-yn}
-         if not del-yn then undo, retry.
-         delete tcr_reg.
-         clear frame a.
-         del-yn = no.
+   scroll_loopb:
+   do on error undo,retry:
+      empty temp-table tab_list no-error.
+      if fieldname = "" then do:
+         for each qaddb._File no-lock where (_FILE-NAME = sfile) :
+             create tab_list.
+             assign tab_name = _FILE-NAME
+                    tab_type = "D"
+                    tab_desc = _File._desc.
+              FOR EACH _FIELD OF _FILE BY _ORDER:
+                  create tab_list.
+                  assign tab_name = _FILE-NAME
+                         tab_fld = _FIELD-NAME
+                         tab_type = "W"
+                         tab_desc = _Label.
+              END.
+         end.
       end.
+      else do:
+           for each qaddb._File no-lock where (_FILE-NAME = sfile) :
+               FOR EACH _FIELD OF _FILE where _FIELD-Name = fieldname:
+                  create tab_list.
+                  assign tab_name = _FILE-NAME
+                         tab_fld = _FIELD-NAME
+                         tab_type = "W"
+                         tab_desc = _Label.
+               END.
+               FOR EACH _FIELD OF _FILE,
+                   EACH tcr_reg no-lock where tcr_table = _file-name
+                    and tcr_field = _field-name BY _ORDER:
+                  find first tab_list exclusive-lock where tab_name = _FILE-NAME
+                         and tab_fld = _FIELD-NAME no-error.
+                  if not available tab_list then do:
+                     create tab_list.
+                     assign tab_name = _FILE-NAME
+                             tab_fld = _FIELD-NAME.
+                  end.
+                     assign tab_sel = ""
+                            tab_type = "W"
+                            tab_desc = _Label.
+              END.
+           end.
+      end.
+
+      for each tcr_reg no-lock where tcr_tab = sFile:
+          find first tab_list no-lock where tab_name = tcr_table
+                and tab_fld = tcr_field no-error.
+          if not available tab_list then do:
+             create tab_list.
+             assign tab_name = tcr_table
+                    tab_fld = tcr_field.
+          end.
+             assign tab_sel = "*"
+                    tab_type = tcr_type
+                    tab_desc = tcr_memo.
+      end.
+
+      if sel-all <> "" then do:
+          for each tab_list exclusive-lock:
+              if sel-all = "Y" or sel-all = "Yes" then
+                 assign tab_sel = "*" when tab_sel = "".
+              else if sel-all = "N" or sel-all = "No" then
+                 assign tab_sel = "" when tab_sel = "*".
+          end.
+      end.
+      {swselect.i
+         &detfile      = tab_list
+         &scroll-field = tab_fld
+         &framename    = "selfld"
+         &framesize    = 13
+         &selectd      = yes
+         &sel_on       = ""*""
+         &sel_off      = """"
+         &display1     = tab_sel
+         &display2     = tab_name
+         &display3     = tab_fld
+         &display4     = tab_type
+         &display5     = tab_desc
+         &exitlabel    = scroll_loopb
+         &exit-flag    = "true"
+         &record-id    = recid(tab_list)
+         }
+         setFrameLabels(frame selfld:handle).
+         if keyfunction(lastkey) = "END-ERROR" or keyfunction(lastkey) = "F4"  then do:
+            hide frame selfld.
+            undo scroll_loopb, retry scroll_loopb.
+         end.
    end.
+   for each tab_list no-lock with frame xx title color
+   normal(getFrameTitle("FIELD",30)):
+       if tab_sel = "*" then assign v_sel = yes. else  assign v_sel = no.
+       display v_sel @ tab_sel tab_name tab_fld tab_type tab_desc format "x(45)".
+       setFrameLabels(frame xx:handle).
+   end.
+   if not can-find(first tab_list) then do:
+      {mfmsg.i 1310 3}
+      undo,retry.
+   end.
+     assign v_sel = no.
+     {mfmsg01.i 12 2 v_sel}
+     if v_sel then do:
+        for each tab_list no-lock:
+           find first tcr_reg exclusive-lock where tcr_table = tab_name
+                  and tcr_field = tab_fld no-error.
+           if tab_sel = "*" then do:
+              if not available tcr_reg then do:
+                 create tcr_reg.
+                 assign  tcr_table = tab_name
+                         tcr_field = tab_fld
+                         tcr_type = tab_type.
+              end.
+                 assign  tcr_userid = global_userid
+                         tcr_date = today
+                         tcr_memo = tab_desc.
+           end. /* if tab_sel = "*" then do: */
+           else do:
+                if available tcr_reg then do:
+                   delete tcr_reg.
+                end.
+           end.
+        end. /* for each tab_list no-lock:*/ 
+     end. /*  if v_sel then do: */
 end.
-status input.
-
-procedure dispFrameb:
-   define input parameter itable as character.
-   define input parameter ifield as character.
-   clear frame b no-pause.
-   hide frame b.
-   for each tcr_reg no-lock where tcr_table = itable and tcr_field >= ifield:
-       if tcr_type = "W" then do:
-          display tcr_field @ tcrtabfld
-                  tcr_type @ tcrtype
-                  tcr_memo @ tcrmemo with frame b.
-       end.
-       else do:
-          display tcr_table @ tcrtabfld
-                  tcr_type @ tcrtype
-                  tcr_memo @ tcrmemo with frame b.
-       end.
-       down with frame b.
-   end.
-   view frame b.
-end procedure.
-
-procedure dispTypeDesc:
-    define input parameter itype as character.
-    display "" @ typedesc with frame a.
-    if itype = "D" then do:
-       display getTermLabel("Delete",10) @ typedesc with frame a.
-    end.
-    else if itype = "C" then do:
-       display getTermLabel("Create",10) @ typedesc with frame a.
-    end.
-    else if itype = "W" then do:
-       display getTermLabel("Write",10) @ typedesc with frame a.
-    end.
-end procedure.
