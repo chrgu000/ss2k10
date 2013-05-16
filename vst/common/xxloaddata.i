@@ -53,7 +53,7 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER
     DEFINE VARIABLE od   AS DATE      NO-UNDO.
     define variable spchar as character no-undo.
     define variable i as integer.
-    if datestr = "" then do:
+    if datestr = "" or datestr = "?" then do:
         assign od = ?.
     end.
     else do:
