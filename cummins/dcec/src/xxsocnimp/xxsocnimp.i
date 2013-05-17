@@ -1,3 +1,12 @@
+define {1} shared temp-table xst_t
+    fields xst_type like tr_type
+    fields xst_id   as integer
+    fields xst_so   like tr_nbr
+    fields xst_line like tr_line
+    fields xst_lot  like tr_lot
+    fields xst_ref  like tr_ref
+    fields xst_qty  like tr_qty_loc.
+
 define {1} shared temp-table xsa_r
     fields xsr_ship like so_ship column-label "xsr_ship"
     fields xsr_so like so_nbr column-label "xsr_so"

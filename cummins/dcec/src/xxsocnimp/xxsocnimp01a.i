@@ -32,7 +32,7 @@
                 xsd_ref = xsm_ref
                 xsd_qty_oh = accum total(xsr_oh)
                 xsd_qty_keep = (accum total(xsr_oh)) - xsm_qty_used
-                xsd_chk =  getmsg(6754)
+                xsd_chk = getmsg(6754)
                 xsd_mid = recid(xsc_m).
          assign xsm_stat = "C".
       end.
@@ -108,6 +108,9 @@
              and sod_nbr = xsd_so and sod_line = xsd_line no-error.
       if available sod_det then do:
          assign xsd_sched = sod_sched.
+      end.
+      if xsd_qty_used = 0 then do:
+         delete xsc_d.
       end.
   end.
 /*

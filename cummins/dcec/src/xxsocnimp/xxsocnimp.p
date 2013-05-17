@@ -278,9 +278,11 @@ END.
 ON CHOOSE OF bChk IN FRAME fMain /* ¼ì²é */
 DO:
     DEFINE VARIABLE i AS INTEGER.
+    define variable qty_cn like tr_qty_loc.
     EMPTY TEMP-TABLE xsc_d NO-ERROR.
     EMPTY TEMP-TABLE xsa_r NO-ERROR.
     EMPTY TEMP-TABLE xsa_r1 no-error.
+    empty temp-table xst_t no-error.
     SESSION:SET-WAIT-STAT("general").
     APPLY "RETURN" TO vFile.
 
@@ -292,23 +294,7 @@ DO:
                {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
             END.
         END.
-        for each xsa_r1 no-lock,
-            each ld_det no-lock where ld_domain = global_domain and
-                 ld_site = xsr1_site and ld_loc = xsr1_loc and
-                 ld_part = xsr1_part:
-            create xsa_r.
-            assign xsr_ship = xsr1_ship
-                   xsr_so = xsr1_so
-                   xsr_line = xsr1_line
-                   xsr_part = xsr1_part
-                   xsr_site = xsr1_site
-                   xsr_loc = xsr1_loc
-                   xsr_lot = ld_lot
-                   xsr_ref = ld_ref
-                   xsr_eff = xsr1_eff
-                   xsr_oh = ld_qty_oh
-                   xsr_um = xsr_um.
-        end.
+        {xxsocnimp02.i}
         {xxsocnimp01a.i}
     END.
 
