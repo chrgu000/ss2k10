@@ -1,4 +1,3 @@
-/* GUI CONVERTED from sososl.p (converter v1.78) Wed Jul 29 22:28:19 2009 */
 /* sososl.p  -  STAGING LIST  GENERATE AND PRINT                              */
 /* Copyright 1986-2009 QAD Inc., Santa Barbara, CA, USA.                      */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -47,8 +46,6 @@
 /* Revision: 1.15.2.29.2.5  BY: Russ Witt          DATE: 03/08/07 ECO: *P5QV* */
 /* Revision: 1.15.2.29.2.5  BY: Mochesh Chandran   DATE: 06/26/07 ECO: *P60K* */
 /* $Revision: 1.15.2.29.2.7 $ BY: Xiaolei Meng       DATE: 07/21/09 ECO: *Q35Q* */
-/* $Revision: eb21			By:Sandler				DATE:11/06/2012 ECO:ss20121109.1 */
-
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -76,7 +73,7 @@
 /* CAN BE COMPLETELY SHIPPED IF PARTIAL OK FLAG IS SET TO NO            */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "20121109.1 "}
+{mfdtitle.i "1+ "}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -162,8 +159,6 @@ define variable iNumOfSales     as   integer               no-undo.
 define variable cSalesOrder     as   character             no-undo.
 /* Added on 7/21/05 for credit card enhancement. fzt end. */
 
-
-
 /* VARIABLE DEFINITIONS FOR gpfile.i */
 {gpfilev.i}
 /* ssm constant */
@@ -215,20 +210,8 @@ define variable tty as int.
 define variable tth as decimal.
 /*ss20121102 e*/
 
-/*GUI preprocessor Frame A define */
-&SCOPED-DEFINE PP_FRAME_NAME A
-
-FORM /*GUI*/ 
-   
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- RECT-FRAME       AT ROW 1 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1 COLUMN 3 NO-LABEL VIEW-AS TEXT SIZE-PIXELS 1 BY 1
- SKIP(.1)  /*GUI*/
-&ENDIF /*GUI*/
-due_date         colon 19  validate (true,"")
+form
+   due_date         colon 19  validate (true,"")
    due_time         no-label
    due_date1        colon 49 label {t001.i} validate (true,"")
    due_time1        no-label skip
@@ -244,8 +227,8 @@ due_date         colon 19  validate (true,"")
    type1            colon 49 label {t001.i}
    part             colon 19
    part1            colon 49 label {t001.i}
-   ref          colon 19
-   ref1         colon 49 label {t001.i} /*skip(1)*/
+   ref              colon 19
+   ref1             colon 49 label {t001.i} /* skip(1) */
    auto_all         colon 26
    max_weight       colon 63
    wght_um          no-label
@@ -263,62 +246,21 @@ due_date         colon 19  validate (true,"")
    break_order      colon 26
    l_create_um      colon 63
    update_yn        colon 26
-   form_code        colon 44 
-							xxlog colon 26
+   form_code        colon 44
+   xxlog            colon 26
    deblank /* skip*/
-
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- SKIP(.4)  /*GUI*/
-&ENDIF /*GUI*/
-with frame a side-labels attr-space width 80
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- NO-BOX THREE-D /*GUI*/
-&ENDIF /*GUI*/
-.
-
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- DEFINE VARIABLE F-a-title AS CHARACTER INITIAL "".
- RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
- RECT-FRAME-LABEL:HIDDEN in frame a = yes.
- RECT-FRAME:HEIGHT-PIXELS in frame a =
-  FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
-&ENDIF /*GUI*/
-
-/*GUI preprocessor Frame A undefine */
-&UNDEFINE PP_FRAME_NAME
-
-
+with frame a side-labels attr-space width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
-FORM /*GUI*/ 
+form
    err_order
    err_line column-label "Line"
    err_msg no-label format "x(64)"
 with frame errrpt down
    title color normal (getFrameTitle("PROCESSING_ERRORS",25)) width
-   80
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
-&ENDIF /*GUI*/
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- THREE-D /*GUI*/
-&ENDIF /*GUI*/
-.
-
+   80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame errrpt:handle).
@@ -341,16 +283,8 @@ end. /* if enable sequenced schedules */
 
 MAINLOOP:
 repeat:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
    release soddet.
-
 
    for each t_so_pick exclusive-lock:
       delete t_so_pick.
@@ -406,19 +340,12 @@ repeat:
       l_create_um
       form_code
       update_yn
-	  xxlog
+      xxlog
    with frame a.
 
    GET_DATA:
    do on endkey undo GET_DATA, leave MAINLOOP
          on error undo GET_DATA, retry GET_DATA:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
       set
          due_date
@@ -457,7 +384,7 @@ repeat:
          l_create_um
          form_code
          update_yn
-		 xxlog
+         xxlog
       with frame a.
 
       /* PAD RUN FILE */
@@ -500,14 +427,7 @@ repeat:
          undo GET_DATA, retry GET_DATA.
       end.
 
-   end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* GET_DATA */
+   end. /* GET_DATA */
 
    run run_mfquoter.
 
@@ -525,41 +445,20 @@ repeat:
    if not batchrun then do:
       {gprun.i ""gpsirvr.p""
          "(input site, input site1, output return_int)"}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
       if return_int = 0 then do:
          next-prompt site with frame a.
          undo MAINLOOP, retry MAINLOOP.
       end.
    end.
 
-
-
-
    termblock:
    do on error undo, retry:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
       if c-application-mode <> 'WEB-ChUI'
       then
         display dtitle format "x(78)"
         with no-labels width 80 row 1 column 2
-        frame dtitle no-box no-attr-space
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
-&ENDIF /*GUI*/
-.
+        frame dtitle no-box no-attr-space.
 
       /* OUTPUT DESTINATION SELECTION */
       {gpselout.i &printType = "printer"
@@ -575,8 +474,6 @@ repeat:
                   &withEmail = "yes"
                   &withWinprint = "yes"
                   &defineVariables = "yes"}
-/*GUI*/ RECT-FRAME:HEIGHT-PIXELS in frame a = FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
-
 
       if dev = "terminal"
       then do:
@@ -585,14 +482,7 @@ repeat:
          {pxmsg.i &MSGNUM=35 &ERRORLEVEL=3}
          undo termblock, retry termblock.
       end. /* IF dev = .... */
-   end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* termblock: */
+   end. /* termblock: */
 
    /* CLEAN UP ANY OLD STAGE LIST TEMP RECORDS IF FOUND */
    for each qad_wkfl
@@ -664,8 +554,6 @@ repeat:
          ls_type >= type   and
          ls_type <= type1)
          no-lock:
-		 
-
 
       l_so_recno = recid(so_mstr).
 
@@ -719,14 +607,7 @@ repeat:
                end.
             end. /* FOR FIRST QAD_WKFL */
          end.  /*   FOR EACH SOD_DET */
-      end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* IF CAN-FIND(FIRST QAD_WKFL) */
+      end. /* IF CAN-FIND(FIRST QAD_WKFL) */
 
       /* HANDLE SCHEDULED ORDERS */
       if so_sched then
@@ -752,13 +633,6 @@ repeat:
                and   sch_line            = sod_line
                and   sch_rlse_id         = sod_curr_rlse_id[3]
             no-lock:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
             /*
             * Added on 7/21/05 for credit card enhancement.fzt
             * Verify if credit card is still valid
@@ -786,8 +660,6 @@ repeat:
             * Added on 7/21/05 for credit card enhancement.fzt
             * Verify if credit card is still valid. end.
             */
-
-
             create t_so_pick.
             assign
                t_so_nbr   = so_nbr
@@ -795,14 +667,7 @@ repeat:
                t_so_ship  = so_ship
                t_sod_line = sod_line.
 
-         end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* FOR EACH SOD_DET */
+         end. /* FOR EACH SOD_DET */
       end. /* IF SO_SCHED */
       else do:
 
@@ -821,13 +686,6 @@ repeat:
             not sod_sched                                and
             sod__qadl01 = no                             and
             sod_confirm ) no-lock:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
             /*
             * Added on 7/21/05 for credit card enhancement.fzt
@@ -870,18 +728,9 @@ repeat:
                t_so_ship  = so_ship
                t_sod_line = sod_line.
 
-         end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* FOR EACH SOD_DET */
+         end. /* FOR EACH SOD_DET */
       end. /* ELSE DO */
    end. /* FOR EACH SO_MSTR */
-
-
    /* Added on 22/07/05 for credit card enhancement. fzt. */
    /*
    * Retrieve sales order number to put sales order status to HD.
@@ -958,12 +807,9 @@ repeat:
       end. /* FOR EACH T_SO_PICK */
    end. /* IF UPDATE_YN */
 
-
    if (abnormal_exit or errorst) then
    do:
       {mfreset.i}
-/*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
    end.
    else
       do:
@@ -1047,13 +893,6 @@ PROCEDURE p_picklist:
       b_t_so_pick.t_sod_site = t_so_pick.t_sod_site
       break by t_so_nbr
             by t_sod_line:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
       if first-of(t_so_nbr)
       then do:
@@ -1078,35 +917,19 @@ PROCEDURE p_picklist:
 
          SalesOrderLoop:
          do transaction:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
             for each b1_t_so_pick
                where b1_t_so_pick.t_so_ship  = b_t_so_pick.t_so_ship
                  and b1_t_so_pick.t_so_nbr   = b_t_so_pick.t_so_nbr
                  and b1_t_so_pick.t_sod_site = b_t_so_pick.t_sod_site
                break by b1_t_so_pick.t_sod_line:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
                if stage_open then
                   assign
                      kit_all        = no
                      ship_avail_qty = no.
                /* DO THE ALLOCATIONS AND CREATE STAGE LIST TEMP RECORDS */
-
-/* *SS-20121108.1*              {gprun.i ""sosla.p""    */  
-/* *SS-20121108.1*     */             {gprun.i ""yysosla.p""  
-		  "(input t_so_nbr,
+               {gprun.i ""sosla.p""
+                  "(input t_so_nbr,
                     input t_sod_line,
                     input due_date,
                     input due_date1,
@@ -1125,13 +948,6 @@ PROCEDURE p_picklist:
                     input l_create_um,
                     output abnormal_exit,
                     output l_error)"}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
                if abnormal_exit
                   or l_error = yes
@@ -1163,13 +979,6 @@ PROCEDURE p_picklist:
                        and sod_site    =  b1_t_so_pick.t_sod_site
                        and sod_qty_ord <> sod_qty_ship
                        and sod_confirm =  yes no-lock:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
                      {openqty.i}
 
@@ -1213,41 +1022,13 @@ PROCEDURE p_picklist:
                               t_sodsite = sod_site.
                         end. /* IF NOT AVAILABLE t_sod_site */
 
-                     end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* IF open_qty > 0 */
+                     end. /* IF open_qty > 0 */
 
                   end. /* FOR EACH sod_det */
 
-               end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* IF stage_open */
-            end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* DO TRANSACTION */
-         end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* FOR EACH b1_t_so_pick */
+               end. /* IF stage_open */
+            end. /* DO TRANSACTION */
+         end. /* FOR EACH b1_t_so_pick */
 
          if l_error        = yes
             and stage_open = no
@@ -1413,13 +1194,6 @@ PROCEDURE p_picklist:
    if false then
    do:
       {gprun.i ""sosl01.p""}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
    end. /* IF FALSE */
 
    /* ADDED THIRD  INPUT PARAMETER MAX. WEIGHT UM (wght_um) */
@@ -1444,13 +1218,6 @@ PROCEDURE p_picklist:
         input update_yn,
         input all_only,
         output errorst)"}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
    /* CLEAN UP ANY OLD STAGE LIST TEMP RECORDS IF FOUND */
    for each qad_wkfl
@@ -1467,44 +1234,19 @@ PROCEDURE p_picklist:
    page.
    /* PRINT ERROR MESSAGES FROM THE PROCESSING */
    for each err_rpt exclusive-lock:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
       {gprun.i ""gpmsg08.p""
          "(input err_num,
            input 1,
-           output err_msg)"}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
+           output err_msg)"}.
       display
          err_order
          err_line
          err_msg
-      with frame errrpt
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/ 
-&ENDIF /*GUI*/
-.
+      with frame errrpt.
       down with frame errrpt.
 
       delete err_rpt.
-   end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* for each err_rpt */
+   end. /* for each err_rpt */
 
 END PROCEDURE. /* P-PICKLIST */
 
