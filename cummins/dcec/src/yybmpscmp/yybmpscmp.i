@@ -3,7 +3,8 @@ define temp-table tmpbom1
        fields tb1_part like ps_par
        fields tb1_comp like ps_comp
        fields tb1_qty  like ps_qty_per
-       fields tb1_rmks like ps_rmks.
+       fields tb1_rmks like ps_rmks
+       fields tb1_low  like mfc_logical.
 define buffer psmstr for ps_mstr.
 
 PROCEDURE process_report:
@@ -11,8 +12,8 @@ PROCEDURE process_report:
     DEFINE INPUT PARAMETER root LIKE pt_part.
     DEFINE INPUT PARAMETER eff  like ps_start.
     DEFINE INPUT PARAMETER qty  like ps_qty_per.
-    DEFINE INPUT PARAMETER lay  as   logical.
-    
+    DEFINE INPUT PARAMETER lay  like mfc_logical.
+
     define variable vsite like si_site initial "dcec-c".
     if length(part) >= 3 then do:
        if substring(part,length(part) - 1) = "ZZ" then assign vsite = "dcec-b".
@@ -21,7 +22,7 @@ PROCEDURE process_report:
              ps_par = part and
             (ps_mstr.ps_start <= eff or ps_mstr.ps_start = ?) and
             (ps_mstr.ps_end>= eff or ps_mstr.ps_end = ?):
-        
+
         if can-find(first psmstr no-lock where psmstr.ps_domain = global_domain
                      and psmstr.ps_par = ps_mstr.ps_comp
                      and (psmstr.ps_start <= eff or psmstr.ps_start = ?)
@@ -41,21 +42,20 @@ PROCEDURE process_report:
                            ptp_site = vsite and ptp_part = ps_mstr.ps_comp no-error.
                 if lay then do:
                    if available ptp_det and ptp_pm_code = "P" then do:
-                      .
+                      tb1_low = yes.
                    end.
                    else do:
-                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).                 
+                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).
                    end.
                 end.
                 else do:
                    if available ptp_det and ptp_phantom = no then do:
-                      .
+                      tb1_low = yes.
                    end.
                    else do:
-                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).  
+                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).
                    end.
                 end.
-  
         end.
         else do:
              IF NOT CAN-FIND(FIRST tmpbom1 WHERE tb1_comp = ps_mstr.ps_comp
@@ -66,6 +66,11 @@ PROCEDURE process_report:
                        tb1_part = ps_mstr.ps_par
                        tb1_root = root
                        tb1_rmks = ps_mstr.ps_rmks.
+             end.
+             find first ptp_det no-lock where ptp_domain = global_domain and
+                        ptp_site = vsite and ptp_part = ps_mstr.ps_comp no-error.
+             if available ptp_det and ptp_phantom = no then do:
+                       tb1_low = yes.
              end.
                        tb1_qty  = tb1_qty + ps_mstr.ps_qty_per * qty * (100 / (100 - ps_mstr.ps_scrp_pct)).
         end.

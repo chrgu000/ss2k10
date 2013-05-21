@@ -189,7 +189,7 @@ repeat:
 /*       end.                                                                 */
 /*    end.                                                                    */
 
-    for each tmpbom1 no-lock:
+    for each tmpbom1 no-lock where tb1_low:
         find first mybomcmp exclusive-lock where
                    bcomp = tb1_comp no-error.
         if not available mybomcmp then do:
@@ -202,7 +202,7 @@ repeat:
        if length(parent1) >= 3 then do:
           if substring(parent1,length(parent1) - 1) = "ZZ" then assign site1 = "dcec-b".
        end.
-       find first sct_det no-lock where sct_domain = global_domain 
+       find first sct_det no-lock where sct_domain = global_domain
               and sct_sim = "standard" and sct_part = tb1_comp
               and sct_site = site1 no-error.
        if available sct_det then do:
@@ -230,7 +230,7 @@ repeat:
 /*       end.                                                                */
 /*    end.                                                                   */
 
-    for each tmpbom1 no-lock:
+    for each tmpbom1 no-lock where tb1_low:
         find first mybomcmp exclusive-lock where
                    bcomp = tb1_comp no-error.
         if not available mybomcmp then do:
@@ -243,7 +243,7 @@ repeat:
        if length(parent2) >= 3 then do:
           if substring(parent2,length(parent2) - 1) = "ZZ" then assign site1 = "dcec-b".
        end.
-       find first sct_det no-lock where sct_domain = global_domain 
+       find first sct_det no-lock where sct_domain = global_domain
               and sct_sim = "standard" and sct_part = tb1_comp
               and sct_site = site1 no-error.
        if available sct_det then do:
@@ -287,7 +287,7 @@ repeat:
   chExcelWorkbook:Worksheets(1):Cells(iRow,9) = parent2 + " - 随机带走件" .
   if showcst then do:
      chExcelWorkbook:Worksheets(1):Cells(iRow,10) = parent1 + " - 成本".
-     chExcelWorkbook:Worksheets(1):Cells(iRow,11) = parent2 + " - 成本". 
+     chExcelWorkbook:Worksheets(1):Cells(iRow,11) = parent2 + " - 成本".
   end.
   chExcelWorkbook:Worksheets(1):Range("E2"):AddComment.
   if effdate1 = ? then
