@@ -1,3 +1,4 @@
+/** 由于开发票的日期可能是上月出货会由于帐期关闭而不能导入调整为当天      520*/
   {mfdeclre.i}
   {zzgtsolt.i}
   define stream bf.
@@ -16,7 +17,7 @@
         put stream bf unformat "-" skip.
         put stream bf unformat "-" skip.
         put stream bf unformat "-" skip.
-        put stream bf unformat "-" skip.
+/*520*/ put stream bf unformat "- - - - - - - - - - - " today skip.
         put stream bf unformat "-" skip.
         put stream bf unformat "N - - - - - - - - - - N" skip.
         if sotax_part = "ZK" then do:

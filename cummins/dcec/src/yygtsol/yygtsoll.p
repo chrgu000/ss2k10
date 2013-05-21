@@ -77,11 +77,11 @@ define shared workfile xinvd
   field xtax  like tx2d_cur_tax_amt
   .
 
-define   shared temp-table wrk_var        /*lb01*/
-    field wrk_sonbr   like sod_nbr    /*lb01*/
-    field wrk_line    like sod_line   /*lb01*/
-    field wrk_qty_inv   like sod_qty_inv /*lb01*/
-    field wrk_sched     like sod_sched   /*lb01*/
+define   shared temp-table wrk_var      /*lb01*/
+    field wrk_sonbr   like sod_nbr      /*lb01*/
+    field wrk_line    like sod_line     /*lb01*/
+    field wrk_qty_inv like sod_qty_inv  /*lb01*/
+    field wrk_sched   like sod_sched    /*lb01*/
     index wrk_sonbr wrk_sonbr.          /*lb01*/
 
 define variable tmptotamt like glt_amt.
@@ -348,6 +348,7 @@ define variable tmpnetamt like glt_amt.
              accum tx2d_tottax(total).
              accum tx2d_cur_tax_amt (total).
           END.
+          assign so_ship_date = today.
           assign so_trl2_amt = (accum total(xtax)) - (accum total(tx2d_cur_tax_amt))
                  so_trl3_amt = (accum total(xtot)) - (accum total(tx2d_tottax)).
 
@@ -464,6 +465,7 @@ define variable tmpnetamt like glt_amt.
              accum tx2d_tottax(total).
              accum tx2d_cur_tax_amt (total).
           END.
+          assign so_ship_date = today.
           assign so_trl2_amt = (accum total(xtax)) - (accum total(tx2d_cur_tax_amt))
                  so_trl3_amt = (accum total(xtot)) - (accum total(tx2d_tottax)).
 

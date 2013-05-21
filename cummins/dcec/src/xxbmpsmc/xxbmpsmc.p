@@ -55,7 +55,7 @@
 /*********************************************************/
 /*V8:ConvertMode=Maintenance                                                  */
 
-{mfdtitle.i "1+ "}
+{mfdtitle.i "517.1"}
 
 define variable part     like pt_part  label "Existing Item".
 define variable part1    like pt_part  label "New Item".
@@ -265,16 +265,19 @@ repeat:
             pt_um @ ptum2.
 
       end.
-
       else do with frame b:
          display " " @ ptdesc1 " " @ ptdesc2 " " @ ptum2.
          /* Item number does not exist */
-         {pxmsg.i &MSGNUM=16 &ERRORLEVEL=3}
-         if batchrun
-         then
-            undo mainloop, leave mainloop.
-         else
-            undo, retry.
+         find first bom_mstr no-lock where bom_domain = global_domain
+                and bom_parent = part1 no-error.
+         if not available bom_mstr then do:
+                {pxmsg.i &MSGNUM=16 &ERRORLEVEL=3}
+                if batchrun
+                then
+                   undo mainloop, leave mainloop.
+                else
+                   undo, retry.
+         end.
       end.
 
    end.

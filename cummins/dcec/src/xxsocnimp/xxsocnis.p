@@ -1,3 +1,4 @@
+/* GUI CONVERTED from xxsocnis.p (converter v1.78) Tue May 21 09:52:42 2013 */
 /* GUI CONVERTED from socnis.p (converter v1.78) Thu Jun  3 07:33:26 2010 */
 /* socnis.p - CUSTOMER CONSIGNMENT USAGE RECORD CREATION                      */
 /* Copyright 1986-2010 QAD Inc., Santa Barbara, CA, USA.                        */
@@ -260,6 +261,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                  output consign_offset_cc)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       /* Determine Consignment options found on Order/Line */
       {gprun.i ""socnsod1.p""
@@ -270,6 +273,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                  output intrans_loc,
                  output max_aging_days,
                  output auto_replenish)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -441,6 +446,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                 output ord-db-cmtype)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       {gprun.i ""socnconv.p""
                "(input  so_nbr,
@@ -450,6 +457,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                  output exch_ratetype,
                  output exch_exru_seq,
                  input-output base-price)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -561,12 +570,16 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                     input recid(tr_hist))"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
          {gprun.i ""socost02.p""
                   "(input - ip_tot_lotser_qty,
                     input  sod_entity,
                     input recid(trgl_det),
                     input recid(tr_hist) )"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -577,6 +590,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                     input 'ADG',
                     input 'cns_ctrl',
                     output using_supplier_consignment)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -595,6 +610,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                        input bUsage.ref,
                        input false,
                        output supplier_consign_flag)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -616,6 +633,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                           input tr_trnbr,
                           input FALSE,
                           input-output io_batch)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -717,6 +736,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
          input """")"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
       for first cncix_mstr
          where cncix_domain       = global_domain
          and   cncix_so_nbr       = bUsage.order_nbr
@@ -780,6 +801,8 @@ do on error undo, return error {&GENERAL-APP-EXCEPT}:
                      input bUsage.selfbill_auth,
                      input bUsage.cncud_ship_date,
                      input so_curr)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -1133,6 +1156,8 @@ PROCEDURE updateSalesOrderQuantities:
                              output       pc_recno)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
 
                   if inventory_domain <> global_domain
@@ -1175,6 +1200,8 @@ PROCEDURE updateSalesOrderQuantities:
                                    input-output net_price)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
                               p_fr_chrg = string(net_price - l_oldnetprice).
                            end. /* IF p_fr_chrg = ""  THEN  */
                            else
@@ -1202,6 +1229,8 @@ PROCEDURE updateSalesOrderQuantities:
                    output cum_date,
                    output qty_inv,
                    output p_cum_qty)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 
@@ -1254,6 +1283,8 @@ PROCEDURE callUmConvertProgram:
                  output p_out_um_conv)"}
 /*GUI*/ if global-beam-me-up then undo, leave.
 
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 
       if p_out_um_conv = ? then
          return {&GENERAL-APP-EXCEPT}.
@@ -1277,6 +1308,8 @@ PROCEDURE switchDomain:
    {gprun.i ""gpmdas.p""
             "(input  ip_domain,
               output err-flag)"}
+/*GUI*/ if global-beam-me-up then undo, leave.
+
 /*GUI*/ if global-beam-me-up then undo, leave.
 
 

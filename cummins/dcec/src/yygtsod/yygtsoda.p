@@ -2,6 +2,15 @@
 /*                                                                        */
 /*  LAST MODIFIED   DATE: 2004-08-30 11:13  BY: *LB01*  LONG BO ATOS ORIGIN */
 /*  LAST MODIFIED   DATE: 2008-04-7         BY: *frk* Frank Sun ATOS ORIGIN */
+/******************************************                             *513*
+单位的逻辑变更
+首先，判断发票中客户、零件在1.16中,是否维护有指定的单位，若有，则取1.16中CP_CUST_ECO的值；
+否则，判断pt_type 是否为“58”，若为“58”，零件单位为“台”；
+否则，零件单位为“件”。
+ **********************************************/
+/******************************************                              514*
+ * 税率的取值由于版本升级不走vt_mstr 改到 tx2_mstr
+ **********************************************/
 {mfdeclre.i}
 define TEMP-TABLE sodet like sod_det.  /*2004-09-01 13:18*/
 define buffer sodet2 for sodet.
@@ -184,10 +193,14 @@ for each so_mstr
            where trl_mstr.trl_domain = global_domain and trl_code = so_trl2_cd
            no-lock no-error.
       if available trl_mstr then do:
-        find first vt_mstr where vt_class = trl_taxc
-        no-lock no-error.
-        if available vt_mstr then do:
-          if vt_tax_pct <> 0 then do:
+/*514    find first vt_mstr where vt_class = trl_taxc                        */
+/*514    no-lock no-error.                                                   */
+/*514    if available vt_mstr then do:                                       */
+/*514     if vt_tax_pct <> 0 then do:                                        */
+/*514*/  find first tx2_mstr no-lock where tx2_domain = global_domain
+/*514*/         and tx2_pt_taxc = trl_taxc no-error.
+/*514*/ if available tx2_mstr then do:
+/*514*/   if tx2_tax_pct <> 0 then do:
             wkgtm_status = "X".
             wkgtm_msg = "ERROR:trl2 have tax".
             next.
@@ -200,11 +213,14 @@ for each so_mstr
            where trl_mstr.trl_domain = global_domain and trl_code = so_trl3_cd
            no-lock no-error.
       if available trl_mstr then do:
-        find first vt_mstr
-             where vt_class = trl_taxc
-        no-lock no-error.
-        if available vt_mstr then do:
-          if vt_tax_pct <> 0 then do:
+/*514    find first vt_mstr where vt_class = trl_taxc                        */
+/*514    no-lock no-error.                                                   */
+/*514    if available vt_mstr then do:                                       */
+/*514     if vt_tax_pct <> 0 then do:                                        */
+/*514*/  find first tx2_mstr no-lock where tx2_domain = global_domain
+/*514*/         and tx2_pt_taxc = trl_taxc no-error.
+/*514*/ if available tx2_mstr then do:
+/*514*/   if tx2_tax_pct <> 0 then do:
             wkgtm_status = "X".
             wkgtm_msg = "ERROR:trl3 have tax".
             next.
@@ -308,26 +324,41 @@ for each so_mstr
                wkgtd_um   = sodet2.sod_um
                wkgtd_qty  = sodet2.sod_qty_inv
                wkgtd_kind = v_itemkind.
-      if available pt_mstr then do:
-        wkgtd_item = pt_desc2.
-        if pt_pm_code = "C" then
-          wkgtd_um = "套".
-        else if pt_part_type = "58" then do:
-          wkgtd_um = "台".
-          wkgtd_item = "发动机".
-        end.
-        else
-          wkgtd_um = "件".
+        if available pt_mstr then do:
+/*513        wkgtd_item = pt_desc2.                                          */
+/*513        if pt_pm_code = "C" then                                        */
+/*513          wkgtd_um = "套".                                              */
+/*513        else if pt_part_type = "58" then do:                            */
+/*513          wkgtd_um = "台".                                              */
+/*513          wkgtd_item = "发动机".                                        */
+/*513        end.                                                            */
+/*513        else                                                            */
+/*513          wkgtd_um = "件".                                              */
 
- /*frk*     remove the following code
-            FIND cp_mstr WHERE cp_domain = global_domain and
-                 cp_part =pt_part AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
-               IF AVAILABLE cp_mstr THEN
-                   wkgtd.wkgtd_item= cp_cust_part.
-            END.
-  */
+/*513*/  find first cp_mstr WHERE cp_domain = global_domain
+/*513*/         and cp_part = pt_part
+/*513*/         AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
+/*513*/   if available cp_mstr and cp_cust_eco <> "" then do:
+/*513*/         assign wkgtd_um = cp_cust_eco.
+/*513*/   end.
+/*513*/   else do:
+/*513*/           wkgtd_item = pt_desc2.
+/*513*/           if pt_part_type = "58" then do:
+/*513*/             wkgtd_um = "台".
+/*513*/             wkgtd_item = "发动机".
+/*513*/           end.
+/*513*/           else
+/*513*/             wkgtd_um = "件".
+/*513*/   end.
+    /*frk*     remove the following code
+               FIND cp_mstr WHERE cp_domain = global_domain and
+                    cp_part =pt_part AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
+                  IF AVAILABLE cp_mstr THEN
+                      wkgtd.wkgtd_item= cp_cust_part.
+               END.
+     */
+    end.
 
-      end.
 
 
 
@@ -339,10 +370,15 @@ for each so_mstr
       pause.
       */
       if sodet2.sod_taxable then do:
-        find first vt_mstr
-           where vt_class = sodet2.sod_taxc
-        no-lock no-error.
-        if available vt_mstr then wkgtd_taxpct = vt_tax_pct / 100.
+/*514    find first vt_mstr                                                  */
+/*514       where vt_class = sodet2.sod_taxc                                 */
+/*514    no-lock no-error.                                                   */
+/*514    if available vt_mstr then wkgtd_taxpct = vt_tax_pct / 100.          */
+/*514*/  find first tx2_mstr no-lock where tx2_domain = global_domain
+/*514*/         and tx2_pt_taxc = sodet2.sod_taxc no-error.
+/*514*/  if available tx2_mstr then do:
+/*514*/     assign wkgtd_taxpct = tx2_tax_pct / 100.
+/*514*/  end.
       end.
       else do:
         wkgtd_status = "X".

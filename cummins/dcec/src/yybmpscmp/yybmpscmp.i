@@ -11,11 +11,17 @@ PROCEDURE process_report:
     DEFINE INPUT PARAMETER root LIKE pt_part.
     DEFINE INPUT PARAMETER eff  like ps_start.
     DEFINE INPUT PARAMETER qty  like ps_qty_per.
-
+    DEFINE INPUT PARAMETER lay  as   logical.
+    
+    define variable vsite like si_site initial "dcec-c".
+    if length(part) >= 3 then do:
+       if substring(part,length(part) - 1) = "ZZ" then assign vsite = "dcec-b".
+    end.
     FOR EACH ps_mstr NO-LOCK WHERE ps_domain = global_domain and
              ps_par = part and
             (ps_mstr.ps_start <= eff or ps_mstr.ps_start = ?) and
             (ps_mstr.ps_end>= eff or ps_mstr.ps_end = ?):
+        
         if can-find(first psmstr no-lock where psmstr.ps_domain = global_domain
                      and psmstr.ps_par = ps_mstr.ps_comp
                      and (psmstr.ps_start <= eff or psmstr.ps_start = ?)
@@ -31,7 +37,25 @@ PROCEDURE process_report:
                            tb1_rmks = ps_mstr.ps_rmks.
                 END.
                 tb1_qty = tb1_qty + ps_mstr.ps_qty_per * qty * (100 / (100 - ps_mstr.ps_scrp_pct)).
-                run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty).
+                find first ptp_det no-lock where ptp_domain = global_domain and
+                           ptp_site = vsite and ptp_part = ps_mstr.ps_comp no-error.
+                if lay then do:
+                   if available ptp_det and ptp_pm_code = "P" then do:
+                      .
+                   end.
+                   else do:
+                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).                 
+                   end.
+                end.
+                else do:
+                   if available ptp_det and ptp_phantom = no then do:
+                      .
+                   end.
+                   else do:
+                      run process_report(input ps_mstr.ps_comp ,INPUT root ,input eff ,input tb1_qty,input lay).  
+                   end.
+                end.
+  
         end.
         else do:
              IF NOT CAN-FIND(FIRST tmpbom1 WHERE tb1_comp = ps_mstr.ps_comp

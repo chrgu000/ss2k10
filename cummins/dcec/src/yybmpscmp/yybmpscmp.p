@@ -1,9 +1,14 @@
-/* zzbmpscmp.p - PRODUCT STRUCTURE COMPARE, REPORT EXPORT TO MS EXCEL FILE    */
-/* COPYRIGHT AtosOrigin. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.    */
-/* REVISION: 8.5  LAST MODIFIED: 11/19/03  BY: *LB01* Long Bo         */
-/* $Revision:eb21sp12  $ BY: Jordan Lin DATE: 08/16/12  ECO: *SS-20120816.1*   */
-
-     /* DISPLAY TITLE */
+/* zzbmpscmp.p - PRODUCT STRUCTURE COMPARE, REPORT EXPORT TO MS EXCEL FILE   */
+/* COPYRIGHT AtosOrigin. ALL RIGHTS RESERVED. THIS IS AN UNPUBLISHED WORK.   */
+/* REVISION: 8.5  LAST MODIFIED: 11/19/03  BY: *LB01* Long Bo                */
+/* $Revision:eb21sp12  $ BY: Jordan Lin DATE: 08/16/12  ECO: *SS-20120816.1* */
+/*************************************************************************517*
+ * 1)选择条件增加“是否显示最底层”，若=Yes，则该程序将BOM展到第一层的采购件，
+ *   若=No，则将BOm展到第一层的实零件(可能为M件“虚零件=No”),也可能为采购件
+ * 2)选择条件增加“是否显示标准成本”，若=Yes，
+ * 则该程序将根据1）的选择，显示sct_det的标准成本合计(包括本层合计和底层合计),
+ *   若选择No，则不显示成本
+ *****************************************************************************/
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
@@ -17,6 +22,9 @@ define variable desc2 like pt_desc1.
 define variable desc11 like pt_desc2.
 define variable desc12 like pt_desc2.
 define variable showall like mfc_logical initial no.
+define variable exptype like mfc_logical initial no.
+define variable showcst like mfc_logical initial no.
+define variable site1 like si_site.
 define new shared var effdate1 like ps_start.
 define new shared var effdate2 like ps_start.
 def var strdate as char.
@@ -28,6 +36,8 @@ define new shared work-table mybomcmp
   field bdesc2 like pt_desc2
   field bqty1 like ps_qty_per
   field bqty2 like ps_qty_per
+  field bcst1 like sct_cst_tot
+  field bcst2 like sct_cst_tot
   field bref1 like ps_ref
   field bref2 like ps_ref.
 
@@ -48,6 +58,8 @@ form
    desc12 no-label at 50 skip(1)
    effdate1 colon 15 label "生效日期"
    effdate2 colon 50 label "生效日期" skip(1)
+   exptype colon 20 label "展开层次" "Yes:展开到第一层采购件;NO:展开到第一层实零件"
+   showcst colon 20 label "显示成本"
    showall colon 20 label "显示所有Y/N"
    skip(.4)
    with frame a side-labels width 80 NO-BOX THREE-D /*GUI*/.
@@ -59,16 +71,18 @@ form
    FRAME a:HEIGHT-PIXELS - RECT-FRAME:Y in frame a - 2.
    RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
 
-  display parent1 parent2 today @ effdate1 today @ effdate2 with frame a.
+  display parent1 parent2 today @ effdate1 today @ effdate2 exptype showcst
+          with frame a.
 repeat:
 
   set parent1
-    parent2
-    effdate1
-    effdate2
+      parent2
+      effdate1
+      effdate2
+      exptype
+      showcst
   with frame a editing:
      message "输入需要比较的两个产品结构，按F2执行，并等待输出到EXCEL表格...".
-
    if frame-field = "parent1" then do:
      /* FIND NEXT/PREVIOUS RECORD - ALL BOM_MSTR'S ARE
       VALID FOR "SOURCE" */
@@ -109,8 +123,8 @@ repeat:
         desc12 = pt_desc2.
 
       display parent2
-          desc2
-          desc12
+              desc2
+              desc12
       with frame a.
 
      end.    /* if recno <> ? */
@@ -158,7 +172,6 @@ repeat:
   end.
 
   disp desc1 desc2 desc11 desc12 with frame a.
-
   update showall with frame a.
 
     for each mybomcmp exclusive-lock:
@@ -166,7 +179,7 @@ repeat:
     end.
     empty temp-table tmpbom1 no-error.
     vqty = 1.
-    run process_report (input parent1,input effdate1).
+    run process_report(input parent1,input parent1,input effdate1,input 1,input exptype).
 
 /*    for each tmpbom1 exclusive-lock:                                        */
 /*       find first ps_mstr no-lock where ps_domain = global_domain           */
@@ -185,12 +198,30 @@ repeat:
         end.
            bqty1 = tb1_qty.
            bref1 = tb1_rmks.
+       assign site1 = "dcec-c".
+       if length(parent1) >= 3 then do:
+          if substring(parent1,length(parent1) - 1) = "ZZ" then assign site1 = "dcec-b".
+       end.
+       find first sct_det no-lock where sct_domain = global_domain 
+              and sct_sim = "standard" and sct_part = tb1_comp
+              and sct_site = site1 no-error.
+       if available sct_det then do:
+          assign bcst1 =  sct_mtl_tl +
+                          sct_lbr_tl +
+                          sct_bdn_tl +
+                          sct_ovh_tl +
+                          sct_sub_tl +
+                          sct_mtl_ll +
+                          sct_lbr_ll +
+                          sct_bdn_ll +
+                          sct_ovh_ll +
+                          sct_sub_ll.
+       end.
     end.
 
     empty temp-table tmpbom1 no-error.
     vqty = 1.
-    run process_report
-            (input parent2, input effdate2).
+    run process_report(input parent2,input parent2,input effdate2,input 1,input exptype).
 /*    for each tmpbom1 exclusive-lock:                                       */
 /*       find first ps_mstr no-lock where ps_domain = global_domain          */
 /*       and ps_par = tb2_comp no-error.                                     */
@@ -208,6 +239,25 @@ repeat:
         end.
            bqty2 = tb1_qty.
            bref2 = tb1_rmks.
+       assign site1 = "dcec-c".
+       if length(parent2) >= 3 then do:
+          if substring(parent2,length(parent2) - 1) = "ZZ" then assign site1 = "dcec-b".
+       end.
+       find first sct_det no-lock where sct_domain = global_domain 
+              and sct_sim = "standard" and sct_part = tb1_comp
+              and sct_site = site1 no-error.
+       if available sct_det then do:
+          assign bcst2 =  sct_mtl_tl +
+                          sct_lbr_tl +
+                          sct_bdn_tl +
+                          sct_ovh_tl +
+                          sct_sub_tl +
+                          sct_mtl_ll +
+                          sct_lbr_ll +
+                          sct_bdn_ll +
+                          sct_ovh_ll +
+                          sct_sub_ll.
+       end.
     end.
 
     for each mybomcmp exclusive-lock:
@@ -235,6 +285,10 @@ repeat:
   chExcelWorkbook:Worksheets(1):Cells(iRow,7) = "差异数量".
   chExcelWorkbook:Worksheets(1):Cells(iRow,8) = parent1 + " - 随机带走件" .
   chExcelWorkbook:Worksheets(1):Cells(iRow,9) = parent2 + " - 随机带走件" .
+  if showcst then do:
+     chExcelWorkbook:Worksheets(1):Cells(iRow,10) = parent1 + " - 成本".
+     chExcelWorkbook:Worksheets(1):Cells(iRow,11) = parent2 + " - 成本". 
+  end.
   chExcelWorkbook:Worksheets(1):Range("E2"):AddComment.
   if effdate1 = ? then
     strdate = "".
@@ -264,6 +318,10 @@ repeat:
     chExcelWorkbook:Worksheets(1):Cells(iRow,7) = string(mybomcmp.bqty2 - mybomcmp.bqty1).
     chExcelWorkbook:Worksheets(1):Cells(iRow,8) = "'" + string(mybomcmp.bref1).
     chExcelWorkbook:Worksheets(1):Cells(iRow,9) = "'" + string(mybomcmp.bref2).
+    if showcst then do:
+       chExcelWorkbook:Worksheets(1):Cells(iRow,10) = "'" + string(mybomcmp.bcst1).
+       chExcelWorkbook:Worksheets(1):Cells(iRow,11) = "'" + string(mybomcmp.bcst2).
+    end.
   end.
 
   chExcelWorkbook:Worksheets(1):Range("A1:G1"):HorizontalAlignment = -4108.
