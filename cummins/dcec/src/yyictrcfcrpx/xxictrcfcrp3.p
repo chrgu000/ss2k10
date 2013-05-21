@@ -22,8 +22,8 @@ def var site1 like si_site.
 def var keeper as char label "保管员".
 def var keeper1 as char.
 
-DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes 
-     LABEL "Suppress Zero" 
+DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
+     LABEL "Suppress Zero"
 /*JJ     VIEW-AS TOGGLE-BOX
      SIZE 13 BY 1.39 */ NO-UNDO.
 
@@ -99,7 +99,7 @@ Form
  group1 colon 22        group2 colon 49 label {t001.i}
  part colon 22          part1 colon 49 label {t001.i}
 /* site colon 22          site1 colon 49 label {t001.i} */
- loc colon 22           loc1 colon 49 label {t001.i} 
+ loc colon 22           loc1 colon 49 label {t001.i}
  keeper colon 22        keeper1 colon 49 label {t001.i} skip(1)
  yn_zero colon 33  label "抑制为零数据"
  lscrap colon 33   label "包括工废库位"
@@ -118,6 +118,9 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
  RECT-FRAME:WIDTH-CHARS IN FRAME a = FRAME a:WIDTH-CHARS - .5.  /*GUI*/
 */
 
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame a:handle).
+
 repeat:
 
     if effdate = low_date then effdate = ?.
@@ -129,10 +132,10 @@ repeat:
 /*    if site1 = hi_char then site1 = "".*/
     if loc1 = hi_char then loc1 = "".
     if keeper1 = hi_char then keeper1 = "".
-    
+
     update site effdate effdate1 line line1 type type1 group1 group2 part part1 /*site site1*/
            loc loc1 keeper keeper1 yn_zero lscrap lconsign with frame a.
-    
+
     if effdate = ? then effdate = low_date.
     if effdate1 = ? then effdate1 = hi_date.
     if line1 = "" then line1 = hi_char.
@@ -142,7 +145,7 @@ repeat:
 /*    if site1 = "" then site1 = hi_char.*/
     if loc1 = "" then loc1 = hi_char.
     if keeper1 = "" then keeper1 = hi_char.
-    
+
                  find si_mstr no-lock where si_domain = global_domain and si_site = site no-error.
                  if not available si_mstr or (si_db <> global_db) then do:
                      if not available si_mstr then msg-nbr = 708.
@@ -150,7 +153,7 @@ repeat:
                      {mfmsg.i msg-nbr 3}
                      undo, retry.
                  end.
-   
+
                 {gprun.i ""gpsiver.p""
                 "(input si_site, input recid(si_mstr), output return_int)"}
 /*JJ
@@ -161,28 +164,28 @@ repeat:
 /*J034*/             {mfmsg.i 725 3}    /* USER DOES NOT HAVE */
 /*J034*/                                /* ACCESS TO THIS SITE*/
 /*J034*/             undo,retry.
-/*J034*/          end.               
-    
+/*J034*/          end.
+
 
     curr_tot = 0.
     old_tot = 0.
-    
+
     {mfselbpr.i "printer" 132 nopage}
-        
+
     status input "Waiting for report process...".
-    
-    disp effdate column-label "起始日期" format "9999/99/99" 
+
+    disp effdate column-label "起始日期" format "9999/99/99"
          effdate1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
-        
+
     for each in_mstr where /*(in_site >= site and in_site <= site1) and*/ in_domain = global_domain and
-                       in_site = site and 
-                           (in_part >= part and in_part <= part1) and 
+                       in_site = site and
+                           (in_part >= part and in_part <= part1) and
                            (in__qadc01 >= keeper and in__qadc01 <= keeper1) no-lock,
         each pt_mstr where pt_domain = global_domain and pt_part = in_part and
                            (pt_prod_line >= line and pt_prod_line <= line1) and
                            (pt_part_type >= type and pt_part_type <= type1) and
                            (pt_group >= group1 and pt_group <= group2) no-lock:
-        
+
         edqty = 0.
         bgqty = 0.
         inqty = 0.
@@ -198,60 +201,60 @@ repeat:
        isswo = 0.
        invadj = 0.
        oth = 0.
-               
+
         edqty = in_qty_oh + in_qty_nonet.
 
-	for each ld_det no-lock where ld_domain = global_domain and 
-		ld_part = pt_part and
-		ld_site = in_site and
-		(ld_loc < loc or ld_loc > loc1 ):
-		edqty = edqty - ld_qty_oh.
-	end.
+        for each ld_det no-lock where ld_domain = global_domain and
+                ld_part = pt_part and
+                ld_site = in_site and
+                (ld_loc < loc or ld_loc > loc1 ):
+                edqty = edqty - ld_qty_oh.
+        end.
 
-	if lconsign = no then do:
-		for each ld_det no-lock where ld_domain = global_domain and
-			ld_part = pt_part and
-			ld_site = in_site and
-			ld_loc begins "CN" and
-			ld_loc >= loc and ld_loc <= loc1:
-			edqty = edqty - ld_qty_oh.
-		end.
-	end.
+        if lconsign = no then do:
+                for each ld_det no-lock where ld_domain = global_domain and
+                        ld_part = pt_part and
+                        ld_site = in_site and
+                        ld_loc begins "CN" and
+                        ld_loc >= loc and ld_loc <= loc1:
+                        edqty = edqty - ld_qty_oh.
+                end.
+        end.
 
-	if lscrap = no then do:
-		for each ld_det no-lock where ld_domain = global_domain and
-			ld_part = pt_part and
-			ld_site = in_site and
-			ld_loc >= loc and ld_loc <= loc1 and
-			/* ld_loc begins "ZZZ" */
-			can-find(first pld_det where pld_domain = global_domain and
-				pld_prodline = pt_prod_line and
-				pld_site = in_site and
-				pld_loc = ld_loc):
-			edqty = edqty - ld_qty_oh.
-		end.
-	end.
-        
+        if lscrap = no then do:
+                for each ld_det no-lock where ld_domain = global_domain and
+                        ld_part = pt_part and
+                        ld_site = in_site and
+                        ld_loc >= loc and ld_loc <= loc1 and
+                        /* ld_loc begins "ZZZ" */
+                        can-find(first pld_det where pld_domain = global_domain and
+                                pld_prodline = pt_prod_line and
+                                pld_site = in_site and
+                                pld_loc = ld_loc):
+                        edqty = edqty - ld_qty_oh.
+                end.
+        end.
+
         for each tr_hist no-lock where tr_domain = global_domain and tr_part = pt_part
                  and tr_site = in_site and tr_effdate >= effdate
                  and tr_ship_type = ""
                  and (tr_qty_loc <> 0 or tr_type = "cst-adj")
                  and (tr_loc >= loc and tr_loc <= loc1) :
 
-	  if lconsign = no and tr_loc begins "CN" then do:
-		next.	
-	  end. 	  
+          if lconsign = no and tr_loc begins "CN" then do:
+                next.
+          end.
 
-	  if lscrap = no then do:
+          if lscrap = no then do:
 /*
-		if can-find(first  pld_det where pld_domain = global_domain and
-			pld_prodline = pt_prod_line and
-			pld_site = in_site and
-			pld_loc = tr_loc) then next.
+                if can-find(first  pld_det where pld_domain = global_domain and
+                        pld_prodline = pt_prod_line and
+                        pld_site = in_site and
+                        pld_loc = tr_loc) then next.
 */
-		if tr_loc begins "ZZZ" then next.
-	  end.
-            
+                if tr_loc begins "ZZZ" then next.
+          end.
+
           if tr_effdate >= effdate and tr_effdate <= effdate1 then do:
              if tr_type = "rct-po" then rctpo = rctpo + tr_qty_loc.
              else if tr_type = "rct-tr" then rcttr = rcttr + tr_qty_loc.
@@ -262,55 +265,57 @@ repeat:
              else if tr_type = "iss-unp" then issunp = issunp - tr_qty_loc.
              else if tr_type = "iss-so" then issso = issso - tr_qty_loc.
              else if tr_type = "iss-wo" then isswo = isswo - tr_qty_loc.
-             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt") 
+             else if (tr_type = "tag-cnt" or tr_type = "cyc-cnt" or tr_type = "cyc-rcnt")
                   then invadj = invadj + tr_qty_loc.
              else oth = oth + tr_qty_loc.
           end.
-            
+
             if tr_effdate <= effdate1 then do:
-                if tr_type begins "Iss" then  
-                    outqty = outqty - tr_qty_loc. 
+                if tr_type begins "Iss" then
+                    outqty = outqty - tr_qty_loc.
                 if tr_type begins "rct" then
                     inqty = inqty + tr_qty_loc.
-            end. /* if tr_effdate */           
+            end. /* if tr_effdate */
             else if tr_qty_loc <> 0 then
                 edqty = edqty - tr_qty_loc.
         end. /* for each tr_hist */
-           
+
         /*bgqty = max(0, edqty - inqty + outqty ).*/
        bgqty = edqty - inqty + outqty.
 
         if (yn_zero and (edqty <> 0 or bgqty <> 0 or rctpo <> 0 or rcttr <> 0 or rctunp <> 0 or rctwo <> 0
-          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0 
-          or isswo <> 0 or invadj <> 0 or oth <> 0)) 
+          or isspo <> 0 or isstr <> 0 or issunp <> 0 or issso <> 0
+          or isswo <> 0 or invadj <> 0 or oth <> 0))
            or not yn_zero then do:
-           
+
            {gpsct03.i &cost=sct_cst_tot}
-           
+
            edqty_amt = edqty * glxcst.
-           
+
            disp pt_part pt_desc2 pt_prod_line pt_abc in__qadc01 label "保管员"
               in_user1 label "缺省库位" bgqty label "期初库存"
-              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库" 
-              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库" 
-              issunp label "计划外出库" issso label "销售出库" 
+              rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库"
+              rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
+              issunp label "计划外出库" issso label "销售出库"
               isswo label "加工单出库" invadj label "盘点调整" oth label "其他"
               edqty label "期末库存" /* glxcst format "->>,>>>,>>9.99<<<<" edqty_amt label "期末库存金额" */ with width 300 stream-io.
 
-	   curr_tot = curr_tot + edqty.	   
-	   old_tot = old_tot + bgqty.
-                        
+           curr_tot = curr_tot + edqty.
+           old_tot = old_tot + bgqty.
+
         end.
-                           
-    end. /*for each in_mstr,each pt_mstr*/                            
+
+    end. /*for each in_mstr,each pt_mstr*/
 
     disp old_tot label "期初库存总数量" curr_tot label "期末库存总数量" with side-label.
 .
-    
-    {mfreset.i}
+
+  {mfrtrail.i}
+
+/*    {mfreset.i} */
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-    
+
     status input.
-    
+
 end. /*repeat*/
 
