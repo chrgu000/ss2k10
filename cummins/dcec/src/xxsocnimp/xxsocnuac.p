@@ -405,7 +405,7 @@ repeat with frame a:
       undo mainloop, leave mainloop.
 
    /* CREATE USAGE RECORDS AND POST INVOICE */
-   {gprun.i ""socnuac2.p""
+   {gprun.i ""xxsocnuac2.p""
             "(input-output table tt_autocr,
               input-output table tt_so_update,
               input        using_selfbilling,
