@@ -23,22 +23,36 @@
      and cm_region >= region and cm_region <= region1
      AND (cm_type = cmtype OR cmtype = "")
             use-index cm_addr:
+
+    assign vcons = no
+           vconloc = "".
+    FIND FIRST cncu_mstr NO-LOCK WHERE cncu_domain = global_domain
+           AND cncu_invoice = idh_inv_nbr AND cncu_sod_line = idh_line NO-ERROR.
+    IF AVAILABLE cncu_mstr THEN DO:
+        assign vcons = yes.
+        FIND FIRST tr_hist NO-LOCK WHERE tr_domain = global_domain
+               and tr_trnbr = cncu_trnbr NO-ERROR.
+        IF AVAILABLE tr_hist THEN DO:
+           assign vconloc = tr_loc.
+        END.
+    END.
+
       create zzwkso.
       assign
-        sonbr   = ih_nbr
-        sopart      = idh_part
-        invqty      = idh_qty_inv
-        soprice     = idh_price
-        socon       = idh_consume
-/*        soconloc    =                                        */
-        soregion    = cm_region
-        socmtype    =   cm_type
-        socust      = ih_cust
-        ptline      = pt_prod_line
-        soslspsn    = ih_slspsn[1]
-        shipdate  = idh_cum_date[2]
-        invnbr    = idh_inv_nbr
-        zzsite    = idh_site
+        sonbr    = ih_nbr
+        sopart   = idh_part
+        invqty   = idh_qty_inv
+        soprice  = idh_price
+        socon    = vcons
+        soconloc = vconloc
+        soregion = cm_region
+        socmtype =   cm_type
+        socust   = ih_cust
+        ptline   = pt_prod_line
+        soslspsn = ih_slspsn[1]
+        shipdate = idh_cum_date[2]
+        invnbr   = idh_inv_nbr
+        zzsite   = idh_site
         .
       iTotalLine = iTotalLine + 1.
     end.
@@ -63,20 +77,20 @@ if incso then do:
             use-index cm_addr:
       create zzwkso.
       assign
-        sonbr   = so_nbr
-        sopart      = sod_part
-        invqty      = sod_qty_inv
-        soprice     = sod_price
-        socon       = sod_consignment
-        soconloc    = sod_consign_loc
-        soregion    = cm_region
-        socmtype    = cm_type
-        socust      = so_cust
-        ptline      = pt_prod_line
-        soslspsn    = so_slspsn[1]
-        shipdate  = sod_cum_date[2]
-        invnbr    = so_inv_nbr
-        zzsite    = sod_site.
+        sonbr    = so_nbr
+        sopart   = sod_part
+        invqty   = sod_qty_inv
+        soprice  = sod_price
+        socon    = sod_consignment
+        soconloc = sod_consign_loc
+        soregion = cm_region
+        socmtype = cm_type
+        socust   = so_cust
+        ptline   = pt_prod_line
+        soslspsn = so_slspsn[1]
+        shipdate = sod_cum_date[2]
+        invnbr   = so_inv_nbr
+        zzsite   = sod_site.
       iTotalLine = iTotalLine + 1.
     end.
 end.    /* if incso then do: */

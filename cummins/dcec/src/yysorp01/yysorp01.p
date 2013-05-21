@@ -22,6 +22,8 @@ define variable site1    like si_site initial "DCEC-SV".
 define variable allamt   as decimal.
 DEFine VARiable cmtype   LIKE cm_type .
 define variable incso    like mfc_logical initial NO.
+define variable vcons    like sod_consignment initial no no-undo.
+define variable vconloc  like sod_consign_loc no-undo.
 
 def temp-table zzwkso
   field sonbr   like so_nbr

@@ -31,7 +31,7 @@
       chExcelWorkbook:Worksheets(1):Cells(iLine,11) = shipdate.
       chExcelWorkbook:Worksheets(1):Cells(iLine,12) = invqty.
       chExcelWorkbook:Worksheets(1):Cells(iLine,13) = invqty * soprice.
-      chExcelWorkbook:Worksheets(1):Cells(iLine,14) = invnbr.
+      chExcelWorkbook:Worksheets(1):Cells(iLine,14) = "'" + invnbr.
       chExcelWorkbook:Worksheets(1):Cells(iLine,15) = zzsite.
       allamt = allamt + invqty * soprice.
     end.
@@ -104,7 +104,7 @@
           chExcelWorkbook:Worksheets(1):Cells(iLine,11) = sod_cum_date[2].
           chExcelWorkbook:Worksheets(1):Cells(iLine,12) = sod_qty_inv.
           chExcelWorkbook:Worksheets(1):Cells(iLine,13) = amt.
-          chExcelWorkbook:Worksheets(1):Cells(iLine,14) = so_inv_nbr.
+          chExcelWorkbook:Worksheets(1):Cells(iLine,14) = "'" + so_inv_nbr.
           chExcelWorkbook:Worksheets(1):Cells(iLine,15) = sod_site.
 
   /*        display
