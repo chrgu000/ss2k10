@@ -67,6 +67,7 @@
 /* ss - 130315.1 by: jack */
 /* ss - 130321.1 by: jack */
 /* ss - 130322.1 by: jack */
+/*如果批号为空，就归类在第一个期间                     by:zy             521*/
 /* DISPLAY TITLE */
 
 
@@ -77,7 +78,7 @@
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
-{mfdtitle.i "130420.1 "}
+{mfdtitle.i "521"}
 
 /*  DEFINING VARIABLES AS NO-UNDO */
 
@@ -153,7 +154,7 @@ DEFINE VAR v_total_qty LIKE ld_qty_oh .
 DEFINE VAR effdate LIKE tr_effdate .
 define variable i as integer.
 /* ss - 130321.1 -b */
-define variable cost_qty like mfc_logical initial NO 
+define variable cost_qty like mfc_logical initial NO
        label "Include Cost Inventory" no-undo.
 /* ss - 130321.1 -e */
 {xxptrp06.i "new"}
@@ -1449,12 +1450,10 @@ define buffer trhist for tr_hist.
          FOR EACH tt NO-LOCK
               ,EACH pt_mstr NO-LOCK
               WHERE pt_domain = global_domain and
-           pt_part = tt.t_lddet_part
-                BREAK BY tt.t_lddet_site BY tt.t_lddet_part  BY tt.t_lddet_loc BY  tt.t_lddet_lot /* BY tt.t_lddet_ref */
-
-              :
-
-
+                    pt_part = tt.t_lddet_part
+                BREAK BY tt.t_lddet_site BY tt.t_lddet_part
+                      BY tt.t_lddet_loc  BY tt.t_lddet_lot
+                   /* BY tt.t_lddet_ref */  :
 
                 IF FIRST-OF(tt.t_lddet_part)  THEN DO:
                       find first x_ret exclusive-lock where
@@ -1478,27 +1477,27 @@ define buffer trhist for tr_hist.
 
 
               effdate = ?.
-         /* ss - 130318.1 -b
-              IF tt.t_lddet_lot <> "" THEN DO:
-               ss -e */
-         /*
-                 FOR EACH tr_hist NO-LOCK
-                    WHERE
-                tr_domain = global_domain and
-                tr_part = tt.t_lddet_part
-                    AND tr_serial = tt.t_lddet_lot
-                  /*  AND tr_ref = tt.t_lddet_ref */
-                    AND tr_site = tt.t_lddet_site
-                     AND tr_loc = tt.t_lddet_loc
-                    AND tr_qty_loc > 0 AND tr_type BEGINS "rct-"
-                    :
-                    effdate = tr_effdate.
-                    LEAVE.
-                 END.
-     */
-     /* ss - 130318.1 -b
-              END.
-        ss -e */
+/*          /* ss - 130318.1 -b                                     */
+/*               IF tt.t_lddet_lot <> "" THEN DO:                   */
+/*                ss -e */                                          */
+/*          /*                                                      */
+/*                  FOR EACH tr_hist NO-LOCK                        */
+/*                     WHERE                                        */
+/*                 tr_domain = global_domain and                    */
+/*                 tr_part = tt.t_lddet_part                        */
+/*                     AND tr_serial = tt.t_lddet_lot               */
+/*                   /*  AND tr_ref = tt.t_lddet_ref */             */
+/*                     AND tr_site = tt.t_lddet_site                */
+/*                      AND tr_loc = tt.t_lddet_loc                 */
+/*                     AND tr_qty_loc > 0 AND tr_type BEGINS "rct-" */
+/*                     :                                            */
+/*                     effdate = tr_effdate.                        */
+/*                     LEAVE.                                       */
+/*                  END.                                            */
+/*      */                                                          */
+/*      /* ss - 130318.1 -b                                         */
+/*               END.                                               */
+/*         ss -e */                                                 */
 
                  /* ss - 130315.1 -b */
 
@@ -1523,6 +1522,8 @@ define buffer trhist for tr_hist.
                 ELSE
                     i = 1 .
                /* ss - 130322.1 -e */
+
+/*521*/         IF tt.t_lddet_lot  = "" THEN i = 1.
 
                 if i = 9 and as_of_date - effdate > days[9] then do:
                    assign i  = i + 1.
