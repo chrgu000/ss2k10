@@ -264,6 +264,7 @@ procedure p-report:
          if tr_hist.tr_type = "cn-ship" then do:
             find first trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
                    AND trhist.tr_trnbr < integer(tr_hist.tr_rmks)
+                   AND trhist.tr_trnbr >= integer(tr_hist.tr_rmks) - 3
                    and trhist.tr_effdate = tr_hist.tr_effdate
                    and trhist.tr_part = tr_hist.tr_part
                    and trhist.tr_type = "ISS-TR"
