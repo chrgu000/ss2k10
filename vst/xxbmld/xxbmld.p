@@ -91,7 +91,7 @@ repeat:
      end.
      for each tmpbom no-lock with width 320 frame c:
          setFrameLabels(frame c:handle).
-         display tbm_par tbm_old tbm_new tbm_qty_per tbm_scrp.
+         display tbm_par tbm_old tbm_new tbm_qty_per tbm_scrp tbm_chk.
      end.
      for each tmpbomn exclusive-lock with width 320 frame d:
       /* SET EXTERNAL LABELS */
