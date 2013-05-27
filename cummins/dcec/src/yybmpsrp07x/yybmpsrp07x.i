@@ -397,7 +397,7 @@ PROCEDURE process_report:
             then do:
 
             /* THIRD INPUT PARAMETER CHANGED FROM new_parent TO skpge */
-             find first ptp_det no-lock where ptp_domain = global_domain 
+             find first ptp_det no-lock where ptp_domain = global_domain
                     and ptp_part = ps_par and ptp_site = site no-error.
              if (available ptp_det and ptp_pm_code <> "P") or not available ptp_det then do:
                 run process_report
@@ -405,7 +405,7 @@ PROCEDURE process_report:
                    input level + 1).
              end.
                 get next q_ps_mstr no-lock.
-           
+
           end.  /* IF level < maxlevel ... */
          else
             get next q_ps_mstr no-lock.

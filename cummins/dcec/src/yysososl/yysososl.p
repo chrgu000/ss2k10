@@ -928,7 +928,8 @@ PROCEDURE p_picklist:
                      kit_all        = no
                      ship_avail_qty = no.
                /* DO THE ALLOCATIONS AND CREATE STAGE LIST TEMP RECORDS */
-               {gprun.i ""sosla.p""
+/* *SS-20121108.1*              {gprun.i ""sosla.p""    */  
+/* *SS-20121108.1*     */             {gprun.i ""yysosla.p""  
                   "(input t_so_nbr,
                     input t_sod_line,
                     input due_date,

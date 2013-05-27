@@ -224,7 +224,9 @@ repeat:
      FIND ptp_det use-index ptp_site WHERE ptp_domain = global_domain and ptp_site = site and (ptp_part = xxwk.par OR ptp_part = SUBSTRING(xxwk.par,1,LENGTH(ptp_part))) /* AND ptp_pm_code <> "P" */ NO-LOCK NO-ERROR.
      IF AVAIL ptp_det THEN DO:
        partcost = 0.
-       FOR EACH pc_mstr where pc_domain = global_domain and pc_part = xxwk.comp BREAK BY pc_start:
+       FOR EACH pc_mstr where pc_domain = global_domain
+            AND NOT (pc_list begins "ETS")
+            and pc_part = xxwk.comp BREAK BY pc_start:
         IF LAST-OF(pc_start) THEN DO:
            FIND FIRST ad_mstr WHERE ad_domain = global_domain and ad_addr = pc_list OR ad_addr = SUBSTRING(pc_list,1 ,LENGTH(ad_addr)) AND ad_type = "supplier"  NO-LOCK NO-ERROR.
            IF AVAIL ad_mstr THEN DO:
@@ -252,7 +254,7 @@ repeat:
         END.
        END.
 
- 
+
 /*
       find last qad_wkfl where qad_domain = global_domain and qad_key1 = "poa_det" and
           qad_charfld[3] = pod_site and qad_charfld[2] = pod_part
@@ -263,12 +265,12 @@ repeat:
 */
 
     END.  /*END. end if ptp_det*/
-   
+
    END.
-   
+
 FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1) exclusive-LOCK:
-       
+
        find first ptp_det no-lock where ptp_domain = global_domain and ptp_part = xxwk.comp and ptp_site = site no-error.
        if (available ptp_det and ptp_phantom) or not available ptp_det or substring(trim(xxwk.comp),length(xxwk.comp) - 1) = "ZZ" then do:
           delete xxwk.
@@ -277,9 +279,9 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        if (available ptp_det and ptp_pm_code = "P") then do:
           delete xxwk.
        end.
-       
-       
-end.       
+
+
+end.
 FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        and (xxwk.wkctr >= wkctr and xxwk.wkctr <= wkctr1) and  xxwk.pmcode <> "M"  NO-LOCK:
 
@@ -288,7 +290,10 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
             IF LAST-OF(qad_decfld[1]) THEN DO:
               FIND LAST pod_det WHERE pod_domain = global_domain and pod_part = xxwk.comp AND pod_nbr = qad_charfld[1] NO-LOCK NO-ERROR.
                   IF AVAIL pod_det THEN DO:
-                      FIND LAST pc_mstr WHERE pc_domain = global_domain and pc_part =  xxwk.comp AND pc_list = pod_pr_list  NO-LOCK NO-ERROR.
+                      FIND LAST pc_mstr WHERE pc_domain = global_domain
+                            AND pc_list = pod_pr_list
+                            and pc_part =  xxwk.comp
+                   NO-LOCK NO-ERROR.
                       IF AVAIL pc_mstr THEN DO:
                           IF pc_um = "KA" THEN v_per_price = pc_amt[1] / 1000.
                           ELSE v_per_price = pc_amt[1].
@@ -304,7 +309,7 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
        IF v_per_price = 0 THEN v_per_price = partcost.
 
 /*322*/       partcost = 0.
-/*322*/       FOR EACH pc_mstr where pc_domain = global_domain and pc_part = xxwk.comp BREAK BY pc_start:
+/*322*/       FOR EACH pc_mstr where pc_domain = global_domain and not (pc_list begins "ETS") and pc_part = xxwk.comp BREAK BY pc_start:
 /*322*/        IF LAST-OF(pc_start) THEN DO:
 /*322*/           FIND FIRST ad_mstr WHERE ad_domain = global_domain and ad_addr = pc_list OR ad_addr = SUBSTRING(pc_list,1 ,LENGTH(ad_addr)) AND ad_type = "supplier"  NO-LOCK NO-ERROR.
 /*322*/           IF AVAIL ad_mstr THEN DO:
@@ -332,7 +337,7 @@ FOR EACH xxwk WHERE (string(xxwk.op) >= op and string(xxwk.op) <= op1)
 /*322*/        END.
 /*322*/       END.
 
-       
+
      disp xxwk.parent COLUMN-LABEL "机型"
             xxwk.par COLUMN-LABEL "父零件"
             xxwk.wkctr COLUMN-LABEL "工作中心"
