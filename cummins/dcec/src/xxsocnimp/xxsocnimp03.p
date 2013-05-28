@@ -9,6 +9,9 @@
   define variable trref as integer.
   define variable ret as character.
   define stream bf.
+for each xsc_d no-lock where xsd_diffpi:
+    {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price)"} 
+end.
 FOR EACH xsc_d WHERE xsd_chk = "PASS":
     ASSIGN cfile = execname + "." + STRING(xsd_sn,"99999999").
     OUTPUT STREAM bf TO VALUE(cfile + ".bpi").

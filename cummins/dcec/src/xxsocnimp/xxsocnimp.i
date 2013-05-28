@@ -75,6 +75,7 @@ define {1} shared temp-table xsc_d
     fields xsd_qty_oh as decimal format "->,>>>,>>9.9<<<<" label "Qty on Hand"
     fields xsd_chk  as character format "x(120)" column-label "xsd_chk"
     fields xsd_sn   as integer column-label "xsd_sn"
+    fields xsd_diffpi as logical column-label "xsd_diffpi" /*已更新报价*/
     fields xsd_mid  as integer column-label "xsd_mid_recid(xsc_m)".
 
 

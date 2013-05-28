@@ -41,6 +41,9 @@ if available sod_det then do:
          if available pi_mstr then do:
               assign xsd_price = pi_list_price
                      xsd_amt = pi_list_price * xsd_qty_used.
+              if sod_list_pr <> pi_list_price then do:
+                 assign xsd_diffpi = yes.
+              end.
          end.
          else do:
               assign xsd_chk = "价格表不存在".
