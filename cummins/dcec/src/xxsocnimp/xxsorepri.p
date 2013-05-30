@@ -9,7 +9,8 @@ define stream sob.
 output stream sob to "xxsorepri.bpi".
   put stream sob unformat '"' sonbr '"' skip.
   put stream sob unformat '-' skip '-' skip '-' skip.
-  put stream sob unformat '-' skip '-' skip '-' skip.
+  put stream sob unformat '-' skip '-' skip.
+  put stream sob unformat 'N - - - - - - - - - - N' skip.
   put stream sob unformat '.' skip 'S' skip.
   put stream sob unformat soline skip.
   put stream sob unformat '-' skip '-' skip.
