@@ -22,7 +22,7 @@ DEFINE VARIABLE duedate_from   as date .
 DEFINE VARIABLE duedate_to     as date .
 DEFINE VARIABLE ship like abs_id.
 DEFINE VARIABLE ship1 like abs_id.
-DEFINE VARIABLE flag1      as logical label "只打印未打印过的收货单".
+DEFINE VARIABLE flag1      as logical label "只打印未打印过的收货单" initial yes.
 DEFINE VARIABLE pageno     as integer. /*页号*/
 DEFINE VARIABLE duplicate  as CHARACTER.    /*副本*/
 DEFINE VARIABLE vendor     as CHARACTER extent 6.
