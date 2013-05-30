@@ -18,6 +18,8 @@ define variable v_poldesc as character format "x(30)".
 * Record is deleted only when the value of this variable
 * Is set to "X" */
 define variable batchdelete as character format "x(1)" no-undo.
+define variable vmthwk as character.
+define variable vweek  as character.
 
 {gpfieldv.i}      /* var defs for gpfield.i */
 
@@ -27,7 +29,9 @@ form
    usrw_key2 colon 25 format "x(18)"
    v_ptdesc1 no-label
    usrw_key3 colon 25 format "x(12)"
-   v_poldesc colon 45 no-label
+   v_poldesc colon 45 no-label skip(2)
+   vmthwk colon 25
+   vweek colon 25
 with frame a side-labels width 80 attr-space.
 
 /* SET EXTERNAL LABELS */
@@ -71,7 +75,13 @@ repeat with frame a:
             if available code_mstr then do:
             	 assign v_poldesc = code_cmmt.
             end.
-            display usrw_key1 usrw_key2 v_ptdesc1 usrw_key3 v_poldesc.
+            assign vmthwk = "" vweek = "".
+            if usrw_charfld[4] <> "" then do:
+               assign vmthwk = entry(1,usrw_charfld[4],";")
+                      vweek =  entry(2,usrw_charfld[4],";").
+            end.
+            display usrw_key1 usrw_key2 v_ptdesc1 usrw_key3 v_poldesc 
+                    vmthwk vweek.
          end.
       end. /* editing: */
       if not can-find(first pt_mstr no-lock where pt_part = input usrw_key2)
@@ -111,30 +121,29 @@ repeat with frame a:
       assign
          usrw_key1 usrw_key2.
    end. /* if not available usrw_wkfl then do: */
-
+   assign vmthwk = "" vweek = "".
+   if available usrw_wkfl and  usrw_charfld[4] <> "" then do:
+      assign vmthwk = entry(1,usrw_charfld[4],";")
+             vweek =  entry(2,usrw_charfld[4],";").
+   end.
    ststatus = stline[2].
    status input ststatus.
 
   repeat with frame a:
-         update usrw_key3
+         update usrw_key3 vmthwk vweek
          go-on(F5 CTRL-D).
          assign v_ptdesc1 = ""
                 v_poldesc = "".
-         find first code_mstr no-lock where code_fldname = "vd__chr03" and
-                 code_value = input usrw_key3 no-error.
-         if not available code_mstr then do:
-            {pxmsg.i &ERRORLEVEL=3 &MSGTEXT=""到货方式错误""}
+         if vmthwk <> "" and vweek <> "" then do:
+            assign usrw_charfld[4] = vmthwk + ";" + vweek.
             undo,retry.
-         end.
-         else do:
-             assign v_poldesc = code_cmmt.
          end.
          find first pt_mstr no-lock
               where pt_part = usrw_key2 no-error.
          if available pt_mstr then do:
             assign v_ptdesc1 = pt_desc1.
          end.
-         display v_ptdesc1 v_poldesc with frame a.
+         display vmthwk vweek v_ptdesc1 v_poldesc with frame a.
          leave.
   end.
    /* Delete to be executed if batchdelete is set or
