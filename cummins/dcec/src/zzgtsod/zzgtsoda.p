@@ -10,6 +10,7 @@
 /******************************************                              514*
  * 税率的取值由于版本升级不走vt_mstr 改到 tx2_mstr
  **********************************************/
+
 {mfdeclre.i}
 
 define TEMP-TABLE sodet like sod_det.  /*2004-09-01 13:18*/
@@ -321,45 +322,26 @@ for each so_mstr
                wkgtd_um   = sodet2.sod_um
                wkgtd_qty  = sodet2.sod_qty_inv
                wkgtd_kind = v_itemkind.
-     if available pt_mstr then do:                                        
-/*513    wkgtd_item = pt_desc2.                                              */
-/*513    if pt_pm_code = "C" then                                            */
-/*513      wkgtd_um = "套".                                                  */
-/*513    else if pt_part_type = "58" then do:                                */
-/*513      wkgtd_um = "台".                                                  */
-/*513      wkgtd_item = "发动机".                                            */
-/*513    end.                                                                */
-/*513    else                                                                */
-/*513      wkgtd_um = "件".                                                  */
+      if available pt_mstr then do:
+         wkgtd_item = pt_desc2.
+/*513        if pt_pm_code = "C" then                                        */
+/*513          wkgtd_um = "套".                                              */
+/*513        else                                                            */
+        if pt_part_type = "58" then do:
+           wkgtd_um = "台".
+           wkgtd_item = "发动机".
+        end.
+        else
+          wkgtd_um = "件".
 
           FIND cp_mstr WHERE cp_domain = global_domain and cp_part = pt_part
                          AND cp_cust = v_cust3 NO-LOCK NO-ERROR.
-                         /* ss - 130219.1 -b
-               IF AVAILABLE cp_mstr THEN
-                   wkgtd.wkgtd_item= cp_cust_part.
-                   ss - 130219.1 -e */
-                   /* ss - 130219.1 -b */
-               IF AVAILABLE cp_mstr THEN do:
-                assign
-                   wkgtd.wkgtd_spec = cp_cust_part .
-
-                   if cp_comment <> "" then
-                   wkgtd.wkgtd_item = cp_comment.
-                end .
-/*513*/   if available cp_mstr and cp_cust_eco <> "" then do:
-/*513*/         assign wkgtd_um = cp_cust_eco.
-/*513*/   end.
-/*513*/   else do:
-/*513*/      wkgtd_item = pt_desc2.
-/*513*/      if pt_part_type = "58" then do:
-/*513*/        wkgtd_um = "台".
-/*513*/        wkgtd_item = "发动机".
-/*513*/      end.
-/*513*/      else
-/*513*/        wkgtd_um = "件".
-/*513*/   end.
-                 /*  ss - 130219.1 -e */
-     end.                                                                
+          IF AVAILABLE cp_mstr THEN do:
+/*513*/      assign wkgtd.wkgtd_um = cp_cust_eco when(cp_cust_eco <> "").
+             assign wkgtd.wkgtd_spec = cp_cust_part.
+             assign wkgtd.wkgtd_item = cp_comment when(cp_comment <> "").
+          end .
+      end.
 
       /*TAXPCT*/
       /*
