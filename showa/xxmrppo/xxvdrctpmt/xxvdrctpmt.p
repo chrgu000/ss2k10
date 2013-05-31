@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120619.1"}
+{mfdtitle.i "130531.1"}
 /* ********** End Translatable Strings Definitions ********* */
 define variable vmthwk as character.
 define variable vweek  as character.
@@ -69,7 +69,10 @@ repeat with frame a:
       update vd__chr03 vmthwk vweek with frame a.
       IF vmthwk <> "" AND vweek <> "" THEN DO:
          assign vd__chr04 = vmthwk + ";" + vweek.
-      END.  
+      END.
+      IF vmthwk = "" AND vweek = "" THEN DO:
+         assign vd__chr04 = "".
+      END.
 /*    find first code_mstr no-lock where code_fldname = "vd__chr03" and       */
 /*               code_value = input vd__chr03 no-error.                       */
 /*    if not available code_mstr then do:                                     */

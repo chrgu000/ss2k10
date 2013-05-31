@@ -5,7 +5,7 @@
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "120614.1"}
+{mfdtitle.i "130531.1"}
 define variable vkey1 like usrw_key1 no-undo
                   initial "XXMRPPORP0.P-ITEM-ORDER-POLICY".
 define variable del-yn like mfc_logical initial no.
@@ -71,16 +71,16 @@ repeat with frame a:
                assign v_ptdesc1 = pt_desc1.
             end.
             find first code_mstr no-lock where code_fldname = "vd__chr03"
-            			 and code_value = usrw_key3 no-error.
+                   and code_value = usrw_key3 no-error.
             if available code_mstr then do:
-            	 assign v_poldesc = code_cmmt.
+               assign v_poldesc = code_cmmt.
             end.
             assign vmthwk = "" vweek = "".
             if usrw_charfld[4] <> "" then do:
                assign vmthwk = entry(1,usrw_charfld[4],";")
                       vweek =  entry(2,usrw_charfld[4],";").
             end.
-            display usrw_key1 usrw_key2 v_ptdesc1 usrw_key3 v_poldesc 
+            display usrw_key1 usrw_key2 v_ptdesc1 usrw_key3 v_poldesc
                     vmthwk vweek.
          end.
       end. /* editing: */
@@ -136,7 +136,9 @@ repeat with frame a:
                 v_poldesc = "".
          if vmthwk <> "" and vweek <> "" then do:
             assign usrw_charfld[4] = vmthwk + ";" + vweek.
-            undo,retry.
+         end.
+         if vmthwk = "" and vweek = "" then do:
+            assign usrw_charfld[4] = "".
          end.
          find first pt_mstr no-lock
               where pt_part = usrw_key2 no-error.
