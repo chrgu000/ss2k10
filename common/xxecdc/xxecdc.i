@@ -30,7 +30,8 @@ FUNCTION getMAC RETURNS CHARACTER:
 /*             usrw_key2 <> "" no-error.                                     */
 /*  if not available usrw_wkfl then do:                                      */
      if opsys = "UNIX" then do:
-        UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".
+/*      UNIX SILENT "netstat -v > ip.xxecdc.i.201020.cfg".                   */     
+        UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".             
         if search("ip.xxecdc.i.201020.cfg") <> ? then do:
            input from "ip.xxecdc.i.201020.cfg".
            repeat:
