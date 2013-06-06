@@ -17,6 +17,18 @@ FUNCTION dts returns character(input idate as date):
            string(day(idate),"99") + ",#*2012".
 end FUNCTION.
 
+FUNCTION getLabelDesc1 RETURNS character(iTerm as character,iLength as integer):
+  define variable ret as character format "x(80)".
+  find first lbl_mstr no-lock where lbl_lang = global_user_lang and
+             lbl_term = iTerm no-error.
+  if availabl lbl_mstr then do:
+     assign ret = substring(lbl_desc1,1,iLength).
+  end.
+  if ret = "" then ret = iTerm.
+  return ret.
+END FUNCTION. /*FUNCTION getLabelDesc1*/
+
+
 FUNCTION getMAC RETURNS CHARACTER:
  /* -----------------------------------------------------------
     Purpose: get MAC ADDRESS.
@@ -30,14 +42,14 @@ FUNCTION getMAC RETURNS CHARACTER:
 /*             usrw_key2 <> "" no-error.                                     */
 /*  if not available usrw_wkfl then do:                                      */
      if opsys = "UNIX" then do:
-/*      UNIX SILENT "netstat -v > ip.xxecdc.i.201020.cfg".                   */     
-        UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".             
+/*     UNIX SILENT "netstat -v > ip.xxecdc.i.201020.cfg".                 */
+      UNIX SILENT "/sbin/ifconfig -a > ip.xxecdc.i.201020.cfg".
         if search("ip.xxecdc.i.201020.cfg") <> ? then do:
            input from "ip.xxecdc.i.201020.cfg".
            repeat:
              import unformat txt.
-             if index(txt,"HWaddr") > 0 then do:
-                assign txt = substring(txt, index(txt,"HWaddr") + 7).
+             if index(txt,getLabelDesc1("PHYSICAL_ADDRESS_.....",60)) > 0 then do:
+                assign txt = substring(txt,length(txt) - 16).
                 leave.
              end.
            end.
@@ -85,6 +97,34 @@ FUNCTION getMAC RETURNS CHARACTER:
 /*  release usrw_wkfl.                                                       */
   return trim(txt).
 END FUNCTION. /*FUNCTION getMAC*/
+
+
+FUNCTION getEncode RETURNS CHARACTER
+        (key1 as CHARACTER, key2 as CHARACTER,
+         key3 as CHARACTER, key4 as CHARACTER,
+         key5 as CHARACTER, key6 as CHARACTER,
+         key7 as CHARACTER, Key8 as CHARACTER):
+ /* -----------------------------------------------------------
+    Purpose:
+    Parameters:  <none>
+    Notes:
+  -------------------------------------------------------------*/
+  define variable retVal as CHARACTER initial "".
+
+/*
+  assign retVal = getMd5(key1) + "," + getMd5(key2) + ","
+                + getMd5(key3) + "," + getMd5(key4) + ","
+                + getMd5(key5) + "," + getMd5(key6) + ","
+                + getMd5(key7).
+*/
+  assign retVal = ENCODE(key1) + "," + ENCODE(key2) + ","
+                + ENCODE(key3) + "," + ENCODE(key4) + ","
+                + ENCODE(key5) + "," + ENCODE(key6) + ","
+                + ENCODE(key7) + "," + ENCODE(key8) .
+
+  return retVal.
+END FUNCTION. /*FUNCTION getKey*/
+
 
 /***以下这些程序在progress 10.1下有问题暂时屏蔽 ********************************
 FUNCTION getMd5 RETURNS CHARACTER(input keywords as CHARACTER):
@@ -134,7 +174,6 @@ FUNCTION getEn RETURNS CHARACTER(input ci as CHARACTER):
 
     PUT-STRING(mptr, 1) = ci.
 
-
     c1 = "".
     REPEAT cnt = 1 TO LENGTH(ci,"RAW"):
 
@@ -181,7 +220,6 @@ FUNCTION getDn RETURNS CHARACTER(input ci as CHARACTER):
 
   SET-SIZE(mptr) = INTEGER(LENGTH(c1,"RAW") / 3) + 1.
 
-
   REPEAT cnt = 1 TO (LENGTH(c1,"RAW") / 3):
 
      i1 = (cnt MOD 3).
@@ -203,29 +241,3 @@ FUNCTION getDn RETURNS CHARACTER(input ci as CHARACTER):
 END. /* FUNCTION getDn */
 
 ***以上这些程序在progress 10.1下有问题暂时屏蔽 ********************************/
-
-FUNCTION getEncode RETURNS CHARACTER
-        (key1 as CHARACTER, key2 as CHARACTER,
-         key3 as CHARACTER, key4 as CHARACTER,
-         key5 as CHARACTER, key6 as CHARACTER,
-         key7 as CHARACTER, Key8 as CHARACTER):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  define variable retVal as CHARACTER initial "".
-
-/*
-  assign retVal = getMd5(key1) + "," + getMd5(key2) + ","
-                + getMd5(key3) + "," + getMd5(key4) + ","
-                + getMd5(key5) + "," + getMd5(key6) + ","
-                + getMd5(key7).
-*/
-  assign retVal = ENCODE(key1) + "," + ENCODE(key2) + ","
-                + ENCODE(key3) + "," + ENCODE(key4) + ","
-                + ENCODE(key5) + "," + ENCODE(key6) + ","
-                + ENCODE(key7) + "," + ENCODE(key8) .
-
-  return retVal.
-END FUNCTION. /*FUNCTION getKey*/
