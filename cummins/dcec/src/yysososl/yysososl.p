@@ -45,7 +45,7 @@
 /* Revision: 1.15.2.29.2.3  BY: Xiao Liu           DATE: 01/11/07 ECO: *Q11H* */
 /* Revision: 1.15.2.29.2.5  BY: Russ Witt          DATE: 03/08/07 ECO: *P5QV* */
 /* Revision: 1.15.2.29.2.5  BY: Mochesh Chandran   DATE: 06/26/07 ECO: *P60K* */
-/* $Revision: 1.15.2.29.2.7 $ BY: Xiaolei Meng       DATE: 07/21/09 ECO: *Q35Q* */
+/* $Revision: 1.15.2.29.2.7 $ BY: Xiaolei Meng     DATE: 07/21/09 ECO: *Q35Q* */
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -73,7 +73,7 @@
 /* CAN BE COMPLETELY SHIPPED IF PARTIAL OK FLAG IS SET TO NO            */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "1+ "}
+{mfdtitle.i "1305"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -111,8 +111,10 @@ define variable lang like so_lang no-undo.
 define variable lang1 like lang no-undo.
 define variable site like sod_site no-undo.
 define variable site1 like sod_site no-undo.
+define variable loc  like ld_loc no-undo label "Loc".
+define variable loc1 like ld_loc no-undo Label "To".
 define variable type   as character
-   label "Address List Type" no-undo.
+   label "Addr List Type" no-undo.
 define variable type1   as character no-undo.
 define variable part like sod_part no-undo.
 define variable part1 like sod_part no-undo.
@@ -203,7 +205,8 @@ define temp-table t_so_pick no-undo
 /*ss20121102 b*/
 define temp-table xxerr
 field err as char.
-define new shared variable xxlog as log label "是否考虑最小包装量(Y/N)" initial yes.
+define new shared variable xxlog as log label "考虑最小包装量(Y/N)" initial yes.
+define new shared variable xxlot as log label "按批序号备料" initial yes.
 define variable xx as log initial no.
 define variable ttz as int.
 define variable tty as int.
@@ -211,23 +214,25 @@ define variable tth as decimal.
 /*ss20121102 e*/
 
 form
-   due_date         colon 19  validate (true,"")
+   due_date         colon 16  validate (true,"")
    due_time         no-label
    due_date1        colon 49 label {t001.i} validate (true,"")
    due_time1        no-label skip
-   nbr              colon 19
+   nbr              colon 16
    nbr1             colon 49 label {t001.i} skip
-   ship             colon 19
+   ship             colon 16
    ship1            colon 49 label {t001.i} skip
-   lang             colon 19
+   lang             colon 16
    lang1            colon 49 label {t001.i}
-   site             colon 19
+   site             colon 16
+   loc              colon 30
    site1            colon 49 label {t001.i}
-   type             colon 19
+   loc1             colon 62 label {t001.i} skip
+   type             colon 16
    type1            colon 49 label {t001.i}
-   part             colon 19
+   part             colon 16
    part1            colon 49 label {t001.i}
-   ref              colon 19
+   ref              colon 16
    ref1             colon 49 label {t001.i} /* skip(1) */
    auto_all         colon 26
    max_weight       colon 63
@@ -248,6 +253,7 @@ form
    update_yn        colon 26
    form_code        colon 44
    xxlog            colon 26
+   xxlot            colon 44
    deblank /* skip*/
 with frame a side-labels attr-space width 80.
 
@@ -297,6 +303,7 @@ repeat:
    if ship1 = hi_char then ship1 = "".
    if lang1 = hi_char then lang1 = "".
    if site1 = hi_char then site1 = "".
+   if loc1 = hi_char then loc1 = "".
    if type1   = hi_char then type1   = "".
    if part1   = hi_char then part1   = "".
    if ref1    = hi_char then ref1    = "".
@@ -315,7 +322,9 @@ repeat:
       lang
       lang1
       site
+      loc
       site1
+      loc1
       type
       type1
       part
@@ -341,6 +350,7 @@ repeat:
       form_code
       update_yn
       xxlog
+      xxlot
    with frame a.
 
    GET_DATA:
@@ -359,7 +369,9 @@ repeat:
          lang
          lang1
          site
+         loc
          site1
+         loc1
          type
          type1
          part
@@ -385,6 +397,7 @@ repeat:
          form_code
          update_yn
          xxlog
+         xxlot
       with frame a.
 
       /* PAD RUN FILE */
@@ -438,6 +451,7 @@ repeat:
    if ship1 = "" then ship1 = hi_char.
    if lang1 = "" then lang1 = hi_char.
    if site1 = "" then site1 = hi_char.
+   if loc1 = "" then loc1 = hi_char.
    if type1   = "" then type1   = hi_char.
    if part1   = "" then part1   = hi_char.
    if ref1    = "" then ref1    = hi_char.
@@ -837,6 +851,8 @@ PROCEDURE run_mfquoter:
    {mfquoter.i lang1}
    {mfquoter.i site}
    {mfquoter.i site1}
+   {mfquoter.i loc}
+   {mfquoter.i loc1}
    {mfquoter.i type}
    {mfquoter.i type1}
    {mfquoter.i part}
@@ -928,8 +944,8 @@ PROCEDURE p_picklist:
                      kit_all        = no
                      ship_avail_qty = no.
                /* DO THE ALLOCATIONS AND CREATE STAGE LIST TEMP RECORDS */
-/* *SS-20121108.1*              {gprun.i ""sosla.p""    */  
-/* *SS-20121108.1*     */             {gprun.i ""yysosla.p""  
+/* *SS-20121108.1*              {gprun.i ""sosla.p""    */
+/* *SS-20121108.1*     */             {gprun.i ""yysosla.p""
                   "(input t_so_nbr,
                     input t_sod_line,
                     input due_date,

@@ -58,8 +58,6 @@
 /* Revision: 1.27.1.28.1.2  BY: Mochesh Chandran   DATE: 04/10/07 ECO: *P5FK* */
 /* Revision: 1.27.1.28.1.3  BY: Vivek Kamath       DATE: 01/04/08 ECO: *P6HV* */
 /* $Revision: 1.27.1.28.1.4 $  BY: Sumit Karunakaran DATE: 05/12/08 ECO: *P6SX* */
-/* $Revision: eb21 $   By: Jordan Lin    DATE:11/08/2012  ECO: *SS-20121108.1* */
-
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -142,9 +140,6 @@ define variable l_msg1 as character   no-undo.
 define variable l_msg2 as character   no-undo.
 define variable l_delproc like mfc_logical  no-undo initial no.
 define variable l_domain  like so_domain    no-undo.
- /* *SS-20121108.1* -b */
-define shared variable xxlog as log.
-  /* *SS-20121108.1* -e */
 
 /* SHARED VARIABLES FOR CUSTOMER SEQUENCE SCHEDULES */
 {sosqvars.i}
@@ -177,20 +172,10 @@ find first sod_det
 mainblock:
 do on error undo mainblock, leave mainblock:
 
-
-
    if available (sod_det)
    and sod_sched
    then do:
-   /* *SS-20121108.1* -b */ 
 
-if xxlog = yes then do:
-      /* 检查订单倍数和库存 */
-      {gprun.i ""yysckom.p"" "( input sod_nbr ,input sod_line, INPUT-OUTPUT sod_qty_all)"}
-      if sod_qty_all = 0 then
-         leave mainblock.
-end.
-/* *SS-20121108.1* -e */ 
       /* HANDLE  SCHEDULE ORDERS                            */
       /* Get inv mov code and NR seq used to generate its # */
       run get_shipgrp_attrib (input sod_site,
@@ -236,7 +221,6 @@ end.
               output open_qty)"}
       end.  /* else do */
 
-
       if open_qty = 0 then leave mainblock.
 
       /* NOT STAGE OPEN QUANTITIES OPTION */
@@ -269,14 +253,7 @@ end.
                  input open_qty,
                  output new_qty_all,
                  output new_qty_set)"}
-   /* *SS-20121108.1* -b */ 
-if xxlog = yes then do:  
-      /* 检查订单倍数和库存 */
-      {gprun.i ""yysckom.p"" "( input sod_nbr ,input sod_line, INPUT-OUTPUT new_qty_set)"}
-      if new_qty_set = 0 then
-         leave mainblock.
-end.
-/* *SS-20121108.1* -e */ 
+
             /* SWITCH BACK TO THE SALES ORDER DOMAIN */
             {gprun.i ""gpalias3.p"" "(so_db, output err_flag)"}
 
@@ -318,7 +295,7 @@ end.
          /* Added shipgrp, inv_mov, nrseq and cons_ship
          as input parameters */
          /* ADDED INPUT PARAMETER L_CREATE_UM */
-         {gprun.i ""rcslb01.p""
+         {gprun.i ""yyrcslb01.p""
             "(input recid(so_mstr),
               input recid(sod_det),
               input all_only,
@@ -352,14 +329,6 @@ end.
 
    end. /* IF AVAILABLE (sod_det) AND sod_sched..*/
    else do:
-   /* *SS-20121108.1* -b */ 
-if xxlog = yes then do:  
-      /* 检查订单倍数和库存 */
-      {gprun.i ""yysckom.p"" "( input sod_nbr ,input sod_line, INPUT-OUTPUT sod_qty_all)"}
-      if sod_qty_all = 0 then
-         leave mainblock.
-end.
-/* *SS-20121108.1* -e */ 
       v_unpicked_qty = 0.
       for each abs_mstr
          where abs_mstr.abs_domain = global_domain
@@ -381,6 +350,7 @@ end.
          open_qty       = sod_qty_ord - sod_qty_pick - sod_qty_ship -
                           v_unpicked_qty
          part_qty       = open_qty.
+
       if open_qty = 0 then
          leave mainblock.
 
@@ -652,14 +622,7 @@ end.
                     input open_qty,
                     output new_qty_all,
                     output new_qty_set)"}
-   /* *SS-20121108.1* -b */ 
-if xxlog = yes then do:  
-      /* 检查订单倍数和库存 */
-      {gprun.i ""yysckom.p"" "( input sod_nbr ,input sod_line, INPUT-OUTPUT new_qty_set)"}
-      if new_qty_set = 0 then
-         leave mainblock.
-end.
-/* *SS-20121108.1* -e */ 
+
                /* SWITCH BACK TO THE SALES ORDER DOMAIN */
                {gprun.i ""gpalias3.p"" "(so_db, output err_flag)"}
 
@@ -700,7 +663,7 @@ end.
             /* Added shipgrp, inv_mov, nrseq and cons_ship
             as input parameters */
             /* ADDED INPUT PARAMETER L_CREATE_UM */
-            {gprun.i ""rcslb01.p""
+            {gprun.i ""yyrcslb01.p""
                "(input recid(so_mstr),
                  input recid(sod_det),
                  input all_only,
@@ -1038,4 +1001,3 @@ end. /* procedure get_shipgrp_attrib */
 
 /* Internal procedure Cmd_Chg_SO */
 {gpcmf.i}
-
