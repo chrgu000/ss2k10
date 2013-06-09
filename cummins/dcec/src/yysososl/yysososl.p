@@ -73,7 +73,7 @@
 /* CAN BE COMPLETELY SHIPPED IF PARTIAL OK FLAG IS SET TO NO            */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "1305"}
+{mfdtitle.i "1369.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -111,8 +111,6 @@ define variable lang like so_lang no-undo.
 define variable lang1 like lang no-undo.
 define variable site like sod_site no-undo.
 define variable site1 like sod_site no-undo.
-define variable loc  like ld_loc no-undo label "Loc".
-define variable loc1 like ld_loc no-undo Label "To".
 define variable type   as character
    label "Addr List Type" no-undo.
 define variable type1   as character no-undo.
@@ -127,7 +125,7 @@ define variable include_partial like mfc_logical
 define variable print_options like mfc_logical initial no
    label "Print Features and Options" no-undo.
 define variable auto_all like mfc_logical
-   label "Auto Allocation" no-undo.
+   label "Auto Allocation" no-undo initial yes.
 define variable kit_all like mfc_logical
    label "Allocate Components" no-undo.
 define variable break_order like mfc_logical
@@ -166,7 +164,7 @@ define variable cSalesOrder     as   character             no-undo.
 /* ssm constant */
 {fsconst.i}
 {sotmpdef.i new}
-
+{yysososlv.i new}
 /* SHARED VARIABLES */
 define new shared variable company as character format "x(38)"
    extent 6.
@@ -205,8 +203,6 @@ define temp-table t_so_pick no-undo
 /*ss20121102 b*/
 define temp-table xxerr
 field err as char.
-define new shared variable xxlog as log label "考虑最小包装量(Y/N)" initial yes.
-define new shared variable xxlot as log label "按批序号备料" initial yes.
 define variable xx as log initial no.
 define variable ttz as int.
 define variable tty as int.
@@ -225,9 +221,9 @@ form
    lang             colon 16
    lang1            colon 49 label {t001.i}
    site             colon 16
-   loc              colon 30
+   loc              colon 32
    site1            colon 49 label {t001.i}
-   loc1             colon 62 label {t001.i} skip
+   loc1            /* colon 64 */ no-label skip
    type             colon 16
    type1            colon 49 label {t001.i}
    part             colon 16
@@ -251,9 +247,9 @@ form
    break_order      colon 26
    l_create_um      colon 63
    update_yn        colon 26
-   form_code        colon 44
+   form_code        colon 49
    xxlog            colon 26
-   xxlot            colon 44
+   xxlot            colon 49
    deblank /* skip*/
 with frame a side-labels attr-space width 80.
 

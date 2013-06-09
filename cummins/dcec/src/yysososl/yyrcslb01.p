@@ -14,7 +14,7 @@
 /* REVISION: 9.1    LAST MODIFIED: 09/06/00   BY: *N0RG* Mudit Mehta       */
 /* Revision: 1.8.3.6  BY: Paul Donnelly (SB)   DATE: 06/28/03   ECO: *Q00K* */
 /* Revision: 1.8.3.7  BY: Rajinder Kamra       DATE: 05/05/03   ECO: *Q003* */
-/* $Revision: 1.8.3.7.1.1 $  BY: Mochesh Chandran     DATE: 04/10/07   ECO: *P5FK*  */
+/* $Revision: 1.8.3.7.1.1 $ BY: Mochesh Chandran DATE: 04/10/07   ECO: *P5FK* */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -58,7 +58,7 @@ define new shared variable so_recno as recid.
 
 /* SHARED VARIABLES FOR CUSTOMER SEQUENCE SCHEDULES */
 {sosqvars.i}
-
+{yysososlv.i}
 find sod_det where recid(sod_det) = sod_recid.
 
 assign

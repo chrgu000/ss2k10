@@ -18,7 +18,7 @@
 /* Revision: 1.20         BY: Priya Idnani       DATE: 10/31/05   ECO: *P46V* */
 /* Revision: 1.20.1.1     BY: Mochesh Chandran   DATE: 04/10/07   ECO: *P5FK* */
 /* Revision: 1.20.1.2     BY: Prajakta Patil     DATE: 16/10/07   ECO: *P69R* */
-/* $Revision: 1.20.1.3 $          BY: Prajakta Patil     DATE: 18/10/07   ECO: *P6B4* */
+/* $Revision: 1.20.1.3 $  BY: Prajakta Patil     DATE: 18/10/07   ECO: *P6B4* */
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -82,6 +82,7 @@ do i = 1 to 3:
          where ld_det.ld_domain = global_domain and (  ld_site = sod_site
         and ld_part = sod_part
         and ld_loc = tt_loc
+/*1*/   and ld_loc >= loc and ld_loc <= loc1
         and ld_qty_oh - ld_qty_all > 0
         and (ld_expire > today + icc_ctrl.icc_iss_days
         or ld_expire = ?)
@@ -90,7 +91,6 @@ do i = 1 to 3:
            if (this_lot <> ? and ld_lot <> this_lot) or
            (this_ref <> ? and ld_ref <> this_ref)
            then next.
-
            run detail-allocate.
 
            if qty_to_all = 0
@@ -111,6 +111,7 @@ do i = 1 to 3:
              ld_expire ld_lot ld_ref ld_status ld_date)
       where ld_det.ld_domain = global_domain and (  ld_site = sod_site
      and ld_part = sod_part
+/*1*/  and ld_loc >= loc and ld_loc <= loc1
      and can-find(tt_resv_loc where tt_loc = ld_loc)
      and ld_qty_oh - ld_qty_all > 0
      and (ld_expire > today + icc_iss_days
@@ -120,7 +121,6 @@ do i = 1 to 3:
         if (this_lot <> ? and ld_lot <> this_lot) or
         (this_ref <> ? and ld_ref <> this_ref)
         then next.
-
         run detail-allocate.
 
         if qty_to_all = 0
@@ -160,6 +160,7 @@ then do:
               ld_expire ld_lot ld_ref ld_status ld_date)
    where ld_det.ld_domain = global_domain
    and (  ld_site = sod_det.sod_site
+/*1*/   and ld_loc >= loc and ld_loc <= loc1
    and ld_part = sod_part
    and can-find(is_mstr
                 where is_mstr.is_domain = global_domain
@@ -175,7 +176,6 @@ then do:
       or (    this_ref  <> ?
           and ld_ref    <> this_ref)
       then next.
-
       run detail-allocate.
 
       if (     l_flag         = yes

@@ -43,7 +43,7 @@ define input parameter l_create_um like mfc_logical  no-undo.
 /* OUTPUT PARAMETERS */
 define output parameter tot_qty_all like lad_qty_all.
 define output parameter abnormal_exit as logical.
-
+{yysososlv.i}
 /* LOCAL VARIABLES */
 define variable err_flag as integer no-undo.
 define variable qty_all like lad_qty_all no-undo.

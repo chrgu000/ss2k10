@@ -32,7 +32,7 @@
 {sotmpdef.i}
 
 define input parameter alloc_cont as logical no-undo.
-
+{yysososlv.i}
 define variable tot_lad_qty like sod_qty_all.
 define variable qty_to_all like sod_qty_all.
 define variable all_this_loc like sod_qty_all.
@@ -187,7 +187,7 @@ then do:
                         where ld_domain = global_domain
                         and   ld_site   = abs_site
                         and   ld_part   = abs_item
-                        and   ld_loc    =  abs_loc
+                        and   ld_loc    = abs_loc
                         and   ld_lot    = abs_lot
                         and   ld_ref    = abs_ref
                         and   (ld_qty_oh - ld_qty_all <= 0 ))
@@ -258,22 +258,31 @@ do  while   l_iterate =  yes :
    if pt_sngl_lot = no then this_lot = ?.
 
    if icc_ascend then do:
-      if icc_pk_ord <= 2 then do:
-         {yysopkall.i &sort1 = "(if icc_pk_ord = 1 then ld_loc else ld_lot)" }
+      if xxlot then do:
+         {yysopkall.i &sort1 = " ld_lot "}
       end.
       else do:
-         {yysopkall.i
-         &sort1 = "(if icc_pk_ord = 3 then ld_date else ld_expire)" }
+           if icc_pk_ord <= 2 then do:
+              {sopkall.i &sort1 = "(if icc_pk_ord = 1 then ld_loc else ld_lot)" }
+           end.
+           else do:
+              {sopkall.i &sort1 = "(if icc_pk_ord = 3 then ld_date else ld_expire)" }
+           end.
       end.
    end.
    else do:
-      if icc_pk_ord <= 2 then do:
-         {sopkall.i &sort1 = "(if icc_pk_ord = 1 then ld_loc else ld_lot)"
-         &sort2 = "descending"}
+      if xxlot then do:
+         {yysopkall.i &sort1 = " ld_lot "}
       end.
       else do:
-         {sopkall.i &sort1 = "(if icc_pk_ord = 3 then ld_date else ld_expire)"
-         &sort2 = "descending"}
+           if icc_pk_ord <= 2 then do:
+              {sopkall.i &sort1 = "(if icc_pk_ord = 1 then ld_loc else ld_lot)"
+              &sort2 = "descending"}
+           end.
+           else do:
+              {sopkall.i &sort1 = "(if icc_pk_ord = 3 then ld_date else ld_expire)"
+              &sort2 = "descending"}
+           end.
       end.
    end.
 end.  /* if qty_to_all > 0 */
@@ -282,6 +291,7 @@ end.  /* if qty_to_all > 0 */
 
 PROCEDURE detail-allocate:
    define buffer lddet for ld_det.
+/*1*/   define variable q_mult like pt_ord_mult.
 
    allocate-proc:
    do:
@@ -300,9 +310,26 @@ PROCEDURE detail-allocate:
       run checkReservedLocation.
       if ret-flag = 0 then leave allocate-proc.
 
+/*1*/ assign q_mult = 1.
+/*1*/ find first ptp_det no-lock where ptp_domain = global_domain
+/*1*/        and ptp_part = ld_part and ptp_site = ld_site no-error.
+/*1*/ if available ptp_det and ptp_ord_mult <> 0 then do:
+/*1*/    assign q_mult = ptp_ord_mult.
+/*1*/ end.
+/*1*/ else do:
+/*1*/      find first pt_mstr no-lock where pt_domain = global_domain
+/*1*/             and pt_part = ld_part no-error.
+/*1*/      if available pt_mstr and pt_ord_mult <> 0 then do:
+/*1*/         assign q_mult = pt_ord_mult.
+/*1*/      end.
+/*1*/ end.
+
       if qty_to_all < ld_qty_oh - ld_qty_all
       then all_this_loc = qty_to_all.
       else all_this_loc = ld_qty_oh - ld_qty_all.
+/*1*/ if xxlog then do:
+/*1*/   assign all_this_loc = all_this_loc - all_this_loc mod q_mult.
+/*1*/ end.
 
       if pt_mstr.pt_sngl_lot and all_this_loc < qty_to_all
       and this_lot = ?
