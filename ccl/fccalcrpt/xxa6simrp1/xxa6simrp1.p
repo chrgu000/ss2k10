@@ -7,7 +7,7 @@
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "130301.1"}
+{mfdtitle.i "524.1"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -55,6 +55,39 @@ define variable conv           like um_conv no-undo.
 function getStart returns date(input f_dte1 as date) forward.
 function convRemark returns character(input iPmCode as character, input izone as integer) forward.
 
+define temp-table tmp_det9
+       fields td9_part        like pt_part
+       fields td9_desc1       like pt_desc1
+       fields td9_lt          like a6rqd_lt
+       fields td9_rq_date     like a6rqd_rq_date
+       fields td9_um          like pt_um
+       fields td9_bomsum      as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_openpoqtyum as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_inventory   as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_demandqty   as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_inv_dem     as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_dmoq        as decimal
+       fields td9_buyer       like pt_buyer
+       fields td9_rq_qty      as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_openpo_inv  as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_inv_mrp     as decimal format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_due_date    as date
+       fields td9_rel_date    as date
+       fields td9_nbr         as character format "x(40)"
+       fields td9_ln          like mrp_line
+       fields td9_pm_code     like pt_pm_code
+       fields td9_status      like pt_status
+       fields td9_due_date1   as date
+       fields td9_rqd_rq_qty  as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_b4_sm_dmd   as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_b4_sm_oppo  as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_aft_sm_oppo as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_decinv      as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_calc_qty    as decimal   format "->,>>>,>>>,>>9.<<<<<<"
+       fields td9_rmks        as character format "x(30)"
+       fields td9_ps_code     like ps_ps_code.
+
+
 assign
 v_disp1 = "1 = " + gettermlabel("v_disp1",15)
 v_disp2 = "2 = " + gettermlabel("v_disp2",15).
@@ -73,7 +106,7 @@ v_disp2    colon 24 no-label skip
 with  frame  a side-labels  width  80 attr-space.
 setframelabels(frame  a:handle ).
 {wbrp01.i}
-{mfdemo.i 05/01/2013 09/30/2013}
+{mfdemo.i 05/01/2013 05/28/2013}
 repeat :
     if site1      = hi_char  then site1      = "".
     if cust1      = hi_char  then cust1      = "".
@@ -126,7 +159,7 @@ repeat :
             '$' '库存' '$' '是否欠料' '$' '测料明细说明'
             /*ss-130129.1 -e */
             skip.
-
+empty temp-table tmp_det9 no-error.
     for each a6rq_mstr where (a6rq_site >= site ) and  ( a6rq_site <= site1 )
         and ( a6rq_cust >= cust )  and ( a6rq_cust <= cust1 )
         and ( a6rq_custpono = custpono  or custpono = '' )  and ( a6rq_custpoln = custpoln or custpoln = 0 )
@@ -701,45 +734,80 @@ repeat :
                      end.
                      put skip (1).
                      /*v_rmks = convRemark(input v_pm_code,input a6rqd_zone). ss-130129.1 */
-/*130507.1_2*/       if v_ps_code <> "X" then do:
-                        put /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */
-                        a6rqd_part                   '$'
-                        desc1                        '$'
-                        a6rqd_lt                     '$'
-                        "'" + string(a6rqd_rq_date)  '$'
-                        pt_um                        '$'
-                        decBomSummary                format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decOpenPOQtyum               format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decInventory                 format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decDemandQty                 format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decInventory  - decDemandQty format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        dMOQ                         '$'
-                        v_buyer                      '$'
-                        v_a6rqd_rq_qty               format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        /*a6rqd_rq_qty ss-130129.1*/
-                        decOpenPOQty + decInventory  format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decInventory - mrpqty        format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        "'" + string(a6rqd_due_date) '$'
-                        "'" + string(a6rqd_rel_date) '$'
-                        nbr                          format "x(40)" '$'
-                        ln                           '$'
-                        /*v_rmks format "x(30)" '$'*/
-                        v_pm_code                    '$'
-                        sStatus                      '$'
-                        /*ss-130129.1 -b */
-                        "'" + string(a6rq_due_date)  '$'
-                        v_a6rqd_rq_qty               format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        before_simdate_demand        format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        before_simdate_oppo          format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        after_simdate_oppo           format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decInventory                 format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        decInventory + before_simdate_oppo
-                        - before_simdate_demand
-                        - v_a6rqd_rq_qty             format "->,>>>,>>>,>>9.<<<<<<" '$'
-                        v_rmks
-                        /*ss-130129.1 -e */
-                        skip.
-/*130507.1_2*/       end. /* if v_ps_code <> "X" then do: */
+/*524*/              create tmp_det9.
+/*524*/              assign td9_part  = a6rqd_part
+/*524*/                     td9_desc1 = desc1
+/*524*/                     td9_lt    = a6rqd_lt
+/*524*/                     td9_rq_date = a6rqd_rq_date
+/*524*/                     td9_um      =   pt_um
+/*524*/                     td9_bomsum  = decBomSummary
+/*524*/                     td9_openpoqtyum = decOpenPOQtyum
+/*524*/                     td9_inventory   = decInventory
+/*524*/                     td9_demandqty   = decDemandQty
+/*524*/                     td9_inv_dem     = decInventory  - decDemandQty
+/*524*/                     td9_dmoq        = dMOQ
+/*524*/                     td9_buyer       = v_buyer
+/*524*/                     td9_rq_qty      = v_a6rqd_rq_qty
+/*524*/                     td9_openpo_inv  = decOpenPOQty + decInventory
+/*524*/                     td9_inv_mrp     = decInventory - mrpqty
+/*524*/                     td9_due_date    = a6rqd_due_date
+/*524*/                     td9_rel_date    = a6rqd_rel_date
+/*524*/                     td9_nbr         = nbr
+/*524*/                     td9_ln          = ln
+/*524*/                     td9_pm_code     = v_pm_code
+/*524*/                     td9_status      = sStatus
+/*524*/                     td9_due_date1   = a6rq_due_date
+/*524*/                     td9_rqd_rq_qty  = v_a6rqd_rq_qty
+/*524*/                     td9_b4_sm_dmd   = before_simdate_demand
+/*524*/                     td9_b4_sm_oppo  = before_simdate_oppo
+/*524*/                     td9_aft_sm_oppo = after_simdate_oppo
+/*524*/                     td9_decinv      = decInventory
+/*524*/                     td9_calc_qty    = decInventory + before_simdate_oppo
+/*524*/                                     - before_simdate_demand
+/*524*/                                     - v_a6rqd_rq_qty
+/*524*/                     td9_rmks        = v_rmks
+/*524*/                     td9_ps_code     = v_ps_code.
+
+
+/*524 /*130507.1_2*/       if v_ps_code <> "X" then do:                                                        */
+/*524                         put /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */                 */
+/*524                         a6rqd_part                   '$'                                                 */
+/*524                         desc1                        '$'                                                 */
+/*524                         a6rqd_lt                     '$'                                                 */
+/*524                         "'" + string(a6rqd_rq_date)  '$'                                                 */
+/*524                         pt_um                        '$'                                                 */
+/*524                         decBomSummary                format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decOpenPOQtyum               format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decInventory                 format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decDemandQty                 format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decInventory  - decDemandQty format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         dMOQ                         '$'                                                 */
+/*524                         v_buyer                      '$'                                                 */
+/*524                         v_a6rqd_rq_qty               format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         /*a6rqd_rq_qty ss-130129.1*/                                                     */
+/*524                         decOpenPOQty + decInventory  format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decInventory - mrpqty        format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         "'" + string(a6rqd_due_date) '$'                                                 */
+/*524                         "'" + string(a6rqd_rel_date) '$'                                                 */
+/*524                         nbr                          format "x(40)" '$'                                  */
+/*524                         ln                           '$'                                                 */
+/*524                         /*v_rmks format "x(30)" '$'*/                                                    */
+/*524                         v_pm_code                    '$'                                                 */
+/*524                         sStatus                      '$'                                                 */
+/*524                         /*ss-130129.1 -b */                                                              */
+/*524                         "'" + string(a6rq_due_date)  '$'                                                 */
+/*524                         v_a6rqd_rq_qty               format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         before_simdate_demand        format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         before_simdate_oppo          format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         after_simdate_oppo           format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decInventory                 format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         decInventory + before_simdate_oppo                                               */
+/*524                         - before_simdate_demand                                                          */
+/*524                         - v_a6rqd_rq_qty             format "->,>>>,>>>,>>9.<<<<<<" '$'                  */
+/*524                         v_rmks                                                                           */
+/*524                         /*ss-130129.1 -e */                                                              */
+/*524                         skip.                                                                            */
+/*524 /*130507.1_2*/       end. /* if v_ps_code <> "X" then do: */                                             */
                      for each a6rrd_det where a6rrd_site = a6rqd_site and a6rrd_cust = a6rqd_cust
                          and a6rrd_custpono = a6rqd_custpono and a6rrd_custpoln = a6rqd_custpoln
                          and a6rrd_part = a6rqd_part no-lock
@@ -844,44 +912,77 @@ repeat :
                                 (decInventory - decDemandQty - v_a6rrd_rq_qty >= 0)
                              then v_rmks = "安全区,库存足".
                              /*ss-130129.1 -e */
-/*130507.1_2*/       if v_ps_code <> "X" then do:
-                             put  /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */
-                             a6rrd_part                       '$'
-                             desc1                            '$'
-                             a6rqd_lt                         '$'
-                             "'" + string(a6rrd_rq_date)      '$'
-                             pt_um                            '$'
-                             decBomSummary                    format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decOpenPOQtyum                   format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decInventory                     format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decDemandQty                     format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decPlan1                         format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             dMOQ                             '$'
-                             v_buyer                          '$'
-                             v_a6rrd_rq_qty                   format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decOpenPOQty + decInventory      format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decInventory - mrpqty            format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             "'" + string(a6rrd_due_date)     '$'
-                             "'" + string(a6rrd_rel_date)     '$'
-                             nbr                              format "x(40)" '$'
-                             ln                               '$'
-                             /*v_rmks format "x(30)"          '$' *ss-130129.1*/
-                             v_pm_code                        '$'
-                             sStatus                          '$'
-                             /*ss-130129.1 -b */
-                             "'" + string(a6rq_due_date)      '$'
-                             v_a6rrd_rq_qty                   '$'
-                             before_simdate_demand            format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             before_simdate_oppo              format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             after_simdate_oppo               format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decInventory                     format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             decInventory + before_simdate_oppo
-                             - before_simdate_demand
-                             - v_a6rrd_rq_qty                 format "->,>>>,>>>,>>9.<<<<<<" '$'
-                             v_rmks
-                             /*ss-130129.1 -e */
-                             skip.
-/*130507.1_2*/              end. /* if v_ps_code <> "X" then do:*/
+/*524*/                   create tmp_det9.
+/*524*/                   assign td9_part        = a6rrd_part
+/*524*/                          td9_desc1       = desc1
+/*524*/                          td9_lt          = a6rqd_lt
+/*524*/                          td9_rq_date     = a6rrd_rq_date
+/*524*/                          td9_um          = pt_um
+/*524*/                          td9_bomsum      = decBomSummary
+/*524*/                          td9_openpoqtyum = decOpenPOQtyum
+/*524*/                          td9_inventory   = decInventory
+/*524*/                          td9_demandqty   = decDemandQty
+/*524*/                          td9_inv_dem     = decPlan1
+/*524*/                          td9_dmoq        = dMOQ
+/*524*/                          td9_buyer       = v_buyer
+/*524*/                          td9_rq_qty      = v_a6rrd_rq_qty
+/*524*/                          td9_openpo_inv  = decOpenPOQty + decInventory
+/*524*/                          td9_inv_mrp     = decInventory - mrpqty
+/*524*/                          td9_due_date    = a6rrd_due_date
+/*524*/                          td9_rel_date    = a6rrd_rel_date
+/*524*/                          td9_nbr         = nbr
+/*524*/                          td9_ln          = ln
+/*524*/                          td9_pm_code     = v_pm_code
+/*524*/                          td9_status      = sStatus
+/*524*/                          td9_due_date1   = a6rq_due_date
+/*524*/                          td9_rqd_rq_qty  = v_a6rrd_rq_qty
+/*524*/                          td9_b4_sm_dmd   = before_simdate_demand
+/*524*/                          td9_b4_sm_oppo  = before_simdate_oppo
+/*524*/                          td9_aft_sm_oppo = after_simdate_oppo
+/*524*/                          td9_decinv      = decInventory
+/*524*/                          td9_calc_qty    = decInventory + before_simdate_oppo
+/*524*/                                          - before_simdate_demand
+/*524*/                                          - v_a6rrd_rq_qty
+/*524*/                          td9_rmks        = v_rmks
+/*524*/                          td9_ps_code     = v_ps_code.
+/*524 /*130507.1_2*/       if v_ps_code <> "X" then do:                                                   */
+/*524                              put  /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */      */
+/*524                              a6rrd_part                       '$'                                   */
+/*524                              desc1                            '$'                                   */
+/*524                              a6rqd_lt                         '$'                                   */
+/*524                              "'" + string(a6rrd_rq_date)      '$'                                   */
+/*524                              pt_um                            '$'                                   */
+/*524                              decBomSummary                    format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decOpenPOQtyum                   format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decInventory                     format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decDemandQty                     format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decPlan1                         format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              dMOQ                             '$'                                   */
+/*524                              v_buyer                          '$'                                   */
+/*524                              v_a6rrd_rq_qty                   format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decOpenPOQty + decInventory      format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decInventory - mrpqty            format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              "'" + string(a6rrd_due_date)     '$'                                   */
+/*524                              "'" + string(a6rrd_rel_date)     '$'                                   */
+/*524                              nbr                              format "x(40)" '$'                    */
+/*524                              ln                               '$'                                   */
+/*524                              /*v_rmks format "x(30)"          '$' *ss-130129.1*/                    */
+/*524                              v_pm_code                        '$'                                   */
+/*524                              sStatus                          '$'                                   */
+/*524                              /*ss-130129.1 -b */                                                    */
+/*524                              "'" + string(a6rq_due_date)      '$'                                   */
+/*524                              v_a6rrd_rq_qty                   '$'                                   */
+/*524                              before_simdate_demand            format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              before_simdate_oppo              format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              after_simdate_oppo               format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decInventory                     format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              decInventory + before_simdate_oppo                                     */
+/*524                              - before_simdate_demand                                                */
+/*524                              - v_a6rrd_rq_qty                 format "->,>>>,>>>,>>9.<<<<<<" '$'    */
+/*524                              v_rmks                                                                 */
+/*524                              /*ss-130129.1 -e */                                                    */
+/*524                              skip.                                                                  */
+/*524 /*130507.1_2*/              end. /* if v_ps_code <> "X" then do:*/                                  */
                          end. /*if last-of(a6rrd_part)*/
                      end. /*for each a6rrd_det*/
                  end. /*if v_sort_opt = 1*/
@@ -891,6 +992,39 @@ repeat :
     /*
     {mfrtrail.i}
     */
+/*524*/      for each tmp_det9 no-lock where td9_ps_code = "":
+/*524*/           put unformat td9_part                  "$"
+/*524*/                        td9_desc1                 "$"
+/*524*/                        td9_lt                    "$"
+/*524*/                        "'" string(td9_rq_date)   "$"
+/*524*/                        td9_um                    "$"
+/*524*/                        td9_bomsum                "$"
+/*524*/                        td9_openpoqtyum           "$"
+/*524*/                        td9_inventory             "$"
+/*524*/                        td9_demandqty             "$"
+/*524*/                        td9_inv_dem               "$"
+/*524*/                        td9_dmoq                  "$"
+/*524*/                        td9_buyer                 "$"
+/*524*/                        td9_rq_qty                "$"
+/*524*/                        td9_openpo_inv            "$"
+/*524*/                        td9_inv_mrp               "$"
+/*524*/                        "'" string(td9_due_date)  "$"
+/*524*/                        "'" string(td9_rel_date)  "$"
+/*524*/                        td9_nbr                   "$"
+/*524*/                        td9_ln                    "$"
+/*524*/                        td9_pm_code               "$"
+/*524*/                        td9_status                "$"
+/*524*/                        "'" string(td9_due_date1) "$"
+/*524*/                        td9_rqd_rq_qty            "$"
+/*524*/                        td9_b4_sm_dmd             "$"
+/*524*/                        td9_b4_sm_oppo            "$"
+/*524*/                        td9_aft_sm_oppo           "$"
+/*524*/                        td9_decinv                "$"
+/*524*/                        td9_calc_qty              "$"
+/*524*/                        td9_rmks         skip.
+/*524*/      end.
+
+
     {mfreset.i}
 end.
 {wbrp04.i &frame-spec = a}
