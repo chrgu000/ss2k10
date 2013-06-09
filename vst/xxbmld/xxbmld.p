@@ -41,17 +41,16 @@ repeat:
          undo, retry.
      END.
      else do:
-          find first usrw_wkfl where
-                     usrw_key1 = "xxbmld.p_filename" and
-                     usrw_key2 = global_userid no-error.
-          if available usrw_wkfl then do:
-                 assign usrw_key3 = flhload.
-          end.
-          else do:
-              create usrw_wkfl.
-              assign usrw_key1 = "xxbmld.p_filename"
-                     usrw_key2 = global_userid
-                     usrw_key3 = flhload.
+          do transaction:
+             find first usrw_wkfl where
+                        usrw_key1 = "xxbmld.p_filename" and
+                        usrw_key2 = global_userid no-error.
+             if not available usrw_wkfl then do:
+                 create usrw_wkfl.
+                 assign usrw_key1 = "xxbmld.p_filename"
+                        usrw_key2 = global_userid.
+             end.
+             assign usrw_key3 = flhload.
           end.
      end.
 

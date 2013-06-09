@@ -91,7 +91,7 @@ for each tmpbom no-lock where tbm_chk = "":
                 if not available tmpbomn then do:
                   create tmpbomn.
                   assign tbmn_par = ps_par
-                         tbmn_comp = tbm_old
+                         tbmn_comp = tbm_new
                          tbmn_start = today + 1.
                 end.
                 if tbm_qty_per = -1000 then
@@ -106,51 +106,51 @@ for each tmpbom no-lock where tbm_chk = "":
           end. /* if last-of(ps_comp) then do: */
         end.
     end. /*  if tbm_old <> "" then do:  */
-    else if tbm_new <> "" then do:
-         if can-find(first ps_mstr no-lock where ps_par = tbm_par
-                     and ps_comp = tbm_new) then do:
-            for each ps_mstr no-lock where ps_par = tbm_par
-                  and ps_comp = tbm_new
-                  and (ps_start <= today or ps_start = ?)
-                  and (ps_end >= today or ps_end = ?)
-            break by ps_comp by ps_start by ps_end :
-                  if last-of(ps_comp) then do:
-                  find first tmpbomn where tbmn_par = ps_par
-                    and tbmn_comp = tbm_new
-                    and tbmn_ref = ps_ref
-                    and tbmn_start = ps_start no-error.
-                     if not available tmpbomn then do:
-                       create tmpbomn.
-                       assign tbmn_par = ps_par
-                              tbmn_comp = tbm_old
-                              tbmn_ref = ps_ref
-                              tbmn_start = ps_start
-                              tbmn_end = today
-                              tbmn_qty_per = ps_qty_per
-                              tbmn_scrp = ps_scrp_pct.
-                     end.
-                  end.
-                  find first tmpbomn where tbmn_par = ps_par
-                         and tbmn_comp = tbm_new
-                         and tbmn_start = today + 1 no-error.
-                    if not available tmpbomn then do:
-                       create tmpbomn.
-                       assign tbmn_par = ps_par
-                              tbmn_comp = tbm_old
-                              tbmn_ref = ps_ref
-                              tbmn_start = today + 1.
-                    end.
-                    if tbm_qty_per = -1000 then
-                        tbmn_qty_per = ps_qty_per.
-                    else
-                       tbmn_qty_per = tbm_qty_per.
-                    if tbm_scrp = -1000 then
-                        tbmn_scrp = ps_scrp_pct.
-                    else
-                        tbmn_scrp = tbm_scrp.
-            end.
-         end.
-    end.
+    /*   else if tbm_new <> "" then do:                                       */
+    /*        if can-find(first ps_mstr no-lock where ps_par = tbm_par        */
+    /*                    and ps_comp = tbm_new) then do:                     */
+    /*           for each ps_mstr no-lock where ps_par = tbm_par              */
+    /*                 and ps_comp = tbm_new                                  */
+    /*                 and (ps_start <= today or ps_start = ?)                */
+    /*                 and (ps_end >= today or ps_end = ?)                    */
+    /*           break by ps_comp by ps_start by ps_end :                     */
+    /*                 if last-of(ps_comp) then do:                           */
+    /*                 find first tmpbomn where tbmn_par = ps_par             */
+    /*                   and tbmn_comp = tbm_new                              */
+    /*                   and tbmn_ref = ps_ref                                */
+    /*                   and tbmn_start = ps_start no-error.                  */
+    /*                    if not available tmpbomn then do:                   */
+    /*                      create tmpbomn.                                   */
+    /*                      assign tbmn_par = ps_par                          */
+    /*                             tbmn_comp = tbm_old                        */
+    /*                             tbmn_ref = ps_ref                          */
+    /*                             tbmn_start = ps_start                      */
+    /*                             tbmn_end = today                           */
+    /*                             tbmn_qty_per = ps_qty_per                  */
+    /*                             tbmn_scrp = ps_scrp_pct.                   */
+    /*                    end.                                                */
+    /*                 end.                                                   */
+    /*                 find first tmpbomn where tbmn_par = ps_par             */
+    /*                        and tbmn_comp = tbm_new                         */
+    /*                        and tbmn_start = today + 1 no-error.            */
+    /*                   if not available tmpbomn then do:                    */
+    /*                      create tmpbomn.                                   */
+    /*                      assign tbmn_par = ps_par                          */
+    /*                             tbmn_comp = tbm_old                        */
+    /*                             tbmn_ref = ps_ref                          */
+    /*                             tbmn_start = today + 1.                    */
+    /*                   end.                                                 */
+    /*                   if tbm_qty_per = -1000 then                          */
+    /*                       tbmn_qty_per = ps_qty_per.                       */
+    /*                   else                                                 */
+    /*                      tbmn_qty_per = tbm_qty_per.                       */
+    /*                   if tbm_scrp = -1000 then                             */
+    /*                       tbmn_scrp = ps_scrp_pct.                         */
+    /*                   else                                                 */
+    /*                       tbmn_scrp = tbm_scrp.                            */
+    /*           end.                                                         */
+    /*        end.                                                            */
+    /*   end.                                                                 */
 end.
 /******************************************************************************
 for each tmpbom exclusive-lock where tbm_chk = "":
