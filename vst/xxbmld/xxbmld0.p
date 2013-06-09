@@ -9,6 +9,7 @@
 {xxloaddata.i}
 define variable vtax as character.
 define variable vi as integer.
+define shared variable eff_date as date.
 empty temp-table tmpbom no-error.
 assign vi = 0.
 input from value(flhload).
@@ -66,8 +67,8 @@ for each tmpbom no-lock where tbm_chk = "":
     if tbm_old <> "" then do:
         for each ps_mstr no-lock where ps_par = tbm_par
           and ps_comp = tbm_old
-          and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?)
+          and (ps_start <= eff_date or ps_start = ?)
+          and (ps_end >= eff_date or ps_end = ?)
         break by ps_comp by ps_start by ps_end:
           if last-of(ps_comp) then do:
              find first tmpbomn where tbmn_par = ps_par
@@ -80,19 +81,19 @@ for each tmpbom no-lock where tbm_chk = "":
                       tbmn_comp = tbm_old
                       tbmn_ref = ps_ref
                       tbmn_start = ps_start
-                      tbmn_end = today
+                      tbmn_end = eff_date
                       tbmn_qty_per = ps_qty_per
                       tbmn_scrp = ps_scrp_pct.
              end.
              if tbm_new <> "" then do:
                 find first tmpbomn where tbmn_par = ps_par
                        and tbmn_comp = tbm_new
-                       and tbmn_start = today + 1 no-error.
+                       and tbmn_start = eff_date + 1 no-error.
                 if not available tmpbomn then do:
                   create tmpbomn.
                   assign tbmn_par = ps_par
                          tbmn_comp = tbm_new
-                         tbmn_start = today + 1.
+                         tbmn_start = eff_date + 1.
                 end.
                 if tbm_qty_per = -1000 then
                    tbmn_qty_per = ps_qty_per.
@@ -111,8 +112,8 @@ for each tmpbom no-lock where tbm_chk = "":
     /*                    and ps_comp = tbm_new) then do:                     */
     /*           for each ps_mstr no-lock where ps_par = tbm_par              */
     /*                 and ps_comp = tbm_new                                  */
-    /*                 and (ps_start <= today or ps_start = ?)                */
-    /*                 and (ps_end >= today or ps_end = ?)                    */
+    /*                 and (ps_start <= eff_date or ps_start = ?)             */
+    /*                 and (ps_end >= eff_date or ps_end = ?)                 */
     /*           break by ps_comp by ps_start by ps_end :                     */
     /*                 if last-of(ps_comp) then do:                           */
     /*                 find first tmpbomn where tbmn_par = ps_par             */
@@ -125,20 +126,20 @@ for each tmpbom no-lock where tbm_chk = "":
     /*                             tbmn_comp = tbm_old                        */
     /*                             tbmn_ref = ps_ref                          */
     /*                             tbmn_start = ps_start                      */
-    /*                             tbmn_end = today                           */
+    /*                             tbmn_end = eff_date                        */
     /*                             tbmn_qty_per = ps_qty_per                  */
     /*                             tbmn_scrp = ps_scrp_pct.                   */
     /*                    end.                                                */
     /*                 end.                                                   */
     /*                 find first tmpbomn where tbmn_par = ps_par             */
     /*                        and tbmn_comp = tbm_new                         */
-    /*                        and tbmn_start = today + 1 no-error.            */
+    /*                        and tbmn_start = eff_date + 1 no-error.         */
     /*                   if not available tmpbomn then do:                    */
     /*                      create tmpbomn.                                   */
     /*                      assign tbmn_par = ps_par                          */
     /*                             tbmn_comp = tbm_old                        */
     /*                             tbmn_ref = ps_ref                          */
-    /*                             tbmn_start = today + 1.                    */
+    /*                             tbmn_start = eff_date + 1.                 */
     /*                   end.                                                 */
     /*                   if tbm_qty_per = -1000 then                          */
     /*                       tbmn_qty_per = ps_qty_per.                       */
@@ -156,8 +157,8 @@ end.
 for each tmpbom exclusive-lock where tbm_chk = "":
     for each ps_mstr no-lock where ps_par = tbm_par
           and ps_comp = tbm_old and tbm_old <> ""
-          and (ps_start <= today or ps_start = ?)
-          and (ps_end >= today or ps_end = ?)
+          and (ps_start <= eff_date or ps_start = ?)
+          and (ps_end >= eff_date or ps_end = ?)
     break by ps_comp by ps_start by ps_end:
           if last-of(ps_comp) then do:
              if tbm_qty_per = -1000 then do:
@@ -177,7 +178,7 @@ for each tmpbom exclusive-lock where tbm_chk = "":
                       tbmn_ref = ps_ref.
              end.
              assign tbmn_start = ps_start
-                    tbmn_end = today
+                    tbmn_end = eff_date
                     tbmn_qty_per = ps_qty_per
                     tbmn_scrp = ps_scrp_pct.
           end.
@@ -187,8 +188,8 @@ for each tmpbom exclusive-lock where tbm_chk = "":
                      and ps_comp = tbm_new) then do:
           for each ps_mstr no-lock where ps_par = tbm_par
                 and ps_comp = tbm_new
-                and (ps_start <= today or ps_start = ?)
-                and (ps_end >= today or ps_end = ?)
+                and (ps_start <= eff_date or ps_start = ?)
+                and (ps_end >= eff_date or ps_end = ?)
           break by ps_comp by ps_start by ps_end :
                 if last-of(ps_comp) then do:
                       find first tmpbomn where tbmn_par = ps_par
@@ -202,7 +203,7 @@ for each tmpbom exclusive-lock where tbm_chk = "":
                                tbmn_ref = ps_ref.
                       end.
                       assign tbmn_start = ps_start
-                             tbmn_end = today
+                             tbmn_end = eff_date
                              tbmn_qty_per = ps_qty_per
                              tbmn_scrp = ps_scrp_pct.
                 end. /*  if last-of(ps_comp) then do: */
@@ -210,13 +211,13 @@ for each tmpbom exclusive-lock where tbm_chk = "":
        end. /* if can-find(first ps_mstr ) */
        find first tmpbomn where tbmn_par = tbm_par
               and tbmn_comp = tbm_new
-              and tbmn_start = today + 1 no-error.
+              and tbmn_start = eff_date + 1 no-error.
        if not available tmpbomn then do:
                  create tmpbomn.
                  assign tbmn_par = tbm_par
                         tbmn_comp = tbm_new.
        end.
-       assign tbmn_start = today + 1
+       assign tbmn_start = eff_date + 1
               tbmn_qty_per = tbm_qty_per
               tbmn_scrp = tbm_scrp.
    end. /* if tbm_new <> "" and  ... */

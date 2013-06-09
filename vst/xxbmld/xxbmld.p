@@ -7,11 +7,15 @@
 /* DISPLAY TITLE */
 {mfdtitle.i "120907.1"}
 {xxbmld.i "new"}
+define new shared variable eff_date as date initial today.
+
 {gpcdget.i "UT"}
 
 form
    skip(1)
-   flhload colon 14  view-as fill-in size 40 by 1 skip(1)
+   flhload  colon 14  view-as fill-in size 40 by 1
+   eff_date colon 14  skip(1)
+
    cloadfile colon 14 skip(2)
 with frame a side-labels width 80.
 
@@ -30,9 +34,9 @@ repeat:
       end.
    end.
    if c-application-mode <> 'web' then
-   update flhload cloadfile with frame a.
+   update flhload eff_date cloadfile with frame a.
 
-   {wbrp06.i &command = update &fields = " flhload cloadfile "
+   {wbrp06.i &command = update &fields = " flhload eff_date cloadfile "
       &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:
