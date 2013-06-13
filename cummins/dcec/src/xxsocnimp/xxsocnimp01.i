@@ -36,8 +36,8 @@ if available sod_det then do:
                 and pi_curr = so_curr
                 and pi_um = sod_um
                 and pi_amt_type = "1"
-                and (pi_start <= sod_due_date or pi_start = ?)
-                and (pi_expir >= sod_due_date or pi_expir = ?) no-error.
+                and (pi_start <= today or pi_start = ?)
+                and (pi_expir >= today or pi_expir = ?) no-error.
          if available pi_mstr then do:
               assign xsd_price = pi_list_price
                      xsd_amt = pi_list_price * xsd_qty_used.
