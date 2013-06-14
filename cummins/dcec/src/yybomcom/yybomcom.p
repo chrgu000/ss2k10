@@ -4,18 +4,19 @@
 {mfdtitle.i "0513.1"}
 define var i as integer.
 define workfile comtwo field bom1_par as char format "x(20)"
-                         field bom1_com like ps_comp
-                         field bom1_date like ps_start
-                         field bom1_qty like ps_qty_per
-                         field bom2_par like ps_par
-                         field bom2_com like ps_comp
-                         field bom2_date like ps_start
-                         field bom2_qty like ps_qty_per
-                         field bom_log as logical.
+                       field bom1_com like ps_comp
+                       field bom1_date like ps_start
+                       field bom1_qty like ps_qty_per
+                       field bom2_par like ps_par
+                       field bom2_com like ps_comp
+                       field bom2_date like ps_start
+                       field bom2_qty like ps_qty_per
+                       field bom_log as logical.
 define variable so_bom1 like ps_par label "BOM1的值 ".
 define variable so_so_date1 like ps_start label "bom1的生效日期 " initial today.
 define variable so_bom2 like ps_par label "BOM2的值 ".
 define variable so_so_date2 like ps_start label "bom2的生效日期 " initial today.
+define variable showall like mfc_logical initial NO.
 define var pageno as integer.
 
 /*start format of query screen*/
@@ -28,6 +29,7 @@ FORM
    so_so_date1 colon 60 skip
    so_bom2  colon 20
    so_so_date2 colon 60 skip
+   showall  colon 20
 with frame a side-labels width 80 attr-space NO-BOX THREE-D.
 
 DEFINE VARIABLE F-a-title AS CHARACTER.
@@ -68,6 +70,7 @@ procedure p-report-quote:
    {mfquoter.i so_so_date1}
    {mfquoter.i so_bom2}
    {mfquoter.i so_so_date2}
+   {mfquoter.i showall}
 /*end receive query preference*/
 
 /*start check the validity of query preference*/
@@ -102,7 +105,7 @@ procedure p-report:
     FIND item OF order-line.
   END.
 END.*/
-               create comtwo.
+         create comtwo.
                 bom1_com = ps_comp.
                 bom1_date = so_so_date1.
                 bom1_qty=ps_qty_per.
@@ -114,25 +117,29 @@ END.*/
        (ps_start <= so_so_date2 or ps_start = ?) and
        (ps_end >= so_so_date2 or ps_end = ?)  use-index ps_comp
         with frame b4 width 132 no-attr-space :
-            find first comtwo where (bom1_com = ps_comp ) no-error.
+            find first comtwo where (bom1_com = ps_comp and bom1_qty = ps_qty_per) no-error.
             if available comtwo then do:
                 bom2_com = ps_comp.
-                bom2_qty=ps_qty_per.
+                bom2_qty = ps_qty_per.
                 bom2_date = so_so_date2.
-                if bom1_qty=ps_qty_per then do:
-                   bom_log = Yes.
-                end.
-                else do:
-                   bom_log = no.
-                end.
+                bom_log = Yes.
             end.
             else do:
+                find first comtwo where (bom1_com = ps_comp) no-error.
+                if available comtwo then do:
+                   bom2_com = ps_comp.
+                   bom2_qty = ps_qty_per.
+                   bom2_date = so_so_date2.
+                   bom_log = no.
+                end.
+                else do:
                 create comtwo.
-                bom2_com = ps_comp.
-                bom2_qty=ps_qty_per.
-                bom2_date = so_so_date2.
-                bom_log = no.
-                bom1_com="无此组号".
+                       bom2_com = ps_comp.
+                       bom2_qty = ps_qty_per.
+                       bom2_date = so_so_date2.
+                       bom_log = no.
+                       bom1_com="无此组号".
+                end.
             end.
    end.
   form  "ＢＯＭ 对比清单 "  font 14 at 22 skip(1)
@@ -141,8 +148,8 @@ END.*/
       so_bom2 format "x(18)" at 32
       so_so_date2  at 52
   with STREAM-IO no-labels no-attr-space frame heading width 130.
-   display so_bom1 so_so_date1 so_bom2 so_so_date2  WITH STREAM-IO frame heading.
-   for each comtwo where bom_log = no and (bom1_com <> ""  or bom2_com  <> ""):
+   display so_bom1 so_so_date1 so_bom2 so_so_date2 showall WITH STREAM-IO frame heading.
+   for each comtwo where (bom_log = no or showall) and  (bom1_com <> "" or bom2_com  <> ""):
        if i = 1 then do:
           i = i + 2.
        end.
@@ -154,18 +161,11 @@ END.*/
        end.
    end.
 
-  for each comtwo :
-     delete comtwo.
-  end.
+  for each comtwo exclusive-lock: delete comtwo. end.
 
 /* reset variable */
 {mfreset.i}
-  {mfgrptrm.i}
-
+{mfgrptrm.i}
 
 end. /*end of the procedure*/
-{mfguirpb.i &flds="so_bom1 so_so_date1 so_bom2 so_so_date2 "}
-
-
-
-
+{mfguirpb.i &flds="so_bom1 so_so_date1 so_bom2 so_so_date2 showall"}
