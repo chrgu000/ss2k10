@@ -1,3 +1,4 @@
+do transaction:
 find first usrw_wkfl no-lock where usrw_domain = global_domain
        and usrw_key1 = execname
        and usrw_key2 = global_userid no-error.
@@ -35,4 +36,7 @@ if available usrw_wkfl then do:
            customer_consign = usrw_charfld[11]
            supplier_consign = usrw_charfld[12]
            fName            = usrw_charfld[15].
+end.
+
+release usrw_wkfl.
 end.
