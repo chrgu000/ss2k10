@@ -281,20 +281,51 @@ DO:
     define variable qty_cn like tr_qty_loc.
     EMPTY TEMP-TABLE xsc_d NO-ERROR.
     EMPTY TEMP-TABLE xsa_r NO-ERROR.
-    EMPTY TEMP-TABLE xsa_r1 no-error.
-    empty temp-table xst_t no-error.
     SESSION:SET-WAIT-STAT("general").
     APPLY "RETURN" TO vFile.
 
     FIND FIRST xsc_m NO-LOCK NO-ERROR.
     IF AVAILABLE xsc_m THEN DO:
-        FOR EACH xsc_m NO-LOCK BREAK BY xsm_ship:
+        FOR EACH xsc_m EXCLUSIVE-LOCK BREAK BY xsm_ship by xsm_part:
             assign xsm_stat = "".
-            IF FIRST-OF(xsm_ship) THEN DO:
+            IF FIRST-OF(xsm_part) THEN DO:
+            /*
                {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
+            */
+            for each cncix_mstr no-lock where cncix_domain = global_domain
+                 and cncix_shipto = xsm_ship and cncix_part = xsm_part:
+
+                 create xsa_r.
+                 assign xsr_ship = cncix_shipto
+                        xsr_cust = cncix_cust
+                        xsr_so = cncix_so_nbr
+                        xsr_line = cncix_sod_line
+                        xsr_part = cncix_part
+                        xsr_site = cncix_site
+                        xsr_loc = cncix_current_loc
+                        xsr_lot = cncix_lotser
+                        xsr_ref = cncix_ref
+                        xsr_eff = ?
+                        xsr_oh = cncix_qty_stock
+                        xsr_um = cncix_stock_um.
+
+
+ /*             create xsa_r1.                        */
+ /*             assign xsr1_ship = cncix_shipto       */
+ /*                    xsr1_so = cncix_so_nbr         */
+ /*                    xsr1_line = cncix_sod_line     */
+ /*                    xsr1_part = cncix_part         */
+ /*                    xsr1_site = cncix_site         */
+ /*                    xsr1_loc = cncix_current_loc   */
+ /*                    xsr1_lot = cncix_lotser        */
+ /*                    xsr1_ref = cncix_ref           */
+ /*                    xsr1_eff = cncix_ship_date     */
+ /*                    xsr1_oh = cncix_qty_stock      */
+ /*                    xsr1_um = cncix_stock_um.      */
+            end.
             END.
         END.
-        {xxsocnimp02.i}
+/*        {xxsocnimp02.i} */
         {xxsocnimp01a.i}
     END.
 
@@ -414,14 +445,16 @@ DO:
 /*    END.                                                        */
 /*    EMPTY TEMP-TABLE xsc_m NO-ERROR. */
   IF vfile <> "" THEN DO:
-     FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = global_domain AND usrw_key1 = execname
-            AND usrw_key2 = global_userid NO-ERROR.
-     IF NOT AVAILABLE usrw_wkfl THEN DO:
-        CREATE Usrw_wkfl. usrw_domain = global_domain.
-        ASSIGN Usrw_key1 = execname
-               Usrw_key2 = global_userid.
-     END.
-     ASSIGN USrw_key3 = vfile.
+     do transaction:
+        FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = global_domain AND usrw_key1 = execname
+               AND usrw_key2 = global_userid NO-ERROR.
+        IF NOT AVAILABLE usrw_wkfl THEN DO:
+           CREATE Usrw_wkfl. usrw_domain = global_domain.
+           ASSIGN Usrw_key1 = execname
+                  Usrw_key2 = global_userid.
+        END.
+        ASSIGN USrw_key3 = vfile.
+     end.
      release usrw_wkfl.
   END.
 

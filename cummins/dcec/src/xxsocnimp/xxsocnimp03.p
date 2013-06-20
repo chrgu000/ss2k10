@@ -9,20 +9,24 @@
   define variable trref as integer.
   define variable ret as character.
   define stream bf.
-for each xsc_d no-lock where xsd_diffpi:
-    {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price)"} 
+for each xsc_d exclusive-lock where xsd_diffpi:
+    {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price,output ret)"}
+    if ret = "e" then do:
+       assign xsd_chk = "价格表调整失败!".
+    end.
 end.
+ret = "".
 FOR EACH xsc_d WHERE xsd_chk = "PASS":
     ASSIGN cfile = execname + "." + STRING(xsd_sn,"99999999").
     OUTPUT STREAM bf TO VALUE(cfile + ".bpi").
     PUT STREAM bf UNFORMAT '"' xsd_ship '" "' xsd_cust '"' SKIP.
-    PUT STREAM bf UNFORMAT '- - - - - - "' xsd_so '" "' xsd_so '" "' xsd_part '" "' xsd_part '" '.
-    PUT STREAM bf UNFORMAT xsd_line ' "' xsd_site '" "' xsd_loc '" ' xsd_eff SKIP.
+    PUT STREAM bf UNFORMAT '- - - - - - "' xsd_so '" "' xsd_so '" "' xsd_part '" "' xsd_part '" ' xsd_line skip.
+/*    PUT STREAM bf UNFORMAT xsd_line ' "' xsd_site '" "' xsd_loc '" ' xsd_eff SKIP. */
     PUT STREAM bf UNFORMAT '-' SKIP.
     PUT STREAM bf UNFORMAT '"' xsd_part '"' SKIP.
     PUT STREAM bf UNFORMAT xsd_qty_used ' - "' xsd_lot '" "' xsd_ref '" N' SKIP.
     PUT STREAM bf UNFORMAT '- - ' xsd_eff SKIP.
-    PUT STREAM bf UNFORMAT 'N' SKIP.
+    PUT STREAM bf UNFORMAT '.' SKIP.
     PUT STREAM bf UNFORMAT 'Y' SKIP.
     PUT STREAM bf UNFORMAT '.' SKIP.
     OUTPUT STREAM bf CLOSE.

@@ -1,4 +1,4 @@
-/* xxsocnimp01.p - import from xls                                            */
+/* xxsocnimp01.i 取最新价格                                                  */
 
 /***** 是否有价格表判定:如果是日程单取1.10.1.2普通采购单取1.10.1.1 ****/
 find first sod_det no-lock where sod_domain = global_domain

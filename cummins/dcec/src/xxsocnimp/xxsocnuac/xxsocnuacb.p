@@ -1,4 +1,3 @@
-/* GUI CONVERTED from socnuacb.p (converter v1.78) Thu May 28 01:17:11 2009 */
 /* socnuacb.p - Sales Order Consignment Usage Window For Final Selection      */
 /* Copyright 1986-2009 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -64,156 +63,81 @@ define variable l_backup_domain              like global_domain         no-undo.
 {socnufrm.i}   /* COMMON USAGE FORM DEFINITIONS */
 
 /* FRAME B */
-FORM /*GUI*/
+form
 with frame b 5 down width 80
-title color normal (getFrameTitle("CONSIGNMENT_SELECTION",78))
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/
-&ENDIF /*GUI*/
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- THREE-D /*GUI*/
-&ENDIF /*GUI*/
-.
-
+title color normal (getFrameTitle("CONSIGNMENT_SELECTION",78)).
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame b:handle).
 
 /* FRAME C */
-FORM /*GUI*/
-
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- RECT-FRAME       AT ROW 1.4 COLUMN 1.25
- RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
- SKIP(.1)  /*GUI*/
-&ENDIF /*GUI*/
-{socnfrmc.i}
-
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- SKIP(.4)  /*GUI*/
-&ENDIF /*GUI*/
+form
+   {socnfrmc.i}
 with frame c side-labels width 80
-
-&IF (("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" <> "A")) &THEN
-title color normal (getFrameTitle("CONSIGNMENT_DETAILS",78))
-&ENDIF /*GUI*/
-
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/
-&ENDIF /*GUI*/
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- NO-BOX THREE-D /*GUI*/
-&ENDIF /*GUI*/
-.
-
-
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
- DEFINE VARIABLE F-c-title AS CHARACTER.
- F-c-title = (getFrameTitle("CONSIGNMENT_DETAILS",78)).
- RECT-FRAME-LABEL:SCREEN-VALUE in frame c = F-c-title.
- RECT-FRAME-LABEL:WIDTH-PIXELS in frame c =
-  FONT-TABLE:GET-TEXT-WIDTH-PIXELS(
-  RECT-FRAME-LABEL:SCREEN-VALUE in frame c + " ", RECT-FRAME-LABEL:FONT).
- RECT-FRAME:HEIGHT-PIXELS in frame c =
-  FRAME c:HEIGHT-PIXELS - RECT-FRAME:Y in frame c - 2.
- RECT-FRAME:WIDTH-CHARS IN FRAME c = FRAME c:WIDTH-CHARS - .5. /*GUI*/
-&ENDIF /*GUI*/
-
+title color normal (getFrameTitle("CONSIGNMENT_DETAILS",78)).
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame c:handle).
 
 loop0:
 do transaction:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
    shiploop:
    repeat:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
       hide frame aa.
       clear frame b all.
-      view frame b.
-      view frame c.
+/*      view frame b. */
+/*      view frame c. */
+      hide frame b.
+      hide frame c.
       clear frame d all.
+/**************************************************************      
+      scroll_loop:
+      do with frame b
+      on error undo, return error {&GENERAL-APP-EXCEPT}:
+         {swview.i &domain        = "true and "
+                   &buffer        = tt_autocr
+                   &scroll-field  = ac_part
+                   &searchkey     = "ac_cncixrecid <> 0"
+                   &index-phrase  = "use-index sort_order"
+                   &framename     = "b"
+                   &framesize     = 5
+                   &display1      = ac_part
+                   &display2      = ac_order
+                   &display3      = ac_line
+                   &display4      = ac_tot_qty_oh
+                   &display5      = ac_stock_um
+                   &display6      = ac_tot_qty_consumed
+                   &display7      = ac_consumed_um
+                   &display8      = ac_loc
+                   &exitlabel     = shiploop
+                   &exit-flag     = "true"
+                   &record-id     = ac_recid
+                   &first-recid   = ac_first_recid
+                   &exec_cursor   =
+                       " run displayConsignmentDetails
+                            (input  ip_invoice_domain,
+                             buffer tt_autocr).
 
-/*8u   scroll_loop:                                                                 */
-/*8u   do with frame b                                                              */
-/*8u   on error undo, return error {&GENERAL-APP-EXCEPT}:                           */
-/*8u      {swview.i &domain        = "true and "                                    */
-/*8u                &buffer        = tt_autocr                                      */
-/*8u                &scroll-field  = ac_part                                        */
-/*8u                &searchkey     = "ac_cncixrecid <> 0"                           */
-/*8u                &index-phrase  = "use-index sort_order"                         */
-/*8u                &framename     = "b"                                            */
-/*8u                &framesize     = 5                                              */
-/*8u                &display1      = ac_part                                        */
-/*8u                &display2      = ac_order                                       */
-/*8u                &display3      = ac_line                                        */
-/*8u                &display4      = ac_tot_qty_oh                                  */
-/*8u                &display5      = ac_stock_um                                    */
-/*8u                &display6      = ac_tot_qty_consumed                            */
-/*8u                &display7      = ac_consumed_um                                 */
-/*8u                &display8      = ac_loc                                         */
-/*8u                &exitlabel     = shiploop                                       */
-/*8u                &exit-flag     = "true"                                         */
-/*8u                &record-id     = ac_recid                                       */
-/*8u                &first-recid   = ac_first_recid                                 */
-/*8u                &exec_cursor   =                                                */
-/*8u                    " run displayConsignmentDetails                             */
-/*8u                         (input  ip_invoice_domain,                             */
-/*8u                          buffer tt_autocr).                                    */
-/*8u                                                                                */
-/*8u                      if return-value <> {&SUCCESS-RESULT} then do:             */
-/*8u                         hide frame c.                                          */
-/*8u                         hide frame b.                                          */
-/*8u                         undo shiploop, return.                                 */
-/*8u                      end. "                                                    */
-/*8u                                                                                */
-/*8u                &logical1      = true}                                          */
-/*8u                                                                                */
-/*8u   end. /* DO WITH FRAME b */                                                   */
-/*8u                                                                                */
-/*8u   for first tt_autocr: end.                                                    */
-/*8u   run displayConsignmentDetails (input  ip_invoice_domain, buffer tt_autocr).  */
-/*8u   if return-value <> {&SUCCESS-RESULT} then do:                                */
-/*8u     hide frame c.                                                              */
-/*8u     hide frame b.                                                              */
-/*8u     undo shiploop, return.                                                     */
-/*8u   end.                                                                         */
-/*8u   if keyfunction(lastkey) = "END-ERROR" then do:                               */
-/*8u            op_continue-yn = ?.                                                 */
-/*8u      leave shiploop.                                                           */
-/*8u   end.                                                                         */
+                         if return-value <> {&SUCCESS-RESULT} then do:
+                            hide frame c.
+                            hide frame b.
+                            undo shiploop, return.
+                         end. "
+
+                   &logical1      = true}
+
+      end. /* DO WITH FRAME b */
+
+      if keyfunction(lastkey) = "END-ERROR" then do:
+         /*V8! op_continue-yn = ?. */
+         leave shiploop.
+      end.
+**************************************************************/      
+
       setloop1:
-      do on error undo shiploop, leave shiploop :
+      do on error undo setloop1, leave setloop1 with frame c:
 
          /* DISPLAY CURRENT tt_autocr RECORD */
          if ac_recid <> ? then
@@ -238,14 +162,7 @@ do transaction:
             where si_domain = global_domain
             and   si_site   = site
          no-lock:
-         end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* FOR FIRST si_mstr */
+         end. /* FOR FIRST si_mstr */
 
          if available si_mstr
          then do:
@@ -259,13 +176,13 @@ do transaction:
 
             if gpglef_result > 0
             then
-               undo shiploop, leave shiploop.
+               undo setloop1, leave setloop1.
 
          end. /* IF AVAILABLE si_mstr */
 
          prompt-for
-            part with frame c
-         editing :
+            part
+         editing:
 
             /* FIND NEXT/PREVIOUS RECORD */
             {mfnp05.i tt_autocr
@@ -297,7 +214,7 @@ do transaction:
          then do:
             {pxmsg.i &MSGNUM=5935 &ERRORLEVEL=3} /* RECORD DOESN'T EXIST */
             next-prompt part with frame c.
-            undo shiploop, leave shiploop.
+            undo, retry.
          end.
 
          /* DISPLAY LOWER FRAME */
@@ -348,21 +265,13 @@ do transaction:
 
          /* setloop2 AND 3 FOR FRAME c AND d PPROCESSING */
          {xxsocnuacb.i}
-         leave SHIPLOOP.
+
       end. /* SETLOOP1 */
-      leave SHIPLOOP.
    end. /* SHIPLOOP */
 
    l_backup_domain = global_domain.
    for each tt_autocr
       where tt_autocr.ac_tot_qty_consumed <> 0:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
       assign
          inventory_domain = tt_autocr.ac_domain
          undo_flag        = no.
@@ -392,21 +301,14 @@ do transaction:
       then do:
          tt_autocr.ac_tot_qty_consumed = 0.
 
-         view frame b.
-         view frame c.
+/*         view frame b.                  */
+/*         view frame c.                  */
 
          /* UNABLE TO ISSUE OR RECEIVE FOR ITEM */
          {pxmsg.i &MSGNUM=161 &ERRORLEVEL=2 &MSGARG1=tt_autocr.ac_part
                   &MSGARG2=tt_autocr.ac_order &MSGARG3=tt_autocr.ac_line}
       end. /* IF undo_flag */
-   end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
- /* FOR EACH tt_autocr */
+   end. /* FOR EACH tt_autocr */
 
    if l_backup_domain <> global_domain
    then do:
@@ -425,30 +327,25 @@ do transaction:
       where ac_tot_qty_consumed <> 0)
    then do on endkey undo, leave loop0
            on error  undo, leave loop0:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
       hide frame aa.
       hide message. pause 0.
-      ok_to_display = yes.
+      ok_to_display = no.
       /* DISPLAY ITEMS BEING ISSUED */
+      /*V8-*/
+      if not batchrun then do:
+      {pxmsg.i &MSGNUM=636 &ERRORLEVEL=1 &CONFIRM=ok_to_display
+               &CONFIRM-TYPE='LOGICAL'}
+      end.
       /*V8+*/
-      if batchrun then do:
-         assign ok_to_display = no.
-      end.
-      else do:
-           {mfgmsg10.i 636 1 ok_to_display}
-      end.
+
+      /*V8!
+      {mfgmsg10.i 636 1 ok_to_display}
       if ok_to_display = ? then do:
          op_continue-yn = ok_to_display.
          hide frame aa.
          undo, leave loop0.
       end.
-
+      */
 
       if ok_to_display then do:
          /* DISPLAY QUANTITIES */
@@ -456,13 +353,6 @@ do transaction:
             where ac_tot_qty_consumed <> 0
          no-lock
          use-index sort_order:
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
             display
                ac_part               @ part
@@ -470,11 +360,7 @@ do transaction:
                ac_consumed_um        @ um
                ac_tot_qty_consumed   @ tot_qty_consumed
                ac_lotser             @ frmd_lotser
-            with frame d
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/
-&ENDIF /*GUI*/
-.
+            with frame d.
 
             for each tt_sr exclusive-lock:
                delete tt_sr.
@@ -498,13 +384,6 @@ do transaction:
             {gprun.i ""socnucb3.p""
                      "(input        ac_count,
                        input-output table tt_sr)"}
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-
 
             for each tt_sr
             no-lock:
@@ -514,25 +393,14 @@ do transaction:
                   tt_sr_ref      @ frmd_ref
                   tt_sr_qty      @ tot_qty_consumed
                   ac_consumed_um @ um
-               with frame d
-&IF ("{&PP_GUI_CONVERT_MODE}" = "REPORT") &THEN
- STREAM-IO /*GUI*/
-&ENDIF /*GUI*/
-.
+               with frame d.
 
                down with frame d.
             end.
 
             down with frame d.
 
-         end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-  /* FOR EACH tt_autocr */
+         end.  /* FOR EACH tt_autocr */
       end.  /* IF ok_to_display */
 
       /* ASK IF EVERYTHING IS CORRECT. IF YES THEN  */
@@ -540,33 +408,29 @@ do transaction:
       /* CALLING PROGRAM.                           */
       ok_to_continue = yes.
 
+      /*V8-*/
+/*      {pxmsg.i &MSGNUM=12 &ERRORLEVEL=1 &CONFIRM=ok_to_continue         */
+/*               &CONFIRM-TYPE='LOGICAL'}                                 */
+       message "All information is OK?" update ok_to_continue.
       /*V8+*/
 
-if not batchrun then do:
+      /*V8!
       {mfgmsg10.i 12 1 ok_to_continue}
-end.
       if ok_to_continue = ? then do:
          op_continue-yn = ok_to_continue.
          hide frame aa.
          undo, leave loop0.
       end.
-
+      */
 
       op_continue-yn = ok_to_continue.
 
       if not ok_to_continue then
-         undo loop0, leave loop0.
+         undo loop0, retry loop0.
       else
          leave loop0.
 
-   end.
-&IF ("{&PP_GUI_CONVERT_MODE}" <> "REPORT") OR
-(("{&PP_GUI_CONVERT_MODE}" = "REPORT") AND
-("{&PP_FRAME_NAME}" = "A")) &THEN
-
-/*GUI*/ if global-beam-me-up then undo, leave.
-&ENDIF /*GUI*/
-  /* IF CAN-FIND(FIRST tt_autocr) */
+   end.  /* IF CAN-FIND(FIRST tt_autocr) */
 end.  /* loop0 */
 
 hide frame aa.

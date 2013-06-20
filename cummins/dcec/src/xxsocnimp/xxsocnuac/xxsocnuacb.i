@@ -1,4 +1,3 @@
-/* GUI CONVERTED from socnuacb.i (converter v1.78) Wed Aug 26 02:02:34 2009 */
 /* socnuacb.i - Common Customer Consignment Usage Logic                       */
 /* Copyright 1986-2009 QAD Inc., Santa Barbara, CA, USA.                      */
 /* All rights reserved worldwide.  This is an unpublished work.               */
@@ -22,11 +21,9 @@
 define variable op-err as integer no-undo.
 
       setloop2:
-      do on endkey undo loop0, leave loop0
-         on error  undo loop0, leave loop0
-        :
-/*GUI*/ if global-beam-me-up then undo loop0, leave loop0.
-
+      do on endkey undo setloop1, retry setloop1
+         on error  undo setloop2, retry setloop2
+      with frame c:
 
          view frame b.
 
@@ -52,7 +49,7 @@ define variable op-err as integer no-undo.
          then do:
             /* ERROR: QUANTITY ENTERED MUST BE A POSITIVE QUANTITY # */
             {pxmsg.i &MSGNUM=8440 &ERRORLEVEL=3 &MSGARG1=tot_qty_consumed}
-            undo loop0, leave loop0.
+            undo setloop2, retry setloop2.
          end. /* IF tot_qty_consumed < 0 */
 
          if inventory_domain <> global_domain then do:
@@ -64,10 +61,10 @@ define variable op-err as integer no-undo.
             if undo_flag then do:
                pause.
                hide frame c.
-               undo loop0, return.
+               undo shiploop, return.
             end.
          end.
-
+/**/     assign tt_autocr.ac_asn_shipper = "".
          /* UPDATE CNCIX_MSTR AND CREATE USAGE */
          {gprun.i ""socnucb2.p""
                   "(input-output lotser,
@@ -88,7 +85,7 @@ define variable op-err as integer no-undo.
                     input-output tt_autocr.ac_order,
                     input-output tt_autocr.ac_line,
                     input-output tt_autocr.ac_loc,
-                    input-output tt_autocr.ac_asn_shipper,
+                    input-output tt_autocr.ac_asn_shipper,       
                     input-output tt_autocr.ac_auth,
                     input-output tt_autocr.ac_cust_job,
                     input-output tt_autocr.ac_cust_seq,
@@ -98,9 +95,6 @@ define variable op-err as integer no-undo.
                     input-output ac_lotser,
                     input-output ac_ref,
                     output       op-err)"}
-/*GUI*/ if global-beam-me-up then undo loop0, leave.
-
-
          if ip_invoice_domain <> global_domain then do:
             /* SWITCH TO INVOICE DOMAIN */
             run switchDomain
@@ -110,7 +104,7 @@ define variable op-err as integer no-undo.
             if undo_flag then do:
                pause.
                hide frame c.
-               undo loop0, return.
+               undo shiploop, return.
             end.
          end.
 
@@ -118,24 +112,24 @@ define variable op-err as integer no-undo.
             /* NO SHIPMENT RECORD EXISTS FOR LOT/SERIAL */
             {pxmsg.i &MSGNUM=6562 &ERRORLEVEL=3 &MSGARG1=lotser}
             next-prompt lotser with frame c.
-            undo loop0, leave loop0.
+            undo setloop2, retry setloop2.
          end.
          else if op-err = 33 then do:
             /* NO UOM CONVERSION EXISTS */
             {pxmsg.i &MSGNUM=33 &ERRORLEVEL=2}
             next-prompt consumed_um with frame c.
-            undo loop0, leave loop0.
+            undo, retry.
          end.
          else if op-err = 99 then do:
-            undo loop0, leave loop0.
+            undo, retry.
          end.
          else if op-err = 6673 then do:
-            undo loop0, leave loop0.
+            undo setloop1, retry setloop1.
          end.
          else if op-err = 66731 then do:
             /* ERROR: MAXIMUM CONSIGNMENT QUANTITY TO BE INVOICED # */
             {pxmsg.i &MSGNUM=6673 &ERRORLEVEL=3 &MSGARG1=cncix_qty1}
-            undo loop0, leave loop0.
+            undo, retry.
          end.
 
          display
@@ -146,9 +140,7 @@ define variable op-err as integer no-undo.
          with frame aa.
 
          setloop3:
-         do on error undo loop0, leave loop0:
-/*GUI*/ if global-beam-me-up then undo loop0, leave.
-
+         do on error undo, retry:
             set
                cust_usage_ref
                cust_usage_date
@@ -157,9 +149,7 @@ define variable op-err as integer no-undo.
                {&SOCNUACB-I-TAG1}
             with frame aa.
 
-         end.
-/*GUI*/ if global-beam-me-up then undo loop0, leave.
-  /* SETLOOP3 */
+         end.  /* SETLOOP3 */
 
          assign
             ac_cust_usage_ref   = cust_usage_ref
@@ -172,6 +162,4 @@ define variable op-err as integer no-undo.
             ac_consumed_um      = consumed_um
             ac_consumed_um_conv = trans_conv.
 
-      end.
-/*GUI*/ if global-beam-me-up then undo loop0, leave.
- /* SETLOOP2 */
+      end. /* SETLOOP2 */
