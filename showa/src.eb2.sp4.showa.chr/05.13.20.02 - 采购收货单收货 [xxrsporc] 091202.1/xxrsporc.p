@@ -126,7 +126,7 @@
 /******************************************************************************/
 
 /* SS 091028.1 - B */
-{mfdtitle.i "091202.1"}
+{mfdtitle.i "20130517.1"}
 /* SS 091028.1 - E */
 
 {cxcustom.i "RSPORC.P"}
@@ -142,7 +142,7 @@ define new shared temp-table tt-pvocharge no-undo
    index tt-index
    tt-lc_charge
    tt-pvo_id.
-   
+
 /* SS 091202.1 - B */
 define new shared temp-table reasonfile no-undo
         field reason like code_value
@@ -308,9 +308,11 @@ define buffer pod3 for pod_det.
 
 /* SS 091028.1 - B */
 define variable serial like tr_serial.
+define variable myloc like pt_loc.
 /* SS 091028.1 - E */
 /* SS 091202.1 - B */
 define variable scmrcrmks as logic.
+define var scmfilename as char format "x(40)".
 /* SS 091202.1 - E */
 
 /* WIP Lot Trace functions and constants */
@@ -354,8 +356,8 @@ setFrameLabels(frame a:handle).
 
 form
 /* SS 091028.1 - B */
-		serial							colon 28
-		scmrcrmks							colon 28 label "备注"
+    serial              colon 28
+    scmrcrmks             colon 28 label "备注"
 /* SS 091028.1 - E */
    eff_date             colon 28
 with frame bb side-labels width 80 attr-space.
@@ -517,9 +519,9 @@ repeat:
    end.
 
 /* SS 091116.1 - B */
-		find first abs_mstr where abs_shipfrom = input abs_shipfrom and abs_par_id  = "S" + input abs_id 
-			and abs_type = "R" no-lock no-error.
-		if avail abs_mstr then serial = abs_lotser.
+    find first abs_mstr where abs_shipfrom = input abs_shipfrom and abs_par_id  = "S" + input abs_id
+      and abs_type = "R" no-lock no-error.
+    if avail abs_mstr then serial = abs_lotser.
 /* SS 091116.1 - E */
 
    for first abs_mstr
@@ -554,33 +556,33 @@ repeat:
    scmrcrmks = no.
    update
 /* SS 091028.1 - B */
-			serial validate( serial <> "" , "批/序号不能为空")
+      serial validate( serial <> "" , "批/序号不能为空")
 /* SS 091116.1 - E */
-			scmrcrmks
+      scmrcrmks
 /* SS 091028.1 - E */
       eff_date
    with frame bb.
-   
+
 /* SS 091202.1 - B */
    if scmrcrmks then do:
-    	for each reasonfile :
-    	  delete reasonfile.
-   	  end.
-    	{gprun.i ""xxrsporcreason.p"" }
+      for each reasonfile :
+        delete reasonfile.
+      end.
+      {gprun.i ""xxrsporcreason.p"" }
    end.
 
 /* 在通用代码设置可以输入的值,并控制是否存在*/
 /*
-		find first code_mstr where code_fldname = "scmrcrmks" no-lock no-error.
-		if avail code_mstr then do:
-			find first code_mstr where code_fldname = "scmrcrmks" and code_value = scmrcrmks no-lock no-error.
-			if not avail code_mstr then do:
-				message "错误: 该值必须在通用代码中存在.  请重新输入".
-				next-prompt scmrcrmks with frame bb.
-				undo,retry.
-			end.
-		end.
-		*/
+    find first code_mstr where code_fldname = "scmrcrmks" no-lock no-error.
+    if avail code_mstr then do:
+      find first code_mstr where code_fldname = "scmrcrmks" and code_value = scmrcrmks no-lock no-error.
+      if not avail code_mstr then do:
+        message "错误: 该值必须在通用代码中存在.  请重新输入".
+        next-prompt scmrcrmks with frame bb.
+        undo,retry.
+      end.
+    end.
+    */
 /* SS 091202.1 - E */
    assign
       ship_date = if abs_mstr.abs_shp_date <> ? then
@@ -988,7 +990,7 @@ repeat:
 
 
 /* SS 091028.1 - B */
-		/*给库位和批号赋值*/
+    /*给库位和批号赋值*/
    for each work_abs_mstr no-lock
       where work_abs_mstr.abs_qty <> work_abs_mstr.abs_ship_qty,
        each abs_mstr exclusive-lock
@@ -998,35 +1000,53 @@ repeat:
       find pod_det where pod_nbr  = abs_mstr.abs_order and
                          pod_line = integer(abs_mstr.abs_line)
       no-lock no-error.
-      if not avail pod_det then next.
-      abs_mstr.abs_loc = pod_loc.
+      if not avail pod_det then do:
+        abs_mstr.abs_loc = "".
+        next.
+      end.
+      find first pt_mstr no-lock where pt_part = pod_part no-error.
+      if not avail pt_mstr then do:
+        abs_mstr.abs_loc = pod_loc.
+      end.
+      else if pt_loc <> abs_mstr.abs_loc then do:
+        scmfilename = "".
+        {gprun.i ""xxsccomCreateSendCommandData_PT.p"" "(input abs_mstr.abs_item,
+                                   input abs_mstr.abs_item,
+                                   input 'xxscptsi.p',
+                                   input-output scmfilename)"}
+
+        if scmfilename <> "" then do:
+          {gprun.i ""xxpomt1xa2.p"" "(input scmfilename,input '')"}.
+        end.
+        abs_mstr.abs_loc = pt_loc.
+      end.
 
       abs_mstr.abs_lotser = serial.
-		end.
+    end.
 /* SS 091028.1 - E */
 
 /* SS 091202.1 - B */
-		/*保存备注信息*/
-		for each work_abs_mstr no-lock
-			where work_abs_mstr.abs_qty <> work_abs_mstr.abs_ship_qty,
+    /*保存备注信息*/
+    for each work_abs_mstr no-lock
+      where work_abs_mstr.abs_qty <> work_abs_mstr.abs_ship_qty,
        each abs_mstr exclusive-lock
       where abs_mstr.abs_shipfrom = work_abs_mstr.abs_shipfrom
         and abs_mstr.abs_id = work_abs_mstr.abs_par_id and abs_mstr.abs_par_id = "":
-/*      
-      abs_mstr.abs__chr01 = scmrcrmks. 
-	*/
-			xxss = "scmrcrkms" + abs_mstr.abs_id.
+/*
+      abs_mstr.abs__chr01 = scmrcrmks.
+  */
+      xxss = "scmrcrkms" + abs_mstr.abs_id.
       for each reasonfile :
-      	find first usrw_wkfl no-lock where usrw_key1 = xxss and usrw_key2 = reason no-error.
-      	if not avail usrw_wkfl then do:
-      		create usrw_wkfl .
-      		assign
-      		  usrw_key1 = xxss
-      		  usrw_key2 = reason.
-      	end.
+        find first usrw_wkfl no-lock where usrw_key1 = xxss and usrw_key2 = reason no-error.
+        if not avail usrw_wkfl then do:
+          create usrw_wkfl .
+          assign
+            usrw_key1 = xxss
+            usrw_key2 = reason.
+        end.
       end.
-      
-		end.
+
+    end.
 
 /* SS 091202.1 - E */
 
@@ -1148,7 +1168,6 @@ repeat:
       end. /* if not available pod_det and abs_item... */
 
    end.  /* FOR EACH */
-
    run dotrans1
       (output undo-loop).
    if undo-loop then
@@ -1217,20 +1236,20 @@ repeat:
    end.   /* END TRANSACTION */
 
 /* SS 091030.1 - B */
-		/* 告诉SCM系统收货成功 */
-		define var scmfilename as char format "x(40)".
-		
-		/* 产生XML文件 */
-		scmfilename = "".
-		{gprun.i ""xxsccomCreateSendCommandData_ABS.p"" "(input abs_mstr.abs_shipfrom,
-		                               input abs_mstr.abs_shipfrom,
-		                               input substring(abs_mstr.abs_id,2),
-		                               input substring(abs_mstr.abs_id,2),
-		                               input-output scmfilename)"}
-		if scmfilename <> "" then do:
-		 	/* 加入上传排除 */
-	  	{gprun.i ""xxpomt1xa2.p"" "(input scmfilename,input '')"}.
-		end.
+    /* 告诉SCM系统收货成功 */
+
+
+    /* 产生XML文件 */
+    scmfilename = "".
+    {gprun.i ""xxsccomCreateSendCommandData_ABS.p"" "(input abs_mstr.abs_shipfrom,
+                                   input abs_mstr.abs_shipfrom,
+                                   input substring(abs_mstr.abs_id,2),
+                                   input substring(abs_mstr.abs_id,2),
+                                   input-output scmfilename)"}
+    if scmfilename <> "" then do:
+      /* 加入上传排除 */
+      {gprun.i ""xxpomt1xa2.p"" "(input scmfilename,input '')"}.
+    end.
 /* SS 091030.1 - E */
 
    global_recid = abs_recid.
