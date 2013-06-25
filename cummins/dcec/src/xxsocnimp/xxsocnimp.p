@@ -330,7 +330,7 @@ DO:
     END.
 
   assign i = 1.
-  for each xsc_d exclusive-lock break by xsd_mid:
+  for each xsc_d exclusive-lock where xsd_chk = "" break by xsd_mid:
       ASSIGN xsd_sn = i.
       i = i + 1.
       /***** 是否有价格表判定:如果是日程单取1.10.1.2普通采购单取1.10.1.1 ****/
@@ -351,7 +351,7 @@ DO:
   FOR EACH xsc_d EXCLUSIVE-LOCK WHERE xsd_chk = "":
       ASSIGN xsd_chk = "PASS".
   END.
-    OPEN QUERY brDet FOR EACH xsc_d.
+    OPEN QUERY brDet FOR EACH xsc_d by xsd_serial by xsd_so descendin.
     IF CAN-FIND(FIRST xsc_d) THEN DO:
          brdet:REFRESH().
     END.
@@ -412,7 +412,7 @@ DO:
   SESSION:SET-WAIT-STAT("GENERAL").
   {gprun.i ""xxsocnimp03.p""}
 
-  OPEN QUERY brDet FOR EACH xsc_d.
+  OPEN QUERY brDet FOR EACH xsc_d by xsd_serial  by xsd_so descendin.
   IF CAN-FIND(FIRST xsc_d) THEN DO:
        brdet:REFRESH().
   END.
@@ -466,7 +466,7 @@ DO:
       {gprun.i ""xxsocnimp01.p"" "(input vfile)"}
    end.
        APPLY "CHOOSE" TO bChk.
-    OPEN QUERY brDet FOR EACH xsc_d.
+    OPEN QUERY brDet FOR EACH xsc_d by xsd_serial  by xsd_so descendin.
     IF CAN-FIND(FIRST xsc_d) THEN DO:
          brdet:REFRESH().
     END.
