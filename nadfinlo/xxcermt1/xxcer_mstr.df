@@ -1,0 +1,606 @@
+ADD TABLE "xxcer_mstr"
+  AREA "TRANSACTION"
+  DUMP-NAME "xxcer_ms"
+
+ADD FIELD "xxcer_site" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "地点"
+  POSITION 2
+  SQL-WIDTH 16
+  ORDER 10
+
+ADD FIELD "xxcer_nbr" OF "xxcer_mstr" AS character 
+  FORMAT "x(16)"
+  INITIAL ""
+  LABEL "申请号"
+  POSITION 3
+  SQL-WIDTH 32
+  ORDER 20
+
+ADD FIELD "xxcer_req_dpt" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "申请部门"
+  POSITION 4
+  SQL-WIDTH 16
+  ORDER 30
+
+ADD FIELD "xxcer_test_dpt" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "测试部门"
+  POSITION 5
+  SQL-WIDTH 16
+  ORDER 40
+
+ADD FIELD "xxcer_req_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "申请人"
+  POSITION 6
+  SQL-WIDTH 24
+  ORDER 50
+
+ADD FIELD "xxcer_due_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "要求完成日期"
+  POSITION 7
+  SQL-WIDTH 4
+  ORDER 60
+
+ADD FIELD "xxcer_vend" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "供应商代码"
+  POSITION 8
+  SQL-WIDTH 16
+  ORDER 70
+
+ADD FIELD "xxcer_part" OF "xxcer_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "零件编号"
+  POSITION 9
+  SQL-WIDTH 36
+  ORDER 80
+
+ADD FIELD "xxcer_qty" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "供办数量"
+  POSITION 10
+  SQL-WIDTH 19
+  DECIMALS 4
+  ORDER 90
+
+ADD FIELD "xxcer_safety" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "安规要求"
+  POSITION 11
+  SQL-WIDTH 60
+  ORDER 100
+
+ADD FIELD "xxcer_usage" OF "xxcer_mstr" AS character 
+  DESCRIPTION "新物料/替代物料,通用代码验证"
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "用途"
+  POSITION 12
+  SQL-WIDTH 24
+  ORDER 110
+
+ADD FIELD "xxcer_add_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "新增日期"
+  POSITION 13
+  SQL-WIDTH 4
+  ORDER 120
+
+ADD FIELD "xxcer_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "新增用户"
+  POSITION 14
+  SQL-WIDTH 16
+  ORDER 130
+
+ADD FIELD "xxcer_mod_date" OF "xxcer_mstr" AS date 
+  DESCRIPTION "指申请表、测试指标、测试结果和判定都内容的最后维护日期"
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "最后修改日期"
+  POSITION 15
+  SQL-WIDTH 4
+  ORDER 140
+
+ADD FIELD "xxcer_mod_user" OF "xxcer_mstr" AS character 
+  DESCRIPTION "指申请表、测试指标、测试结果和判定都内容的最后维护用户"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "最后修改用户"
+  POSITION 16
+  SQL-WIDTH 16
+  ORDER 150
+
+ADD FIELD "xxcer_std1" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容1"
+  POSITION 17
+  SQL-WIDTH 80
+  ORDER 160
+
+ADD FIELD "xxcer_std2" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容2"
+  POSITION 18
+  SQL-WIDTH 80
+  ORDER 170
+
+ADD FIELD "xxcer_std3" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容3"
+  POSITION 19
+  SQL-WIDTH 80
+  ORDER 180
+
+ADD FIELD "xxcer_std4" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容4"
+  POSITION 20
+  SQL-WIDTH 80
+  ORDER 190
+
+ADD FIELD "xxcer_std5" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容5"
+  POSITION 21
+  SQL-WIDTH 80
+  ORDER 200
+
+ADD FIELD "xxcer_std6" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容6"
+  POSITION 22
+  SQL-WIDTH 80
+  ORDER 210
+
+ADD FIELD "xxcer_std7" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容7"
+  POSITION 23
+  SQL-WIDTH 80
+  ORDER 220
+
+ADD FIELD "xxcer_std8" OF "xxcer_mstr" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "测试标准及内容8"
+  POSITION 24
+  SQL-WIDTH 80
+  ORDER 230
+
+ADD FIELD "xxcer_std_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "指标制定人"
+  POSITION 25
+  SQL-WIDTH 24
+  ORDER 240
+
+ADD FIELD "xxcer_std_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "指标制定日期"
+  POSITION 26
+  SQL-WIDTH 4
+  ORDER 250
+
+ADD FIELD "xxcer_result1" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果1"
+  POSITION 27
+  SQL-WIDTH 60
+  ORDER 260
+
+ADD FIELD "xxcer_result2" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果2"
+  POSITION 28
+  SQL-WIDTH 60
+  ORDER 270
+
+ADD FIELD "xxcer_result3" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果3"
+  POSITION 29
+  SQL-WIDTH 60
+  ORDER 280
+
+ADD FIELD "xxcer_result4" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果4"
+  POSITION 30
+  SQL-WIDTH 60
+  ORDER 290
+
+ADD FIELD "xxcer_result5" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果5"
+  POSITION 31
+  SQL-WIDTH 60
+  ORDER 300
+
+ADD FIELD "xxcer_result6" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果6"
+  POSITION 32
+  SQL-WIDTH 60
+  ORDER 310
+
+ADD FIELD "xxcer_result7" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果7"
+  POSITION 33
+  SQL-WIDTH 60
+  ORDER 320
+
+ADD FIELD "xxcer_result8" OF "xxcer_mstr" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "检验结果8"
+  POSITION 34
+  SQL-WIDTH 60
+  ORDER 330
+
+ADD FIELD "xxcer_qc_result" OF "xxcer_mstr" AS character 
+  DESCRIPTION "需要通用代码验证"
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "QA检验结果"
+  POSITION 35
+  SQL-WIDTH 24
+  ORDER 340
+
+ADD FIELD "xxcer_result_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "检验确认者"
+  POSITION 36
+  SQL-WIDTH 24
+  ORDER 350
+
+ADD FIELD "xxcer_result_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "检验确认日期"
+  POSITION 37
+  SQL-WIDTH 4
+  ORDER 360
+
+ADD FIELD "xxcer_dec_rmks1" OF "xxcer_mstr" AS character 
+  FORMAT "x(70)"
+  INITIAL ""
+  LABEL "最后判定条件1"
+  POSITION 38
+  SQL-WIDTH 140
+  ORDER 370
+
+ADD FIELD "xxcer_dec_rmks2" OF "xxcer_mstr" AS character 
+  FORMAT "x(70)"
+  INITIAL ""
+  LABEL "最后判定条件2"
+  POSITION 39
+  SQL-WIDTH 140
+  ORDER 380
+
+ADD FIELD "xxcer_dec_rmks3" OF "xxcer_mstr" AS character 
+  FORMAT "x(70)"
+  INITIAL ""
+  LABEL "最后判定条件3"
+  POSITION 40
+  SQL-WIDTH 140
+  ORDER 390
+
+ADD FIELD "xxcer_dec_result" OF "xxcer_mstr" AS character 
+  DESCRIPTION "{合格(OK),不合格(NG),限购(QTY),备料(ALLOC)} 在通用代码中存并F2功能"
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "判定结果"
+  POSITION 41
+  SQL-WIDTH 24
+  ORDER 400
+
+ADD FIELD "xxcer_pur_qty" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "限购数量"
+  POSITION 42
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 410
+
+ADD FIELD "xxcer_ord_qty" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<"
+  INITIAL "0"
+  LABEL "已订购数量"
+  POSITION 43
+  SQL-WIDTH 17
+  DECIMALS 2
+  ORDER 420
+
+ADD FIELD "xxcer_dec_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "判定填写人"
+  POSITION 44
+  SQL-WIDTH 24
+  ORDER 430
+
+ADD FIELD "xxcer_dec_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "判定填写日期"
+  POSITION 45
+  SQL-WIDTH 4
+  ORDER 440
+
+ADD FIELD "xxcer_test_per" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "测试负责人"
+  POSITION 46
+  SQL-WIDTH 24
+  ORDER 450
+
+ADD FIELD "xxcer_test_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 47
+  SQL-WIDTH 4
+  ORDER 460
+
+ADD FIELD "xxcer_qm_per" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "品管部主管"
+  POSITION 48
+  SQL-WIDTH 24
+  ORDER 470
+
+ADD FIELD "xxcer_qm_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 49
+  SQL-WIDTH 4
+  ORDER 480
+
+ADD FIELD "xxcer_eng_per" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "工程部主管"
+  POSITION 50
+  SQL-WIDTH 24
+  ORDER 490
+
+ADD FIELD "xxcer_eng_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "日期"
+  POSITION 51
+  SQL-WIDTH 4
+  ORDER 500
+
+ADD FIELD "xxcer_audit_user" OF "xxcer_mstr" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "最后审批人"
+  POSITION 52
+  SQL-WIDTH 24
+  ORDER 510
+
+ADD FIELD "xxcer_audit_date" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "最后审批日期"
+  POSITION 53
+  SQL-WIDTH 4
+  ORDER 520
+
+ADD FIELD "xxcer_effdate" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "生效日期"
+  POSITION 54
+  SQL-WIDTH 4
+  ORDER 530
+
+ADD FIELD "xxcer_expire" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "结束日期"
+  POSITION 55
+  SQL-WIDTH 4
+  ORDER 540
+
+ADD FIELD "xxcer__chr01" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 56
+  SQL-WIDTH 16
+  ORDER 550
+
+ADD FIELD "xxcer__chr02" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 57
+  SQL-WIDTH 16
+  ORDER 560
+
+ADD FIELD "xxcer__chr03" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 58
+  SQL-WIDTH 16
+  ORDER 570
+
+ADD FIELD "xxcer__chr04" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 59
+  SQL-WIDTH 16
+  ORDER 580
+
+ADD FIELD "xxcer__chr05" OF "xxcer_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 60
+  SQL-WIDTH 16
+  ORDER 590
+
+ADD FIELD "xxcer__dte01" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 61
+  SQL-WIDTH 4
+  ORDER 600
+
+ADD FIELD "xxcer__dte02" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 62
+  SQL-WIDTH 4
+  ORDER 610
+
+ADD FIELD "xxcer__dte03" OF "xxcer_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  POSITION 63
+  SQL-WIDTH 4
+  ORDER 620
+
+ADD FIELD "xxcer__dec01" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 64
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 630
+
+ADD FIELD "xxcer__dec02" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 65
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 640
+
+ADD FIELD "xxcer__dec03" OF "xxcer_mstr" AS decimal 
+  FORMAT "->,>>>,>>>,>>9.9<<<<"
+  INITIAL "0"
+  POSITION 66
+  SQL-WIDTH 20
+  DECIMALS 5
+  ORDER 650
+
+ADD FIELD "xxcer__log01" OF "xxcer_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 67
+  SQL-WIDTH 1
+  ORDER 660
+
+ADD FIELD "xxcer__log02" OF "xxcer_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  POSITION 68
+  SQL-WIDTH 1
+  ORDER 670
+
+ADD FIELD "xxcer__int01" OF "xxcer_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 69
+  SQL-WIDTH 4
+  ORDER 680
+
+ADD FIELD "xxcer__int02" OF "xxcer_mstr" AS integer 
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  POSITION 70
+  SQL-WIDTH 4
+  ORDER 690
+
+ADD FIELD "xxcer_avail" OF "xxcer_mstr" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "CER激活"
+  POSITION 71
+  SQL-WIDTH 1
+  ORDER 12
+
+ADD INDEX "xxcer_nbr" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "xxcer_nbr" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_part_vend" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_avail" ASCENDING 
+  INDEX-FIELD "xxcer_part" ASCENDING 
+  INDEX-FIELD "xxcer_vend" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_part_vend2" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_part" ASCENDING 
+  INDEX-FIELD "xxcer_vend" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_site_part_vend" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_avail" ASCENDING 
+  INDEX-FIELD "xxcer_site" ASCENDING 
+  INDEX-FIELD "xxcer_part" ASCENDING 
+  INDEX-FIELD "xxcer_vend" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_site_part_vend2" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_site" ASCENDING 
+  INDEX-FIELD "xxcer_part" ASCENDING 
+  INDEX-FIELD "xxcer_vend" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_vend_part" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_avail" ASCENDING 
+  INDEX-FIELD "xxcer_vend" ASCENDING 
+  INDEX-FIELD "xxcer_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "xxcer_vend_part2" ON "xxcer_mstr" 
+  AREA "TRANSACTION_IDX"
+  INDEX-FIELD "xxcer_vend" ASCENDING 
+  INDEX-FIELD "xxcer_part" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=GB2312
+.
+0000011821
