@@ -1,0 +1,361 @@
+ADD TABLE "edi_hist"
+  AREA "TRANSACTION"
+  LABEL "EDI History"
+  DUMP-NAME "edi_hist"
+
+ADD FIELD "edi_nbr" OF "edi_hist" AS character 
+  DESCRIPTION "Order"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Order"
+  POSITION 2
+  MAX-WIDTH 16
+  COLUMN-LABEL "Order"
+  ORDER 10
+
+ADD FIELD "edi_line" OF "edi_hist" AS integer 
+  DESCRIPTION "Line"
+  FORMAT "->,>>>,>>9"
+  INITIAL "0"
+  LABEL "Line"
+  POSITION 3
+  MAX-WIDTH 4
+  COLUMN-LABEL "Line"
+  ORDER 20
+
+ADD FIELD "edi_sourcedomain" OF "edi_hist" AS character 
+  DESCRIPTION "SourceDomain"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "SourceDomain"
+  POSITION 4
+  MAX-WIDTH 16
+  COLUMN-LABEL "SourceDomain"
+  ORDER 30
+
+ADD FIELD "edi_group" OF "edi_hist" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Group"
+  POSITION 5
+  MAX-WIDTH 50
+  COLUMN-LABEL "Group"
+  ORDER 40
+
+ADD FIELD "edi_entity" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Entity"
+  POSITION 6
+  MAX-WIDTH 16
+  COLUMN-LABEL "Entity"
+  ORDER 60
+
+ADD FIELD "edi_site" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+  POSITION 7
+  MAX-WIDTH 16
+  COLUMN-LABEL "Site"
+  ORDER 70
+
+ADD FIELD "edi_targetdomain" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Target Domain"
+  POSITION 8
+  MAX-WIDTH 16
+  COLUMN-LABEL "Target Domain"
+  ORDER 80
+
+ADD FIELD "edi_userid" OF "edi_hist" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Userid"
+  POSITION 9
+  MAX-WIDTH 40
+  COLUMN-LABEL "Userid"
+  ORDER 90
+
+ADD FIELD "edi_type" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Type"
+  POSITION 10
+  MAX-WIDTH 4
+  COLUMN-LABEL "Type"
+  ORDER 100
+
+ADD FIELD "edi_addr" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Addr"
+  POSITION 11
+  MAX-WIDTH 16
+  COLUMN-LABEL "Addr"
+  ORDER 110
+
+ADD FIELD "edi_part" OF "edi_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item"
+  POSITION 12
+  MAX-WIDTH 36
+  COLUMN-LABEL "Item"
+  ORDER 120
+
+ADD FIELD "edi_qty_ord" OF "edi_hist" AS decimal 
+  DESCRIPTION "Total quantity quoted to customer for this sales order line."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "NEW Qty Order"
+  POSITION 13
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 150
+
+ADD FIELD "edi_due_date" OF "edi_hist" AS date 
+  DESCRIPTION "The due date for a line item."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "NEW Due Date"
+  POSITION 14
+  MAX-WIDTH 4
+  COLUMN-LABEL "Due"
+  ORDER 170
+
+ADD FIELD "edi_price" OF "edi_hist" AS decimal 
+  DESCRIPTION "The unit cost for the item."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "NEW Price"
+  POSITION 15
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 190
+
+ADD FIELD "edi_curr" OF "edi_hist" AS character 
+  DESCRIPTION "The currency for the  order."
+  FORMAT "x(3)"
+  INITIAL ""
+  LABEL "Currency"
+  POSITION 16
+  MAX-WIDTH 6
+  COLUMN-LABEL "Cur"
+  ORDER 130
+
+ADD FIELD "edi_action" OF "edi_hist" AS character 
+  DESCRIPTION "NEW,MOD"
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Action"
+  POSITION 17
+  MAX-WIDTH 16
+  COLUMN-LABEL "Action"
+  ORDER 140
+
+ADD FIELD "edi_time" OF "edi_hist" AS integer 
+  FORMAT ">>,>>>,>>9"
+  INITIAL "0"
+  LABEL "Time"
+  POSITION 18
+  MAX-WIDTH 4
+  ORDER 210
+
+ADD FIELD "edi_errormsg" OF "edi_hist" AS character 
+  FORMAT "x(50)"
+  INITIAL ""
+  LABEL "Error Message"
+  POSITION 19
+  MAX-WIDTH 100
+  COLUMN-LABEL "Error Message"
+  ORDER 220
+
+ADD FIELD "edi__char01" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL ""
+  POSITION 20
+  MAX-WIDTH 16
+  ORDER 500
+
+ADD FIELD "edi__char02" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 21
+  MAX-WIDTH 16
+  ORDER 510
+
+ADD FIELD "edi__char03" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 22
+  MAX-WIDTH 16
+  ORDER 520
+
+ADD FIELD "edi__char04" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 23
+  MAX-WIDTH 16
+  ORDER 530
+
+ADD FIELD "edi__dec01" OF "edi_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 24
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 540
+
+ADD FIELD "edi_trnbr" OF "edi_hist" AS integer 
+  DESCRIPTION "A system generated number used to identify this transaction."
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Trans"
+  POSITION 25
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "edi__char05" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  POSITION 26
+  MAX-WIDTH 16
+  ORDER 560
+
+ADD FIELD "edi_old_due_date" OF "edi_hist" AS date 
+  DESCRIPTION "The due date for a line item."
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Old due Date"
+  POSITION 27
+  MAX-WIDTH 4
+  COLUMN-LABEL "Old PO Due Date"
+  ORDER 180
+
+ADD FIELD "edi_old_price" OF "edi_hist" AS decimal 
+  DESCRIPTION "The unit cost for the item."
+  FORMAT "->>>,>>>,>>9.99<<<"
+  INITIAL "0"
+  LABEL "Old Price"
+  POSITION 28
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 200
+
+ADD FIELD "edi_old_qty_ord" OF "edi_hist" AS decimal 
+  DESCRIPTION "The number of items ordered on this line."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Old Qty Order"
+  POSITION 29
+  MAX-WIDTH 25
+  COLUMN-LABEL "Old PO Qty Order"
+  DECIMALS 10
+  ORDER 160
+
+ADD FIELD "edi_ExposeNextSO" OF "edi_hist" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "ExposeNexSO"
+  POSITION 35
+  MAX-WIDTH 2
+  COLUMN-LABEL "ExposeNextSO"
+  ORDER 250
+
+ADD FIELD "edi_TransQty" OF "edi_hist" AS decimal 
+  DESCRIPTION "Transaction Qty."
+  FORMAT "->,>>>,>>9.9<<<<<<<<"
+  INITIAL "0"
+  LABEL "Trans Qty"
+  POSITION 36
+  MAX-WIDTH 25
+  DECIMALS 10
+  ORDER 430
+
+ADD FIELD "edi_ExposePreSO" OF "edi_hist" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "ExposePreSO"
+  POSITION 37
+  MAX-WIDTH 2
+  COLUMN-LABEL "ExposePreSO"
+  ORDER 240
+
+ADD FIELD "edi_Sucess" OF "edi_hist" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Sucess"
+  POSITION 38
+  MAX-WIDTH 2
+  COLUMN-LABEL "Sucess"
+  ORDER 230
+
+ADD FIELD "edi_TransLoc" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "LOC"
+  POSITION 39
+  MAX-WIDTH 2
+  COLUMN-LABEL "LOC"
+  ORDER 400
+
+ADD FIELD "edi_Translot" OF "edi_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "LOT"
+  POSITION 40
+  MAX-WIDTH 2
+  COLUMN-LABEL "LOT"
+  ORDER 410
+
+ADD FIELD "edi_ReceiptPO" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "ReceiptPO"
+  POSITION 41
+  MAX-WIDTH 2
+  COLUMN-LABEL "RecPO"
+  ORDER 425
+
+ADD FIELD "edi__dec02" OF "edi_hist" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  POSITION 42
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 550
+
+ADD FIELD "edi_Transref" OF "edi_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "REF"
+  POSITION 43
+  MAX-WIDTH 2
+  COLUMN-LABEL "REF"
+  ORDER 420
+
+ADD INDEX "edi_group" ON "edi_hist" 
+  AREA "TRANSACTION"
+  PRIMARY
+  INDEX-FIELD "edi_group" ASCENDING ABBREVIATED 
+
+ADD INDEX "edi_nbr_line_type" ON "edi_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "edi_nbr" ASCENDING 
+  INDEX-FIELD "edi_line" ASCENDING 
+  INDEX-FIELD "edi_type" ASCENDING ABBREVIATED 
+
+ADD INDEX "edi_typesucess" ON "edi_hist" 
+  AREA "TRANSACTION"
+  INDEX-FIELD "edi_targetdomain" ASCENDING 
+  INDEX-FIELD "edi_type" ASCENDING 
+  INDEX-FIELD "edi_Sucess" ASCENDING ABBREVIATED 
+
+.
+PSC
+cpstream=CP936
+.
+0000007032
