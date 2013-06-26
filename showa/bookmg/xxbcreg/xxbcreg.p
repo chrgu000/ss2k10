@@ -19,8 +19,8 @@ define variable del-yn like mfc_logical initial no.
 /* DISPLAY SELECTION FORM */
 form
    xxbc_id       colon 20 skip(1)
-   xxbc_name     colon 20
-   xxbc_dept     view-as fill-in size 40 by 1  colon 20
+   xxbc_name     colon 20 view-as fill-in size 40 by 1 format "x(120)"
+   xxbc_dept     colon 20 view-as fill-in size 40 by 1 format "x(120)"
    xxbc_phone    colon 20
    xxbc_email    colon 20
    xxbc_type     colon 20 v_desc no-label v_Deposit
@@ -41,19 +41,19 @@ repeat with frame a:
          display xxbc_id xxbc_name xxbc_dept xxbc_phone xxbc_email
                  xxbc_type xxbc_stat xxbc_amt "" @ v_Deposit.
          assign v_desc = "" v_Deposit = 0 v_stat = "" v_avail = no .
-  			 find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
+         find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
               and usrw_key2 = xxbc_type no-error.
          if available usrw_wkfl then do:
-				 		assign v_desc = usrw_key3
-				 					 v_Deposit = usrw_decfld[1].
-				 end.
-				 find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
-			        and usrw_key2 = xxbc_stat no-error.
-			   if available usrw_wkfl then do:
-			  		assign v_stat = usrw_key3
-			  					 v_avail = usrw_logfld[1].
-			   end.
-				 display v_desc v_Deposit v_stat v_avail.
+            assign v_desc = usrw_key3
+                   v_Deposit = usrw_decfld[1].
+         end.
+         find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
+              and usrw_key2 = xxbc_stat no-error.
+         if available usrw_wkfl then do:
+            assign v_stat = usrw_key3
+                   v_avail = usrw_logfld[1].
+         end.
+         display v_desc v_Deposit v_stat v_avail.
       end.
    end.
 
@@ -77,36 +77,36 @@ repeat with frame a:
    ststatus = stline[2].
    status input ststatus.
 
-	 repeat with frame a:
+   repeat with frame a:
    update xxbc_name xxbc_dept xxbc_phone xxbc_email
           xxbc_type xxbc_stat go-on(F5 CTRL-D).
           if xxbc_name = "" then do:
              {mfmsg.i 40 3}
-   					 next-prompt xxbc_name.
-   					 undo,retry.
+             next-prompt xxbc_name.
+             undo,retry.
           end.
-   				find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
-   							  and usrw_key2 = xxbc_type no-error.
-   				if not available usrw_wkfl then do:
-   					 {mfmsg.i 7774 3}
-   					 next-prompt xxbc_type.
-   					 undo,retry.
-   				end.
-   				else do:
-   			  		 if usrw_decfld[1] <> xxbc_amt or batchrun then do:
-   			  		 	  display usrw_decfld[1] @ v_Deposit.
-   			  		 		update xxbc_amt.
-   			  		 end.
-   			  end.
-   				find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
-   							  and usrw_key2 = xxbc_stat no-error.
-   				if not available usrw_wkfl then do:
-   					 {mfmsg.i 7775 3}
-   					 next-prompt xxbc_stat.
-   					 undo,retry.
-   				end.
-   				leave.
-	 end.
+          find first usrw_wkfl no-lock where usrw_key1 = v_key_book03
+                  and usrw_key2 = xxbc_type no-error.
+          if not available usrw_wkfl then do:
+             {mfmsg.i 7774 3}
+             next-prompt xxbc_type.
+             undo,retry.
+          end.
+          else do:
+               if usrw_decfld[1] <> xxbc_amt or batchrun then do:
+                  display usrw_decfld[1] @ v_Deposit.
+                  update xxbc_amt.
+               end.
+          end.
+          find first usrw_wkfl no-lock where usrw_key1 = v_key_book04
+                  and usrw_key2 = xxbc_stat no-error.
+          if not available usrw_wkfl then do:
+             {mfmsg.i 7775 3}
+             next-prompt xxbc_stat.
+             undo,retry.
+          end.
+          leave.
+   end.
    /* DELETE */
    if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
    then do:

@@ -19,8 +19,8 @@ define variable del-yn like mfc_logical initial no.
 /* DISPLAY SELECTION FORM */
 form
    xxbk_id       colon 20 skip(1)
-   xxbk_name     colon 20
-   xxbk_desc     view-as fill-in size 40 by 1  colon 20
+   xxbk_name     colon 20 view-as fill-in size 40 by 1 format "x(120)"
+   xxbk_desc     colon 20 view-as fill-in size 40 by 1 format "x(120)"
    xxbk_type     colon 20 v_type colon 34 no-label v_days colon 54
    xxbk_price    colon 20
    xxbk_reg_date colon 20
