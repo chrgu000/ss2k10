@@ -1,7 +1,7 @@
 /* popomtb.p - PURCHASE ORDER MAINTENANCE -- ORDER HEADER SUBPROGRAM          */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.15.3.25.1.1 $                                                     */
+/* $Revision: 1.15.3.25.1.1 $                                                 */
 /*                                                                            */
 /* Revision: 7.0           BY: ram                DATE: 09/12/91  ECO: *F033* */
 /* Revision: 7.0           BY: mlv                DATE: 11/08/91  ECO: *F029* */
@@ -88,12 +88,12 @@
 /*---Add Begin by davild 20080421.1*/
 /*
 xxpopom1t.p（popomt.p）
-	xxrpomt.p(pomt.p)
-		xxpopom1b.p(popomtb.p)	po_DUE_Date 强制为空	f)完成
-		xxpopom1a.p(popomta.p)
-			xxpopom1r.p(popomtr.p)
-				xxpopom1r1.p(popomtr1.p)				
-			xxpopomtea.p(popomtea.p)
+  xxrpomt.p(pomt.p)
+    xxpopom1b.p(popomtb.p)  po_DUE_Date 强制为空  f)完成
+    xxpopom1a.p(popomta.p)
+      xxpopom1r.p(popomtr.p)
+        xxpopom1r1.p(popomtr1.p)
+      xxpopomtea.p(popomtea.p)
 
 a)首先判断5.2.1.24是否启动CER检验，若没有启动，处理逻辑与修改前一样；
 b)在5.2.1.24启动后，若1.4.3中零件不需要CER，处理逻辑与修改前一样；
@@ -269,9 +269,9 @@ do on error undo, retry on endkey undo, leave with frame b:
    end.
    /*---Add Begin by davild 20080421.1*/
    /*将采购订单单头需求日期强制置空*/
-	else assign po_due_date = ? 
-		po_confirm = No	/*---Add by davild 20080722.1*/
-		.
+  else assign po_due_date = ?
+    po_confirm = No /*---Add by davild 20080722.1*/
+    .
    /*---Add End   by davild 20080421.1*/
 
    impexp = no.
@@ -290,9 +290,9 @@ do on error undo, retry on endkey undo, leave with frame b:
 
    if c-application-mode <> "API" then
       display
-         po_ord_date po_due_date po_buyer po_bill
+         po_ord_date po_due_date po_buyer /*625*/ po_ship @ po_bill
          so_job po_contract po_contact po_rmks
-         po_pr_list2 po_pr_list disc po_site
+         po_pr_list2 po_pr_list disc /*625*/ po_ship @ po_site
          po_project po_confirm po_curr po_lang
          po_taxable po_taxc po_tax_date po_fix_pr
          po_consignment
@@ -317,13 +317,13 @@ do on error undo, retry on endkey undo, leave with frame b:
       if c-application-mode <> "API"
       then do:
          set
-            po_ord_date po_due_date po_buyer po_bill
+            po_ord_date po_due_date po_buyer /* po_bill */
             so_job po_contract po_contact po_rmks
-            po_pr_list2 po_pr_list disc po_site
-            po_project /*po_confirm*/	/*---Remark by davild 20080722.1*/
-			impexp
+            po_pr_list2 po_pr_list disc /* po_site */
+            po_project /*po_confirm*/ /*---Remark by davild 20080722.1*/
+            impexp
             po_curr when (new_po) po_lang when (new_po)
-            po_taxable po_taxc po_tax_date po_fix_pr
+           /*  po_taxable po_taxc po_tax_date */ po_fix_pr
             po_consignment when (using_supplier_consignment)
             /* SS - 100722.1 - B
             po_cr_terms
@@ -830,11 +830,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          set_tax1:
          do on error undo, retry:
             if c-application-mode <> "API" then
-               update po_tax_usage
-                  po_tax_env
-                  po_taxc
-                  po_taxable
-                  tax_in
+/*625        update */
+/*625*/      display
+                      po_tax_usage
+                      po_tax_env
+                      po_taxc
+                      po_taxable
+                      tax_in
                with frame set_tax no-validate.
             else /*if c-application-mode = "API"*/
                assign

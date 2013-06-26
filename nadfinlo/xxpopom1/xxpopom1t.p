@@ -164,11 +164,11 @@
 /* ss -091105.1 by: jack */  /* 修改xxpopom1a.p*/
 /*
 xxpopom1t.p（popomt.p）
-	xxrpomt.p(pomt.p)
-		xxpopom1a.p(popomta.p)
-			xxpopom1r.p(popomtr.p)
-				xxpopom1r1.p(popomtr1.p)				
-			xxpopomtea.p(popomtea.p)
+  xxrpomt.p(pomt.p)
+    xxpopom1a.p(popomta.p)
+      xxpopom1r.p(popomtr.p)
+        xxpopom1r1.p(popomtr1.p)
+      xxpopomtea.p(popomtea.p)
 
 a)首先判断5.2.1.24是否启动CER检验，若没有启动，处理逻辑与修改前一样；
 b)在5.2.1.24启动后，若1.4.3中零件不需要CER，处理逻辑与修改前一样；
@@ -221,11 +221,13 @@ SS - 100722.1 - RNE */
 /* SS - 111010.1  By: Apple Tam */ /*增加项目编号（pod__chr01) */
 /*-Revision end---------------------------------------------------------------*/
 /* ss - 130307.1 by: jack */  /* modify xxpopomtf.p v_choifce initial no */
-/*
-{mfdtitle.i "111010.1"}
-*/
-{mfdtitle.i "130307.1"}
-
+/* SS - 130625.1 by: zy */
+/***130625.1************************************************************625****
+ * EMAIL:2013/6/24 (周一) 16:27  from:szmis03e@nadfinlo.com.cn
+ * 1.票据开往和地点不用手工录入， 直接默认发货-至中录入的site代码
+ * 2.头栏和明细项中的税信息都需要锁定,用户不能更改(取默认供应商资料里的纳税明细)
+ ****************************************************************************/
+{mfdtitle.i "test.2"}
 
 /* Clear anything displayed by mftitle if api mode.*/
 {mfaititl.i}
@@ -306,7 +308,7 @@ define var v_duedate like po_due_date .
 define var v_pc_recno as recid .
 
 define temp-table tt
-field tt_nbr like po_nbr 
+field tt_nbr like po_nbr
 field tt_part like pod_part
 field tt_pur_cost like pod_pur_cost
 field tt_disc_pct like pod_disc_pct .
@@ -314,10 +316,10 @@ field tt_disc_pct like pod_disc_pct .
 /* ss-090104.1 -e */
 
 /* 用于存储每次进入时订单项次，对cer删除的同步更新 */
-define temp-table tt2 
- field tt2_nbr like pod_nbr 
- field tt2_line like pod_line 
- field tt2_qty_ord like pod_qty_ord 
+define temp-table tt2
+ field tt2_nbr like pod_nbr
+ field tt2_line like pod_line
+ field tt2_qty_ord like pod_qty_ord
  field tt2__chr08 like pod__chr08 .
 
 /* ss-081210.1 -e */
@@ -382,8 +384,6 @@ assign
 {potrldef.i "NEW"}
 
 {pxrun.i &PROC='initialize-variables'}
-
-
 
 mainloop:
 repeat:
@@ -661,13 +661,13 @@ repeat:
       assign
          old_vend = po_vend
          old_ship = po_ship.
-  
+
   /* ss-081213.1 -b */
     for each pod_det no-lock where pod_nbr = po_nbr :
       if pod__chr08 <> "" then do :
         create tt2 .
         assign tt2_nbr = pod_nbr tt2_line = pod_line tt2_qty_ord = pod_qty_ord tt2__chr08 = pod__chr08 .
-	end .
+  end .
 
      end .
   /* ss-081213.1 -e */
@@ -1001,17 +1001,17 @@ repeat:
          del-yn     = no.
 
       /* PURCHASE ORDER MAINTENANCE -- ORDER HEADER subroutine */
-      {gprun.i ""xxpopom1b.p"" "(input using_supplier_consignment)"}	/*---Add by davild 20080624.1*/
-      
+      {gprun.i ""xxpopom1b.p"" "(input using_supplier_consignment)"}  /*---Add by davild 20080624.1*/
+
       /* ss-081226.1 -b */
-       for each tt2 : 
+       for each tt2 :
      find first pod_det where pod_nbr = tt2_nbr and pod_line = tt2_line and pod__chr08 = tt2__chr08 no-lock no-error .
      if not available pod_det then do :
         find first xxcer_mstr where  xxcer_Nbr = tt2__chr08 no-error.
-	 if avail xxcer_mstr then do:
-	   assign xxcer_ord_qty = xxcer_ord_qty - tt2_qty_ord .
-	   end .
-      end .  
+   if avail xxcer_mstr then do:
+     assign xxcer_ord_qty = xxcer_ord_qty - tt2_qty_ord .
+     end .
+      end .
    end .
     /* ss-081226.1 -e */
 
@@ -1106,9 +1106,9 @@ repeat:
    /* ss-081210.1 -b */
    v_update = no .
    /* ss-081210.1 -e */
-  
+
    /* LINE ITEMS */
-   {gprun.i ""xxpopom1a.p""}	/*---Add by davild 20080624.1*/
+   {gprun.i ""xxpopom1a.p""}  /*---Add by davild 20080624.1*/
 
    /* TRAILER */
    hide all.
@@ -1123,7 +1123,7 @@ repeat:
   {gprun.i ""xxpopomtf.p""}
   /* ss-090104.1 -e */
 
-   
+
 
    {&POMT-P-TAG1}
    /* IMPORT EXPORT UPDATE */
@@ -1145,59 +1145,59 @@ repeat:
      /* ss-081210.1 -b */
    /* ss-090104.1 -b */
    /* empty temp-table tt .
-   
+
    if v_update = yes then do :
       message "根据采购订单重新计算价格和折扣(Y/N)" view-as alert-box buttons yes-no update v_choice .
       if v_choice = yes then do :
        for each po_mstr where   po_nbr = ponbr no-lock :
            for each pod_det no-lock where  pod_nbr = po_nbr break by pod_part :
-	     if index("xc",pod_status) = 0 then do :
-	       v_qty = v_qty + pod_qty_ord .
-	      end .
-	      else do :
-	       v_qty = v_qty + ( pod_qty_rcvd - pod_qty_rtnd ) .
-	      end .
-	    if last-of(pod_part) then do :
+       if index("xc",pod_status) = 0 then do :
+         v_qty = v_qty + pod_qty_ord .
+        end .
+        else do :
+         v_qty = v_qty + ( pod_qty_rcvd - pod_qty_rtnd ) .
+        end .
+      if last-of(pod_part) then do :
 
-	 assign v_logical = yes    .
+   assign v_logical = yes    .
 
-	    find first poc_ctrl where no-lock no-error .
+      find first poc_ctrl where no-lock no-error .
 
-             
-		 {xxpopom1list.i}
-	     
-	     create tt .
-	     assign tt_nbr = pod_nbr
-	            tt_part = pod_part
-		    tt_pur_cost = v_pur_cost
-		    tt_disc_pct = v_disc_pct .
 
-	    v_qty = 0 .
-	    end . /* last-of */
-	   
-	   end . /* pod_det */
+     {xxpopom1list.i}
+
+       create tt .
+       assign tt_nbr = pod_nbr
+              tt_part = pod_part
+        tt_pur_cost = v_pur_cost
+        tt_disc_pct = v_disc_pct .
+
+      v_qty = 0 .
+      end . /* last-of */
+
+     end . /* pod_det */
         end . /* po_mstr */
-	   
-	  for each tt no-lock :
-	    for each pod_det where  pod_nbr = tt_nbr and pod_part = tt_part :
-	     assign pod_pur_cost = tt_pur_cost pod_disc_pct = tt_disc_pct .
-	     end .
-	   end .  
-        
-      
-     
+
+    for each tt no-lock :
+      for each pod_det where  pod_nbr = tt_nbr and pod_part = tt_part :
+       assign pod_pur_cost = tt_pur_cost pod_disc_pct = tt_disc_pct .
+       end .
+     end .
+
+
+
       end . /* v_choice */
    end . /* v_update */  */
    /* ss-090104.1 -e */
 /* ss - 090617.1 -b
-   for each tt2 : 
+   for each tt2 :
      find first pod_det where pod_nbr = tt2_nbr and pod_line = tt2_line and pod__chr08 = tt2__chr08 no-lock no-error .
      if not available pod_det then do :
         find first xxcer_mstr where  xxcer_Nbr = tt2__chr08 no-error.
-	 if avail xxcer_mstr then do:
-	   assign xxcer_ord_qty = xxcer_ord_qty - tt2_qty_ord .
-	  end .
-      end .  
+   if avail xxcer_mstr then do:
+     assign xxcer_ord_qty = xxcer_ord_qty - tt2_qty_ord .
+    end .
+      end .
    end .
    ss - 090617.1 -e */  /* 在项次中删除时更新xxcer_ord_qty  xxpopom1h.p*/
     /* ss-081210.1 -b */
@@ -1320,16 +1320,16 @@ PROCEDURE get-input:
          else /*if c-application-mode = "API" */
             undo, return error.
       end.
-	/*---Add Begin by davild 20080709.1*/
-	find first rqf_ctrl no-lock no-error.
-	if avail rqf_ctrl then do:
-		if po_confirm = yes and rqf__chr04 = "y" then do:
-			message "此PO已被审核,不能进行操作." view-as alert-box .
-			next-prompt po_nbr with frame a.
-			undo, retry.
-		end.
-	end.
-	/*---Add End   by davild 20080709.1*/
+  /*---Add Begin by davild 20080709.1*/
+  find first rqf_ctrl no-lock no-error.
+  if avail rqf_ctrl then do:
+    if po_confirm = yes and rqf__chr04 = "y" then do:
+      message "此PO已被审核,不能进行操作." view-as alert-box .
+      next-prompt po_nbr with frame a.
+      undo, retry.
+    end.
+  end.
+  /*---Add End   by davild 20080709.1*/
 
       {pxrun.i &PROC='validateEMTOrder' &PROGRAM='popoxr.p'
                &PARAM="(input po_is_btb)"

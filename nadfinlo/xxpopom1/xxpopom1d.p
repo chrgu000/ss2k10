@@ -1,7 +1,7 @@
 /* popomtd.p - PURCHASE ORDER MAINTENANCE SINGLE LINE ITEMS                   */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.14.4.25.1.1 $                                                               */
+/* $Revision: 1.14.4.25.1.1 $                                                 */
 /*                                                                            */
 /* This program allows updating of purchase order line details like location, */
 /* revision, due date and so on in single line entry mode.                    */
@@ -149,13 +149,13 @@ V xxrqrqmta.p 3.申请单第二项采购账户取值不正确；
 /*---Add Begin by davild 20080624.1*/
 /*
 xxpopom1t.p（popomt.p）
-	xxrpomt.p(pomt.p)
-		xxpopom1b.p(popomtb.p)	po_DUE_Date 强制为空	f)完成
-		xxpopom1a.p(popomta.p)
-			xxpopom1r.p(popomtr.p)
-				xxpopom1r1.p(popomtr1.p)	到期日期转	f)完成		
-			xxpopomtea.p(popomtea.p)
-			xxpopom1d.p(popomtd.p)	c)b)a)d)
+  xxrpomt.p(pomt.p)
+    xxpopom1b.p(popomtb.p)  po_DUE_Date 强制为空  f)完成
+    xxpopom1a.p(popomta.p)
+      xxpopom1r.p(popomtr.p)
+        xxpopom1r1.p(popomtr1.p)  到期日期转  f)完成
+      xxpopomtea.p(popomtea.p)
+      xxpopom1d.p(popomtd.p)  c)b)a)d)
 
 a)首先判断5.2.1.24是否启动CER检验，若没有启动，处理逻辑与修改前一样；
 b)在5.2.1.24启动后，若1.4.3中零件不需要CER，处理逻辑与修改前一样；
@@ -184,10 +184,10 @@ define new shared variable worklot  like wo_lot.
 define new shared variable routeop  like wr_op.
 define new shared variable workpart like wo_part.
 define new shared variable workproj like wo_project.
-define shared variable new_pod        like mfc_logical.	/*---Add by davild 20080624.1*/
+define shared variable new_pod        like mfc_logical. /*---Add by davild 20080624.1*/
 
 /* SHARED VARIABLES */
-define shared variable old_qty_ord    like pod_qty_ord.	/*---Add by davild 20080624.1*/
+define shared variable old_qty_ord    like pod_qty_ord. /*---Add by davild 20080624.1*/
 define shared variable rndmthd like rnd_rnd_mthd.
 define shared variable desc1   like pt_desc1.
 define shared variable desc2   like pt_desc2.
@@ -369,7 +369,7 @@ if c-application-mode <> "API" then
       desc1
       desc2
       pod_due_date
-/*SS - 20110926.1*/   pod__chr01     
+/*SS - 20110926.1*/   pod__chr01
       pod_per_date
       pod_need
       pod_so_job
@@ -436,7 +436,7 @@ do on error undo, retry:
          pod_vpart
          desc1 when (not can-find(pt_mstr where pt_part = pod_part))
          pod_due_date
-/*SS - 20110926.1*/   pod__chr01    
+/*SS - 20110926.1*/   pod__chr01
          pod_per_date
          pod_need
          pod_so_job
@@ -446,8 +446,10 @@ do on error undo, retry:
          pod_cc
          pod_project
          pod_type when (not blanket)
+/*
          pod_taxable
          pod_taxc
+*/
          pod_insp_rqd
          podcmmts
          pod_um_conv when (new pod_det)
@@ -580,7 +582,7 @@ do on error undo, retry:
    /* ss - 090617.1 -b */
    if pod_status <> old_pod_status then do:
    if pod_status = "x" then
-   v_update = yes 
+   v_update = yes
    .
    end.
    /* ss - 090617.1 -e */
@@ -595,9 +597,9 @@ display pod_need pod_due_date with frame d .
 /*---Add End   by davild 20080715.1*/
 /*message new_pod skip old_qty_ord skip pod_qty_ord view-as alert-box .*/
 if pod_need = ? or pod_due_date = ? then do:
-	message "需求日期 或 到期日期不能为空 ." view-as alert-box .
-	next-prompt pod_due_date with frame d no-validate.
-	 undo setd, retry setd.
+  message "需求日期 或 到期日期不能为空 ." view-as alert-box .
+  next-prompt pod_due_date with frame d no-validate.
+   undo setd, retry setd.
 end.
 /* ss-081222.1 -b */
 find first rqf_ctrl where rqf__log01 = yes no-lock no-error .
@@ -607,65 +609,65 @@ if avail pt_mstr then do:
  if pt__Log02 = yes then do:
 /* ss-081222.1 -e */
 
-if pod__chr08 = "" then do:	
+if pod__chr08 = "" then do:
 
-	find first xxcer_mstr where 
-		xxcer_avail = yes	/*---Add by davild 20080707.1*/
-	     and  xxcer_part = pod_part
-	     and  xxcer_vend = po_vend
-	     and  xxcer_effdate <= pod_due_date and (xxcer_expire >= pod_due_date or xxcer_expire = ?)
-	     and  xxcer_dec_result <> "不合格(NG)"
-	     no-error.
-	if avail xxcer_mstr then do:
-		if xxcer_dec_result = "限购(QTY)" then do:
-			if xxcer_ord_qty + pod_qty_ord > xxcer_pur_qty then do:
-				message 
-				"CER申请号为:" + xxcer_nbr + "该申请号允许数量为" + string(xxcer_pur_qty - xxcer_ord_qty) 
-				skip
-				"请按F4退出" 
-				view-as alert-box .
-				undo setd, retry setd.
-			end.
-		end.
-		/*查询到的CER代码，记录到采购订单明细资料中pod__chr08，若是限量采购类型，将已经订购数量记录在pod__dec01和xxcer_ord_qty*/
-		do:
-		    
-			assign pod__chr08 = xxcer_nbr .
-			assign xxcer_ord_qty = xxcer_ord_qty + pod_qty_ord .
-			assign pod__dec01 = xxcer_ord_qty .
-			
-		end.
-	end.
-	/*---Add Begin by davild 20080722.1*/
-	else do:
-		/*没有有效日期的CER*/
-		message "到期日期:" + string(pod_due_Date) + "没有有效日期的CER" view-as alert-box .
-		next-prompt pod_due_date with frame d no-validate.
-		undo setd, retry setd.
-	end.
-	/*---Add End   by davild 20080722.1*/
+  find first xxcer_mstr where
+    xxcer_avail = yes /*---Add by davild 20080707.1*/
+       and  xxcer_part = pod_part
+       and  xxcer_vend = po_vend
+       and  xxcer_effdate <= pod_due_date and (xxcer_expire >= pod_due_date or xxcer_expire = ?)
+       and  xxcer_dec_result <> "不合格(NG)"
+       no-error.
+  if avail xxcer_mstr then do:
+    if xxcer_dec_result = "限购(QTY)" then do:
+      if xxcer_ord_qty + pod_qty_ord > xxcer_pur_qty then do:
+        message
+        "CER申请号为:" + xxcer_nbr + "该申请号允许数量为" + string(xxcer_pur_qty - xxcer_ord_qty)
+        skip
+        "请按F4退出"
+        view-as alert-box .
+        undo setd, retry setd.
+      end.
+    end.
+    /*查询到的CER代码，记录到采购订单明细资料中pod__chr08，若是限量采购类型，将已经订购数量记录在pod__dec01和xxcer_ord_qty*/
+    do:
+
+      assign pod__chr08 = xxcer_nbr .
+      assign xxcer_ord_qty = xxcer_ord_qty + pod_qty_ord .
+      assign pod__dec01 = xxcer_ord_qty .
+
+    end.
+  end.
+  /*---Add Begin by davild 20080722.1*/
+  else do:
+    /*没有有效日期的CER*/
+    message "到期日期:" + string(pod_due_Date) + "没有有效日期的CER" view-as alert-box .
+    next-prompt pod_due_date with frame d no-validate.
+    undo setd, retry setd.
+  end.
+  /*---Add End   by davild 20080722.1*/
 end.
 /*若是修改则作以下动作*/
 else do:
-	find first xxcer_mstr where  xxcer_Nbr = pod__chr08 no-error.
-	if avail xxcer_mstr then do:
-		if xxcer_dec_result = "限购(QTY)" then do:
-			if xxcer_ord_qty + pod_qty_ord - old_qty_ord > xxcer_pur_qty then do:
-				message 
-				"CER申请号为:" + xxcer_nbr + "该申请号允许数量为" 
-				+ string(xxcer_pur_qty - xxcer_ord_qty + old_qty_ord) 
-				skip
-				"请按F4退出" 
-				view-as alert-box .
-				undo setd, retry setd.
-			end.
-		end.
-		do:
-			assign xxcer_ord_qty = xxcer_ord_qty + pod_qty_ord - old_qty_ord .
-			assign pod__dec01 = xxcer_ord_qty .
-			
-		end.
-	end.
+  find first xxcer_mstr where  xxcer_Nbr = pod__chr08 no-error.
+  if avail xxcer_mstr then do:
+    if xxcer_dec_result = "限购(QTY)" then do:
+      if xxcer_ord_qty + pod_qty_ord - old_qty_ord > xxcer_pur_qty then do:
+        message
+        "CER申请号为:" + xxcer_nbr + "该申请号允许数量为"
+        + string(xxcer_pur_qty - xxcer_ord_qty + old_qty_ord)
+        skip
+        "请按F4退出"
+        view-as alert-box .
+        undo setd, retry setd.
+      end.
+    end.
+    do:
+      assign xxcer_ord_qty = xxcer_ord_qty + pod_qty_ord - old_qty_ord .
+      assign pod__dec01 = xxcer_ord_qty .
+
+    end.
+  end.
 end.
 
 /* ss-081222.1 -b */
@@ -891,7 +893,8 @@ end . /* end pt__chr08 = yes */
             }
          end. /* IF pod_tax_env = "" */
          if c-application-mode <> "API" then
-            update
+/*625    update   */
+/*625*/  display
                pod_tax_usage
                pod_tax_env
                pod_taxc
