@@ -194,23 +194,6 @@ h)若零件净重(pt_net_wt)小于零，则提示用户，该零件不能采购。
 SS - 100722.1 - RNE */
 
 /* DISPLAY TITLE */
-/* ss-081210.1 -b */
-/* {mfdtitle.i "2+ "} */
-/* ss-081226.1 -b */
-/* {mfdtitle.i "081210.1 "} */
-/* ss-081230.1 -b */
-/* {mfdtitle.i "081226.1 "} */
-/*
-{mfdtitle.i "090109.1 "}
-*/
-/*
-{mfdtitle.i "090617.1 "}
-*/
-/*
-{mfdtitle.i "091105.1 "}
-*/
-/*{mfdtitle.i "100722.1 "}*/
-
 /* ss-081230.1 -e */
 /* ss-081210.1 -e */
 /* ss-081226.1 -e */
@@ -227,9 +210,9 @@ SS - 100722.1 - RNE */
  * 1.票据开往和地点不用手工录入， 直接默认发货-至中录入的site代码
  * 2.头栏和明细项中的税信息都需要锁定,用户不能更改(取默认供应商资料里的纳税明细)
  ****************************************************************************/
-{mfdtitle.i "test.2"}
 
 /* Clear anything displayed by mftitle if api mode.*/
+{mfdtitle.i "test.2"}
 {mfaititl.i}
 {cxcustom.i "POMT.P"}
 {pxmaint.i}
@@ -1108,7 +1091,7 @@ repeat:
    /* ss-081210.1 -e */
 
    /* LINE ITEMS */
-   {gprun.i ""xxpopom1a.p""}  /*---Add by davild 20080624.1*/
+   {gprun.i ""xxpopom2a.p""}  /*---Add by davild 20080624.1*/
 
    /* TRAILER */
    hide all.
