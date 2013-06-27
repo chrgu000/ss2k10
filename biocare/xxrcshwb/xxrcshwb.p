@@ -55,6 +55,7 @@
 /* Revision: 1.19.1.31.1.4  BY: Lester Bloomberg  DATE: 04/23/07  ECO: *P5SB* */
 /* Revision: 1.19.1.31.1.5  BY: Ambrose Almeida   DATE: 08/27/07  ECO: *P654* */
 /* $Revision: 1.19.1.31.1.6 $ BY: Abhijit Gupta     DATE: 10/30/07  ECO: *P6CJ* */
+/* REVISION  EB21sp7   BY: MEL ZHAO DATE 13/06/07 ECO SS-20130607.1           */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -1193,10 +1194,16 @@ repeat with frame a:
    hide frame c no-pause.
 
    /* SHIPPER WORKBENCH */
-   {gprun.i ""xxrcshwbb.p""
+  /* {gprun.i ""rcshwbb.p""
+      "(input ship_from,
+        input tmp_prefix,
+        input abs_recid)"} */  /* ss - 20130607 */
+
+    {gprun.i ""xxrcshwbb.p""
       "(input ship_from,
         input tmp_prefix,
         input abs_recid)"}
+
 
    view frame a.
 

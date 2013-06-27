@@ -20,6 +20,7 @@
 /* Revision: 1.9.1.9    BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00K*     */
 /* Revision: 1.9.1.10   BY: Mandar Gawde       DATE: 05/17/04 ECO: *P1YF*     */
 /* $Revision: 1.9.1.11 $ BY: Abhijit Gupta    DATE: 10/30/07 ECO: *P6CJ* */
+/* REVISION  EB21sp7   BY: MEL ZHAO DATE 13/06/07 ECO SS-20130607.1           */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -174,13 +175,22 @@ do:
 
          absid = if available abs_mstr then abs_mstr.abs_id else ?.
 
-         {gprun.i ""xxrcshwbc2.p""
+         /*{gprun.i ""rcshwbc2.p""
+            "(input absid,
+              input ship_from,
+              input temp_parent,
+              input shipto_code,
+              input p_dock_id,
+              output abnormal_exit)"}.*/ /* ss - 20130607 */
+
+           {gprun.i ""xxrcshwbc2.p""
             "(input absid,
               input ship_from,
               input temp_parent,
               input shipto_code,
               input p_dock_id,
               output abnormal_exit)"}.
+
       end.
 
       /* ADD ITEM FOR CONTAINER WORKBENCH */

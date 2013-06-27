@@ -272,6 +272,8 @@ define variable lIfRelease        as logical        no-undo.
 define variable l_msg_text        as character      no-undo.
 /* Added on 7/22/05 for credit card validation end */
 define variable v_si_entity       like si_entity    no-undo.
+define variable qty_open like sod_qty_ord.  /* ss - 20130607 */
+
 /* VARIABLE DEFINITIONS FOR gpfile.i */
 {gpfilev.i}
 
@@ -1033,6 +1035,11 @@ do on endkey undo main, leave main
          multiple      when (sod_type = "")
          cmmts
       with frame a editing:
+
+      /* ss - 20130607 - b */
+      assign qty_open = sod_qty_ord - sod_qty_ship.
+      message "¶ÌÈ±Á¿£º" + string(qty_open).
+      /* ss - 20130607 - e */
          assign
             global_site = input part_site
             global_loc  = input part_loc
@@ -1104,7 +1111,6 @@ do on endkey undo main, leave main
 /**/           end.
 /**/        end.
 /**/     end.
-
       if not so_sched then
          if ((sod_qty_ord >= 0  and
             ((part_qty * part_qty_conv) / sod_um_conv) > open_qty )  or
@@ -1112,8 +1118,15 @@ do on endkey undo main, leave main
             ((part_qty * part_qty_conv) / sod_um_conv) < open_qty ))
          then do:
             /* QTY ORDERED CANNOT BE LESS THAN ALLOCATED + PICKED + SHIPPED */
-            {pxmsg.i  &MSGNUM=4999 &ERRORLEVEL=2}
+          /*  {pxmsg.i  &MSGNUM=4999 &ERRORLEVEL=2} */ /* ss - 20130607 */
+
+          /* ss - 20130607 - b */
+          {pxmsg.i  &MSGNUM=4999 &ERRORLEVEL=4}
+           undo INV_DETAIL, retry INV_DETAIL.
+          /* ss - 20130607 - e */
+
          end. /* IF PART_QTY > OPEN_QTY */
+
 
       /* IF SPECIFIED SITE IS NOT DEFINED SHIP-FROM SITE, */
       /* MAKE SURE IT'S IN THE SAME DOMAIN              */
@@ -1747,8 +1760,22 @@ do on endkey undo main, leave main
             end.
             else do:
 
+/* up_yn */
                /* DURING SO CREATION l_sodall = Yes, sod_qty_all = 0  */
-               {gprun.i ""soitallf.p""
+               /*{gprun.i ""soitallf.p""
+                        "(input part_order,
+                          input part_order_line,
+                          input part_item,
+                          input work_sr_wkfl.sr_site,
+                          input work_sr_wkfl.sr_loc,
+                          input work_sr_wkfl.sr_lotser,
+                          input work_sr_wkfl.sr_ref,
+                          input this_rec_qty2 * part_qty_conv,
+                          input del_lad,
+                          input l_sodall,
+                          output undotran)"}*/  /* ss - 20130607 */
+
+                  {gprun.i ""xxsoitallf.p""
                         "(input part_order,
                           input part_order_line,
                           input part_item,

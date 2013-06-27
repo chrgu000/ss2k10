@@ -119,6 +119,7 @@
 /* Revision: 1.127.1.19 By: Amandeep Saini         DATE: 09/14/07 ECO: *P67R* */
 /* Revision: 1.127.1.20 By: Anju Dubey             DATE: 09/28/07 ECO: *P684* */
 /* $Revision: 1.127.1.21 $ By: Deepak Taneja       DATE: 10/15/07 ECO: *P69J* */
+/* REVISION  EB21sp7   BY: MEL ZHAO DATE 13/06/07 ECO SS-20130607.1           */
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -287,9 +288,7 @@ define variable l_recid3   as recid no-undo.
 define variable l_recid4   as recid no-undo.
 
 define variable v_si_entity like si_entity no-undo.
-
 {socnvars.i}   /* CONSIGNMENT VARIABLES */
-
 {socnis.i}     /* CUSTOMER CONSIGNMENT SHIPMENT TEMP-TABLE DEFINITION */
 
 {rcexptbl.i new}
@@ -410,7 +409,18 @@ repeat:
    /* CREATE NEW RECORDS */
    if create_recs then do:
 
-      {gprun.i ""xxrcctwbc.p""
+     /* {gprun.i ""rcctwbc.p""
+               "(input ship_from,
+                 input add_container,
+                 input add_item,
+                 input add_parent_container,
+                 input tmp_prefix,
+                 input true,
+                 input shipto_code,
+                 input l_dock_id,
+                 input-output abs_recid)"}. */ /* ss - 20130607 */
+
+       {gprun.i ""xxrcctwbc.p""
                "(input ship_from,
                  input add_container,
                  input add_item,
@@ -1211,6 +1221,7 @@ repeat:
          assign l_twt_old = l_abs_tare_wt.
 /*6*/ setdet:
 /*6*/ do transaction:
+
          /* CHECK LOCAL VARIABLE fas_so_rec POSSIBLY FROM REMOTE DOMAIN */
          set
             part_order when (using_container_charges and
