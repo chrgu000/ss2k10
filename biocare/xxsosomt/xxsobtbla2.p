@@ -315,7 +315,7 @@ do on error undo, retry:
                prev-btb-vend = sod_btb_vend.
 
             set
-        sod_site when
+               sod_site when
              (((new sod_det and pm_code = "C")
            or pm_code <> "C") and l_updsite)
                sod_btb_vend
@@ -474,7 +474,24 @@ do on error undo, retry:
                else
                   apply lastkey.
             end.  /* update sod_site ... */
-
+/**/     assign v_si_entity = "".
+/**/     if so_site <> sod_site and not batchrun then do:
+/**/        find first si_mstr no-lock where si_domain = global_domain and
+/**/             si_site = so_site no-error.
+/**/        if available si_mstr then do:
+/**/           assign v_si_entity = si_entity.
+/**/        end.
+/**/        find first si_mstr no-lock where si_domain = global_domain and
+/**/             si_site = sod_site no-error.
+/**/        if available si_mstr then do:
+/**/           if si_entity <> v_si_entity then do:
+/**/              assign v_si_entity = '会计单位[' + si_entity + ']与订单头[' + v_si_entity + ']不符'.
+/**/              {pxmsg.i &MSGTEXT=v_si_entity &ERRORLEVEL=3}
+/**/              next-prompt pod_site.  /* with frame c_btb_site */
+/**/              undo btb1,retry btb1.
+/**/           end.
+/**/        end.
+/**/     end.
             /* VALIDATE EMT TYPE - MUST BE IN lngd_det */
             {gplngv.i
                &file     = ""emt""
@@ -726,6 +743,7 @@ do on error undo, retry:
             else
                apply lastkey.
          end. /* editing */
+/**/     assign v_si_entity = "".
 /**/     if so_site <> sod_site and not batchrun then do:
 /**/        find first si_mstr no-lock where si_domain = global_domain and
 /**/             si_site = so_site no-error.
@@ -737,8 +755,8 @@ do on error undo, retry:
 /**/        if available si_mstr then do:
 /**/           if si_entity <> v_si_entity then do:
 /**/              assign v_si_entity = '会计单位[' + si_entity + ']与订单头[' + v_si_entity + ']不符'.
-/**/              {pxmsg.i &MSGTEXT=v_si_entity
-/**/                       &ERRORLEVEL=3}
+/**/              {pxmsg.i &MSGTEXT=v_si_entity &ERRORLEVEL=3}
+/**/              next-prompt pod_site. /* with frame c_site. */
 /**/              undo,retry.
 /**/           end.
 /**/        end.
