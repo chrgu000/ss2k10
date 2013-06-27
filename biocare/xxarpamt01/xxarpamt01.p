@@ -72,7 +72,12 @@
 /* Revision: 1.52       BY: Shivanand H        DATE: 04/12/05 ECO: *P3CB*     */
 /* Revision: 1.53       BY: Salil Pradhan      DATE: 07/12/05 ECO: *P3SZ*     */
 /* Revision: 1.54       BY: Shivanand H        DATE: 08/23/05 ECO: *P3S4*     */
-/* $Revision: 1.55 $ BY: SurenderSingh Nihalani DATE: 12/01/05 ECO: *P4B2*     */
+/* $Revision: 1.55 $ BY: SurenderSingh Nihalani DATE: 12/01/05 ECO: *P4B2*    */
+/* SS - 130624.1 RNB
+【 130624.1 】
+ 1.ar细项的ENTITY与ar头的ENTITY不符不允许继续
+【 130624.1 】
+SS - 130624.1 - RNE */
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -84,7 +89,7 @@
 /*V8:ConvertMode=Maintenance                                                  */
 
 {&ARPAMT01-P-TAG1}
-{mfdtitle.i "1+ "}
+{mfdtitle.i "130624.1"}
 {&ARPAMT01-P-TAG2}
 
 {cxcustom.i "ARPAMT01.P"}

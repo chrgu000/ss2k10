@@ -147,11 +147,11 @@
 /* $Revision: 1.13 $    BY: Katie Hilbert  DATE: 04/01/01 ECO: *P002*  */
 /* SS - 121206.1 By: Randy Li */
 /* SS - 121206.1 RNB
-【 121206.1 】
+【 130627.1 】
 1.增加用户权限控制。
 2.订单明细项的ENTITY与订单头的ENTITY不符不允许继续(用site确认)
-【 121206.1 】
-SS - 121206.1 - RNE */
+【 130627.1 】
+SS - 130627.1 - RNE */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -163,7 +163,7 @@ SS - 121206.1 - RNE */
 /*
 {mfdtitle.i "b+ "}
 */
-{mfdtitle.i "121206.1"}
+{mfdtitle.i "130627.1"}
 /* SS - 121206.1 - E */
 /* CHANGES MADE TO THIS PROGRAM MAY ALSO NEED TO BE */
 /* MADE TO PROGRAM fseomt.p.                        */

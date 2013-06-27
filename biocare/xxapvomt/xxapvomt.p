@@ -190,7 +190,11 @@
 /* Revision: 1.94.2.19    BY: Amandeep Saini       DATE: 11/28/07 ECO: *P6FJ* */
 /* Revision: 1.94.2.20    BY: Shivakumar Patil     DATE: 11/29/07 ECO: *P6FM* */
 /* $Revision: 1.94.2.21 $ BY: Shivakumar Patil     DATE: 12/11/07 ECO: *P6GQ* */
-
+/* SS - 130624.1 RNB
+【 130624.1 】
+ 1.AP细项的ENTITY与AP头的ENTITY不符不允许继续
+【 130624.1 】
+SS - 130624.1 - RNE */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -269,7 +273,7 @@
 
 /*V8:ConvertMode=Maintenance                                                  */
 
-{mfdtitle.i "1+ "}
+{mfdtitle.i "130624.1"}
 {cxcustom.i "APVOMT.P"}
 
 {gprunpdf.i "mcrndpl" "p"}

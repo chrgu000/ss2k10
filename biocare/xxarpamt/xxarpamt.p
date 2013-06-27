@@ -30,8 +30,13 @@
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Old ECO marker removed, but no ECO header exists *L01K*                    */
 /* Revision: 1.13.1.9   BY: Manjusha Inglay    DATE: 07/29/02  ECO:   *N1P4*  */
-/* Revision: 1.13.1.10  BY: Marcin Serwata      DATE: 11/17/03  ECO: *P18V*  */
-/* $Revision: 1.13.1.11 $ BY: Hitendra P V    DATE: 07/12/05  ECO: *P3SP*               */
+/* Revision: 1.13.1.10  BY: Marcin Serwata      DATE: 11/17/03  ECO: *P18V*   */
+/* $Revision: 1.13.1.11 $ BY: Hitendra P V    DATE: 07/12/05  ECO: *P3SP*     */
+/* SS - 130624.1 RNB
+【 130624.1 】
+ 1.ar细项的ENTITY与ar头的ENTITY不符不允许继续
+【 130624.1 】
+SS - 130624.1 - RNE */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -39,7 +44,7 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
-{mfdtitle.i "1+ "}
+{mfdtitle.i "130624.1"}
 {cxcustom.i "ARPAMT.P"}
 
 define new shared variable cash_book        like mfc_logical initial no.

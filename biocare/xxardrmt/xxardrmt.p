@@ -100,6 +100,11 @@
 /* Revision: 1.20.1.36     BY: Annapurna V        DATE: 02/21/05 ECO: *P390* */
 /* Revision: 1.20.1.37.1.1 BY: Priyank Khandare   DATE: 07/25/05 ECO: *P3TC* */
 /* $Revision: 1.20.1.37.1.2 $BY: Sarita Gonsalves   DATE: 07/26/06 ECO: *P4XS* */
+/* SS - 130624.1 RNB
+【 130624.1 】
+ 1.ar细项的ENTITY与ar头的ENTITY不符不允许继续
+【 130624.1 】
+SS - 130624.1 - RNE */
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -115,7 +120,7 @@
 /* Disabled and data is read from temp tables.                 */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "1+ "}
+{mfdtitle.i "130624.1"}
 {cxcustom.i "ARDRMT.P"}
 {gprunpdf.i "mcrndpl" "p"}
 

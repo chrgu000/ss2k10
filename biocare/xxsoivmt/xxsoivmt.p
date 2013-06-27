@@ -211,11 +211,11 @@
 /* Revision: 1.107.1.4     BY: Antony LejoS       DATE: 06/11/07  ECO: *P5T1* */
 /* $Revision: 1.107.1.5 $           BY: Anju Dubey         DATE: 08/13/07  ECO: *P64F* */
 /*-Revision end---------------------------------------------------------------*/
-/* SS - 121206.1 RNB
+/* SS - 130624.1 RNB
 【 130624.1 】
  1.订单明细项的ENTITY与订单头的ENTITY不符不允许继续(用site确认)
 【 130624.1 】
-SS - 121206.1 - RNE */
+SS - 130624.1 - RNE */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
