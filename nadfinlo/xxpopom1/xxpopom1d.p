@@ -363,7 +363,7 @@ continue = no.
 if c-application-mode <> "API" then
    display
       pod_lot_rcpt
-      pod_loc
+      "1WH-P" @ pod_loc
       pod_rev
       pod_vpart
       desc1
@@ -482,6 +482,7 @@ do on error undo, retry:
             apply lastkey.
          end.
       end. /* EDITING */
+      assign pod_loc.
    end.  /* If c-application-mode <> "API" */
    else do: /* c-application-mode = "API" */
       if blanket then

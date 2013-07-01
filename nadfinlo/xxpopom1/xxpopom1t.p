@@ -227,7 +227,7 @@ SS - 100722.1 - RNE */
  * 1.票据开往和地点不用手工录入， 直接默认发货-至中录入的site代码
  * 2.头栏和明细项中的税信息都需要锁定,用户不能更改(取默认供应商资料里的纳税明细)
  ****************************************************************************/
-{mfdtitle.i "test.2"}
+{mfdtitle.i "test.3"}
 
 /* Clear anything displayed by mftitle if api mode.*/
 {mfaititl.i}
@@ -384,7 +384,7 @@ assign
 {potrldef.i "NEW"}
 
 {pxrun.i &PROC='initialize-variables'}
-{mfdemo.i 06/01/2013 06/30/2013} /* ref mf1.p */
+{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
 mainloop:
 repeat:
  /* ss-081226.1 -b */

@@ -350,6 +350,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             end. /* if frame-field = "po_cr_terms" */
             apply lastkey.
          end. /* Editing */
+         assign po_bill po_site.
       end.  /* if c-application-mode <>"API"*/
       else       /* if c-application-mode = "API"*/
       do:
@@ -394,7 +395,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             undo, return error.
          end.
       end. /*end if C-APPLICATION-MODE = API */
-
+      
       /* CHECKS FOR ACCESS ON PO ORDER DATE */
       if po_ord_date <> old_ord_date
       then do:

@@ -36,7 +36,7 @@ define variable i as integer no-undo.
 myii1 = "".
 myii2 = "".
 thf = no.
-find first pt_mstr no-lock where pt_part = ro_routing 
+find first pt_mstr no-lock where pt_part = ro_routing
        and pt_prod_line = "3700" no-error.
 if avail pt_mstr then do:
   thf = true.
@@ -48,15 +48,17 @@ if thf then do:
        int(entry(1,ro_vend,"/"))  no-error.
        if not error-status:error then do:
          myii1 = entry(1,ro_vend,"/").
+         if int(myii1) = 0 then myii1 = "".
          int(entry(2,ro_vend,"/"))  no-error.
          if not error-status:error then do:
            myii2 = entry(2,ro_vend,"/").
+           if int(myii2) = 0 then myii2 = "".
          end.
        end.
      end.
   end.
   else do:
-     assign myii1 = "" 
+     assign myii1 = ""
             myii2 = "".
   end.
 end.
@@ -91,7 +93,16 @@ if thf then do:
     ro_po_line
     ro_mv_nxt_op
     ro_auto_lbr
-  with frame b.   
+  with frame b.
+  if ro_tool <> "" then do:
+     find first pt_mstr no-lock where pt_part = ro_tool no-error.
+     if not available pt_mstr then do:
+        {mfmsg.i 16 3}
+        display ro_tool with frame b.
+        next-prompt ro_tool with frame b.
+        undo , retry.
+     end.
+  end.
   if myii1 <> "" then do:
      DO i = 1 to length(myii1).
         If index("0987654321.", substring(myii1,i,1)) = 0 then do:
@@ -124,9 +135,9 @@ if thf then do:
     message "产出数必须<=模腔数".
     undo,retry.
   end.
-  if myii1 <> "" and myii2 <> "" then 
+  if myii1 <> "" and myii2 <> "" then
      ro_vend = myii1 + "/" + myii2.
-  else 
+  else
      ro_vend = "".
 end.
 else do:

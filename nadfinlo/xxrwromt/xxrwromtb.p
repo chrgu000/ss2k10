@@ -28,18 +28,37 @@ define input parameter ro_recid as recid.
 
 find first ro_det where recid(ro_det) = ro_recid exclusive-lock.
 /* lambert 20120905.1 */
-define var myii1 as int no-undo.
-define var myii2 as int no-undo.
-myii1 = 1.
-myii2 = 1.
-if index(ro_vend , "/") > 1 and index(ro_vend , "/") < length(ro_vend) then do:
-  int(entry(1,ro_vend,"/"))  no-error.
-  if not error-status:error then do:
-    myii1 = int(entry(1,ro_vend,"/")).
-    int(entry(2,ro_vend,"/"))  no-error.
-    if not error-status:error then do:
-      myii2 = int(entry(2,ro_vend,"/")).
-    end.
+define variable myii1 as character no-undo.
+define variable myii2 as character no-undo.
+define variable thf as logical no-undo .
+define variable i as integer no-undo.
+myii1 = "".
+myii2 = "".
+thf = no.
+find first pt_mstr no-lock where pt_part = ro_routing
+       and pt_prod_line = "3700" no-error.
+if avail pt_mstr then do:
+  thf = true.
+end.
+thf = true.
+if thf then do:
+  if ro_vend <> "" then do:
+     if index(ro_vend , "/") > 1 and index(ro_vend , "/") < length(ro_vend) then do:
+       int(entry(1,ro_vend,"/"))  no-error.
+       if not error-status:error then do:
+         myii1 = entry(1,ro_vend,"/").
+         if int(myii1) = 0 then myii1 = "".
+         int(entry(2,ro_vend,"/"))  no-error.
+         if not error-status:error then do:
+           myii2 = entry(2,ro_vend,"/").
+           if int(myii2) = 0 then myii2 = "".
+         end.
+       end.
+     end.
+  end.
+  else do:
+     assign myii1 = ""
+            myii2 = "".
   end.
 end.
 /* lambert 20120905.1 */
@@ -57,18 +76,23 @@ setFrameLabels(frame bb:handle).
 
 ststatus = stline[1].
 status input ststatus.
-
-update
-   ro_tool
-   myii1 myii2
-   ro_wipmtl_part
-   ro__dec01
-with frame bb.
-
-if myii1 > myii2 then do:
-  message "产出数必须<=模腔数".
-  undo,retry.
-end.
+   update
+      ro_tool
+      myii1 myii2
+      ro_wipmtl_part
+      ro__dec01
+   with frame bb.
+   find first pt_mstr no-lock where pt_part = ro_tool no-error.
+   if not available pt_mstr then do:
+      {mfmsg.i 16 3}
+      display ro_tool with frame bb.
+      next-prompt ro_tool with frame bb.
+      undo , retry.
+   end.
+   if myii1 > myii2 then do:
+     message "产出数必须<=模腔数".
+     undo,retry.
+   end.
 ro_vend = string(myii1) + "/" + string(myii2).
 
 /*

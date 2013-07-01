@@ -81,9 +81,9 @@ Last change:  Q    19 Mar 97    1:27 pm
 
 
 /****030627.1*******************************************************************
-1.ro_routing如果录入的不是零件主档里的料号，则必须有错误提示。
-2.模腔数原来默认的是”1:1“ ,现在更改”空:空“，即，用户无论是否填写数据，
-  屏幕都会过到下一屏，不用错误提示.
+1.ro_tool如果不为空时录入的不是零件主档里的料号,则必须有错误提示,不允许过.
+2.模腔数原来默认的是”1:1“ ,现在更改”空:空“,即,用户无论是否填写数据,
+  屏幕都会过到下一屏,不用错误提示.
 *******************************************************************************/
 /* DISPLAY TITLE */
 {mfdtitle.i "test.1"}
@@ -172,7 +172,7 @@ setFrameLabels(frame a:handle).
 
 /* DISPLAY */
 view frame a.
-{mfdemo.i 06/01/2013 06/31/2013} /* ref mf1.p */
+{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
 mainloop:
 repeat with frame a:
 
@@ -329,12 +329,7 @@ repeat with frame a:
             recno   = ?.
       end. /* IF recno <> ? THEN DO: */
    end. /* EDITING: */
-   find first pt_mstr no-lock where pt_part = input ro_routing no-error.
-   if not available pt_mstr then do:
-      {mfmsg.i 16 3}
-      next-prompt ro_routing with frame a.
-      undo mainloop, retry.
-   end.
+
    /* ADD/MOD/DELETE */
 
    /* CHECK TO SEE IF ANY OPERATION ARE SSM OPERATIONS */

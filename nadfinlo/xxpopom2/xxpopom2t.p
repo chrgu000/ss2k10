@@ -367,7 +367,7 @@ assign
 {potrldef.i "NEW"}
 
 {pxrun.i &PROC='initialize-variables'}
-{mfdemo.i 06/01/2013 06/30/2013} /* ref mf1.p */
+{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
 mainloop:
 repeat:
  /* ss-081226.1 -b */
@@ -988,7 +988,8 @@ repeat:
 
       /* ss-081226.1 -b */
        for each tt2 :
-     find first pod_det where pod_nbr = tt2_nbr and pod_line = tt2_line and pod__chr08 = tt2__chr08 no-lock no-error .
+     find first pod_det where pod_nbr = tt2_nbr and pod_line = tt2_line
+            and pod__chr08 = tt2__chr08 no-lock no-error .
      if not available pod_det then do :
         find first xxcer_mstr where  xxcer_Nbr = tt2__chr08 no-error.
    if avail xxcer_mstr then do:

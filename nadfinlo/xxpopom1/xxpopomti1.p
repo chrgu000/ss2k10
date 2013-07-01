@@ -1,7 +1,7 @@
 /* popomti.p - PURCHASE ORDER MAINTENANCE SUBROUTINE                          */
 /* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.22 $                                                               */
+/* $Revision: 1.22 $                                                          */
 /*                                                                            */
 /* This program updates and validates the purchase order line site.           */
 /*F0PN*/
@@ -19,7 +19,7 @@
 /* Revision: 1.19  BY:Samir Bavkar                  DATE:12/12/01 ECO: *P013* */
 /* Revision: 1.20  BY:Rajaneesh S.                  DATE:08/29/02 ECO: *M1BY* */
 /* $Revision: 1.22 $  BY: Laurene Sheridan          DATE:10/17/02 ECO: *N13P* */
-/* $Revision: eB2SP4    BY: Apple Tam        DATE: 09/26/11  ECO: *SS - 20110926.1*   */
+/* $Revision: eB2SP4    BY: Apple Tam  DATE: 09/26/11  ECO: *SS - 20110926.1* */
 /*V8:ConvertMode=Maintenance                                                  */
 /* ************************************************************************** */
 /* Note: This code has been modified to run when called inside an MFG/PRO API */
@@ -135,7 +135,6 @@ for first pod_det
    where recid(pod_det) = pod_recno
    exclusive-lock:
 end.
-
 setreq:
 do on error undo, retry:
 /* DO NOT RETRY WHEN PROCESSING API REQUEST */
@@ -227,7 +226,6 @@ do on error undo, retry:
    then do:
       if pod_site <> old_pod_site
       then do:
-
          if (pod_status = "C" or pod_status = "X")
          then do:
             yn = no.
