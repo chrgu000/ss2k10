@@ -195,7 +195,8 @@ then do:
    end.
 
    /* ADDED SECOND EXCHANGE RATE BELOW */
-   {gprun.i ""popomtra.p""
+/*   {gprun.i ""popomtra.p"" */
+     {gprun.i ""xxpopomtra1.p""
       "(input no,
         input p_pod_site,
         input p_pod_req_nbr,
