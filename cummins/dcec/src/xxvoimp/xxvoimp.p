@@ -85,8 +85,9 @@ empty temp-table xiv_m no-error.
 empty temp-table xivd_d no-error.
 input from value(xf_name).
 repeat:
-  import unformat v_key. 
-  if index(entry(1,v_key,"|"),v_pre) > 0 then do:
+  import unformat v_key.
+/*  if index(entry(1,v_key,"|"),v_pre) > 0 then do: /* 取消收货单必须以RC开头限制 */ */
+  if entry(1,v_key,"|") <> "" then do:
      create xiv_m.
      assign xiv_receiver = entry(1,v_key,"|").
             xiv_line     = integer(entry(2,v_key,"|")).
@@ -101,7 +102,7 @@ repeat:
 end.
 input close.
 
-for each xiv_m exclusive-lock with width 200: 
+for each xiv_m exclusive-lock with width 200:
     if xiv_datec <> "" then assign xiv_date = str2Date(xiv_datec) no-error.
     if xiv_date = ? then assign xiv_date = today.
     find first prh_hist no-lock where prh_domain = global_domain and
@@ -135,7 +136,7 @@ if can-find(first xiv_m where xiv_chk <> "") then do:
    next.
 end.
 else do:
-		 OS-COMMAND SILENT VALUE( "move /y " + xf_name + " " + vdirbak).
+     OS-COMMAND SILENT VALUE( "move /y " + xf_name + " " + vdirbak).
 end.
 
 /*查找PO list*/
@@ -163,7 +164,7 @@ for each xiv_m no-lock break by xiv_inv:
        put stream bf unformat '-' skip.
        put stream bf unformat 'N' skip. /* 自动选择 */
        put stream bf unformat '-' skip. /* 税 */
-   end.       
+   end.
        put stream bf unformat '"' xiv_receiver '" ' xiv_line skip.
        put stream bf unformat '-' skip. /* 税 */
        put stream bf unformat xiv_qty_ord ' ' xiv_iv_cost skip.
@@ -184,23 +185,23 @@ for each xiv_m no-lock break by xiv_inv:
 
       /* cim_load */
       batchrun = yes.
-			input from value(vdirtmp + xf_file + ".bpi").
-			output to value(vdirlog + xf_file + ".bpo").
-			hide message no-pause.
-			cimrunprogramloop:
-			do on stop undo cimrunprogramloop,leave cimrunprogramloop:
-			   {gprun.i ""xxapvomt.p""}
-			end.
-			hide message no-pause.
-			output close.
-			input close.
-			batchrun = no.
-			find ap_mstr NO-LOCK where ap_mstr.ap_domain = global_domain and  
+      input from value(vdirtmp + xf_file + ".bpi").
+      output to value(vdirlog + xf_file + ".bpo").
+      hide message no-pause.
+      cimrunprogramloop:
+      do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+         {gprun.i ""xxapvomt.p""}
+      end.
+      hide message no-pause.
+      output close.
+      input close.
+      batchrun = no.
+      find ap_mstr NO-LOCK where ap_mstr.ap_domain = global_domain and
                   ap_type = "vo" and
-			            ap_ref = xiv_inv NO-ERROR.
-			IF AVAILABLE ap_mstr THEN DO:
-			     OS-COMMAND SILENT VALUE( "move /y " + xf_name + " " + vdirbak).
-			END.
+                  ap_ref = xiv_inv NO-ERROR.
+      IF AVAILABLE ap_mstr THEN DO:
+           OS-COMMAND SILENT VALUE( "move /y " + xf_name + " " + vdirbak).
+      END.
    end.
 end.
 
@@ -221,7 +222,7 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER):
         ASSIGN sstr = datestr.
         ASSIGN iY = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
         ASSIGN sstr = SUBSTRING(sstr,INDEX(sstr,"-") + 1).
-      
+
         ASSIGN iM = INTEGER(SUBSTRING(sstr,1,INDEX(sstr,"-") - 1)).
         ASSIGN iD = INTEGER(SUBSTRING(sstr,INDEX(sstr,"-") + 1)).
         ASSIGN od = DATE(im,id,iy).
