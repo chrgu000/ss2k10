@@ -363,7 +363,7 @@ continue = no.
 if c-application-mode <> "API" then
    display
       pod_lot_rcpt
-      "1WH-P" @ pod_loc
+      pod_loc
       pod_rev
       pod_vpart
       desc1

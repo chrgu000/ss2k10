@@ -154,14 +154,8 @@
 /* MAINTAINS BOTH BLANKET AND REGULAR PURCHASE ORDERS.                        */
 /*                                                                            */
 /* Creation: eB21SP3 Chui Last Modified: 20080624 By: Davild Xu *ss-20080624.1*/
-/* ss-081210.1 by jack */
 /*---Add Begin by davild 20080624.1*/
-/* ss-081226.1 jack  */
-/* ss-081230.1 jack */
-/* ss-090104.1 jack */
-/* ss-090108.1 jack */
-/* ss-090109.1 jack */
-/* ss -091105.1 by: jack */  /* ĞŞ¸Äxxpopom1a.p*/
+/* ss -091105.1 by: jack  ĞŞ¸Äxxpopom1a.p*/
 /*
 xxpopom1t.p£¨popomt.p£©
   xxrpomt.p(pomt.p)
@@ -180,9 +174,6 @@ g)²É¹º¶©µ¥Ã÷Ï¸ÖĞµÄË°ÓÃÍ¾(pod_tax_usage)ºÍÄÉË°ÀàĞÍ(pod_taxc)Ä¬ÈÏÈ¡Öµ²É¹º¶©µ¥µ¥Í·¶
 h)ÈôÁã¼ş¾»ÖØ(pt_net_wt)Ğ¡ÓÚÁã£¬ÔòÌáÊ¾ÓÃ»§£¬¸ÃÁã¼ş²»ÄÜ²É¹º¡£
 */
 /*---Add End   by davild 20080624.1*/
-/* ss - 090617.1 by: jack */
-
-
 
 /* SS - 100722.1 - RNB
 [100722.1]
@@ -194,29 +185,7 @@ h)ÈôÁã¼ş¾»ÖØ(pt_net_wt)Ğ¡ÓÚÁã£¬ÔòÌáÊ¾ÓÃ»§£¬¸ÃÁã¼ş²»ÄÜ²É¹º¡£
 SS - 100722.1 - RNE */
 
 /* DISPLAY TITLE */
-/* ss-081210.1 -b */
-/* {mfdtitle.i "2+ "} */
-/* ss-081226.1 -b */
-/* {mfdtitle.i "081210.1 "} */
-/* ss-081230.1 -b */
-/* {mfdtitle.i "081226.1 "} */
-/*
-{mfdtitle.i "090109.1 "}
-*/
-/*
-{mfdtitle.i "090617.1 "}
-*/
-/*
-{mfdtitle.i "091105.1 "}
-*/
-/*{mfdtitle.i "100722.1 "}*/
-
-/* ss-081230.1 -e */
-/* ss-081210.1 -e */
-/* ss-081226.1 -e */
 /*----rev history-------------------------------------------------------------------------------------*/
-/* SS - 100722.1  By: Bill Jiang */
-/* SS - 110104.1  By: Roger Xiao */
 /* SS - 110223.1  By: Roger Xiao */ /*just xxpopom1a.p: pod_taxable = po_taxable ;xxpopom1r1.p : cancel p_pod_disc_pct */
 /* SS - 111010.1  By: Apple Tam */ /*Ôö¼ÓÏîÄ¿±àºÅ£¨pod__chr01) */
 /*-Revision end---------------------------------------------------------------*/
@@ -227,7 +196,7 @@ SS - 100722.1 - RNE */
  * 1.Æ±¾İ¿ªÍùºÍµØµã²»ÓÃÊÖ¹¤Â¼Èë£¬ Ö±½ÓÄ¬ÈÏ·¢»õ-ÖÁÖĞÂ¼ÈëµÄsite´úÂë
  * 2.Í·À¸ºÍÃ÷Ï¸ÏîÖĞµÄË°ĞÅÏ¢¶¼ĞèÒªËø¶¨,ÓÃ»§²»ÄÜ¸ü¸Ä(È¡Ä¬ÈÏ¹©Ó¦ÉÌ×ÊÁÏÀïµÄÄÉË°Ã÷Ï¸)
  ****************************************************************************/
-{mfdtitle.i "test.3"}
+{mfdtitle.i "130703.1"}
 
 /* Clear anything displayed by mftitle if api mode.*/
 {mfaititl.i}
@@ -384,7 +353,7 @@ assign
 {potrldef.i "NEW"}
 
 {pxrun.i &PROC='initialize-variables'}
-{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
+
 mainloop:
 repeat:
  /* ss-081226.1 -b */

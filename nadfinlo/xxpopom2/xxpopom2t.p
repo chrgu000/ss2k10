@@ -154,13 +154,7 @@
 /* MAINTAINS BOTH BLANKET AND REGULAR PURCHASE ORDERS.                        */
 /*                                                                            */
 /* Creation: eB21SP3 Chui Last Modified: 20080624 By: Davild Xu *ss-20080624.1*/
-/* ss-081210.1 by jack */
 /*---Add Begin by davild 20080624.1*/
-/* ss-081226.1 jack  */
-/* ss-081230.1 jack */
-/* ss-090104.1 jack */
-/* ss-090108.1 jack */
-/* ss-090109.1 jack */
 /* ss -091105.1 by: jack */  /* 修改xxpopom1a.p*/
 /*
 xxpopom1t.p（popomt.p）
@@ -198,8 +192,6 @@ SS - 100722.1 - RNE */
 /* ss-081210.1 -e */
 /* ss-081226.1 -e */
 /*----rev history-------------------------------------------------------------------------------------*/
-/* SS - 100722.1  By: Bill Jiang */
-/* SS - 110104.1  By: Roger Xiao */
 /* SS - 110223.1  By: Roger Xiao */ /*just xxpopom1a.p: pod_taxable = po_taxable ;xxpopom1r1.p : cancel p_pod_disc_pct */
 /* SS - 111010.1  By: Apple Tam */ /*增加项目编号（pod__chr01) */
 /*-Revision end---------------------------------------------------------------*/
@@ -212,7 +204,7 @@ SS - 100722.1 - RNE */
  ****************************************************************************/
 
 /* Clear anything displayed by mftitle if api mode.*/
-{mfdtitle.i "test.2"}
+{mfdtitle.i "130703.1"}
 {mfaititl.i}
 {cxcustom.i "POMT.P"}
 {pxmaint.i}
@@ -367,7 +359,6 @@ assign
 {potrldef.i "NEW"}
 
 {pxrun.i &PROC='initialize-variables'}
-{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
 mainloop:
 repeat:
  /* ss-081226.1 -b */

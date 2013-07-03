@@ -86,7 +86,7 @@ Last change:  Q    19 Mar 97    1:27 pm
   屏幕都会过到下一屏,不用错误提示.
 *******************************************************************************/
 /* DISPLAY TITLE */
-{mfdtitle.i "test.1"}
+{mfdtitle.i "130703.1"}
 
 {pxmaint.i}
 
@@ -172,7 +172,6 @@ setFrameLabels(frame a:handle).
 
 /* DISPLAY */
 view frame a.
-{mfdemo.i 06/01/2013 07/10/2013} /* ref mf1.p */
 mainloop:
 repeat with frame a:
 
