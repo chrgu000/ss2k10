@@ -990,7 +990,7 @@ repeat on endkey undo, leave:
 /*SS - 110926.1 -E*/
 
 /*SS - 110926.1 -B*/
-            {gprun.i ""xxpopomtea2.p""}
+            {gprun.i ""xxpopomtea9.p""}
 /*SS - 110926.1 -E*/
 
             if c-application-mode <> "API" and

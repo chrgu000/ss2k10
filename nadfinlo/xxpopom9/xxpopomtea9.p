@@ -282,6 +282,15 @@ do on endkey undo, leave on error undo, retry:
          end.
       end.
    end.  /* PROMPT-FOR pod_part */
+   
+/*6*/  find first code_mstr no-lock where code_fldname = "pod_part_allowlist"
+/*6*/      and index(input pod_part,code_value) > 0 no-error.
+/*6*/  if not available code_mstr then do:
+/*6*/     message "零件" + pod_part + "不在通用代码[pod_part_allowlist]允许列表里,不允许输入." view-as alert-box.
+/*6*/     undo,retry. 
+/*6*/  end.
+
+   
    end.  /*if c-application-mode <> "API" */
    else if c-application-mode = "API" then do:
       assign
