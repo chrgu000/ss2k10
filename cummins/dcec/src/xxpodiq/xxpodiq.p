@@ -381,6 +381,10 @@ DO:
   DEFINE VARIABLE i AS INTEGER.
   DEFINE VARIABLE v AS CHARACTER.
   ASSIGN v = "".
+  if global_userid <> "mfg" then do:
+     message "你不可以删除资料哦！" view-as alert-box error.
+     leave.
+  end.
   OPEN QUERY querybrowse1 FOR EACH usrw_wkfl no-lock.
   DO ibrowse = 1 TO  brList:NUM-SELECTED-ROWS IN FRAME fmain :
       method-return = brList:FETCH-SELECTED-ROW(ibrowse).
