@@ -48,7 +48,9 @@ define variable op-err as integer no-undo.
          if tot_qty_consumed < 0
          then do:
             /* ERROR: QUANTITY ENTERED MUST BE A POSITIVE QUANTITY # */
-            {pxmsg.i &MSGNUM=8440 &ERRORLEVEL=3 &MSGARG1=tot_qty_consumed}
+            if not batchrun then do:
+              {pxmsg.i &MSGNUM=8440 &ERRORLEVEL=3 &MSGARG1=tot_qty_consumed}
+            end.
             undo setloop2, retry setloop2.
          end. /* IF tot_qty_consumed < 0 */
 
@@ -85,7 +87,7 @@ define variable op-err as integer no-undo.
                     input-output tt_autocr.ac_order,
                     input-output tt_autocr.ac_line,
                     input-output tt_autocr.ac_loc,
-                    input-output tt_autocr.ac_asn_shipper,       
+                    input-output tt_autocr.ac_asn_shipper,
                     input-output tt_autocr.ac_auth,
                     input-output tt_autocr.ac_cust_job,
                     input-output tt_autocr.ac_cust_seq,
@@ -110,13 +112,17 @@ define variable op-err as integer no-undo.
 
          if op-err = 6562 then do:
             /* NO SHIPMENT RECORD EXISTS FOR LOT/SERIAL */
-            {pxmsg.i &MSGNUM=6562 &ERRORLEVEL=3 &MSGARG1=lotser}
+            if not batchrun then do:
+               {pxmsg.i &MSGNUM=6562 &ERRORLEVEL=3 &MSGARG1=lotser}
+            end.
             next-prompt lotser with frame c.
             undo setloop2, retry setloop2.
          end.
          else if op-err = 33 then do:
             /* NO UOM CONVERSION EXISTS */
-            {pxmsg.i &MSGNUM=33 &ERRORLEVEL=2}
+            if not batchrun then do:
+               {pxmsg.i &MSGNUM=33 &ERRORLEVEL=2}
+            end.
             next-prompt consumed_um with frame c.
             undo, retry.
          end.
@@ -128,7 +134,9 @@ define variable op-err as integer no-undo.
          end.
          else if op-err = 66731 then do:
             /* ERROR: MAXIMUM CONSIGNMENT QUANTITY TO BE INVOICED # */
-            {pxmsg.i &MSGNUM=6673 &ERRORLEVEL=3 &MSGARG1=cncix_qty1}
+            if not batchrun then do:
+               {pxmsg.i &MSGNUM=6673 &ERRORLEVEL=3 &MSGARG1=cncix_qty1}
+            end.
             undo, retry.
          end.
 

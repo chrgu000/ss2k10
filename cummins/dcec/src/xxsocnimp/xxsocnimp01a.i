@@ -3,7 +3,6 @@
   DEFINE VARIABLE VQTY01 LIKE ld_qty_oh.
   DEFINE VARIABLE VQTY02 LIKE ld_qty_oh.
   define variable vdetstat as character.
-
   /*数量完全匹配*/
   for each xsc_m exclusive-lock where xsm_stat = "":
       find first xsa_r exclusive-lock where
@@ -29,7 +28,6 @@
             delete xsa_r.
       end.
   end.
-
 /*check qty_loc 库存数量大于使用量*/
   for each xsc_m exclusive-lock where xsm_stat = "":
       find first xsa_r exclusive-lock where
@@ -59,7 +57,7 @@
   for each xsc_m exclusive-lock where xsm_stat = "":
   xme:
       for each xsa_r exclusive-lock where
-           xsm_part = xsr_part and
+               xsr_part = xsm_part and
            (xsm_so = xsr_so or xsm_so = ""):
          create xsc_d.
          assign xsd_ship = xsr_ship
@@ -84,6 +82,7 @@
               end.
               assign xsm_qty_used = 0.
               delete xsc_m.
+              leave.
            end.
            else do:
                assign xsd_qty_used = xsr_oh
@@ -93,6 +92,7 @@
            end.
         end.
   end.
+
   for each xsc_m exclusive-lock where xsm_stat = "":
       create xsc_d.
       assign xsd_ship = xsm_ship

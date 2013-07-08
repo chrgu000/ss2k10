@@ -92,7 +92,7 @@ do transaction:
       hide frame b.
       hide frame c.
       clear frame d all.
-/**************************************************************      
+/**************************************************************
       scroll_loop:
       do with frame b
       on error undo, return error {&GENERAL-APP-EXCEPT}:
@@ -134,7 +134,7 @@ do transaction:
          /*V8! op_continue-yn = ?. */
          leave shiploop.
       end.
-**************************************************************/      
+**************************************************************/
 
       setloop1:
       do on error undo setloop1, leave setloop1 with frame c:
@@ -268,10 +268,11 @@ do transaction:
 
       end. /* SETLOOP1 */
    end. /* SHIPLOOP */
-
    l_backup_domain = global_domain.
+
    for each tt_autocr
       where tt_autocr.ac_tot_qty_consumed <> 0:
+
       assign
          inventory_domain = tt_autocr.ac_domain
          undo_flag        = no.
@@ -288,15 +289,13 @@ do transaction:
             undo loop0, return.
          end. /* IF undo_flag */
       end. /* IF inventory_domain <> global_domain */
-
       run proc_check_restricted(input  "CN-USE",
                                 output undo_flag).
-
       if undo_flag = no
       then
          run proc_check_restricted(input  "ISS-SO",
                                    output undo_flag).
-
+/**/  undo_flag = no.
       if undo_flag
       then do:
          tt_autocr.ac_tot_qty_consumed = 0.
@@ -305,11 +304,12 @@ do transaction:
 /*         view frame c.                  */
 
          /* UNABLE TO ISSUE OR RECEIVE FOR ITEM */
+         if not batchrun then do:
          {pxmsg.i &MSGNUM=161 &ERRORLEVEL=2 &MSGARG1=tt_autocr.ac_part
                   &MSGARG2=tt_autocr.ac_order &MSGARG3=tt_autocr.ac_line}
+         end.
       end. /* IF undo_flag */
    end. /* FOR EACH tt_autocr */
-
    if l_backup_domain <> global_domain
    then do:
       /* SWITCH BACK THE DOMAIN */
@@ -322,7 +322,6 @@ do transaction:
          undo loop0, return.
       end. /* IF undo_flag */
    end. /* IF l_backup_domain <> global_domain */
-
    if can-find(first tt_autocr
       where ac_tot_qty_consumed <> 0)
    then do on endkey undo, leave loop0
@@ -332,6 +331,7 @@ do transaction:
       ok_to_display = no.
       /* DISPLAY ITEMS BEING ISSUED */
       /*V8-*/
+
       if not batchrun then do:
       {pxmsg.i &MSGNUM=636 &ERRORLEVEL=1 &CONFIRM=ok_to_display
                &CONFIRM-TYPE='LOGICAL'}
