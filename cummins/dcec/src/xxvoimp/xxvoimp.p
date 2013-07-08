@@ -1,6 +1,18 @@
 {mfdeclre.i "new global"}
 {mf1.i "new global"}
+define variable v_i as integer.
 session:date-format = 'dmy'.
+do on error undo, return error {&GENERAL-APP-EXCEPT}:
+      hi_char = chr(1).
+
+      do v_i = 2 to 131071:
+         if chr(v_i) > hi_char then hi_char = chr(v_i).
+      end. /*DO i = 2 to 131071*/
+
+      assign
+         hi_date = 12/31/3999
+         low_date = 01/01/1900.
+end.
 base_curr = "RMB".
 IF global_userid = "" THEN global_userid = "MFG".
 mfguser="".
@@ -9,6 +21,7 @@ global_user_lang_dir = "ch/".
 global_domain = "DCEC".
 global_db = "DCEC".
 execname = "xxivimp.p".
+
 define variable v_key   like usrw_key1 no-undo initial "XXVOIMP-CTRL".
 define variable v_pre   like poc_rcv_pre no-undo.
 define variable vbank   like ap_bank   no-undo.
@@ -35,7 +48,7 @@ define temp-table xiv_m
   fields xiv_inv      like vo_invoice
   fields xiv_inv_amt  like prh_curr_amt
   fields xiv_date     as   date
-  fields xiv_po    like po_nbr
+  fields xiv_po       like po_nbr
   fields xiv_vend     like po_vend
   fields xiv_chk      as   character format "x(60)"
   fields xiv_datec    as   character.
@@ -85,6 +98,7 @@ empty temp-table xiv_m no-error.
 empty temp-table xivd_d no-error.
 input from value(xf_name).
 repeat:
+  assign v_key = "".
   import unformat v_key.
 /*  if index(entry(1,v_key,"|"),v_pre) > 0 then do: /* 取消收货单必须以RC开头限制 */ */
   if entry(1,v_key,"|") <> "" then do:
@@ -150,7 +164,7 @@ for each xiv_m no-lock:
     end.
 end.
 
-for each xiv_m no-lock break by xiv_inv:
+for each xiv_m no-lock break by xiv_inv BY xiv_receiver BY xiv_line:
     if first-of(xiv_inv) then do:
        output stream bf to value(vdirtmp + xf_file + ".bpi").
        put stream bf unformat "-" skip "-" skip '"' xiv_inv '"' skip.
@@ -158,7 +172,7 @@ for each xiv_m no-lock break by xiv_inv:
            put stream bf unformat '"' xivd_po '"' skip.
        end.
        put stream bf unformat '.' skip.
-       put stream bf unformat '- - ' xiv_date skip.
+       put stream bf unformat '-' skip.
        put stream bf unformat '- "' vbank '" "' xiv_inv '" ' xiv_date.
        put stream bf unformat ' - - - - - - - - - - - - - - "' vtype '"' skip.
        put stream bf unformat '-' skip.
@@ -189,7 +203,7 @@ for each xiv_m no-lock break by xiv_inv:
       output to value(vdirlog + xf_file + ".bpo").
       hide message no-pause.
       cimrunprogramloop:
-      do on stop undo cimrunprogramloop,leave cimrunprogramloop:
+      DO TRANSACTION on stop undo cimrunprogramloop,leave cimrunprogramloop:
          {gprun.i ""xxapvomt.p""}
       end.
       hide message no-pause.
