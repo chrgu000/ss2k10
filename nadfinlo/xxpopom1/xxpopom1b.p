@@ -395,7 +395,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             undo, return error.
          end.
       end. /*end if C-APPLICATION-MODE = API */
-      
+
       /* CHECKS FOR ACCESS ON PO ORDER DATE */
       if po_ord_date <> old_ord_date
       then do:
@@ -830,15 +830,26 @@ do on error undo, retry on endkey undo, leave with frame b:
 
          set_tax1:
          do on error undo, retry:
-            if c-application-mode <> "API" then
-/*625        update */
-/*625*/      display
-                      po_tax_usage
-                      po_tax_env
-                      po_taxc
-                      po_taxable
-                      tax_in
-               with frame set_tax no-validate.
+            if c-application-mode <> "API" then do:
+/*625*/        if po_vend = "ZZZZZZZZ" then do:
+                 update
+                       po_tax_usage
+                       po_tax_env
+                       po_taxc
+                       po_taxable
+                       tax_in
+                 with frame set_tax no-validate.
+/*625*/        end.
+/*625*/        else do:
+/*625*/             display
+/*625*/                  po_tax_usage
+/*625*/                  po_tax_env
+/*625*/                  po_taxc
+/*625*/                  po_taxable
+/*625*/                  tax_in
+/*625*/             with frame set_tax no-validate.
+/*625*/        end.
+            end.
             else /*if c-application-mode = "API"*/
                assign
                   {mfaiset.i po_tax_usage ttPurchaseOrder.taxUsage}

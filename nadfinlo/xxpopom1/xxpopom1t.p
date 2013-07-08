@@ -195,8 +195,9 @@ SS - 100722.1 - RNE */
  * EMAIL:2013/6/24 (周一) 16:27  from:szmis03e@nadfinlo.com.cn
  * 1.票据开往和地点不用手工录入， 直接默认发货-至中录入的site代码
  * 2.头栏和明细项中的税信息都需要锁定,用户不能更改(取默认供应商资料里的纳税明细)
+ * 3.ZZZZZZZZ的供应商允许修改头栏的税信息
  ****************************************************************************/
-{mfdtitle.i "130703.1"}
+{mfdtitle.i "130708.2"}
 
 /* Clear anything displayed by mftitle if api mode.*/
 {mfaititl.i}

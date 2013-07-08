@@ -446,10 +446,8 @@ do on error undo, retry:
          pod_cc
          pod_project
          pod_type when (not blanket)
-/*
-         pod_taxable
-         pod_taxc
-*/
+         pod_taxable when po_vend = "ZZZZZZZZ"
+         pod_taxc when po_vend = "ZZZZZZZZ"
          pod_insp_rqd
          podcmmts
          pod_um_conv when (new pod_det)
