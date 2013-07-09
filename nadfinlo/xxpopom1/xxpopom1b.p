@@ -323,7 +323,10 @@ do on error undo, retry on endkey undo, leave with frame b:
             po_project /*po_confirm*/ /*---Remark by davild 20080722.1*/
             impexp
             po_curr when (new_po) po_lang when (new_po)
-           /*  po_taxable po_taxc po_tax_date */ po_fix_pr
+            po_taxable  when po_vend = "ZZZZZZZZ"
+            po_taxc     when po_vend = "ZZZZZZZZ"
+            po_tax_date when po_vend = "ZZZZZZZZ"
+            po_fix_pr
             po_consignment when (using_supplier_consignment)
             /* SS - 100722.1 - B
             po_cr_terms
