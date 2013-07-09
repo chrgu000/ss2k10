@@ -7,7 +7,11 @@
   for each xsc_m exclusive-lock where xsm_stat = "":
       find first xsa_r exclusive-lock where
            xsm_part = xsr_part and xsm_qty_used = xsr_oh and
-           (xsm_so = xsr_so or xsm_so = "") no-error.
+           (xsm_so = xsr_so or xsm_so = "") and
+           (not can-find(first cncix_mstr no-lock where cncix_domain = global_domain
+                           and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line
+                           and (cncix_qty_stock * -1) = xsr_oh))
+            no-error.
       if available xsa_r then do:
          create xsc_d.
          assign xsd_ship = xsr_ship
