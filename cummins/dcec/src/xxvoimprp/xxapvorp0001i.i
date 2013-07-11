@@ -473,15 +473,17 @@ batch)
    if vopo = multiple then do:
    assign vopo = "".
    for each vpo_det  where vpo_det.vpo_domain = global_domain and  vpo_ref =
-   vo_ref no-lock
+   vo_ref no-lock:
+/*
       with frame {&frame7}:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame {&frame7}:handle).
       display vpo_po column-label "*PO Numbers"
-      				with frame {&frame7} width 132 down no-box.
+              with frame {&frame7} width 132 down no-box.
+*/
       if vopo = "" then assign vopo = vpo_po.
-     		 		       else assign vopo = vopo + "," + vpo_po.
-      
+                   else assign vopo = vopo + "," + vpo_po.
+
    end.
    end.
 /*
@@ -651,7 +653,7 @@ batch)
                ttssapvorp0001_vo_type = vo_type
                ttssapvorp0001_flag = flag
                /* Line 5 */
-               ttssapvorp0001_ap_rmk = ap_rmk 
+               ttssapvorp0001_ap_rmk = ap_rmk
                ttssapvorp0001_ap_ckfrm = ap_ckfrm
                ttssapvorp0001_vo_confirmed = vo_confirmed
                ttssapvorp0001_vo_conf_by = vo_conf_by
@@ -696,6 +698,7 @@ batch)
                ttssapvorp0001_prh_um = prh_um
                ttssapvorp0001_prh_type = prh_type
                ttssapvorp0001_prh_rcvd = prh_rcvd
+               ttssapvorp0001_prh_rcp_date = prh_rcp_date
                ttssapvorp0001_inv_qty = vph_inv_qty
                ttssapvorp0001_pur_amt = pur_amt
                ttssapvorp0001_prh_curr = prh_curr
@@ -714,7 +717,7 @@ batch)
                ttssapvorp0001_vod_desc = vod_desc
                .
             if base_rpt = "" and mixed_rpt then DO:
-               ASSIGN 
+               ASSIGN
                   ttssapvorp0001_vod_amt = vod_amt
                   .
             END.
@@ -737,8 +740,9 @@ batch)
    /* SS - 20080322.1 - B */
    /*
    /* GET AP DETAIL  */
-   for each vod_det  where vod_det.vod_domain = global_domain and  vod_ref =
-   ap_ref no-lock
+   for each vod_det  where vod_det.vod_domain = global_domain and
+        and vod_det.vod_ref = ap_ref
+   no-lock
          by vod_ln
       with frame {&frame3} width 132:
 
@@ -765,7 +769,6 @@ batch)
          base_damt = vod_amt.
       else
          base_damt = vod_base_amt.
-
       if summary = no then do:
          /* SS - 20080322.1 - B */
          /*
@@ -784,92 +787,83 @@ batch)
 
          down with frame {&frame3}.
          */
-         CREATE ttssapvorp0001.
-         ASSIGN
-            /* Line 1 */
-            ttssapvorp0001_vo_ref = vo_ref
-            ttssapvorp0001_ap_date = ap_date
-            ttssapvorp0001_vd_remit = vd_remit
-            ttssapvorp0001_ap_curr = ap_curr
-            /* Line 2 */
-            ttssapvorp0001_vopo = vopo
-            ttssapvorp0001_ap_effdate = ap_effdate
-            ttssapvorp0001_vo_ship = vo_ship
-            ttssapvorp0001_curr_disp_line1 = curr_disp_line1
-            ttssapvorp0001_ap_acct = ap_acct
-            ttssapvorp0001_ap_sub = ap_sub
-            ttssapvorp0001_ap_cc = ap_cc
-            /* Line 2a if needed */
-            ttssapvorp0001_curr_disp_line2 = curr_disp_line2
-            /* CURR_DISP_LINE2 LINES-UP WITH CURR_DISP_LINE1 */
-            /* Line 3 */
-            ttssapvorp0001_ap_vend = ap_vend
-            ttssapvorp0001_vo_due_date = vo_due_date
-            ttssapvorp0001_vo_invoice = vo_invoice
-            ttssapvorp0001_ap_bank = ap_bank
-            /* Line 4 */
-            ttssapvorp0001_name = name
-            ttssapvorp0001_vo_disc_date = vo_disc_date
-            ttssapvorp0001_ap_entity = ap_entity
-            ttssapvorp0001_vo_type = vo_type
-            ttssapvorp0001_flag = flag
-            /* Line 5 */
-            ttssapvorp0001_ap_rmk = ap_rmk 
-            ttssapvorp0001_ap_ckfrm = ap_ckfrm
-            ttssapvorp0001_vo_confirmed = vo_confirmed
-            ttssapvorp0001_vo_conf_by = vo_conf_by
-            /* Line 6 */
-            ttssapvorp0001_vo_is_ers = vo_is_ers
-            ttssapvorp0001_remit_label = remit_label
-            ttssapvorp0001_remit_name = remit_name
-            ttssapvorp0001_ap_batch = ap_batch
-            .
-
-         /* If all currencies are selected, */
-         /* Then these amounts will be display in the currency entered.*/
-         if base_rpt = ""
-            and mixed_rpt
-            and disp_curr = getTermLabel("YES",1)
-         then do:
-            disp_curr = "".
-            ASSIGN
-               ttssapvorp0001_disp_curr = DISP_curr
-               ttssapvorp0001_ap_amt = ap_amt
-               ttssapvorp0001_vo_ndisc_amt = vo_ndisc_amt
-               ttssapvorp0001_vo_applied = vo_applied
-               ttssapvorp0001_vo_hold_amt = vo_hold_amt
-               .
-         end.
-         /*If base is selected, then amounts shown will be in base. */
-         else DO:
-            ASSIGN
-               ttssapvorp0001_disp_curr = DISP_curr
-               ttssapvorp0001_ap_amt = base_amt
-               ttssapvorp0001_vo_ndisc_amt = base_ndamt
-               ttssapvorp0001_vo_applied = base_applied
-               ttssapvorp0001_vo_hold_amt = base_hold_amt
-               .
-         END.
-
-         ASSIGN
-            ttssapvorp0001_vod_ln = vod_ln
-            ttssapvorp0001_vod_acc = vod_acct
-            ttssapvorp0001_vod_sub = vod_sub
-            ttssapvorp0001_vod_cc = vod_cc
-            ttssapvorp0001_vod_project = vod_project
-            ttssapvorp0001_vod_entity = vod_entity
-            ttssapvorp0001_vod_desc = vod_desc
-            .
-         if base_rpt = "" and mixed_rpt then DO:
-            ASSIGN 
-               ttssapvorp0001_vod_amt = vod_amt
-               .
-         END.
-         else DO:
-            assign
-               ttssapvorp0001_vod_amt = base_damt
-               .
-         END.
+/*       CREATE ttssapvorp0001.                                              */
+/*       ASSIGN                                                              */
+/*          /* Line 1 */                                                     */
+/*          ttssapvorp0001_vo_ref = vo_ref                                   */
+/*          ttssapvorp0001_ap_date = ap_date                                 */
+/*          ttssapvorp0001_vd_remit = vd_remit                               */
+/*          ttssapvorp0001_ap_curr = ap_curr                                 */
+/*          /* Line 2 */                                                     */
+/*          ttssapvorp0001_vopo = vopo                                       */
+/*          ttssapvorp0001_ap_effdate = ap_effdate                           */
+/*          ttssapvorp0001_vo_ship = vo_ship                                 */
+/*          ttssapvorp0001_curr_disp_line1 = curr_disp_line1                 */
+/*          ttssapvorp0001_ap_acct = ap_acct                                 */
+/*          ttssapvorp0001_ap_sub = ap_sub                                   */
+/*          ttssapvorp0001_ap_cc = ap_cc                                     */
+/*          /* Line 2a if needed */                                          */
+/*          ttssapvorp0001_curr_disp_line2 = curr_disp_line2                 */
+/*          /* CURR_DISP_LINE2 LINES-UP WITH CURR_DISP_LINE1 */              */
+/*          /* Line 3 */                                                     */
+/*          ttssapvorp0001_ap_vend = ap_vend                                 */
+/*          ttssapvorp0001_vo_due_date = vo_due_date                         */
+/*          ttssapvorp0001_vo_invoice = vo_invoice                           */
+/*          ttssapvorp0001_ap_bank = ap_bank                                 */
+/*          /* Line 4 */                                                     */
+/*          ttssapvorp0001_name = name                                       */
+/*          ttssapvorp0001_vo_disc_date = vo_disc_date                       */
+/*          ttssapvorp0001_ap_entity = ap_entity                             */
+/*          ttssapvorp0001_vo_type = vo_type                                 */
+/*          ttssapvorp0001_flag = flag                                       */
+/*          /* Line 5 */                                                     */
+/*          ttssapvorp0001_ap_rmk = ap_rmk                                   */
+/*          ttssapvorp0001_ap_ckfrm = ap_ckfrm                               */
+/*          ttssapvorp0001_vo_confirmed = vo_confirmed                       */
+/*          ttssapvorp0001_vo_conf_by = vo_conf_by                           */
+/*          /* Line 6 */                                                     */
+/*          ttssapvorp0001_vo_is_ers = vo_is_ers                             */
+/*          ttssapvorp0001_remit_label = remit_label                         */
+/*          ttssapvorp0001_remit_name = remit_name                           */
+/*          ttssapvorp0001_ap_batch = ap_batch                               */
+/*          .                                                                */
+/*                                                                           */
+/*       /* If all currencies are selected, */                               */
+/*       /* Then these amounts will be display in the currency entered.*/    */
+/*       if base_rpt = ""                                                    */
+/*          and mixed_rpt                                                    */
+/*          and disp_curr = getTermLabel("YES",1)                            */
+/*       then do:                                                            */
+/*          disp_curr = "".                                                  */
+/*          ASSIGN                                                           */
+/*             ttssapvorp0001_disp_curr = DISP_curr                          */
+/*             ttssapvorp0001_ap_amt = ap_amt                                */
+/*             ttssapvorp0001_vo_ndisc_amt = vo_ndisc_amt                    */
+/*             ttssapvorp0001_vo_applied = vo_applied                        */
+/*             ttssapvorp0001_vo_hold_amt = vo_hold_amt                      */
+/*             .                                                             */
+/*       end.                                                                */
+/*       /*If base is selected, then amounts shown will be in base. */       */
+/*       else DO:                                                            */
+/*          ASSIGN                                                           */
+/*             ttssapvorp0001_disp_curr = DISP_curr                          */
+/*             ttssapvorp0001_ap_amt = base_amt                              */
+/*             ttssapvorp0001_vo_ndisc_amt = base_ndamt                      */
+/*             ttssapvorp0001_vo_applied = base_applied                      */
+/*             ttssapvorp0001_vo_hold_amt = base_hold_amt                    */
+/*             .                                                             */
+/*       END.                                                                */
+/*                                                                           */
+/*       ASSIGN                                                              */
+/*          ttssapvorp0001_vod_ln = vod_ln                                   */
+/*          ttssapvorp0001_vod_acc = vod_acct                                */
+/*          ttssapvorp0001_vod_sub = vod_sub                                 */
+/*          ttssapvorp0001_vod_cc = vod_cc                                   */
+/*          ttssapvorp0001_vod_project = vod_project                         */
+/*          ttssapvorp0001_vod_entity = vod_entity                           */
+/*          ttssapvorp0001_vod_desc = vod_desc                               */
+/*          ttssapvorp0001_vod_amt = vod_base_amt                            */
+/*          .                                                                */
       /* SS - 20080322.1 - E */
       end.
       /* SS - 20080322.1 - B */
@@ -890,7 +884,7 @@ batch)
             gltw_userid = mfguser
             gltw_desc = ap_batch + " " + ap_type + " " + ap_ref
                        + " " + ap_vend
-            gltw_amt = base_damt
+            gltw_amt = Base_Damt
             recno = recid(gltw_wkfl).
             {&APVORP-I-TAG5}
          /*FOLLOWING SECTION FOR INTERCOMPANY TRANSACTION*/
@@ -1041,7 +1035,7 @@ batch)
    */
    /* SS - 20080322.1 - E */
 
-   {mfrpchk.i}
+ /*  {mfrpchk.i} */
 end.
 
 /* SS - 20080322.1 - B */

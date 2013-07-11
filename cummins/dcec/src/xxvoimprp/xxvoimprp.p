@@ -40,34 +40,54 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "121207.1"}
+{mfdtitle.i "130709.1"}
+
+/* title "121207.1" */
+
 {xxapvorp0001.i "NEW"}
 
-define new shared variable vend like ap_vend.
-define new shared variable vend1 like ap_vend.
-define new shared variable apdate like ap_date.
-define new shared variable apdate1 like ap_date.
-define new shared variable po like po_nbr.
-define new shared variable po1 like po_nbr.
-define new shared variable invoice like vo_invoice.
-define new shared variable invoice1 like vo_invoice.
+define variable vend like ap_vend.
+define variable vend1 like ap_vend.
+define new shared variable ref like ap_ref.
+define new shared variable ref1 like ap_ref.
+define new shared variable batch like ap_batch.
+define new shared variable batch1 like ap_batch.
+define variable apdate like ap_date.
+define variable apdate1 like ap_date.
+define variable duedate like vo_due_date.
+define variable duedate1 like vo_due_date.
+define variable po like po_nbr.
+define variable po1 like po_nbr.
+define variable invoice like vo_invoice.
+define variable invoice1 like vo_invoice.
+define variable show_conf like mfc_logical.
+define variable show_unconf like mfc_logical initial yes.
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-	 vend           colon 25
-   vend1          colon 46 label {t001.i}
-   apdate					colon 25       
-   apdate1        colon 46 label {t001.i} 
-   po             colon 25       
-   po1            colon 46 label {t001.i} 
-   invoice        colon 25       
-   invoice1       colon 46 label {t001.i} skip(1)
+   batch          colon 22
+   batch1         colon 48 label {t001.i}
+   ref            colon 22
+   ref1           colon 48 label {t001.i}
+   vend           colon 22
+   vend1          colon 48 label {t001.i}
+   apdate         colon 22
+   apdate1        colon 48 label {t001.i}
+   duedate        colon 22
+   duedate1       colon 48 label {t001.i}
+   po             colon 22
+   po1            colon 48 label {t001.i}
+   invoice        colon 22
+   invoice1       colon 48 label {t001.i}
+   show_conf       colon 22
+   show_unconf     colon 48 label {t001.i} skip(1)
+
  SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
@@ -76,8 +96,8 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
    &IF (DEFINED(SELECTION_CRITERIA) = 0)
    &THEN " Selection Criteria "
    &ELSE {&SELECTION_CRITERIA}
-   &ENDIF 
-&ELSE 
+   &ENDIF
+&ELSE
    getTermLabel("SELECTION_CRITERIA", 25).
 &ENDIF.
  RECT-FRAME-LABEL:SCREEN-VALUE in frame a = F-a-title.
@@ -94,7 +114,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
- 
+
 {wbrp01.i}
 
 /*GUI*/ {mfguirpa.i false "printer" 132 " " " " " "  }
@@ -102,15 +122,18 @@ setFrameLabels(frame a:handle).
 /*GUI repeat : */
 /*GUI*/ procedure p-enable-ui:
 
-
+   if batch1 = hi_char then batch1 = "".
+   if ref1 = hi_char then ref1 = "".
    if vend1 = hi_char then vend1 = "".
    if apdate = low_date then apdate = ?.
    if apdate1 = hi_date then apdate1 = ?.
+   if duedate = low_date then duedate = ?.
+   if duedate1 = hi_date then duedate1 = ?.
    if po1 = hi_char then po1 = "".
-	 if invoice1 = hi_char then invoice1 = "".
-	
+   if invoice1 = hi_char then invoice1 = "".
+
    if c-application-mode <> 'web' then
-      
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -118,23 +141,27 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 /*GUI*/ procedure p-report-quote:
 
 
-   {wbrp06.i &command = update  
-   					 &fields = " vend vend1 apdate apdate1 po po1 invoice invoice1" 
-   					 &frm = "a"}
+   {wbrp06.i &command = update
+             &fields = " batch batch1 ref ref1 vend vend1 apdate apdate1 duedate duedate1 po po1 invoice invoice1 show_conf show_unconf"
+             &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
       (c-web-request begins 'data'))
    then do:
+      if batch1 = "" then batch1 = hi_char.
+      if ref1 = "" then ref1 = hi_char.
       if vend1 = "" then vend1 = hi_char.
       if apdate = ? then apdate = low_date.
       if apdate1 = ? then apdate1 = hi_date.
+      if duedate = ? then duedate = low_date.
+      if duedate1 = ? then duedate1 = hi_date.
       if po1 = "" then po1 = hi_char.
       if invoice1 = "" then invoice1 = hi_char.
    end.
 
    /* OUTPUT DESTINATION SELECTION */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -145,70 +172,109 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
    EMPTY TEMP-TABLE ttssapvorp0001 no-error.
    {gprun.i ""xxapvorp0001.p"" "(
+      input batch,
+      input batch1,
+      input ref,
+      input ref1,
       input '',
       input hi_char,
       input '',
       input hi_char,
+      input vend,
+      input vend1,
       input '',
       input hi_char,
-      input '',
-      input hi_char,
-      input '',
-      input hi_char,
-      input '',
-      input hi_char,
-      input low_date,
-      input hi_date,
-      input low_date,
-      input hi_date,
+      input apdate,
+      input apdate1,
+      input duedate,
+      input duedate1,
       input no,
       input no,
-      input no,
-      input yes,
+      input show_conf,
+      input show_unconf,
       input '',
       input no
       )"}
-      
-      
+
+
 /*
 凭证号、发票号、开票日期、金额、税额、PO、收货单、零件号、数量、单价、项、供应商、发货日期、单价、暂留金额
 */
    {mfphead.i}
+     for each ttssapvorp0001 exclusive-lock
+        where ttssapvorp0001_vo_invoice >= invoice and
+             ttssapvorp0001_vo_invoice <= invoice1 and
+             ttssapvorp0001_vopo >= po and
+             ttssapvorp0001_vopo <= po1:
+         find first vod_det no-lock where
+                    vod_det.vod_domain = global_domain and
+                    vod_ref = ttssapvorp0001_vo_ref and
+                    vod_det.vod_acct = "222100" no-error.
+         if available vod_det then do:
+            assign ttssapvorp0001_vod_amt = vod_base_amt.
+         end.
+         find first glt_det no-lock where glt_domain = global_domain
+                and glt_batch = ttssapvorp0001_ap_batch no-error.
+         if available glt_det then do:
+            assign ttssapvorp0001_trgl_gl_ref = glt_ref.
+         end.
+/*
+         find first tr_hist use-index tr_type WHERE tr_domain = global_domain
+             AND tr_type = "rct-po"
+             AND tr_lot = ttssapvorp0001_prh_receiver
+             AND tr_line = ttssapvorp0001_prh_line NO-LOCK no-error.
+         if available tr_hist then do:
+            find first trgl_det no-lock where  trgl_domain = global_domain and
+                 trgl_trnbr = tr_trnbr no-error.
+            if available trgl_det then do:
+               assign ttssapvorp0001_trgl_gl_ref = trgl_gl_ref.
+            end.
+         END.
+*/
+      end.
    for each ttssapvorp0001 no-lock
-   	/*	 where ttxxapvorp0002_vo_invoice >= invoice and 
-   		 			 ttxxapvorp0002_vo_invoice <= invoice1 and
-   		 			 ttxxapvorp0002_vopo >= po and
-   		 			 ttxxapvorp0002_vopo <= po1 */
-   with frame b width 592 no-attr-space:
-			/*
-			display ttxxapvorp0002_vo_ref
-							ttxxapvorp0002_vo_invoice
-							ttxxapvorp0002_ap_date
-							ttxxapvorp0002_vopo
-							*/
-		  display ttssapvorp0001_vo_ref
-		          ttssapvorp0001_vo_invoice
-		          ttssapvorp0001_ap_date
-		  				ttssapvorp0001_ap_amt
-		  				ttssapvorp0001_vopo
-		  				ttssapvorp0001_prh_receiver
-		  				ttssapvorp0001_prh_part
-		  				ttssapvorp0001_inv_qty
-		  				ttssapvorp0001_pur_amt
-		  				ttssapvorp0001_inv_amt
-		  				ttssapvorp0001_prh_line
-		  				ttssapvorp0001_ap_vend
-		  				ttssapvorp0001_vo_hold_amt
-		  			  with stream-io.
-					
-      setFrameLabels(frame b:handle).
+       where ttssapvorp0001_vo_invoice >= invoice and
+             ttssapvorp0001_vo_invoice <= invoice1 and
+             ttssapvorp0001_vopo >= po and
+             ttssapvorp0001_vopo <= po1
+   with frame b width 500 no-attr-space:
+   setFrameLabels(frame b:handle).
+      /*
+      display ttxxapvorp0002_vo_ref
+              ttxxapvorp0002_vo_invoice
+              ttxxapvorp0002_ap_date
+              ttxxapvorp0002_vopo
+              */
+      display ttssapvorp0001_ap_batch
+              ttssapvorp0001_trgl_gl_ref
+              ttssapvorp0001_vo_ref
+              ttssapvorp0001_vo_invoice
+              ttssapvorp0001_ap_effdate
+              ttssapvorp0001_ap_date
+              ttssapvorp0001_ap_amt
+              ttssapvorp0001_vopo
+              ttssapvorp0001_prh_receiver
+              ttssapvorp0001_prh_line
+              ttssapvorp0001_prh_part
+              ttssapvorp0001_prh_rcp_date
+              ttssapvorp0001_inv_qty
+              ttssapvorp0001_pur_amt
+              ttssapvorp0001_inv_amt
+              ttssapvorp0001_ap_vend
+              ttssapvorp0001_vod_amt
+              ttssapvorp0001_vo_hold_amt
+        /*    ttssapvorp0001_vo_confirmed */
+              ttssapvorp0001_vo_conf_by
+              with stream-io.
 
-      
+
+
+
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 
    end.
 
-   
+
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
@@ -219,4 +285,4 @@ end.
 {wbrp04.i &frame-spec = a}
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds=" vend vend1 apdate apdate1 po po1 invoice invoice1"} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds=" batch batch1 ref ref1 vend vend1 apdate apdate1 duedate duedate1 po po1 invoice invoice1 show_conf show_unconf"} /*Drive the Report*/

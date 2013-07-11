@@ -1,7 +1,7 @@
 /* apvorp.p - AP DETAIL VOUCHER REGISTER REPORT                               */
 /* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.11.2.13 $                                                         */
+/* $Revision: 1.11.2.13 $                                                     */
 /*V8:ConvertMode=FullGUIReport                                                */
 /* REVISION: 1.0      LAST MODIFIED: 10/20/86   BY: PML                       */
 /* REVISION: 6.0      LAST MODIFIED: 02/20/91   BY: bjb *D326*                */
@@ -38,9 +38,9 @@
 /* Old ECO marker removed, but no ECO header exists *F0PN*                    */
 /* Revision: 1.11.2.7  BY: Ed van de Gevel       DATE: 11/09/01  ECO: *N15N*  */
 /* Revision: 1.11.2.8  BY: Mercy C.              DATE: 03/18/02  ECO: *M1WF*  */
-/* Revision: 1.11.2.11  BY: Orawan S. DATE: 04/23/03 ECO: *P0QC* */
-/* $Revision: 1.11.2.13 $ BY: Paul Donnelly (SB) DATE: 06/26/03 ECO: *Q00B* */
-/* $Revision: 1.11.2.13 $ BY: Bill Jiang DATE: 03/22/08 ECO: *SS - 20080322.1* */
+/* Revision: 1.11.2.11  BY: Orawan S. DATE: 04/23/03 ECO: *P0QC*              */
+/* $Revision: 1.11.2.13 $ BY: Paul Donnelly (SB) DATE: 06/26/03 ECO: *Q00B  * */
+/* $Revision: 1.11.2.13 $ BY: Bill Jiang DATE: 03/22/08 ECO: *SS - 20080322.1**/
 /*-Revision end---------------------------------------------------------------*/
 
 /******************************************************************************/
@@ -52,10 +52,8 @@
 /******************************************************************************/
 
 /* SS - 20080322.1 - B */
-/*
-{mfdtitle.i "2+ "}
-*/
-{a6mfdtitle.i "2+ "}
+
+{mfdeclre.i}
 
 {xxapvorp0001.i}
 
