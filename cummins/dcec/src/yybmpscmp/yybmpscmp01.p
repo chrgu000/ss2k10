@@ -80,7 +80,7 @@ repeat:
       effdate1
       effdate2
       exptype
-      showcst
+
   with frame a editing:
      message "输入需要比较的两个产品结构，按F2执行，并等待输出到EXCEL表格...".
    if frame-field = "parent1" then do:
@@ -286,8 +286,8 @@ repeat:
   chExcelWorkbook:Worksheets(1):Cells(iRow,8) = parent1 + " - 随机带走件" .
   chExcelWorkbook:Worksheets(1):Cells(iRow,9) = parent2 + " - 随机带走件" .
   if showcst then do:
-  /*   chExcelWorkbook:Worksheets(1):Cells(iRow,10) = parent1 + " - 成本".
-     chExcelWorkbook:Worksheets(1):Cells(iRow,11) = parent2 + " - 成本".    */
+     chExcelWorkbook:Worksheets(1):Cells(iRow,10) = parent1 + " - 成本".
+     chExcelWorkbook:Worksheets(1):Cells(iRow,11) = parent2 + " - 成本".
   end.
   chExcelWorkbook:Worksheets(1):Range("E2"):AddComment.
   if effdate1 = ? then
