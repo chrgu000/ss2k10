@@ -174,7 +174,7 @@ for each xiv_m no-lock break by xiv_inv BY xiv_receiver BY xiv_line:
        put stream bf unformat '.' skip.
        put stream bf unformat '-' skip.
        put stream bf unformat '- "' vbank '" "' xiv_inv '" ' xiv_date.
-       put stream bf unformat ' - - - - - - - - - - - - - - "' vtype '"' skip.
+       put stream bf unformat ' - - - - - - - - - - - "AUTOMATCH" - - "' vtype '"' skip.
        put stream bf unformat '-' skip.
        put stream bf unformat 'N' skip. /* 自动选择 */
        put stream bf unformat '-' skip. /* 税 */
