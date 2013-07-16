@@ -7,7 +7,7 @@
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "524.1"}
+{mfdtitle.i "test722"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -106,7 +106,7 @@ v_disp2    colon 24 no-label skip
 with  frame  a side-labels  width  80 attr-space.
 setframelabels(frame  a:handle ).
 {wbrp01.i}
-{mfdemo.i 05/01/2013 05/28/2013}
+{mfdemo.i 07/10/2013 07/22/2013}
 repeat :
     if site1      = hi_char  then site1      = "".
     if cust1      = hi_char  then cust1      = "".
@@ -732,7 +732,6 @@ empty temp-table tmp_det9 no-error.
                                 and mrp_due_date <= a6rq_due_date:
                             mrpqty = mrpqty + mrp_qty.
                      end.
-                     put skip (1).
                      /*v_rmks = convRemark(input v_pm_code,input a6rqd_zone). ss-130129.1 */
 /*524*/              create tmp_det9.
 /*524*/              assign td9_part  = a6rqd_part
@@ -812,8 +811,7 @@ empty temp-table tmp_det9 no-error.
                          and a6rrd_custpono = a6rqd_custpono and a6rrd_custpoln = a6rqd_custpoln
                          and a6rrd_part = a6rqd_part no-lock
                          /*ss-130206.1 -b */
-                         break by a6rrd_site by a6rrd_custpono by a6rrd_custpoln by a6rrd_part
-                         :
+                         break by a6rrd_site by a6rrd_custpono by a6rrd_custpoln by a6rrd_part:
                          if first-of(a6rrd_part) then
                             v_a6rrd_rq_qty = 0.
 

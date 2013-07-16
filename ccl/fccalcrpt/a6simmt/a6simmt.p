@@ -1,13 +1,13 @@
 
 /*a6simmt.p 客戶交貨期推演計算.*/
 
-{mfdtitle.i "120814.1"}
+{mfdtitle.i "test.1"}
 
 /*定義變量....*/
-DEFINE  VARIABLE  site      LIKE  a6rq_site   .
-DEFINE  VARIABLE  part      LIKE  pt_part     .
-DEFINE  VARIABLE  desc1     LIKE  pt_desc1    .
-DEFINE  VARIABLE  proc_flag AS    CHAR FORMAT "x(8)" .
+DEFINE  VARIABLE site      LIKE  a6rq_site   .
+DEFINE  VARIABLE part      LIKE  pt_part     .
+DEFINE  VARIABLE desc1     LIKE  pt_desc1    .
+DEFINE  VARIABLE proc_flag AS    CHAR FORMAT "x(8)" .
 DEFINE  VARIABLE qty_oh    AS DECIMAL FORMAT ">>>>>,>>9.<<".
 DEFINE  VARIABLE past_date LIKE wo_rel_date .
 DEFINE  VARIABLE lt_date   LIKE wo_rel_date .
@@ -45,7 +45,7 @@ DEFINE TEMP-TABLE tpart_det
        FIELD tpart_past_date   LIKE wo_rel_date
        FIELD tpart_lt_date   LIKE wo_rel_date
        FIELD tpart_sfty_date LIKE wo_rel_date
-       FIELD tpart_qty_oh   AS DECIMAL FORMAT ">>>>>,>>9.<<"
+       FIELD tpart_qty_oh   AS DECIMAL FORMAT "->>>>>>>,>>9.<<"
        FIELD tpart_sfty_time  LIKE pt_sfty_time 
        FIELD tpart_insp_lead  LIKE pt_insp_lead
        FIELD tpart_leadtime   LIKE pt_pur_lead 
@@ -90,7 +90,7 @@ WITH FRAME b WIDTH 80 SIDE-LABELS ATTR-SPACE .
 setFrameLabels(FRAME  b:HANDLE ) .
 
 /* setFrameLabels( FRAME  b: HANDLE ) . */
-
+{mfdemo.i 07/01/2013 07/31/2013}
 REPEAT  WITH  FRAME  a :
     /*CLEAR FRAME b NO-PAUSE . */
     
@@ -104,7 +104,8 @@ REPEAT  WITH  FRAME  a :
     DISP taskname   WITH FRAME b .
    
     /*提取推演物料清單..*/
-    FOR EACH a6rqd_det WHERE a6rqd_site = site AND a6rqd_run = YES NO-LOCK  USE-INDEX itemdate  BREAK BY a6rqd_part :
+    FOR EACH a6rqd_det WHERE a6rqd_site = site AND a6rqd_run = YES NO-LOCK 
+             USE-INDEX itemdate BREAK BY a6rqd_part :
         IF FIRST-OF(a6rqd_part) THEN DO:
            /*提取物料計划參數...*/
            ASSIGN interval = 0 sfty_time = 0 insp_rqd = NO insp_lead = 0 leadtime = 0 past_date = ? LT_Date = ? sfty_date = ? .
@@ -165,7 +166,13 @@ REPEAT  WITH  FRAME  a :
 
         END.  /*IF FIRST-OF(a6rqd_part) THEN DO:*/
     END. /*FOR EACH a6rqd_det WHERE a6rqd_site = site AND ...*/
-    
+/**/
+    output to tpart_det.txt.
+    for each tpart_det no-lock with frame tpart_det width 400:
+        display tpart_det.
+    end.
+    output close.
+/**/
     ASSIGN taskname = getmsg(7803). /* '物料推演數據合併...' . */
     DISP taskname  WITH FRAME b .
    
@@ -208,14 +215,18 @@ REPEAT  WITH  FRAME  a :
                                tmrp_ord_type   = mrp_dataset
                                tmrp_ord_nbr    = mrp_nbr
                                tmrp_ord_id     = STRING(mrp_line)
-                               tmrp_cust       = ''
-                     .
+                               tmrp_cust       = ''.
 
         END. /*FOR EACH mrp_det WHERE   mrp_part = tpart_part ....*/
 
     END.  /*FOR EACH tpart_det WHERE tpart_site = site NO-LOCK :*/
-
-    
+/**/
+    output to tmrp_det.txt.
+    for each tmrp_det no-lock with frame tmrp_det width 400:
+        display tmrp_det.
+    end.
+    output close.
+/**/
     ASSIGN taskname = getmsg(7804). /* '初始化推演關聯清單...' . */
     DISP taskname  WITH FRAME b .
    
