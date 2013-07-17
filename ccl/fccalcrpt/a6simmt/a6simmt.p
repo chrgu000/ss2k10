@@ -91,6 +91,8 @@ setFrameLabels(FRAME  b:HANDLE ) .
 
 /* setFrameLabels( FRAME  b: HANDLE ) . */
 {mfdemo.i 07/01/2013 07/31/2013}
+empty temp-table tpart_det no-error.   
+empty temp-table tmrp_det no-error.
 REPEAT  WITH  FRAME  a :
     /*CLEAR FRAME b NO-PAUSE . */
     
@@ -166,13 +168,13 @@ REPEAT  WITH  FRAME  a :
 
         END.  /*IF FIRST-OF(a6rqd_part) THEN DO:*/
     END. /*FOR EACH a6rqd_det WHERE a6rqd_site = site AND ...*/
-/**/
-    output to tpart_det.txt.
-    for each tpart_det no-lock with frame tpart_det width 400:
-        display tpart_det.
-    end.
-    output close.
-/**/
+/* 
+ *  output to tpart_det.txt.
+ *  for each tpart_det no-lock with frame tpart_det width 400:
+ *      display tpart_det.
+ *  end.
+ *  output close.
+ **/
     ASSIGN taskname = getmsg(7803). /* '物料推演數據合併...' . */
     DISP taskname  WITH FRAME b .
    
@@ -220,13 +222,13 @@ REPEAT  WITH  FRAME  a :
         END. /*FOR EACH mrp_det WHERE   mrp_part = tpart_part ....*/
 
     END.  /*FOR EACH tpart_det WHERE tpart_site = site NO-LOCK :*/
-/**/
-    output to tmrp_det.txt.
-    for each tmrp_det no-lock with frame tmrp_det width 400:
-        display tmrp_det.
-    end.
-    output close.
-/**/
+/**
+ *   output to tmrp_det.txt.
+ *   for each tmrp_det no-lock with frame tmrp_det width 400:
+ *       display tmrp_det.
+ *   end.
+ *   output close.
+**/
     ASSIGN taskname = getmsg(7804). /* '初始化推演關聯清單...' . */
     DISP taskname  WITH FRAME b .
    

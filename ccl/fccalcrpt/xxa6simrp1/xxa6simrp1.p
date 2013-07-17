@@ -3,11 +3,11 @@
 /* ss - 130227.1 by: jack */  /* 输出显示调整 */
 /* ss - 130301.1 by: jack */
 /* ss - 130507.1 by: zy
- *  1.OPPO 数量,需要做转换. 若采购单位和PO单位不一致时,需要转换为库存单位.( G栏,牵涉到此栏位的计算不用更改)
+ *  1.OPPO 数量,需要做转换. 若PO单位和PT单位不一致时,需要转换为库存单位.(G栏,牵涉到此栏位的计算不用更改)
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "test722"}
+{mfdtitle.i "test.21"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -29,6 +29,7 @@ define variable v_pm_code like pt_pm_code.
 define variable v_ord_min like pt_ord_min.
 define variable v_ord_mult like pt_ord_mult.
 define variable v_rmks as character format "x(30)".
+define variable v_rmks_type as integer.
 define variable dtePeriodStart as date no-undo.
 define variable dtePeriodFinish as date no-undo.
 define variable decOpenPOQty as decimal no-undo.
@@ -85,6 +86,7 @@ define temp-table tmp_det9
        fields td9_decinv      as decimal   format "->,>>>,>>>,>>9.<<<<<<"
        fields td9_calc_qty    as decimal   format "->,>>>,>>>,>>9.<<<<<<"
        fields td9_rmks        as character format "x(30)"
+       fields td9_rmks_type   as integer
        fields td9_ps_code     like ps_ps_code.
 
 
@@ -106,7 +108,7 @@ v_disp2    colon 24 no-label skip
 with  frame  a side-labels  width  80 attr-space.
 setframelabels(frame  a:handle ).
 {wbrp01.i}
-{mfdemo.i 07/10/2013 07/22/2013}
+{mfdemo.i 07/10/2013 07/21/2013}
 repeat :
     if site1      = hi_char  then site1      = "".
     if cust1      = hi_char  then cust1      = "".
@@ -159,7 +161,7 @@ repeat :
             '$' '库存' '$' '是否欠料' '$' '测料明细说明'
             /*ss-130129.1 -e */
             skip.
-empty temp-table tmp_det9 no-error.
+    empty temp-table tmp_det9 no-error.
     for each a6rq_mstr where (a6rq_site >= site ) and  ( a6rq_site <= site1 )
         and ( a6rq_cust >= cust )  and ( a6rq_cust <= cust1 )
         and ( a6rq_custpono = custpono  or custpono = '' )  and ( a6rq_custpoln = custpoln or custpoln = 0 )
@@ -254,7 +256,7 @@ empty temp-table tmp_det9 no-error.
                  if (a6rqd_rq_qty - a6rqd_short_qty ) >= 0 then assign qty_oh = a6rqd_rq_qty - a6rqd_short_qty.
                  else assign qty_oh = 0.
 
-                 assign ln = string (a6rqd_custpoln )
+                 assign ln = string(a6rqd_custpoln)
                         nbr = a6rqd_custpono.
 
 
@@ -294,7 +296,7 @@ empty temp-table tmp_det9 no-error.
 
 
                  /*ss-130129.1 -b */
-                 before_simdate_demand = 0. v_rmks = "".
+                 before_simdate_demand = 0. v_rmks = "". v_rmks_type = 0.
                  after_simdate_oppo = 0. before_simdate_oppo = 0.
 
                  for each mrp_det no-lock where mrp_dataset = 'pod_det'
@@ -312,28 +314,42 @@ empty temp-table tmp_det9 no-error.
                     - before_simdate_demand - v_a6rqd_rq_qty < 0) and
                     (decInventory + before_simdate_oppo + after_simdate_oppo
                     - before_simdate_demand - v_a6rqd_rq_qty < 0)
-                 then v_rmks = "欠料区,库存不足,出新PO".
+                 then do:
+                       v_rmks = "欠料区,库存不足,出新PO".
+                       v_rmks_type = 11.
+                 end.
                  if (decInventory + before_simdate_oppo
                     - before_simdate_demand - v_a6rqd_rq_qty < 0) and
                     (decInventory + before_simdate_oppo + after_simdate_oppo
                     - before_simdate_demand - v_a6rqd_rq_qty >= 0)
-                 then v_rmks = "欠料区,库存不足,加快PO".
+                 then do:
+                      v_rmks = "欠料区,库存不足,加快PO".
+                      v_rmks_type = 12.
+                 end.
 
                  if (decInventory + before_simdate_oppo
                     - before_simdate_demand - v_a6rqd_rq_qty >= 0) and
                     (decInventory - before_simdate_demand - v_a6rqd_rq_qty < 0)
-                 then v_rmks = "过期区,库存不足,采购跟进".
-
+                 then do:
+                      v_rmks = "过期区,库存不足,采购跟进".
+                      v_rmks_type = 21.
+                 end.
                  /* ss - 130301.1 -b */
                   if (decInventory + before_simdate_oppo
                     - before_simdate_demand - v_a6rqd_rq_qty >= 0) and
                     (decInventory - before_simdate_demand - v_a6rqd_rq_qty >= 0)
-                 then v_rmks = "潜在欠料区,可挪用加快PO，采购跟进".
+                 then do:
+                      v_rmks = "潜在欠料区,可挪用加快PO，采购跟进".
+                      v_rmks_type = 31.
+                 end.
                  /* ss - 130301.1 -e */
                  if (decInventory + before_simdate_oppo
                     - decDemandQty - v_a6rqd_rq_qty >= 0) and
                     (decInventory - decDemandQty - v_a6rqd_rq_qty >= 0)
-                 then v_rmks = "安全区,库存足".
+                 then do:
+                      v_rmks = "安全区,库存足".
+                      v_rmks_type = 42.
+                 end.
                  /*ss-130129.1 -e */
                  /*ss-130206.1-b*/
 
@@ -571,11 +587,11 @@ empty temp-table tmp_det9 no-error.
 /*                            v_buyer         '~t'                                                                                                    */
 /*                            a6rqd_rq_qty    '~t'                                                                                                    */
 /*                            dec(a6rqd_char02)  format "->,>>>,>>>,>>9.<<<<<<" '~t'                                                                  */
-/*                            decShort                    '~t'                                                                                        */
+/*                            decShort                '~t'                                                                                        */
 /*                            a6rqd_due_date          '~t'                                                                                            */
 /*                            a6rqd_rel_date          '~t'                                                                                            */
-/*                            nbr   format "x(40)"        '~t'                                                                                        */
-/*                            ln                          '~t'                                                                                        */
+/*                            nbr   format "x(40)"    '~t'                                                                                        */
+/*                            ln                      '~t'                                                                                        */
 /*                            a6rqd_remark '~t'                                                                                                       */
 /*                            v_pm_code '~t'                                                                                                          */
 /*                            sStatus '~t'                                                                                                            */
@@ -765,6 +781,7 @@ empty temp-table tmp_det9 no-error.
 /*524*/                                     - before_simdate_demand
 /*524*/                                     - v_a6rqd_rq_qty
 /*524*/                     td9_rmks        = v_rmks
+                            td9_rmks_type   = v_rmks_type
 /*524*/                     td9_ps_code     = v_ps_code.
 
 
@@ -811,7 +828,8 @@ empty temp-table tmp_det9 no-error.
                          and a6rrd_custpono = a6rqd_custpono and a6rrd_custpoln = a6rqd_custpoln
                          and a6rrd_part = a6rqd_part no-lock
                          /*ss-130206.1 -b */
-                         break by a6rrd_site by a6rrd_custpono by a6rrd_custpoln by a6rrd_part:
+                         break by a6rrd_site by a6rrd_custpono by a6rrd_custpoln by a6rrd_part
+                         :
                          if first-of(a6rrd_part) then
                             v_a6rrd_rq_qty = 0.
 
@@ -889,26 +907,41 @@ empty temp-table tmp_det9 no-error.
                                 - before_simdate_demand - v_a6rrd_rq_qty < 0) and
                                 (decInventory + before_simdate_oppo + after_simdate_oppo
                                 - before_simdate_demand - v_a6rrd_rq_qty < 0)
-                             then v_rmks = "欠料区,库存不足,出新PO".
+                             then do:
+                                  v_rmks = "欠料区,库存不足,出新PO".
+                                  v_rmks_type = 11.
+                             end.
                              if (decInventory + before_simdate_oppo
                                 - before_simdate_demand - v_a6rrd_rq_qty < 0) and
                                 (decInventory + before_simdate_oppo + after_simdate_oppo
                                 - before_simdate_demand - v_a6rrd_rq_qty >= 0)
-                             then v_rmks = "欠料区,库存不足,加快PO".
+                             then do:
+                                  v_rmks = "欠料区,库存不足,加快PO".
+                                  v_rmks_type = 12.
+                             end.
                              if (decInventory + before_simdate_oppo
                                 - before_simdate_demand - v_a6rrd_rq_qty >= 0) and
                                 (decInventory - before_simdate_demand - v_a6rrd_rq_qty < 0)
-                             then v_rmks = "过期区,库存不足,采购跟进".
+                             then do:
+                                  v_rmks = "过期区,库存不足,采购跟进".
+                                  v_rmks_type = 21.
+                             end.
                              /* ss - 130301.1 -b */
                              if (decInventory + before_simdate_oppo
                                 - before_simdate_demand - v_a6rrd_rq_qty >= 0) and
                                 (decInventory - before_simdate_demand - v_a6rrd_rq_qty >= 0)
-                             then v_rmks = "潜在欠料区,可挪用加快PO，采购跟进".
+                             then do:
+                                  v_rmks = "潜在欠料区,可挪用加快PO，采购跟进".
+                                  v_rmks_type = 31.
+                             end.
                              /* ss - 130301.1 -e */
                              if (decInventory + before_simdate_oppo
                                 - decDemandQty - v_a6rrd_rq_qty >= 0) and
                                 (decInventory - decDemandQty - v_a6rrd_rq_qty >= 0)
-                             then v_rmks = "安全区,库存足".
+                             then do:
+                                  v_rmks = "安全区,库存足".
+                                  v_rmks_type = 42.
+                             end.
                              /*ss-130129.1 -e */
 /*524*/                   create tmp_det9.
 /*524*/                   assign td9_part        = a6rrd_part
@@ -942,6 +975,7 @@ empty temp-table tmp_det9 no-error.
 /*524*/                                          - before_simdate_demand
 /*524*/                                          - v_a6rrd_rq_qty
 /*524*/                          td9_rmks        = v_rmks
+                                 td9_rmks_type   = v_rmks_type
 /*524*/                          td9_ps_code     = v_ps_code.
 /*524 /*130507.1_2*/       if v_ps_code <> "X" then do:                                                   */
 /*524                              put  /* ss - 130227.1 -b */ unformatted    /* ss - 130227.1 -b */      */
@@ -990,7 +1024,28 @@ empty temp-table tmp_det9 no-error.
     /*
     {mfrtrail.i}
     */
-/*524*/      for each tmp_det9 no-lock where td9_ps_code = "":
+    /*将父件安全库存足的物料存在temp3*/
+      empty temp-table temp3 no-error.
+      for each tmp_det9 no-lock where td9_rmks_type = 42:
+          for each ps_mstr no-lock where ps_par = td9_part:
+              find first temp3 no-lock where t3_part = ps_par
+                     and t3_comp = ps_comp no-error.
+              if not available temp3 then do:
+                 create temp3.
+                 assign t3_par = ps_par
+                        t3_comp = ps_comp.
+              end.
+          end.
+      end.
+      for each tmp_det9 exclusive-lock where (td9_rmks_type = 11 or td9_rmks_type = 12):
+          find first temp3 no-lock where t3_comp = td9_part no-error.
+          if available temp3 then do:
+             assign td9_rmks_type = td9_rmks_type * -1.
+          end.
+      end.
+
+/*524*/      for each tmp_det9 no-lock where td9_ps_code <> "X"
+                  and td9_rmks_type > 0:
 /*524*/           put unformat td9_part                  "$"
 /*524*/                        td9_desc1                 "$"
 /*524*/                        td9_lt                    "$"
@@ -1019,7 +1074,7 @@ empty temp-table tmp_det9 no-error.
 /*524*/                        td9_aft_sm_oppo           "$"
 /*524*/                        td9_decinv                "$"
 /*524*/                        td9_calc_qty              "$"
-/*524*/                        td9_rmks         skip.
+/*524*/                        td9_rmks skip.
 /*524*/      end.
 
 
