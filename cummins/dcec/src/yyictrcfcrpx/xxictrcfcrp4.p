@@ -21,6 +21,10 @@ def var site like si_site.
 def var site1 like si_site.
 def var keeper as char label "保管员".
 def var keeper1 as char.
+def var vptpbuyer   like ptp_buyer.
+def var vptpvend    like ptp_vend.
+def var vptprunseq2 like ptp_run_seq2.
+
 
 DEFINE VARIABLE yn_zero AS LOGICAL INITIAL yes
      LABEL "Suppress Zero"
@@ -196,7 +200,7 @@ repeat:
          effdate1 column-label "截止日期" format "9999/99/99" with frame b stream-io.
 
 put skip(1) "地点" format "x(9)" "零件号码" format "x(19)" "描述" format "x(25)" "产线" format 'x(6)' "A" format "x(2)" "保管员" format 'x(9)'
-    "缺省库位" format "x(9)" "期初库存" format "x(13)" "成本" format "x(16)" "期初库存金额" format "x(13)" "采购收货" format "x(13)"
+    "缺省库位" format "x(9)" "采购员" format "x(9)" "供应商" format "x(9)" "E&O" format "x(9)" "期初库存" format "x(13)" "成本" format "x(16)" "期初库存金额" format "x(13)" "采购收货" format "x(13)"
     "采购收货金额" format "x(13)" "转移入库" format "x(13)" "转移入库金额" format "x(13)" "计划外入库" format "x(13)"
     "计划外入库金额" format "x(13)" "加工单入库" format "x(13)" "加工单入库金额" format "x(13)" "采购退货" format "x(13)"
     "采购退货金额" format "x(13)" "转移出库" format "x(13)" "转移出库金额" format "x(13)" "计划外出库" format "x(13)"
@@ -205,7 +209,7 @@ put skip(1) "地点" format "x(9)" "零件号码" format "x(19)" "描述" format "x(25)"
     "其他金额"  format "x(13)" "成本调整" format "x(13)" "期末库存" format "x(13)" "成本" format "x(16)" "期末库存金额" skip.
 
 put unformatted
-    "-------- ------------------ ------------------------ ----- - -------- -------- ------------ --------------- ------------ ------------ ------------ ------------ ------------ ".
+    "-------- ------------------ ------------------------ ----- - -------- -------- -------- -------- -------- ------------ --------------- ------------ ------------ ------------ ------------ ------------ ".
 put unformatted
     "------------ ------------ ------------ ------------ ------------ ------------ ------------ ------------ ".
 put unformatted "------------ ------------ ------------ ------------ ------------ ".
@@ -528,9 +532,19 @@ put unformatted
               edqty label "期末库存" std_as_of_to format "->>,>>>,>>9.99<<<<" label "成本" edqty_amt label "期末库存金额"
         with width 600 stream-io.
 */
+assign vptpbuyer = ""
+       vptpvend = ""
+       vptprunseq2 = "".
 
+find first ptp_det no-lock where ptp_domain = global_domain
+       and ptp_part = pt_part and ptp_site = in_site no-error.
+if available ptp_det then do:
+assign vptpbuyer = ptp_buyer
+       vptpvend = ptp_vend
+       vptprunseq2 = ptp_run_seq2.
+end.
 
-put in_site " " pt_part " " pt_desc2 " " pt_prod_line "  " pt_abc " " in__qadc01 " " in_user1 " " bgqty " " std_as_of_from " " bgqty_amt  " "
+put in_site " " pt_part " " pt_desc2 " " pt_prod_line "  " pt_abc " " in__qadc01 " " in_user1 " " vptpbuyer " " vptpvend " " vptprunseq2 " " bgqty " " std_as_of_from " " bgqty_amt  " "
   rctpo " " rctpo_amt " "
   rcttr " " rcttr_amt " " rctunp " " rctunp_amt " "  rctwo  " " rctwo_amt " "
   isspo " " isspo_amt " " isstr " " isstr_amt " " issunp " " issunp_amt " "

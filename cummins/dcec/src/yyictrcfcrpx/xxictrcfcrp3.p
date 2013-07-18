@@ -291,9 +291,15 @@ repeat:
            {gpsct03.i &cost=sct_cst_tot}
 
            edqty_amt = edqty * glxcst.
-
+ 
+            find first ptp_det no-lock where ptp_domain = global_domain
+                   and ptp_part = pt_part and ptp_site = in_site no-error. 
            disp pt_part pt_desc2 pt_prod_line pt_abc in__qadc01 label "保管员"
-              in_user1 label "缺省库位" bgqty label "期初库存"
+              in_user1 label "缺省库位" 
+              ptp_buyer label "采购员" when available ptp_det
+              ptp_vend label "供应商" when available ptp_det
+              ptp_run_seq2 label "E&O" when available ptp_det
+              bgqty label "期初库存"
               rctpo label "采购收货" rcttr label "转移入库" rctunp label "计划外入库"
               rctwo label "加工单入库" isspo label "采购退货" isstr label "转移出库"
               issunp label "计划外出库" issso label "销售出库"
