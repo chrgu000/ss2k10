@@ -37,7 +37,7 @@ define variable decOpenPOQtyum as decimal no-undo.
 define variable decOpenWOQty as decimal no-undo.
 define variable decDemandQty as decimal no-undo.
 define variable decInventory as decimal no-undo.
-define variable decPlan1 as decimal no-undo.
+define variable decPlan1 as decimal no-undo. /* =当天库存+OPPO+未结工单数-安全库存-总需求*/
 define variable decShort as decimal no-undo.
 define variable dMOQ as decimal no-undo.
 define variable sStatus like pt_status no-undo.
@@ -157,7 +157,7 @@ repeat :
             /*ss-130129.1 -b */
             '$' '成品测料日期' '$' '测料需求量' '$' '测料日期前总需求'
             '$' '测料日期前Open_PO' '$' '测料日期后Open_PO'
-            '$' '库存' '$' '是否欠料' '$' '测料明细说明' '$' '类别' 
+            '$' '库存' '$' '是否欠料' '$' '测料明细说明'
             /*ss-130129.1 -e */
             skip.
     empty temp-table tmp_det9 no-error.
@@ -231,7 +231,8 @@ repeat :
                      sStatus = pt_status.
                  end.
 
-                 find first ptp_det where ptp_site = a6rqd_site and ptp_part = a6rqd_part no-lock no-error.
+                 find first ptp_det where ptp_site = a6rqd_site
+                        and ptp_part = a6rqd_part no-lock no-error.
                  if available(ptp_det) then do:
                      assign
                      v_buyer = ptp_buyer
@@ -1026,8 +1027,8 @@ repeat :
     /*将父件安全库存足的物料存在temp3*/
       empty temp-table temp3 no-error.
       for each tmp_det9 no-lock where td9_rmks_type = 42:
-          for each ps_mstr no-lock where ps_par = td9_part  
-               and (ps_start <= today or ps_start = ?) 
+          for each ps_mstr no-lock where ps_par = td9_part
+               and (ps_start <= today or ps_start = ?)
                and (ps_end >= today or ps_end = ?) :
               find first temp3 no-lock where t3_comp = ps_comp no-error.
               if not available temp3 then do:
@@ -1075,7 +1076,7 @@ repeat :
 /*524*/                        td9_aft_sm_oppo           "$"
 /*524*/                        td9_decinv                "$"
 /*524*/                        td9_calc_qty              "$"
-/*524*/                        td9_rmks "$" td9_rmks_type skip.
+/*524*/                        td9_rmks skip.
 /*524*/      end.
 
     {mfreset.i}
