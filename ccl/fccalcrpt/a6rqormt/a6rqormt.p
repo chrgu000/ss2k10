@@ -1,6 +1,6 @@
 /*a6rqormt.p 客户新订单需求维护....*/
 
-{mfdtitle.i "test7"}
+{mfdtitle.i "130718.1"}
 
 /*定义变量....*/
 DEFINE VARIABLE CustPONO LIKE  a6rq_custpono.
@@ -43,12 +43,10 @@ setFrameLabels(FRAME  b:HANDLE ).
 VIEW FRAME a.
 VIEW FRAME b.
 
-{mfdemo.i 07/10/2013 07/22/2013}
-REPEAT  WITH  FRAME  a :
+REPEAT WITH FRAME a:
     CLEAR FRAME b NO-PAUSE.
 
     SET Customer  CustPONO   CustPOLN.
-
 
     /*稽核客户的合法性..*/
     FIND ad_mstr WHERE ad_addr = Customer NO-LOCK NO-ERROR.

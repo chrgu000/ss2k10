@@ -11,7 +11,6 @@
 
 FOR FIRST shop_cal FIELDS (shop_site shop_wdays) WHERE shop_site  =  {3} AND shop_wkctr  =  "" AND shop_mch =  "" NO-LOCK : END.
 
-
 IF  NOT  AVAILABLE  shop_cal THEN
     FOR FIRST  shop_cal FIELDS (shop_site shop_wdays) WHERE shop_site  = ""  AND  shop_wkctr = "" AND shop_mch = "" NO-LOCK: END .
 

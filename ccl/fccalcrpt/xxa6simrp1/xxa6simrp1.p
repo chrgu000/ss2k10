@@ -7,7 +7,7 @@
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "test.21"}
+{mfdtitle.i "130718.1"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -108,7 +108,6 @@ v_disp2    colon 24 no-label skip
 with  frame  a side-labels  width  80 attr-space.
 setframelabels(frame  a:handle ).
 {wbrp01.i}
-{mfdemo.i 07/10/2013 07/21/2013}
 repeat :
     if site1      = hi_char  then site1      = "".
     if cust1      = hi_char  then cust1      = "".
@@ -158,7 +157,7 @@ repeat :
             /*ss-130129.1 -b */
             '$' '成品测料日期' '$' '测料需求量' '$' '测料日期前总需求'
             '$' '测料日期前Open_PO' '$' '测料日期后Open_PO'
-            '$' '库存' '$' '是否欠料' '$' '测料明细说明'
+            '$' '库存' '$' '是否欠料' '$' '测料明细说明' '$' '类别' 
             /*ss-130129.1 -e */
             skip.
     empty temp-table tmp_det9 no-error.
@@ -1027,13 +1026,15 @@ repeat :
     /*将父件安全库存足的物料存在temp3*/
       empty temp-table temp3 no-error.
       for each tmp_det9 no-lock where td9_rmks_type = 42:
-          for each ps_mstr no-lock where ps_par = td9_part:
-              find first temp3 no-lock where t3_part = ps_par
-                     and t3_comp = ps_comp no-error.
+          for each ps_mstr no-lock where ps_par = td9_part  
+               and (ps_start <= today or ps_start = ?) 
+               and (ps_end >= today or ps_end = ?) :
+              find first temp3 no-lock where t3_comp = ps_comp no-error.
               if not available temp3 then do:
                  create temp3.
                  assign t3_par = ps_par
-                        t3_comp = ps_comp.
+                        t3_comp = ps_comp
+                        t3_qty_per = td9_rmks_type.
               end.
           end.
       end.
@@ -1074,9 +1075,8 @@ repeat :
 /*524*/                        td9_aft_sm_oppo           "$"
 /*524*/                        td9_decinv                "$"
 /*524*/                        td9_calc_qty              "$"
-/*524*/                        td9_rmks skip.
+/*524*/                        td9_rmks "$" td9_rmks_type skip.
 /*524*/      end.
-
 
     {mfreset.i}
 end.
