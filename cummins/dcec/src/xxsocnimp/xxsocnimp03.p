@@ -10,12 +10,6 @@
   define variable ret as character.
   define stream bf.
 
-for each xsc_d no-lock where not xsd_diffpi break by xsd_so:
-    if first-of(xsd_so) then do:
-       {gprun.i ""xxmodspdt.p"" "(input xsd_so,output ret)"}
-    end.
-end.
-
 for each xsc_d exclusive-lock where xsd_diffpi break by xsd_so by xsd_line:
     if first-of(xsd_line) then do:
        {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price,output ret)"}
@@ -24,6 +18,18 @@ for each xsc_d exclusive-lock where xsd_diffpi break by xsd_so by xsd_line:
        assign xsd_chk = "价格表调整失败!".
     end.
 end.
+
+/*如果无价差的SO且出货日期非当月的将出货日期调整为当天以防止漏开发票         */
+for each xsc_d no-lock where break by xsd_so by xsd_diffpi:
+    if last-of(xsd_so) and not xsd_diffpi then do:
+       find first so_mstr no-lock where so_domain = global_domain
+              and so_nbr = xsd_so no-error.
+       if available so_mstr and so_ship_date <= today - day(today) then do:
+          {gprun.i ""xxmodspdt.p"" "(input xsd_so,output ret)"}
+       end.
+    end.
+end.
+
 ret = "".
 FOR EACH xsc_d WHERE xsd_chk = "PASS":
     ASSIGN cfile = execname + "." + STRING(xsd_sn,"99999999").

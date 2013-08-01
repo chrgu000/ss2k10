@@ -1,4 +1,4 @@
-/*用新价格表写价格                                                           */
+/*调整出货日期为当天防止漏开发票                                             */
 {mfdeclre.i}
 
 define input parameter sonbr like so_nbr.
