@@ -46,14 +46,16 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
              PUT UNFORMATTED "-" SKIP.
           END.
       END.
-      /* check po_pr_list2 */
-      {xxadprclst.i
-         &price-list     = "po_pr_list2"
-         &curr           = "po_curr"
-         &price-list-req = "no"
-         &disp-msg       = "yes"
-         &warning        = "no"}
-      PUT UNFORMATTED "-" SKIP. /*TAX*/
+/* check po_pr_list2
+{xxadprclst.i
+   &price-list     = "po_pr_list2"
+   &curr           = "po_curr"
+   &price-list-req = "no"
+   &disp-msg       = "yes"
+   &warning        = "no"}
+   */
+    PUT UNFORMATTED "-" SKIP. /*TAX*/
+
 /*      if v-use-log-acctg then do:                                   */
 /*           PUT UNFORMATTED "-" SKIP. /*Terms of Trade*/             */
 /*      end                                                           */
@@ -103,7 +105,7 @@ FOR EACH xxpod_det exclusive-lock where xxpod_chk = "":
  /*         PUT UNFORMATTED "-" SKIP.                                        */
  /*         PUT UNFORMATTED "-" SKIP.                                        */
  /*      END.                                                                */
-                                                                             
+
  /*     if pod_cmtindx <> 0 then do:        /*CMMT = YES*/                   */
  /*        PUT UNFORMATTED "." skip.                                         */
  /*     end.                                                                 */
