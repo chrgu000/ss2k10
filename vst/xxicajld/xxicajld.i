@@ -7,6 +7,8 @@
 define {1} shared variable flhload as character format "x(70)".
 define {1} shared variable cloadfile as logical initial "no".
 define {1} shared variable i as integer no-undo.
+define {1} shared variable dte as date initial today no-undo.
+
 define {1} shared temp-table xxic
        fields xxic_part like pt_part
        fields xxic_site like pt_site

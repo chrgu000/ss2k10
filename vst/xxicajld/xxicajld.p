@@ -5,38 +5,38 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "121008.1"}
+{mfdtitle.i "130801.1"}
 {xxicajld.i "NEW"}
 {gpcdget.i "UT"}
 
 form
    skip(1)
    flhload colon 14  view-as fill-in size 40 by 1 skip(1)
+   dte     colon 14 skip(1)
    cloadfile colon 14 skip(2)
 with frame a side-labels width 80.
 
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
-/*
+assign flhload = os-getenv("HOME"). /*  + "/tmp/i.csv". */
 find first qad_wkfl where
            qad_key1 = "xxunrcld.p_filename" and
            qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
-   if qad_key3 <> "" then do:
-      assign flhload =  qad_key3.
+   if qad_charfld[15] <> "" then do:
+      assign flhload =  qad_charfld[15].
    end.
 end.
-*/
-assign flhload = os-getenv("HOME"). /*  + "/tmp/i.csv". */
-display flhload with frame a.
+
+display flhload dte with frame a.
 
 {wbrp01.i}
 repeat:
 
    if c-application-mode <> 'web' then
-   update flhload cloadfile with frame a.
+   update flhload dte cloadfile with frame a.
 
-   {wbrp06.i &command = update &fields = " flhload cloadfile "
+   {wbrp06.i &command = update &fields = " flhload dte cloadfile "
       &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:
@@ -69,20 +69,21 @@ repeat:
                &defineVariables = "yes"}
    {mfmsg.i 457 1}
    {mfphead.i}
-   /*
-   find first qad_wkfl where
-              qad_key1 = "xxunrcld.p_filename" and
-              qad_key2 = global_userid no-error.
-   if available qad_wkfl then do:
-          assign qad_key3 = flhload.
+
+   do transaction:
+      find first qad_wkfl exclusive-lock where
+                 qad_key1 = "xxunrcld.p_filename" and
+                 qad_key2 = global_userid no-error.
+      if available qad_wkfl then do:
+             assign qad_charfld[15] = flhload.
+      end.
+      else do:
+          create qad_wkfl.
+          assign qad_key1 = "xxunrcld.p_filename"
+                 qad_key2 = global_userid
+                 qad_charfld[15] = flhload.
+      end.
    end.
-   else do:
-       create qad_wkfl.
-       assign qad_key1 = "xxunrcld.p_filename"
-              qad_key2 = global_userid
-              qad_key3 = flhload.
-   end.
-   */
    empty temp-table xxic no-error.
    for each xxic exclusive-lock: delete xxic. end.
    {gprun.i ""xxicajld0.p""}

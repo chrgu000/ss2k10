@@ -22,7 +22,7 @@ for each xxic exclusive-lock where xxic_chk = "".
        put unformat '"' xxic_part '"' skip.
        put unformat '"' xxic_site '" "' xxic_loc '" "' xxic_lot '" "' xxic_ref '"' skip.
        put unformat xxic_qty_adj ' - -' skip.
-       put unformat '- ' today ' "' xxic_acct '" "' xxic_sub '" "' xxic_cc '"' skip.
+       put unformat '- ' dte ' "' xxic_acct '" "' xxic_sub '" "' xxic_cc '"' skip.
        put "Y" skip.
        put "." skip.
    output close.
@@ -47,7 +47,7 @@ for each xxic exclusive-lock where xxic_chk = "".
    batchrun = no.
 
    find first tr_hist no-lock where tr_trnbr > integer(trrecid)  and
-              tr_type = "CYC-RCNT" and tr_date = today and
+              tr_type = "CYC-RCNT" and tr_date = dte and
               tr_part = xxic_part and tr_site = xxic_site and
               tr_loc = xxic_loc and tr_lot = xxic_lot and
               tr_ref = xxic_ref and tr_qty_loc = xxic_qty_adj no-error.
