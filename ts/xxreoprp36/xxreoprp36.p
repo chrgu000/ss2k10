@@ -27,7 +27,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-/****************************************************************************** 
+/******************************************************************************
  * 注意：此程序是CHAR版的程序，需要做转换才能在GUI使用
  ******************************************************************************/
 /* DISPLAY TITLE */
@@ -244,9 +244,10 @@ repeat:
       {&REOPRP36-P-TAG12}
       assign act-hrs-sub = act-hrs-sub + act-hrs.
       {&REOPRP36-P-TAG13}
-      find first lnd_det no-lock where lnd_domain = global_domain
-             and lnd_line = op_wkctr and lnd_site = "TS"
-             and lnd_part = op_part and lnd_start <= today no-error.
+      find last lnd_det no-lock where lnd_domain = global_domain
+/*             and lnd_line = op_wkctr */ and lnd_site = "TS"
+             and lnd_part = op_part and lnd_start <= today
+             and lnd_run <> "" no-error.
       display
          op_date
          op_part
