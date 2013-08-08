@@ -3,6 +3,7 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
 /* REVISION END                                                              */
+/* 这个程序以资料为准装入。处理关闭后重新打开的问题                          */
 
 /* DISPLAY TITLE */
 {mfdtitle.i "120806.1"}
@@ -84,14 +85,14 @@ repeat:
    end.
    empty temp-table xxrqd no-error.
    for each xxrqd exclusive-lock: delete xxrqd. end.
-   {gprun.i ""xxrqdld0.p""}
+   {gprun.i ""xxrqdldx0.p""}
 
      if not can-find(first xxrqd) then do:
           {mfmsg.i 1310 1}
      end.
      else do:
      			assign oldId = global_userid.
-          {gprun.i ""xxrqdld1.p""}
+          {gprun.i ""xxrqdldx1.p""}
           assign global_userid = oldID.
      end.
      for each xxrqd exclusive-lock with width 320 frame c:
