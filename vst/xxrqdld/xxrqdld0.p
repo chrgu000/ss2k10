@@ -65,7 +65,7 @@ for each xxrqd exclusive-lock:
         else do:
              if cloadfile then do:
              assign rqd_due_date = xxrqd_due_date
-                    rqd_status = xxrqd_status
+                    rqd_status = xxrqd_stat.
              {gprun.i ""rqmrw.p""
                 "(input false, input rqd_site, input rqd_nbr, input rqd_line)"}
              end.   /* if cloadfile then do:     */
