@@ -60,9 +60,11 @@ define variable I as integer.
    bsheet:Range("F1:F2"):Interior:ColorIndex = 6.
    bsheet:Range("F1"):AddComment NO-ERROR.
    bsheet:Range("F1"):Comment:TEXT("±ØÌî") NO-ERROR.
-   bsheet:Range("I1:I2"):Interior:ColorIndex = 6.
+   bsheet:Range("I1:J2"):Interior:ColorIndex = 6.
    bsheet:Range("I1"):AddComment NO-ERROR.
    bsheet:Range("I1"):Comment:TEXT("±ØÌî") NO-ERROR.
+   bsheet:Range("J1"):AddComment NO-ERROR.
+   bsheet:Range("J1"):Comment:TEXT("±ØÌî") NO-ERROR.   
    for each xsc_d no-lock:
        bsheet:cells(i,1) = "'" + xsd_ship.
        bsheet:cells(i,2) = "'" + xsd_cust.
