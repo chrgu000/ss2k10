@@ -1,6 +1,6 @@
 /*V8:ConvertMode=FullGUIReport                                               */
 
-{mfdtitle.i "130720.1"}
+{mfdtitle.i "130812.1"}
 define variable part      like pt_part.
 define variable part1     like pt_part.
 define variable added     as date.
@@ -15,12 +15,21 @@ define variable var_eng_days like xapt_eng_days.
 define variable var_doc_days like xapt_doc_days.
 define variable var_fin_days like xapt_fin_days.
 define variable var_tot_days as   integer.
+define variable var_pmc_noconf like mfc_logical initial yes.
+define variable var_pur_noconf like mfc_logical initial yes.
+define variable var_eng_noconf like mfc_logical initial yes.
+define variable var_doc_noconf like mfc_logical initial yes.
+define variable var_fin_noconf like mfc_logical initial yes.
 
 form
    part    colon 16 part1    colon 40 label {t001.i}
    added   colon 16 added1   colon 40 label {t001.i}
    ptadded colon 16 ptadded1 colon 40 label {t001.i}
-   dsgngrp colon 16 dsgngrp1 colon 40 label {t001.i}
+   dsgngrp colon 16 dsgngrp1 colon 40 label {t001.i} skip(2)
+   
+   var_pmc_noconf colon 16 var_pur_noconf colon 40
+   var_eng_noconf colon 16 var_doc_noconf colon 40
+   var_fin_noconf colon 16
    skip(1)
 with frame a side-labels width 80 attr-space.
 
@@ -38,9 +47,15 @@ repeat:
    if dsgngrp1 = hi_char then dsgngrp1 = "".
 
    if c-application-mode <> 'web' then
-      update part part1 added added1 ptadded ptadded1 dsgngrp dsgngrp1 with frame a.
+      update part part1 added added1 ptadded ptadded1 dsgngrp dsgngrp1
+             var_pmc_noconf var_pur_noconf var_eng_noconf
+             var_doc_noconf var_fin_noconf with frame a.
 
-   {wbrp06.i &command = update &fields = " part part1 added added1 ptadded ptadded1 dsgngrp dsgngrp1 " &frm = "a"}
+   {wbrp06.i &command = update 
+             &fields = " part part1 added added1 ptadded ptadded1 dsgngrp dsgngrp1
+                         var_pmc_noconf var_pur_noconf var_eng_noconf
+                         var_doc_noconf var_fin_noconf
+                        " &frm = "a"}
 
    if (c-application-mode <> 'web') or
       (c-application-mode = 'web' and
@@ -76,11 +91,17 @@ for each xapt_aud no-lock where xapt_part >= part
                and (xapt_added >= added or added = ?)
                and (xapt_added <= added1 or added1 = ?)
                and (xapt_adm_date = ?)
+               and ((xapt_pmc_date = ? and var_pmc_noconf) or (not var_pmc_noconf))
+               and ((xapt_pur_date = ? and var_pur_noconf) or (not var_pur_noconf))
+               and ((xapt_eng_date = ? and var_eng_noconf) or (not var_eng_noconf))
+               and ((xapt_doc_date = ? and var_doc_noconf) or (not var_doc_noconf))
+               and ((xapt_fin_date = ? and var_fin_noconf) or (not var_fin_noconf))
    ,each pt_mstr no-lock where pt_part = xapt_part
                and pt_dsgn_grp >= dsgngrp
                and (pt_dsgn_grp <= dsgngrp1 or dsgngrp1 = "")
                and (pt_added >= ptadded or ptadded = ?)
                and (pt_added <= ptadded1 or ptadded1 = ?)
+               and pt_stat <> "AC"
    with frame b width 320 no-attr-space:
 
       /* SET EXTERNAL LABELS */
