@@ -30,13 +30,13 @@
 /*       COMBIND PROGRAM USES FRAMES BM & FM.  WHERE THESE FRAME            */
 /*       NAMES ARE USED, THE PREVIOUS PROGRAMS USED 'HEADING'               */
 /*G265***********************************************************************/
-
+/*731BOM结构中负数的先生出来4941303(层次选1时会重复BB 9564)                 */
      /* DISPLAY TITLE */
 
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "121031.1"}
+{mfdtitle.i "130731.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -94,7 +94,8 @@
 
 define temp-table xxrec
        fields xxrec_level as integer
-       fields xxrec_part like pt_part.
+       fields xxrec_part like pt_part
+       fields xxrec_qty  like ps_qty_per.
 
 
 /*GUI preprocessor Frame A define */
@@ -383,9 +384,9 @@ o_char:ADD-LAST("非O","非O") .
                 (substring(o_char,1,1) <> "!" and index(o_char,xxstatus) > 0 ) or
                 (substring(o_char,1,1) = "!" and index(substring(o_char,2), xxstatus) = 0)
              then do:
-               find first xxrec no-lock where xxrec_level = level
-                      and xxrec_part = ps_par no-error.
-               if not available xxrec then do:
+/*731*/         find first xxrec no-lock where xxrec_level = level              
+/*731*/                and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.                        
+/*731*/         if not available xxrec then do:                                 
               display lvl ps_par desc1 ps_qty_per um
                       l_phantom @ phantom
                       ps_ps_code
@@ -393,19 +394,19 @@ o_char:ADD-LAST("非O","非O") .
     /*judy*/          xxstatus
                       ps_rmks
                      with frame bm STREAM-IO /*GUI*/ .
-               find first xxrec exclusive-lock where xxrec_level = level
-                      and xxrec_part = ps_par no-error.
-               if not available xxrec then do:
-                  create xxrec.
-                  assign xxrec_level = level
-                         xxrec_part = ps_par.
-               end.
-
+/*731*/            find first xxrec exclusive-lock where xxrec_level = level         
+/*731*/                   and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.                          
+/*731*/            if not available xxrec then do:                                   
+/*731*/               create xxrec.                                                  
+/*731*/               assign xxrec_level = level                                     
+/*731*/                      xxrec_part = ps_par
+/*731*/                      xxrec_qty = ps_qty_per.                                    
+/*731*/            end.                                                              
 
 /*G265*/             if available bom_mstr and not available pt_mstr then
 /*N0F3 /*G265*/      display {&bmwuiqa_p_5} @ phantom with frame bm. */
 /*N0F3*/             /*hj01 IF yn = NO THEN */ display getTermLabel("BOM",3) FORMAT "x(3)" @ phantom with frame bm STREAM-IO /*GUI*/ .
-                end. /* if not available xxrec then do:*/
+/*731*/        end. /* if not available xxrec then do:*/                    
                end. /* if o_char = "ALL" or */
 /********
        if available pt_mstr and pt_desc2 > ""
