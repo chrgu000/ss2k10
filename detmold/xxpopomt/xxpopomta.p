@@ -1113,7 +1113,7 @@ repeat on endkey undo, leave:
 /*Y715*/          if available code_mstr then do:
 /*Y715*/             assign price_came_from_req = yes.
 /*Y715*/          end.
-/*Y715*/       end.               
+/*Y715*/       end.
             if not price_came_from_req
                then do:
 

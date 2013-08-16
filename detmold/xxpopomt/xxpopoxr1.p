@@ -1954,7 +1954,7 @@ History:       Extracted from popomta.p
    define variable newPOLine        as logical no-undo.
    define variable pc_recno         as recid   no-undo.
    define variable minmaxerror      as logical no-undo.
-   
+
    do on error undo, return error {&GENERAL-APP-EXCEPT}:
       {pxgetph.i pxtools}
       newPOLine = {pxfunct.i &FUNCTION='isNewRecord' &PROGRAM='pxtools.p'

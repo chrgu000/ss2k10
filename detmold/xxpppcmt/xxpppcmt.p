@@ -38,7 +38,10 @@
 /* $Revision:ebsp4   $by:Sandler  DATE:2012/09/18   ECO:*ss20120918.1*/
 /* ss-20130411.1 by Steven defult unit measure from pt_um & disable update*/
      /* DISPLAY TITLE */
-{mfdtitle.i "130716.1 "}
+/**130815.1********************************************************************
+ * 增加site维护选择
+ **130815.1*******************************************************************/
+{mfdtitle.i "130815.1 "}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -302,7 +305,7 @@
 /*M1QZ*/    min_label    at 17 pc_min_price   at 31
 /*M1QZ*/    max_label    at 17 temp_max_price at 31 */
             skip(2)
-         with frame c overlay no-labels row 11 width 80 attr-space.
+         with frame c overlay no-labels row 12 width 80 attr-space.
 
 /*N0GV*
  *        qty_label = {&pppcmt_p_2}.

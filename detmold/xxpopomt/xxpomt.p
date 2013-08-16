@@ -139,8 +139,14 @@
 /* ****************************** Definitions ******************************* */
 /*============================================================================*/
 
+/***130815.1*******************************************************************
+ * 1.使用价格单时，M类型和成品的零件不需要价格单
+ *   1.1 code_mstr: code_fldname = PT_PROD_LINE_NOTCHKPC 是成品
+ * 2.po_confirm set default to no.
+******************************************************************************/
+
 /* DISPLAY TITLE */
-{mfdtitle.i "130720.1"}
+{mfdtitle.i "130815.1"}
 /*N13P*/ /* Clear anything displayed by mftitle if api mode.*/
 /*N13P*/ {mfaititl.i}
 /*N0W9*/ {cxcustom.i "POMT.P"}
@@ -358,7 +364,7 @@ repeat:
             &ERRORLEVEL={&INFORMATION-RESULT}}
          new_po = yes.
 
-         {pxrun.i &PROC='createPurchaseOrder' &PROGRAM='popoxr.p'
+         {pxrun.i &PROC='createPurchaseOrder' &PROGRAM='xxpopoxr.p'
             &PARAM="(input ponbr,
                      buffer po_mstr)"
             &NOAPPERROR=TRUE &CATCHERROR=TRUE}
