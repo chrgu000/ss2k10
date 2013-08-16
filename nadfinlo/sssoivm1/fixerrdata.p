@@ -28,3 +28,15 @@ end.
 end.
 
 
+for each ar_mstr no-lock where ar_nbr = '22843811':
+display ar_mstr with 2 columns.
+/* assign ar_applied = 65716.82.   */
+color display input ar_amt ar_applied.
+for each ard_det exclusive-lock where ard_ref = ar_nbr:
+display ard_det with 2 columns.
+color display input  ard_amt.
+/*
+assign ard_amt = 65716.82.
+*/
+end.
+end.
