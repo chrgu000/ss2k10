@@ -2,11 +2,9 @@
 /* REVISION: 090717.1      Create Date: 20090717  BY: Softspeed roger xiao    */
 /* SS - 101215.1  By: Roger Xiao */  /*remove xsqty_date from disp            */
 /*-Revision end---------------------------------------------------------------*/
-/*维护完运行 xxsqtymt02.p                                                     */
-
 
 /* DISPLAY TITLE */
-{mfdtitle.i "101215.1"}
+{mfdtitle.i "130807.1"}
 
 define var part    like xsqty_part .
 define var site    like xsqty_site .
@@ -26,7 +24,6 @@ with frame a  side-labels width 80 attr-space.
 setFrameLabels(frame a:handle).
 
 form
-
     v_sqty[01] colon 15 label "01月"   v_sqty[07] colon 52 label "07月"
     v_sqty[02] colon 15 label "02月"   v_sqty[08] colon 52 label "08月"
     v_sqty[03] colon 15 label "03月"   v_sqty[09] colon 52 label "09月"
@@ -38,7 +35,7 @@ form
     "1.地点:留空为所有地点的安全库存,否则仅为指定地点的安全库存"  colon 10
     "2.月份:从当前日期开始滚动输入.  例:假如当前日期为2009/8/1,"  colon 10
     "       则08月-12月为本年的月份,01月-07月为次年的月份"        colon 10
-
+    "3.维护完运行 xxsqtymt02.p"                                   colon 10
 with frame b title color normal "各月安全库存" side-labels width 80 attr-space.
 setFrameLabels(frame b:handle).
 
@@ -109,15 +106,15 @@ repeat with frame a:
     desc2 = if avail pt_mstr then pt_desc2 else "" .
     disp part desc1 desc2 site with frame a .
 
-    find  xsqty_mstr where  xsqty_part = part and xsqty_site = site exclusive-lock no-error .
+    find  xsqty_mstr where xsqty_part = part
+                       and xsqty_site = site exclusive-lock no-error .
     if not avail xsqty_mstr then do :
             {mfmsg.i 1 1 }
-            create xsqty_mstr .
+            create xsqty_mstr.
             assign xsqty_part =  part
                    xsqty_site =  site
                    xsqty_user =  global_userid
-                   xsqty_date =  today .
-
+                   xsqty_date =  today.
     end.
 
 
@@ -141,12 +138,8 @@ repeat with frame a:
             v_sqty[12]
     with frame b .
 
-
-
     setloop:
     do on error undo ,retry :
-
-
         update
                 v_sqty[1]
                 v_sqty[2]
@@ -193,6 +186,4 @@ repeat with frame a:
             xsqty_date = today .
     end. /*  setloop: */
 end.   /*  mainloop: */
-
 status input.
-
