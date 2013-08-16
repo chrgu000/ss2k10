@@ -333,7 +333,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_ponbr '"' skip
                         '"' xxwk1_vend  '"' skip
                         "-" skip
-                        '"' today  '" ' '"' xxwk1_due_date '" ' '"' xxwk1_buyer '" ' "- " "- " '"' xxwk1_contract '" ' "- " "- " "- " '"' " " '" ' "- " '"' xxwk1_site '" ' "- " '"'"yes" '" ' '"' "no" '" ' '"' xxwk1_curr '" ' "- - - - "  '"'"no" '" '"- - - "   '"' "no" '" ' skip
+                        '"' today  '" ' '"' xxwk1_due_date '" ' '"' xxwk1_buyer '" ' "- " "- " '"' xxwk1_contract '" ' "- " "- " "- " '"' " " '" ' "- " '"' xxwk1_site '" ' "- " '"'"no" '" ' '"' "no" '" ' '"' xxwk1_curr '" ' "- - - - "  '"'"no" '" '"- - - "   '"' "no" '" ' skip
                         "- - - " skip
                          "-" skip
                           xxwk1_line  skip
@@ -351,7 +351,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_ponbr '"' skip
                         '"' xxwk1_vend  '"' skip
                         "-" skip
-                        '"' today  '" ' '"' xxwk1_due_date '" ' '"' xxwk1_buyer '" ' "- " "- " '"' xxwk1_contract '" ' "- " "- " "- " '"' " " '" ' "- " '"' xxwk1_site '" ' "- " '"'"yes" '" ' '"' "no" '" ' '"' xxwk1_curr '" ' "- - - - "  '"'"no" '" '"- - - "   '"' "no" '" ' skip
+                        '"' today  '" ' '"' xxwk1_due_date '" ' '"' xxwk1_buyer '" ' "- " "- " '"' xxwk1_contract '" ' "- " "- " "- " '"' " " '" ' "- " '"' xxwk1_site '" ' "- " '"'"no" '" ' '"' "no" '" ' '"' xxwk1_curr '" ' "- - - - "  '"'"no" '" '"- - - "   '"' "no" '" ' skip
                         "- " skip
                           xxwk1_line  skip
                         '"' xxwk1_site '" 'skip
