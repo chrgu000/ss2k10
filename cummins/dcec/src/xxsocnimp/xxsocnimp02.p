@@ -28,7 +28,8 @@ define variable I as integer.
    bsheet:cells(i,15) = "Iss-Due-Date".
    bsheet:cells(i,16) = "Sales_Price".
    bsheet:cells(i,17) = "Total".
-   bsheet:cells(i,18) = "Description".
+   bsheet:cells(i,18) = "UpdatePrice".
+   bsheet:cells(i,19) = "Description".
    i = i + 1.
    bsheet:cells(i,1) = "发货至".
    bsheet:cells(i,2) = "销往".
@@ -47,7 +48,8 @@ define variable I as integer.
    bsheet:cells(i,15) = "生效日期".
    bsheet:cells(i,16) = "单价".
    bsheet:cells(i,17) = "合计".
-   bsheet:cells(i,18) = "结果".
+   bsheet:cells(i,18) = "更新价格".
+   bsheet:cells(i,19) = "结果".
    i = i + 1.
    bsheet:Range("A1:B2"):Interior:ColorIndex = 6.
    bsheet:Range("A1"):AddComment NO-ERROR.
@@ -81,7 +83,8 @@ define variable I as integer.
        bsheet:cells(i,15) = "'" + string(xsd_eff,"99/99/99").
        bsheet:cells(i,16) = xsd_price.
        bsheet:cells(i,17) = xsd_amt.
-       bsheet:cells(i,18) = xsd_chk.
+       bsheet:cells(i,18) = string(xsd_newpc).
+       bsheet:cells(i,19) = xsd_chk.
        if xsd_chk = "" then do:
             bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.
        end.

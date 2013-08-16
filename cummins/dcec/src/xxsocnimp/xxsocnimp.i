@@ -14,6 +14,7 @@ define {1} shared temp-table xsa_r
     fields xsr_oh like ld_qty_oh column-label "xsr_oh"
     fields xsr_um like um_um column-label "xsr_um"
     fields xsr_stat as character column-label "xsr_flag"
+    fields xsr_newpc as logical column-label "xsr_newpc"
     index xsr_1 is primary xsr_part xsr_so
     index xsr_2 xsr_so xsr_part xsr_site xsr_loc xsr_lot xsr_ref.
     .
@@ -30,6 +31,7 @@ define {1} shared temp-table xsc_m
     fields xsm_lot  like ld_lot column-label "xsm_lot"
     fields xsm_ref  like ld_ref column-label "xsm_ref"
     fields xsm_eff  like tr_effdate column-label "xsm_eff"
+    fields xsm_newpc as logical column-label "xsm_newpc"
     fields xsm_stat as   character column-label "xsm_stat".
 
 define {1} shared temp-table xsc_d
@@ -57,6 +59,7 @@ define {1} shared temp-table xsc_d
     fields xsd_chk  as character format "x(120)" column-label "xsd_chk"
     fields xsd_sn   as integer column-label "xsd_sn"
     fields xsd_diffpi as logical column-label "xsd_diffpi" /*已更新报价*/
+    fields xsd_newpc as logical column-label "xsd_newpc"
     fields xsd_mid  as integer column-label "xsd_mid_recid(xsc_m)"
     index xsd_so_line xsd_so xsd_line.
 

@@ -1,7 +1,5 @@
 /* xxsocnimp01.p - import from xls                                            */
-
 {mfdeclre.i}
-
 {xxsocnimp.i}
 define input parameter thfile as CHAR FORMAT "x(50)".
 define variable bexcel as com-handle.
@@ -30,6 +28,7 @@ define variable intI as integer.
                xsm_site = TRIM(bsheet:cells(intI,10):FormulaR1C1)
                xsm_loc = TRIM(bsheet:cells(intI,11):FormulaR1C1)
                xsm_ref = TRIM(bsheet:cells(intI,14):FormulaR1C1)
+               xsm_newpc = logical(TRIM(bsheet:cells(intI,18):FormulaR1C1))
                no-error.
      end.
   END.

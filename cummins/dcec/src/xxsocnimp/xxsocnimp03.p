@@ -10,7 +10,7 @@
   define variable ret as character.
   define stream bf.
 
-for each xsc_d exclusive-lock where xsd_diffpi break by xsd_so by xsd_line:
+for each xsc_d exclusive-lock where xsd_diffpi and xsd_newpc break by xsd_so by xsd_line:
     if first-of(xsd_line) then do:
        {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price,output ret)"}
     end.

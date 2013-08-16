@@ -61,7 +61,7 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES xsc_d
 
 /* Definitions for BROWSE brDet                                         */
-&Scoped-define FIELDS-IN-QUERY-brDet xsd_ship xsd_cust xsd_so xsd_line xsd_serial xsd_part xsd_desc1 xsd_desc2 xsd_qty_used xsd_site xsd_loc xsd_qty_keep xsd_lot xsd_ref xsd_eff xsd_price xsd_amt xsd_chk
+&Scoped-define FIELDS-IN-QUERY-brDet xsd_ship xsd_cust xsd_so xsd_line xsd_serial xsd_sched xsd_part xsd_desc2 /* xsd_desc1 */ xsd_qty_used xsd_site xsd_loc xsd_qty_keep xsd_lot xsd_ref xsd_eff xsd_price xsd_amt xsd_newpc xsd_chk
 &Scoped-define ENABLED-FIELDS-IN-QUERY-brDet
 &Scoped-define SELF-NAME brDet
 &Scoped-define QUERY-STRING-brDet FOR EACH xsc_d
@@ -119,7 +119,7 @@ DEFINE QUERY brDet FOR
 DEFINE BROWSE brDet
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brDet wWin _FREEFORM
   QUERY brDet DISPLAY
-    xsd_ship     COLUMN-LABEL "发货至"
+      xsd_ship     COLUMN-LABEL "发货至"
     xsd_cust    COLUMN-LABEL "销往"
     xsd_so       COLUMN-LABEL "销售订单号"
     xsd_line     COLUMN-LABEL "项次"
@@ -137,6 +137,7 @@ DEFINE BROWSE brDet
     xsd_eff      COLUMN-LABEL "生效日期"
     xsd_price    COLUMN-LABEL "单价"
     xsd_amt      COLUMN-LABEL "合计"
+    xsd_newpc    COLUMN-LABEL "更新报价"
     xsd_chk      COLUMN-LABEL "结果"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME

@@ -27,6 +27,7 @@
                 xsd_qty_used = xsr_oh
                 xsd_qty_oh = xsr_oh
                 xsd_qty_keep = 0
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m).
             delete xsc_m.
             delete xsa_r.
@@ -52,6 +53,7 @@
                 xsd_qty_used = xsm_qty_used
                 xsd_qty_oh = xsr_oh - xsm_qty_used
                 xsd_qty_keep = xsr_oh - xsm_qty_used
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m).
             assign xsr_oh = xsr_oh - xsm_qty_used.
             delete xsc_m.
@@ -74,6 +76,7 @@
                 xsd_loc = xsr_loc
                 xsd_lot = xsr_lot
                 xsd_ref = xsr_ref
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m)
                 .
            if xsr_oh >= xsm_qty_used then do:
@@ -107,6 +110,7 @@
              xsd_mid = recid(xsc_m)
              xsd_qty_oh = 0
              xsd_qty_keep = 0
+             xsd_newpc = xsm_newpc
              xsd_chk = getmsg(6754)
              .
   end.
