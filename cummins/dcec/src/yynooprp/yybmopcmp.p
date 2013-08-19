@@ -245,27 +245,33 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
          input level,
          input skpge).
 
-for each xbop exclusive-lock:
-       assign xbop_stat = "BOM".
-end.
-
-for each ro_det no-lock where ro_domain = global_domain
-     and ro_rout = parent1:
-     find first xbop exclusive-lock where xbop_op = ro_op no-error.
-     if available xbop then do:
-        assign xbop_stat = "OK".
-     end.
-     else do:
-        create xbop.
-        assign xbop_comp = parent1
-               xbop_op = ro_op
-               xbop_stat = "Routing".
-     end.
-end.
+/*  for each xbop exclusive-lock:                                                       */
+/*      if xbop_op = 0 then do:                                                         */
+/*         assign xbop_stat = "未维护工序".                                             */
+/*      end.                                                                            */
+/*      else do:                                                                        */
+/*           delete xbop.                                                               */
+/*  /*     find first opm_mstr no-lock where opm_domain = global_domain         */      */
+/*  /*            and opm_std_op = trim(string(xbop_op)) no-error.              */      */
+/*  /*     if not available opm_mstr then do:                                   */      */
+/*  /*        assign xbop_stat = "工序维护不正确!".                             */      */
+/*  /*     end.                                                                 */      */
+/*  /*     else do:                                                             */      */
+/*  /*        assign xbop_stat = "OK".                                          */      */
+/*  /*     end.                                                                 */      */
+/*  /*       find first ro_det no-lock where ro_domain = global_domain   */             */
+/*  /*              and ro_routing = xbop_par and ro_op = xbop_op        */             */
+/*  /*              and (ro_start >= eff_date or eff_date = ?)           */             */
+/*  /*              and (ro_end <= eff_date or eff_date = ?) no-error.   */             */
+/*  /*       if not available ro_det then do:                            */             */
+/*  /*          assign xbop_stat = "工序维护不正确!".                    */             */
+/*  /*       end.                                                        */             */
+/*      end.                                                                            */
+/*  end.                                                                                */
 
 for each xbop no-lock break by xbop_stat with frame x:
    setFrameLabels(frame x:handle).
-      display xbop_comp xbop_op xbop_iss_pol xbop_phantom xbop_stat with stream-io.
+      display xbop_par xbop_comp xbop_op xbop_iss_pol xbop_phantom xbop_stat with stream-io.
 /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
 end.
    end.   /* for each bom_mstr */

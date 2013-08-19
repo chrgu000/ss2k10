@@ -282,11 +282,12 @@ PROCEDURE process_report:
 /*         down with frame det2.                                             */
 
 if ps_op <> 0 and ps_ps_code <> "D" then do:
-   find first xbop no-lock where xbop_comp = ps_comp 
+   find first xbop no-lock where xbop_par = ps_par and xbop_comp = ps_comp 
           and xbop_op = ps_op no-error.
    if not available xbop then do:
           create xbop.
-          assign xbop_comp = ps_comp
+          assign xbop_par = ps_par
+                 xbop_comp = ps_comp
                  xbop_op = ps_op.
    end.
    if available pt_mstr then do:
