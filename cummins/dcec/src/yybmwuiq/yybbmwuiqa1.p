@@ -219,7 +219,7 @@ o_char:ADD-LAST("非O","非O") .
 /*G265      comp = pt_part.  */
 /*G265*/    comp      = parent
             maxlevel  = min(maxlevel,99).
-            level     = 1. 
+            level     = 1.
 
         find first ps_mstr use-index ps_comp where ps_domain = global_domain
                and ps_comp = comp
@@ -300,7 +300,7 @@ o_char:ADD-LAST("非O","非O") .
                pt_part = ps_par no-lock no-error.
 
           if not available pt_mstr then do:
-/************************          
+/************************
              find bom_mstr no-lock where bom_domain = global_domain and
       bom_parent = ps_par no-error.
              if available bom_mstr and bom__chr02 <> "" then do:
@@ -309,9 +309,9 @@ o_char:ADD-LAST("非O","非O") .
               end.
 *************************/
              if substring(ps_par,length(ps_par) - 1) = "ZZ" then do:
-                find first pt_mstr no-lock where pt_domain = global_domain 
-                       and pt_part = substring(ps_par,1,length(ps_par) - 2) no-error. 
-             end.             
+                find first pt_mstr no-lock where pt_domain = global_domain
+                       and pt_part = substring(ps_par,1,length(ps_par) - 2) no-error.
+             end.
           end.  /* if not available pt_mstr then do: */
 
           if available pt_mstr then do:
@@ -384,9 +384,9 @@ o_char:ADD-LAST("非O","非O") .
                 (substring(o_char,1,1) <> "!" and index(o_char,xxstatus) > 0 ) or
                 (substring(o_char,1,1) = "!" and index(substring(o_char,2), xxstatus) = 0)
              then do:
-/*731*/         find first xxrec no-lock where xxrec_level = level              
-/*731*/                and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.                        
-/*731*/         if not available xxrec then do:                                 
+/*731*/         find first xxrec no-lock where xxrec_level = level
+/*731*/                and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.
+/*731*/         if not available xxrec then do:
               display lvl ps_par desc1 ps_qty_per um
                       l_phantom @ phantom
                       ps_ps_code
@@ -394,19 +394,19 @@ o_char:ADD-LAST("非O","非O") .
     /*judy*/          xxstatus
                       ps_rmks
                      with frame bm STREAM-IO /*GUI*/ .
-/*731*/            find first xxrec exclusive-lock where xxrec_level = level         
-/*731*/                   and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.                          
-/*731*/            if not available xxrec then do:                                   
-/*731*/               create xxrec.                                                  
-/*731*/               assign xxrec_level = level                                     
+/*731*/            find first xxrec exclusive-lock where xxrec_level = level
+/*731*/                   and xxrec_part = ps_par and xxrec_qty = ps_qty_per no-error.
+/*731*/            if not available xxrec then do:
+/*731*/               create xxrec.
+/*731*/               assign xxrec_level = level
 /*731*/                      xxrec_part = ps_par
-/*731*/                      xxrec_qty = ps_qty_per.                                    
-/*731*/            end.                                                              
+/*731*/                      xxrec_qty = ps_qty_per.
+/*731*/            end.
 
 /*G265*/             if available bom_mstr and not available pt_mstr then
 /*N0F3 /*G265*/      display {&bmwuiqa_p_5} @ phantom with frame bm. */
 /*N0F3*/             /*hj01 IF yn = NO THEN */ display getTermLabel("BOM",3) FORMAT "x(3)" @ phantom with frame bm STREAM-IO /*GUI*/ .
-/*731*/        end. /* if not available xxrec then do:*/                    
+/*731*/        end. /* if not available xxrec then do:*/
                end. /* if o_char = "ALL" or */
 /********
        if available pt_mstr and pt_desc2 > ""
