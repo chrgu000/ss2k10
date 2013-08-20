@@ -1,10 +1,10 @@
 /*V8:ConvertMode=FullGUIReport                                               */
 
-{mfdtitle.i "130720.1"}
+{mfdtitle.i "130721"}
 define variable part      like pt_part.
 define variable part1     like pt_part.
-define variable added     like pt_added.
-define variable added1    like pt_added.
+define variable added     as date.
+define variable added1    as date.
 define variable dsgngrp   like pt_dsgn_grp.
 define variable dsgngrp1  like pt_dsgn_grp.
 define variable convdate  as   date.
@@ -22,13 +22,11 @@ form
    convdate colon 16 convdate1 colon 40 label {t001.i}
     skip(1)
 with frame a side-labels width 80 attr-space.
-
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a:handle).
 
 {wbrp01.i}
 repeat:
-
    if part1 = hi_char then part1 = "".
    if added = low_date then added = ?.
    if added1 = hi_date then added1 = ?.
@@ -98,7 +96,7 @@ for each xapt_aud no-lock where xapt_part >= part
       {mfrpchk.i}
       display xapt_part pt_site format "x(4)"
               pt_dsgn_grp pt_desc1 pt_pm_code pt_um
-              pt_draw format "x(12)" 
+              pt_draw format "x(12)"
               pt_added pt_status format "x(3)" xapt_added
               xapt_pmc_date var_pmc_days format "->>9"
               xapt_pur_date var_pur_days format "->>9"
