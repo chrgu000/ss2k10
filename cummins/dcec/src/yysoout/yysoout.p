@@ -5,6 +5,7 @@
 /* zy 4/26/13                                                                */
 /* 1.显示CN-SHIP对应的交易(注：数量是与之相对应的ISS-TR的数量)               */
 /* 2.如果做了CN-USE的交易类型则不打印相应的ISS-SO记录                        */
+/* 8/27/13 fix bug:ih_hist找不到资料报错                                     */
 
 {mfdtitle.i "121002.1"}
 
@@ -240,19 +241,26 @@ procedure p-report:
          END.
          else do:
              soddet="N".
+             find first ad_mstr where ad_domain = global_domain
+                    and ad_addr = tr_hist.tr_addr no-lock no-error.
              find first ih_hist where ih_domain = global_domain
                     and ih_inv_nbr = tr_hist.tr_rmks no-lock no-error.
-             find first IDH_HIST where idh_domain = global_domain
-                    and iDH_nbr = tr_hist.tr_NBR and iDH_line = tr_hist.tr_line
-             no-lock no-error.
-             find first ad_mstr where ad_domain = global_domain
-                    and ad_addr = ih_cust no-lock no-error.
-             if  i = 1 then  do:
-                if tr_hist.tr__log02 = No then duplicate = "原本".
-                else duplicate = "副本".
-                display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn
-                        ad_line1 ih_ord_date ad_phone pdate ih_rmks
-                        tr_hist.tr_ship_id with frame bih.
+             if available ih_hist then do:
+                find first IDH_HIST where idh_domain = global_domain
+                       and iDH_nbr = tr_hist.tr_NBR and iDH_line = tr_hist.tr_line
+                no-lock no-error.
+                if  i = 1 then  do:
+                   if tr_hist.tr__log02 = No then duplicate = "原本".
+                   else duplicate = "副本".
+                   display pageno duplicate ih_cust ih_nbr ad_zip ad_name ad_attn
+                           ad_line1 ih_ord_date ad_phone pdate ih_rmks
+                           tr_hist.tr_ship_id with frame bih.
+                end.
+             end.
+             else do:
+             display pageno duplicate "" @ ih_cust "" @ ih_nbr ad_zip ad_name ad_attn
+                            ad_line1 "" @ ih_ord_dat ad_phone pdate "" @ ih_rmks
+                            tr_hist.tr_ship_id with frame bih.
              end.
              SOAV = no.
          end.
