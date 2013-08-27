@@ -14,6 +14,7 @@ define variable var_pur_days like xapt_pur_days.
 define variable var_eng_days like xapt_eng_days.
 define variable var_doc_days like xapt_doc_days.
 define variable var_fin_days like xapt_fin_days.
+define variable var_pm_code  like pt_pm_code.
 
 form
    part    colon 16 part1    colon 40 label {t001.i}
@@ -81,7 +82,14 @@ for each xapt_aud no-lock where xapt_part >= part
 
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame b:handle).
-
+      assign var_pm_code = pt_pm_code.
+      if pt_site = "VST2" then do:
+         find first ptp_det no-lock where ptp_part = pt_part
+                and ptp_site = pt_site no-error.
+         if available ptp_det then do:
+            assign var_pm_code = ptp_pm_code.
+         end.
+      end.
       if xapt_pmc_days = ? then assign var_pmc_days = today - xapt_added.
                            else assign var_pmc_days = xapt_pmc_days.
       if xapt_pur_days = ? then assign var_pur_days = today - xapt_added.
@@ -95,7 +103,7 @@ for each xapt_aud no-lock where xapt_part >= part
 
       {mfrpchk.i}
       display xapt_part pt_site format "x(4)"
-              pt_dsgn_grp pt_desc1 pt_pm_code pt_um
+              pt_dsgn_grp pt_desc1 var_pm_code pt_um
               pt_draw format "x(12)"
               pt_added pt_status format "x(3)" xapt_added
               xapt_pmc_date var_pmc_days format "->>9"
