@@ -85,7 +85,7 @@ define variable I as integer.
        bsheet:cells(i,15) = "'" + string(xsd_eff,"99/99/99").
        bsheet:cells(i,16) = xsd_price.
        bsheet:cells(i,17) = xsd_amt.
-       bsheet:cells(i,18) = xsd_newpc.
+       bsheet:cells(i,18) = string(xsd_newpc).
        bsheet:cells(i,19) = xsd_chk.
        if xsd_chk = "" then do:
             bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.

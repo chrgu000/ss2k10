@@ -294,7 +294,8 @@ DO:
                {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
             */
             for each cncix_mstr no-lock where cncix_domain = global_domain
-                 and cncix_shipto = xsm_ship and cncix_part = xsm_part:
+                 and cncix_shipto = xsm_ship and cncix_part = xsm_part
+                 and cncix_qty_stock > 0:
 
                  create xsa_r.
                  assign xsr_ship = cncix_shipto
@@ -326,6 +327,15 @@ DO:
             end.
             END.
         END.
+/*13827    删除有负数批号的资料*/        
+/*13827*/  for each xsa_r exclusive-lock:
+/*13827*/      find first cncix_mstr no-lock where cncix_domain = global_domain
+/*13827*/             and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line
+/*13827*/             and cncix_lot = xsr_lot and  xsr_oh = cncix_qty_stock * -1 no-error.
+/*13827*/      if available cncix_mstr then do:
+/*13827*/         delete xsa_r.
+/*13827*/      end.
+/*13827*/  end.
 /*        {xxsocnimp02.i} */
         {xxsocnimp01a.i}
     END.

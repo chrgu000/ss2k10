@@ -8,10 +8,12 @@
       find first xsa_r exclusive-lock where
            xsm_part = xsr_part and xsm_qty_used = xsr_oh and
            xsm_site = xsr_site and
-           (xsm_so = xsr_so or xsm_so = "") and
-           (not can-find(first cncix_mstr no-lock where cncix_domain = global_domain
-                           and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line
-                           and (cncix_qty_stock * -1) = xsr_oh))
+           (xsm_so = xsr_so or xsm_so = "")
+/* and                                                                        */
+/* (not can-find(first cncix_mstr no-lock where cncix_domain = global_domain  */
+/*                 and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line    */
+/*                 and cncix_lot = xsr_lot                                    */
+/*                 and (cncix_qty_stock * -1) = xsr_oh))                      */
             no-error.
       if available xsa_r then do:
          create xsc_d.
@@ -28,6 +30,7 @@
                 xsd_qty_used = xsr_oh
                 xsd_qty_oh = xsr_oh
                 xsd_qty_keep = 0
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m).
             delete xsc_m.
             delete xsa_r.
@@ -54,6 +57,7 @@
                 xsd_qty_used = xsm_qty_used
                 xsd_qty_oh = xsr_oh - xsm_qty_used
                 xsd_qty_keep = xsr_oh - xsm_qty_used
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m).
             assign xsr_oh = xsr_oh - xsm_qty_used.
             delete xsc_m.
@@ -77,6 +81,7 @@
                 xsd_loc = xsr_loc
                 xsd_lot = xsr_lot
                 xsd_ref = xsr_ref
+                xsd_newpc = xsm_newpc
                 xsd_mid = recid(xsc_m)
                 .
            if xsr_oh >= xsm_qty_used then do:
@@ -111,6 +116,7 @@
              xsd_mid = recid(xsc_m)
              xsd_qty_oh = 0
              xsd_qty_keep = 0
+             xsd_newpc = xsm_newpc
              xsd_chk = getmsg(6754)
              .
   end.
