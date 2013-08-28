@@ -1,3 +1,5 @@
+/*确认人不从控制档取改取:vd_ap_cntct                                         */
+
 {mfdeclre.i "new global"}
 {mf1.i "new global"}
 define variable v_i as integer.
@@ -50,6 +52,7 @@ define temp-table xiv_m
   fields xiv_date     as   date
   fields xiv_po       like po_nbr
   fields xiv_vend     like po_vend
+  fields xiv_conf     like vd_ap_cntct
   fields xiv_chk      as   character format "x(60)"
   fields xiv_datec    as   character.
 
@@ -119,6 +122,7 @@ input close.
 for each xiv_m exclusive-lock with width 200:
     if xiv_datec <> "" then assign xiv_date = str2Date(xiv_datec) no-error.
     if xiv_date = ? then assign xiv_date = today.
+    assign xiv_conf = vusr.
     find first prh_hist no-lock where prh_domain = global_domain and
                prh_receiver = xiv_receiver and prh_line = xiv_line no-error.
     if available prh_hist then do:
@@ -127,6 +131,11 @@ for each xiv_m exclusive-lock with width 200:
        end.
        assign xiv_vend = prh_vend
               xiv_po = prh_nbr.
+       find first vd_mstr no-lock where vd_domain = global_domain
+              and vd_addr = prh_vend no-error.
+       if available vd_mstr then do:
+          assign xiv_conf = vd_ap_cntct.
+       end.
     end.
     else do:
          assign xiv_chk = "未找到收货资料".
@@ -190,7 +199,7 @@ for each xiv_m no-lock break by xiv_inv BY xiv_receiver BY xiv_line:
       put stream bf unformat '.' skip.
       put stream bf unformat '.' skip.
    /*     put stream bf unformat 'n' skip. 查看税细节 */
-      put stream bf unformat '- N "' vusr '"' skip. /*确认 = NO*/
+      put stream bf unformat '- N "' vd_ap_cntct '"' skip. /*确认 = NO*/
       put stream bf unformat '.' skip.
       put stream bf unformat '.' skip.
       output stream bf close.
