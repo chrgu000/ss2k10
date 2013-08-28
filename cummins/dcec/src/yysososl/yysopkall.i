@@ -83,6 +83,7 @@ do i = 1 to 3:
         and ld_part = sod_part
         and ld_loc = tt_loc
 /*1*/   and ld_loc >= loc and ld_loc <= loc1
+/*13821.1*/ and ld_lot <> ""
         and ld_qty_oh - ld_qty_all > 0
         and (ld_expire > today + icc_ctrl.icc_iss_days
         or ld_expire = ?)
@@ -112,6 +113,7 @@ do i = 1 to 3:
       where ld_det.ld_domain = global_domain and (  ld_site = sod_site
      and ld_part = sod_part
 /*1*/  and ld_loc >= loc and ld_loc <= loc1
+/*13821.1*/ and ld_lot <> ""
      and can-find(tt_resv_loc where tt_loc = ld_loc)
      and ld_qty_oh - ld_qty_all > 0
      and (ld_expire > today + icc_iss_days
@@ -161,6 +163,7 @@ then do:
    where ld_det.ld_domain = global_domain
    and (  ld_site = sod_det.sod_site
 /*1*/   and ld_loc >= loc and ld_loc <= loc1
+/*13821.1*/ and ld_lot <> ""
    and ld_part = sod_part
    and can-find(is_mstr
                 where is_mstr.is_domain = global_domain
