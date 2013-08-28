@@ -12,8 +12,16 @@
 /*                                   09/03/94   by: srk   *FQ80*        */
 /*                                   11/17/94   by: str   *FT77*        */
 /*                                   19/07/01   by: rhb   *bn083*       */
+/* 增加28.1里的确认人(vo__qad01) 的筛选条件                            */
 
-	  /* DISPLAY TITLE */
+/***********
+FOR EACH glt_det NO-LOCK WHERE glt_domain = "dcec" AND glt_tr_type = "AP"
+    ,EACH ap_mstr NO-LOCK use-index ap_batch_ref WHERE ap_domain = "dcec" AND ap_batch = glt_batch
+    ,EACH vo_mstr NO-LOCK WHERE vo_domain = ap_domain AND vo_ref = ap_ref:
+    DISPLAY glt_ref glt_batch vo__qad01 vo_invoice ap_type.
+END.
+******/
+
 
 /*GUI global preprocessor directive settings */
 &GLOBAL-DEFINE PP_PGM_RP TRUE
@@ -23,6 +31,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
+/* DISPLAY TITLE */
 {mfdtitle.i "120912.1"}
 
 	  define variable ref like glt_ref.
@@ -45,12 +54,11 @@
 /*FQ15*/  define variable entity like gltr_entity.
 /*FQ15*/  define variable entity1 like gltr_entity.
 /*FT77*/  define variable entity_flag like mfc_logical.
-
-/*FT77*/  
+    define variable conf as character.
 
 /*FQ15*/  /* BEGIN: ADDED SECTION */
 	  /* GET NAME OF CURRENT ENTITY */
-	  find en_mstr where en_domain = global_domain and 
+	  find en_mstr where en_domain = global_domain and
 	  		 en_entity = current_entity no-lock no-error.
 	  if not available en_mstr then do:
 	     {mfmsg.i 3059 3} /* NO PRIMARY ENTITY DEFINED */
@@ -65,9 +73,9 @@
 	  entity1 = entity.
 /*FQ15*/  /* END: ADDED SECTION */
 
-form "财  务  凭  证"      at 33  
+form "财  务  凭  证"      at 33
 skip(1)
-    glt_ref      label "总帐参考号  " 
+     glt_ref      label "总帐参考号  "
      glt_date        label "制单日期  "                 at 30
      glt_effdate    label "出库日期  "    at 50
 /*RHB     glt_userid       label "制单人" at 70  */
@@ -75,12 +83,12 @@ skip(1)
 
 
 	  /* SELECT FORM */
-	  
+
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-/*FQ15*/     
+FORM /*GUI*/
+/*FQ15*/
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
@@ -89,11 +97,12 @@ entity   colon 25    entity1 colon 50 label {t001.i}
 	     dt       colon 25    dt1     colon 50 label {t001.i}
 	     effdt    colon 25    effdt1  colon 50 label {t001.i}
 /*F058*/     btch     colon 25
+       conf     colon 25
 	     type     colon 25
 	     unb      colon 25
 /*FQ80*   with frame a side-labels attr-space */
 /*FQ80*/   SKIP(.4)  /*GUI*/
-with frame a side-labels attr-space width 80 
+with frame a side-labels attr-space width 80
 /*FQ15*/   NO-BOX THREE-D /*GUI*/.
 
  DEFINE VARIABLE F-a-title AS CHARACTER.
@@ -114,9 +123,9 @@ with frame a side-labels attr-space width 80
 
 
 /*RHB	  type = "JL"   .  */
- 
+
 	  /* REPORT BLOCK */
-	  
+
 /*GUI*/ {mfguirpa.i true  "printer" 80 }
 
 /*GUI repeat : */
@@ -130,7 +139,7 @@ with frame a side-labels attr-space width 80
 /*FQ15*/     if entity1 = hi_char then entity1 = "".
 	     unb = no.
 
-/*F058*/     
+/*F058*/
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -162,7 +171,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 	     drtot = 0.
 
 	     /* SELECT PRINTER */
-	     
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -180,15 +189,20 @@ define buffer gltdet for glt_det.
 	     {mfphead.i}
 
 	     for each glt_det where glt_domain = global_domain and
-/*FQ15*/                            glt_entity >= entity and
-/*FQ15*/                            glt_entity <= entity1 and
-				    glt_ref >= ref and glt_ref <= ref1 and
-				    glt_date >= dt and
-				    glt_date <= dt1 and
-				    glt_effdate >= effdt and
-				    glt_effdate <= effdt1 and
-/*F058*/                            (glt_batch = btch or btch = "")
+/*FQ15*/        glt_entity >= entity and
+/*FQ15*/        glt_entity <= entity1 and
+				        glt_ref >= ref and glt_ref <= ref1 and
+				        glt_date >= dt and
+				        glt_date <= dt1 and
+				        glt_effdate >= effdt and
+				        glt_effdate <= effdt1 and
+/*F058*/       (glt_batch = btch or btch = "")
 				    no-lock use-index glt_ref
+				  ,EACH ap_mstr NO-LOCK use-index ap_batch_ref WHERE 
+				        ap_domain = global_domain AND 
+				        ap_batch = glt_batch and ap_type = "VO"
+          ,EACH vo_mstr NO-LOCK WHERE vo_domain = ap_domain AND
+                vo_ref = ap_ref and (vo__user1 = conf or conf = ""):      
 				    break by glt_ref
 				    with width 132 NO-ATTR-SPACE STREAM-IO:
 		if type <> "" and substring(glt_ref, 1, 2) <> type then next.
@@ -198,7 +212,7 @@ define buffer gltdet for glt_det.
 /*FT77*/           entity_flag = no.
 /*FT77*/           find first gltdet where gltdet.glt_domain = global_domain and
 /*FT77*/              gltdet.glt_ref = glt_det.glt_ref and
-/*FT77*/              (gltdet.glt_entity < entity or 
+/*FT77*/              (gltdet.glt_entity < entity or
 /*FT77*/               gltdet.glt_entity > entity1) no-lock no-error.
 /*FT77*/           if available gltdet then do:
 /*FT77*/              entity_flag = yes.
@@ -218,71 +232,71 @@ define buffer gltdet for glt_det.
 /*FT77*/           display "" @ glt_det.glt_ref
 /*FT77*/                   "" @ glt_det.glt_date
 /*FT77*/                   "" @ glt_det.glt_effdate
-/*FT77*/                   
+/*FT77*/
 /* RHB "" @ glt_det.glt_userid */
 				WITH STREAM-IO /*GUI*/ .
 /*FT77*/        end.
 */		amt = glt_det.glt_amt.
-		if glt_det.glt_curr <> base_curr 
+		if glt_det.glt_curr <> base_curr
 		   then amt = glt_det.glt_curr_amt.
 /*F058*/        find ac_mstr where ac_domain = global_domain and
 									   ac_code = glt_det.glt_acc no-lock no-error.
 		if not available ac_mstr then do:
 		   accumulate glt_det.glt_amt (total by glt_det.glt_ref).
-		   if glt_det.glt_amt < 0 
+		   if glt_det.glt_amt < 0
 		      then crtot = crtot - glt_det.glt_amt.
 		   else drtot = drtot + glt_det.glt_amt.
 		end.
 		else if ac_type <> "S" and ac_type <> "M" then do:
 		   accumulate glt_det.glt_amt (total by glt_det.glt_ref).
-		   if glt_det.glt_amt < 0 
+		   if glt_det.glt_amt < 0
 		      then crtot = crtot - glt_det.glt_amt.
 		   else drtot = drtot + glt_det.glt_amt.
 		end.
-/*F058*/        {glacct.i &acc=glt_det.glt_acc 
-			  &sub=glt_det.glt_sub 
-			  &cc=glt_det.glt_cc 
+/*F058*/        {glacct.i &acc=glt_det.glt_acc
+			  &sub=glt_det.glt_sub
+			  &cc=glt_det.glt_cc
 			  &acct=account}
 	       find pj_mstr where pj_domain = global_domain and
 	       		  pj_project = glt_project no-lock no-error.
 		if available pj_mstr then do:
 		assign subdesc = "".
-		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain 
+		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain
 					 and sb_mstr.sb_sub = glt_det.glt_sub no-error.
 	  if available sb_mstr then do:
 	  	 assign subdesc = sb_mstr.sb_desc.
 	  end.
 		display glt_det.glt_line
-/*F058*/    account
+/*F058*/    account format "x(22)"
 /*RHB*/			ac_mstr.ac_desc WHEN AVAIL ac_mstr column-label "账户名称"
 						subdesc
 /*bn083 don't disply entity*/
-			glt_det.glt_project 
+			glt_det.glt_project
 			pj_desc
 /*bn083			glt_det.glt_entity     */
 			glt_det.glt_desc
 			glt_det.glt_cc
 			amt
-			glt_det.glt_curr WITH width 180 /*GUI*/ .
+			glt_det.glt_curr glt_det.glt_addr WITH width 220 stream-io /*GUI*/ .
 		end.
 		else do:
 	  assign subdesc = "".
-		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain 
+		find first sb_mstr no-lock where sb_mstr.sb_domain = global_domain
 					 and sb_mstr.sb_sub = glt_det.glt_sub no-error.
 	  if available sb_mstr then do:
 	  	 assign subdesc = sb_mstr.sb_desc.
 	  end.
 		display glt_det.glt_line
-/*F058*/    account
+/*F058*/    account  format "x(22)"
 /*RHB*/			ac_mstr.ac_desc WHEN AVAIL ac_mstr
 				subdesc
 /*bn083 don't disply entity*/
-			glt_det.glt_project 			
+			glt_det.glt_project
 /*bn083			glt_det.glt_entity     */
 			glt_det.glt_desc
 /*RHB			glt_det.glt_cc */
 			amt
-			glt_det.glt_curr WITH STREAM-IO /*GUI*/ .
+			glt_det.glt_curr glt_det.glt_addr WITH width 220 STREAM-IO /*GUI*/ .
 		end.
 		if glt_det.glt_error <> "" then do:
 		   down 1.
@@ -298,7 +312,7 @@ define buffer gltdet for glt_det.
 		   down 1.
 		end.
 
-		
+
 /*GUI*/ {mfguirex.i } /*Replace mfrpexit*/
 
 	     end.
@@ -315,9 +329,9 @@ find usr_mstr where usr_userid = glt_userid no-lock no-error.
              put skip(1)     "---------------------------------------------------------------------------------------------".
             put  skip(1) "    财务主管:                  复核:                    制单:" .
 if available usr_mstr then put usr_name.
-	     
 
-/* bn083 cancel the trailer print	     
+
+/* bn083 cancel the trailer print
 /*GUI*/ {mfguitrl.i} /*Replace mfrtrail*/
 */
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
