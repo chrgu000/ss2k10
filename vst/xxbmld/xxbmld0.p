@@ -123,7 +123,7 @@ for each tmpbom no-lock where tbm_chk = "":
                      if not available tmpbomn then do:
                        create tmpbomn.
                        assign tbmn_par = ps_par
-                              tbmn_comp = tbm_old
+                              tbmn_comp = tbm_new
                               tbmn_ref = ps_ref
                               tbmn_start = ps_start
                               tbmn_end = eff_date
@@ -137,7 +137,7 @@ for each tmpbom no-lock where tbm_chk = "":
                     if not available tmpbomn then do:
                        create tmpbomn.
                        assign tbmn_par = ps_par
-                              tbmn_comp = tbm_old
+                              tbmn_comp = tbm_new
                               tbmn_ref = ps_ref
                               tbmn_start = eff_date + 1.
                     end.
