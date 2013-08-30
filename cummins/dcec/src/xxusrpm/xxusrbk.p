@@ -25,7 +25,7 @@ if intJ >= 400 then do:
        for each mnd_det no-lock:
            export DELIMITER "," MND_NBR MND_SELECT MND_CANRUN.
        end.
-     output close. 
+     output close.
      output to value("./log.txt").
      put unformat "Total " + trim(string(inti))
                 + " users passwd export(Not include " + expUser + ")." skip.
@@ -47,6 +47,7 @@ else do:
 end.
 put unformat '"dcec"' skip.
 
+/* 改为NO才可以导入用户名密码 */
 put unformat '"qxopm.p"' skip.
 put unformat 'N' skip.
 put unformat '.' skip.
@@ -96,13 +97,18 @@ FOR EACH usr_mstr NO-LOCK WHERE usr_userid <> "" and
 END.
 put unformat '.' skip.
 
+/* 改为Yes才可以使用Qxtend */
+put unformat '"qxopm.p"' skip.
+put unformat 'Y' skip.
+put unformat '.' skip.
+
 put unformat '"mgurgpmt.p"' skip.
 for each usrg_mstr no-lock:
     put unformat '"' usrg_mstr.usrg_group_name '"' skip.
     put unformat '"'  usrg_mstr.usrg_group_desc '"' skip.
-    for each usrgd_det no-lock where 
+    for each usrgd_det no-lock where
              usrgd_det.oid_usrg_mstr = usrg_mstr.oid_usrg_mstr
-             break by usrgd_det.oid_usrg_mstr 
+             break by usrgd_det.oid_usrg_mstr
                    by usrgd_det.usrgd_domain
                    by usrgd_userid:
          if first-of(usrgd_det.usrgd_domain) then do:
