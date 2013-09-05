@@ -1,6 +1,6 @@
 /*a6rqormt.p 客户新订单需求维护....*/
 
-{mfdtitle.i "130718.1"}
+{mfdtitle.i "130904.1"}
 
 /*定义变量....*/
 DEFINE VARIABLE CustPONO LIKE  a6rq_custpono.
@@ -42,7 +42,6 @@ setFrameLabels(FRAME  b:HANDLE ).
 
 VIEW FRAME a.
 VIEW FRAME b.
-
 REPEAT WITH FRAME a:
     CLEAR FRAME b NO-PAUSE.
 

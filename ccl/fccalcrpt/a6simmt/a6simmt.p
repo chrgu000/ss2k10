@@ -1,7 +1,7 @@
 
 /*a6simmt.p 客戶交貨期推演計算.*/
 
-{mfdtitle.i "130718.1"}
+{mfdtitle.i "130904.1"}
 
 /*定義變量....*/
 DEFINE  VARIABLE site      LIKE  a6rq_site   .
@@ -88,7 +88,6 @@ FORM
     */
 WITH FRAME b WIDTH 80 SIDE-LABELS ATTR-SPACE .
 setFrameLabels(FRAME  b:HANDLE ) .
-
 /* setFrameLabels( FRAME  b: HANDLE ) . */
 empty temp-table tpart_det no-error.
 empty temp-table tmrp_det no-error.

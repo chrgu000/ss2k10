@@ -1,7 +1,7 @@
-/*a6simrp.p 回复客戶交期推演報表..*/
+/*a6delrp.p 客戶交期推演報表资料删除..*/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "130718.1"}
+{mfdtitle.i "130904.1"}
 
 DEFINE VARIABLE site       LIKE wo_site .
 DEFINE VARIABLE site1      LIKE wo_site .
@@ -16,13 +16,8 @@ DEFINE VARIABLE ln         LIKE mrp_line .
 DEFINE VARIABLE nbr        LIKE mrp_nbr .
 DEFINE VARIABLE desc1      LIKE pt_desc1 .
 DEFINE VARIABLE yn         AS LOGICAL INIT NO .
-define variable xaction as character format "x(50)"
-   column-label "Restricted Transactions" no-undo.  */
 
 FORM
-  /* CODE            colon 25
-   code1          label "To"
-   */
     site  COLON 20
     site1 LABEL {t001.i} COLON  38 SKIP
     cust  COLON 20
@@ -33,13 +28,18 @@ FORM
     custpoln  COLON 20  SKIP
     yn        COLON 20
 WITH  FRAME  a SIDE-LABELS  WIDTH  80 ATTR-SPACE .
-
-FORM
-     a6rq_site a6rq_cust a6rq_custpono  a6rq_custpoln a6rq_part  desc1 a6rq_due_date
-WITH FRAME b .
 /* SET EXTERNAL LABELS */
 setFrameLabels(FRAME  a:HANDLE ).
 
+FORM
+     a6rq_site
+     a6rq_cust
+     a6rq_custpono
+     a6rq_custpoln
+     a6rq_part
+     desc1
+     a6rq_due_date
+WITH FRAME b .
 setFrameLabels(FRAME  b:HANDLE ).
 
 {wbrp01.i}

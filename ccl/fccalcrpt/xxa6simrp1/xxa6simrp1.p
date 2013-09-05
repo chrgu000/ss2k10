@@ -1,4 +1,4 @@
-/*ss-130129.1 by steven add simular result*/
+
 /*ss-130206.1 by steven */
 /* ss - 130227.1 by: jack */  /* 输出显示调整 */
 /* ss - 130301.1 by: jack */
@@ -7,7 +7,7 @@
  *  2.虚结构物料不用显示
  *  3.父件已满足需求,对应的子件不应该在显示欠料.
  */
-{mfdtitle.i "130718.1"}
+{mfdtitle.i "130904.1"}
 
 define variable site       like wo_site.
 define variable site1      like wo_site.
@@ -37,7 +37,7 @@ define variable decOpenPOQtyum as decimal no-undo.
 define variable decOpenWOQty as decimal no-undo.
 define variable decDemandQty as decimal no-undo.
 define variable decInventory as decimal no-undo.
-define variable decPlan1 as decimal no-undo. /* =当天库存+OPPO+未结工单数-安全库存-总需求*/
+define variable decPlan1 as decimal no-undo. /* =当天库存+OPPO+未结工单数-安全库存-总需求 */
 define variable decShort as decimal no-undo.
 define variable dMOQ as decimal no-undo.
 define variable sStatus like pt_status no-undo.
@@ -142,10 +142,6 @@ repeat :
     &definevariables = "yes" } ss-130205.1 */
 
      {mfselbpr.i "printer" 320 nopage}
-
-/*
-    {mfphead.i}
-*/
 
      put unformat '零件编号' '$' '零件描述' '$' '提前期' '$' '需求日期' '$'
             'um' '$' '物料用量' '$' 'OPPO' '$' '当天库存' '$' '总需求' '$'
