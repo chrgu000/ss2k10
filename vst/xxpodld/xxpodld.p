@@ -79,6 +79,14 @@ repeat on error undo, retry:
      END.
      ELSE DO:
           {gprun.i ""xxpodld1.p""}
+          for each xxpod_det exclusive-lock :
+              find first pod_det no-lock where pod_nbr = xxpod_nbr
+                     and pod_line = xxpod_line no-error.
+              if available pod_det then do:
+                 assign xxpod_due_date = pod_due_date
+                        xxpod_stat = pod_status.
+              end.
+          end.
           for each xxpod_det no-lock with frame x width 130:
               display xxpod_det.
           end.
