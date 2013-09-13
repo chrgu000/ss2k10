@@ -10,7 +10,8 @@
   define variable ret as character.
   define stream bf.
 
-for each xsc_d exclusive-lock where xsd_diffpi and xsd_newpc break by xsd_so by xsd_line:
+for each xsc_d exclusive-lock where xsd_chk = "PASS" and 
+         xsd_diffpi and xsd_newpc break by xsd_so by xsd_line:
     if first-of(xsd_line) then do:
        {gprun.i ""xxsorepri.p"" "(input xsd_so,input xsd_line,input xsd_price,output ret)"}
     end.
@@ -20,7 +21,7 @@ for each xsc_d exclusive-lock where xsd_diffpi and xsd_newpc break by xsd_so by 
 end.
 
 /*如果无价差的SO且出货日期非当月的将出货日期调整为当天以防止漏开发票         */
-for each xsc_d no-lock where break by xsd_so by xsd_diffpi:
+for each xsc_d no-lock where xsd_chk = "PASS" break by xsd_so by xsd_diffpi:
     if last-of(xsd_so) and not xsd_diffpi then do:
        find first so_mstr no-lock where so_domain = global_domain
               and so_nbr = xsd_so no-error.

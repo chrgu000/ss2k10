@@ -408,6 +408,7 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL bLoad wWin
 ON CHOOSE OF bLoad IN FRAME fMain /* 装入 */
 DO:
+define variable lChoice like mfc_logical.
   IF not CAN-FIND(FIRST xsc_d NO-LOCK WHERE) THEN DO:
      MESSAGE "未找到数据请先装入数据." VIEW-AS ALERT-BOX INFORMATION.
      UNDO,LEAVE.
@@ -416,10 +417,24 @@ DO:
      MESSAGE "装入前请先检查数据." VIEW-AS ALERT-BOX INFORMATION.
      UNDO,LEAVE.
   END.
-  ELSE IF CAN-FIND(FIRST xsc_d NO-LOCK WHERE xsd_chk <> "PASS") THEN DO:
-     MESSAGE "数据检查发现错误.请先确认数据。" VIEW-AS ALERT-BOX ERROR.
-     UNDO,LEAVE.
-  END.
+  if not can-find(first xsc_d no-lock where xsd_chk = "PASS") then do:
+     MESSAGE "未找到可装入的数据,请先检查数据." VIEW-AS ALERT-BOX INFORMATION.
+     UNDO,LEAVE. 
+  end.
+/* ELSE IF CAN-FIND(FIRST xsc_d NO-LOCK WHERE xsd_chk <> "PASS") THEN DO:   */
+/*    MESSAGE "数据检查发现错误.请先确认数据。" VIEW-AS ALERT-BOX ERROR.    */
+/*    UNDO,LEAVE.                                                           */
+/* END.                                                                     */
+  if can-find(first xsc_d no-lock where xsd_chk = "pass") and
+     can-find(first xsc_d no-lock where xsd_chk <> "pass") then do:
+     assign lChoice = no.
+     MESSAGE "数据检查发现错误,是否装入检查通过的数据"
+              VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO title "系统信息"
+              UPDATE lChoice.
+     if lChoice = no then do:
+        undo,leave.
+     end.
+  end.
   SESSION:SET-WAIT-STAT("GENERAL").
   {gprun.i ""xxsocnimp03.p""}
 
