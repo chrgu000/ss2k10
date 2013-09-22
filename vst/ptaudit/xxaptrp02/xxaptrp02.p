@@ -23,6 +23,9 @@ define variable var_fin_noconf like mfc_logical initial No.
 define variable var_pm_code like pt_pm_code.
 define variable var_cst     as logical.
 define variable var_routing as character format "x(4)".
+define variable n           as integer.
+define variable talb        AS character FORMAT "x(60)".
+define variable cSpec as char FORMAT "x(64)" EXTENT 18 no-undo.
 form
    part    colon 16 part1    colon 40 label {t001.i}
    added   colon 16 added1   colon 40 label {t001.i}
@@ -163,9 +166,13 @@ for each xapt_aud no-lock where xapt_part >= part
                                 assign var_fin_days = xapt_fin_days
                                        var_tot_days = xapt_fin_date - xapt_added.
                            end.
-
+      talb = ''.
+      {xxgetspec.i pt_part 64 cSpec 18 hi_date hi_date}.
+      REPEAT n = 1 to 18:
+         IF trim(cSpec[n])<>"" then talb = talb + cSpec[n].
+      end.
       display xapt_part pt_site format "x(4)"
-              pt_dsgn_grp pt_desc1 var_pm_code pt_um
+              pt_dsgn_grp pt_desc1 talb var_pm_code pt_um
               pt_draw format "x(12)" pt_added
               pt_status format "x(3)" xapt_added var_cst
               var_routing format "x(4)"
