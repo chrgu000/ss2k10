@@ -1,0 +1,321 @@
+ADD TABLE "xpg_mstr"
+    AREA "TRANSACTION"
+    Description "Item Group master"
+    DUMP-NAME  "xpg_mstr"
+
+ADD FIELD "xpg_domain" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "domain"
+
+ADD FIELD "xpg_group" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(12)"
+    INITIAL  ""
+    LABEL  "group"
+
+ADD FIELD "xpg_desc" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(40)"
+    INITIAL  ""
+    LABEL  "desc"
+
+ADD FIELD "xpg_mod_date" of "xpg_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "Last Modify When"
+
+ADD FIELD "xpg_mod_usr" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Last Modify By"
+
+ADD FIELD "xpg__chr01" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpg__chr02" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpg__chr03" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpg__chr04" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpg__chr05" of "xpg_mstr" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpg__int01" of "xpg_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpg__int02" of "xpg_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpg__int03" of "xpg_mstr" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpg__dte01" of "xpg_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpg__dte02" of "xpg_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpg__dte03" of "xpg_mstr" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpg__dec01" of "xpg_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpg__dec02" of "xpg_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpg__dec03" of "xpg_mstr" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpg__log01" of "xpg_mstr" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+ADD FIELD "xpg__log02" of "xpg_mstr" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+
+ADD INDEX "xpg_group" on "xpg_mstr"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xpg_domain"  ASCENDING
+    INDEX-FIELD  "xpg_group"  ASCENDING
+
+
+
+ADD TABLE "xpgt_det"
+    AREA "TRANSACTION"
+    Description "Item group detial"
+    DUMP-NAME  "xpgt_det"
+
+ADD FIELD "xpgt_domain" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "domain"
+
+ADD FIELD "xpgt_group" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(12)"
+    INITIAL  ""
+    LABEL  "group"
+
+ADD FIELD "xpgt_part" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(18)"
+    INITIAL  ""
+    LABEL  "Item number"
+
+ADD FIELD "xpgt_desc" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(40)"
+    INITIAL  ""
+    LABEL  "desc"
+
+ADD FIELD "xpgt_start" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "?"
+    LABEL  "start"
+
+ADD FIELD "xpgt_end" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  "?"
+    LABEL  "end"
+
+ADD FIELD "xpgt_mod_date" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "Last Modify When"
+
+ADD FIELD "xpgt_mod_usr" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "Last Modify By"
+
+ADD FIELD "xpgt__chr01" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpgt__chr02" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpgt__chr03" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpgt__chr04" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpgt__chr05" of "xpgt_det" as character
+    Description ""
+    FORMAT  "X(8)"
+    INITIAL  ""
+    LABEL  "?"
+
+ADD FIELD "xpgt__int01" of "xpgt_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpgt__int02" of "xpgt_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpgt__int03" of "xpgt_det" as integer
+    Description ""
+    FORMAT  "->>,>>>,>>9"
+    INITIAL  "0"
+    LABEL  "?"
+
+ADD FIELD "xpgt__dte01" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpgt__dte02" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpgt__dte03" of "xpgt_det" as date
+    Description ""
+    FORMAT  "99/99/99"
+    INITIAL  ?
+    LABEL  "?"
+
+ADD FIELD "xpgt__dec01" of "xpgt_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpgt__dec02" of "xpgt_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpgt__dec03" of "xpgt_det" as decimal
+    Description ""
+    FORMAT  "->,>>>,>>9.9<"
+    INITIAL  "0"
+    LABEL  "?"
+    DECIMALS 10
+
+ADD FIELD "xpgt__log01" of "xpgt_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+ADD FIELD "xpgt__log02" of "xpgt_det" as logical
+    Description ""
+    FORMAT  "Yes/No"
+    INITIAL  "No"
+    LABEL  "?"
+
+
+ADD INDEX "xpgt_group_part" on "xpgt_det"
+    AREA "TRANSACTION_IDX"
+    PRIMARY 
+    UNIQUE 
+    INDEX-FIELD  "xpgt_domain"  ASCENDING
+    INDEX-FIELD  "xpgt_group"  ASCENDING
+    INDEX-FIELD  "xpgt_part"  ASCENDING
+    INDEX-FIELD  "xpgt_start"  ASCENDING
+
+ADD INDEX "xpgt_part_group" on "xpgt_det"
+    AREA "TRANSACTION_IDX"
+    UNIQUE 
+    INDEX-FIELD  "xpgt_domain"  ASCENDING
+    INDEX-FIELD  "xpgt_part"  ASCENDING
+    INDEX-FIELD  "xpgt_group"  ASCENDING
+    INDEX-FIELD  "xpgt_start"  ASCENDING
+
+
+
+.
+PSC
+cpstream=CP936
+.
+

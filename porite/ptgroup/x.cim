@@ -1,0 +1,15 @@
+@@batchload mgdlfhmt.p
+- "xpgt_part" "" 
+"gplu340.p" 
+"Item number" 7 6 
+@@end
+@@batchload mgdlfhmt.p
+- "xpg_group" "" 
+"xxlu230.p" 
+"Group" 7 6 
+@@end
+@@batchload mgdlfhmt.p
+- "xpgt_group" "" 
+"xxlu230.p" 
+"Group" 7 6 
+@@end
