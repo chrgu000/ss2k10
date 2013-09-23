@@ -11,7 +11,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "f+ "}
+{mfdtitle.i "130917.1"}
 
 define variable nbr like tr_nbr.
 define variable nbr1 like tr_nbr.
@@ -43,6 +43,9 @@ DEFINE VARIABLE copyd  LIKE tr_qty_loc.
 define var    isCopy   as char.
 DEFINE VAR    flag1    AS LOGICAL.
 DEFINE VAR    flag2    AS LOGICAL.
+
+define temp-table tmptr
+       fields ttr_id as integer.
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
@@ -143,18 +146,18 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
 
    bcdparm = "".
-   {mfquoter.i nbr         }
-   {mfquoter.i nbr1        }
-   {mfquoter.i trdate      }
-   {mfquoter.i trdate1     }
-   {mfquoter.i part        }
-   {mfquoter.i part1       }
-   {mfquoter.i site        }
-   {mfquoter.i site1       }
-   {mfquoter.i site2        }
-   {mfquoter.i site3        }
-   {mfquoter.i keeper        }
-   {mfquoter.i keeper1        }
+   {mfquoter.i nbr    }
+   {mfquoter.i nbr1   }
+   {mfquoter.i trdate }
+   {mfquoter.i trdate1}
+   {mfquoter.i part   }
+   {mfquoter.i part1  }
+   {mfquoter.i site   }
+   {mfquoter.i site1  }
+   {mfquoter.i site2  }
+   {mfquoter.i site3  }
+   {mfquoter.i keeper }
+   {mfquoter.i keeper1}
 
 
    if  nbr1 = "" then nbr1 = hi_char.
@@ -180,7 +183,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    {mfphead.i}
 */
  IF flag1 THEN DO:
-
+   for each tmptr exclusive-lock: delete tmptr. end.
    for each tr_hist where tr_hist.tr_domain = global_domain
    and (tr_nbr >= nbr and tr_nbr <= nbr1 and tr_nbr <> "")
    and (tr_effdate >= trdate and tr_effdate <= trdate1)
@@ -190,7 +193,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    AND (tr__chr01 <> 'Y')
  /* and (tr_program = "yyicmtrtr.p") 2004-09-06 10:48*/  /*judy zz-> yy*/
       /* AND tr_program = "mfnewa3.p"*/
-   exclusive-lock ,
+   no-lock ,
 
    each in_mstr where in_mstr.in_domain = global_domain
    and in_site = tr_hist.tr_site
@@ -200,10 +203,13 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    break by tr_hist.tr_nbr BY IN__qadc01 by integer(tr_hist.tr_lot)
    with frame b down width 132:
 
-      IF flag2 THEN
-       UPDATE
-           tr__chr01 ='Y'.
-
+      IF flag2 THEN do:
+           if dev = "printer" or dev="print-sm" or dev="PRNT88" or
+              dev = "PRNT80" or dev="printer" or dev="print-sm" then do:
+              create tmptr.
+              assign ttr_id = recid(tr_hist).
+         end.
+      end.
   /*     find first
      tr_hist no-lock where
      tr_hist.tr_type = "RCT-TR"
@@ -296,7 +302,7 @@ ELSE DO:
 
  /* and (tr_program = "yyicmtrtr.p") 2004-09-06 10:48*/  /*judy zz-> yy*/
       /* AND tr_program = "mfnewa3.p"*/
-   exclusive-lock ,
+   no-lock ,
 
    each in_mstr where in_mstr.in_domain = global_domain
    and in_site = tr_hist.tr_site
@@ -306,10 +312,13 @@ ELSE DO:
 
    break by tr_hist.tr_nbr  BY IN__qadc01 by integer(tr_hist.tr_lot) with frame b down width 132:
 
-
-      IF flag2 THEN
-       UPDATE
-           tr__chr01 ='Y'.
+      IF flag2 THEN do:
+         if dev = "printer" or dev="print-sm" or dev="PRNT88" or
+            dev = "PRNT80" or dev="printer" or dev="print-sm" then do:
+              create tmptr.
+              assign ttr_id = recid(tr_hist).
+         end.
+      end.
   /*     find first
      tr_hist no-lock where
      tr_hist.tr_type = "RCT-TR"
@@ -389,6 +398,7 @@ ELSE DO:
 
    end.
 
+
  END.
 
 
@@ -402,10 +412,20 @@ ELSE DO:
 
    /* REPORT TRAILER */
 
+IF flag2 THEN do:
+  for each tmptr no-lock:
+      find first tr_hist exclusive-lock where recid(tr_hist) = ttr_id no-error.
+      if available tr_hist then do:
+      if dev = "printer" or dev="print-sm" or dev="PRNT88" or
+              dev = "PRNT80" or dev="printer" or dev="print-sm" then do:
+              assign tr__chr01 ='Y'.
+         end.
+      end.
+  end.
+end.
 
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
-
 
 end.
 

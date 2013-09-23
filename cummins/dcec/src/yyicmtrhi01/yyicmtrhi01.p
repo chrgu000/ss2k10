@@ -11,7 +11,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "f+ "}
+{mfdtitle.i "130918.1"}
 
 define variable nbr like tr_nbr.
 define variable nbr1 like tr_nbr.
@@ -23,7 +23,7 @@ define variable trnbr like tr_trnbr.
 define variable trnbr1 like tr_trnbr.
 define variable trdate like tr_effdate.
 define variable trdate1 like tr_effdate.
-define variable keeper	as char.
+define variable keeper  as char.
 define variable keeper1 as char.
 
 define variable type like glt_tr_type format "x(8)".
@@ -40,21 +40,22 @@ define variable newpage as logic initial no.
 
 define variable pageno as integer initial 1.
 
-
+define temp-table tmptr
+       fields ttr_id as integer.
 
 define buffer trhist for tr_hist.
-define var 	  isCopy   as char.
+define var    isCopy   as char.
 
 
 /*GUI preprocessor Frame A define */
 &SCOPED-DEFINE PP_FRAME_NAME A
 
-FORM /*GUI*/ 
-   
+FORM /*GUI*/
+
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-   nbr       format "x(8)"      label "移库单" colon 20 
+   nbr       format "x(8)"      label "移库单" colon 20
    nbr1       format "x(8)"     label {t001.i} colon 49 skip
    trdate         label "生效日期" colon 20
    trdate1        label {t001.i} colon 49 skip
@@ -66,10 +67,10 @@ FORM /*GUI*/
    site3          label {t001.i} colon 49 skip
    so_job         colon 20
    so_job1        label {t001.i} colon 49 skip
-   rmks			  label "备注" colon 20
-   rmks1 		  label {t001.i} colon 49 skip
-   keeper		  label "保管员" colon 20
-   keeper1		  label {t001.i} colon 49 skip
+   rmks       label "备注" colon 20
+   rmks1      label {t001.i} colon 49 skip
+   keeper     label "保管员" colon 20
+   keeper1      label {t001.i} colon 49 skip
  SKIP(.4)  /*GUI*/
 with overlay frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
 
@@ -89,39 +90,39 @@ with overlay frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
 
 
 
-     FORM /*GUI*/ 
+     FORM /*GUI*/
         header
-		"移库单"   at 48
-        "页号:"        at 1  
+    "移库单"   at 48
+        "页号:"        at 1
       /*  string         (page-number - pageno) format "X(8)" */
-      	string(pageno) format "x(8)"
+        string(pageno) format "x(8)"
         isCopy  no-label
        "东风康明斯发动机有限公司"        at 42
         with STREAM-IO /*GUI*/  frame phead page-top width 132 no-box.
 
 
-/*GL93*/ FORM /*GUI*/ 
-			space(17)
-			tr_hist.tr_nbr 	label "移库单"
-			tr_hist.tr_site  	label "调出地点" 
-			trhist.tr_site  label "调入地点"
-			tr_hist.tr_so_job  	label "销售/定制品"
-			tr_hist.tr_rmks  	label "备注"
-/*GL93*/ with STREAM-IO /*GUI*/  down  frame b 
+/*GL93*/ FORM /*GUI*/
+      space(17)
+      tr_hist.tr_nbr  label "移库单"
+      tr_hist.tr_site   label "调出地点"
+      trhist.tr_site  label "调入地点"
+      tr_hist.tr_so_job   label "销售/定制品"
+      tr_hist.tr_rmks   label "备注"
+/*GL93*/ with STREAM-IO /*GUI*/  down  frame b
 /*GL93*/ width 132 attr-space.
 
 
-/*GL93*/ FORM /*GUI*/ 
-			space (3)
-			tr_hist.tr_line format "999" label "序"
-			tr_hist.tr_part 	label "零件" 
-			pt_desc2	
-			in__qadc01  label "保管员"
-			tr_hist.tr_effdate label "转移日期"
-			tr_hist.tr_loc 	label "调出库位"
-			trhist.tr_qty_loc label "转移量"
-			trhist.tr_loc label "调入库位"
-/*GL93*/ with STREAM-IO /*GUI*/ down frame c 
+/*GL93*/ FORM /*GUI*/
+      space (3)
+      tr_hist.tr_line format "999" label "序"
+      tr_hist.tr_part   label "零件"
+      pt_desc2
+      in__qadc01  label "保管员"
+      tr_hist.tr_effdate label "转移日期"
+      tr_hist.tr_loc  label "调出库位"
+      trhist.tr_qty_loc label "转移量"
+      trhist.tr_loc label "调入库位"
+/*GL93*/ with STREAM-IO /*GUI*/ down frame c
 /*GL93*/ width 132 attr-space.
 
 
@@ -135,13 +136,13 @@ with overlay frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
    if nbr1 = hi_char then nbr1 = "".
    if trdate = low_date then trdate = ?.
    if trdate1 = hi_date then trdate1 = ?.
-	if part1 = hi_char then part1 = "".
-	if site1 = hi_char then site1 = "".
-	if site3 = hi_char then site3 = "".
-	if so_job1 = hi_char then so_job1 = "".
-	if rmks1 = hi_char then rmks1 = "".
-	if keeper1 = hi_char then keeper1 = "".
-   
+  if part1 = hi_char then part1 = "".
+  if site1 = hi_char then site1 = "".
+  if site3 = hi_char then site3 = "".
+  if so_job1 = hi_char then so_job1 = "".
+  if rmks1 = hi_char then rmks1 = "".
+  if keeper1 = hi_char then keeper1 = "".
+
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
 end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
@@ -171,15 +172,15 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    if  nbr1 = "" then nbr1 = hi_char.
    if  trdate = ? then trdate = low_date.
    if  trdate1 = ? then trdate1 = hi_date.
-	if part1 = "" then part1 = hi_char.
-	if site1 = "" then site1 = hi_char.
-	if site3 = "" then site3 = hi_char.
-	if so_job1 = "" then so_job1 = hi_char.
-	if rmks1 = "" then rmks1 = hi_char.
-	if keeper1 = "" then keeper1 = hi_char.
+  if part1 = "" then part1 = hi_char.
+  if site1 = "" then site1 = hi_char.
+  if site3 = "" then site3 = hi_char.
+  if so_job1 = "" then so_job1 = hi_char.
+  if rmks1 = "" then rmks1 = hi_char.
+  if keeper1 = "" then keeper1 = hi_char.
 
    /* SELECT PRINTER */
-   
+
 /*GUI*/ end procedure. /* p-report-quote */
 /*GUI - Field Trigger Section */
 
@@ -192,97 +193,99 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
 
    {mfphead.i}
 */
+for each tmptr exclusive-lock: delete tmptr. end.
 
-   for each tr_hist where tr_domain = "DCEC" and (tr_nbr >= nbr and tr_nbr <= nbr1 and tr_nbr <> "")
+   for each tr_hist where tr_domain = global_domain and (tr_nbr >= nbr and tr_nbr <= nbr1 and tr_nbr <> "")
    and (tr_effdate >= trdate and tr_effdate <= trdate1)
    and (tr_part >= part) and (tr_part <= part1 or part1 = "")
    and (tr_so_job >= so_job) and (tr_so_job <= so_job1 or so_job1 = "")
    and (tr_rmks >= rmks and tr_rmks <= rmks1)
    and (tr_type = "ISS-TR")
-   and (tr_site >= site and tr_site <= site1) /*2004-09-06 10:48*/  /*judy zz-> yy*/ 
+   and (tr_site >= site and tr_site <= site1) /*2004-09-06 10:48*/  /*judy zz-> yy*/
       /* AND tr_program = "mfnewa3.p"*/
-   exclusive-lock ,
-   
-   each in_mstr where in_domain = "DCEC" and in_site = tr_hist.tr_site 
-   and in_part = tr_hist.tr_part 
+   no-lock ,
+
+   each in_mstr where in_domain = global_domain and in_site = tr_hist.tr_site
+   and in_part = tr_hist.tr_part
    and (in__qadc01 >= keeper and in__qadc01 <= keeper1)
    no-lock
 
    break by tr_hist.tr_nbr by tr_hist.tr_effdate by tr_hist.tr_so_job by tr_hist.tr_rmks by integer(tr_hist.tr_line) with frame b down width 132:
-   
-	   find first
-	   trhist no-lock where trhist.tr_domain = "DCEC" and
-	   trhist.tr_type = "RCT-TR"
-	   and trhist.tr_effdate = tr_hist.tr_effdate
-	   and trhist.tr_nbr = tr_hist.tr_nbr
-	   and trhist.tr_part = tr_hist.tr_part
-	   and trhist.tr_so_job = tr_hist.tr_so_job
-	   and trhist.tr_rmks = tr_hist.tr_rmks
-	   and trhist.tr_site >= site2 and trhist.tr_site <= site3
-	   and trhist.tr_qty_loc + tr_hist.tr_qty_loc = 0
-	   and trhist.tr_trnbr > tr_hist.tr_trnbr
-/*	   and trhist.tr_program = "" */
-	   and trhist.tr_lot = tr_hist.tr_lot
-	   and trhist.tr_userid = tr_hist.tr_userid no-error.
-	
-		if not available trhist then next.	
 
- 		isCopy = if tr_hist.tr__log01 then "副本" else "原本".  /*打印标志*/
-		tr_hist.tr__log01 = yes.
-		
-		view frame phead.	
-		
-		if page-size - LINE-COUNTER - 4 < 0 then do:
-			put
-				skip(1)
-				"主管 ________" at 10
-				"保管员________" at 50
-				"接收人________" at 90.
-			pageno = pageno + 1.
-			page.
-			newpage = yes.
-		end.
-		
-		if first-of(tr_hist.tr_nbr) or first-of(tr_hist.tr_effdate) or first-of(tr_hist.tr_so_job) 
-			or first-of(tr_hist.tr_rmks)
-		or newpage then do:
-			page. /*2004-09-03 17:55*/
-			newpage = no.
-   			display 
-   				tr_hist.tr_nbr 	
-   				tr_hist.tr_site  	
-   				trhist.tr_site
-   				tr_hist.tr_so_job
-   				tr_hist.tr_rmks
-   			with frame b.
-   			down 1 with frame b.
-		end.
+     find first
+     trhist no-lock where trhist.tr_domain = global_domain and
+     trhist.tr_type = "RCT-TR"
+     and trhist.tr_effdate = tr_hist.tr_effdate
+     and trhist.tr_nbr = tr_hist.tr_nbr
+     and trhist.tr_part = tr_hist.tr_part
+     and trhist.tr_so_job = tr_hist.tr_so_job
+     and trhist.tr_rmks = tr_hist.tr_rmks
+     and trhist.tr_site >= site2 and trhist.tr_site <= site3
+     and trhist.tr_qty_loc + tr_hist.tr_qty_loc = 0
+     and trhist.tr_trnbr > tr_hist.tr_trnbr
+/*     and trhist.tr_program = "" */
+     and trhist.tr_lot = tr_hist.tr_lot
+     and trhist.tr_userid = tr_hist.tr_userid no-error.
 
-		find first pt_mstr where pt_domain = "DCEC" and pt_part = tr_hist.tr_part no-lock no-error.
-/*		find first in_mstr where in_site = tr_hist.tr_site and in_part = tr_hist.tr_part no-lock no-error. 2004-09-07 09:36 lb01*/
-		display
-			tr_hist.tr_line
-			tr_hist.tr_part 	 
-			pt_desc2 when available pt_mstr	
-			in__qadc01   
-			tr_hist.tr_loc 	 
-			trhist.tr_qty_loc  
-			trhist.tr_loc  
-			tr_hist.tr_effdate  
-		with frame c.
-		down 1 with frame c.
-		put "------------------------------------------------------------------------------------------------" at 4.
+    if not available trhist then next.
 
-		if last-of(tr_hist.tr_nbr) or last-of(tr_hist.tr_effdate) or last-of(tr_hist.tr_so_job) 
-			or last-of(tr_hist.tr_rmks) then do:
-			put
-				skip(1)
-				"主管 ________" at 10
-				"保管员________" at 50
-				"接收人________" at 90.
-			pageno = 1.
-			page.
-		end.
+    isCopy = if tr_hist.tr__log01 then "副本" else "原本".  /*打印标志*/
+/*    tr_hist.tr__log01 = yes. */
+    create tmptr.
+    assign ttr_id = recid(tr_hist).
+    view frame phead.
+
+    if page-size - LINE-COUNTER - 4 < 0 then do:
+      put
+        skip(1)
+        "主管 ________" at 10
+        "保管员________" at 50
+        "接收人________" at 90.
+      pageno = pageno + 1.
+      page.
+      newpage = yes.
+    end.
+
+    if first-of(tr_hist.tr_nbr) or first-of(tr_hist.tr_effdate) or first-of(tr_hist.tr_so_job)
+      or first-of(tr_hist.tr_rmks)
+    or newpage then do:
+      page. /*2004-09-03 17:55*/
+      newpage = no.
+        display
+          tr_hist.tr_nbr
+          tr_hist.tr_site
+          trhist.tr_site
+          tr_hist.tr_so_job
+          tr_hist.tr_rmks
+        with frame b.
+        down 1 with frame b.
+    end.
+
+    find first pt_mstr where pt_domain = global_domain and pt_part = tr_hist.tr_part no-lock no-error.
+/*    find first in_mstr where in_site = tr_hist.tr_site and in_part = tr_hist.tr_part no-lock no-error. 2004-09-07 09:36 lb01*/
+    display
+      tr_hist.tr_line
+      tr_hist.tr_part
+      pt_desc2 when available pt_mstr
+      in__qadc01
+      tr_hist.tr_loc
+      trhist.tr_qty_loc
+      trhist.tr_loc
+      tr_hist.tr_effdate
+    with frame c.
+    down 1 with frame c.
+    put "------------------------------------------------------------------------------------------------" at 4.
+
+    if last-of(tr_hist.tr_nbr) or last-of(tr_hist.tr_effdate) or last-of(tr_hist.tr_so_job)
+      or last-of(tr_hist.tr_rmks) then do:
+      put
+        skip(1)
+        "主管 ________" at 10
+        "保管员________" at 50
+        "接收人________" at 90.
+      pageno = 1.
+      page.
+    end.
 
 
 /*GUI*/ {mfguirex.i } /*Replace mfrpexit*/
@@ -290,16 +293,26 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    end.
 
 /*
-	put
-	/*	skip(page-size - LINE-COUNTER - 2) */
-		skip(1)
-		"主管 ________" at 10
-		"保管员________" at 50
-		"接收人________" at 90.  */
+  put
+  /*  skip(page-size - LINE-COUNTER - 2) */
+    skip(1)
+    "主管 ________" at 10
+    "保管员________" at 50
+    "接收人________" at 90.  */
 
-   /* REPORT TRAILER */
-
-
+/*
+  if dev = "printer" or dev="print-sm" or dev="PRNT88" or
+              dev = "PRNT80" or dev="printer" or dev="print-sm" then do:
+*/
+      for each tmptr no-lock:
+          find first tr_hist exclusive-lock where recid(tr_hist) = ttr_id no-error.
+          if available tr_hist and tr_hist.tr__log01 = no then do:
+                  assign tr_hist.tr__log01 = yes.
+          end.
+      end.
+ /*
+  end.
+ */
 
 /*GUI*/ {mfgrptrm.i} /*Report-to-Window*/
 
