@@ -1,18 +1,13 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */
 /* BARCODE SYSTEM */
 /* Generate date / time  12/05/07 22:31:30 */
-/* replace 【复盘(BY NBR). .44】 as 【台车回收..44】                    *17YJ**/
-/*- SS - 110720.1 --------------------------------------------*17YJ*-----------
-  Purpose:新增台车回收程序替换原44(xsinv44.p).
-  Parameters: NONE
-  Memo: Add new table xxtc_hst record it.
-------------------------------------------------------------------------------*/
 /*- SS - 110720.1 --------------------------------------------*31Y9*-----------
     Purpose:新增70从ZZ调拨到EPS库位的
     Parameters:
     Notes:
 ------------------------------------------------------------------------------*/
-
+/* replace 【成品入库..44】   as  【成品入库..44】                    *17YJ**/
+/* replace  销售出货(台车).46 as  【销售出货..46】                    *17YJ**/
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -2099,7 +2094,7 @@ IF OkToRun = yes then RUN    xsrep09.p.
 
 
                 /* LABEL 6 - START */
-                  L11406 = "销售出货(台车).46" .
+                  L11406 = "销售出货   .46" .
                 display L11406          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 6 - END */
         Update V1140
@@ -2547,8 +2542,8 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
         V1140 = "".
 /*17YJ* RUN CheckSecurity (INPUT "xsinv44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ). */
 /*17YJ* IF OkToRun = yes THEN  RUN    xsinv44.p.                                                        */
-/*17YJ*/ RUN CheckSecurity (INPUT "xstcbk.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-/*17YJ*/  IF OkToRun = yes THEN  RUN xstcbk.p.
+/*17YJ*/ RUN CheckSecurity (INPUT "xsrep44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+/*17YJ*/  IF OkToRun = yes THEN  RUN xsrep44.p.
         leave V1144L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
@@ -2761,7 +2756,6 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
    REPEAT:
    /*Logical Enter Cycle1146    */
    IF NOT (V1140 = "46" OR V1100 = "46" ) THEN LEAVE V1146LMAINLOOP.
-     /* START  LINE :1146  1.4.6 库存转到备料区  */
      V1146L:
      REPEAT:
 
@@ -2789,8 +2783,8 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
 
         /* LOGICAL SKIP START */
         V1140 = "".
-RUN CheckSecurity (INPUT "xsinv28.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN    xsinv28.p.
+RUN CheckSecurity (INPUT "xssoi46.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN xssoi46.p.
         leave V1146L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
