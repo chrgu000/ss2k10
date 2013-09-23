@@ -323,9 +323,9 @@ do on error undo, retry on endkey undo, leave with frame b:
             po_project /*po_confirm*/ /*---Remark by davild 20080722.1*/
             impexp
             po_curr when (new_po) po_lang when (new_po)
-            po_taxable  when po_vend = "ZZZZZZZZ"
-            po_taxc     when po_vend = "ZZZZZZZZ"
-            po_tax_date when po_vend = "ZZZZZZZZ"
+            po_taxable  when can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and code_value = po_vend)
+            po_taxc     when can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and code_value = po_vend)
+            po_tax_date when can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and code_value = po_vend)
             po_fix_pr
             po_consignment when (using_supplier_consignment)
             /* SS - 100722.1 - B
@@ -834,7 +834,8 @@ do on error undo, retry on endkey undo, leave with frame b:
          set_tax1:
          do on error undo, retry:
             if c-application-mode <> "API" then do:
-/*625*/        if po_vend = "ZZZZZZZZ" then do:
+/*625*/        if can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor"
+                  and code_value = po_vend) then do:
                  update
                        po_tax_usage
                        po_tax_env

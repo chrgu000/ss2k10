@@ -736,8 +736,7 @@ repeat on error undo, retry:
             WHERE xxabs_nbr = xxrqm_nbr
             AND xxabs_shipfrom = xxrqmsite
             USE-INDEX xxabs_id
-            BREAK BY xxabs_id
-            :
+            BREAK BY xxabs_id:
             ACCUMULATE xxabs_ship_qty (TOTAL BY xxabs_id).
             IF LAST-OF(xxabs_id) THEN DO:
                FIND FIRST tt1 WHERE tt1_id = xxabs_id USE-INDEX tt1_id NO-ERROR.

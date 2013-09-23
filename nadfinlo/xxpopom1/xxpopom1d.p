@@ -446,8 +446,8 @@ do on error undo, retry:
          pod_cc
          pod_project
          pod_type when (not blanket)
-         pod_taxable when po_vend = "ZZZZZZZZ"
-         pod_taxc when po_vend = "ZZZZZZZZ"
+         pod_taxable when can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and code_value = po_vend)
+         pod_taxc when can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and code_value = po_vend)
          pod_insp_rqd
          podcmmts
          pod_um_conv when (new pod_det)
