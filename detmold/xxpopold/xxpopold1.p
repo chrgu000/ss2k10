@@ -1,32 +1,5 @@
 {mfdeclre.i}
-    def  shared temp-table xxwk
-        field xxwk_ponbr like po_nbr
-        field xxwk_vend like po_vend
-        field xxwk_due_date as character
-        field xxwk_curr as character
-        field xxwk_buyer as character
-        field xxwk_contract as character
-        field xxwk_site as character
-        field xxwk_part as character
-        field xxwk_qty as character
-        FIELD xxwk_prlist AS CHARACTER
-        FIELD xxwk_line AS INTE
-        field xxwk_err as character format "x(40)" .
-
-  def  shared temp-table xxwk1
-        field xxwk1_ponbr like po_nbr
-        field xxwk1_vend like po_vend
-        field xxwk1_due_date like po_due_date
-        field xxwk1_curr like po_curr
-        field xxwk1_buyer like po_buyer
-        field xxwk1_contract like po_contract
-        field xxwk1_site like pod_site
-        field xxwk1_part like pod_part
-        FIELD xxwk1_prlist AS CHARACTER
-        FIELD xxwk1_line AS INTE
-        FIELD xxwk1_newpo AS LOGICAL
-        FIELD xxwk1_modline AS LOGICAL
-        field xxwk1_qty like pod_qty_ord .
+{xxpopold.i}
 
  define input parameter xxponbr as character .
  define input parameter xxvend as character .
@@ -36,7 +9,11 @@
  define input parameter xxbuyer as character .
  define input parameter xxindate as character .
  define input parameter xxpricelist as character .
- define input parameter xxpoline as character .
+ define input parameter xxpoline as character.
+ define input parameter xxpoacct  as character.
+ define input parameter xxposub  as character.
+ define input parameter xxpocc  as character.
+ define input parameter xxpoproj  as character.
  define input-output parameter ok_yn as logical .
  define output parameter errmsg as character format "x(40)" .
  define output parameter xxoutdate as character .
@@ -158,7 +135,7 @@
                 errmsg = "该地点无权访问" .
  end.
 
- /*LB01*.. Validate: Cost set needed.                         
+ /*LB01*.. Validate: Cost set needed.
 def var gl_site like in_gl_cost_site.
 find in_mstr where in_site = xxsite and in_part = xxpart no-lock no-error.
 if avail in_mstr then do:
@@ -237,6 +214,10 @@ if avail in_mstr then do:
                     xxwk1_prlist = xxpricelist
                      xxwk1_newpo = xxnewpo
                      xxwk1_modline = xxmodline
+                     xxwk1_acct = xxpoacct
+                     xxwk1_sub = xxposub
+                     xxwk1_cc = xxpocc
+                     xxwk1_proj = xxpoproj
                         .
                  end.  /* else do*/
                end. /*else do*/
@@ -268,6 +249,10 @@ if avail in_mstr then do:
                             xxwk1_prlist = xxpricelist
                             xxwk1_newpo = xxnewpo
                             xxwk1_modline = xxmodline
+                            xxwk1_acct = xxpoacct
+                            xxwk1_sub = xxposub
+                            xxwk1_cc = xxpocc
+                            xxwk1_proj = xxpoproj
                          .
                 end.
               end.

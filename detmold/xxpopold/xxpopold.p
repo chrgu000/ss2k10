@@ -1,7 +1,7 @@
 /*zztlupld.p for upload the transfer list created by ATPU into MFG/PRO*/
 /*display the title*/
-{mfdtitle.i "130715.1"}
-
+{mfdtitle.i "130916.1"}
+{xxpopold.i "new"}
 def var site like si_site.
 def var sidesc like si_desc.
 def var src_file as char format "x(40)".
@@ -12,40 +12,11 @@ def var i as inte.
 def var j as inte.
 def var v_data as char extent 20.
 
-def  new shared temp-table xxwk
-        field xxwk_ponbr like po_nbr
-        field xxwk_vend like po_vend
-        field xxwk_due_date as character
-        field xxwk_curr as character
-        field xxwk_buyer as character
-        field xxwk_contract as character
-        field xxwk_site as character
-        field xxwk_part as character
-        field xxwk_qty as character
-        field xxwk_prlist as character
-        field xxwk_line as inte
-        field xxwk_err as character format "x(40)" .
-
-  def new  shared temp-table xxwk1
-        field xxwk1_ponbr like po_nbr
-        field xxwk1_vend like po_vend
-        field xxwk1_due_date like po_due_date
-        field xxwk1_curr like po_curr
-        field xxwk1_buyer like po_buyer
-        field xxwk1_contract like po_contract
-        field xxwk1_site like pod_site
-        field xxwk1_part like pod_part
-        field xxwk1_prlist as character
-        field xxwk1_line as inte
-        field xxwk1_newpo as logical
-        field xxwk1_modline as logical
-        field xxwk1_qty like pod_qty_ord .
-
 define variable ponbr like po_nbr.
 define variable povend like po_vend .
-define variable poduedate as character .
-define variable pocurr as character .
-define variable pobuyer as character .
+define variable poduedate as character.
+define variable pocurr as character.
+define variable pobuyer as character.
 define variable pocontract as character .
 define variable posite as character .
 define variable popart as character .
@@ -54,6 +25,10 @@ define variable um like pt_um .
 define variable xxduedate like pod_due_date .
 define variable pricelist like po_pr_list.
 define variable poline  as char.
+define variable poacct like pod_acct.
+define variable posub  like pod_sub.
+define variable pocc like pod_cc.
+define variable poproj like pod_project.
 define variable xxraw as integer label "??????????" initial 2 .
 define variable excelapp as com-handle.
 define variable excelworkbook as com-handle.
@@ -70,7 +45,8 @@ FORM /*GUI*/
  "** 供应商维护中税环境设置是正确的                                    **" at 4
  "** 文件格式：以逗号隔开的文本文件(.csv)                              **" at 4
  "** 栏位顺序：                                                        **" at 4
- "** 采购单号,供应商代码,到期日,价格单,币别,采购员,项次,地点,料号,数量 **" at 4
+ "** 采购单号,供应商代码,到期日,价格单,币别,采购员,项次,地点,料号,数量,**" at 4
+ "** 账户,分账户,成本中心,项目                                         **" at 4
      SKIP(.4)  /*GUI*/
 with frame a side-labels width 80 .
 setFrameLabels(frame a:handle) .
@@ -137,26 +113,29 @@ repeat:
 
 
        repeat:    /*asn input repeat*/
-           assign   ponbr = excelsheetmain:cells(i,1):text
-                    povend = excelsheetmain:cells(i,2):text
-                    poduedate = excelsheetmain:cells(i,3):text
-                    pricelist = excelsheetmain:cells(i,4):TEXT
-                    pocurr = excelsheetmain:cells(i,5):text
-                    pobuyer = excelsheetmain:cells(i,6):text
-                    pocontract = excelsheetmain:cells(i,7):text
-                    poline = excelsheetmain:cells(i,8):text
-                    posite = excelsheetmain:cells(i,9):text
-                    popart = excelsheetmain:cells(i,10):text
-                    poqty = excelsheetmain:cells(i,11):TEXT
-                  /*  pocurr = excelsheetmain:cells(i,4):text
-                    pobuyer = excelsheetmain:cells(i,5):text
-                    pocontract = excelsheetmain:cells(i,6):text
-                    posite = excelsheetmain:cells(i,7):text
-                    popart = excelsheetmain:cells(i,8):text
-                    poqty = excelsheetmain:cells(i,9):text*/ .
+           assign   ponbr = excelsheetmain:cells(i,1):FormulaR1C1
+                    povend = excelsheetmain:cells(i,2):FormulaR1C1
+                    poduedate = excelsheetmain:cells(i,3):FormulaR1C1
+                    pricelist = excelsheetmain:cells(i,4):FormulaR1C1
+                    pocurr = excelsheetmain:cells(i,5):FormulaR1C1
+                    pobuyer = excelsheetmain:cells(i,6):FormulaR1C1
+                    poline = excelsheetmain:cells(i,7):FormulaR1C1
+                    posite = excelsheetmain:cells(i,8):FormulaR1C1
+                    popart = excelsheetmain:cells(i,9):FormulaR1C1
+                    poqty = excelsheetmain:cells(i,10):FormulaR1C1
+                    poacct = excelsheetmain:cells(i,11):FormulaR1C1
+                    posub = excelsheetmain:cells(i,12):FormulaR1C1
+                    pocc = excelsheetmain:cells(i,13):FormulaR1C1
+                    poproj = excelsheetmain:cells(i,14):FormulaR1C1
+                  /*  pocurr = excelsheetmain:cells(i,4):FormulaR1C1
+                    pobuyer = excelsheetmain:cells(i,5):FormulaR1C1
+                    pocontract = excelsheetmain:cells(i,6):FormulaR1C1
+                    posite = excelsheetmain:cells(i,7):FormulaR1C1
+                    popart = excelsheetmain:cells(i,8):FormulaR1C1
+                    poqty = excelsheetmain:cells(i,9):FormulaR1C1*/ .
 
                     i = i + 1 .
-             if trim(ponbr) + trim(povend) + trim(poduedate) + trim(pocurr) + trim(pobuyer) + trim(pocontract) + trim(posite) + trim(popart) + trim(poqty) +
+             if trim(ponbr) + trim(povend) + trim(poduedate) + trim(pocurr) + trim(pobuyer) + trim(posite) + trim(popart) + trim(poqty) +
                  TRIM(pricelist) + TRIM(poline)
                  = "" then
                  do:
@@ -175,13 +154,15 @@ repeat:
                     xxwk_due_date = date(trim(poduedate))
                     xxwk_curr = trim(pocurr)
                     xxwk_buyer =TRIM(pobuyer)
-                    xxwk_contract = trim(pocontract)
                     xxwk_site = trim(posite)
                     xxwk_part = trim(popart)
                     xxwk_qty = trim(poqty)
                     xxwk_line = INTEGER( trim(poline))
-                    xxwk_prlist = trim(pricelist).
-
+                    xxwk_prlist = trim(pricelist)
+                    xxwk_acct = trim(poacct)
+                    xxwk_sub = trim(posub)
+                    xxwk_cc = trim(pocc)
+                    xxwk_proj = trim(poporj).
             end.
 
         end.
@@ -204,8 +185,12 @@ repeat:
                  posite = entry(8,vtax,",") no-error.
                  popart = entry(9,vtax,",") no-error.
                  poqty = entry(10,vtax,",") no-error.
+                 poacct =  entry(11,vtax,",") no-error.
+                 posub = entry(12,vtax,",") no-error.
+                 pocc =  entry(13,vtax,",") no-error.
+                 poproj =  entry(14,vtax,",") no-error.
                  if trim(ponbr) + trim(povend) + trim(poduedate) +
-                    trim(pocurr) + trim(pobuyer) + trim(pocontract) +
+                    trim(pocurr) + trim(pobuyer) +
                     trim(posite) + trim(popart) + trim(poqty) +
                     TRIM(pricelist) + TRIM(poline) <> ""
                     and ponbr <> ""
@@ -216,12 +201,16 @@ repeat:
                                xxwk_due_date = trim(poduedate)
                                xxwk_curr = trim(pocurr)
                                xxwk_buyer =TRIM(pobuyer)
-                               xxwk_contract = trim(pocontract)
                                xxwk_site = trim(posite)
                                xxwk_part = trim(popart)
                                xxwk_qty = trim(poqty)
                                xxwk_line = INTEGER( trim(poline))
-                               xxwk_prlist = trim(pricelist).
+                               xxwk_prlist = trim(pricelist)
+                               xxwk_acct = trim(poacct)
+                               xxwk_sub = trim(posub)
+                               xxwk_cc = trim(pocc)
+                               xxwk_proj = trim(poproj)
+                               .
                 end.
         end.
         input close.
@@ -262,6 +251,10 @@ Procedure transferlist_check_upload:
                                            input xxwk_due_date,
                                            INPUT xxwk_prlist,
                                            INPUT xxwk_line,
+                                           input xxwk_acct,
+                                           input xxwk_sub,
+                                           input xxwk_cc,
+                                           input xxwk_proj,
                                            input-output ok_yn ,
                                            output errmsg,
                                            output xxduedate
@@ -342,7 +335,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_part '" ' skip
                          xxwk1_qty  ' "' um  '" ' skip
                         "- - " skip
-                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "- " "- " "- "  "- " "- " '"' "no" '" ' skip  .
+                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
 
                         end.
                         else do:
@@ -359,7 +352,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_part '" ' skip
                          xxwk1_qty  ' "' um '" ' skip
                         "- - " skip
-                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "- " "- " "- "  "- " "- " '"' "no" '" ' skip .
+                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
 
 
     /*********************************
@@ -391,7 +384,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_part '" ' skip
                          xxwk1_qty  ' "' um  '" ' skip
                         "- - " skip
-                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "- " "- " "- "  "- " "- " '"' "no" '" ' skip  .
+                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
                         END.
                         ELSE DO:
                               put
@@ -404,7 +397,7 @@ Procedure transferlist_check_upload:
                                 '"' xxwk1_site '" 'skip
                                  xxwk1_qty  skip
                                 "- - " skip
-                                "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "- " "- " "- "  "- " "- " '"' "no" '" ' skip  .
+                                "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
                         END.
                 END.
                 end.   /*first-of(xxwk1_ponbr)*/
@@ -418,7 +411,7 @@ Procedure transferlist_check_upload:
                         '"' xxwk1_part '" ' skip
                          xxwk1_qty  ' "'um '" ' skip
                         "- - " skip
-                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "N " "- " "- "  "- " "- " '"' "no" '" ' skip .
+                        "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
                       END.
                      ELSE DO:
                          PUT
@@ -426,11 +419,8 @@ Procedure transferlist_check_upload:
                              '"' xxwk1_site '" 'skip
                                  xxwk1_qty  skip
                                 "- - " skip
-                                "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " "- " "- " "- "  "- " "- " "- "  "- " "- " '"' "no" '" ' skip  .
-
+                                "- " "- " "- " "- " "- " '"'xxwk1_due_date '" ' "- " "- " "- " "- " '"' xxwk1_acct '" ' '"' xxwk1_sub '" ' '"' xxwk1_cc '" ' '"' xxwk1_proj '" ' "- " "- "  "- " "- " '"' "no" '" ' skip  .
                       END.
-
-
                 end.
 
                 if last-of(xxwk1_ponbr) then
