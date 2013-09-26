@@ -197,7 +197,7 @@ SS - 100722.1 - RNE */
  * 2.头栏和明细项中的税信息都需要锁定,用户不能更改(取默认供应商资料里的纳税明细)
  * 3.ZZZZZZZZ的供应商允许修改头栏的税信息 设置在通用代码can-find (first code_mstr no-lock where code_fldname = "AllowChangePOTaxVendor" and cod_value = po_vend)
  ****************************************************************************/
-{mfdtitle.i "130923.1"}
+{mfdtitle.i "130926.1"}
 
 /* Clear anything displayed by mftitle if api mode.*/
 {mfaititl.i}

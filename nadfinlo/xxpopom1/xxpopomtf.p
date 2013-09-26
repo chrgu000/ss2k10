@@ -106,7 +106,7 @@ define variable old_ap_sub      like po_ap_sub no-undo.
 define variable old_ap_cc       like po_ap_cc no-undo.
 /* ss-090104.1 -b */
 define  shared var v_update as logical initial no .
-   define var v_choice as logical initial yes .
+   define var v_choice as logical initial no.
 
    DEF VAR v_qty AS DECIMAL.
    DEF VAR v_disc AS DECIMAL.

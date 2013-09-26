@@ -892,14 +892,26 @@ end . /* end pt__chr08 = yes */
             }
          end. /* IF pod_tax_env = "" */
          if c-application-mode <> "API" then
-/*625    update   */
-/*625*/  display
-               pod_tax_usage
-               pod_tax_env
-               pod_taxc
-               pod_taxable
-               pod_tax_in
-            with frame set_tax no-validate.
+            if can-find (first code_mstr no-lock where
+                               code_fldname = "AllowChangePOTaxVendor" and
+                               code_value = po_vend) then do:
+               update
+                  pod_tax_usage
+                  pod_tax_env
+                  pod_taxc
+                  pod_taxable
+                  pod_tax_in
+               with frame set_tax no-validate.
+            end.
+            else do:
+                display
+                  pod_tax_usage
+                  pod_tax_env
+                  pod_taxc
+                  pod_taxable
+                  pod_tax_in
+               with frame set_tax no-validate.
+             end.
          else
             assign
                {mfaiset.i pod_tax_usage  ttPurchaseOrderDet.taxUsage}
