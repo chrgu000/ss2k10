@@ -60,7 +60,7 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
                 L10021 = "地点设定有误" .
@@ -164,7 +164,7 @@ REPEAT:
          if sectionid > 1 then leave V1005L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[ASSY回冲-有标签]"  + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1005 no-box.
+                display "[产线成品入库]"  + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1005 no-box.
 
                 /* LABEL 1 - START */ 
                 L10051 = "请扫描条码" .
@@ -274,7 +274,7 @@ If AVAILABLE ( code_mstr ) then
          if sectionid > 1 then leave V1100L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */ 
                 L11001 = "生产线?" .
@@ -459,7 +459,7 @@ If AVAILABLE ( code_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1203 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1203 no-box.
 
                 /* LABEL 1 - START */ 
                 L12031 = "生效日期?" .
@@ -548,7 +548,7 @@ If AVAILABLE ( code_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
 
                 /* LABEL 1 - START */ 
                 L13001 = "图号 或 图号+批号?" .
@@ -688,7 +688,7 @@ If AVAILABLE ( ro_det ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1310 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1310 no-box.
 
                 /* LABEL 1 - START */ 
                 L13101 = "工序?" .
@@ -848,7 +848,7 @@ If AVAILABLE ( pt_mstr ) then
          if sectionid > 1 then leave V1410L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
 
                 /* LABEL 1 - START */ 
                   L14101 = "" . 
@@ -946,7 +946,7 @@ If AVAILABLE ( pt_mstr ) then
 end.
         leave V1500L.
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
 
                 /* LABEL 1 - START */ 
                 L15001 = "批号?" .
@@ -1048,7 +1048,7 @@ end.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
 
                 /* LABEL 1 - START */ 
                 L15101 = "库位?" .
@@ -1188,7 +1188,7 @@ end.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
 
                 /* LABEL 1 - START */ 
                 L16001 = "完工数量?" .
@@ -1332,7 +1332,7 @@ ld_site = V1002 and ld_ref = "" and  ld_QTY_oh + DECIMAL ( V1600 ) >= 0 ) )  no-
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1601 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1601 no-box.
 
                 /* LABEL 1 - START */ 
                 L16011 = "废品数量?" .
@@ -1437,7 +1437,7 @@ ld_site = V1002 and ld_ref = "" and  ld_QTY_oh + DECIMAL ( V1600 ) >= 0 ) )  no-
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
 
                 /* LABEL 1 - START */ 
                 L17001 = "图号:" + trim(V1300) .
@@ -1542,7 +1542,7 @@ If AVAILABLE ( tr_hist ) then
          if sectionid > 1 then leave V9000L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
 
                 /* LABEL 1 - START */ 
                   L90001 = "" . 
@@ -1654,7 +1654,7 @@ If AVAILABLE ( tr_hist ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
 
                 /* LABEL 1 - START */ 
                 find last tr_hist where 
@@ -1808,7 +1808,7 @@ If NOT AVAILABLE ( tr_hist ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
 
                 /* LABEL 1 - START */ 
                 find first pt_mstr where pt_part = V1300  no-lock no-error.
@@ -1915,7 +1915,7 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
 
                 /* LABEL 1 - START */ 
                 L91201 = "标签个数?" .
@@ -2019,7 +2019,7 @@ If AVAILABLE ( upd_det ) then
         IF 1 <> 1 THEN
         leave V9130L.
         /* LOGICAL SKIP END */
-                display "[生产回冲-无标签]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
+                display "[产线成品入库]"    + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
 
                 /* LABEL 1 - START */ 
                 L91301 = "打印机?" .

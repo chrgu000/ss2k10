@@ -172,7 +172,7 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
                 L10021 = "地点设定有误" .
@@ -276,7 +276,7 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1003 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1003 no-box.
 
                 /* LABEL 1 - START */ 
                 L10031 = "客户" .
@@ -425,7 +425,7 @@ If V1004<>"" then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1004 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1004 no-box.
 
                 /* LABEL 1 - START */ 
                 L10041 = "日期" .
@@ -576,7 +576,7 @@ If V1005<>"" then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1005 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1005 no-box.
 
                 /* LABEL 1 - START */ 
                 L10051 = "时段" .
@@ -733,7 +733,7 @@ repeat:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
 
                 /* LABEL 1 - START */ 
                 L13001 = "图号 或 图号+批号?" .
@@ -1152,7 +1152,7 @@ End.
    If  avail so_mstr then
         leave V1301L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1301 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1301 no-box.
 
                 /* LABEL 1 - START */ 
                 L13011 = "昭和订单" .
@@ -1249,7 +1249,7 @@ End.
    If  avail sod_det then
         leave V1302L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1302 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1302 no-box.
 
                 /* LABEL 1 - START */ 
                 L13021 = "昭和料号" .
@@ -1338,7 +1338,7 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1400 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1400 no-box.
 
                 /* LABEL 1 - START */ 
                 L14001 = "库位?" .
@@ -1491,7 +1491,7 @@ If AVAILABLE ( pt_mstr ) then
          if sectionid > 1 then leave V1410L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
 
                 /* LABEL 1 - START */ 
                   L14101 = "" . 
@@ -1589,7 +1589,7 @@ If AVAILABLE ( pt_mstr ) then
         IF V1410 <> "L" then
         leave V1500L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
 
                 /* LABEL 1 - START */ 
                 L15001 = "批号?" .
@@ -1769,7 +1769,7 @@ If AVAILABLE ( ld_det ) then
          if sectionid > 1 then leave V1550L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1550 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1550 no-box.
 
                 /* LABEL 1 - START */ 
                 L15501 = "1- 18 LOT NO" .
@@ -1868,7 +1868,7 @@ If AVAILABLE ( ld_det ) then
 If   avail so_mstr and so_nbr=trim(V1551) then
         leave V1551L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1551 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1551 no-box.
 
                 /* LABEL 1 - START */ 
                 L15511 = "销售订单?" .
@@ -1998,7 +1998,7 @@ If AVAILABLE ( so_mstr ) then
         if 1=1 then
         leave V1553L.
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1553 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1553 no-box.
 
                 /* LABEL 1 - START */ 
                   L15531 = "" . 
@@ -2112,7 +2112,7 @@ If V1555<>"" then
         /* SS - 20080121.1 - B */
         /* LOGICAL SKIP END */
 
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1555 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1555 no-box.
 
                 /* LABEL 1 - START */ 
                 L15551 = "订单项次" .
@@ -2300,7 +2300,7 @@ end.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
 
                 /* LABEL 1 - START */ 
                 L16001 = "发货数量?" .
@@ -2513,7 +2513,7 @@ End.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
 
                 /* LABEL 1 - START */ 
                 L17001 = "图号:" + trim(tmppart) .
@@ -2621,7 +2621,7 @@ If AVAILABLE ( tr_hist ) then
          if sectionid > 1 then leave V9000L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
 
                 /* LABEL 1 - START */ 
                   L90001 = "" . 
@@ -2808,7 +2808,7 @@ If 1 = 1 then
          if sectionid > 1 then leave V9005L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9005 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9005 no-box.
 
                 /* LABEL 1 - START */ 
                 L90051 = "UPDATE TO TR__CHR01" .
@@ -2900,7 +2900,7 @@ If 1 = 1 then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[销售订单发货n]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
+                display "[成品出货]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
 
                 /* LABEL 1 - START */ 
                 find last tr_hist where 

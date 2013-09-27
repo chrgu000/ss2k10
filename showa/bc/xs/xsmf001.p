@@ -1,13 +1,23 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song */
 /* BARCODE SYSTEM */
 /* Generate date / time  12/05/07 22:31:30 */
+/* replace 【复盘(BY NBR). .44】 as 【台车回收..44】                    *17YJ**/
+/*- SS - 110720.1 --------------------------------------------*17YJ*-----------
+  Purpose:新增台车回收程序替换原44(xsinv44.p).
+  Parameters: NONE
+  Memo: Add new table xxtc_hst record it.
+------------------------------------------------------------------------------*/
 /*- SS - 110720.1 --------------------------------------------*31Y9*-----------
     Purpose:新增70从ZZ调拨到EPS库位的
     Parameters:
     Notes:
 ------------------------------------------------------------------------------*/
-/* replace 【成品入库..44】   as  【成品入库..44】                    *17YJ**/
-/* replace  销售出货(台车).46 as  【销售出货..46】                    *17YJ**/
+/*- SS - 130924.1 --------------------------------------------*31Y9*-----------
+    Purpose:新增菜单47,(xssoi46.p回冲),48(xspitcmt.p盘点录入),63(成品出货)
+    Parameters:
+    Notes:
+------------------------------------------------------------------------------*/
+
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -2094,7 +2104,7 @@ IF OkToRun = yes then RUN    xsrep09.p.
 
 
                 /* LABEL 6 - START */
-                  L11406 = "销售出货   .46" .
+                  L11406 = "销售出货(台车).46" .
                 display L11406          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 6 - END */
         Update V1140
@@ -2542,8 +2552,8 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
         V1140 = "".
 /*17YJ* RUN CheckSecurity (INPUT "xsinv44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ). */
 /*17YJ* IF OkToRun = yes THEN  RUN    xsinv44.p.                                                        */
-/*17YJ*/ RUN CheckSecurity (INPUT "xsrep44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-/*17YJ*/  IF OkToRun = yes THEN  RUN xsrep44.p.
+/*17YJ*/ RUN CheckSecurity (INPUT "xstcbk.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+/*17YJ*/  IF OkToRun = yes THEN  RUN xstcbk.p.
         leave V1144L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
@@ -2756,6 +2766,7 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
    REPEAT:
    /*Logical Enter Cycle1146    */
    IF NOT (V1140 = "46" OR V1100 = "46" ) THEN LEAVE V1146LMAINLOOP.
+     /* START  LINE :1146  1.4.6 库存转到备料区  */
      V1146L:
      REPEAT:
 
@@ -2783,8 +2794,8 @@ IF OkToRun = yes THEN  RUN    xssoi11.p.
 
         /* LOGICAL SKIP START */
         V1140 = "".
-RUN CheckSecurity (INPUT "xssoi46.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN xssoi46.p.
+RUN CheckSecurity (INPUT "xsinv28.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN    xsinv28.p.
         leave V1146L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
@@ -2872,6 +2883,253 @@ IF OkToRun = yes THEN  RUN xssoi46.p.
    END.
    pause 0 before-hide.
    /* Internal Cycle Input :1150    */
+
+
+      /* Internal Cycle Input :1147    */
+   V1147LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle1147    */
+   IF NOT (V1140 = "47" OR V1100 = "47" ) THEN LEAVE V1147LMAINLOOP.
+     V1147L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1147           as char format "x(50)".
+        define variable PV1147          as char format "x(50)".
+        define variable L11471          as char format "x(40)".
+        define variable L11472          as char format "x(40)".
+        define variable L11473          as char format "x(40)".
+        define variable L11474          as char format "x(40)".
+        define variable L11475          as char format "x(40)".
+        define variable L11476          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1147 = " ".
+        V1147 = ENTRY(1,V1147,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1140 = "".
+RUN CheckSecurity (INPUT "xsrep44.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN xsrep44.p.
+        leave V1147L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1147 no-box.
+
+                /* LABEL 1 - START */
+                  L11471 = "" .
+                display L11471          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L11472 = "" .
+                display L11472          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L11473 = "" .
+                display L11473          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L11474 = "" .
+                display L11474          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L11475 = "" .
+                display L11475          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L11476 = "" .
+                display L11476          format "x(40)" skip with fram F1147 no-box.
+                /* LABEL 6 - END */
+        Update V1147
+        WITH  fram F1147 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V1147 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V1147 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V1147 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1147 ).
+        /* **CHANGE Default Site END ** */
+        IF V1147 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F1147.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1147.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1147.
+        pause 0.
+        leave V1147L.
+     END.
+     PV1147 = V1147.
+     /* END    LINE :1147    */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V1147LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :1147    */
+   END.
+   pause 0 before-hide.
+
+
+
+      /* Internal Cycle Input :11048    */
+   V11048LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle11048    */
+   IF NOT (V1140 = "48" OR V1100 = "48" ) THEN LEAVE V11048LMAINLOOP.
+     V11048L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V11048           as char format "x(50)".
+        define variable PV11048          as char format "x(50)".
+        define variable L110481          as char format "x(40)".
+        define variable L110482          as char format "x(40)".
+        define variable L110483          as char format "x(40)".
+        define variable L110484          as char format "x(40)".
+        define variable L110485          as char format "x(40)".
+        define variable L110486          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V11048 = " ".
+        V11048 = ENTRY(1,V11048,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1140 = "".
+RUN CheckSecurity (INPUT "xspitcmt.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN xspitcmt.p.
+        leave V11048L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F11048 no-box.
+
+                /* LABEL 1 - START */
+                  L110481 = "" .
+                display L110481          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L110482 = "" .
+                display L110482          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L110483 = "" .
+                display L110483          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L110484 = "" .
+                display L110484          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L110485 = "" .
+                display L110485          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L110486 = "" .
+                display L110486          format "x(40)" skip with fram F11048 no-box.
+                /* LABEL 6 - END */
+        Update V11048
+        WITH  fram F11048 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V11048 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V11048 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V11048 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V11048 ).
+        /* **CHANGE Default Site END ** */
+        IF V11048 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F11048.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F11048.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F11048.
+        pause 0.
+        leave V11048L.
+     END.
+     PV11048 = V11048.
+     /* END    LINE :11048    */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V11048LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :11048    */
+   END.
+   pause 0 before-hide.
+
+
    V1150LMAINLOOP:
    REPEAT:
    /*Logical Enter Cycle1150    */
@@ -3763,7 +4021,7 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
 
 
                 /* LABEL 3 - START */
-                L11603 = ". . . . . . . .63" .
+                L11603 = "成品出货. . . .63" .
                 display L11603          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 3 - END */
 
@@ -4106,10 +4364,8 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
 
         /* LOGICAL SKIP START */
         V1160 = "".
-/*
-RUN CheckSecurity (INPUT "xsinv23.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN    xsinv23.p.
-*/
+RUN CheckSecurity (INPUT "xssoi46.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN xssoi46.p.
         leave V1163L.
         /* LOGICAL SKIP END */
                 display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
