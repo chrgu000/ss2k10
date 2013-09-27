@@ -18,19 +18,19 @@ DEFINE VARIABLE line_from like tr_line.
 DEFINE VARIABLE line_to like tr_line INITIAL 999.
 DEFINE VARIABLE soddet as CHARACTER.
 DEFINE VARIABLE sonbr_from as CHARACTER.
-DEFINE VARIABLE sonbr_to     as CHARACTER.
-DEFINE VARIABLE duedate_from   as date .
-DEFINE VARIABLE duedate_to     as date .
+DEFINE VARIABLE sonbr_to   as CHARACTER.
+DEFINE VARIABLE duedate_from as date.
+DEFINE VARIABLE duedate_to   as date.
 DEFINE VARIABLE ship like abs_id.
 DEFINE VARIABLE ship1 like abs_id.
-DEFINE VARIABLE flag1      as logical label "只打印未打印过的收货单" initial yes.
-DEFINE VARIABLE pageno     as integer. /*页号*/
-DEFINE VARIABLE duplicate  as CHARACTER.    /*副本*/
-DEFINE VARIABLE vendor     as CHARACTER extent 6.
-DEFINE VARIABLE site       like tr_site.
-DEFINE VARIABLE pdate      as date initial today.    /*打印日期*/
+DEFINE VARIABLE flag1     as logical label "只打印未打印过的收货单" initial yes.
+DEFINE VARIABLE pageno    as integer. /*页号*/
+DEFINE VARIABLE duplicate as CHARACTER.    /*副本*/
+DEFINE VARIABLE vendor    as CHARACTER extent 6.
+DEFINE VARIABLE site      like tr_site.
+DEFINE VARIABLE pdate     as date initial today.    /*打印日期*/
 DEFINE VARIABLE vend_phone as CHARACTER format "x(20)". /*供应商电话*/
-DEFINE VARIABLE rmks       as CHARACTER format "x(80)". /*备注*/
+DEFINE VARIABLE rmks       as CHARACTER format "x(80)". /*备注      */
 DEFINE VARIABLE i          as integer.
 DEFINE VARIABLE j          as integer.
 DEFINE VARIABLE qty like tr_qty_chg.
@@ -270,14 +270,15 @@ procedure p-report:
          qty = 0 - tr_hist.tr_qty_loc.
          serial = tr_hist.tr_serial.
          if tr_hist.tr_type = "cn-ship" then do:
-            find first trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
+             FIND trhist no-lock WHERE trhist.tr_domain = GLOBAL_domain
                    AND trhist.tr_trnbr < integer(tr_hist.tr_rmks)
-                   AND trhist.tr_trnbr >= integer(tr_hist.tr_rmks) - 13
+                   AND trhist.tr_trnbr >= integer(tr_hist.tr_rmks) - 15
                    and trhist.tr_effdate = tr_hist.tr_effdate
                    and trhist.tr_part = tr_hist.tr_part
                    and trhist.tr_type = "ISS-TR"
                    and trhist.tr_nbr = tr_hist.tr_nbr
-                   and trhist.tr_so_job = tr_hist.tr_so_job no-error.
+                   AND trhist.tr_serial = tr_hist.tr_serial
+                   and trhist.tr_so_job = tr_hist.tr_so_job NO-ERROR.
             if available trhist then do:
                    assign qty = - trhist.tr_qty_loc.
                           serial = trhist.tr_serial.
