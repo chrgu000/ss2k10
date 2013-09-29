@@ -185,7 +185,7 @@ repeat:
             and ld_part = tag_part and ld_lot = tag_serial no-error.
      if available ld_det then do:
         assign vldqty = ld_qty_oh
-               vqty = trim(string(ld_qty_oh)) when vqty = "".
+               /* vqty = trim(string(ld_qty_oh)) when */ vqty = "".
      end.
      display skip(1) "盘点数量?" format "x(20)" skip with frame framea2 no-box.
   end.
@@ -206,10 +206,14 @@ repeat:
           end.
        end.
   end.
-  ret-ok = yes.
+  ret-ok = no.
+  find first code_mstr no-lock where code_fldname = "BarcodeContConfirm"
+         and substring(code_value,1,1) = "Y" no-error.
+  if available code_mstr then do:
+     assign ret-ok = yes.
+  end.
   hide all.
-  if decimal(vqty) <> vldqty then do:
-     ret-OK = no.
+  if decimal(vqty) <> vldqty and ret-ok = no then do:
      display vtitle + "*" + TRIM ( V1002 )  format "x(40)" skip with fram framead no-box.
      display "库存数:" + trim(string(vldqty)) format "x(20)" skip with frame framead.
      display "盘点数:" + trim(vqty) format "x(20)" skip with frame framead.
@@ -230,11 +234,11 @@ repeat:
   find first tag_mstr where tag_site = wDefSite
          and tag_nbr = integer(tgnbr) no-error.
   if available tag_mstr and tag_cnt_qty = integer(vqty) then do:
-       WMESSAGE = "更新成功".
+       WMESSAGE = "单号" + trim(tgnbr) + "数量" + trim(vqty) + "-OK!".
        tgnbr = "".
   end.
   else do:
-       WMESSAGE = "更新失败".
+       WMESSAGE = "单号" + trim(tgnbr) + "数量" + trim(vqty) + "-失败!".
   end.
   leave tagloop.
 end.
