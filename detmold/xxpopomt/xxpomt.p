@@ -1,7 +1,9 @@
 /* pomt.p - PURCHASE ORDER MAINTENANCE                                        */
 /* Copyright 1986-2002 QAD Inc., Carpinteria, CA, USA.                        */
 /* All rights reserved worldwide.  This is an unpublished work.               */
-/* $Revision: 1.13.2.13.2.3 $                                                 */
+/*F0PN*/
+/* $Revision: 1.13.2.13.2.3 $                                                               */
+/*                                                                            */
 /* REVISION: 1.0     LAST MODIFIED: 08/30/86    BY: PML *14*  */
 /* REVISION: 1.0     LAST MODIFIED: 02/11/86    BY: EMB       */
 /* REVISION: 2.0     LAST MODIFIED: 12/19/86    BY: PML *A3*  */
@@ -122,10 +124,10 @@
 /* Revision: 1.13.2.6   BY: Niranjan R.         DATE: 05/24/00  ECO: *N0C7*   */
 /* Revision: 1.13.2.8   BY: Pat Pigatti         DATE: 07/14/00  ECO: *N0G2*   */
 /* Revision: 9.1        BY: Ashwini G.          DATE: 07/24/00  ECO: *J3Q2*   */
-/* $Revision: 1.13.2.13.2.3 $ BY:Anup Pereira   DATE: 07/10/00  ECO: *N059*   */
+/* $Revision: 1.13.2.13.2.3 $         BY:Anup Pereira         DATE: 07/10/00  ECO: *N059*   */
 /* REVISION: 9.1     LAST MODIFIED: 08/18/00    BY: *J3Q4* Ashwini G.         */
 /* REVISION: 9.1     LAST MODIFIED: 09/06/00    BY: *M0S8* Ashwini G.         */
-/* REVISION: 9.1     LAST MODIFIED: 09/26/00 BY: *N0W9* Mudit Mehta           */
+/* REVISION: 9.1     LAST MODIFIED: 09/26/00 BY: *N0W9* Mudit Mehta         */
 /* REVISION: 9.1     LAST MODIFIED: 11/26/01 BY: *N13P* John Lannon           */
 /* REVISION: 9.1     LAST MODIFIED: 03/15/02 BY: *N1D7* John Pison            */
 /*                                                                            */
@@ -133,20 +135,15 @@
 /*                                                                            */
 /* MAINTAINS BOTH BLANKET AND REGULAR PURCHASE ORDERS.                        */
 /*                                                                            */
+/* REVISION: 9.1     BY:Ricky Ho                 DATE:13/Apr/05 ECO: *ricky* */
 
 
 /*============================================================================*/
 /* ****************************** Definitions ******************************* */
 /*============================================================================*/
 
-/***130815.1*******************************************************************
- * 1.使用价格单时，M类型和成品的零件不需要价格单
- *   1.1 code_mstr: code_fldname = PT_PROD_LINE_NOTCHKPC 是成品
- * 2.po_confirm set default to no.
-******************************************************************************/
-
 /* DISPLAY TITLE */
-{mfdtitle.i "130815.1"}
+{mfdtitle.i "b+ "}
 /*N13P*/ /* Clear anything displayed by mftitle if api mode.*/
 /*N13P*/ {mfaititl.i}
 /*N0W9*/ {cxcustom.i "POMT.P"}
@@ -209,7 +206,6 @@ define new shared variable tax_recno as recid.
 define new shared variable poc_pc_line like mfc_logical initial yes.
 define new shared variable impexp      like mfc_logical no-undo.
 define new shared variable blanket as logical.
-define new shared variable using_grs like mfc_logical no-undo.
 define new shared variable l_include_retain like mfc_logical
    initial yes no-undo.
 
@@ -364,7 +360,7 @@ repeat:
             &ERRORLEVEL={&INFORMATION-RESULT}}
          new_po = yes.
 
-         {pxrun.i &PROC='createPurchaseOrder' &PROGRAM='xxpopoxr.p'
+         {pxrun.i &PROC='createPurchaseOrder' &PROGRAM='popoxr.p'
             &PARAM="(input ponbr,
                      buffer po_mstr)"
             &NOAPPERROR=TRUE &CATCHERROR=TRUE}
@@ -769,8 +765,13 @@ repeat:
             continue   = no
             del-yn     = no.
 
+/*ricky*/ po_site = po_ship.
+/*ricky*/ po_pr_list2 = po_site + string(year(po_ord_date)).
+/*ricky*/ po_bill = po_ship.
+
+
          /* PURCHASE ORDER MAINTENANCE -- ORDER HEADER subroutine */
-         {gprun.i ""popomtb.p""}
+/*zy*/   {gprun.i ""xxpopomtb.p""}
 
 /*N13P*/ if c-application-mode <> "API" then
 /*N13P*/ do:
@@ -865,7 +866,8 @@ repeat:
       due_date = po_due_date.
 
       /* LINE ITEMS */
-      {gprun.i ""xxpopomta.p""}
+/*ricky   {gprun.i ""popomta.p""}*/
+/*ricky*/   {gprun.i ""xxpopomta.p""}
 
       /* TRAILER */
       hide all.

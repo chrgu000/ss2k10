@@ -6,6 +6,7 @@
  define input parameter xxsite as character .
  define input parameter xxcurr as character .
  define input parameter xxpart as character .
+ define input parameter xxpodesc as character.
  define input parameter xxbuyer as character .
  define input parameter xxindate as character .
  define input parameter xxpricelist as character .
@@ -14,6 +15,14 @@
  define input parameter xxposub  as character.
  define input parameter xxpocc  as character.
  define input parameter xxpoproj  as character.
+ define input parameter xxprnbr as character.
+ define input parameter xxpoum as character.
+ define input parameter xxprice as character.
+ define input parameter xxtaxable like po_taxable.
+ define input parameter xxtax_in like pod_tax_in.
+ define input parameter xxperdate as character.
+ define input parameter xxneeddate as character.
+ define input parameter xxrmks as character.
  define input-output parameter ok_yn as logical .
  define output parameter errmsg as character format "x(40)" .
  define output parameter xxoutdate as character .
@@ -91,7 +100,7 @@
 
     IF xxpricelist <> po_pr_list2 THEN
                assign ok_yn = no
-             errmsg = "PO 价格单与文件中不同 " .
+             errmsg = "PO 价格单[" + po_pr_list2 + "]与文件[" + xxpricelist + "]不同 " .
     IF xxbuyer <> po_buyer THEN
               assign ok_yn = no
                errmsg = "PO 计划员与文件中不同 " .
@@ -189,23 +198,30 @@ if avail in_mstr then do:
                  end.    /*if not avail exr_rate*/
              else do:
                  find first pt_mstr where pt_part = xxpart no-lock no-error .
+/* rem by Ricky memo item also need to raise PO
                  if not available pt_mstr then
                  do:
+
                    ok_yn = no .
                    errmsg = "零件号不存在" .
                  end.
                else do:
-                 find first isd_det where isd_status = pt_status and (isd_tr_type = "add-po"
-                 or isd_tr_type = "ord-po" ) no-lock no-error .
-                 if available isd_det then
-                 do:
-                     ok_yn = no .
-                     errmsg = "零件状态限制" .
-                 end.
-                 else do:
+*/
+/*ricky*/      if available pt_mstr then do:
+                     find first isd_det where isd_status = pt_status and (isd_tr_type = "add-po"
+                     or isd_tr_type = "ord-po" ) no-lock no-error .
+                     if available isd_det then
+                     do:
+                         ok_yn = no .
+                         errmsg = "零件状态限制" .
+                     end.
+/*ricky*/        end.
+/*ricky                 else do:*/
+/*ricky*/        if ok_yn then do:
 
                    create xxwk1 .
                     assign xxwk1_part = xxpart
+                    xxwk1_desc = xxpodesc
                     xxwk1_ponbr = xxponbr
                     xxwk1_vend = xxvend
                     xxwk1_curr = xxcurr
@@ -218,27 +234,41 @@ if avail in_mstr then do:
                      xxwk1_sub = xxposub
                      xxwk1_cc = xxpocc
                      xxwk1_proj = xxpoproj
-                        .
+                    xxwk1_prnbr     = xxprnbr
+                    xxwk1_um        = xxpoum
+                    xxwk1_price     = decimal(xxprice)
+                    xxwk1_taxable   = xxtaxable
+                    xxwk1_tax_in    = xxtax_in
+                    xxwk1_per_date  = date(xxperdate)
+                    xxwk1_need      = date(xxneeddate)
+                    xxwk1_rmks      = xxrmks
+                    xxwk1_desc = xxpodesc
+                    .
                  end.  /* else do*/
-               end. /*else do*/
+/*ricky               end. /*else do*/   */
              end.
           end.  /*if xxcurr<> base_curr*/
           else do:
               find first pt_mstr where pt_part = xxpart no-lock no-error .
+/* rem by Ricky memo item also need to raise PO
               if not available pt_mstr then
               do:
                   ok_yn = no .
                   errmsg = "零件号不存在" .
               end.
               else do:
-                 find first isd_det where trim(substring(isd_status,1,8)) = trim(substring(pt_status,1,8)) and (isd_tr_type = "add-po"
-                 or isd_tr_type = "ord-po" ) no-lock no-error .
-                if available isd_det then
-                do:
-                  ok_yn = no .
-                  errmsg = "零件状态限制" .
-                end.
-                else do:
+*/
+/*ricky*/     if available pt_mstr then do:
+                    find first isd_det where trim(substring(isd_status,1,8)) = trim(substring(pt_status,1,8)) and (isd_tr_type = "add-po"
+                    or isd_tr_type = "ord-po" ) no-lock no-error .
+                    if available isd_det then
+                    do:
+                        ok_yn = no .
+                        errmsg = "零件状态限制" .
+                    end.
+/*ricky*/       end.
+/*ricky                else do:*/
+                if ok_yn then do:
                      create xxwk1 .
                       assign xxwk1_part = xxpart
                              xxwk1_ponbr = xxponbr
@@ -253,9 +283,18 @@ if avail in_mstr then do:
                             xxwk1_sub = xxposub
                             xxwk1_cc = xxpocc
                             xxwk1_proj = xxpoproj
+                            xxwk1_prnbr       = xxprnbr
+                            xxwk1_um          = xxpoum
+                            xxwk1_price       = decimal(xxprice)
+                            xxwk1_taxable     = xxtaxable
+                            xxwk1_tax_in      = xxtax_in
+                            xxwk1_per_date    = date(xxperdate)
+                            xxwk1_need        = date(xxneeddate)
+                            xxwk1_rmks        = xxrmks
+                            xxwk1_desc        = xxpodesc
                          .
                 end.
-              end.
+/*ricky              end.*/
           end.
      end.
 

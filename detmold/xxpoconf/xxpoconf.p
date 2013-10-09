@@ -41,7 +41,10 @@ form  tab_sel   column-label "sel"
 With frame selfld no-validate with title color
 normal(getFrameTitle("DETAIL",30)) 13 down width 80.
 setFrameLabels(frame selfld:handle).
-
+ if nbr1 = hi_char then nbr1 = "".
+ if vend1 = hi_char then vend1 = "".
+ if site1 = hi_char then site1 = "".
+ if buyer1 = hi_char then buyer1 = "".
 view frame a.
 repeat with frame a:
    do on error undo,retry:
@@ -68,17 +71,20 @@ repeat with frame a:
              end.
           end.
    end.
-
+   if nbr1 = "" then nbr1 = hi_char.
+   if vend1 = "" then vend1 = hi_char.
+   if site1 = "" then site1 = hi_char.
+   if buyer1 = "" then buyer1 = hi_char.
    ststatus = stline[2].
    status input ststatus.
 
    scroll_loopb:
    do on error undo,retry:
       empty temp-table tab_list no-error.
-      for each po_mstr no-lock where po_nbr >= nbr and (po_nbr <= nbr1 or nbr1 = "")
-           and po_vend >= vend and (po_vend <= vend1 or vend1 = "")
-           and po_site >= site and (po_site <= site1 or site1 = "")
-           and po_buyer >= buyer and (po_buyer <= buyer1 or buyer1 = "")
+      for each po_mstr no-lock where po_nbr >= nbr and (po_nbr <= nbr1)
+           and po_vend >= vend and (po_vend <= vend1)
+           and po_site >= site and (po_site <= site1)
+           and po_buyer >= buyer and (po_buyer <= buyer1)
            and po_confirm = no:
            create tab_list.
            assign tab_sel = if sel-all then "*" else ""
@@ -123,10 +129,11 @@ repeat with frame a:
       {mfmsg.i 1310 3}
       undo,retry.
    end.
-     assign v_sel = no.
+     assign v_sel = yes.
      {mfmsg01.i 12 2 v_sel}
      if v_sel then do:
         for each tab_list no-lock where tab_sel = "*":
+        /*
             output to value(tab_nbr + ".bpi").
                put unformat '"' tab_nbr '"' skip '-' skip '-' skip.
                put unformat '- - - - - - - - - - - - - Y - - - - - - - - N' skip.
@@ -141,6 +148,11 @@ repeat with frame a:
             output close.
             input close.
             batchrun = no.
+            */
+            find first po_mstr exclusive-lock where po_nbr = tab_nbr no-error.
+            if available po_mstr then do:
+               assign po_confirm = yes.
+            end.
         end. /* for each tab_list no-lock:*/
      end. /*  if v_sel then do: */
      for each tab_list no-lock  where tab_sel = "*",

@@ -154,9 +154,7 @@
 /* Revision: 1.46.1.4      BY: Mark Christian     DATE: 12/21/01  ECO: *N175* */
 /* Revision: 1.46.1.5      BY: Anitha Gopal       DATE: 02/08/02  ECO: *N192* */
 /* $Revision: 1.46.1.7 $  BY:Adeline Kinehan  DATE: 10/16/01  ECO: *N13P* */
-/* $Revision: Y715 $    BY: ZY                    DATE: 07/15/13  ECH: *Y715* *
- *在CODE_MSTR 里维护了PT_PROD_LINE_NOTCHKPC 的PROD_LINE 的料号不做PC价格表检验*/
-
+/*                                                                            */
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
@@ -175,6 +173,7 @@
 /************************************************************************/
 /*    THIS PROGRAM HANDLES BOTH MULTI-LINE AND SINGLE-LINE ENTRY.       */
 /************************************************************************/
+/* REVISION: 9.1     BY:Ricky Ho                 DATE:13/Apr/05 ECO: *ricky* */
 
 {mfdeclre.i}
 {cxcustom.i "POPOMTA.P"}
@@ -867,7 +866,8 @@ repeat on endkey undo, leave:
             assign
                podcmmts = pod_cmtindx <> 0 or (poc_lcmmts)
                continue = no.
-            {gprun.i ""popomtea.p""}
+/*ricky            {gprun.i ""popomtea.p""}*/
+/*ricky*/            {gprun.i ""xxpopomtea.p""}
 
             if c-application-mode <> "API" and continue = no then
                undo mainloop, next mainloop.
@@ -1105,21 +1105,12 @@ repeat on endkey undo, leave:
                /* DO NOT RE-CALCULATE THE PRICING RELATED DATA   */
                /* FOR AN ITEM ADDED FROM A PURCHASE REQUISITION  */
                /* WHEN THE GRS MODULE HAS BEEN ACTIVATED         */
-/*Y715*/       find first pt_mstr no-lock where pt_part = pod_part no-error.
-/*Y715*/       if available pt_mstr then do:
-/*Y715*/          find first code_mstr no-lock where
-/*Y715*/                     code_fldname = "PT_PROD_LINE_NOTCHKPC" and
-/*Y715*/                     code_value = pt_prod_line no-error.
-/*Y715*/          if available code_mstr then do:
-/*Y715*/             assign price_came_from_req = yes.
-/*Y715*/          end.
-/*Y715*/       end.
-            if not price_came_from_req
+               if not price_came_from_req
                then do:
 
                   /* CALCULATES THE PRICING RELATED DATA */
                   {pxrun.i &PROC='getPricingData'
-                           &PROGRAM='xxpopoxr1.p'
+                           &PROGRAM='popoxr1.p'
                            &PARAM="(buffer pod_det,
                                     input poc_pt_req,
                                     input poc_pl_req,
@@ -1186,7 +1177,7 @@ repeat on endkey undo, leave:
                 undo setc-2, return error.
 
                {pxrun.i &PROC='setPOLineCostAndDiscountPercent'
-                        &PROGRAM='xxpopoxr1.p'
+                        &PROGRAM='popoxr1.p'
                         &PARAM="(input old_disc_pct,
                                  input old_pur_cost,
                                  output l_actual_disc,
@@ -1420,7 +1411,7 @@ repeat on endkey undo, leave:
             if sngl_ln = yes then do:
                assign continue = no
                   pod_recno = recid(pod_det).
-               {gprun.i ""popomtd.p""}
+               {gprun.i ""xxpopomtd.p""}
                if c-application-mode <> "API" and continue = no then
                   undo mainloop, next mainloop.
                else if c-application-mode = "API" and continue = no then
