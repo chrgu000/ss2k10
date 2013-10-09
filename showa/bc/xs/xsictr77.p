@@ -1,7 +1,7 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */
 /* INV TRANSFER */
 /* Generate date / time  2007-6-8 10:29:06                                    */
-/* ------- Barcode 70  ZZ调拨到EPS库位的 (从库位固定为ZZ 至库位固定为EPS)     */
+/* ------- Barcode 70  ZZ调拨到TS库位的 (出的库位固定为ZZ 入的库位固定为TS)     */
 /* xxtrlocmt.p 程序用于维护库位类型                                           */
 /*1319 如果批号为空则需输入批号 */
 define variable sectionid as integer init 0 .
@@ -60,7 +60,7 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[ZZ调到TS]" + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */
                 L10021 = "地点设定有误" .
@@ -157,7 +157,7 @@ REPEAT:
          if sectionid > 1 then leave V1100L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */
                 L11001 = "单据号码?" .
@@ -250,7 +250,7 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
 
                 /* LABEL 1 - START */
                 L13001 = "图号 或 图号+批号?" .
@@ -399,7 +399,7 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1305 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1305 no-box.
 
                 /* LABEL 1 - START */
                 L13051 = "备注?" .
@@ -437,7 +437,7 @@ REPEAT:
         end.
            apply lastkey.
         end.
-        ************************/
+				************************/
         /* PRESS e EXIST CYCLE */
         IF V1305 = "e" THEN  LEAVE V1300LMAINLOOP.
         display  skip WMESSAGE NO-LABEL with fram F1305.
@@ -503,7 +503,7 @@ If AVAILABLE ( pt_mstr ) then
          if sectionid > 1 then leave V1410L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
 
                 /* LABEL 1 - START */
                   L14101 = "" .
@@ -601,7 +601,7 @@ If AVAILABLE ( pt_mstr ) then
         IF V1410 <> "L" then
         leave V1500L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
 
                 /* LABEL 1 - START */
                 L15001 = "批号?" .
@@ -647,8 +647,8 @@ If AVAILABLE ( ld_det ) then
         recid(LD_DET) = ?.
            Update V1500
 /*1319*/          when not can-find(first ld_det no-lock where ld_site = V1002
-                                      and ld_loc = "ZZ"
-                                      and ld_part = V1300 and ld_lot = v1500)
+																			and ld_loc = "ZZ"
+																			and ld_part = V1300 and ld_lot = v1500)
            WITH  fram F1500 NO-LABEL
            /* ROLL BAR START */
            EDITING:
@@ -790,7 +790,7 @@ If AVAILABLE ( poc_ctrl ) then
         V1510 = "ZZ".
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
 
                 /* LABEL 1 - START */
                 L15101 = "从库位?" .
@@ -926,7 +926,7 @@ If AVAILABLE ( poc_ctrl ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
 
                 /* LABEL 1 - START */
                 L16001 = "转移数量?" .
@@ -1039,7 +1039,7 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1520 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1520 no-box.
 
                 /* LABEL 1 - START */
                 L15201 = "到库位(备料区或生产线)?" .
@@ -1099,7 +1099,7 @@ If AVAILABLE ( pt_mstr ) then
                 /* LABEL 4 - END */
                 display "输入或按E退出"       format "x(40)" skip
         skip with fram F1520 no-box.
-        assign V1520 = "EPS".
+        assign V1520 = "TS".
 /****************************************************************************
         Update V1520
         WITH  fram F1520 NO-LABEL
@@ -1202,7 +1202,7 @@ and substring ( ld_loc ,1,1) = "X"  no-lock no-error.
 If NOT AVAILABLE ld_det THEN
         leave V1525L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1525 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1525 no-box.
 
                 /* LABEL 1 - START */
                 L15251 = "警告:架位有以下货物" .
@@ -1289,7 +1289,7 @@ If NOT AVAILABLE ld_det THEN
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
 
                 /* LABEL 1 - START */
                 L17001 = "图号:" + trim(V1300) .
@@ -1396,7 +1396,7 @@ If AVAILABLE ( tr_hist ) then
          if sectionid > 1 then leave V9000L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
 
                 /* LABEL 1 - START */
                   L90001 = "" .
@@ -1499,7 +1499,7 @@ If AVAILABLE ( tr_hist ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
 
                 /* LABEL 1 - START */
                 find last tr_hist where
@@ -1631,7 +1631,7 @@ If NOT AVAILABLE ( tr_hist ) then
         IF 1 = 1 THEN
         leave V9015L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9015 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9015 no-box.
 
                 /* LABEL 1 - START */
                   L90151 = "" .
@@ -1725,7 +1725,7 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
 
                 /* LABEL 1 - START */
                 L91101 = "发料倍数?" .
@@ -1830,7 +1830,7 @@ If AVAILABLE ( pt_mstr ) then
 if V9120 = ? THEN
         leave V9120L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
 
                 /* LABEL 1 - START */
                 L91201 = "标签个数?" .
@@ -1934,7 +1934,7 @@ If AVAILABLE ( upd_det ) then
         IF V9120 = ?  THEN
         leave V9130L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
 
                 /* LABEL 1 - START */
                 L91301 = "打印机?" .
@@ -2184,7 +2184,7 @@ If AVAILABLE ( pt_mstr )  then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9140 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9140 no-box.
 
                 /* LABEL 1 - START */
                 L91401 = "余数?" .
@@ -2286,7 +2286,7 @@ If AVAILABLE ( pt_mstr )  then
 IF 1 = 1 THEN
         leave V9150L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9150 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9150 no-box.
 
                 /* LABEL 1 - START */
                 L91501 = "标签个数?" .
@@ -2395,7 +2395,7 @@ If AVAILABLE ( upd_det ) then
         IF 1 <> 1 THEN
         leave V9160L.
         /* LOGICAL SKIP END */
-                display "[ZZ调到EPS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9160 no-box.
+                display "[ZZ调到TS]"        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9160 no-box.
 
                 /* LABEL 1 - START */
                 L91601 = "打印机?" .
