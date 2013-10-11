@@ -1,80 +1,280 @@
+/* xxtricmt.p - DIVIDE_LOCATION Maintenance                                  */
+/* revision: 120530.1   created on: 20120530   by: zhang yun                 */
 
-DEFINE VARIABLE vdata AS CHARACTER FORMAT "x(18)"  NO-UNDO.
-DEFINE VARIABLE vtype AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vidxtype AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vtable AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vfield AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vindex AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE varea AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vdump-name AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vDesc AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vcpstream AS CHARACTER FORMAT "x(18)"  NO-UNDO.
-DEFINE VARIABLE vformat AS CHARACTER FORMAT "x(18)"  NO-UNDO.
-DEFINE VARIABLE vinitial AS CHARACTER FORMAT "x(18)"  NO-UNDO. 
-DEFINE VARIABLE vsql-width AS INTEGER   NO-UNDO.
-DEFINE VARIABLE vorder AS INTEGER   NO-UNDO.
-DEFINE VARIABLE vposition AS INTEGER     NO-UNDO.
-DEFINE VARIABLE vprimary AS CHARACTER FORMAT "x(8)"  NO-UNDO.
-DEFINE VARIABLE vunique AS CHARACTER  FORMAT "x(3)" NO-UNDO.
-DEFINE VARIABLE vINDEX-FIELD AS CHARACTER FORMAT "x(18)" NO-UNDO.
-DEFINE VARIABLE vSort AS CHARACTER FORMAT "x(18)" NO-UNDO.
-INPUT FROM D:\ss\trunk\cummins\dcec\src\ADD.df.
-REPEAT :
-    ASSIGN vdata = "". 
-    IMPORT UNFORMAT vdata.
-    ASSIGN vdata = TRIM(vdata).
+/*V8:ConvertMode=Maintenance                                                 */
+/* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
+/*-Revision end--------------------------------------------------------------*/
 
-    IF trim(ENTRY(1,vdata," ")) <> "" THEN DO:
-        IF ENTRY(1,vdata," ") BEGINS "cpstream" THEN
-           ASSIGN vcpstream = ENTRY(2,vdata,"=").
-        ELSE DO: 
-        CASE ENTRY(1,vdata," "):
-             WHEN "ADD" THEN
-                IF ENTRY(2,vdata," ") = "TABLE" THEN DO:
-                    ASSIGN vtype = "TABLE".
-                    ASSIGN vtable = ENTRY(3,vdata," ").
-                END.
-                ELSE IF ENTRY(2,vdata," ") = "FIELD" THEN DO:
-                    ASSIGN vfield = ENTRY(3,vdata," ").
-                    ASSIGN vtype = "FIELD".
-                    ASSIGN vtable = ENTRY(5,vdata," ").
-                END.
-                ELSE IF ENTRY(2,vdata," ") = "INDEX" THEN DO:
-                    ASSIGN vindex = ENTRY(3,vdata," ").
-                    ASSIGN vtype = "INDEX".
-                    ASSIGN vtable = ENTRY(5,vdata," ").
-                END.
-             WHEN "AREA" THEN ASSIGN varea = ENTRY(2,vdata, " ") + " " + ENTRY(3,vdata, " ").
-             WHEN "DUMP-NAME" THEN ASSIGN vdump-name = ENTRY(2,vdata, " ").
-             WHEN "DESCRIPTION" THEN ASSIGN vdesc = ENTRY(2,vdata, " ").
-             WHEN "FORMAT" THEN ASSIGN vformat = ENTRY(2,vdata, " ").
-             WHEN "INITIAL" THEN ASSIGN vinitial = ENTRY(2,vdata, " ").
-             WHEN "POSITION" THEN ASSIGN vposition = INTEGER(ENTRY(2,vdata, " ")).
-             WHEN "SQL-WIDTH" THEN ASSIGN vsql-width = INTEGER(ENTRY(2,vdata, " ")).
-             WHEN "ORDER" THEN ASSIGN vorder = INTEGER(ENTRY(2,vdata, " ")).
-             WHEN "UNIQUE" THEN ASSIGN vunique = "YES".
-             WHEN "PRIMARY" THEN ASSIGN vprimary = "PRIMARY".
-             WHEN "INDEX-FIELD" THEN
-                 ASSIGN vidxtype = "INDEX-FIELD"
-                        vindex-field = ENTRY(2,vdata, " ")
-                        vsort = ENTRY(3,vdata, " ").
-        END CASE.
-        END.
-    END.
-    ELSE DO: 
-         /* 
-         IF vtype = "TABLE" THEN DO:
-             DISPLAY vtype vtable vdesc vAREA  vDUMP-NAME  .
-         END.
-         ELSE IF vtype = "FIELD" THEN DO:
-             DISPLAY vtype vtable vfield vdesc vformat vinitial vPosition vSQL-WIDTH vORDER.
-         END.
-         ELSE */
-          IF vtype = "INDEX" AND vidxtype = "INDEX-FIELD" THEN DO: 
-              DISPLAY vtype vindex-field vprimary vunique varea vtable vindex vsort.
-              ASSIGN vprimary = "" vunique = ""  vidxtype = "".
-         END.
-         ASSIGN vtype = "". 
-    END. 
-END.
-INPUT CLOSE.
+/* DISPLAY TITLE */
+
+{mfdtitle.i "3AYC"}
+define variable del-yn like mfc_logical initial no.
+define variable v_key as character initial "-CTRL".
+define variable vadd1 as character.
+define variable vadd2 as character.
+define variable vadd3 as character.
+define variable vadd4 as character.
+define variable inti  as integer.
+{gpcdget.i "UT"}
+
+define temp-table xxtd
+       fields xd_data as character format "x(80)"
+       fields xd_key1 as character format "x(18)"
+       fields xd_key2 as character format "x(18)"
+       fields xd_key3 as character format "x(18)"
+       fields xd_key4 as character format "x(18)"
+       fields xd_ppt as character format "x(16)"
+       fields xd_val as character format "x(20)"
+       fields xd_test as character.
+
+define temp-table xxt0
+       fields xt_type as character
+       fields xt_tab as character format "x(16)"
+       fields xt_fld as character format "x(24)"
+       fields xt_ord as character format "x(8)"
+       fields xt_lab as character format "x(40)"
+       fields xt_clab as character format "x(40)"
+       fields xt_fldtp as character format "x(12)"
+       fields xt_fmt  as character format "x(18)"
+       fields xt_desc as character format "x(60)"
+       fields xt_ext  as character format "x(6)"
+       fields xt_valexp as character format "x(60)"
+       fields xt_valmsg as character format "x(60)"
+       fields xt_ini as character format "x(20)"
+       index xt_idx1 is primary xt_type xt_tab xt_fld
+       index xt_idx2 xt_type xt_tab xt_ord.
+
+assign v_key = upper(execName + v_key).
+
+/* DISPLAY SELECTION FORM */
+form
+/*   usrw_key1 colon 16 format "x(20)"                                       */
+/*   usrw_key2 colon 16 format "x(20)" skip(1)                               */
+   usrw_key3 colon 16 format "x(180)" view-as fill-in size 40 by 1 skip(2)
+with frame a side-labels width 80 attr-space.
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame a:handle).
+
+find usrw_wkfl exclusive-lock where usrw_key1 = v_key and
+     usrw_key2 = v_key no-error.
+if available usrw_wkfl then do:
+   display usrw_key3 with frame a.
+end.
+else do:
+   display "" @ usrw_key3.
+end.
+/* DISPLAY */
+view frame a.
+
+{wbrp01.i}
+/* {xxchklv.i 'MODEL-CAN-RUN' 10} */
+mainloop:
+repeat with frame a:
+   for each xxtd exclusive-lock: delete xxtd. end.
+   for each xxt0 exclusive-lock: delete xxt0. end.
+
+   if (c-application-mode <> 'web') or
+      (c-application-mode = 'web' and
+      (c-web-request begins 'data'))
+   then do:
+        update usrw_key3 with frame a.
+   end.
+
+   {wbrp06.i &command = update &fields = " usrw_key3" &frm = "a"}
+
+   /* OUTPUT DESTINATION SELECTION */
+   {gpselout.i &printType = "printer"
+               &printWidth = 460
+               &pagedFlag = " nopage "
+               &stream = " "
+               &appendToFile = " "
+               &streamedOutputToTerminal = " "
+               &withBatchOption = "no"
+               &displayStatementType = 1
+               &withCancelMessage = "yes"
+               &pageBottomMargin = 6
+               &withEmail = "yes"
+               &withWinprint = "yes"
+               &defineVariables = "yes"}
+  /*    {mfphead.i}     */
+    assign vadd1 = ""
+           vadd2 = ""
+           vadd3 = ""
+           vadd4 = "" .
+   do on error undo, retry:
+
+   find usrw_wkfl exclusive-lock where usrw_key1 = v_key and
+        usrw_key2 = v_key no-error.
+
+   if not available usrw_wkfl then do:
+    /*  {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1} */
+      create usrw_wkfl.
+      assign usrw_key1 = v_key
+             usrw_key2 = v_key.
+   end. /* if not available usrw_wkfl then do: */
+
+   display usrw_key3 with frame a.
+
+   if search(usrw_key3) = ? or search(usrw_key3) = "" then do:
+      {mfmsg.i 53 3}
+      undo,retry.
+   end.
+
+end.
+    input from value(usrw_key3).
+    repeat:
+        import unformat vadd1.
+        if trim(vadd1) = "." or trim(vadd1) = "PSC"  then leave.
+        if trim(vadd1) = "" then next.
+        create xxtd.
+        assign xd_data = trim(vadd1).
+    end.
+    input close.
+
+    for each xxtd exclusive-lock by recid(xxtd):
+        if index(xd_data,"ADD TABLE") > 0 then do:
+            assign vadd1 = "TABLE"
+                   vadd2 = entry(3,xd_data," ")
+                   vadd3 = ""
+                   vadd4 = "" .
+            if substring(vadd2,1,1) = '~"' then do:
+               assign vadd2 = substring(vadd2,2,length(vadd2) - 2).
+            end.
+        end.
+        if index(xd_data,"ADD FIELD") > 0 or index(xd_data,"ADD INDEX") > 0 then do:
+           if trim(entry(2,xd_data," ")) = "FIELD" then do:
+              assign vadd1 = entry(2,xd_data," ").
+              assign vadd2 = entry(5,xd_data," ").
+              assign vadd3 = entry(3,xd_data," ").
+              assign vadd4 = entry(7,xd_data," ").
+           end.
+           else do:
+              assign vadd1 = entry(2,xd_data," ").
+              assign vadd2 = entry(5,xd_data," ").
+              assign vadd3 = entry(3,xd_data," ").
+              assign vadd4 = "".
+           end.
+           if substring(vadd1,1,1) = '~"' then do:
+              assign vadd1 = substring(vadd1,2,length(vadd1) - 2).
+           end.
+           if substring(vadd2,1,1) = '~"' then do:
+              assign vadd2 = substring(vadd2,2,length(vadd2) - 2).
+           end.
+           if substring(vadd3,1,1) = '~"' then do:
+              assign vadd3 = substring(vadd3,2,length(vadd3) - 2).
+           end.
+           if substring(vadd4,1,1) = '~"' then do:
+              assign vadd4 = substring(vadd4,2,length(vadd4) - 2).
+           end.
+        end.
+        else do:
+           assign xd_key1 = vadd1
+                  xd_key2 = vadd2
+                  xd_key3 = vadd3
+                  xd_key4 = vadd4.
+           if index(xd_data," ") > 0 then do:
+              assign xd_ppt = entry(1,xd_data," ")
+                     xd_val = trim(substring(xd_data,index(xd_data," "))).
+              if xd_ppt = "INDEX-FIELD" then do:
+                   assign xd_key4 = trim(substring(xd_val,index(xd_val," ")))
+                          xd_val = entry(1,trim(xd_val)," ").
+              end.
+           end.
+           else do:
+              assign xd_ppt = xd_data
+                     xd_val = xd_data.
+           end.
+           if substring(xd_val,1,1) = '~"' then do:
+              assign xd_val = substring(xd_val,2,length(xd_val) - 2).
+           end.
+          end.
+    end.
+
+    for each xxtd no-lock where xd_key1 = "FIELD":
+        find first xxt0 exclusive-lock where xt_type = xd_key1 and
+                   xt_tab = xd_key2 and xt_fld = xd_key3 no-error.
+        if not available xxt0 then do:
+           create xxt0.
+           assign xt_tab = xd_key2
+                  xt_fld = xd_key3
+                  xt_type = xd_key1.
+        end.
+        assign xt_fldtp = xd_key4.
+        case xd_ppt :
+             when "Description" then assign xt_desc = xd_val.
+             when "FORMAT" then assign xt_fmt = xd_val.
+             when "INITIAL" then assign xt_ini = xd_val.
+             when "LABEL" then assign xt_lab = xd_val xt_clab = xd_val.
+             when "COLUMN-LABEL" then assign xt_clab = xd_val.
+             when "ORDER" then assign xt_ord = xd_val.
+             when "EXTENT" then assign xt_ext = xd_val.
+             when "VALEXP" then assign xt_valexp = xd_val.
+             when "VALMSG" then assign xt_valmsg = xd_val.
+             /*
+             when "DECIMALS" then assign = xd_val.
+             when "LENGTH" then assign = xd_val.
+             when "MANDATORY" then assign = xd_val.
+             when "MAX-WIDTH" then assign = xd_val.
+             when "POSITION" then assign = xd_val.
+             when "VALMSG-SA" then assign = xd_val.
+             */
+        end case.
+          
+    end.
+
+   for each xxtd no-lock where xd_key1 = "INDEX" by recid(xxtd):
+       if xd_key4 = "" then do:
+          case xd_ppt:
+               when "AREA" then do:
+                    assign vadd1 = xd_val
+                           vadd2 = "NO"
+                           vadd3 = "NO"
+                           vadd4 = "".
+               end.
+               when "PRIMARY" then assign vadd2 = "YES".
+               when "UNIQUE" then assign vadd3 = "YES".
+          end case.
+       end.
+       else do:
+          case xd_ppt:
+               when "INDEX-FIELD" then do:
+                    inti = inti  + 1.
+                    vadd4 = xd_key4.
+                    find first xxt0 exclusive-lock where xt_type = xd_key1 and
+                               xt_tab = xd_key2 and xt_fld = xd_key3 and
+                               xt_ini = string(inti,"99999999") no-error.
+                    if not available xxt0 then do:
+                       create xxt0.
+                       assign xt_tab = xd_key2
+                              xt_fld = xd_val
+                              xt_type = xd_key1
+                              xt_ini = string(inti,"99999999").
+                    end.
+                    assign xt_valexp = xd_key3
+                           xt_fldtp = vadd2
+                           xt_fmt = vadd3
+                           xt_lab = vadd1
+                           xt_clab = vadd4.
+               end.
+          end case.
+       end.
+   end.
+/*
+    for each xxtd no-lock where  xd_key1 = "INDEX" with frame c width 400:
+        display recid(xxtd) xd_key1 xd_key2 xd_key3 xd_key4 xd_ppt xd_val xd_data.
+    end.
+    setFrameLabels(frame c:handle).
+*/ 
+    for each xxt0 no-lock where xt_type = "FIELD" by xt_tab by xt_ord:
+        export delimiter "~t" xt_tab xt_fld xt_lab xt_fldtp xt_fmt
+                              xt_desc xt_ext xt_valexp xt_valmsg xt_ini.
+    end.
+    page.
+    for each xxt0 no-lock where xt_type = "INDEX" by xt_ini:
+        export delimiter "~t" xt_valexp xt_fldtp xt_fmt xt_lab xt_tab xt_fld xt_clab.
+    end.
+    {mfreset.i}
+/*  {mfrtrail.i}  */
+end.
+{wbrp04.i &frame-spec = a}
