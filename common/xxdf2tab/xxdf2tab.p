@@ -1,13 +1,13 @@
-/* xxtricmt.p - DIVIDE_LOCATION Maintenance                                  */
-/* revision: 120530.1   created on: 20120530   by: zhang yun                 */
+/* xxdf2tab.p - convert .df file to csv format                               */
+/* revision: 131011.1   created on: 20131011   by: zhang yun                 */
 
-/*V8:ConvertMode=Maintenance                                                 */
+/*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1C04  QAD:eb21sp7    Interface:Character         */
 /*-Revision end--------------------------------------------------------------*/
 
 /* DISPLAY TITLE */
-
 {mfdtitle.i "3AYC"}
+
 define variable del-yn like mfc_logical initial no.
 define variable v_key as character initial "-CTRL".
 define variable vadd1 as character.
@@ -15,6 +15,7 @@ define variable vadd2 as character.
 define variable vadd3 as character.
 define variable vadd4 as character.
 define variable inti  as integer.
+define variable intj  as integer.
 {gpcdget.i "UT"}
 
 define temp-table xxtd
@@ -41,6 +42,7 @@ define temp-table xxt0
        fields xt_valexp as character format "x(60)"
        fields xt_valmsg as character format "x(60)"
        fields xt_ini as character format "x(20)"
+       fields xt_sn as integer
        index xt_idx1 is primary xt_type xt_tab xt_fld
        index xt_idx2 xt_type xt_tab xt_ord.
 
@@ -97,7 +99,6 @@ repeat with frame a:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-  /*    {mfphead.i}     */
     assign vadd1 = ""
            vadd2 = ""
            vadd3 = ""
@@ -108,11 +109,10 @@ repeat with frame a:
         usrw_key2 = v_key no-error.
 
    if not available usrw_wkfl then do:
-    /*  {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1} */
       create usrw_wkfl.
       assign usrw_key1 = v_key
              usrw_key2 = v_key.
-   end. /* if not available usrw_wkfl then do: */
+   end.
 
    display usrw_key3 with frame a.
 
@@ -190,15 +190,17 @@ end.
            end.
           end.
     end.
-
+    assign intj = 0.
     for each xxtd no-lock where xd_key1 = "FIELD":
+        assign intj = intj + 1.
         find first xxt0 exclusive-lock where xt_type = xd_key1 and
                    xt_tab = xd_key2 and xt_fld = xd_key3 no-error.
         if not available xxt0 then do:
            create xxt0.
            assign xt_tab = xd_key2
                   xt_fld = xd_key3
-                  xt_type = xd_key1.
+                  xt_type = xd_key1
+                  xt_sn = intj.
         end.
         assign xt_fldtp = xd_key4.
         case xd_ppt :
@@ -220,9 +222,9 @@ end.
              when "VALMSG-SA" then assign = xd_val.
              */
         end case.
-          
-    end.
 
+    end.
+   inti = 0.
    for each xxtd no-lock where xd_key1 = "INDEX" by recid(xxtd):
        if xd_key4 = "" then do:
           case xd_ppt:
@@ -260,21 +262,39 @@ end.
           end case.
        end.
    end.
-/*
-    for each xxtd no-lock where  xd_key1 = "INDEX" with frame c width 400:
-        display recid(xxtd) xd_key1 xd_key2 xd_key3 xd_key4 xd_ppt xd_val xd_data.
+
+    for each xxtd no-lock where xd_key1 = "TABLE":
+        find first xxt0 where xt_type = xd_key1 and xt_tab = xd_key2
+                          and xt_fld = xd_key2 no-error.
+        if not available xxt0 then do:
+           create xxt0.
+           assign xt_type = xd_key1
+                  xt_tab = xd_key2
+                  xt_fld = xd_key2
+                  xt_sn = recid(xxtd).
+        end.
+        if xd_ppt = "DESCRIPTION" then do:
+           assign xt_valexp = xd_val.
+        end.
+        if xd_ppt = "AREA" then do:
+           assign xt_valmsg = xd_val.
+        end.
     end.
-    setFrameLabels(frame c:handle).
-*/ 
-    for each xxt0 no-lock where xt_type = "FIELD" by xt_tab by xt_ord:
+
+    for each xxt0 no-lock where xt_type = "TABLE" by xt_sn:
+        export delimiter "~t" xt_tab xt_valexp xt_valmsg.
+    end.
+    page.
+    put skip.
+    for each xxt0 no-lock where xt_type = "FIELD" by xt_sn:
         export delimiter "~t" xt_tab xt_fld xt_lab xt_fldtp xt_fmt
                               xt_desc xt_ext xt_valexp xt_valmsg xt_ini.
     end.
     page.
+    put skip.
     for each xxt0 no-lock where xt_type = "INDEX" by xt_ini:
         export delimiter "~t" xt_valexp xt_fldtp xt_fmt xt_lab xt_tab xt_fld xt_clab.
     end.
     {mfreset.i}
-/*  {mfrtrail.i}  */
 end.
 {wbrp04.i &frame-spec = a}
