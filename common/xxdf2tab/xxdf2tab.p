@@ -132,7 +132,7 @@ end.
     end.
     input close.
 
-    for each xxtd exclusive-lock by recid(xxtd):
+    for each xxtd exclusive-lock:
         if index(xd_data,"ADD TABLE") > 0 then do:
             assign vadd1 = "TABLE"
                    vadd2 = entry(3,xd_data," ")
@@ -188,22 +188,22 @@ end.
            if substring(xd_val,1,1) = '~"' then do:
               assign xd_val = substring(xd_val,2,length(xd_val) - 2).
            end.
-          end.
-    end.
+         end. /* else do:     */
+    end.      /*  for each xxtd exclusive-lock by recid(xxtd):              */
     assign intj = 0.
     for each xxtd no-lock where xd_key1 = "FIELD":
         assign intj = intj + 1.
-        find first xxt0 exclusive-lock where xt_type = xd_key1 and
-                   xt_tab = xd_key2 and xt_fld = xd_key3 no-error.
-        if not available xxt0 then do:
-           create xxt0.
-           assign xt_tab = xd_key2
-                  xt_fld = xd_key3
-                  xt_type = xd_key1
-                  xt_sn = intj.
-        end.
-        assign xt_fldtp = xd_key4.
-        case xd_ppt :
+         find first xxt0 exclusive-lock where xt_type = xd_key1 and
+                    xt_tab = xd_key2 and xt_fld = xd_key3 no-error.
+         if not available xxt0 then do:
+            create xxt0.
+            assign xt_type = xd_key1
+                   xt_tab = xd_key2
+                   xt_fld = xd_key3
+                   xt_sn = intj
+                   xt_fldtp = xd_key4.
+         end.
+         case xd_ppt :
              when "Description" then assign xt_desc = xd_val.
              when "FORMAT" then assign xt_fmt = xd_val.
              when "INITIAL" then assign xt_ini = xd_val.
@@ -221,11 +221,11 @@ end.
              when "POSITION" then assign = xd_val.
              when "VALMSG-SA" then assign = xd_val.
              */
-        end case.
+         end case.
+    end.  /*  for each xxtd no-lock where xd_key1 = "FIELD":   */
 
-    end.
-   inti = 0.
-   for each xxtd no-lock where xd_key1 = "INDEX" by recid(xxtd):
+    inti = 0.
+    for each xxtd no-lock where xd_key1 = "INDEX" by recid(xxtd):
        if xd_key4 = "" then do:
           case xd_ppt:
                when "AREA" then do:
@@ -251,7 +251,8 @@ end.
                        assign xt_tab = xd_key2
                               xt_fld = xd_val
                               xt_type = xd_key1
-                              xt_ini = string(inti,"99999999").
+                              xt_ini = string(inti,"99999999")
+                              xt_sn = inti.
                     end.
                     assign xt_valexp = xd_key3
                            xt_fldtp = vadd2
@@ -280,20 +281,24 @@ end.
            assign xt_valmsg = xd_val.
         end.
     end.
-
+    /*
+    for each xxtd:
+        export delimiter "~t" xd_key1 xd_key2 xd_key3 xd_key4 xd_ppt xd_val recid(xxtd).
+    end.
+    */
     for each xxt0 no-lock where xt_type = "TABLE" by xt_sn:
-        export delimiter "~t" xt_tab xt_valexp xt_valmsg.
+        export delimiter "~t" xt_tab xt_valexp xt_valmsg xt_sn.
     end.
     page.
     put skip.
     for each xxt0 no-lock where xt_type = "FIELD" by xt_sn:
         export delimiter "~t" xt_tab xt_fld xt_lab xt_fldtp xt_fmt
-                              xt_desc xt_ext xt_valexp xt_valmsg xt_ini.
+                              xt_desc xt_ext xt_valexp xt_valmsg xt_ini xt_sn.
     end.
     page.
     put skip.
     for each xxt0 no-lock where xt_type = "INDEX" by xt_ini:
-        export delimiter "~t" xt_valexp xt_fldtp xt_fmt xt_lab xt_tab xt_fld xt_clab.
+        export delimiter "~t" xt_valexp xt_fldtp xt_fmt xt_lab xt_tab xt_fld xt_clab xt_sn.
     end.
     {mfreset.i}
 end.
