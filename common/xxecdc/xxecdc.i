@@ -55,7 +55,7 @@ FUNCTION getMAC RETURNS CHARACTER:
            repeat:
              import unformat txt.
              if index(txt,getLabelDesc1("PHYSICAL_ADDRESS_.....",60)) > 0 then do:
-                assign txt = substring(txt,length(txt) - 16).
+                assign txt = substring(trim(txt),length(trim(txt)) - 16).
                 leave.
              end.
            end.
