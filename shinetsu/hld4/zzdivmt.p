@@ -2,14 +2,25 @@
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
+/* SS - 120706.1 By: Kaine Zhang */
+/* SS - 120808.1 By: Kaine Zhang */
 /* REVISION END                                                              */
 /*120411 查mpd_det时用无-05后缀的料号，其他情况用有-05后缀的料号             */
+
+/*
+history:
+[20120808.1]
+CR-#79. status must be code_cmmt(ZZ_DIVERSION_FRSTS).
+[20120706.1]
+1. CR-#24.
+*/
+
 /*120424 1.转用原因做浏览
          2.规格外抽出作用于v_part1 v_part = "" and v_part1 <> ""
          3.Search必须v_part <> "" and v_part1 <> ""
 */
 
-{mfdtitle.i "120510.1"}
+{mfdtitle.i "120808.1"}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {zzdivmt.i "new"}
 &SCOPED-DEFINE zzdivmt_form_1 "Searche Item"
@@ -640,6 +651,53 @@ REPEAT:
             v_part1
             ovd_lot
             WITH FRAME b.
+
+        /* SS - 20120706.1 - B */
+        if ovd_lot <> "" and v_part1 = "" then do:
+            for first code_mstr
+                no-lock
+                use-index code_fldval
+                where code_domain = global_domain
+                    and code_fldname = "ZZ_DIVERSION_FRLOC"
+                    and code_value = "":
+            end.
+            if not(available(code_mstr)) then do:
+                {pxmsg.i &msgnum=32006 &errorlevel=3}
+                next-prompt v_part with frame b.
+                undo, retry setb.
+            end.
+
+            for first loc_mstr
+                no-lock
+                where loc_domain = global_domain
+                    /* and loc_site = ?? */
+                    and loc_loc = code_cmmt :
+            end.
+            if not(available(loc_mstr)) then do:
+                {pxmsg.i &msgnum=32007 &errorlevel=3}
+                next-prompt v_part with frame b.
+                undo, retry setb.
+            end.
+            assign
+                vv_loc = code_cmmt.   /* from location */
+
+            find first ld_det
+                use-index ld_loc_p_lot
+                where ld_domain = global_domain
+                    and ld_loc = vv_loc
+                    and ld_lot = ovd_lot
+                    and ld_qty_oh > 0
+                no-lock no-error.
+            if available(ld_det) then do:
+                v_part1 = ld_part.
+                if index(v_part1, "-") > 0 then
+                    v_part1 = entry(1, v_part1, "-").
+            end.
+
+            display v_part1 with frame b.
+        end.
+        /* SS - 20120706.1 - E */
+
           FIND FIRST pt_mstr WHERE pt_domain = global_domain
                  AND pt_part = INPUT v_part1 NO-LOCK NO-ERROR.
               IF AVAIL pt_mstr THEN DO:
@@ -1183,11 +1241,24 @@ PROCEDURE getTtldDet:
                 if can-find(first code_mstr no-lock where
                                   code_domain = global_domain and
                                   code_fldname = "ZZ_DIVERSION_FRSTS" and
+                                  /* SS - 20120808.1 - B */
+                                  (code_value = "01" or code_value = "02") and
+                                  /* SS - 20120808.1 - E */
                                   code_cmmt = lot__chr02)
                 then do:
                      assign v_engstat = yes.
                 end.
+                /* SS - 20120808.1 - B */
+                else do:
+                    next.
+                end.
+                /* SS - 20120808.1 - E */
              END. /*IF AVAIL LOT_MSTR THEN DO:*/
+             /* SS - 20120808.1 - B */
+             else do:
+                next.
+             end.
+             /* SS - 20120808.1 - E */
 /* 判断是否有为defect品,如果有是新做defect检查(是否符合defect规范) */
              assign v_defstat = no
                     ov_result = "".

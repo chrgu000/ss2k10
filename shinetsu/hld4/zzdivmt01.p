@@ -2,6 +2,7 @@
 /*V8:ConvertMode=Maintenance                                                 */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 24YP LAST MODIFIED: 04/24/12 BY: zy expand xrc length to 120    */
+/* SS - 120731.1 By: Kaine Zhang */
 /* REVISION END                                                              */
 
 {mfdeclre.i}
@@ -11,6 +12,16 @@
 
 DEFINE VARIABLE fn_i AS CHARACTER.
 DEFINE VARIABLE v_tr_trnbr LIKE tr_trnbr.
+
+/* SS - 20120731.1 - B */
+define variable sPartExceptBranch as character no-undo.
+
+sPartExceptBranch = x_part.
+
+if substring(sPartExceptBranch, max(1, length(sPartExceptBranch) - 2)) = "-05" then do:
+    sPartExceptBranch = substring(sPartExceptBranch, 1, length(sPartExceptBranch) - 3) .
+end.
+/* SS - 20120731.1 - E */
 
 FOR EACH ttld_det WHERE ttld_sel:
 
@@ -71,7 +82,12 @@ FOR EACH ttld_det WHERE ttld_sel:
                  zzsellot_partchg_partto = x_part
                  zzsellot_partchg_partfrom = x_part1
                  zzsellot_partchg_reason = transfer_rs
+                 /* SS - 20120731.1 - B
                  zzsellot_part = x_part
+                 SS - 20120731.1 - E */
+                 /* SS - 20120731.1 - B */
+                 zzsellot_part = sPartExceptBranch
+                 /* SS - 20120731.1 - E */
                  zzsellot_extralen_tech = jsyc_dec
                  zzsellot_extralen_other = qtyc_dec
                  zzsellot_insp_efflength = ttld_yxc.

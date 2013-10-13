@@ -1,0 +1,305 @@
+ADD TABLE "cknyh_hist"
+  LABEL "cknyhist"
+  DESCRIPTION "Material Not Yet Inspection History "
+  DUMP-NAME "cknyh_hi"
+
+ADD FIELD "cknyh_vend" OF "cknyh_hist" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Vendor"
+  COLUMN-LABEL "Vendor"
+  ORDER 10
+
+ADD FIELD "cknyh_inv" OF "cknyh_hist" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Invoice No."
+  COLUMN-LABEL "Invoice No."
+  ORDER 20
+
+ADD FIELD "cknyh_part" OF "cknyh_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Part Number"
+  COLUMN-LABEL "Part Number"
+  ORDER 30
+
+ADD FIELD "cknyh_desc" OF "cknyh_hist" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Description"
+  COLUMN-LABEL "Description"
+  ORDER 40
+
+ADD FIELD "cknyh_code" OF "cknyh_hist" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Type"
+  COLUMN-LABEL "Type"
+  ORDER 50
+
+ADD FIELD "cknyh_weight" OF "cknyh_hist" AS decimal 
+  FORMAT "->>,>>9.9999999999"
+  INITIAL "0"
+  LABEL "O/S Weight"
+  COLUMN-LABEL "O/S Weight"
+  DECIMALS 10
+  ORDER 60
+
+ADD FIELD "cknyh_qty" OF "cknyh_hist" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "O/S Qty"
+  COLUMN-LABEL "O/S Qty"
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "cknyh_box" OF "cknyh_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Boxes"
+  COLUMN-LABEL "Boxes"
+  ORDER 80
+
+ADD FIELD "cknyh_add_date" OF "cknyh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Add date"
+  COLUMN-LABEL "Add date"
+  ORDER 90
+
+ADD FIELD "cknyh_chg_date" OF "cknyh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Chg date"
+  COLUMN-LABEL "Chg date"
+  ORDER 100
+
+ADD FIELD "cknyh_prt_date" OF "cknyh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Print date"
+  COLUMN-LABEL "Print date"
+  ORDER 110
+
+ADD FIELD "cknyh_prt_nbr" OF "cknyh_hist" AS integer 
+  FORMAT ">>>>9"
+  INITIAL "0"
+  LABEL "NY No."
+  COLUMN-LABEL "NY No."
+  ORDER 120
+
+ADD FIELD "cknyh_prt_item" OF "cknyh_hist" AS integer 
+  FORMAT ">>>9"
+  INITIAL "0"
+  LABEL "Item"
+  COLUMN-LABEL "Item"
+  ORDER 130
+
+ADD FIELD "cknyh_post_date" OF "cknyh_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Post date"
+  COLUMN-LABEL "Post date"
+  ORDER 140
+
+ADD FIELD "cknyh_prt_time" OF "cknyh_hist" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  LABEL "Print Time"
+  COLUMN-LABEL "Print Time"
+  ORDER 150
+
+ADD FIELD "cknyh_ocode" OF "cknyh_hist" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Original Type"
+  COLUMN-LABEL "Original Type"
+  ORDER 160
+
+ADD FIELD "cknyh_oweight" OF "cknyh_hist" AS decimal 
+  FORMAT "->>,>>9.9999999999"
+  INITIAL "0"
+  LABEL "Original Weight"
+  COLUMN-LABEL "Original Weight"
+  DECIMALS 10
+  ORDER 170
+
+ADD FIELD "cknyh_error" OF "cknyh_hist" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Error Code"
+  COLUMN-LABEL "Error Code"
+  ORDER 180
+
+ADD FIELD "cknyh_order" OF "cknyh_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Order"
+  COLUMN-LABEL "Order"
+  ORDER 190
+
+ADD FIELD "cknyh_addr" OF "cknyh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Vendor"
+  COLUMN-LABEL "Vendor"
+  ORDER 200
+
+ADD FIELD "cknyh_line" OF "cknyh_hist" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  COLUMN-LABEL "Line"
+  ORDER 210
+
+ADD FIELD "cknyh_receiver" OF "cknyh_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Receiver"
+  COLUMN-LABEL "Receiver"
+  ORDER 220
+
+ADD FIELD "cknyh_trnbr" OF "cknyh_hist" AS integer 
+  FORMAT ">>>>>>>>9"
+  INITIAL "0"
+  LABEL "Trnbr"
+  COLUMN-LABEL "Trnbr"
+  ORDER 230
+
+ADD FIELD "cknyh_std_cost" OF "cknyh_hist" AS decimal 
+  FORMAT "->>>>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Std-Cost"
+  COLUMN-LABEL "Std-Cost"
+  DECIMALS 10
+  ORDER 240
+
+ADD FIELD "cknyh_cl_stat" OF "cknyh_hist" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "CL-Status"
+  COLUMN-LABEL "CL-Status"
+  ORDER 250
+
+ADD FIELD "cknyh_qty1" OF "cknyh_hist" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "I/S Qty"
+  COLUMN-LABEL "I/S Qty"
+  DECIMALS 2
+  ORDER 260
+
+ADD FIELD "cknyh_weight1" OF "cknyh_hist" AS decimal 
+  FORMAT "->>,>>9.9999999999"
+  INITIAL "0"
+  LABEL "I/S Weight"
+  COLUMN-LABEL "I/S Weight"
+  DECIMALS 10
+  ORDER 270
+
+ADD FIELD "cknyh_grade" OF "cknyh_hist" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Grade"
+  COLUMN-LABEL "Grade"
+  ORDER 280
+
+ADD FIELD "cknyh_stype" OF "cknyh_hist" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Sale Type"
+  COLUMN-LABEL "Sale Type"
+  ORDER 290
+
+ADD FIELD "cknyh_stktx" OF "cknyh_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Menu Transfer"
+  COLUMN-LABEL "Menu Transfer"
+  ORDER 300
+
+ADD FIELD "cknyh_wpo" OF "cknyh_hist" AS logical 
+  FORMAT "yes/no"
+  INITIAL "yes"
+  LABEL "WPO"
+  COLUMN-LABEL "WPO"
+  ORDER 310
+
+ADD FIELD "cknyh_nopocode" OF "cknyh_hist" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "WOPO"
+  COLUMN-LABEL "WOPO"
+  ORDER 320
+
+ADD FIELD "cknyh_ograde" OF "cknyh_hist" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "Original Grade"
+  COLUMN-LABEL "Original Grade"
+  ORDER 330
+
+ADD FIELD "cknyh_remark" OF "cknyh_hist" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Remark"
+  COLUMN-LABEL "Remark"
+  ORDER 340
+
+ADD FIELD "cknyh_qty2" OF "cknyh_hist" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty2"
+  COLUMN-LABEL "Qty2"
+  DECIMALS 2
+  ORDER 350
+
+ADD FIELD "cknyh_weight2" OF "cknyh_hist" AS decimal 
+  FORMAT "->>,>>9.9999999999"
+  INITIAL "0"
+  LABEL "Weight2"
+  COLUMN-LABEL "Weight2"
+  DECIMALS 10
+  ORDER 360
+
+ADD FIELD "cknyh_qty3" OF "cknyh_hist" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty3"
+  COLUMN-LABEL "Qty3"
+  DECIMALS 2
+  ORDER 370
+
+ADD FIELD "cknyh_weight3" OF "cknyh_hist" AS decimal 
+  FORMAT "->>,>>9.9999999999"
+  INITIAL "0"
+  LABEL "Weight3"
+  COLUMN-LABEL "Weight3"
+  DECIMALS 10
+  ORDER 380
+
+ADD INDEX "cknyh_prt_date" ON "cknyh_hist" 
+  PRIMARY
+  INDEX-FIELD "cknyh_prt_date" ASCENDING 
+
+ADD INDEX "cknyh_nbr_item" ON "cknyh_hist" 
+  UNIQUE
+  INDEX-FIELD "cknyh_prt_nbr" ASCENDING 
+  INDEX-FIELD "cknyh_prt_item" ASCENDING 
+
+ADD INDEX "cknyh_part" ON "cknyh_hist" 
+  INDEX-FIELD "cknyh_part" ASCENDING 
+  INDEX-FIELD "cknyh_prt_nbr" ASCENDING 
+  INDEX-FIELD "cknyh_prt_item" ASCENDING 
+
+ADD INDEX "cknyh_vend" ON "cknyh_hist" 
+  INDEX-FIELD "cknyh_vend" ASCENDING 
+  INDEX-FIELD "cknyh_inv" ASCENDING 
+  INDEX-FIELD "cknyh_part" ASCENDING ABBREVIATED 
+
+.
+PSC
+codepage=GB2312
+.
+0000006288
