@@ -224,7 +224,7 @@ define variable l-ret-value      as logical   no-undo.
 define variable l_authorized     as logical   no-undo.
 define variable l_enforce_os_userid as logical initial no no-undo.
 define variable l_passwd_chg     like mfc_logical initial no no-undo.
-
+define variable cprt             as character format "x(34)".
 /* SET MESSAGE HANDLER TO RUN PROCEDURE REGISTERREASONMESSAGE */
 run setMessageHandlerHandle in h_mfinitpl
    (input this-procedure).
@@ -296,7 +296,7 @@ c-allrightsreserved = getTermLabel("ALL_RIGHTS_RESERVED",27) + ".".
 run centerLabel in h-label
    (input 78,
    input-output c-notreproduced).
-
+assign cprt = "Copyright " + string(year(today) , "9999" ) + " Softspeed CO,LTD.".
 /*WELCOME AND PRODUCT LICENSE AUDIT FRAME*/
 form
 /*   skip(1)                                 */
@@ -314,9 +314,19 @@ form
 /*   c-notreproduced no-label skip           */
 /*   v_cur format ">>>9" colon 29            */
 /*   v_max format ">>>9" colon 60 skip(1)    */
-   c-userid      colon 14 label "User ID" format "x(8)"
-   c-password    colon 14
-   lv_domain     colon 14 dom_name no-label
+   skip
+   c-welcome colon 1 format "x(36)" no-label
+   "SoftSpeed Barcode System" colon 4 skip(1)
+   cprt colon 2 no-label
+   " (8620) 8552 1040" colon 16
+   " 400 538 3200"  colon 20
+   "http:~/~/www.softspeed.com.cn~/" colon 6
+   c-allrightsreserved colon 16 format "x(20)" no-label skip
+   c-notreproduced colon 1 format "x(36)" no-label skip
+
+   c-userid      colon 12 label "User ID" format "x(8)"
+   c-password    colon 12
+   lv_domain     colon 12 dom_name format "x(16)" no-label
 with frame welcome side-labels width 40 no-attr-space.
 
 /* SET EXTERNALIZED LABELS FRAME WELCOME. */
@@ -380,9 +390,10 @@ if v_licType <> {&CONCURRENT-SESSIONS} then
  /*     v_max:label in frame welcome    = getTermLabel("DEFINED_USERS",26).   */
 
 display
- /*  c-welcome             */
- /*  c-allrightsreserved   */
- /*  c-notreproduced       */
+  cprt
+  trim(c-welcome) @ c-welcome
+  trim(c-allrightsreserved) @ c-allrightsreserved
+  /*  c-notreproduced       */
  /*  temp_vers             */
    c-userid
 with frame welcome.
@@ -497,7 +508,7 @@ do on endkey undo, leave:
    end.
    else if available udd_det then do:
       lv_domain = udd_domain.
-    /*  display lv_domain with frame welcome. */
+      display lv_domain with frame welcome.
    end.
    else do:
       /*DOMAIN IS NOT ASSIGNED TO THE USER*/
@@ -505,7 +516,7 @@ do on endkey undo, leave:
       quit.
    end.
    find dom_mstr where dom_domain = lv_domain no-lock no-error.
-  /*  display dom_name with frame welcome. */
+        display dom_name with frame welcome.
    {gprun.i ""gpmdas.p"" "(input lv_domain, output l_error)"}
 end.
 

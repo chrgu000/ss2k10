@@ -73,8 +73,8 @@
 /* Revision: 1.41     BY: Shivganesh Hegde      DATE: 02/16/06  ECO:  *Q0R3*  */
 /* Revision: 1.41.3.2 BY: Ashim Mishra          DATE: 04/24/07  ECO:  *Q144*  */
 /* Revision: 1.41.3.3 BY: Ambrose Almeida       DATE: 05/02/07  ECO:  *P5VX*  */
-/* Revision: 1.41.3.7 BY: Meng Ge               DATE: 07/03/07  ECO: *Q178*          */
-/* $Revision: 1.41.3.8 $   BY: Deepak Taneja    DATE: 09/19/07  ECO: *Q1C9*          */
+/* Revision: 1.41.3.7 BY: Meng Ge               DATE: 07/03/07  ECO: *Q178*   */
+/* $Revision: 1.41.3.8 $   BY: Deepak Taneja    DATE: 09/19/07  ECO: *Q1C9*   */
 /*-Revision end---------------------------------------------------------------*/
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -96,9 +96,9 @@ define shared variable menu_log as decimal.
 
 define variable selection as character format "!(1)" no-undo.
 
-define new shared variable proclabel like mnt_label extent 8 format "x(36)".
-define new shared variable procselect as integer extent 8.
-define new shared variable procexec as character extent 8.
+define new shared variable proclabel like mnt_label extent {bcmenux.i} format "x(36)".
+define new shared variable procselect as integer extent {bcmenux.i}.
+define new shared variable procexec as character extent {bcmenux.i}.
 define new shared variable tmpthismenu as character no-undo.
 define new shared variable tmpthisselection as integer no-undo.
 
@@ -145,7 +145,7 @@ define variable l_n_selection   as   integer     no-undo.
 define variable l_n_menu        as   character   no-undo.
 define variable l_thisselection as   integer     no-undo.
 define variable l_flag          like mfc_logical no-undo.
-
+define variable exemsg          as character format "x(30)".
 define buffer mnddet for mnd_det.
 define buffer qadwkfl for qad_wkfl.
 
@@ -162,7 +162,7 @@ if  menu_log <> 55702683.14 then quit.
 FUNCTION getBcRootMenu RETURNS character:
       define variable rootmenu as character initial "50".
       find first code_mstr no-lock where code_domain = GLOBAL_DOMAIN
-             and code_fldnam = "MENUSELECT_START" no-error.
+             and code_fldnam = "BC_MENUROOT" no-error.
       if available code_mstr then do:
          for first mnt_det fields(mnt_label mnt_lang mnt_nbr mnt_select)
             where mnt_nbr = code_value
@@ -176,9 +176,8 @@ FUNCTION getBcRootMenu RETURNS character:
 END FUNCTION. /*FUNCTION getBcRootMenu*/
 
 assign menu = getBcRootMenu().
-/*
 find first code_mstr no-lock where code_domain = GLOBAL_DOMAIN
-       and code_fldnam = "MENUSELECT_START" no-error.
+       and code_fldnam = "BC_MENUROOT" and code_value <> "" no-error.
 if available code_mstr then do:
    for first mnt_det fields(mnt_label mnt_lang mnt_nbr mnt_select)
       where mnt_nbr = code_value
@@ -187,10 +186,19 @@ if available code_mstr then do:
       no-lock :
       assign menu = code_value.
    end.
-   else run "mgmgmt24.p".
+   if not available mnt_det then do:
+      assign menu = 'Please Set BarCode Menu ' + code_value + '.0'.
+      {pxmsg.i &MSGTEXT="menu" &ERRORLEVEL=1}
+      pause 20.
+      undo,leave.
+   end.
 end.
-else run "mgmgmt24.p".
-*/
+else do:
+    assign menu = 'Please Set BarCode Menu "BC_MENUROOT"'.
+    {pxmsg.i &MSGTEXT="menu" &ERRORLEVEL=1}
+    pause 20.
+    undo,leave.
+end.
 if available mnt_det then assign menu_title[1] = mnt_label.
 
 /* THE FOLLOWING SECTION ALSO APPEARS IN mfmgmt06.p */
@@ -203,73 +211,8 @@ end.
 
 main-loop:
 repeat:
-   form
-      dtitle format "x(14)"
-   with frame aa no-labels width 40 no-attr-space page-top
-   row rownbr overlay no-box /* title color normal name*/ .
-
+   {bcmenufm.i}
    {pxmsg.i &MSGNUM=4690 &ERRORLEVEL=1 &MSGBUFFER=lit-text}
-
-   form
-   /*   lit-text at 1 */
-      cselection  no-label
-   with frame bb row 10 overlay no-labels no-box width 40 attr-space.
-
-   /* lit-text:screen-value = lit-text. */
-
-   form
-      proclabel[1] /*  proclabel[13] */ skip
-      proclabel[2] /*  proclabel[14] */ skip
-      proclabel[3] /*  proclabel[15] */ skip
-      proclabel[4] /*  proclabel[16] */ skip
-      proclabel[5] /*  proclabel[17] */ skip
-      proclabel[6] /*  proclabel[18] */ skip
-      proclabel[7] /*  proclabel[19] */ skip
-      proclabel[8] /*  proclabel[20] */ skip
- /*     proclabel[9]  proclabel[21]  skip   */
- /*     proclabel[10] proclabel[22]  skip   */
- /*     proclabel[11] proclabel[23]  skip   */
- /*     proclabel[12] proclabel[24]  skip   */
-   with frame dd no-labels no-box width 40  attr-space.
-   form
-/*      t1             at 5   */
-/*      t2             at 31  */
-/*      t3             at 57  */
-/*      skip                  */
-/*      proclabel[01]  format "x(24)"      proclabel[13]  format "x(24)"     */
-/*      proclabel[25]  format "x(24)" skip proclabel[02]  format "x(24)"     */
-/*      proclabel[14]  format "x(24)"      proclabel[26]  format "x(24)"     */
-/*      skip                                                                 */
-/*      proclabel[03]  format "x(24)"      proclabel[15]  format "x(24)"     */
-/*      proclabel[27]  format "x(24)" skip proclabel[04]  format "x(24)"     */
-/*      proclabel[16]  format "x(24)"      proclabel[28]  format "x(24)"     */
-/*      skip                                                                 */
-/*      proclabel[05]  format "x(24)"      proclabel[17]  format "x(24)"     */
-/*      proclabel[29]  format "x(24)" skip proclabel[06]  format "x(24)"     */
-/*      proclabel[18]  format "x(24)"      proclabel[30]  format "x(24)"     */
-/*      skip                                                                 */
-/*      proclabel[07]  format "x(24)"      proclabel[19]  format "x(24)"     */
-/*      proclabel[31]  format "x(24)" skip proclabel[08]  format "x(24)"     */
-/*      proclabel[20]  format "x(24)"      proclabel[32]  format "x(24)"     */
-/*      skip                                                                 */
-/*      proclabel[09]  format "x(24)"      proclabel[21]  format "x(24)"     */
-/*      proclabel[33]  format "x(24)" skip proclabel[10]  format "x(24)"     */
-/*      proclabel[22]  format "x(24)"      proclabel[34]  format "x(24)"     */
-/*      skip                                                                 */
-/*      proclabel[11]  format "x(24)"      proclabel[23]  format "x(24)"     */
-/*      proclabel[35]  format "x(24)" skip proclabel[12]  format "x(24)"     */
-/*      proclabel[24]  format "x(24)"      proclabel[36]  format "x(24)"     */
-/*      skip                                                                 */
-      proclabel[01]  format "x(24)" skip
-      proclabel[02]  format "x(24)" skip
-      proclabel[03]  format "x(24)" skip
-      proclabel[04]  format "x(24)" skip
-      proclabel[05]  format "x(24)" skip
-      proclabel[06]  format "x(24)" skip
-      proclabel[07]  format "x(24)" skip
-      proclabel[08]  format "x(24)" skip
-   with frame ee no-labels no-box width 40 attr-space.
-
    assign
       menu1[1] = "exit"
       menu1[2] = /*   "0"  */ getBcRootMenu()
@@ -296,14 +239,14 @@ repeat:
       repeat on endkey undo block1 , leave block1:
          status input lit-text1.
          /* Initialize the list of procedure names to be run */
-         do i = 1 to 8:  /* 1 to 36*/
+         do i = 1 to {bcmenux.i}:  /* 1 to 36*/
             assign
                proclabel[i] = string(i,">9") + "."
                procselect[i] = 0
                procexec[i] = "".
          end.
 
-         assign menu_entries = if j = 2 then 16 else 24.
+         assign menu_entries = {bcmenux.i}/* if j = 2 then 16 else 24 */ .
          {gprun1.i ""bclabels.p""}
          /****
          if j = 2
@@ -325,10 +268,10 @@ repeat:
          release ad_mstr.
          {gprun.i ""gplkconm.p"" "(input-output company_name)"}
          if global_usrc_right_hdr_disp < 2
-         then assign
+         then do:
+            assign
             name   = company_name + " : " + sdbname("qaddb")
-            dtitle =
-                     menu_title[j - 1].
+            dtitle = menu_title[j - 1].
              /* "mfmenu"
             + fill(" ",integer (max (1,39
             - {gprawlen.i &strng="menu_title[j - 1]"} / 2) - 6))
@@ -338,6 +281,7 @@ repeat:
             + (if global_usrc_right_hdr_disp = 1
                then string(global_userid)
                else string(today)) . */
+         end.
          else do:
            find dom_mstr where dom_domain = global_domain no-lock no-error.
            assign name = sdbname("qaddb").
@@ -349,7 +293,8 @@ repeat:
                                         else
                                            string(today,"99/99/99").
          end.
-
+         if index(dtitle,getBcRootMenu()) > 0 and length(dtitle) > length(getBCRootMenu())
+            then dtitle = substring(dtitle,length(getBcRootMenu()) + 2).
          display dtitle with frame aa.
          if j = 2
          then do:
@@ -377,10 +322,9 @@ repeat:
          /* Display 24 labels */
          else do:
             hide frame ee.
-            color display normal proclabel[1 for 8] with frame dd.
+            color display normal proclabel[1 for {bcmenux.i}] with frame dd.
                display
-               proclabel[1] proclabel[2] proclabel[3] proclabel[4]
-               proclabel[5] proclabel[6] proclabel[7] proclabel[8]
+               proclabel[1 for {bcmenux.i}]
  /*              proclabel[9] proclabel[10] proclabel[11] proclabel[12]  */
  /*              proclabel[13] proclabel[14] proclabel[15] proclabel[16] */
  /*              proclabel[17] proclabel[18] proclabel[19] proclabel[20] */
@@ -511,7 +455,6 @@ repeat:
                              with frame dd.
                           end.
                         if i = menu_entries then bell.
-
                         if i < menu_entries then
                            do while i < menu_entries:
                               assign i = i + 1.
@@ -557,9 +500,9 @@ repeat:
                             with frame dd.
                          end.
 
-                        if i >= menu_entries - 8 + 1 then bell.
+                        if i >= menu_entries - {bcmenux.i} + 1 then bell.
 
-                        if i < menu_entries - 8 + 1 then assign i = i + 8.
+                        if i < menu_entries - {bcmenux.i} + 1 then assign i = i + {bcmenux.i}.
 
                         if j = 2 then do:
                            hide frame dd.
@@ -589,9 +532,9 @@ repeat:
                              color display normal proclabel[i]
                              with frame dd.
                         end.
-                        if i <= 8 then bell.
+                        if i <= {bcmenux.i} then bell.
 
-                        if i > 8 then assign i = i - 8.
+                        if i > {bcmenux.i} then assign i = i - {bcmenux.i}.
 
                         if j = 2 then do:
                            hide frame dd.
@@ -639,12 +582,12 @@ repeat:
                   end.
 
                end. /* SET CSELECTION EDITING */
-
                /* Added and changed '>' to "<>" in following if statements */
                if index(cselection," ") <> 0
                then do:
-                  cselection =
-                  substring(cselection,1,index(cselection," ") - 1).
+                  cselection = trim(cselection)
+                  /* substring(cselection,1,index(cselection," ") - 1) */
+                  .
                end.
 
                if index(cselection,".p") <> 0
@@ -1014,9 +957,13 @@ repeat:
                   then do:
                      /* Selection thisselection (Program execname) */
                      /* not currently installed                    */
+                     if index(execname,getBcRootMenu()) = 1 then do:
+                        assign exemsg = substring(execname,length(getBcRootMenu()) + 2).
+                     end.
+                     else assign exemsg = execname.
                      {pxmsg.i &MSGNUM=4869 &ERRORLEVEL=1
                         &MSGARG1=string(thisselection)
-                        &MSGARG2=execname}
+                        &MSGARG2=exemsg}
                      undo, retry mselect.
                   end.
 
@@ -1192,12 +1139,14 @@ repeat:
             where mnd_nbr = "" and mnd_select = 1 no-lock :
          end.
 
-         if not available mnd_det then leave main-loop.
-
+         if not available mnd_det then do:
+            quit.
+           /*  leave main-loop */.
+         end.
          if available mnd_det
          then do:
             {mfsec.i "mnd_det"}
-            if can_do_menu then leave main-loop.
+            if can_do_menu then quit /* leave main-loop */ .
          end.
 
          /* User is not allowed to access this function */
@@ -1220,10 +1169,10 @@ end. /* mainloop: repeat */
 
 hide all no-pause.
 
-/* CLEAN UP THE QAD_WKFL RECORDS FOR THE CTRL-B FEATURE */
+/* CLEAN UP THE QAD_WKFL RECORDS FOR THE CTRL-B FEATURE
 for each qadwkfl exclusive-lock  where qadwkfl.qad_domain = global_domain and
  qad_key1 = mfguser:
    delete qadwkfl.
 end.
-
+ */
 if selection = "P" then assign rstatus = "P".

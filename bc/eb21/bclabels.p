@@ -17,23 +17,23 @@
     {mfdeclre.i}
     {mf1.i}
 
-        define shared variable proclabel like mnt_label extent 8
+        define shared variable proclabel like mnt_label extent {bcmenux.i}
             format "x(36)".
-        define shared variable procselect as integer extent 8.
-        define shared variable procexec as character extent 8.
+        define shared variable procselect as integer extent {bcmenux.i}.
+        define shared variable procexec as character extent {bcmenux.i}.
         define shared variable menu as character.
-/*J1VR*/ define variable pLabel as character no-undo.
+         define variable pLabel as character no-undo.
          for each mnd_det
-/*J2JB*/ fields(mnd_canrun mnd_exec mnd_nbr mnd_select)
+         fields(mnd_canrun mnd_exec mnd_nbr mnd_select)
          no-lock where mnd_nbr = menu:
-           if mnd_select > 0 and mnd_select <= 36 then do:
+           if mnd_select > 0 and mnd_select <= {bcmenux.i} then do:
 
               {mfsec2.i &mndnbr=mnd_det.mnd_nbr &mndselect=mnd_det.mnd_select
                         &show_message=false}
 
               if can_do_menu then do:
-/*J1VR*/      {gprun.i ""gpns2lbl.p"" "(mnd_det.mnd_nbr, mnd_det.mnd_select)"}
-/*J1VR*/      assign pLabel = return-value.
+              {gprun.i ""gpns2lbl.p"" "(mnd_det.mnd_nbr, mnd_det.mnd_select)"}
+              assign pLabel = return-value.
 
 /*J1VR*****************************************************************
         find mnt_det where mnt_nbr = mnd_nbr
