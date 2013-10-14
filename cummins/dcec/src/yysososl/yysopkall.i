@@ -35,7 +35,6 @@
 
 /* LOAD ALL CUSTOMERS TO BE CHECKED INTO ARRAY  */
 i = i + 1.
-
 if i <= 3
 then do:
    cust-to-allocate[i] = so_ship.
@@ -50,6 +49,7 @@ then do:
      cust-to-allocate[i] = so_bill.
    end.
 end. /* IF i <= 3 */
+
 
 allocate-proc:
 do i = 1 to 3:
@@ -136,7 +136,6 @@ do i = 1 to 3:
   end. /* cust-to-allocate[i] <> 0 */
 
 end. /* allocate-proc block */
-
 /* NOW CHECK FOR NON-RESERVED LOCATIONS         */
 if qty_to_all <> 0
 then do:

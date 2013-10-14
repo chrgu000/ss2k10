@@ -259,7 +259,7 @@ do  while   l_iterate =  yes :
 
    if icc_ascend then do:
       if xxlot then do:
-         {yysopkall.i &sort1 = " ld_lot "}
+         {sopkall.i &sort1 = " ld_lot "}
       end.
       else do:
            if icc_pk_ord <= 2 then do:
@@ -272,7 +272,7 @@ do  while   l_iterate =  yes :
    end.
    else do:
       if xxlot then do:
-         {yysopkall.i &sort1 = " ld_lot "}
+         {sopkall.i &sort1 = " ld_lot "}
       end.
       else do:
            if icc_pk_ord <= 2 then do:
@@ -327,9 +327,9 @@ PROCEDURE detail-allocate:
       if qty_to_all < ld_qty_oh - ld_qty_all
       then all_this_loc = qty_to_all.
       else all_this_loc = ld_qty_oh - ld_qty_all.
-/*1*/ if xxlog then do:
-/*1*/   assign all_this_loc = all_this_loc - all_this_loc mod q_mult.
-/*1*/ end.
+/*1   if xxlog then do:                                                      */
+/*1     assign all_this_loc = all_this_loc - all_this_loc mod q_mult.        */
+/*1   end.                                                                   */
 
       if pt_mstr.pt_sngl_lot and all_this_loc < qty_to_all
       and this_lot = ?
@@ -337,8 +337,8 @@ PROCEDURE detail-allocate:
          for each lddet
          fields( ld_domain ld_site ld_part ld_lot ld_ref ld_status ld_expire
                  ld_qty_oh ld_qty_all)
-          where lddet.ld_domain = global_domain and (  lddet.ld_site =
-          sod_det.sod_site
+          where lddet.ld_domain = global_domain and (
+             lddet.ld_site = sod_det.sod_site
          and lddet.ld_part = sod_part
          and lddet.ld_lot = ld_det.ld_lot
          and lddet.ld_ref = ld_det.ld_ref
@@ -458,7 +458,7 @@ PROCEDURE detail-allocate:
             fields( lad_domain lad_dataset lad_nbr lad_line lad_part lad_site
                     lad_loc lad_lot lad_ref lad_qty_all)
             where lad_det.lad_domain = global_domain
-            and   lad_dataset        = "sod_det"
+            and   lad_dataset = "sod_det"
             and   lad_nbr  = sod_nbr
             and   lad_line = string(sod_line)
             and   lad_part = sod_part
@@ -488,7 +488,7 @@ PROCEDURE detail-allocate:
          /* CREATE THE TEMP-TABLE TO STORE THE VALUES OF lad_det, ld_det */
          /* AND sod_det BEFORE THEY ARE UPDATED BY NEW VALUES            */
 
-         if execname = "sososl.p"
+         if execname = "yysososl.p"
          then do:
             create t_all_data.
             assign
@@ -551,7 +551,6 @@ PROCEDURE detail-allocate:
          lad_qty_all = lad_qty_all + all_this_loc.
 
       end.  /* if all_this_loc... */
-
 
       find first tt_temp no-lock no-error.
       if     not available tt_temp

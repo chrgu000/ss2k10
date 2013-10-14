@@ -71,13 +71,14 @@ find sod_det  where sod_det.sod_domain = global_domain and  alc_nbr = sod_nbr
 
 find so_mstr  where so_mstr.so_domain = global_domain and  so_nbr = sod_nbr
 no-lock.
-
 /*FIND NEW ALLOCATION DETAIL*/
 ALLOC_LINE:
 for each lad_det  where lad_det.lad_domain = global_domain and  lad_dataset =
-"sod_det"
+      "sod_det"
       and lad_nbr = alc_nbr
-      and integer(lad_line) = alc_line exclusive-lock:
+      and integer(lad_line) = alc_line
+/*z  and lad_loc >= loc and lad_loc <= loc1 */
+      exclusive-lock:
 
    /* t_all_data ALREADY CREATED IN sopkall.i FOR PARTIAL DETAIL */
    /* ALLOCATIONS HENCE DO NOT RECREATE                          */
