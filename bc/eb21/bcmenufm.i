@@ -3,7 +3,7 @@
 /*V8:ConvertMode=NoConvert                                                    */
 
    form
-      dtitle format "x(14)"
+      bctitle format "x(14)"
    with frame aa no-labels width 40 no-attr-space page-top
    row rownbr overlay no-box /* title color normal name */ .
 

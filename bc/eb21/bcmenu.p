@@ -88,7 +88,7 @@
 {mfdeclre.i}
 {gplabel.i}
 {mf1.i}
-
+{bccomm.i}
 define output parameter rstatus as character no-undo.
 
 define shared variable menu as character.
@@ -138,7 +138,7 @@ define variable new-exec-pgm-1 as character no-undo.
 define variable new-exec-pgm-2 as character no-undo.
 define variable lit-text  as character format "x(47)" no-undo.
 define variable lit-text1 as character format "x(20)" no-undo.
-
+define variable bctitle         like dtitle no-undo format "x(40)".
 define variable l_menu          as   integer     no-undo.
 define variable l_menu2         as   character   no-undo.
 define variable l_n_selection   as   integer     no-undo.
@@ -148,7 +148,6 @@ define variable l_flag          like mfc_logical no-undo.
 define variable exemsg          as character format "x(30)".
 define buffer mnddet for mnd_det.
 define buffer qadwkfl for qad_wkfl.
-
 assign
    t1 = CAPS(getTermLabelCentered("DISTRIBUTION",18))
    t2 = CAPS(getTermLabelCentered("MANUFACTURING",18))
@@ -158,22 +157,6 @@ assign rstatus = "".
 
 /* Keep hackers out of expired demos */
 if  menu_log <> 55702683.14 then quit.
-
-FUNCTION getBcRootMenu RETURNS character:
-      define variable rootmenu as character initial "50".
-      find first code_mstr no-lock where code_domain = GLOBAL_DOMAIN
-             and code_fldnam = "BC_MENUROOT" no-error.
-      if available code_mstr then do:
-         for first mnt_det fields(mnt_label mnt_lang mnt_nbr mnt_select)
-            where mnt_nbr = code_value
-              and mnt_select = 0
-              and mnt_lang = global_user_lang
-            no-lock :
-            assign rootmenu = code_value.
-         end.
-      end.
-      return rootmenu.
-END FUNCTION. /*FUNCTION getBcRootMenu*/
 
 assign menu = getBcRootMenu().
 find first code_mstr no-lock where code_domain = GLOBAL_DOMAIN
@@ -271,7 +254,7 @@ repeat:
          then do:
             assign
             name   = company_name + " : " + sdbname("qaddb")
-            dtitle = menu_title[j - 1].
+            bctitle = menu_title[j - 1].
              /* "mfmenu"
             + fill(" ",integer (max (1,39
             - {gprawlen.i &strng="menu_title[j - 1]"} / 2) - 6))
@@ -285,17 +268,17 @@ repeat:
          else do:
            find dom_mstr where dom_domain = global_domain no-lock no-error.
            assign name = sdbname("qaddb").
-                dtitle =  /* string(dom_sname,"x(14)")  + " [" + base_curr + "] " */
+                bctitle =  /* string(dom_sname,"x(14)")  + " [" + base_curr + "] " */
                           menu_title[j - 1].
-           overlay(dtitle,71,8,"RAW") = if global_usrc_right_hdr_disp = 3
+           overlay(bctitle,71,8,"RAW") = if global_usrc_right_hdr_disp = 3
                                         then
                                            string(global_userid,"x(8)")
                                         else
                                            string(today,"99/99/99").
          end.
-         if index(dtitle,getBcRootMenu()) > 0 and length(dtitle) > length(getBCRootMenu())
-            then dtitle = substring(dtitle,length(getBcRootMenu()) + 2).
-         display dtitle with frame aa.
+         if index(bctitle,getBcRootMenu()) > 0 and length(bctitle) > length(getBCRootMenu())
+            then bctitle = substring(bctitle,length(getBcRootMenu()) + 2).
+         display bctitle with frame aa.
          if j = 2
          then do:
            hide frame dd.
@@ -730,7 +713,7 @@ repeat:
 
                /* DO PASSWORD CHECKING LOOK AT THIS LEVEL UP TO THE */
                /* LAST CHECKED MENU LEVEL TO SEE IF PROTECTED       */
-               {gprun1.i ""mfsec.p"" "(input mnd_det.mnd_nbr,
+               {gprun1.i ""bcmfsec.p"" "(input mnd_det.mnd_nbr,
                   input mnd_det.mnd_select,
                   input true,
                   output can_do_menu)"}
@@ -791,7 +774,7 @@ repeat:
 
                if available mnd_det
                then do:
-                  if mnd_nbr = "0" then
+                  if mnd_nbr = getbcrootmenu() then
                      assign menu_title[j] = "".
                   else
                      assign menu_title[j] = mnd_nbr + ".".
@@ -812,7 +795,7 @@ repeat:
 
                   /* DO PASSWORD CHECKING LOOK AT THIS LEVEL UP TO THE  */
                   /* LAST CHECKED MENU LEVEL TO SEE IF PROTECTED        */
-                  {gprun1.i ""mfsec.p"" "(input mnd_det.mnd_nbr,
+                  {gprun1.i ""bcmfsec.p"" "(input mnd_det.mnd_nbr,
                      input mnd_det.mnd_select,
                      input true,
                      output can_do_menu)"}
@@ -874,7 +857,7 @@ repeat:
                      for each mnd_det no-lock
                         where mnd_exec matches new-exec-pgm-2:
 
-                        {gprun1.i ""mfsec.p"" "(input mnd_det.mnd_nbr,
+                        {gprun1.i ""bcmfsec.p"" "(input mnd_det.mnd_nbr,
                            input mnd_det.mnd_select,
                            input true,
                            output can_do_menu)"}
@@ -903,7 +886,7 @@ repeat:
 
                         /* DO PSWD CHECK LOOK AT THIS LEVEL UP TO THE  */
                         /* LAST CHECKED MENU LEVEL TO SEE IF PROTECTED */
-                        {gprun1.i ""mfsec.p"" "(input mnd_det.mnd_nbr,
+                        {gprun1.i ""bcmfsec.p"" "(input mnd_det.mnd_nbr,
                            input mnd_det.mnd_select,
                            input true,
                            output can_do_menu)"}
@@ -969,7 +952,7 @@ repeat:
 
                end.
 
-               assign dtitle = lc (execname).
+               assign bctitle = lc (execname).
 
                for first mnd_det
                   fields(mnd_canrun mnd_exec mnd_label mnd_name mnd_nbr
@@ -1049,7 +1032,7 @@ repeat:
 
                assign
                   help_exec = ?
-                  dtitle = "".
+                  bctitle = "".
 
             end. /* if isaprogram */
 
@@ -1091,7 +1074,7 @@ repeat:
                /* LAST CHECKED MENU LEVEL TO SEE IF PROTECTED       */
                if available mnd_det
                then do:
-                  {gprun1.i ""mfsec.p""
+                  {gprun1.i ""bcmfsec.p""
                      "(input mnd_det.mnd_nbr,
                        input mnd_det.mnd_select,
                        input false,
