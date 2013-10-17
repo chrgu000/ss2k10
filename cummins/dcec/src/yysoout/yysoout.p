@@ -3,7 +3,7 @@
 /* V1                 Developped: 07/19/01      BY: Kang Jian                */
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu              */
 /* zy 4/26/13                                                                */
-/* 1.显示CN-SHIP对应的交易(注：数量是与之相对应的ISS-TR的数量)               */
+/* 1.显示CN-SHIP对应的交易(注:数量是与之相对应的ISS-TR的数量)               */
 /* 2.如果做了CN-USE的交易类型则不打印相应的ISS-SO记录                        */
 /* 8/27/13 fix bug:ih_hist找不到资料报错                                     */
 
@@ -51,7 +51,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      so_cust      label "客户代码: "     at 1
      ad_zip label "邮    编: "   at  35
-     so_nbr     label "订 单 号: "   at 70  consignment NO-LABEL
+     so_nbr     label "订 单 号:  "   at 70  consignment NO-LABEL at 86
      "客户全称:" at 1  ad_name       no-labels  at 10
      so_ord_date  label "订单日期: "   at 72
       ad_attn  label "联 系 人:  " at 1
@@ -68,7 +68,7 @@ form "出库单"      at 33
      duplicate     no-labels          at 60
      ih_cust      label "客户代码:  "     at 1
      ad_zip label "邮    编: "   at  35
-     ih_nbr     label "订 单 号："   at 70 consignment NO-LABEL
+     ih_nbr     label "订 单 号: "   at 70 consignment NO-LABEL at 86
      "客户全称:" at 1     ad_name     no-labels  at 10
      ih_ord_date  label "订单日期:  "   at 72
      ad_attn label "联系人:  " at 1
@@ -232,10 +232,9 @@ procedure p-report:
              if  i = 1 then  do:
                 if tr_hist.tr__log02 = No then duplicate = "原本".
                 else duplicate = "副本".
-                display pageno duplicate so_cust so_nbr ad_zip ad_name ad_attn
+                display pageno duplicate so_cust so_nbr consignment ad_zip ad_name ad_attn
                         ad_line1 so_ord_date ad_phone pdate so_rmks
                         tr_hist.tr_ship_id with frame b.
-                display consignment with frame b.
              end.
              SOAV = yes.
          END.
@@ -340,7 +339,7 @@ procedure p-report:
                 disp fill("-",120) format "x(120)" with width 132 no-box frame f1.
             end.
             if line-counter >= (page-size - 5)  OR LAST-OF(IN__qadc01) then do:
-              display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
+              display "保管员:           发运员:            收货人:            财务:       材料主管:"   at 1
                   with width 132 no-box frame d.
               page.
               i=1.
@@ -357,7 +356,7 @@ procedure p-report:
                   with no-box no-label width 132 frame hj down.
                   sum = 0.
               end.
-              display "保管员：           发运员：            收货人：            财务：       材料主管："   at 1
+              display "保管员:           发运员:            收货人:            财务:       材料主管:"   at 1
                   with width 132 no-box frame d.
               page.
               i=1.
@@ -381,4 +380,3 @@ end procedure.
 /* cycle drive the query output */
 {mfguirpb.i &flds="sonbr_from sonbr_to ship ship1 part_from part_to line_from line_to  duedate_from duedate_to site flag1 "}
 /* reset variable */
-
