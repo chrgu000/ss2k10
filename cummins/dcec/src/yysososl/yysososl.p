@@ -532,9 +532,10 @@ repeat:
          delete rcsd_wrk.
       end.
    end.
-  /*20131013*/
-   for each usrw_wkfl exclusive-lock where usrw_domain = global_domain 
-        and usrw_key1 = vkey2k13 + global_userid 
+
+  /*********************************20131013***********************************
+   for each usrw_wkfl exclusive-lock where usrw_domain = global_domain
+        and usrw_key1 = vkey2k13 + global_userid
         and index(usrw_key2,global_userid) = 1 : delete usrw_wkfl. end.
    for each sod_det
                 where sod_det.sod_domain = global_domain and (  sod_nbr >= nbr and sod_nbr <= nbr1
@@ -551,12 +552,12 @@ repeat:
                  and (not(ld_loc >= loc and ld_loc <= loc1) or (xxlot and ld_lot = ""))
                  and ld_qty_oh <> 0:
                  find first usrw_wkfl exclusive-lock where usrw_domain = global_domain
-                        and usrw_key1 = vkey2k13 + global_userid 
+                        and usrw_key1 = vkey2k13 + global_userid
                         and usrw_key2 = global_userid + ";" + ld_site + ld_loc + ld_part + ld_lot + ld_ref no-error.
                  if not available usrw_wkfl then do:
                         create usrw_wkfl.
                         assign usrw_domain = global_domain
-                               usrw_key1 = vkey2k13 + global_userid 
+                               usrw_key1 = vkey2k13 + global_userid
                                usrw_key2 = global_userid + ";" + ld_site + ld_loc + ld_part + ld_lot + ld_ref.
                  end.
                  assign usrw_key3 = ld_site usrw_key4 = ld_loc
@@ -567,9 +568,7 @@ repeat:
    end.
 
    run setldUnavl.
-
-
-  /*20131013*/
+  *********************************20131013***********************************/
 
    /* MOVED SECTIONS OF SOSLA.P                                       */
    /* TO CREATE TEMP TABLE RECORDS FOR ALL THE SALES ORDER LINES THAT */
@@ -857,7 +856,6 @@ repeat:
          end. /* IF LAST_OF T_SO_SHIP */
       end. /* FOR EACH T_SO_PICK */
    end. /* IF UPDATE_YN */
-/*1310*/   run retoldval.
    if (abnormal_exit or errorst) then
    do:
       {mfreset.i}

@@ -4,6 +4,7 @@ define {1} shared variable xxlog as log label "考虑最小包装量(Y/N)" initial yes.
 define {1} shared variable xxlot as log label "按批序号备料" initial yes.
 define {1} shared variable vkey2k13 as character initial "yysososltmp2013.".
 
+/*
 define {1} shared temp-table tmpld3
        fields l3_domain like ld_domain
        fields l3_site like ld_site
@@ -55,3 +56,4 @@ procedure retoldval:
     end.
     end. /* do transaction*/
 end.
+*/

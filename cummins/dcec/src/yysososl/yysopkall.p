@@ -306,6 +306,8 @@ PROCEDURE detail-allocate:
         then leave allocate-proc.
       end.
 
+/*1310*/ if not(ld_det.ld_loc >= loc and ld_det.ld_loc <= loc1) then leave allocate-proc.
+
       /* BYPASS ALLOCATION IS THIS IS RESERVED BY ANOTHER CUSTOMER   */
       run checkReservedLocation.
       if ret-flag = 0 then leave allocate-proc.
