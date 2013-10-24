@@ -2,7 +2,9 @@
 /*V8:ConvertMode=Maintenance                                                  */
 /* Revision: 9.1     Last modified: 08/17/00    By: *N0LJ* Mark Brown         */
 /******************************************************************************/
-{gplabel.i}
+
+/* {gplabel.i}                                                                */
+
 define variable inidte as date.
 assign inidte = date(2,27,2012).
 
