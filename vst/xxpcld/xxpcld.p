@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "130116.1"}
+{mfdtitle.i "131029.1"}
 {xxpcld.i "new"}
 {gpcdget.i "UT"}
 define variable vusrwkey1 as character initial "xxcimload_filename_default_value".
@@ -80,16 +80,18 @@ repeat:
               qad_key3 = flhload.
    end.
    empty temp-table xxtmppc no-error.
+   empty temp-table xxtmppc0 no-error.
    for each xxtmppc exclusive-lock: delete xxtmppc. end.
+   for each xxtmppc0 exclusive-lock: delete xxtmppc0. end.
    {gprun.i ""xxpcld0.p""}
 
      if not can-find(first xxtmppc) then do:
           {mfmsg.i 1310 1}
      end.
      else do:
-            if cloadfile then do:
-               {gprun.i ""xxpcld1.p""}
-            end.
+          if cloadfile then do:
+             {gprun.i ""xxpcld1.p""}
+          end.
      end.
      for each xxtmppc exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */

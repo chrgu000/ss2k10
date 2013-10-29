@@ -9,7 +9,9 @@
 define variable vfile as character.
 define variable vchk as character no-undo.
 define stream bf.
+
 for each xxtmppc where xxpc_chk = "" by xxpc_sn:
+/*生效新的价格单*/
     assign vfile = execname + "." + string(xxpc_sn,"999999").
     output stream bf to value(vfile + ".bpi").
     put stream bf unformat '"' xxpc_list '" "' xxpc_curr '" - "'
@@ -43,12 +45,12 @@ for each xxtmppc where xxpc_chk = "" by xxpc_sn:
           end.
           else do:
              assign vchk = "CIM Data Error!".
-             undo cimrunprogramloop,next. 
+             undo cimrunprogramloop,next.
           end.
        end.
        else do:
             assign vchk = "CIM FAIL".
-            undo cimrunprogramloop,next. 
+            undo cimrunprogramloop,next.
        end.
    end.  /* do transaction:  */
    assign xxpc_chk = vchk.
