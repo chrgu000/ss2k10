@@ -2,7 +2,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "130720.1"}
+{mfdtitle.i "131021.1"}
 define variable part     like pt_part.
 define variable part1    like pt_part.
 define variable added    like pt_added.
@@ -140,14 +140,16 @@ repeat with frame a:
                       xapt_added = today
                       xapt_stat = "N".
 /*802*********************************************************************
-4.0----0 至 4字頭以及80字頭料號，R&D確認/工藝確認不需維護,確認欄位默認為"Y。
+4.0----0 至 4字頭以及80字頭料號，R&D確認/工藝確認不需維護,確認欄位默認為"Y"(排除3411字头)。
 4.1---物料編碼為"Q"字頭的:R&D/工藝/PMC三個部門不需維護,確認欄位默認為"Y",只需採購/財務二個部門維護.
 4.2--- 5字頭、6字頭，7字頭，9字頭不需採購維護，採購確認欄位默認為"Y。
 4.3--A至Z字頭（除Q字頭外）不需採購維護，採購確認欄位默認為"Y。
 4.4 --8字頭（除80開頭外），不需採購維護，採購確認欄位默認為"Y".
-****/           
+****/
 /*802*/      assign vpt1 = substring(trim(tab_part),1,1).
-/*802*/      if vpt1 >= "0" and vpt1 <= "4" then do:
+/*802*/      if vpt1 >= "0" and vpt1 <= "4"
+/*1021*/                    and not(index(vpt1,"3411") = 1)
+/*802*/      then do:
 /*802*/         assign xapt_eng_date = today
 /*802*/                xapt_eng_days = 0
 /*802*/                xapt_doc_date = today
@@ -176,7 +178,7 @@ repeat with frame a:
 /*802*/                assign xapt_pur_date = today
 /*802*/                       xapt_pur_days = 0.
 /*802*/           end.
-/*802*/      end. 
+/*802*/      end.
 /*802*/      else if vpt1 >= "A" and vpt1 <= "Z" and vpt1 <> "Q" then do:
 /*802*/           assign xapt_pur_date = today
 /*802*/                  xapt_pur_days = 0.
