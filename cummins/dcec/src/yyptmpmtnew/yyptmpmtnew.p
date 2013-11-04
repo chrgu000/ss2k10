@@ -238,9 +238,11 @@ repeat:
 
      set /*tfq xxptmp_vend*/
      /*tfq  added for vendor validation*/
-      xxptmp_vend validate(can-find(first ad_mstr where /*ss2012-8-21 b*/ ad_domain = global_domain and /*ss2012-8-21 e*/
-                                                ad_addr = input xxptmp_vend and ad_coc_reg <> "x"
-            and (ad_type = "vendor" or ad_type = "supplier" or ad_type = "")) ,"供应商代码不存在或供应商已失效")
+   /*   xxptmp_vend validate(can-find(first ad_mstr where /*ss2012-8-21 b*/ ad_domain = global_domain and /*ss2012-8-21 e*/ */
+   /*                                           ad_addr = input xxptmp_vend and ad_coc_reg <> "x"                           */
+   /*       and (ad_type = "vendor" or ad_type = "supplier" or ad_type = "")) ,"供应商代码不存在或供应商已失效")            */
+    xxptmp_vend validate(can-find(first vd_mstr no-lock where vd_domain = global_domain
+                and vd_addr = input xxptmp_vend),"供应商代码不存在或供应商已失效")
     /*tfq added for vendor validation end*/
       xxptmp_qty_per xxptmp_cust xxptmp_rmks
      go-on ("F5" "CTRL-D") with frame b.
