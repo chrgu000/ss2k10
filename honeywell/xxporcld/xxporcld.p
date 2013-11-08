@@ -7,7 +7,8 @@
 define variable i as integer.
 define variable c as character.
 assign i = 1.
-for each pod_det no-lock where pod_stat <> "C" break by pod_nbr by pod_line:
+for each pod_det no-lock where pod_stat <> "C" and pod_stat <> "X"
+     and pod_qty_ord - pod_qty_rcvd > 0 break by pod_nbr by pod_line:
 if first-of(pod_nbr) then
 i = i + 1.
 if i modulo 2 = 0 then C = "I" else C = "O".
@@ -27,7 +28,7 @@ end.
 
 **** test program **********************************************************/
 
-{mfdtitle.i "test.3"}
+{mfdtitle.i "test.5"}
 
 {xxporcld.i "new"}
 define variable nynbr  like cknyh_prt_nbr.
@@ -40,19 +41,19 @@ define variable cfile as character.
 form nynbr colon 24
      v_sel colon 46 label "Sel All"
 with frame a side-labels width 80 attr-space.
-setFrameLabels(frame a:handle).
+/* setFrameLabels(frame a:handle). */
 
-form tpo_sel     column-label "sel"
-     tpo_po      colon 3
-     tpo_line    colon 12
-     tpo_part    colon 16
-     tpo_loc     colon 34 column-label "Loc" format "x(4)"
-     tpo_qty_req colon 39 column-label "Ord" format ">>>>9.99"
-     tpo_qty_rc  colon 48 column-label "Rcvd" format ">>>>9.99"
-     tpo_stat    colon 58 format "x(18)"
-With frame selny no-validate with title color
-normal(getFrameTitle("PODETAIL",30)) 8 down width 80.
-setFrameLabels(frame selny:handle).
+form tpo_sel
+     tpo_po      colon 2
+     tpo_line    colon 11
+     tpo_part    colon 15
+     tpo_loc     colon 34
+     tpo_qty_req colon 41
+     tpo_qty_rc  colon 51
+     tpo_stat    colon 62
+With frame selny /* no-validate with title color
+normal(getFrameTitle("PODETAIL",30)) */ 8 down width 80.
+/*  setFrameLabels(frame selny:handle). */
 
 function getLoc returns character(iType as character):
    define variable vLoc as character.
@@ -65,13 +66,13 @@ function getLoc returns character(iType as character):
    return vLoc.
 end function.
 /*日期限制*/
-if today < date(10,1,2013) or today >  date(10,31,2013) then do:
+if today < date(10,1,2013) or today >  date(11,30,2013) then do:
    bell.
    if can-find(msg_mstr where msg_lang = global_user_lang
                           and msg_nbr = 2261)
    then do:
       /* Software version expired, please contact your dealer */
-      {pxmsg.i &MSGNUM=2261 &ERRORLEVEL=1}
+      {mfmsg.i 2261 1}
    end.
    else do:
       message
@@ -95,8 +96,16 @@ repeat with frame a:
       if nynbr = 0 or
          not can-find(first cknyh_hist no-lock where cknyh_prt_nbr = nynbr) then
       do:
-         {pxmsg.i &MSGTEXT=""错误的NY_No"" &ERRORLEVEL=3}
+         message "错误的NY_NO" view-as alert-box.
          undo ,retry.
+      end.
+      find first code_mstr no-lock where code_fldname = "xxporcld.p.lynbr.ctrl"
+             and code_value = "MinVal" no-error.
+      if available code_mstr then do:
+         if nynbr < integer(code_cmmt) then do:
+            message "NY_NO不可小于" + code_cmmt view-as alert-box.
+            undo ,retry.
+         end.
       end.
    end.
 
@@ -107,7 +116,7 @@ repeat with frame a:
    end.
    scroll_loopb:
    do on error undo,retry:
-      empty temp-table tmp_pod no-error.
+      for each tmp_pod exclusive-lock: delete tmp_pod. end.
       for each cknyh_hist no-lock where cknyh_prt_nbr = nynbr:
           create tmp_pod.
           assign  tpo_sel = if v_sel then "*" else ""
@@ -122,17 +131,18 @@ repeat with frame a:
           assign tpo_stat = "可收货".
           find first pod_det no-lock where pod_nbr = tpo_po and pod_line = tpo_line no-error.
           if available pod_det then do:
-             assign tpo_qty_rc = min(pod_qty_ord - pod_qty_rcvd,tpo_qty_req).
+             assign tpo_qty_rc = tpo_qty_req.
              if pod_stat = "C" or pod_stat = "X" then do:
-                assign tpo_stat = "采购单项状态为" + pod_stat.
+                assign tpo_stat = "状态:" + pod_stat.
                 next.
              end.
-             if tpo_qty_rc <= 0 then do:
-                assign tpo_stat = "无可收货数量".
+             if tpo_qty_rc > min(pod_qty_ord - pod_qty_rcvd,tpo_qty_req) then do:
+                assign tpo_stat = "预收" + trim(string(tpo_qty_rc)) + ">可收"
+                                + trim(string(min(pod_qty_ord - pod_qty_rcvd,tpo_qty_req))).
              end.
           end.
           else do:
-             assign tpo_stat = "采购单项次不存在".
+             assign tpo_stat = "项不存在".
           end.
       end.
       /*     find first xxpr_det where xxpr_cknyhid = integer(recid(cknyh_hist)) no-lock no-error. */
@@ -169,7 +179,7 @@ repeat with frame a:
          &exit-flag = "true"
          &record-id = recid(tmp_pod)
          }
-         setFrameLabels(frame selny:handle).
+/*         setFrameLabels(frame selny:handle). */
          if keyfunction(lastkey) = "END-ERROR" then do:
             hide frame selny.
             undo scroll_loopb, retry scroll_loopb.
@@ -199,28 +209,29 @@ repeat with frame a:
           find first pod_det no-lock where pod_nbr = tpo_po and pod_line = tpo_line no-error.
           if available pod_det then do:
              if pod_stat = "C" or pod_stat = "X" then do:
-                assign tpo_stat = "采购单项状态为" + pod_stat.
+                assign tpo_stat = "状态:" + pod_stat.
                 next.
              end.
-             if pod_qty_ord - pod_qty_rcvd < tpo_qty_rc then do:
-                assign tpo_stat = "未结数量不足".
+             if tpo_qty_rc > min(pod_qty_ord - pod_qty_rcvd,tpo_qty_req) then do:
+                assign tpo_stat = "预收" + trim(string(tpo_qty_rc)) + ">可收"
+                                + trim(string(min(pod_qty_ord - pod_qty_rcvd,tpo_qty_req))).
                 next.
              end.
           end.
           else do:
-             assign tpo_stat = "采购单项次不存在".
+             assign tpo_stat = "项不存在".
           end.
       end.
-      find first tmp_pod no-lock where tpo_sel = "*" and tpo_stat <> "可收货" no-error.
-      if available tmp_pod then do:
-         message "资料检查未通过,请确认资料!".
-         leave.
-      end.
+/*    find first tmp_pod no-lock where tpo_sel = "*" and tpo_stat <> "可收货" no-error.         */
+/*    if available tmp_pod then do:                                                             */
+/*       message "资料检查未通过,请确认资料!".                                                  */
+/*       leave.                                                                                 */
+/*    end.                                                                                      */
       for each tmp_pod exclusive-lock where tpo_sel = "*" and tpo_stat = "可收货":
           assign vfile = trim(tpo_po) + "_" + trim(string(tpo_line)) + "." + string(tpo_id).
           output to value(vfile + ".bpi").
              put unformat '"' tpo_po '"' skip.
-             put unformat '- - - - N N' skip.
+             put unformat '"' trim(string(nynbr)) '" - - - N N' skip.
              find first po_mstr no-lock where po_nbr = tpo_po no-error.
              if available po_mstr then do:
                 find first vd_mstr no-lock where vd_addr = po_vend no-error.
@@ -234,7 +245,8 @@ repeat with frame a:
                 end.
              end.
              put unformat trim(string(tpo_line)) skip.
-             put unformat trim(string(tpo_qty_rc)) ' - - - - - - "' tpo_loc '" - - - N N N' skip.
+             put unformat trim(string(tpo_qty_rc)) ' - - - - - - "'.    /*~*/
+                 put unformat tpo_loc '" - - - N N N' skip.
              put unformat '.' skip.
              put unformat 'N' skip.
              put unformat 'Y' skip.
@@ -252,9 +264,12 @@ repeat with frame a:
 
           find first tr_hist no-lock where tr_trnbr > integer(trrecid)
                  and tr_nbr = tpo_po and tr_line = tpo_line
-                 and tr_type = "RCT-PO" and tr_part = tpo_part no-error.
+                 and tr_type = "RCT-PO" and tr_part = tpo_part
+                 and tr_vend_lot = string(nynbr) no-error.
           if available tr_hist then do:
-             assign tpo_stat = "tr_nbr:" + trim(string(tr_trnbr)).
+             os-delete value(vfile + ".bpi").
+             os-delete value(vfile + ".bpo").
+             assign tpo_stat = "tr:" + trim(string(tr_trnbr,">>>>>>>9")).
              find first cknyh_hist no-lock where int(recid(cknyh_hist)) = tpo_id no-error.
              if not available cknyh_hist then do:
                 next.
@@ -262,6 +277,8 @@ repeat with frame a:
              find first xxpr_det exclusive-lock where xxpr_cknyhid = tpo_id no-error.
                   if not available xxpr_det then do:
                      create xxpr_det.
+                     assign xxpr_cknyhid = tpo_id.
+                  end.
                      assign xxpr_prt_nbr = nynbr
                             xxpr_po_nbr = cknyh_order
                             xxpr_line = cknyh_line
@@ -271,20 +288,27 @@ repeat with frame a:
                             xxpr_status = "C"
                             xxpr_date = today
                             xxpr_user = global_userid
-                            xxpr_cknyhid = tpo_id.
-                  end.
-                  xxpr_qty_rcvd = xxpr_qty_rcvd + tpo_qty_rc.
+                            xxpr_qty_rcvd = xxpr_qty_rcvd + tpo_qty_rc.
           end.
           else do:
-                     errmsg  = "".
-                     cfile = vfile + ".bpo".
-                    {gprun.i ""xxgetcimerr.p"" "(input cfile,output errmsg)"}
-                    assign tpo_stat = "CIM错误:" + errmsg.
+                    assign tpo_stat = "CIM错误:".
           end.
         end.  /* do transaction on endkey undo, leave:  */
      end.  /* for each tmp_pod exclusive-lock:  */
    end.  /* if v_sel then do:                   */
+  clear frame selny.
+  hide all.
+  if can-find(first tmp_pod no-lock) then do:
+      for each tmp_pod where tpo_sel = "*" with frame sel2:
+        display tpo_po
+                tpo_line
+                tpo_part
+                tpo_loc
+                tpo_qty_req
+                tpo_qty_rc
+                tpo_stat.
+      end.
+  end.
 end.   /* repeat with frame a:                  */
-if can-find(first tmp_pod no-lock where tpo_sel = "*"  ) then
-{gprun.i ""xxporcldrp.p""}
+ /* {gprun.i ""xxporcldrp.p""}   */
 status input.

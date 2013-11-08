@@ -210,7 +210,7 @@ repeat with frame {&framename}:
             /*Test to see if at eof*/
             if sw_frame_recid[frame-line] = ? then do:
                up.
-               {pxmsg.i &MSGNUM=20 &ERRORLEVEL=2}  /*"End of File"*/
+               {mfmsg.i 20 2}
                input clear.    /*CLEAR TYPEAHEAD*/
                next.
             end.
@@ -242,7 +242,7 @@ repeat with frame {&framename}:
          end.
 
          else do:
-            {pxmsg.i &MSGNUM=20 &ERRORLEVEL=2}  /*"End of File"*/
+            {mfmsg.i 20 2}
             input clear.    /*CLEAR TYPEAHEAD*/
          end.
 
@@ -290,7 +290,7 @@ repeat with frame {&framename}:
          end.
 
          else do:
-            {pxmsg.i &MSGNUM=21 &ERRORLEVEL=2} /*"Beginning of file"*/
+            {mfmsg.i 21 2}
             input clear.    /*CLEAR TYPEAHEAD*/
          end.
 
@@ -320,9 +320,7 @@ repeat with frame {&framename}:
                leave.
             end.
          end.
-
-         {pxmsg.i &MSGNUM=20 &ERRORLEVEL=2}  /*"End of File"*/
-
+          {mfmsg.i 20 2}
          input clear.    /*CLEAR TYPEAHEAD*/
 
          next.
@@ -353,7 +351,7 @@ repeat with frame {&framename}:
             if not available {&detfile} then do:
                /* if no previous records exist, no scroll */
                if sw_i = 1 then do:
-                  {pxmsg.i &MSGNUM=21 &ERRORLEVEL=2}  /*"Beginning of file"*/
+                  {mfmsg.i 21 2}
                   input clear.    /*CLEAR TYPEAHEAD*/
                   next sw-scroll-loop.
                end.
@@ -397,7 +395,7 @@ repeat with frame {&framename}:
                /*Test to see if at eof*/
                if sw_frame_recid[frame-line] = ? then do:
                   up.
-                  {pxmsg.i &MSGNUM=20 &ERRORLEVEL=2}  /*"End of File"*/
+                  {mfmsg.i 20 2}
                   input clear.    /*CLEAR TYPEAHEAD*/
                   next.
                end.
@@ -426,7 +424,7 @@ repeat with frame {&framename}:
 
             end.
             else do:
-               {pxmsg.i &MSGNUM=20 &ERRORLEVEL=2}  /*"End of File"*/
+               {mfmsg.i 20 2}
                input clear.    /*CLEAR TYPEAHEAD*/
             end.
 
