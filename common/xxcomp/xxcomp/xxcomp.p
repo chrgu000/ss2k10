@@ -555,12 +555,3 @@ procedure getUserInfo:
              odevice = _connect-device.
     END.
 end procedure.
-define variable srcDir as character.
-define variable destDir as character.
-define variable src as character.
-assign src = "xxcomp.p".
-assign srcDir = ".".
-assign destDir = "DestDirectory".
-propath = srcDir + "," + propath.
-compile value(src) save into value(destDir).
-propath = substring(propath,length(srcDir) + 1).
