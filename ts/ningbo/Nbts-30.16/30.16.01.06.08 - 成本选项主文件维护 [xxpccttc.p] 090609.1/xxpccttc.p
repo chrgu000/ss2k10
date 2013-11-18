@@ -1,0 +1,243 @@
+/* txtxtmt.p - TAX TYPE MASTER MAINTENANCE                                    */
+/* Copyright 1986-2004 QAD Inc., Carpinteria, CA, USA.                        */
+/* All rights reserved worldwide.  This is an unpublished work.               */
+/* $Revision: 1.11 $                                                           */
+/*V8:ConvertMode=Maintenance                                                  */
+/* Revision: 7.3      CREATED:       10/08/92   By: bcm *G403*                */
+/* Revision: 7.4     MODIFIED:       08/06/93   By: bcm *H058*                */
+/* REVISION: 8.6E     LAST MODIFIED: 02/23/98   BY: *L007* A. Rahane          */
+/*                                   10/12/93   By: bcm *H171*                */
+/*                                   11/30/93   By: bcm *H253*                */
+/*                                   02/23/95   By: jzw *H0BM*                */
+/* REVISION: 8.6E     LAST MODIFIED: 05/20/98   BY: *K1Q4* Alfred Tan         */
+/* REVISION: 8.6E     LAST MODIFIED: 10/04/98   BY: *J314* Alfred Tan         */
+/* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane   */
+/* REVISION: 9.1      LAST MODIFIED: 08/12/00   BY: *N0KC* Mark Brown         */
+/* Old ECO marker removed, but no ECO header exists *F0PN*                    */
+/* Revision: 1.9  BY: Jean Miller DATE: 04/16/02 ECO: *P05H* */
+/* $Revision: 1.11 $ BY: Paul Donnelly (SB) DATE: 06/28/03 ECO: *Q00M* */
+/*-Revision end---------------------------------------------------------------*/
+
+/* SS - 090609.1 By: Bill Jiang */
+
+/* SS - 090609.1 - RNB
+[090609.1]
+
+不计成本的库存事务类型成本维护
+
+本程序兼容以下浏览:
+  - gp072: 标准的通用代码主记录
+  - gp972: 兼容的通用代码主记录,字段"code_cmmt"的值根据字段"code_desc"的值自动更新
+  - gp973: 兼容的通用代码主记录,引用的字段名可以与这里的字段名不一致
+
+[090609.1]
+  
+SS - 090609.1 - RNE */
+           
+/******************************************************************************/
+/* All patch markers and commented out code have been removed from the source */
+/* code below. For all future modifications to this file, any code which is   */
+/* no longer required should be deleted and no in-line patch markers should   */
+/* be added.  The ECO marker should only be included in the Revision History. */
+/******************************************************************************/
+
+/*!
+    txtxtmt.p   Tax Type Maintenance
+                (code_mstr where code_fldname = "txt_tax_type")
+*/
+
+/* DISPLAY TITLE */
+/*
+{mfdtitle.i "2+ "}
+*/
+{mfdtitle.i "090609.1"}
+
+define variable del-yn   like mfc_logical initial no.
+/* SS - 090609.1 - B
+define variable fldname  like code_fldname initial "txt_tax_type".
+SS - 090609.1 - E */
+/* SS - 090609.1 - B */
+/* TODO: 字段名 */
+define variable fldname  like code_fldname initial "xxpctt_cost".
+/* SS - 090609.1 - E */
+
+/* DISPLAY SELECTION FORM */
+form
+   code_value label "Tax Type" colon 25 format "x(1)"
+   skip(1)
+   code_desc                   colon 25
+   /* SS - 090609.1 - B
+   /* TODO: 格式化 */
+   FORMAT "x(1)"
+   SS - 090609.1 - E */
+with frame a side-labels width 80  attr-space.
+
+/* SET EXTERNAL LABELS */
+setFrameLabels(frame a:handle).
+
+/* SS - 090609.1 - B
+/* VERIFY THE EXISTENCE OF NON-TAXABLE TAX TYPE */
+do transaction:
+   {txtxtmt.i}
+end.
+SS - 090609.1 - E */
+
+/* DISPLAY */
+
+view frame a.
+
+mainloop:
+repeat with frame a:
+
+	/* SS - 090609.1 - B */
+   /* gp973.p支持 */
+	GLOBAL_addr = fldname.
+	/* SS - 090609.1 - E */
+
+   prompt-for code_value with frame a
+   editing:
+      /* FIND NEXT/PREVIOUS RECORD */
+      {mfnp01.i code_mstr code_value code_value
+         fldname  " code_mstr.code_domain = global_domain and code_fldname "
+         code_fldval}
+      if recno <> ? then
+         display code_value code_desc.
+   end.
+
+   /* SS - 090609.1 - B
+   /* VALIDATE TAX TYPE NOT BLANK */
+   if not input code_value > "" then do:
+      /* Blank tax type not allowed */
+      {pxmsg.i &MSGNUM=945 &ERRORLEVEL=3}
+      undo mainloop, retry.
+   end.
+   SS - 090609.1 - E */
+
+   /* SS - 090609.1 - B */
+   /* TODO: 验证 */
+   IF index("01",input code_value) = 0 THEN DO:
+      /* Invalid entry */
+      {pxmsg.i &MSGNUM=4509 &ERRORLEVEL=3}
+      undo mainloop, retry.
+   END.
+   /* SS - 090609.1 - E */
+
+   /* ADD/MOD/DELETE  */
+   find code_mstr  where code_mstr.code_domain = global_domain and
+   code_fldname = fldname and
+                        code_value = input code_value
+   exclusive-lock no-error.
+
+   if not available code_mstr then do:
+      {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
+      create code_mstr. code_mstr.code_domain = global_domain.
+      assign
+         code_value.
+      code_fldname = fldname.
+   end.
+
+   /* SS - 090609.1 - B */
+   IF code_cmmt <> "" AND CODE_desc = "" THEN DO:
+      ASSIGN
+         CODE_desc = CODE_cmmt.
+         .
+   END.
+   /* SS - 090609.1 - E */
+
+   display code_value code_desc.
+
+   ststatus  =  stline[2].
+   status input ststatus.
+   del-yn = no.
+
+   seta:
+   do on error undo, retry:
+
+      /* SS - 090609.1 - B
+      /* TODO: 默认值 */
+      IF CODE_desc = "" THEN DO:
+         ASSIGN
+            CODE_desc = "T"
+            .
+         DISPLAY
+            CODE_desc
+            .
+      END.
+      SS - 090609.1 - E */
+
+      set code_desc go-on (F5 CTRL-D).
+
+      /* SS - 090609.1 - B
+      /* TODO: 验证 */
+      IF INDEX("T,;",CODE_desc) = 0 THEN DO:
+         /* Invalid entry */
+         {pxmsg.i &MSGNUM=4509 &ERRORLEVEL=3}
+         UNDO,RETRY.
+      END.
+      SS - 090609.1 - E */
+
+      /* DELETE */
+      if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
+      then do:
+
+         del-yn = yes.
+         {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
+         if del-yn = no then undo, retry.
+
+         /* SS - 090609.1 - B
+         /* VERIFY THAT NONE OF THE FOLLOWING EXISTS */
+         /* TAX ENVIRONMENT DETAIL */
+         find first txed_det  where txed_det.txed_domain = global_domain and
+         txed_tax_type = code_value no-error.
+         if available(txed_det) then do:
+            /* Tax type exists in tax environment.  Cannot delete */
+            {pxmsg.i &MSGNUM=895 &ERRORLEVEL=4}
+            undo mainloop, retry.
+         end.
+
+         /* TAX BASE MASTER */
+         find first txbd_det  where txbd_det.txbd_domain = global_domain and
+         txbd_tax_type = code_value no-error.
+         if available(txbd_det) then do:
+            /* Tax type exists in tax base.  Cannot delete */
+            {pxmsg.i &MSGNUM=894 &ERRORLEVEL=4}
+            undo mainloop, retry.
+         end.
+
+         /* TAX MASTER */
+         find first tx2_mstr  where tx2_mstr.tx2_domain = global_domain and
+         tx2_tax_type = code_value no-error.
+         if available(tx2_mstr) then do:
+            /* Tax type exists in tax master.  Cannot delete */
+            {pxmsg.i &MSGNUM=896 &ERRORLEVEL=4}
+            undo mainloop, retry.
+         end.
+
+         /* TRAILER DETAIL */
+         find first trld_det  where trld_det.trld_domain = global_domain and
+         trld_tax_type = code_value no-error.
+         if available(trld_det) then do:
+            /* Tax type exists in trailer tax .  Cannot delete */
+            {pxmsg.i &MSGNUM=897 &ERRORLEVEL=4}
+            undo mainloop, retry.
+         end.
+         SS - 090609.1 - E */
+
+         delete code_mstr.
+         clear frame a.
+         next mainloop.
+
+      end.
+
+      /* SS - 090609.1 - B */
+      /* gp972.p支持 */
+      ASSIGN
+         CODE_cmmt = CODE_desc
+         .
+      /* SS - 090609.1 - E */
+
+   end.    /* seta: */
+
+   release code_mstr.
+
+end.    /* mainloop: */

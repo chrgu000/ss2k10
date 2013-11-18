@@ -1,0 +1,8 @@
+#def REPORTPATH=$/QAD Addons/BI Report/xxpccccr
+#def :end
+"代码";"说明"
+"1";"直接材料"
+"2";"直接人工"
+"3";"变动制造费用"
+"4";"固定制造费用"
+"5";"转包成本"
