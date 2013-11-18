@@ -70,7 +70,7 @@ for each xxtmppc0 no-lock:
              pc_curr = x0pc_curr and pc_prod_line = "" and
              pc_part = x0pc_part and pc_um = x0pc_um and pc_amt_type = "L"
         break by pc_start descending:
-        if pc_start <> x0pc_start and (pc_expir = ? or pc_expir <> dte) then do:
+        if pc_start <> x0pc_start and (pc_expir = ? or pc_expir > dte) then do:
            create xxtmppc.
            assign xxpc_axvd  = x0pc_axvd
                   xxpc_list  = pc_list

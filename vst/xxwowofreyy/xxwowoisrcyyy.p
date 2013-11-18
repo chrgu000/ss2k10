@@ -70,11 +70,11 @@
 /* REVISION: 9.1      LAST MODIFIED: 04/22/04   BY: *ADM*  Heshiyu         */
 /*                    Add time range and fixed the effdate                 */
 /*                    relation prg: woworcaxx.p,xxictrans.i                */
-/*                    Modified:      07/13/04   by: *ADM* Heshiyu    
-                      relation prg: woisrc01xx.p,woisrc1dxx.p              */   
+/*                    Modified:      07/13/04   by: *ADM* Heshiyu
+                      relation prg: woisrc01xx.p,woisrc1dxx.p              */
 /* A-flag ***20100729 not allow issue over the wod req qty*/
 
-/*ss - 20121225.1 by Steven */  
+/*ss - 20121225.1 by Steven */
 
 /*ADM*/  /* {mfdtitle.i "A0729"} */
 
@@ -326,7 +326,7 @@
 /*G782      wo_part     colon 12 wo_status   issue       colon 68 */
 /*G782      desc1       at 14 no-label       receive     colon 68 */
 /*G782*/    wo_part     colon 12 wo_status   receive     colon 68
-/*ADM*/     v_timestr   at 1 no-label 
+/*ADM*/     v_timestr   at 1 no-label
 /*G782*/    desc1       at 14 no-label       issue       colon 68
      with frame a side-labels width 80 attr-space.
 
@@ -665,7 +665,7 @@ setFrameLabels(frame r:handle).
 
 /*J041*        {gprun.i ""woisrc02.p""}                                 */
 /*ADM/*J041*/       {gprun.i ""woisrc02.p"" "(output trans_ok)"}        */
-/*ADM*/        {gprun.i ""woisrc02xx.p"" "(output trans_ok)"}        
+/*ADM*/        {gprun.i ""woisrc02xx.p"" "(output trans_ok)"}
 /*J041*/       if not trans_ok then undo, retry.
 /*GM78*/ /*V8-*/
            if keyfunction(lastkey) = "end-error" then undo, retry. /*V8+*/
@@ -690,7 +690,7 @@ setFrameLabels(frame r:handle).
 /*J046*/       if jp and undo_jp then undo, retry.
 /*G0KT*/ /*V8! outta_here = no. */
 /*G782*//*ADM*/ /* {gprun.i ""woisrc01yyy.p""} *ss-20121225.1*/  /*A-flag*/
-                   {gprun.i ""xxwoisrc01yyy.p""} /*ss-20121225.1*/ 
+                   {gprun.i ""xxwoisrc01yyy.p""} /*ss-20121225.1*/
 /*G0KT*/ /*V8-*/
 /*G782*/       if keyfunction(lastkey) = "end-error" then undo, retry.
 /*G0KT*/ /*V8+*/

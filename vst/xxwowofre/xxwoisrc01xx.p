@@ -603,11 +603,11 @@ setFrameLabels(frame d:handle).
                               site = wod_site.
                               /*ss - 20121226.1 - b*/
                               /*location = wod_loc.*/
-                              find first tr_hist where tr_type = 'iss-wo' and 
+                              find first tr_hist where tr_type = 'iss-wo' and
                               tr_part = wod_part and tr_lot = wod_lot and
                               tr_wod_op = wod_op no-lock no-error.
                               if avail tr_hist then
-                                 location = tr_loc.                                 
+                                 location = tr_loc.
                               /*ss - 20121226.1 - e*/
                            end.
 
@@ -620,7 +620,7 @@ setFrameLabels(frame d:handle).
 /****ADM begin add***********
 *                              find wopass where w_name = global_userid no-lock no-error.
 *                              if available wopass then do:
-*                                  update lotserial_qty  
+*                                  update lotserial_qty
 *                                  sub_comp   /*ADM cancel_bo*/
 *                                  site location lotserial lotref multi_entry
 *                                  with frame d
@@ -647,10 +647,10 @@ setFrameLabels(frame d:handle).
 *                              end.
 ****ADM end add**************/
 /*ADM                             update lotserial_qty  */
-/*ADM*/                       display lotserial_qty with frame d.
-/*ADM*/                       update 
+/*ADM*/                       display lotserial_qty location with frame d.
+/*ADM*/                       update
                               sub_comp   /*ADM cancel_bo*/
-                              site location lotserial lotref multi_entry
+                              site /* location */ lotserial lotref multi_entry
                               with frame d
                               editing:
                                  global_site = input site.

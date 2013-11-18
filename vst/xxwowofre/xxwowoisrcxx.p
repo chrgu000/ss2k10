@@ -70,13 +70,13 @@
 /* REVISION: 9.1      LAST MODIFIED: 04/22/04   BY: *ADM*  Heshiyu         */
 /*                    Add time range and fixed the effdate                 */
 /*                    relation prg: woworcaxx.p,xxictrans.i                */
-/*                    Modified:      07/13/04   by: *ADM* Heshiyu    
-                      relation prg: woisrc01xx.p,woisrc1dxx.p              */   
+/*                    Modified:      07/13/04   by: *ADM* Heshiyu
+                      relation prg: woisrc01xx.p,woisrc1dxx.p              */
 
 /*ss-20121226.1 by Steven*/
 /*ADM*/ /* {mfdtitle.i "b+d "}  ss-20121226.1*/
 
-{mfdtitle.i "20121226.1"}    /*ss-20121226.1*/
+{mfdtitle.i "131012.1"}    /*ss-20121226.1*/
 
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -325,7 +325,7 @@
 /*G782      wo_part     colon 12 wo_status   issue       colon 68 */
 /*G782      desc1       at 14 no-label       receive     colon 68 */
 /*G782*/    wo_part     colon 12 wo_status   receive     colon 68
-/*ADM*/     v_timestr   at 1 no-label 
+/*ADM*/     v_timestr   at 1 no-label
 /*G782*/    desc1       at 14 no-label       issue       colon 68
      with frame a side-labels width 80 attr-space.
 
@@ -664,7 +664,7 @@ setFrameLabels(frame r:handle).
 
 /*J041*        {gprun.i ""woisrc02.p""}                                 */
 /*ADM/*J041*/       {gprun.i ""woisrc02.p"" "(output trans_ok)"}        */
-/*ADM*/        {gprun.i ""woisrc02xx.p"" "(output trans_ok)"}        
+/*ADM*/        {gprun.i ""woisrc02xx.p"" "(output trans_ok)"}
 /*J041*/       if not trans_ok then undo, retry.
 /*GM78*/ /*V8-*/
            if keyfunction(lastkey) = "end-error" then undo, retry. /*V8+*/

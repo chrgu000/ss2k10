@@ -60,7 +60,7 @@
 /* REVISION: 9.1      LAST MODIFIED: 12/12/00   BY: *L16J* Thomas Fernandes */
 /*ADM*                               07/13/04   by: *ADM*  Heshiyu          */
 /* A-flag ***20100729 not allow issue over the wod req qty*/
-/*ss - 20121225.1 by Steven */ 
+/*ss - 20121225.1 by Steven */
          {mfdeclre.i}
 {gplabel.i} /* EXTERNAL LABEL INCLUDE */
 
@@ -601,17 +601,17 @@ setFrameLabels(frame d:handle).
                               site = wod_site.
                               /*ss - 20121225.1 - b*/
                               /*location = wod_loc.*/
-                              find first tr_hist where tr_type = 'iss-wo' and 
+                              find first tr_hist where tr_type = 'iss-wo' and
                               tr_part = wod_part and tr_lot = wod_lot and
                               tr_wod_op = wod_op no-lock no-error.
                               if avail tr_hist then
-                                 location = tr_loc.                                 
+                                 location = tr_loc.
                               /*ss - 20121225.1 - e*/
                            end.
                            /*ss - 20121225.1 - b*/
                            disp site location with frame d.
                            /*ss - 20121225.1 - e*/
-                            
+
 /*F190*/                   locloop:
                            do on error undo, retry
 /*J060                     on endkey undo, leave:     */
@@ -621,7 +621,7 @@ setFrameLabels(frame d:handle).
 /****ADM begin add***********
 *                              find wopass where w_name = global_userid no-lock no-error.
 *                              if available wopass then do:
-*                                  update lotserial_qty  
+*                                  update lotserial_qty
 *                                  sub_comp   /*ADM cancel_bo*/
 *                                  site location lotserial lotref multi_entry
 *                                  with frame d
@@ -647,15 +647,15 @@ setFrameLabels(frame d:handle).
 *                                  end.
 *                              end.
 ****ADM end add**************/
-/*ADM*/                     update lotserial_qty
+/*ADM*/
+                      display location with frame d.
+                      update lotserial_qty
                             /*ss - 20121225.1 - b*/
-                            validate(lotserial_qty >= 0 or (lotserial_qty < 0 and abs(lotserial_qty) <= max(wod_qty_iss,0)) , "負數回沖數量不能大于已發數量！" )                            
-                            /*ss - 20121225.1 - e*/          
-/*ADM                       display lotserial_qty with frame d.*/
+                            validate(lotserial_qty >= 0 or (lotserial_qty < 0 and abs(lotserial_qty) <= max(wod_qty_iss,0)) , "負數回沖數量不能大于已發數量！" )
+                            /*ss - 20121225.1 - e*/
 /*ADM                       update */
                               sub_comp   /*ADM cancel_bo*/
-                              /* site location ss-20121225.1*/ 
- /*ss - 131023.1*/            location  
+                              site /* location ss-20121225.1*/
                               lotserial lotref multi_entry
                               with frame d
                               editing:
@@ -880,9 +880,9 @@ setFrameLabels(frame d:handle).
                               end.  /* else (not multi_entry) */
 /*A-flag*/
     if total_lotserial_qty > wod_qty_req - wod_qty_iss then do:
-        message "領料量超過工單未結需求量" .  
-	    assign lotserial = "" lotserial_qty = 0.
-        undo locloop, retry.              
+        message "領料量超過工單未結需求量" .
+      assign lotserial = "" lotserial_qty = 0.
+        undo locloop, retry.
     end. /*if total_*/
 /*A-flag*/
 
