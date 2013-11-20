@@ -11,7 +11,7 @@ define variable xworksheet as com-handle.
 define variable fn as character.
 
 empty temp-table tmp-so no-error.
-
+for each tmp-so exclusive-lock: delete tmp-so. end.
   assign fn = file_name.
   CREATE "Excel.Application" excelAppl.
 
@@ -95,5 +95,10 @@ for each tmp-so exclusive-lock:
     if not can-find(pt_mstr no-lock where pt_domain = global_domain and
                     pt_part = tsod_part) then do:
        assign tsod_chk = "Item number " + tsod_part + " does not exist".
+    end.
+    find first sod_det no-lock where sod_domain = global_domain
+           and sod_nbr = tso_nbr and sod_line = tsod_line no-error.
+    if available sod_det then do:
+       assign tsod_chk = "订单" + tso_nbr + "项次" + trim(string(tsod_line)) + "已存在".
     end.
 end.
