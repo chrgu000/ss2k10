@@ -8,8 +8,9 @@
 /* 订货量圆整成订单倍数                                             /*630*/  */
 /* 订货量圆整成订单倍数的计算错误修正                               /*719*/  */
 /* 过滤掉无用的资料                                                 /*831*/  */
+/* 解决usrw_wkfl写入时索引重复的问题                           /*131119.1*/  */
 /* DISPLAY TITLE */
-{mfdtitle.i "121227.1"}
+{mfdtitle.i "131119.1"}
 
 define variable site like si_site.
 define variable site1 like si_site.
@@ -814,6 +815,7 @@ repeat:
 /*121218.1*     end. /* if first-of(tpo_part) or tpoqty > 0 then do: */       */
 /*121218.1*********************************************************************/
                 if tpoqty > 0 or (tpo_fut and tpoqty = 0) then do:
+/*131119.1*/    assign i = i + 1.
 /*121218.1*/    create usrw_wkfl.
 /*121218.1*/    assign usrw_key1 = vkey0
 /*121218.1*/           usrw_key2 = string(i)
@@ -841,7 +843,7 @@ repeat:
                  end.
                  /*    tpo_end tpo_rule tpo_po tpo_tpo.  tpo_mrp_date. */
             end.  /*if last-of(tpo_due) then do:*/
-            assign i = i + 1.
+/*131119.1  assign i = i + 1.                                                */
          end. /*for each tmp_po no-lock*/
 
 /*121218.1*/  for each usrw_wkfl exclusive-lock where
@@ -860,11 +862,11 @@ repeat:
 /*121218.1*/  end.
 assign sendDate = ?.
 for each pod_det no-lock use-index pod_partdue where pod_part <> ""
-		 and pod_due_date > low_date break by pod_due_date:
-		 if pod_type = "T" then do:
-		 		assign sendDate = pod_due_date when sendDate = ?.
-		 end.
-		 if sendDate <> ? then leave.
+     and pod_due_date > low_date break by pod_due_date:
+     if pod_type = "T" then do:
+        assign sendDate = pod_due_date when sendDate = ?.
+     end.
+     if sendDate <> ? then leave.
 end.
 /*output stream bf to xxmrppo.txt.*/
 for each usrw_wkfl exclusive-lock where usrw_wkfl.usrw_key1 = vkey0
@@ -901,7 +903,7 @@ for each usrw_wkfl exclusive-lock where usrw_wkfl.usrw_key1 = vkey0
         find first tmp_n2po no-lock where tn2_part = usrw_charfld[3] no-error.
         if available tmp_n2po then do:
            assign qty_tpod = qty_tpod - tn2_qty.
-/*					 put stream bf unformat "~011" tn2_qty.*/
+/*           put stream bf unformat "~011" tn2_qty.*/
         end.
      end.
 /*     put stream bf skip.*/
