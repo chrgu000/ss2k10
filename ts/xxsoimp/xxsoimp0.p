@@ -19,26 +19,26 @@ for each tmp-so exclusive-lock: delete tmp-so. end.
    xworksheet = excelAppl:sheets:item(1).
 
    DO intI = 2 TO xworksheet:UsedRange:Rows:Count:
-       if trim(xworksheet:cells(intI,1):VALUE) <> "" then do:
+       if trim(xworksheet:cells(intI,1):value) <> "" then do:
        CREATE tmp-so.
-       ASSIGN  tso_nbr = string(xworksheet:cells(intI,1):VALUE)
-               tso_cust = string(xworksheet:cells(intI,2):VALUE)
-               tso_bill = string(xworksheet:cells(intI,3):VALUE)
-               tso_ship = string(xworksheet:cells(intI,4):VALUE)
-               tso_req_date = xworksheet:cells(intI,5):VALUE
-               tso_due_date = xworksheet:cells(intI,6):VALUE
-               tso_rmks = string(xworksheet:cells(intI,7):VALUE)
-               tso_site = string(xworksheet:cells(intI,8):VALUE)
-               tso_curr = string(xworksheet:cells(intI,9):VALUE)
-               tsod_line = xworksheet:cells(intI,10):VALUE
-               tsod_part = string(xworksheet:cells(intI,11):VALUE)
-               tsod_site = string(xworksheet:cells(intI,12):VALUE)
-               tsod_qty_ord = xworksheet:cells(intI,13):VALUE
-               tsod_loc = string(xworksheet:cells(intI,14):VALUE)
-               tsod_acct = string(xworksheet:cells(intI,15):VALUE)
-               tsod_sub = string(xworksheet:cells(intI,16):VALUE)
-               tsod_due_date = xworksheet:cells(intI,17):VALUE
-               tsod_rmks1 = string(xworksheet:cells(intI,18):VALUE).
+       ASSIGN tso_nbr = string(xworksheet:cells(intI,1):value)
+              tso_cust = string(xworksheet:cells(intI,2):value)
+              tso_bill = string(xworksheet:cells(intI,3):value)
+              tso_ship = string(xworksheet:cells(intI,4):value)
+              tso_req_date = xworksheet:cells(intI,5):value
+              tso_due_date = xworksheet:cells(intI,6):value
+              tso_rmks = string(xworksheet:cells(intI,7):value)
+              tso_site = string(xworksheet:cells(intI,8):value)
+              tso_curr = string(xworksheet:cells(intI,9):value)
+              tsod_line = xworksheet:cells(intI,10):value
+              tsod_part = string(xworksheet:cells(intI,11):value)
+              tsod_site = string(xworksheet:cells(intI,12):value)
+              tsod_qty_ord = xworksheet:cells(intI,13):value
+              tsod_loc = string(xworksheet:cells(intI,14):value)
+              tsod_acct = string(xworksheet:cells(intI,15):value)
+              tsod_sub = string(xworksheet:cells(intI,16):value)
+              tsod_due_date = xworksheet:cells(intI,17):value
+              tsod_rmks1 = string(xworksheet:cells(intI,18):value).
       end.
       else do:
           next.

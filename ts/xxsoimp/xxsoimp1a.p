@@ -120,7 +120,7 @@ assign fn = execname + "." + tso_nbr + "." + trim(string(tsod_line,">>>>9")).
    output close.
 
    cimrunprogramloop:
-   do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
+   do transaction /* on stop undo cimrunprogramloop,leave cimrunprogramloop */ :
      input from value(fn + ".bpi").
      output to value(fn + ".bpo") keep-messages.
      pause 0 before-hide.

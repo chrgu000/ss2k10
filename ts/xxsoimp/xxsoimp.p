@@ -1,9 +1,9 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI ADM2
 &ANALYZE-RESUME
-/* Connected Databases 
+/* Connected Databases
 */
 &Scoped-define WINDOW-NAME wWin
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin
 /*------------------------------------------------------------------------
 
   File:
@@ -63,7 +63,7 @@ CREATE WIDGET-POOL.
 &ANALYZE-RESUME
 
 
-&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK
 
 /* ********************  Preprocessor Definitions  ******************** */
 
@@ -82,8 +82,8 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES tmp-so
 
 /* Definitions for BROWSE brList                                        */
-&Scoped-define FIELDS-IN-QUERY-brList tso_nbr "订单号" tso_cust "销往" tso_bill "发票地址" tso_ship "货物发往" tso_req_date "要求日期" tso_due_date "截止日期" tso_rmks "备注" tso_site "地点" tso_curr "货币" tsod_line "项次" tsod_part "ERP 号" tsod_site "地点" tsod_qty_ord "数量" tsod_loc "库位" tsod_acct "账户" tsod_sub "分账户" tsod_due_date "截止日期" tsod_rmks1 "说明1" tsod_chk "状态"   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brList   
+&Scoped-define FIELDS-IN-QUERY-brList tso_nbr "订单号" tso_cust "销往" tso_bill "发票地址" tso_ship "货物发往" tso_req_date "要求日期" tso_due_date "截止日期" tso_rmks "备注" tso_site "地点" tso_curr "货币" tsod_line "项次" tsod_part "ERP 号" tsod_site "地点" tsod_qty_ord "数量" tsod_loc "库位" tsod_acct "账户" tsod_sub "分账户" tsod_due_date "截止日期" tsod_rmks1 "说明1" tsod_chk "状态"
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brList
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH tmp-so
 &Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH tmp-so.
@@ -96,8 +96,8 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brList}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS fiFile btnOpen btnExp tnLoad brList 
-&Scoped-Define DISPLAYED-OBJECTS fiFile 
+&Scoped-Define ENABLED-OBJECTS fiFile btnOpen btnExp tnLoad brList
+&Scoped-Define DISPLAYED-OBJECTS fiFile
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -108,7 +108,7 @@ CREATE WIDGET-POOL.
 
 /* ************************  Function Prototypes ********************** */
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD getStat wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION-FORWARD getStat wWin
 FUNCTION getStat RETURNS CHARACTER
   ( /* parameter-definitions */ )  FORWARD.
 
@@ -122,35 +122,35 @@ FUNCTION getStat RETURNS CHARACTER
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
 /* Menu Definitions                                                     */
-DEFINE MENU POPUP-MENU-brList 
+DEFINE MENU POPUP-MENU-brList
        MENU-ITEM m_item         LABEL "刷新"          .
 
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON btnDelBOM 
-     LABEL "删除" 
+DEFINE BUTTON btnDelBOM
+     LABEL "删除"
      SIZE 9 BY 1.23.
 
-DEFINE BUTTON btnExp 
-     LABEL "导出" 
+DEFINE BUTTON btnExp
+     LABEL "导出"
      SIZE 9 BY 1.23.
 
-DEFINE BUTTON btnOpen 
-     LABEL "浏览..." 
+DEFINE BUTTON btnOpen
+     LABEL "浏览..."
      SIZE 9 BY 1.23.
 
-DEFINE BUTTON tnLoad 
-     LABEL "装入" 
+DEFINE BUTTON tnLoad
+     LABEL "装入"
      SIZE 9 BY 1.23.
 
-DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U 
-     LABEL "文件" 
-     VIEW-AS FILL-IN 
+DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U
+     LABEL "文件"
+     VIEW-AS FILL-IN
      SIZE 40 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
-DEFINE QUERY brList FOR 
+DEFINE QUERY brList FOR
       tmp-so SCROLLING.
 &ANALYZE-RESUME
 
@@ -159,24 +159,24 @@ DEFINE BROWSE brList
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS brList wWin _FREEFORM
   QUERY brList DISPLAY
       tso_nbr         column-label    "订单号"
-tso_cust        column-label    "销往"
-tso_bill        column-label    "发票地址"
-tso_ship        column-label    "货物发往"
-tso_req_date    column-label    "要求日期"
-tso_due_date    column-label    "截止日期"
-tso_rmks        column-label    "备注"
-tso_site        column-label    "地点"
-tso_curr        column-label    "货币"
-tsod_line       column-label    "项次"
-tsod_part       column-label    "ERP 号"
-tsod_site       column-label    "地点"
-tsod_qty_ord    column-label    "数量"
-tsod_loc        column-label    "库位"
-tsod_acct       column-label    "账户"
-tsod_sub        column-label    "分账户"
-tsod_due_date   column-label    "截止日期"
-tsod_rmks1      column-label    "说明1"
-tsod_chk        column-label    "状态"
+        tso_cust        column-label    "销往"
+        tso_bill        column-label    "发票地址"
+        tso_ship        column-label    "货物发往"
+        tso_req_date    column-label    "要求日期"
+        tso_due_date    column-label    "截止日期"
+        tso_rmks        column-label    "备注" WIDTH 12
+        tso_site        column-label    "地点"
+        tso_curr        column-label    "货币"
+        tsod_line       column-label    "项次"
+        tsod_part       column-label    "ERP 号"
+        tsod_site       column-label    "地点"
+        tsod_qty_ord    column-label    "数量"
+        tsod_loc        column-label    "库位"
+        tsod_acct       column-label    "账户"
+        tsod_sub        column-label    "分账户"
+        tsod_due_date   column-label    "截止日期"
+        tsod_rmks1      column-label    "说明1" WIDTH 12
+        tsod_chk        column-label    "状态"
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
     WITH NO-ROW-MARKERS SEPARATORS SIZE 100 BY 22.64 ROW-HEIGHT-CHARS .68 FIT-LAST-COLUMN.
@@ -191,8 +191,8 @@ DEFINE FRAME fMain
      btnExp AT ROW 1.59 COL 65
      tnLoad AT ROW 1.59 COL 82
      brList AT ROW 3.23 COL 2
-    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
-         SIDE-LABELS NO-UNDERLINE THREE-D 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
+         SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
          SIZE 101.11 BY 31.
 
@@ -233,7 +233,7 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* END WINDOW DEFINITION                                                */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin
 /* ************************* Included-Libraries *********************** */
 
 {src/adm2/containr.i}
@@ -252,13 +252,13 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* SETTINGS FOR FRAME fMain
    FRAME-NAME                                                           */
 /* BROWSE-TAB brList tnLoad fMain */
-ASSIGN 
+ASSIGN
        brList:POPUP-MENU IN FRAME fMain             = MENU POPUP-MENU-brList:HANDLE
        brList:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
 
 /* SETTINGS FOR BUTTON btnDelBOM IN FRAME fMain
    NO-ENABLE                                                            */
-ASSIGN 
+ASSIGN
        btnDelBOM:HIDDEN IN FRAME fMain           = TRUE.
 
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
@@ -279,7 +279,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH tmp-so.
 */  /* BROWSE brList */
 &ANALYZE-RESUME
 
- 
+
 
 
 
@@ -419,16 +419,19 @@ DO:
     ASSIGN fifile.
     SESSION:SET-WAIT-STAT("GENERAL").
     if search(fifile) <> ? then do:
-       find first usrw_wkfl exclusive-lock where
-                   usrw_wkfl.usrw_domain = global_domain and
-                   usrw_wkfl.usrw_key1 = execname and
-                   usrw_wkfl.usrw_key2 = execname no-error.
-        if not available usrw_wkfl then do:
-           create usrw_wkfl. usrw_wkfl.usrw_domain = global_domain .
-           assign usrw_wkfl.usrw_key1 = execname
-                  usrw_wkfl.usrw_key2 = execname.
-        end.
-        assign usrw_wkfl.usrw_key3 = fifile.
+       do transaction:
+          find first usrw_wkfl exclusive-lock where
+                     usrw_wkfl.usrw_domain = global_domain and
+                     usrw_wkfl.usrw_key1 = global_userid and
+                     usrw_wkfl.usrw_key2 = execname no-error.
+          if not available usrw_wkfl then do:
+             create usrw_wkfl. usrw_wkfl.usrw_domain = global_domain .
+             assign usrw_wkfl.usrw_key1 = global_userid
+                    usrw_wkfl.usrw_key2 = execname.
+          end.
+          assign usrw_wkfl.usrw_key3 = fifile.
+          release usrw_wkfl.
+       end.
     EMPTY TEMP-TABLE tmp-so NO-ERROR.
     IF selet THEN DO:
         ASSIGN file_name = fifile.
@@ -436,7 +439,9 @@ DO:
     END.
   end.
     OPEN QUERY brlist FOR EACH tmp-so.
-    brList:REFRESH().
+    if can-find(first tmp-so) then do:
+       brList:REFRESH().
+    end.
     SESSION:SET-WAIT-STAT("").
     STATUS INPUT getstat().
 
@@ -454,10 +459,11 @@ DO:
     IF SEARCH(fifile) <> ? AND SEARCH(fifile) <> "" THEN DO:
         SESSION:SET-WAIT-STAT("GENERAL").
         ASSIGN file_name = fifile.
-        
         {gprun.i ""xxsoimp0.p""}
         OPEN QUERY brlist FOR EACH tmp-so.
-        brList:REFRESH().
+        if can-find(first tmp-so) then do:
+           brList:REFRESH().
+        end.
         STATUS INPUT getstat().
         SESSION:SET-WAIT-STAT("").
     END.
@@ -474,7 +480,9 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL m_item wWin
 ON CHOOSE OF MENU-ITEM m_item /* 刷新 */
 DO:
-  brlist:REFRESH() IN FRAME fmain.
+  if can-find(first tmp-so) then do:
+    brlist:REFRESH() IN FRAME fmain.
+  end.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -489,7 +497,9 @@ DO:
     {gprun.i ""xxsoimp1a.p""}
     SESSION:SET-WAIT-STAT("").
     OPEN QUERY brlist FOR EACH tmp-so.
-    brList:REFRESH().
+    if can-find(first tmp-so) then do:
+       brList:REFRESH().
+    end.
     STATUS INPUT getstat().
 END.
 
@@ -500,7 +510,7 @@ END.
 &Scoped-define BROWSE-NAME brList
 &UNDEFINE SELF-NAME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin
 
 
 /* ***************************  Main Block  *************************** */
@@ -510,14 +520,14 @@ END.
 
 SESSION:SET-WAIT-STATE ("").
 
-find first usrw_wkfl exclusive-lock where
-                   usrw_wkfl.usrw_domain = global_domain and
-                   usrw_wkfl.usrw_key1 = execname and
-                   usrw_wkfl.usrw_key2 = execname no-error.
-        if available usrw_wkfl then do:
-           fifile:SCREEN-VALUE IN FRAME fmain = usrw_wkfl.usrw_key3.
-           ASSIGN  FRAME fmain  fifile.
-        END.
+find first usrw_wkfl no-lock where
+           usrw_wkfl.usrw_domain = global_domain and
+           usrw_wkfl.usrw_key1 = global_userid and
+           usrw_wkfl.usrw_key2 = execname no-error.
+if available usrw_wkfl then do:
+   fifile:SCREEN-VALUE IN FRAME fmain = usrw_wkfl.usrw_key3.
+   ASSIGN  FRAME fmain  fifile.
+END.
 
 
 {src/adm2/windowmn.i}
@@ -547,7 +557,7 @@ PROCEDURE disable_UI :
   Purpose:     DISABLE the User Interface
   Parameters:  <none>
   Notes:       Here we clean-up the user-interface by deleting
-               dynamic widgets we have created and/or hide 
+               dynamic widgets we have created and/or hide
                frames.  This procedure is usually called when
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
@@ -568,12 +578,12 @@ PROCEDURE enable_UI :
   Notes:       Here we display/view/enable the widgets in the
                user-interface.  In addition, OPEN all queries
                associated with each FRAME and BROWSE.
-               These statements here are based on the "Other 
+               These statements here are based on the "Other
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-  DISPLAY fiFile 
+  DISPLAY fiFile
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE fiFile btnOpen btnExp tnLoad brList 
+  ENABLE fiFile btnOpen btnExp tnLoad brList
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.
@@ -582,7 +592,7 @@ END PROCEDURE.
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin
 PROCEDURE exitObject :
 /*------------------------------------------------------------------------------
   Purpose:  Window-specific override of this procedure which destroys
@@ -600,7 +610,7 @@ END PROCEDURE.
 
 /* ************************  Function Implementations ***************** */
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION getStat wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _FUNCTION getStat wWin
 FUNCTION getStat RETURNS CHARACTER
   ( /* parameter-definitions */ ) :
     DEFINE VARIABLE vsn AS INTEGER.
