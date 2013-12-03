@@ -9,18 +9,18 @@ define {1} shared variable cloadfile as logical initial "no".
 define {1} shared temp-table xxapvotmp
        fields xxapt_ref like ap_ref
        fields xxapt_tot like ap_amt
-       fields xxapt_vd  like ap_vend
+       fields xxapt_vd like ap_vend
        fields xxapt_sort like vd_sort
        fields xxapt_invoice like vo_invoice
-       fields xxapt_taxable as character
+       fields xxapt_taxable like vod_tax_at
+       fields xxapt_line like sod_line
        fields xxapt_acct like sod_acct
        fields xxapt_amt like vod_amt
-       fields xxapt_sn as integer
        fields xxapt_cc like sod_cc
        fields xxapt_proj like sod_proj
        fields xxapt_cmmt like code_cmmt
+       fields xxapt_sn as integer
        fields xxapt_chk as character format "x(30)".
-
 
 FUNCTION getMsg RETURNS character(inbr as integer):
  /* -----------------------------------------------------------

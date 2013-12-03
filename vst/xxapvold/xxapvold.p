@@ -1,11 +1,11 @@
-/* xxapvold.p - apvomt.p cim load                                            */
-/*V8:ConvertMode=Report                                                      */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 131115.1 LAST MODIFIED: 11/15/13 BY:Zy                          */
-/* REVISION END                                                              */
+/* xxapvold.p - apvomt.p cim load                                             */
+/*V8:ConvertMode=Report                                                       */
+/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character           */
+/* REVISION: 131115.1 LAST MODIFIED: 11/15/13   BY:Zy                         */
+/* REVISION END                                                               */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "131115.1"}
+{mfdtitle.i "131125.1"}
 {xxapvold.i "new"}
 {gpcdget.i "UT"}
 
@@ -23,7 +23,7 @@ find first qad_wkfl where
            qad_key2 = global_userid no-error.
 if available qad_wkfl then do:
    if qad_key3 <> "" then do:
-      assign flhload =  qad_key3.
+      assign flhload = qad_key3.
    end.
 end.
 
@@ -88,13 +88,24 @@ repeat:
              {mfmsg.i 1310 1}
         end.
         else do:
-                {gprun.i ""xxapvold1.p""}
+             {gprun.i ""xxapvold1.p""}
         end.
      end.
      for each xxapvotmp exclusive-lock with width 320 frame c:
       /* SET EXTERNAL LABELS */
       setFrameLabels(frame c:handle).
-         display xxapvotmp.
+         display xxapt_ref
+                 xxapt_tot
+                 xxapt_vd
+                 xxapt_invoice
+                 xxapt_taxable
+                 xxapt_line
+                 xxapt_acct
+                 xxapt_amt
+                 xxapt_cc
+                 xxapt_proj
+                 xxapt_cmmt
+                .
      end.
    {mfrtrail.i}
    {pxmsg.i &MSGNUM=8 &ERRORLEVEL=1}

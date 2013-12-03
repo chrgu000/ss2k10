@@ -811,15 +811,14 @@
                         /* TAX MANAGEMENT TRANSACTION POP-UP. */
                         /* PARAMETERS ARE 5 FIELDS AND UPDATEABLE FLAGS, */
                         /* STARTING ROW, AND UNDO FLAG. */
-                        {gprun.i ""txtrnpop.p""
-                                 "(input-output vod_tax_usage, input true,
-                                   input-output vod_tax_env,   input false,
-                                   input-output vod_taxc,      input true,
-                                   input-output vod_taxable,   input true,
-                                   input-output vod_tax_in,    input true,
-                                   input 2,
-                                   output undo_taxpop)"}
-
+                           {gprun.i ""txtrnpop.p""
+                                    "(input-output vod_tax_usage, input true,
+                                      input-output vod_tax_env,   input false,
+                                      input-output vod_taxc,      input true,
+                                      input-output vod_taxable,   input true,
+                                      input-output vod_tax_in,    input true,
+                                      input 2,
+                                      output undo_taxpop)"}
 /*L15T**                if undo_taxpop then undo loopg, retry. */
 
 /*L15T*/                /* l_flag IS SET TO true IN BATCH MODE. */

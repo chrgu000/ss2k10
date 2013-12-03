@@ -13,22 +13,31 @@ empty temp-table xxapvotmp no-error.
 input from value(flhload).
 repeat:
     import unformat txt.
-    if trim(entry(1,txt,",")) <= "ZZZZZZZZ" then do:
-       create xxapvotmp.
-       assign xxapt_ref = trim(entry(1,txt,",")) no-error.
-       assign xxapt_tot = decimal(trim(entry(2,txt,","))) no-error.
-       assign xxapt_vd  = trim(entry(3,txt,",")) no-error.
-       assign xxapt_sort = trim(entry(4,txt,",")) no-error.
-       assign xxapt_invoice = trim(entry(5,txt,",")) no-error.
-       assign xxapt_taxable = trim(entry(6,txt,",")) no-error.
-       assign xxapt_acct = trim(entry(7,txt,",")) no-error.
-       assign xxapt_amt = decimal(trim(entry(8,txt,","))) no-error.
-       assign xxapt_cc   = trim(entry(9,txt,",")) no-error.
-       assign xxapt_proj = trim(entry(10,txt,",")) no-error.
-       assign xxapt_cmmt = trim(entry(11,txt,",")) no-error.
+    if trim(entry(1,txt,",")) <= "ZZZZZZZZ" and
+       trim(entry(3,txt,",")) <= "ZZZZZZZZ" and
+       trim(entry(4,txt,",")) <= "ZZZZZZZZ" and trim(entry(3,txt,",")) <> "" and
+       trim(entry(5,txt,",")) <= "ZZZZZZZZ" and
+       trim(entry(6,txt,",")) <= "ZZZZZZZZ"
+       then do:
+            create xxapvotmp.
+            assign xxapt_ref = trim(entry(1,txt,",")) no-error.
+            assign xxapt_tot = decimal(trim(entry(2,txt,","))) no-error.
+            assign xxapt_vd = trim(entry(3,txt,",")) no-error.
+            assign xxapt_invoice = trim(entry(4,txt,",")) no-error.
+            assign xxapt_taxable = trim(entry(5,txt,",")) no-error.
+            assign xxapt_line = integer(entry(6,txt,",")) no-error.
+            assign xxapt_acct = trim(entry(7,txt,",")) no-error.
+            assign xxapt_amt = decimal(trim(entry(8,txt,","))) no-error.
+            assign xxapt_cc = trim(entry(9,txt,",")) no-error.
+            assign xxapt_proj = trim(entry(10,txt,",")) no-error.
+            assign xxapt_cmmt = trim(entry(11,txt,",")) no-error.
     end.
 end.
 input close.
+
+for each xxapvotmp exclusive-lock break by xxapt_ref:
+    if xxapt_line = 0 then delete xxapvotmp.
+end.
 
 assign i = 0.
 for each xxapvotmp exclusive-lock break by xxapt_ref:

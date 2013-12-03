@@ -98,7 +98,7 @@
 /*K1JN*/ define variable l_abs_id           like abs_id        no-undo.
 /*M1JZ*/ define variable l_print_lotserials like mfc_logical   initial no
 /*M1JZ*/    label {&icshprt_p_9}                               no-undo.
-
+         define stream bf.
          /* FRAMES */
          form
              v_ship_cmmts       colon 34
@@ -362,21 +362,35 @@
 
             end.  /* if not v_ok (transaction) */
             if v_ok then do:
-               output to value(vabsid + ".bpi").
-               put unformat '"' vshipfrom '" "' vshiptp '" "' vabsid '"' skip.
-               put unformat '-' skip.
-               put unformat 'Y' skip. 
-               output close.
+               output stream bf to value(vabsid + "-1.bpi").
+               put stream bf unformat '"' vshipfrom '" "' vshiptp '" "' vabsid '"' skip.
+               put stream bf unformat '- ' due skip.
+               put stream bf unformat 'Y' skip.
+               output stream bf close.
                batchrun = yes.
-               input from value(vabsid + ".bpi").
-               output to value(vabsid + ".bpo").
+               input from value(vabsid + "-1.bpi").
+               output to value(vabsid + "-1.bpo").
                {gprun.i ""xxrcsois.p""}
                output close.
                input close.
                batchrun = no.
-               os-delete value(vabsid + ".bpi").
-               os-delete value(vabsid + ".bpo").
+               os-delete value(vabsid + "-1.bpi").
+               os-delete value(vabsid + "-1.bpo").
+               output stream bf to value(vabsid + "-2.bpi").
+               put stream bf unformat '-' skip.
+               put stream bf unformat '-' skip.
+               put stream bf unformat vabsid skip.
+               output stream bf close.
+               batchrun = yes.
+               input from value(vabsid + "-2.bpi").
+               output to value(vabsid + "-2.bpo").
                {gprun.i ""xxrcsorp.p""}
+               output close.
+               input close.
+               batchrun = no.
+               os-delete value(vabsid + "-2.bpi").
+               os-delete value(vabsid + "-2.bpo").
+               os-command value("cat " + vabsid + ".prn").
             end.
             leave main_blk.
 

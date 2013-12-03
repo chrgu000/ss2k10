@@ -45,11 +45,10 @@
 /* ADM1      10/24/03  Brian Lo - need re-enter for to-be-ship qty > ord qty */
 /* 131023.1 *****************************************************************
  *  我们现在在7.9.2中做预先出货单，7.9.5做出货，7.9.17生成销售发票，
- *  可否进行优化，
  *  当我们在7.9.2做预先出货单之后，系统自动做出货以及自动生成销售发票。
  *  订单如果是HD状态不允许做7.9.2控制设置在CODE_MSTR fldname = "WHEN_SO_HOLD_DISABL_SHIP"
  *131023.1 ******************************************************************/
-         {mfdtitle.i "131023.1"}
+         {mfdtitle.i "131023.2"}
 /*N0WD*/ {cxcustom.i "RCSHWB.P"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -83,7 +82,7 @@
 
 &SCOPED-DEFINE rcshwb_p_10 "Ship-From"
 /* MaxLen: Comment: */
-
+&SCOPED-DEFINE rcshwb_p_11 "Due date"
 /* ********** End Translatable Strings Definitions ********* */
 
 /*K003*/ {rcinvtbl.i new}
@@ -174,7 +173,8 @@
             abs_shipfrom         colon 25 label {&rcshwb_p_10}
             si_desc              at 37 no-label
 /*J0K9      doc_type             colon 25 label "Picklist/Shipper"     */
-/*J0K9*/    doc_type             colon 25 label {&rcshwb_p_1}
+/*J0K9*/    doc_type             colon 25 label {&rcshwb_p_1}  
+            due             colon 47
 /*G1XQ      abs_id               colon 25 label "Number" format "X(9)" */
 /*K003* /*G1XQ*/ abs_id          colon 25 label "Number" format "X(8)" */
 /*K003*/    abs_id               colon 25 label {&rcshwb_p_3}
@@ -318,17 +318,18 @@
 /*K003*/          display
 /*K003*/             abs_shipfrom
 /*K003*/             si_desc
-/*K003*/             doc_type
+/*K003*/             doc_type 
+                     due
 /*K003*/             substring(abs_id,2) @ abs_id
 /*K003*/          with frame a.
 /*K003*/       end.
 /*K003*/    end.
 
-            display doc_type with frame a.
+            display doc_type due with frame a.
 
             /* INPUT SHIPFROM, TYPE, AND CONTAINER ID */
 /*K003*     prompt-for abs_shipfrom doc_type abs_id editing: */
-/*K003*/    prompt-for abs_shipfrom doc_type abs_id
+/*K003*/    prompt-for abs_shipfrom doc_type due abs_id
 /*K003*/               abs_shipto inv_mov editing:
 
 /*J1M3*/      global_site = input abs_shipfrom.
