@@ -21,7 +21,9 @@ define variable I as integer.
    bsheet:cells(i,8)  = "项次".
    bsheet:cells(i,9)  = "料号".
    bsheet:cells(i,10) = "订单量".
-   bsheet:cells(i,11) = "结果".
+   bsheet:cells(i,11) = "预测1".
+   bsheet:cells(i,12) = "预测2".
+   bsheet:cells(i,13) = "结果".
    bsheet:Range("A1:B2"):Interior:ColorIndex = 6.
    bsheet:Range("A1"):AddComment NO-ERROR.
    bsheet:Range("A1"):Comment:TEXT("必填") NO-ERROR.
@@ -37,7 +39,9 @@ define variable I as integer.
        bsheet:cells(i,8) = x9_line.
        bsheet:cells(i,9) = x9_part.
        bsheet:cells(i,10) = x9_qty_ord.
-       bsheet:cells(i,11) = "'" + x9_chk.
+       bsheet:cells(i,11) = x9_qty_fc1.
+       bsheet:cells(i,12) = x9_qty_fc2.
+       bsheet:cells(i,13) = "'" + x9_chk.
 /*
        if xsd_chk = "" then do:
             bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.

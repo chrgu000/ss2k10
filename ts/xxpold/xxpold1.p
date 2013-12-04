@@ -94,5 +94,4 @@ for each xxpod9 exclusive-lock:
             end.
         end.
     end.
-    if x9_chk = "" then x9_chk = "Pass".
 end.

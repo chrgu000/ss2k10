@@ -10,5 +10,7 @@ define {1} shared temp-table xxpod9
   fields x9_line like pod_line
   fields x9_part like pod_part
   fields x9_qty_ord like pod_qty_ord
+  fields x9_qty_fc1 like pod_qty_ord
+  fields x9_qty_fc2 like pod_qty_ord
   fields x9_fn as character
   fields x9_chk as character format "x(80)".

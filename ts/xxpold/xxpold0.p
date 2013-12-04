@@ -15,7 +15,7 @@ define variable intI as integer.
   bsheet = bexcel:Sheets:Item(1) NO-ERROR.
   bsheet:Activate NO-ERROR.
   empty temp-table xxpod9 no-error.
-  DO intI = 3 TO bsheet:UsedRange:Rows:Count:
+  DO intI = 2 TO bsheet:UsedRange:Rows:Count:
      if TRIM(bsheet:cells(intI,1):FormulaR1C1) <> "" and
         TRIM(bsheet:cells(intI,2):FormulaR1C1) <> "" and
         TRIM(bsheet:cells(intI,3):FormulaR1C1) <> "" and
@@ -25,13 +25,15 @@ define variable intI as integer.
         assign x9_nbr = TRIM(bsheet:cells(intI,1):FormulaR1C1)
                x9_vend = TRIM(bsheet:cells(intI,2):FormulaR1C1)
                x9_ship = TRIM(bsheet:cells(intI,3):FormulaR1C1)
-               x9_due_date = str2Date(TRIM(bsheet:cells(intI,4):FormulaR1C1),"mdy")
+               x9_due_date = str2Date(TRIM(bsheet:cells(intI,4):value),"ymd")
                x9_pr_list2 = TRIM(bsheet:cells(intI,5):FormulaR1C1)
                x9_pr_list = TRIM(bsheet:cells(intI,6):FormulaR1C1)
                x9_site = TRIM(bsheet:cells(intI,7):FormulaR1C1)
                x9_line = integer(TRIM(bsheet:cells(intI,8):FormulaR1C1))
                x9_part = TRIM(bsheet:cells(intI,9):FormulaR1C1)
                x9_qty_ord = decimal(TRIM(bsheet:cells(intI,10):FormulaR1C1))
+               x9_qty_fc1 = decimal(TRIM(bsheet:cells(intI,11):FormulaR1C1))
+               x9_qty_fc2 = decimal(TRIM(bsheet:cells(intI,12):FormulaR1C1))
                no-error.
      end.
   END.
