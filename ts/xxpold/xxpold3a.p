@@ -35,7 +35,12 @@ for each xxpod9 exclusive-lock where x9_chk = "" break by x9_nbr by x9_line:
           put stream bf unformat '-' skip.
        end.
        else do:
-           put stream bf unformat '- ' x9_due_date ' - - - - - - "' x9_pr_list2 '" ' .
+           put stream bf unformat '- ' x9_due_date ' "' x9_buyer '" - - - - '.
+           if x9_rmks = "-" then
+               put stream bf unformat '- '.
+           else
+               put stream bf unformat '"' x9_rmks '" '.
+           put stream bf unformat '"' x9_pr_list2 '" '.
            put stream bf unformat '"' x9_pr_list '" - ' x9_site ' - - - - - - - - - - - - N' skip.
        end.
        put stream bf '-' skip. /*tax*/

@@ -17,16 +17,21 @@ define variable I as integer.
    bsheet:cells(i,4)  = "到期日".
    bsheet:cells(i,5)  = "价格表".
    bsheet:cells(i,6)  = "折扣表".
-   bsheet:cells(i,7)  = "地点".
-   bsheet:cells(i,8)  = "项次".
-   bsheet:cells(i,9)  = "料号".
-   bsheet:cells(i,10) = "订单量".
-   bsheet:cells(i,11) = "预测1".
-   bsheet:cells(i,12) = "预测2".
-   bsheet:cells(i,13) = "结果".
-   bsheet:Range("A1:B2"):Interior:ColorIndex = 6.
+   bsheet:cells(i,7)  = "采购员".
+   bsheet:cells(i,8)  = "备注".
+   bsheet:cells(i,9)  = "地点".
+   bsheet:cells(i,10) = "项次".
+   bsheet:cells(i,11) = "料号".
+   bsheet:cells(i,12) = "订单量".
+   bsheet:cells(i,13) = "预测1".
+   bsheet:cells(i,14) = "预测2".
+   bsheet:cells(i,15) = "结果".
+   bsheet:Range("A1:A1"):Interior:ColorIndex = 6.
+   bsheet:Range("H1:H1"):Interior:ColorIndex = 6.
    bsheet:Range("A1"):AddComment NO-ERROR.
    bsheet:Range("A1"):Comment:TEXT("必填") NO-ERROR.
+   bsheet:Range("H1"):AddComment NO-ERROR.
+   bsheet:Range("H1"):Comment:TEXT('如果不修改原有备注请填"-"') NO-ERROR.
    i = i + 1.
    for each xxpod9 no-lock:
        bsheet:cells(i,1) = "'" + x9_nbr.
@@ -35,13 +40,15 @@ define variable I as integer.
        bsheet:cells(i,4) = "'" + string(x9_due_date,"99/99/99").
        bsheet:cells(i,5) = "'" + x9_pr_list2.
        bsheet:cells(i,6) = "'" + x9_pr_list.
-       bsheet:cells(i,7) = x9_site.
-       bsheet:cells(i,8) = x9_line.
-       bsheet:cells(i,9) = x9_part.
-       bsheet:cells(i,10) = x9_qty_ord.
-       bsheet:cells(i,11) = x9_qty_fc1.
-       bsheet:cells(i,12) = x9_qty_fc2.
-       bsheet:cells(i,13) = "'" + x9_chk.
+       bsheet:cells(i,7) = x9_buyer.
+       bsheet:cells(i,8) = x9_rmks.
+       bsheet:cells(i,9) = x9_site.
+       bsheet:cells(i,10) = x9_line.
+       bsheet:cells(i,11) = x9_part.
+       bsheet:cells(i,12) = x9_qty_ord.
+       bsheet:cells(i,13) = x9_qty_fc1.
+       bsheet:cells(i,14) = x9_qty_fc2.
+       bsheet:cells(i,15) = "'" + x9_chk.
 /*
        if xsd_chk = "" then do:
             bsheet:Range("a" + string(i) + ":" + "R" + string(i)):Interior:Color = 65535.
@@ -54,7 +61,7 @@ define variable I as integer.
        i = i + 1.
    end.
   bsheet:Cells:EntireColumn:AutoFit.
-  bsheet:Range("H2"):Select.
+  bsheet:Range("J2"):Select.
   bexcel:ActiveWindow:FreezePanes = True.
 
 /* bbook:SaveAs(thfile ,,,,,,1).                                            */

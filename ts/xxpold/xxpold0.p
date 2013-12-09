@@ -28,12 +28,14 @@ define variable intI as integer.
                x9_due_date = str2Date(TRIM(bsheet:cells(intI,4):value),"ymd")
                x9_pr_list2 = TRIM(bsheet:cells(intI,5):FormulaR1C1)
                x9_pr_list = TRIM(bsheet:cells(intI,6):FormulaR1C1)
-               x9_site = TRIM(bsheet:cells(intI,7):FormulaR1C1)
-               x9_line = integer(TRIM(bsheet:cells(intI,8):FormulaR1C1))
-               x9_part = TRIM(bsheet:cells(intI,9):FormulaR1C1)
-               x9_qty_ord = decimal(TRIM(bsheet:cells(intI,10):FormulaR1C1))
-               x9_qty_fc1 = decimal(TRIM(bsheet:cells(intI,11):FormulaR1C1))
-               x9_qty_fc2 = decimal(TRIM(bsheet:cells(intI,12):FormulaR1C1))
+               x9_buyer = TRIM(bsheet:cells(intI,7):FormulaR1C1)
+               x9_rmks  = TRIM(bsheet:cells(intI,8):FormulaR1C1)
+               x9_site = TRIM(bsheet:cells(intI,9):FormulaR1C1)
+               x9_line = integer(TRIM(bsheet:cells(intI,10):FormulaR1C1))
+               x9_part = TRIM(bsheet:cells(intI,11):FormulaR1C1)
+               x9_qty_ord = decimal(TRIM(bsheet:cells(intI,12):FormulaR1C1))
+               x9_qty_fc1 = decimal(TRIM(bsheet:cells(intI,13):FormulaR1C1))
+               x9_qty_fc2 = decimal(TRIM(bsheet:cells(intI,14):FormulaR1C1))
                no-error.
      end.
   END.

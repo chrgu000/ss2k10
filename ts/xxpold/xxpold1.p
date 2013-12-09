@@ -15,6 +15,13 @@ for each xxpod9 exclusive-lock:
        assign x9_chk = "ÏîºÅ´íÎó!".
        next.
     end.
+    if can-find(first code_mstr no-lock where code_domain = global_domain and
+                      code_fldname = "po_buyer")
+       and not can-find(first code_mstr no-lock where code_domain = global_domain and
+                              code_fldname = "po_buyer" and code_value = x9_buyer) then do:
+       assign x9_chk = "²É¹ºÔ±´íÎó!".
+       next.
+    end.
     find first vd_mstr no-lock where vd_domain = global_domain
            and vd_addr = x9_vend no-error.
     if not available vd_mstr then do:

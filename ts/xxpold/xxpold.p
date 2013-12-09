@@ -1,10 +1,10 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER AB_v10r12 GUI ADM2
 &ANALYZE-RESUME
-/* Connected Databases 
+/* Connected Databases
 */
 &Scoped-define WINDOW-NAME wWin
 {adecomm/appserv.i}
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS wWin
 /*------------------------------------------------------------------------
 
   File:
@@ -44,7 +44,7 @@ CREATE WIDGET-POOL.
 &ANALYZE-RESUME
 
 
-&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK 
+&ANALYZE-SUSPEND _UIB-PREPROCESSOR-BLOCK
 
 /* ********************  Preprocessor Definitions  ******************** */
 
@@ -63,8 +63,8 @@ CREATE WIDGET-POOL.
 &Scoped-define INTERNAL-TABLES xxpod9
 
 /* Definitions for BROWSE brList                                        */
-&Scoped-define FIELDS-IN-QUERY-brList x9_nbr x9_vend x9_ship x9_due_date x9_pr_list2 x9_pr_list x9_site x9_line x9_part x9_qty_ord x9_qty_fc1 x9_qty_fc2 x9_chk   
-&Scoped-define ENABLED-FIELDS-IN-QUERY-brList   
+&Scoped-define FIELDS-IN-QUERY-brList x9_nbr x9_vend x9_ship x9_due_date x9_pr_list2 x9_pr_list x9_buyer x9_rmks x9_site x9_line x9_part x9_qty_ord x9_qty_fc1 x9_qty_fc2 x9_chk
+&Scoped-define ENABLED-FIELDS-IN-QUERY-brList
 &Scoped-define SELF-NAME brList
 &Scoped-define QUERY-STRING-brList FOR EACH xxpod9
 &Scoped-define OPEN-QUERY-brList OPEN QUERY {&SELF-NAME} FOR EACH xxpod9.
@@ -77,8 +77,8 @@ CREATE WIDGET-POOL.
     ~{&OPEN-QUERY-brList}
 
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-OBJECTS brList fiFile btnOpen btnExp btnLoad 
-&Scoped-Define DISPLAYED-OBJECTS fiFile 
+&Scoped-Define ENABLED-OBJECTS brList fiFile btnOpen btnExp btnLoad
+&Scoped-Define DISPLAYED-OBJECTS fiFile
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -94,26 +94,26 @@ CREATE WIDGET-POOL.
 DEFINE VAR wWin AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
-DEFINE BUTTON btnExp 
-     LABEL "输出" 
+DEFINE BUTTON btnExp
+     LABEL "输出"
      SIZE 15 BY 1.14.
 
-DEFINE BUTTON btnLoad 
-     LABEL "装入" 
+DEFINE BUTTON btnLoad
+     LABEL "装入"
      SIZE 15 BY 1.14.
 
-DEFINE BUTTON btnOpen 
-     LABEL "浏览..." 
+DEFINE BUTTON btnOpen
+     LABEL "浏览..."
      SIZE 15 BY 1.14.
 
-DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U 
-     LABEL "文件名" 
-     VIEW-AS FILL-IN 
+DEFINE VARIABLE fiFile AS CHARACTER FORMAT "X(256)":U
+     LABEL "文件名"
+     VIEW-AS FILL-IN
      SIZE 31 BY 1 NO-UNDO.
 
 /* Query definitions                                                    */
 &ANALYZE-SUSPEND
-DEFINE QUERY brList FOR 
+DEFINE QUERY brList FOR
       xxpod9 SCROLLING.
 &ANALYZE-RESUME
 
@@ -127,6 +127,8 @@ DEFINE BROWSE brList
       x9_due_date  COLUMN-LABEL "到期日"
       x9_pr_list2  COLUMN-LABEL "价格表"
       x9_pr_list   COLUMN-LABEL "折扣表"
+      x9_buyer     COLUMN-LABEL "采购员"
+      x9_rmks      COLUMN-LABEL "备注" WIDTH 12
       x9_site      COLUMN-LABEL "地点"
       x9_line      COLUMN-LABEL "项次"
       x9_part      COLUMN-LABEL "料号"
@@ -147,8 +149,8 @@ DEFINE FRAME fMain
      btnOpen AT ROW 2.09 COL 43.56
      btnExp AT ROW 2.09 COL 64.56
      btnLoad AT ROW 2.09 COL 84.89
-    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
-         SIDE-LABELS NO-UNDERLINE THREE-D 
+    WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY
+         SIDE-LABELS NO-UNDERLINE THREE-D
          AT COL 1 ROW 1
          SIZE 104.67 BY 23.
 
@@ -189,7 +191,7 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* END WINDOW DEFINITION                                                */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB wWin
 /* ************************* Included-Libraries *********************** */
 
 {src/adm2/containr.i}
@@ -208,6 +210,9 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* SETTINGS FOR FRAME fMain
    FRAME-NAME L-To-R,COLUMNS                                            */
 /* BROWSE-TAB brList 1 fMain */
+ASSIGN
+       brList:COLUMN-RESIZABLE IN FRAME fMain       = TRUE.
+
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(wWin)
 THEN wWin:HIDDEN = yes.
 
@@ -226,7 +231,7 @@ OPEN QUERY {&SELF-NAME} FOR EACH xxpod9.
 */  /* BROWSE brList */
 &ANALYZE-RESUME
 
- 
+
 
 
 
@@ -374,7 +379,7 @@ END.
 &Scoped-define BROWSE-NAME brList
 &UNDEFINE SELF-NAME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK wWin
 
 
 /* ***************************  Main Block  *************************** */
@@ -425,7 +430,7 @@ PROCEDURE disable_UI :
   Purpose:     DISABLE the User Interface
   Parameters:  <none>
   Notes:       Here we clean-up the user-interface by deleting
-               dynamic widgets we have created and/or hide 
+               dynamic widgets we have created and/or hide
                frames.  This procedure is usually called when
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
@@ -446,12 +451,12 @@ PROCEDURE enable_UI :
   Notes:       Here we display/view/enable the widgets in the
                user-interface.  In addition, OPEN all queries
                associated with each FRAME and BROWSE.
-               These statements here are based on the "Other 
+               These statements here are based on the "Other
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-  DISPLAY fiFile 
+  DISPLAY fiFile
       WITH FRAME fMain IN WINDOW wWin.
-  ENABLE brList fiFile btnOpen btnExp btnLoad 
+  ENABLE brList fiFile btnOpen btnExp btnLoad
       WITH FRAME fMain IN WINDOW wWin.
   {&OPEN-BROWSERS-IN-QUERY-fMain}
   VIEW wWin.
@@ -460,7 +465,7 @@ END PROCEDURE.
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin 
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE exitObject wWin
 PROCEDURE exitObject :
 /*------------------------------------------------------------------------------
   Purpose:  Window-specific override of this procedure which destroys
