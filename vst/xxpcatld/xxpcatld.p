@@ -39,7 +39,7 @@ repeat:
     end.
     input close.
 
-    for each xxfl exclusive-lock: 
+    for each xxfl exclusive-lock:
         if index(xf_type,"F") = 0 then delete xxfl.
         else do:
           if substring(xf_file,length(xf_file) - 3) <> ".csv" then delete xxfl.

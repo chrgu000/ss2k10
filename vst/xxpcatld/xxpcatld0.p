@@ -3,34 +3,49 @@
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
 /* REVISION END                                                              */
-
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+
 {mfdeclre.i}
 {xxpcatld.i}
 {xxloaddata.i}
 define variable txt as character.
 define variable i as integer.
 define variable dte as date.
+define variable dtes as character.
+define variable dtee as character.
 empty temp-table xxtmppc0 no-error.
 empty temp-table xxtmppc no-error.
 for each xxfl no-lock:
 input from value(xf_dname).
 repeat:
-    import unformat txt.
-    if entry(1,txt,",") <> "VENDOR" and entry(2,txt,",") <> "CURR" then do:
+    /* import unformat txt. */
+    /* if index(entry(1,txt,",") , "VENDOR") = 0 and                 */
+    /*    index(entry(2,txt,",") , "CURR" ) = 0 then do:             */
        create xxtmppc0.
-       assign x0pc_list = entry(1,txt,",") no-error.
+       import delimiter "," x0pc_axvd x0pc_curr x0pc_part x0pc_axum dtes
+              dtee x0pc_user1 x0pc_amt.
+       assign x0pc_start = str2Date(dtes,"ymd")
+              x0pc_expir = str2Date(dtee,"ymd")
+              x0pc_file = xf_file no-error.
+       /*
+       assign x0pc_axvd = entry(1,txt,",") no-error.
        assign x0pc_curr = entry(2,txt,",") no-error.
        assign x0pc_part = entry(3,txt,",") no-error.
-       assign x0pc_um  = entry(4,txt,",") no-error.
+       assign x0pc_axum  = entry(4,txt,",") no-error.
        assign x0pc_start = str2Date(entry(5,txt,","),"ymd") no-error.
        assign x0pc_expir = str2Date(entry(6,txt,","),"ymd") no-error.
        assign x0pc_user1 = entry(7,txt,",") no-error.
        assign x0pc_amt = decimal(entry(8,txt,",")) no-error.
        assign x0pc_file = xf_file no-error.
-    end.
+       */
+  /* end.  */
 end.
 input close.
+end.
+
+
+for each xxtmppc0 exclusive-lock:
+    if x0pc_axvd = "VENDOR" or x0pc_axvd = "" or x0pc_part = "" then delete xxtmppc0.
 end.
 
 assign i = 1.
@@ -45,21 +60,29 @@ for each xxtmppc0 exclusive-lock:
     if not available(pt_mstr) then do:
        assign x0pc_chk = getMsg(17).
     end.
-/*  find first usrw_wkfl no-lock where usrw_key1 = "AX_QAD_VENDOR_REFERENCE"  */
-/*         and usrw_key2 = x0pc_axvd no-error.                                */
-/*  if available usrw_wkfl then do:                                           */
-/*     assign x0pc_list = usrw_key3.                                          */
-/*  end.                                                                      */
-/*  else do:                                                                  */
-/*     assign x0pc_chk = getMsg(2) + "-xxvdaxref.p".                          */
-/*  end.                                                                      */
-/*  find first vd_mstr no-lock where vd_addr = x0pc_list no-error.            */
-/*  if available(vd_mstr) then do:                                            */
-/*     assign x0pc_sort = vd_sort.                                            */
-/*  end.                                                                      */
-/*  else do:                                                                  */
-/*      assign x0pc_chk = getMsg(2).                                          */
-/*  end.                                                                      */
+    else do:
+         if x0pc_axum <> pt_um then do:
+            assign x0pc_um = pt_um.
+         end.
+         else do:
+            assign x0pc_um = pt_um.
+         end.
+    end.
+    find first usrw_wkfl no-lock where usrw_key1 = "AX_QAD_VENDOR_REFERENCE"
+           and usrw_key2 = x0pc_axvd no-error.
+    if available usrw_wkfl then do:
+       assign x0pc_list = usrw_key3.
+    end.
+    else do:
+       assign x0pc_chk = getMsg(2) + "-xxvdaxref.p".
+    end.
+    find first vd_mstr no-lock where vd_addr = x0pc_list no-error.
+    if available(vd_mstr) then do:
+       assign x0pc_sort = vd_sort.
+    end.
+    else do:
+        assign x0pc_chk = getMsg(2).
+    end.
 end.
 
 assign i = 1.
