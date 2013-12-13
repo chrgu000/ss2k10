@@ -46,9 +46,9 @@ for each xxtmppc0 exclusive-lock:
        assign x0pc_chk = getMsg(17).
     end.
     find first usrw_wkfl no-lock where usrw_key1 = "AX_QAD_VENDOR_REFERENCE"
-           and usrw_key2 = x0pc_axvd no-error.
+           and usrw_key3 = x0pc_axvd and usrw_key4 = x0pc_curr no-error.
     if available usrw_wkfl then do:
-       assign x0pc_list = usrw_key3.
+       assign x0pc_list = usrw_key5.
     end.
     else do:
        assign x0pc_chk = getMsg(2) + "-xxvdaxref.p".

@@ -43,6 +43,14 @@
 /* REVISION: 9.1      LAST MODIFIED: 07/26/01   BY: *L13N* Rajaneesh S.      */
 /* REVISION: 9.1      LAST MODIFIED: 03/08/02   BY: *N1CC* Rajaneesh S.      */
 /* ADM1      10/24/03  Brian Lo - need re-enter for to-be-ship qty > ord qty */
+/* 1312  *****************************************************************
+ * 当生产部门在7.1.1中把销售订单录入完毕，可否增加一个节点，
+ * 让财务部门进行审核单价，当财务部门审核无误后，才可以在7.9.2中作预先出货单。
+ * 借用SOD__CHR10 = "HD" 则不允许出货,"" 则允许出货.  
+ * 1.修改xxsosomt.p维护SO时sod__chr10设置为HD
+ * 2.新开发程序xxsoprau.p修改sod__chr10的状态
+ * 3.修改xxrcshwb.p当sod__chr10 = "HD"时不允许出货
+ * 1312 *****************************************************************/
 /* 131023.1 *****************************************************************
  *  我们现在在7.9.2中做预先出货单，7.9.5做出货，7.9.17生成销售发票，
  *  当我们在7.9.2做预先出货单之后，系统自动做出货以及自动生成销售发票。
@@ -174,7 +182,7 @@
             si_desc              at 37 no-label
 /*J0K9      doc_type             colon 25 label "Picklist/Shipper"     */
 /*J0K9*/    doc_type             colon 25 label {&rcshwb_p_1}  
-            due             colon 47
+            due                  colon 47
 /*G1XQ      abs_id               colon 25 label "Number" format "X(9)" */
 /*K003* /*G1XQ*/ abs_id          colon 25 label "Number" format "X(8)" */
 /*K003*/    abs_id               colon 25 label {&rcshwb_p_3}
@@ -540,7 +548,7 @@
 .           end. /* IF INPUT ABS_ID = "" THEN DO TRANSACTION */
 .*K003*/
 
-            assign doc_type.
+            assign doc_type due.
 
             do transaction:
 

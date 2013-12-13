@@ -11,8 +11,14 @@
 define variable txt as character.
 define variable i as integer.
 define variable dte as date.
+define variable vaxvd as character.
+define variable vcurr as character.
+define variable vpart as character.
+define variable vaxum as character.
 define variable dtes as character.
 define variable dtee as character.
+define variable vuser1  as character.
+define variable vamt as character.
 empty temp-table xxtmppc0 no-error.
 empty temp-table xxtmppc no-error.
 for each xxfl no-lock:
@@ -21,12 +27,19 @@ repeat:
     /* import unformat txt. */
     /* if index(entry(1,txt,",") , "VENDOR") = 0 and                 */
     /*    index(entry(2,txt,",") , "CURR" ) = 0 then do:             */
-       create xxtmppc0.
-       import delimiter "," x0pc_axvd x0pc_curr x0pc_part x0pc_axum dtes
-              dtee x0pc_user1 x0pc_amt.
-       assign x0pc_start = str2Date(dtes,"ymd")
-              x0pc_expir = str2Date(dtee,"ymd")
-              x0pc_file = xf_file no-error.
+
+       import delimiter "," vaxvd vcurr vpart vaxum dtes dtee vuser1 vamt.
+       if vaxvd <> "" and vaxvd <> "VENDOR" and vamt <> "Price" then do:
+          create xxtmppc0.
+          assign x0pc_axvd = vaxvd
+                 x0pc_curr = vcurr
+                 x0pc_part = vpart
+                 x0pc_axum = vaxum
+                 x0pc_user1 = vuser1
+                 x0pc_start = str2Date(dtes,"ymd")
+                 x0pc_expir = str2Date(dtee,"ymd")
+                 x0pc_file = xf_file no-error.
+       end.
        /*
        assign x0pc_axvd = entry(1,txt,",") no-error.
        assign x0pc_curr = entry(2,txt,",") no-error.
@@ -69,9 +82,9 @@ for each xxtmppc0 exclusive-lock:
          end.
     end.
     find first usrw_wkfl no-lock where usrw_key1 = "AX_QAD_VENDOR_REFERENCE"
-           and usrw_key2 = x0pc_axvd no-error.
+           and usrw_key3 = x0pc_axvd and usrw_key4 = x0pc_curr no-error.
     if available usrw_wkfl then do:
-       assign x0pc_list = usrw_key3.
+       assign x0pc_list = usrw_key5.
     end.
     else do:
        assign x0pc_chk = getMsg(2) + "-xxvdaxref.p".
@@ -124,4 +137,12 @@ assign i = 1.
 for each xxtmppc exclusive-lock:
     assign xxpc_sn = i.
     assign i = i + 1.
+end.
+
+/*如果有一笔检查错误则整个文档都判定为错误*/
+for each xxtmppc exclusive-lock break by xxpc_file by xxpc_chk descending:
+    if first-of(xxpc_file) then do:
+        assign vuser1 = xxpc_chk.
+    end.
+    if xxpc_chk = "" and vuser1 <> "" then assign xxpc_chk = "err".
 end.

@@ -146,12 +146,17 @@
 /* ADM1    11/17/03 Brian Lo -  add audit trail logic      */
 
 /*J034*  * MOVED MFDTITLE.I UP FROM BELOW */
-/*131023.1*********************************************************************
- * 关于销售系统，当生产部门在7.1.1中把销售订单录入完毕，可否增加一个节点，
+
+ /* 1312  *****************************************************************
+ * 当生产部门在7.1.1中把销售订单录入完毕，可否增加一个节点，
  * 让财务部门进行审核单价，当财务部门审核无误后，才可以在7.9.2中作预先出货单。
- * call stack: xxsosomt.p->xxsosomt1.p->xxsosomtc.p->xxsosomtc2.p
+ * 借用SOD__CHR10 = "HD" 则不允许出货,"" 则允许出货.
+ * 1.修改xxsosomt.p维护SO时sod__chr10设置为HD
+ * 2.新开发程序xxsoprau.p修改sod__chr10的状态
+ * 3.修改xxrcshwb.p当sod__chr10 = "HD"时不允许出货
+ * call stack: xxsosomt.p->xxsosomt1.p->sosomtaxx.p->sosomtlaxx.p
  * 控制设置在CODE_MSTR fldname = "WHEN_SO_HOLD_DISABL_SHIP"
- *131023.1********************************************************************/
+ * 1312 *****************************************************************/
          /* DISPLAY TITLE */
          {mfdtitle.i "131023.1"}  /*H238*/
 

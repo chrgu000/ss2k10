@@ -419,7 +419,7 @@
 /*N00F*/              sod_desc sod_end_eff sod_fa_nbr sod_line sod_loc
 /*N00F*/              sod_nbr sod_part sod_qty_all sod_qty_ord sod_qty_pick
 /*N00F*/              sod_qty_ship sod_sched sod_site sod_start_eff sod_type
-/*N00F*/              sod_um sod_um_conv)
+/*N00F*/              sod_um sod_um_conv sod__chr10)
 /*N00F*/       where recid(sod_det) = window_recid no-lock:
 /*N00F*/    end. /* FOR FIRST SOD_DET */
 /*N00F*/    if available sod_det then
@@ -461,13 +461,15 @@
 /*M16B*/           sod_loc      sod_nbr       sod_part     sod_qty_all
 /*M16B*/           sod_qty_ord  sod_qty_pick  sod_qty_ship sod_sched
 /*M16B*/           sod_site     sod_start_eff sod_type     sod_um
-/*M1TT*/           sod_btb_type
-/*M16B*/           sod_um_conv)
+/*M1TT*/           sod_btb_type sod_um_conv sod__chr10)
 /*M16B*/    where sod_nbr          = part_order
 /*M16B*/    and   string(sod_line) = part_order_line
 /*M16B*/    no-lock:
 /*M16B*/ end. /* FOR FIRST sod_det */
-
+/*1312*/ if available sod_det and sod__chr10 = "HD" then do:
+/*1312*/    {mfmsg.i 3758 3}
+/*1312*/    undo MAIN, retry MAIN.
+/*1312*/ end.
 /*M1TT*/ if available sod_det
 /*M1TT*/    and sod_btb_type = "03"
 /*M1TT*/ then do:
@@ -507,7 +509,7 @@
 /*M16B*/               sod_loc      sod_nbr       sod_part     sod_qty_all
 /*M16B*/               sod_qty_ord  sod_qty_pick  sod_qty_ship sod_sched
 /*M16B*/               sod_site     sod_start_eff sod_type     sod_um
-/*M16B*/               sod_um_conv)
+/*M16B*/               sod_um_conv sod__chr10)
 /*N05Q*/      where sod_part     =  part_item
 /*M16B*/      and   sod_part     <> ""
 /*N05Q*/      and   sod_contr_id =  part_po

@@ -700,7 +700,7 @@
             /* THEN FOR RMA RECEIPT LINES.                                */
 
 /*ADM1            {gprun.i ""sosomta.p""*/
-/*ADM1*/    {gprun.i ""sosomtaxx.p""            
+/*ADM1*/    {gprun.i ""sosomtaxx.p""
                 "(input this-is-rma,
                     input rma-recno,
                     input yes)"}
@@ -887,7 +887,7 @@
 .*J0JW*/
 
 /*J1P5**    {gprun.i ""sosomtc.p""} */
-/*J1P5*/    {gprun.i ""xxsosomtc.p"" "(input this-is-rma)"}
+/*J1P5*/    {gprun.i ""sosomtc.p"" "(input this-is-rma)"}
 
 
 /*K004*/ /* added next section */

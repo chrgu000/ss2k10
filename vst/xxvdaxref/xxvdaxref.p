@@ -21,8 +21,9 @@ define variable batchdelete as character format "x(1)" no-undo.
 /* DISPLAY SELECTION FORM */
 form
    usrw_key1 colon 25 format "x(24)" skip(1)
-   usrw_key2 colon 25 format "x(12)"
    usrw_key3 colon 25 format "x(8)"
+   usrw_key4 colon 25 format "x(4)" skip(2)
+   usrw_key5 colon 25 format "x(8)"
    vadsort colon 25 no-label skip(2)
 with frame a side-labels width 80 attr-space.
 
@@ -43,51 +44,73 @@ repeat with frame a:
 
    do on error undo, retry:
 
-      /* Prompt for the delete variable in the key frame at the
-       * End of the key field/s only when batchrun is set to yes */
-      prompt-for
-         usrw_key2
-         batchdelete no-label when (batchrun)
-      editing:
-         {mfnp05.i usrw_wkfl usrw_index1  " usrw_key1 = vkey1 "
-                   usrw_key2  " input usrw_key2 "}
-         if recno <> ? then do:
-            find first vd_mstr no-lock where vd_addr = usrw_key3 no-error.
-              if available vd_mstr then do:
-                 assign vadsort = vd_sort.
-              end.
-            display usrw_key1 usrw_key2 usrw_key3 vadsort.
+       prompt-for usrw_key3 usrw_key4 batchdelete no-label when (batchrun) editing:
+         if frame-field = "usrw_key3" then do:
+            {mfnp05.i usrw_wkfl usrw_index1 " usrw_key1 = vkey1 "
+                      usrw_key3 " input usrw_key3"}
+            if recno <> ? then do:
+               assign vadsort = "".
+               find first vd_mstr no-lock where vd_addr = usrw_key5 no-error.
+               if available vd_mstr then do:
+                  assign vadsort = vd_sort.
+               end.
+               display usrw_key1 usrw_key3 usrw_key4 usrw_key5 vadsort.
+            end.
          end.
-
-      end. /* editing: */
+         else if frame-field = "usrw_key4" then do:
+           {mfnp05.i usrw_wkfl usrw_index1
+                    " usrw_key1 = vkey1 and usrw_key3 = input usrw_key3 "
+                     usrw_key4 " input usrw_key4 "}
+           if recno <> ? then do:
+               assign vadsort = "".
+               find first vd_mstr no-lock where vd_addr = usrw_key5 no-error.
+               if available vd_mstr then do:
+                  assign vadsort = vd_sort.
+               end.
+               display usrw_key1 usrw_key3 usrw_key4 usrw_key5 vadsort.
+           end.
+         end.
+         else do:
+              readkey.
+              apply lastkey.
+         end.
+       end. /*prompt for*/
 
    end. /* do on error undo, retry: */
-   if input usrw_key2 = "" then do:
+   if input usrw_key3 = "" then do:
       {pxmsg.i &MSGNUM=40 &ERRORLEVEL=3}
+      next-prompt usrw_key3.
+      undo,retry.
+   end.
+    if input usrw_key4 = "" then do:
+      {pxmsg.i &MSGNUM=40 &ERRORLEVEL=3}
+      next-prompt usrw_key4.
       undo,retry.
    end.
    /* ADD/MOD/DELETE  */
-   find usrw_wkfl where usrw_key1 = vkey1 and
-                        usrw_key2 = input usrw_key2 no-error.
+   find usrw_wkfl use-index usrw_index1 exclusive-lock where usrw_key1 = vkey1 and
+        usrw_key3 = input usrw_key3 and usrw_key4 = input usrw_key4 no-error.
 
    if not available usrw_wkfl then do:
       {pxmsg.i &MSGNUM=1 &ERRORLEVEL=1}
       create usrw_wkfl.
       assign usrw_key1 = vkey1
-             usrw_key2.
+             usrw_key2 = input usrw_key3 + ";" + input usrw_key4
+             usrw_key3
+             usrw_key4.
    end. /* if not available usrw_wkfl then do: */
 
    ststatus = stline[2].
    status input ststatus.
 
   repeat with frame a:
-     update usrw_key3 go-on(F5 CTRL-D).
-          if usrw_key3 = "" then do:
+     update usrw_key5 go-on(F5 CTRL-D).
+          if usrw_key5 = "" then do:
              {pxmsg.i &MSGNUM=40 &ERRORLEVEL=3}
              undo,retry.
           end.
           assign vadsort = "".
-          find first vd_mstr no-lock where vd_addr = input usrw_key3 no-error.
+          find first vd_mstr no-lock where vd_addr = input usrw_key5 no-error.
           if available vd_mstr then do:
              assign vadsort = vd_sort.
           end.
@@ -95,7 +118,7 @@ repeat with frame a:
               {pxmsg.i &MSGNUM=2 &ERRORLEVEL=3}
               undo,retry.
           end.
-          display usrw_key3 vadsort with frame a.
+          display usrw_key5 vadsort with frame a.
           leave.
   end.
    /* Delete to be executed if batchdelete is set or

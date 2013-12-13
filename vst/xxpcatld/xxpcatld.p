@@ -20,6 +20,7 @@ form
    sTxtDir colon 18
    cloadfile colon 18 skip(2)
 with frame a side-labels width 80.
+setframelabels(frame a:handle).
 
 repeat:
   FILE-INFO:FILE-NAME = sTxtDir.
