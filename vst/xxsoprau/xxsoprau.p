@@ -20,7 +20,7 @@ form
    nbr  colon 16
    nbr1 colon 42 label "To"
    ln   colon 16
-   ln1  colon 42 label "To" 
+   ln1  colon 42 label "To"
    part colon 15
    part1 colon 42 label "To" skip(2)
    st   colon 22 label "stat"
@@ -67,11 +67,13 @@ repeat:
 
    {mfphead.i}
   for each tsod exclusive-lock: delete tsod. end.
-for each sod_det no-lock where sod_nbr >= nbr and sod_nbr <= nbr1 
+for each sod_det no-lock where sod_nbr >= nbr and sod_nbr <= nbr1
      and sod_line >= ln and sod_line <= ln1
-     and sod_part >= part and sod_part <= part1 :
-
-     display sod_nbr sod_line sod_part sod_qty_ord sod_price.
+     and sod_part >= part and sod_part <= part1 with frame z:
+     setframelabels(frame z:handle).
+    find first so_mstr no-lock where so_nbr = sod_nbr no-error.
+     display sod_nbr so_ship when available so_mstr
+             sod_line sod_part sod_qty_ord sod_price.
      if st <> 1 then do:
         create tsod.
         assign tsod_id = recid(sod_det).

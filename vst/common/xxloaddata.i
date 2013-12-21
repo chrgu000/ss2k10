@@ -57,7 +57,12 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER
         assign od = ?.
     end.
     else do:
-        ASSIGN sstr = datestr.
+        if index(trim(datestr)," ") = 0 then do:
+           ASSIGN sstr = datestr.
+        end.
+        else do:
+           assign sstr = substring(trim(datestr),1,index(trim(datestr)," ") - 1).
+        end.
         do i = 1 to length(sstr).
            if index("0123456789",substring(sstr,i,1)) = 0 then do:
               assign spchar = substring(sstr,i,1).
@@ -86,8 +91,8 @@ FUNCTION str2Date RETURNS DATE(INPUT datestr AS CHARACTER
         ASSIGN od = DATE(im,id,iy).
     end.
     RETURN od.
-
 END FUNCTION.
+
 
 FUNCTION Pct2Dec RETURNS Decimal(input iPercentStr AS CHARACTER):
  /* -----------------------------------------------------------
