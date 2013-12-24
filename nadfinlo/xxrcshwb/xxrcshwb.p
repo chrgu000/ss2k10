@@ -1136,11 +1136,10 @@ repeat with frame a:
    hide frame c no-pause.
 
    /* SHIPPER WORKBENCH */
-   {gprun.i ""rcshwbb.p""
+   {gprun.i ""xxrcshwbb.p""
                "(input ship_from,
                  input tmp_prefix,
                  input abs_recid)"}
-
    view frame a.
 
    if use-log-acctg and (l_AbsId begins "s" or l_AbsId begins "p") then do:
