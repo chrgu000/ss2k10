@@ -189,56 +189,61 @@ repeat:
      end.
      display skip(1) "盘点数量?" format "x(20)" skip with frame framea2 no-box.
   end.
+  ret-ok = no.
   qtyloop:
   repeat:
-  hide frame frameac.
-  hide frame framead.
-  update vqty view-as fill-in size 20 by 1 no-label with frame framea2 no-box.
-  if upper(vqty) = "E" then do:
-     assign WMESSAGE = "".
-     leave tagloop.
-  end.
-  else do:
-       DO i = 1 to length(vqty).
-          If index("0987654321,", substring(vqty,i,1)) = 0 then do:
-             display "项次输入错误." @ wmessage no-label with frame frameac.
-             undo,retry.
-          end.
-       end.
-  end.
-  ret-ok = no.
-  find first code_mstr no-lock where code_fldname = "BarcodeContConfirm"
-         and substring(code_value,1,1) = "Y" no-error.
-  if available code_mstr then do:
-     assign ret-ok = yes.
-  end.
-  hide all.
-  if decimal(vqty) <> vldqty and ret-ok = no then do:
-     display vtitle + "*" + TRIM ( V1002 )  format "x(40)" skip with fram framead no-box.
-     display "库存数:" + trim(string(vldqty)) format "x(20)" skip with frame framead.
-     display "盘点数:" + trim(vqty) format "x(20)" skip with frame framead.
-
-     display skip(2) "确认更新?" skip with frame framead.
-     update ret-ok no-label with frame framead no-box.
-     if not ret-ok then do:
-        undo, retry.
-     end.
-  end.
-  leave qtyloop.
+      hide frame frameac.
+      hide frame framead.
+      ret-ok = no.
+      update vqty view-as fill-in size 20 by 1 no-label with frame framea2 no-box.
+      if upper(vqty) = "E" then do:
+         assign WMESSAGE = "".
+         leave tagloop.
+      end.
+      else if trim(vqty) = "" then do:
+         undo,retry.
+      end.
+      else do:
+           DO i = 1 to length(vqty).
+              If index("0987654321,", substring(vqty,i,1)) = 0 then do:
+                 display "项次输入错误." @ wmessage no-label with frame frameac.
+                 undo,retry.
+              end.
+           end.
+      end.
+      find first code_mstr no-lock where code_fldname = "BarcodeContConfirm"
+             and substring(code_value,1,1) = "Y" no-error.
+      if available code_mstr then do:
+         assign ret-ok = yes.
+      end.
+      hide all.
+      if decimal(vqty) <> vldqty and ret-ok = no then do:
+         display vtitle + "*" + TRIM ( V1002 )  format "x(40)" skip with fram framead no-box.
+         display "库存数:" + trim(string(vldqty)) format "x(20)" skip with frame framead.
+         display "盘点数:" + trim(vqty) format "x(20)" skip with frame framead.
+    
+         display skip(2) "确认更新?" skip with frame framead.
+         update ret-ok no-label with frame framead no-box.
+         if not ret-ok then do:
+            undo, retry.
+         end.
+      end.
+      leave qtyloop.
   end. /* qtyloop:*/
-
-  if ret-ok then do:
+  if ret-ok = yes then do:
      {xspitcmt.i}
   end.
 
   find first tag_mstr where tag_site = wDefSite
-         and tag_nbr = integer(tgnbr) no-error.
+         and tag_nbr = integer(tgnbr) and tag_cnt_dt <> ? no-error.
   if available tag_mstr and tag_cnt_qty = integer(vqty) then do:
        WMESSAGE = "单号" + trim(tgnbr) + "数量" + trim(vqty) + "-OK!".
        tgnbr = "".
   end.
   else do:
-       WMESSAGE = "单号" + trim(tgnbr) + "数量" + trim(vqty) + "-失败!".
+       if vqty <> "" then do:
+          WMESSAGE = "单号" + trim(tgnbr) + "数量" + trim(vqty) + "-失败!".
+       end.
   end.
   leave tagloop.
 end.
@@ -247,5 +252,4 @@ end.
   hide frame framea2.
   hide frame frameac.
   hide frame framead.
-
 end.
