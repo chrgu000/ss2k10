@@ -1,61 +1,39 @@
-/* xxptcld1.p - xxppctmt.p cim load                                                */
+/* xxptld.p - ppptmt.p cim load                                                */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
 /* REVISION END                                                              */
 
+/* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
 {mfdeclre.i}
+{xxloaddata.i}
 {xxpcld.i}
-define variable vfile as character.
-define variable cfile as character.
-define variable vchk as character no-undo.
-define stream bf.
-for each xxtmppc where xxpc_chk = "" by xxpc_sn:
-    assign vfile = execname + "." + string(xxpc_sn,"999999").
-    output stream bf to value(vfile + ".bpi").
-    put stream bf unformat '"' xxpc_list '" "' xxpc_curr '" - "'
-        xxpc_part '" "' xxpc_um '" ' xxpc_start skip.
-    put stream bf unformat xxpc_expir ' L' skip.
-    put stream bf unformat trim(string(xxpc_amt)) skip.
-    output stream bf close.
+define variable i as integer.
+define variable j as integer.
 
-    cimrunprogramloop:
-    do transaction:
-       input from value(vfile + ".bpi").
-       output to value(vfile + ".bpo") keep-messages.
-       hide message no-pause.
-          batchrun = yes.
-          {gprun.i ""pppcmt.p""}
-          batchrun = no.
-       hide message no-pause.
-       output close.
-       input close.
-       assign vchk = "".
-       FIND FIRST pc_mstr NO-LOCK WHERE pc_domain = global_domain and
-                  pc_list = xxpc_list and
-                  pc_curr = xxpc_curr and pc_prod_line = "" and
-                  pc_part = xxpc_part and pc_um = xxpc_um and
-                  pc_start = xxpc_start no-error.
-       if available pc_mstr then do:
-          if pc_expire = xxpc_expir and
-             pc_amt_type = "L" and pc_amt[1] = xxpc_amt then do:
-             assign vchk = "OK".
-             os-delete value(vfile + ".bpi").
-             os-delete value(vfile + ".bpo").
-          end.
-          else do:
-            vchk  = "".
-            assign cfile = vfile + ".bpo".
-            {gprun.i ""xxgetcimerr.p"" "(input cfile,output vchk)"}
-             undo cimrunprogramloop,next.
-          end.
-       end.
-       else do:
-            vchk  = "".
-            assign cfile = vfile + ".bpo".
-            {gprun.i ""xxgetcimerr.p"" "(input cfile,output vchk)"}
-            undo cimrunprogramloop,next.
-       end.
-   end.  /* do transaction:  */
-   assign xxpc_chk = vchk.
+/* check data */
+for each xxtmppc exclusive-lock:
+    find first pt_mstr no-lock where pt_domain = global_domain and
+               pt_part = xxpc_part no-error.
+    if not available(pt_mstr) then do:
+       assign xxpc_chk = getMsg(17).
+    end.
+    find first vd_mstr no-lock where vd_domain = global_domain and
+               vd_addr = xxpc_list no-error.
+    if not available(vd_mstr) then do:
+       assign xxpc_chk = getMsg(2).
+    end.
 end.
+
+assign i = 0.
+for each xxtmppc exclusive-lock break by xxpc_list by xxpc_part
+      by xxpc_curr by xxpc_um by xxpc_start by xxpc_type:
+      if first-of(xxpc_type) then do:
+         assign i = i + 1.
+         assign j = 1.
+      end.
+         assign xxpc_sn = i
+                xxpc_sn1 = j.
+         assign j = j + 1.
+end.
+

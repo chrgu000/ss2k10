@@ -1,47 +1,45 @@
-/* xxptld.p - ppptmt.p cim load                                                */
-/*V8:ConvertMode=Report                                                      */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
-/* REVISION END                                                              */
-
-/* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+/* xxpold0.p - import from xls                                            */
 {mfdeclre.i}
-{xxpcld.i}
 {xxloaddata.i}
-define variable txt as character.
-define variable i as integer.
-empty temp-table xxtmppc no-error.
-input from value(flhload).
-repeat:
-    import unformat txt.
-    if entry(1,txt,",") <= "ZZZZZZZZZZZZ" and entry(1,txt,",") <> "" then do:
-       create xxtmppc.
-       assign xxpc_list = replace(entry(1,txt,","),'"',"") no-error.
-       assign xxpc_curr = replace(entry(2,txt,","),'"',"") no-error.
-       assign xxpc_part = replace(entry(3,txt,","),'"',"") no-error.
-       assign xxpc_start = str2Date(replace(entry(4,txt,","),'"',""),"dmy") no-error.
-       assign xxpc_expir = str2Date(replace(entry(5,txt,","),'"',""),"dmy") no-error.
-       assign xxpc_um  = replace(entry(6,txt,","),'"',"") no-error.
-       assign xxpc_amt = decimal(entry(7,txt,",")) no-error.
-    end.
-end.
-input close.
-assign i = 1.
-for each xxtmppc exclusive-lock:
-    assign xxpc_sn = i.
-    assign i = i + 1.
-end.
+{xxpcld.i}
+define input parameter thfile as CHAR FORMAT "x(50)".
 
-/* check data */
-for each xxtmppc exclusive-lock:
-    find first pt_mstr no-lock where pt_domain = global_domain and
-               pt_part = xxpc_part no-error.
-    if not available(pt_mstr) then do:
-       assign xxpc_chk = getMsg(17).
-    end.
-    find first vd_mstr no-lock where vd_domain = global_domain and
-               vd_addr = xxpc_list no-error.
-    if not available(vd_mstr) then do:
-       assign xxpc_chk = getMsg(2).
-    end.
+if search(thfile) = "" or search(thfile) = ? then do:
+   .
+end.
+else do:
+     define variable bexcel as com-handle.
+     define variable bbook as com-handle.
+     define variable bsheet as com-handle.
+     define variable intI as integer.
+      create "Excel.Application" bexcel.
+      bexcel:visible = false.
+      bbook = bexcel:Workbooks:OPEN(thfile,,true).
+      bsheet = bexcel:Sheets:Item(1) NO-ERROR.
+      bsheet:Activate NO-ERROR.
+      empty temp-table xxtmppc no-error.
+      DO intI = 2 TO bsheet:UsedRange:Rows:Count:
+         if TRIM(bsheet:cells(intI,1):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,2):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,3):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,4):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,5):FormulaR1C1) <> "" then do:
+            create xxtmppc.
+            assign xxpc_list = TRIM(bsheet:cells(intI,1):FormulaR1C1)
+                   xxpc_part = TRIM(bsheet:cells(intI,2):FormulaR1C1)
+                   xxpc_curr = TRIM(bsheet:cells(intI,3):FormulaR1C1)
+                   xxpc_um = TRIM(bsheet:cells(intI,4):FormulaR1C1)
+                   xxpc_start = str2Date(TRIM(bsheet:cells(intI,5):value),"ymd")
+                   xxpc_expir = str2Date(TRIM(bsheet:cells(intI,6):value),"ymd")
+                   xxpc_type = TRIM(bsheet:cells(intI,7):FormulaR1C1)
+                   xxpc_min_qty = decimal(TRIM(bsheet:cells(intI,8):FormulaR1C1))
+                   xxpc_amt = decimal(TRIM(bsheet:cells(intI,9):FormulaR1C1))
+                   no-error.
+         end.
+      END.
+    bbook:CLOSE().
+    bexcel:quit.
+    RELEASE OBJECT bsheet NO-ERROR.
+    RELEASE OBJECT bbook NO-ERROR.
+    RELEASE OBJECT bexcel NO-ERROR.
 end.

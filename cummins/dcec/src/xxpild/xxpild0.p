@@ -1,58 +1,41 @@
-/* xxptld.p - ppptmt.p cim load                                                */
-/*V8:ConvertMode=Report                                                      */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
-/* REVISION END                                                              */
-
-/* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
+/* xxpold0.p - import from xls                                            */
 {mfdeclre.i}
-{xxpild.i}
 {xxloaddata.i}
-define variable txt as character.
-define variable i as integer.
-empty temp-table xxtmppi no-error.
-input from value(flhload).
-repeat:
-    import unformat txt.
-    if entry(1,txt,",") <= "ZZZZZZZZZZZZ" and entry(1,txt,",") <> "" then do:
-    	 create xxtmppi.
-    	 assign xxpi_list = replace(entry(1,txt,","),'"',"") no-error.
-    	 assign xxpi_cs   = replace(entry(2,txt,","),'"',"") no-error.
-			 assign xxpi_part = replace(entry(3,txt,","),'"',"") no-error.     
- 	     assign xxpi_curr = replace(entry(4,txt,","),'"',"") no-error.
- 	     assign xxpi_um  = replace(entry(5,txt,","),'"',"") no-error.
-			 assign xxpi_start = str2Date(replace(entry(6,txt,","),'"',""),"dmy") no-error.
-			 assign xxpi_expir = str2Date(replace(entry(7,txt,","),'"',""),"dmy") no-error.
-			 assign xxpi_amt = decimal(entry(8,txt,",")) no-error.
-    end.
+{xxpild.i}
+define input parameter thfile as CHAR FORMAT "x(50)".
+if search(thfile) = "" or search(thfile) = ? then do:
+   .
 end.
-input close.
-assign i = 1.
-for each xxtmppi exclusive-lock: 
-	  assign xxpi_sn = i.
-	  assign i = i + 1.
+else do:
+     define variable bexcel as com-handle.
+     define variable bbook as com-handle.
+     define variable bsheet as com-handle.
+     define variable intI as integer.
+      create "Excel.Application" bexcel.
+      bexcel:visible = false.
+      bbook = bexcel:Workbooks:OPEN(thfile,,true).
+      bsheet = bexcel:Sheets:Item(1) NO-ERROR.
+      bsheet:Activate NO-ERROR.
+      empty temp-table xxtmppi no-error.
+      DO intI = 2 TO bsheet:UsedRange:Rows:Count:
+         if TRIM(bsheet:cells(intI,1):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,4):FormulaR1C1) <> "" and
+            TRIM(bsheet:cells(intI,5):FormulaR1C1) <> "" then do:
+            create xxtmppi.
+            assign xxpi_list = TRIM(bsheet:cells(intI,1):FormulaR1C1)
+                   xxpi_cs   = TRIM(bsheet:cells(intI,2):FormulaR1C1)
+                   xxpi_part = TRIM(bsheet:cells(intI,3):FormulaR1C1)
+                   xxpi_curr = TRIM(bsheet:cells(intI,4):FormulaR1C1)
+                   xxpi_um = TRIM(bsheet:cells(intI,5):FormulaR1C1)
+                   xxpi_start = str2Date(TRIM(bsheet:cells(intI,6):value),"ymd")
+                   xxpi_expir = str2Date(TRIM(bsheet:cells(intI,7):value),"ymd")
+                   xxpi_amt = decimal(TRIM(bsheet:cells(intI,8):FormulaR1C1))
+                   no-error.
+         end.
+      END.
+    bbook:CLOSE().
+    bexcel:quit.
+    RELEASE OBJECT bsheet NO-ERROR.
+    RELEASE OBJECT bbook NO-ERROR.
+    RELEASE OBJECT bexcel NO-ERROR.
 end.
-
-/* check data */
-for each xxtmppi exclusive-lock:
-    find first pt_mstr no-lock where pt_domain = global_domain and
-               pt_part = xxpi_part no-error.
-    if not available(pt_mstr) then do:
-       assign xxpi_chk = getMsg(17).
-    end.
-    if xxpi_cs <> "" then do:
-       find first cm_mstr no-lock where cm_domain = global_domain and
-                  cm_addr = xxpi_cs no-error.
-       if not available(cm_mstr) then do:
-          assign xxpi_chk = getMsg(3).
-       end.
-    end.
-end.
-
-/*
-output to pi.txt.
-FOR EACH pi_mstr NO-LOCK with width 400:
-    DISPLAY pi_list pi_cs_code pi_part_code pi_curr pi_um pi_start pi_expir pi_list_price pi_amt_type pi_break_cat with stream-io.
-END.
-output close.
-*/

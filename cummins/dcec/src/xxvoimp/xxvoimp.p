@@ -1,5 +1,6 @@
 /* xxvoimp.p - AP自动挂账                                                     */
 /* 取2.3.1中供应商与AP会计代码的对应关系(vd_ap_cntct)，作为该张凭证的"确认人" */
+/* 在自动挂账时，任何情况下，"暂留金额"字段都为0.                             */
 
 {mfdeclre.i "new global"}
 {mf1.i "new global"}
@@ -200,7 +201,7 @@ for each xiv_m no-lock break by xiv_inv BY xiv_receiver BY xiv_line:
       put stream bf unformat '.' skip.
       put stream bf unformat '.' skip.
    /*     put stream bf unformat 'n' skip. 查看税细节 */
-      put stream bf unformat '- N "' xiv_conf '"' skip. /*确认 = NO*/
+      put stream bf unformat '0 N "' xiv_conf '"' skip. /*确认 = NO*/
       put stream bf unformat '.' skip.
       put stream bf unformat '.' skip.
       output stream bf close.

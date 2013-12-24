@@ -29,7 +29,7 @@
 /*GUI preprocessor directive settings */
 &SCOPED-DEFINE PP_GUI_CONVERT_MODE REPORT
 
-{mfdtitle.i "121023.1"}
+{mfdtitle.i "1219.1"}
 
 /* DEFINE LOCAL VARIABLES */
 define variable l-entity     like fa_entity   no-undo.
@@ -58,21 +58,21 @@ FORM /*GUI*/
  RECT-FRAME       AT ROW 1.4 COLUMN 1.25
  RECT-FRAME-LABEL AT ROW 1   COLUMN 3 NO-LABEL
  SKIP(.1)  /*GUI*/
-l-entity      colon 25
+l-entity      colon 22
    l-entity1     colon 42
       label {t001.i}
-   l-book        colon 25
+   l-book        colon 22
    l-book1       colon 42
       label {t001.i}
-   l-class       colon 25
+   l-class       colon 22
    l-class1      colon 42
       label {t001.i}
-   l-asset       colon 25
+   l-asset       colon 22
    l-asset1      colon 42
       label {t001.i}
-   l-yrper1      colon 25
-   Retire      colon 25
-    tax_fa        colon 25
+   l-yrper1      colon 22
+   Retire      colon 22
+    tax_fa        colon 22
    outpath  colon 22
 
  SKIP(.4)  /*GUI*/
@@ -100,7 +100,7 @@ with frame a side-labels width 80 attr-space NO-BOX THREE-D /*GUI*/.
 setFrameLabels(frame a:handle).
 
 {wbrp01.i &io-frame = "a"}
-find first glc_cal where  /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and glc_start <= today and glc_end >= today no-lock no-error.
+find first glc_cal where glc_cal.glc_domain = global_domain and glc_start <= today and glc_end >= today no-lock no-error.
          if avail glc_cal then do:
            if integer(glc_per) < 10 then   l-yrper1 = string(glc_year) + "0" + string(glc_per).
             else l-yrper1 = string(glc_year) +  string(glc_per).

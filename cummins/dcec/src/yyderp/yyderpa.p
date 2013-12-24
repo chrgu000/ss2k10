@@ -1,9 +1,9 @@
-/* GUI CONVERTED from yyderpa.p (converter v1.75) Fri May 22 11:20:57 2009 */
+/* GUI CONVERTED from yyderpa.p (converter v1.75) Fri May 22 11:20:57 2009  */
 /* faderpa.p PRINT DEPRECIATION EXPENSE REPORT SUBROUTINE                   */
 /* Copyright 1986-2003 QAD Inc., Carpinteria, CA, USA.                      */
 /* All rights reserved worldwide.  This is an unpublished work.             */
-/* $Revision: 1.10.1.17 $                                                             */
-/*V8:ConvertMode=Report                                              */
+/* $Revision: 1.10.1.17 $                                                   */
+/*V8:ConvertMode=Report                                                     */
 /* REVISION: 9.1      LAST MODIFIED: 10/26/99   BY: *N021* Pat Pigatti      */
 /* REVISION: 9.1      LAST MODIFIED: 11/30/99   BY: *N062* P Pigatti        */
 /* REVISION: 9.1      LAST MODIFIED: 03/24/00   BY: *N08T* Annasaheb Rahane */
@@ -14,10 +14,12 @@
 /* Revision:              BY: Vinod Nair        DATE: 12/24/01  ECO: *M1N8* */
 /* Revision: 1.10.1.14    BY: Ashish Kapadia    DATE: 07/10/02  ECO: *M1ZW* */
 /* Revision: 1.10.1.15    BY: Vivek Gogte       DATE: 11/11/02  ECO: *N1YX* */
-/* $Revision: 1.10.1.17 $      BY: Rajesh Lokre      DATE: 05/19/03  ECO: *N240* */
-/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 08/20/12  ECO: *SS-20120821.1*   */
-/* $Revision:eb21sp12  $ BY: Jordan Lin            DATE: 10/23/12  ECO: *SS-20121023.1*   */
-
+/* $Revision: 1.10.1.17 $      BY: Rajesh Lokr  DATE: 05/19/03  ECO: *N240* */
+/* $Revision:eb21sp12  $ BY: Jordan Lin         DATE: 08/20/12  ECO: *SS-20120821.1*   */
+/* $Revision:eb21sp12  $ BY: Jordan Lin         DATE: 10/23/12  ECO: *SS-20121023.1*   */
+/********************************************************************1219******
+d. “已提月份”列，应当是：当前日期 - 服务日期，现在是：当前日期 - 资产创建日期
+ *****************************************************************************/
 
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
@@ -110,6 +112,8 @@ define variable l_disp_trf     as   character format "x(17)" no-undo.
 define variable l_disp_ent     as   character format "x(13)" no-undo.
 define variable l_disp_fromper as   character format "x(15)" no-undo.
 define variable l_disp_toper   as   character format "x(15)" no-undo.
+define variable vdate          as   date.
+define variable vdate1         as   date.
 /*Define Excel object handle */
 DEFINE VARIABLE chExcelApplication AS COM-HANDLE.
 DEFINE VARIABLE chExcelWorkbook AS COM-HANDLE.
@@ -162,23 +166,21 @@ define temp-table tt_fabddetail no-undo
 
 define buffer fabddet for fabd_det.
 
-
-
 /* REPORT LOGIC */
-
+assign vdate1=date(integer(substring(l-yrper1,5,2)),1,integer(substring(l-yrper1,1,4))).
 empty temp-table tt_fabddetail.
- find first fabk_mstr where  /* *SS-20120821.1*   */ fabk_mstr.fabk_domain = global_domain and fabk_post = yes no-lock no-error.
+ find first fabk_mstr where   fabk_mstr.fabk_domain = global_domain and fabk_post = yes no-lock no-error.
   if avail fabk_mstr then bk_id = fabk_id.
 /* COMBINED for first fa_mstr WITH for each fabd_det TO CORRECT */
 /* THE PROBLEM OF TOTALS NOT PRINTED WHEN THE NON-DEPRECIATING  */
 /* ASSET IS THE LAST ASSET IN A BREAK GROUP                     */
-  find first glc_cal where  /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and glc_start <= today and glc_end >= today no-lock no-error.
+  find first glc_cal where   glc_cal.glc_domain = global_domain and glc_start <= today and glc_end >= today no-lock no-error.
          if avail glc_cal then do:
            if integer(glc_per) < 10 then   curryer = string(glc_year) + "0" + string(glc_per).
             else curryer = string(glc_year) +  string(glc_per).
         end.
 /* GET EACH ASSET ID WITHIN USER SELECTED RANGES */
-     for each fa_mstr where  /* *SS-20120821.1*   */ fa_mstr.fa_domain = global_domain and fa_id >= fromAsset and fa_id <= toAsset
+     for each fa_mstr where   fa_mstr.fa_domain = global_domain and fa_id >= fromAsset and fa_id <= toAsset
          and fa_entity >= fromEntity and fa_entity  <= toEntity
          and fa_facls_id >= fromClass and fa_facls_id <= toClass
          and ( (not fa_id begins "T"  and not tax_fa) or (fa_id begins "T"  and  tax_fa) )
@@ -202,7 +204,7 @@ empty temp-table tt_fabddetail.
       else do:
          for first fabddet
             fields (fabd_fa_id fabd_fabk_id fabd_yrper)
-            where  /* *SS-20120821.1*   */ fabddet.fabd_domain = global_domain
+            where   fabddet.fabd_domain = global_domain
       and fabddet.fabd_fa_id   = fa_id  /* fabd_det.fabd_fa_id  */
         /*    and   fabddet.fabd_fabk_id = fabd_det.fabd_fabk_id  */
             no-lock:
@@ -268,10 +270,10 @@ empty temp-table tt_fabddetail.
 
 
       ovramt = 0.
-     find first facls_mstr where  /* *SS-20120821.1*   */ facls_mstr.facls_domain = global_domain and  facls_mstr.facls_id = fa_mstr.fa_facls_id no-lock no-error.
+     find first facls_mstr where   facls_mstr.facls_domain = global_domain and  facls_mstr.facls_id = fa_mstr.fa_facls_id no-lock no-error.
        if avail facls_mstr then cls_desc = facls_mstr.facls_desc.
 
-     find last fab_det where  /* *SS-20120821.1*   */ fab_det.fab_domain = global_domain and fab_fa_id = fa_id and fab_fabk_id = bk_id
+     find last fab_det where   fab_det.fab_domain = global_domain and fab_fa_id = fa_id and fab_fabk_id = bk_id
              no-lock no-error.
       if avail fab_det then do:
         fa_life = fab_life.
@@ -279,48 +281,65 @@ empty temp-table tt_fabddetail.
         ovramt = fab_ovramt.
         service_date = fab_date.
          end.
-      find last fabd1 where  /* *SS-20120821.1*   */ fabd1.fabd_domain = global_domain and fabd1.fabd_fa_id =  fa_id  and fabd1.fabd_fabk_id =  bk_id
+      find last fabd1 where   fabd1.fabd_domain = global_domain and fabd1.fabd_fa_id =  fa_id  and fabd1.fabd_fabk_id =  bk_id
           no-lock no-error.
         if avail fabd1 then last_yrper = fabd1.fabd_yrper.
-        if l-yrper1 <= last_yrper then last_yrper =  l-yrper1 .
-      if ovramt > 0 then do:
-           used_yrper = integer(fa__int01).
-        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and glc_start > ovrdt and
-              ( glc_year < integer(substring(last_yrper,1,4))
-                or  (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
-                 no-lock:
-              used_yrper = used_yrper + 1.
-            end.
-      end.
+        if l-yrper1 <= last_yrper then last_yrper =  l-yrper1.
+/*1219*/    last_yrper = string(year(fa_startdt),"9999") + string(month(fa_startdt),"99").
+/*1219*/    assign vdate = fa_startdt.
+/*1219*/    assign used_yrper = 0.
+/*1219*/    assign vdate = min(fa_startdt,vdate1).
+/*1219*/    repeat:
+/*1219*/       if day(vdate) = 1 then do:
+/*1219*/          assign used_yrper = used_yrper + 1.
+/*1219*/          vdate = vdate + 27.
+/*1219*/       end.
+/*1219*/       else do:
+/*1219*/          vdate = vdate + 1.
+/*1219*/       end.
+/*1219*/       if vdate >= vdate1 then leave.
+/*1219*/    end.
 
-       if ovramt = 0 then do:
-             used_yrper = 0.
-        for each glc_cal where /* *SS-20120821.1*   */ glc_cal.glc_domain = global_domain and  glc_start > service_date and
-       ( glc_year < integer(substring(last_yrper,1,4))
-                or  (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
-            no-lock:
-              used_yrper = used_yrper + 1.
-         end.
-   end.
-
-     find first  faloc_mstr where /* *SS-20120821.1*   */ faloc_mstr.faloc_domain = global_domain and  faloc_mstr.faloc_id =  fa_mstr.fa_faloc_id no-lock no-error.
+ /***1219**
+  *    if ovramt > 0 then do:
+  *         used_yrper = integer(fa__int01).
+  *
+  *         for each glc_cal where glc_cal.glc_domain = global_domain and glc_start > ovrdt and
+  *              ( glc_year < integer(substring(last_yrper,1,4))
+  *                 or (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
+  *               no-lock:
+  *            used_yrper = used_yrper + 1.
+  *          end.
+  *    end.
+  *
+  *     if ovramt = 0 then do:
+  *           used_yrper = 0.
+  *      for each glc_cal where glc_cal.glc_domain = global_domain and  glc_start > service_date and
+  *     ( glc_year < integer(substring(last_yrper,1,4))
+  *              or  (glc_year = integer(substring(last_yrper,1,4)) and  glc_per <= integer(substring(last_yrper,5,6))) )
+  *          no-lock:
+  *            used_yrper = used_yrper + 1.
+  *       end.
+  *    end.
+ *****/
+     find first  faloc_mstr where  faloc_mstr.faloc_domain = global_domain and  faloc_mstr.faloc_id =  fa_mstr.fa_faloc_id no-lock no-error.
         if avail faloc_mstr then loc_desc = trim(faloc_mstr.faloc_desc).
 
-     find first ad_mstr where /* *SS-20120821.1*   */ ad_mstr.ad_domain = global_domain and ad_addr = string(trim(fa_mstr.fa_faloc_id)) no-lock no-error.
+     find first ad_mstr where  ad_mstr.ad_domain = global_domain and ad_addr = string(trim(fa_mstr.fa_faloc_id)) no-lock no-error.
         if avail ad_mstr then loc_site = trim(ad_line1).
      if fa_mstr.fa__dte01 = ? then assign dte01 = "" .
         else  dte01 = string(fa_mstr.fa__dte01,"9999/99/99").
      if fa_mstr.fa_disp_dt = ? then assign disp_dt = "" .
         else  disp_dt = string(fa_mstr.fa_disp_dt,"9999/99/99").
-     find first code_mstr where /* *SS-20120821.1*   */ code_mstr.code_domain = global_domain and code_fldname = "fa_chr04" and trim(string(code_value))=
+     find first code_mstr where  code_mstr.code_domain = global_domain and code_fldname = "fa_chr04" and trim(string(code_value))=
           trim(string(fa__chr04)) no-lock no-error.
      if avail code_mstr then sup_name = trim(code_cmmt).
         else sup_name = "".
          i = i + 1.
 /*Fill*/
   chExcelWorkbook:Worksheets(1):Cells(i,1) = fa_id.
-  chExcelWorkbook:Worksheets(1):Cells(i,2) =  trim(string(fa_mstr.fa_desc1)).
-  chExcelWorkbook:Worksheets(1):Cells(i,3) = string(fa_mstr.fa_startdt).
+  chExcelWorkbook:Worksheets(1):Cells(i,2) = trim(string(fa_mstr.fa_desc1)).
+  chExcelWorkbook:Worksheets(1):Cells(i,3) = string(year(fa_mstr.fa_startdt),"9999") + "-" + string(month(fa_mstr.fa_startdt),"99") + "-" + string(day(fa_mstr.fa_startdt),"99").
   chExcelWorkbook:Worksheets(1):Cells(i,4) = costAmt.
   chExcelWorkbook:Worksheets(1):Cells(i,5) = expAmt.
   chExcelWorkbook:Worksheets(1):Cells(i,6) = netBook.
@@ -357,6 +376,4 @@ end. /* FOR EACH fabd_det */
  RELEASE OBJECT chExcelWorkbook.
  RELEASE OBJECT chExcelApplication.
 
-
 /*GUI*/ {mfguichk.i }
-
