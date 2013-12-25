@@ -38,6 +38,7 @@ repeat:
                  x0pc_user1 = vuser1
                  x0pc_start = str2Date(dtes,"ymd")
                  x0pc_expir = str2Date(dtee,"ymd")
+                 x0pc_amt = decimal(vamt)
                  x0pc_file = xf_file no-error.
        end.
        /*
@@ -95,6 +96,9 @@ for each xxtmppc0 exclusive-lock:
     end.
     else do:
         assign x0pc_chk = getMsg(2).
+    end.
+    if x0pc_amt = 0 then do:
+       assign x0pc_chk = getMsg(2345).
     end.
 end.
 
