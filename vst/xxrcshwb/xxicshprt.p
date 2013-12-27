@@ -99,6 +99,8 @@
 /*M1JZ*/ define variable l_print_lotserials like mfc_logical   initial no
 /*M1JZ*/    label {&icshprt_p_9}                               no-undo.
          define stream bf.
+         define variable errmsg as character format "x(60)" no-undo.
+         define variable errfn  as character.
          /* FRAMES */
          form
              v_ship_cmmts       colon 34
@@ -115,6 +117,14 @@
 
             /* SET EXTERNAL LABELS */
             setFrameLabels(frame a:handle).
+
+            form
+                skip(1)
+                errmsg colon 12 format "x(60)"
+                skip
+            with frame inv width 80 attr-space
+                title color normal (getFrameTitle("INVOICE_NUMBER",20)).
+            setFrameLabels(frame inv:handle).
 
 /*N05X*/ for first soc_ctrl
 /*N05X*/    fields (soc_company)
@@ -367,31 +377,49 @@
                put stream bf unformat '- ' due skip.
                put stream bf unformat 'Y' skip.
                output stream bf close.
-               batchrun = yes.
                input from value(vabsid + "-1.bpi").
                output to value(vabsid + "-1.bpo").
+               batchrun = yes.
                {gprun.i ""xxrcsois.p""}
+               batchrun = no.
                output close.
                input close.
-               batchrun = no.
-               os-delete value(vabsid + "-1.bpi").
-               os-delete value(vabsid + "-1.bpo").
+               errmsg  = "".
+               errfn =  vabsid + "-1.bpo".
+              {gprun.i ""xxgetcimin.p"" "(input errfn , output errmsg)"}
+              if errmsg <> "" then do:
+                 message errmsg view-as alert-box.
+                 leave main_blk.
+              end.
+              os-delete value(vabsid + "-1.bpi").
+              os-delete value(vabsid + "-1.bpo").
                output stream bf to value(vabsid + "-2.bpi").
                put stream bf unformat '-' skip.
-               put stream bf unformat '-' skip.
+               put stream bf unformat due ' ' due skip.
                put stream bf unformat vabsid skip.
                output stream bf close.
-               batchrun = yes.
                input from value(vabsid + "-2.bpi").
                output to value(vabsid + "-2.bpo").
+               batchrun = yes.
                {gprun.i ""xxrcsorp.p""}
+               batchrun = no.
                output close.
                input close.
-               batchrun = no.
                os-delete value(vabsid + "-2.bpi").
                os-delete value(vabsid + "-2.bpo").
-               os-command value("cat " + vabsid + ".prn").
+               input from value(vabsid + ".prn").
+               repeat:
+                    import unformat errmsg.
+                    if index(trim(substring(errmsg,90)),"IO") > 0 then do:
+                       assign errmsg = trim(substring(errmsg,90,20)).
+                       display errmsg with frame inv.
+                       down 1 with frame inv.
+                    end.
+               end.
+               input close.
             end.
+            hide frame inv.
+            os-delete value(vabsid + ".prn").
             leave main_blk.
 
          end.  /* main_blk */
