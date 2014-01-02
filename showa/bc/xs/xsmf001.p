@@ -22,6 +22,11 @@
     Parameters:
     Notes:
 ------------------------------------------------------------------------------*/
+/*- SS - 1225.1 --------------------------------------------*1225.1*-----------
+    Purpose:新增48盘点录入
+    Parameters:
+    Notes:
+------------------------------------------------------------------------------*/
 
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
@@ -3010,6 +3015,129 @@ IF OkToRun = yes THEN  RUN xsrep44.p.
    END.
    pause 0 before-hide.
 
+/**menu 48****************************************************1225.1*Start*****/
+      /* Internal Cycle Input :1148    */
+   V1148LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle1148    */
+   IF NOT (V1140 = "48" OR V1100 = "48" ) THEN LEAVE V1148LMAINLOOP.
+     V1148L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1148           as char format "x(50)".
+        define variable PV1148          as char format "x(50)".
+        define variable L11481          as char format "x(40)".
+        define variable L11482          as char format "x(40)".
+        define variable L11483          as char format "x(40)".
+        define variable L11484          as char format "x(40)".
+        define variable L11485          as char format "x(40)".
+        define variable L11486          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1148 = " ".
+        V1148 = ENTRY(1,V1148,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1140 = "".
+RUN CheckSecurity (INPUT "xspitcmt.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN xspitcmt.p.
+        leave V1148L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1148 no-box.
+
+                /* LABEL 1 - START */
+                  L11481 = "" .
+                display L11481          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L11482 = "" .
+                display L11482          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L11483 = "" .
+                display L11483          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L11484 = "" .
+                display L11484          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L11485 = "" .
+                display L11485          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L11486 = "" .
+                display L11486          format "x(40)" skip with fram F1148 no-box.
+                /* LABEL 6 - END */
+        Update V1148
+        WITH  fram F1148 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V1148 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V1148 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V1148 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1148 ).
+        /* **CHANGE Default Site END ** */
+        IF V1148 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F1148.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1148.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1148.
+        pause 0.
+        leave V1148L.
+     END.
+     PV1148 = V1148.
+     /* END    LINE :1148    */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V1148LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :1148    */
+   END.
+   pause 0 before-hide.
+/**menu 48****************************************************1225.1*End××*****/
+
    V1150LMAINLOOP:
    REPEAT:
    /*Logical Enter Cycle1150    */
@@ -5116,7 +5244,7 @@ end. /*v11A70lmainloop:*/
    /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1170    */
    END.
-   
+
 /**3AY9**************START****************************************************/
 pause 0 before-hide.
 v11A77lmainloop:
