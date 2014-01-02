@@ -3,18 +3,19 @@
 /******************************************************************************/
 
 /* DISPLAY TITLE */
-{mfdtitle.i "131211.1"}
+{mfdtitle.i "131231.1"}
 
 define variable nbr like si_site.
 define variable nbr1 like si_site.
 define variable part like pt_part.
 define variable part1 like pt_part.
-define variable ln like sod_line.
+define variable ln like sod_line initial 1.
 define variable ln1 like sod_line initial 999.
 define variable st  as integer format "9" initial 1.
 
-define temp-table tsod
-    fields tsod_id as integer.
+define workfile tsod
+    fields tsod_nbr  like sod_nbr
+    fields tsod_line like sod_line.
 
 form
    nbr  colon 16
@@ -49,7 +50,7 @@ repeat:
       if nbr1 = "" then nbr1 = hi_char.
       if part1 = "" then part1 = hi_char.
    end.
-
+for each tsod exclusive-lock: delete tsod. end.
    /* OUTPUT DESTINATION SELECTION */
    {gpselout.i &printType = "printer"
                &printWidth = 132
@@ -64,30 +65,39 @@ repeat:
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
+/****    SD20705    ****/
 
-   {mfphead.i}
-  for each tsod exclusive-lock: delete tsod. end.
 for each sod_det no-lock where sod_nbr >= nbr and sod_nbr <= nbr1
      and sod_line >= ln and sod_line <= ln1
-     and sod_part >= part and sod_part <= part1 with frame z:
-     setframelabels(frame z:handle).
-    find first so_mstr no-lock where so_nbr = sod_nbr no-error.
-     display sod_nbr so_ship when available so_mstr
-             sod_line sod_part sod_qty_ord sod_price.
-     if st <> 1 then do:
+     and sod_part >= part and sod_part <= part1:
+     find first tsod exclusive-lock where tsod_nbr = sod_nbr and
+                tsod_line = sod_line no-error.
+     if not available tsod then do:
         create tsod.
-        assign tsod_id = recid(sod_det).
+        assign tsod_nbr = sod_nbr
+               tsod_line = sod_line.
      end.
-   {mfrtrail.i}
 end.
+
 if st <> 1 then do:
   for each tsod no-lock:
-      find first sod_det exclusive-lock where recid(sod_det) = tsod_id no-error.
+      find first sod_det exclusive-lock where sod_nbr = tsod_nbr and
+                 sod_line = tsod_line no-error.
       if available sod_det then do:
          if st = 2 then sod__chr10 = "HD".
          if st = 3 then sod__chr10 = "".
       end.
   end.
 end.
-end. /*repeat frame a*/
+{mfphead.i}
+
+for each tsod no-lock,each sod_det no-lock where sod_nbr = tsod_nbr and
+                 sod_line = tsod_line with frame z:
+     setframelabels(frame z:handle).
+     find first so_mstr no-lock where so_nbr = sod_nbr no-error.
+         display sod_nbr so_ship when available so_mstr
+                 sod_line sod_part sod_qty_ord sod_price.
+end.
+   {mfrtrail.i}
+end.
 {wbrp04.i &frame-spec = a}

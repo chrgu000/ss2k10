@@ -19,6 +19,7 @@ define variable dtes as character.
 define variable dtee as character.
 define variable vuser1  as character.
 define variable vamt as character.
+define variable vqty as character.
 empty temp-table xxtmppc0 no-error.
 empty temp-table xxtmppc no-error.
 for each xxfl no-lock:
@@ -28,7 +29,7 @@ repeat:
     /* if index(entry(1,txt,",") , "VENDOR") = 0 and                 */
     /*    index(entry(2,txt,",") , "CURR" ) = 0 then do:             */
 
-       import delimiter "," vaxvd vcurr vpart vaxum dtes dtee vuser1 vamt.
+       import delimiter "," vaxvd vcurr vpart vaxum dtes dtee vuser1 vamt vqty.
        if vaxvd <> "" and vaxvd <> "VENDOR" and vamt <> "Price" then do:
           create xxtmppc0.
           assign x0pc_axvd = vaxvd
@@ -39,6 +40,7 @@ repeat:
                  x0pc_start = str2Date(dtes,"ymd")
                  x0pc_expir = str2Date(dtee,"ymd")
                  x0pc_amt = decimal(vamt)
+                 x0pc_qty = decimal(vqty)
                  x0pc_file = xf_file no-error.
        end.
        /*
@@ -105,24 +107,26 @@ end.
 assign i = 1.
 for each xxtmppc0 no-lock:
 /*失效旧的价格单*/
-    assign dte = x0pc_start - 1.
-    for each pc_mstr no-lock where pc_list = x0pc_list and
-             pc_curr = x0pc_curr and pc_prod_line = "" and
-             pc_part = x0pc_part and pc_um = x0pc_um and pc_amt_type = "L"
-        break by pc_start descending:
-        if pc_start <> x0pc_start and (pc_expir = ? or pc_expir > dte) then do:
-           create xxtmppc.
-           assign xxpc_list  = pc_list
-                  xxpc_curr  = pc_curr
-                  xxpc_part  = pc_part
-                  xxpc_start = pc_start
-                  xxpc_expir = dte
-                  xxpc_um    = pc_um
-                  xxpc_user1 = pc_user1
-                  xxpc_amt   = pc_amt[1]
-                  xxpc_file  = x0pc_file.
-        end.
-        dte = pc_start - 1.
+    if x0pc_qty = 0 then do:
+       assign dte = x0pc_start - 1.
+       for each pc_mstr no-lock where pc_list = x0pc_list and
+                pc_curr = x0pc_curr and pc_prod_line = "" and
+                pc_part = x0pc_part and pc_um = x0pc_um and pc_amt_type = "L"
+           break by pc_start descending:
+           if pc_start <> x0pc_start and (pc_expir = ? or pc_expir > dte) then do:
+              create xxtmppc.
+              assign xxpc_list  = pc_list
+                     xxpc_curr  = pc_curr
+                     xxpc_part  = pc_part
+                     xxpc_start = pc_start
+                     xxpc_expir = dte
+                     xxpc_um    = pc_um
+                     xxpc_user1 = pc_user1
+                     xxpc_amt   = pc_amt[1]
+                     xxpc_file  = x0pc_file.
+           end.
+           dte = pc_start - 1.
+       end.
     end.
 /*生效新价格*/
     create xxtmppc.

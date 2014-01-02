@@ -23,6 +23,7 @@ define {1} shared temp-table xxtmppc0
        fields x0pc_expir like pc_expir
        fields x0pc_user1 as character format "x(12)"
        fields x0pc_amt as decimal format "->>,>>>,>>>,>>>,>>9.<<<<<<<<<"
+       fields x0pc_qty as decimal /*ÊýÁ¿·¶Î§*/
        fields x0pc_sn as integer
        fields x0pc_sort like vd_sort
        fields x0pc_file as character

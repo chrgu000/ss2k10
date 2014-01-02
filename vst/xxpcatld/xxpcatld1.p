@@ -1,4 +1,4 @@
-/* xxptcld1.p - xxppctmt.p cim load                                                */
+/* xxptcld1.p - xxppctmt.p cim load                                          */
 /*V8:ConvertMode=Report                                                      */
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
@@ -63,8 +63,8 @@ end.
 /* ‰≥ˆ»’÷æ*/
 for each xxtmppc no-lock break by xxpc_file by xxpc_sn:
     if first-of(xxpc_file) then do:
-        output stream bf to value(sTxtDir + "/log/" + xxpc_file + ".log").
-        put stream bf unformat 'VENDOR,CURR,ITEM,UNIT,START,END,NUMBER,PRICE' skip.
+       output stream bf to value(sTxtDir + "/log/" + xxpc_file + ".log").
+       put stream bf unformat 'VENDOR,CURR,ITEM,UNIT,START,END,NUMBER,PRICE' skip.
     end.
     export stream bf delimiter "," xxtmppc.
     if last-of(xxpc_file) then do:
@@ -81,7 +81,20 @@ for each xxtmppc no-lock break by xxpc_file:
        assign fmv = "err".
     end.
     if last-of(xxpc_file) then do:
-          assign fmv = "mv " + sTxtDir + "/" + xxpc_file + " " + sTxtDir + "/" + fmv + "/".
+          if fmv = "ok" then do:
+             assign fmv = "mv " + sTxtDir + "/" + xxpc_file + " " + sTxtDir + "/" + fmv + "/".
+          end.
+          else do:
+             for each code_mstr no-lock where code_fldname = "AX.QAD.Interface.MailList":
+                 if fmv = "err" then do:
+                    assign fmv = code_value.
+                 end.
+                 else do:
+                    assign fmv = fmv + "," + code_value.
+                 end.
+             end.
+             assign fmv = 'cat '+ sTxtDir + '/log/' + xxpc_file + '.log' + ' | mail -s "Pricelist AX vs QAD Error"' + ' ' + fmv.
+          end.
           os-command silent value(fmv).
     end.
 end.
