@@ -59,6 +59,8 @@ output close.
 ciminputfile = usection + ".bpi".
 cimoutputfile = usection + ".bpo".
 {xserrlg.i}
+os-delete value ( usection + ".bpi") .
+os-delete value ( usection + ".bpo") .
 /* ss - 090910.1 -b
 unix silent value ( "rm -f "  + Trim(usection) + ".i").
 unix silent value ( "rm -f "  + Trim(usection) + ".o").
