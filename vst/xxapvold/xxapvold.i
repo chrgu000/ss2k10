@@ -19,21 +19,22 @@ define {1} shared temp-table xxapvotmp
        fields xxapt_cc like sod_cc
        fields xxapt_proj like sod_proj
        fields xxapt_cmmt like code_cmmt
+       fields xxapt_eff like ap_effdate
        fields xxapt_sn as integer
        fields xxapt_chk as character format "x(30)".
 
-FUNCTION getMsg RETURNS character(inbr as integer):
- /* -----------------------------------------------------------
-    Purpose:
-    Parameters:  <none>
-    Notes:
-  -------------------------------------------------------------*/
-  find first msg_mstr no-lock where msg_lang = global_user_lang
-         and msg_nbr = inbr no-error.
-  if available msg_mstr then do:
-      return msg_desc.
-  end.
-  else do:
-      return "ERROR.".
-  end.
-END FUNCTION. /*FUNCTION getMsg*/
+/*  FUNCTION getMsg RETURNS character(inbr as integer):                   */
+/*   /* -----------------------------------------------------------       */
+/*      Purpose:                                                          */
+/*      Parameters:  <none>                                               */
+/*      Notes:                                                            */
+/*    -------------------------------------------------------------*/     */
+/*    find first msg_mstr no-lock where msg_lang = global_user_lang       */
+/*           and msg_nbr = inbr no-error.                                 */
+/*    if available msg_mstr then do:                                      */
+/*        return msg_desc.                                                */
+/*    end.                                                                */
+/*    else do:                                                            */
+/*        return "ERROR.".                                                */
+/*    end.                                                                */
+/*  END FUNCTION. /*FUNCTION getMsg*/                                     */

@@ -7,6 +7,7 @@
 /* define shared variable global_user_lang_dir like lng_mstr.lng_dir.        */
 {mfdeclre.i}
 {xxapvold.i}
+{xxloaddata.i}
 define variable txt as character.
 define variable i as integer.
 empty temp-table xxapvotmp no-error.
@@ -31,6 +32,7 @@ repeat:
             assign xxapt_cc = trim(entry(9,txt,",")) no-error.
             assign xxapt_proj = trim(entry(10,txt,",")) no-error.
             assign xxapt_cmmt = trim(entry(11,txt,",")) no-error.
+            assign xxapt_eff = str2Date(entry(12,txt,","),"mdy")no-error.
     end.
 end.
 input close.

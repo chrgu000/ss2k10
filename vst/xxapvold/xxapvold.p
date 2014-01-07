@@ -105,6 +105,7 @@ repeat:
                  xxapt_cc
                  xxapt_proj
                  xxapt_cmmt
+                 xxapt_eff
                 .
      end.
    {mfrtrail.i}

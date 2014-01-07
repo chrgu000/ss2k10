@@ -18,19 +18,22 @@ for each xxapvotmp no-lock where xxapt_chk = "" break by xxapt_ref.
        put stream bf unformat '-' skip.
        put stream bf unformat '"' xxapt_ref '"' skip.
        put stream bf "." skip.
-           put stream bf unformat trim(string(xxapt_tot)) ' '.
-           find ap_mstr where ap_ref = xxapt_ref and
-                ap_type = "VO" no-lock no-error.
-           if not available ap_mstr then do:
-              put stream bf unformat '"' xxapt_vd '"'.
-           end.
-           put stream bf skip.
+       put stream bf unformat trim(string(xxapt_tot)) ' '.
+       find ap_mstr where ap_ref = xxapt_ref and
+            ap_type = "VO" no-lock no-error.
+       if not available ap_mstr then do:
+          put stream bf unformat '"' xxapt_vd '"'.
+       end.
+       else do:
+          put stream bf unformat '-'.
+       end.
+       put stream bf ' ' xxapt_eff skip.
        put stream bf unformat "-" ' '.
        if not available ap_mstr then do:
           put stream bf unformat "-" ' '.
        end.
-       put stream bf  '"' trim(xxapt_invoice) '"' skip.  /* curr */
-       put stream bf unformat "-" skip.  /* perPay */
+       put stream bf  '"' trim(xxapt_invoice) '" ' xxapt_eff ' - ' xxapt_eff ' ' xxapt_eff ' ' xxapt_eff skip.  /* curr */
+       put stream bf unformat "-" skip.  /* perpay */
        put stream bf unformat "-" skip.  /* tax */
        assign vamt = 0.
     end.
@@ -66,10 +69,8 @@ for each xxapvotmp no-lock where xxapt_chk = "" break by xxapt_ref.
          batchrun = no.
          output close.
          input stream bf close.
-/*
          os-delete value(vfile + ".bpi").
          os-delete value(vfile + ".bpo").
-*/
     end.
 end.
 output close.

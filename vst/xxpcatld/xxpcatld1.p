@@ -63,7 +63,7 @@ end.
 /*Êä³öÈÕÖ¾*/
 for each xxtmppc no-lock break by xxpc_file by xxpc_sn:
     if first-of(xxpc_file) then do:
-       output stream bf to value(sTxtDir + "/log/" + xxpc_file + ".log").
+       output stream bf to value(sTxtDir + "/log/" + xxpc_file + "." + global_userid + ".log").
        put stream bf unformat 'VENDOR,CURR,ITEM,UNIT,START,END,NUMBER,PRICE' skip.
     end.
     export stream bf delimiter "," xxtmppc.
@@ -83,8 +83,14 @@ for each xxtmppc no-lock break by xxpc_file:
     if last-of(xxpc_file) then do:
           if fmv = "ok" then do:
              assign fmv = "mv " + sTxtDir + "/" + xxpc_file + " " + sTxtDir + "/" + fmv + "/".
+             find first usrw_wkfl exclusive-lock where usrw_key1 = "PCLIST_AUTO_LOAD_HIST"
+                    and usrw_key2 = xxpc_file no-error.
+             if available usrw_wkfl then do:
+                delete usrw_wkfl.
+             end.
           end.
           else do:
+             /**** get Email List **********************/
              for each code_mstr no-lock where code_fldname = "AX.QAD.Interface.MailList":
                  if fmv = "err" then do:
                     assign fmv = code_value.
@@ -93,7 +99,25 @@ for each xxtmppc no-lock break by xxpc_file:
                     assign fmv = fmv + "," + code_value.
                  end.
              end.
-             assign fmv = 'cat '+ sTxtDir + '/log/' + xxpc_file + '.log' + ' | mail -s "Pricelist AX vs QAD Error"' + ' ' + fmv.
+             assign fmv = 'cat '+ sTxtDir + '/log/' + xxpc_file + "." + global_userid + '.log' + ' | mail -s "Pricelist AX vs QAD Error"' + ' ' + fmv.
+             find first usrw_wkfl exclusive-lock where usrw_key1 = "PCLIST_AUTO_LOAD_HIST"
+                    and usrw_key2 = xxpc_file no-error.
+             if not available usrw_wkfl then do:
+                create usrw_wkfl.
+                assign usrw_key1 = "PCLIST_AUTO_LOAD_HIST"
+                       usrw_key2 = xxpc_file
+                       usrw_charfld[1] = fmv
+                       usrw_charfld[2] = sTxtDir
+                       usrw_charfld[3] = "mv " + sTxtDir + "/" + xxpc_file + " " + sTxtDir + "/err/".
+                       usrw_charfld[4] = "mv " + sTxtDir + "/err/" + xxpc_file + " " + sTxtDir + "/".
+                       usrw_intfld[1] = 1.
+             end.
+             else do:
+                assign usrw_intfld[1] = usrw_intfld[1] + 1.
+                if usrw_intfld[1] >= 3 then do:
+                   assign fmv = "mv " + sTxtDir + "/" + xxpc_file + " " + sTxtDir + "/err/".
+                end.
+             end.
           end.
           os-command silent value(fmv).
     end.
