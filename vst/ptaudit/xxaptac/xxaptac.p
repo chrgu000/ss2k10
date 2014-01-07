@@ -159,6 +159,8 @@ repeat with frame a:
                                  xapt_adm_days = today - xapt_added
                                  xapt_adm_user = global_userid
                                  xapt_stat = "C".
+                          os-delete value(tab_part + ".bpi").
+                          os-delete value(tab_part + ".bpo").
                        end.
                end.
             end.
