@@ -304,6 +304,10 @@ define variable postInvoice      as logical no-undo.
 define variable cardProcessed    as logical no-undo.
 define variable l_storefront_so  as logical no-undo.
 
+/* ss - 130321.1 -b */
+DEFINE VAR v_taxamt LIKE ar_amt .
+/* ss - 130321.1 -e */
+
 /* DEFINE VARIABLES USED IN GPGLEF1.P (GL CALENDAR VALIDATION) */
 {gpglefv.i}
 
@@ -831,6 +835,7 @@ do on error undo, leave:
                     input cont_charges,
                     input line_charges)"}
                   */
+                    
                   {gprun.i ""sssoivtrl2.p""
                      "(input so_inv_nbr,
                        input so_nbr,
@@ -839,6 +844,8 @@ do on error undo, leave:
                        input cont_charges,
                        input line_charges,
                        input xxabsnbr)"}
+                        
+                      
                   /* SS - 20060524.3 - E */
 
                if undo_trl2 then return.
@@ -1236,8 +1243,9 @@ do on error undo, leave:
                         sopart = sod_part.
 
                      undo_all = no.
-
+  
                      {gprun.i ""soivpste.p""}
+                           
 
                      if undo_all then undo invoiceloop , leave.
 
@@ -1252,10 +1260,17 @@ do on error undo, leave:
                   /* UPDATE AR DETAIL */
                   undo_all = no.
 /*121213.1          {gprun.i ""soivpstb.p""}                     */
+                 
+                 
 /*121213.1*/        {gprun.i ""sssoivpstb.p"" "(input xxabsnbr)"}
+    
+       
+
                   if undo_all then undo invoiceloop , leave.
 
                end. /* for each sod_det */
+
+              
 
                if l_ord_contains_tax_in_lines
                then do:
@@ -1270,7 +1285,7 @@ do on error undo, leave:
                   l_consolidate = yes.
 
                {soivtot7.i}
-
+  
                /* Display Trailer */
                /* (Only display trailer after all SOs for this invoice */
                /* have been printed.)                                  */
@@ -1290,8 +1305,10 @@ do on error undo, leave:
                   /* PARAMETER yes TO ACCOMMODATE THE LOGIC INTRODUCED IN */
                   /* txdetrpa.i FOR DISPLAYING THE APPROPRIATE CURRENCY   */
                   /* AMOUNT.                                              */
-
+  /* ss - 130321.1 -b */
+                  /* 显示计算税*/
                   {&SOIVPST1-P-TAG30}
+                      
                   {gprun.i ""txdetrp.p""
                      "(input '16',
                        input so_inv_nbr,
@@ -1300,9 +1317,37 @@ do on error undo, leave:
                        input 0,
                        input '',
                        input yes)"}
+                      
+                       /* ss - 130321.1 -b */
+                      v_taxamt = 0 .
+                  {gprun.i ""sstxdetrp.p""
+                     "(input '16',
+                       input so_inv_nbr,
+                       input '*',
+                       input col-80,
+                       input 0,
+                       input '',
+                       input yes,
+                       OUTPUT v_taxamt )"}
+                    /*   ss - 130321.1 -e */
+
                   {&SOIVPST1-P-TAG31}
                   if undo_txdetrp then undo invoiceloop, leave.
+                  /* ss - 130321.1 -b */
+                  /* 显示汇总税 */
+                  /* ss - 130321.1 -b
                   {soivtot8.i}
+                  ss - 130321.1 -e */
+                
+                  ASSIGN
+                   taxable_amt  = v_taxamt 
+                   nontaxable_amt = 
+                   invtot_line_total - taxable_amt
+                      .
+                  /* ss - 130321.1 -b */
+                  {sssoivtot8.i}
+                  /* ss - 130321.1 -e */
+                       
                   if so_fsm_type = "PRM" and so_prepaid <> 0 then do:
 
                      assign
@@ -1379,6 +1424,7 @@ do on error undo, leave:
                      l_rnd_tax_amt  = 0.
 
                   /* ACCUMULATING TAX TOTALS */
+                  /* ss - 130320.1 -b
                   for each tx2d_det
                   fields(tx2d_cur_tax_amt tx2d_ref tx2d_tax_amt tx2d_tr_type)
                      where tx2d_ref     = so_inv_nbr
@@ -1387,12 +1433,25 @@ do on error undo, leave:
 /*121218.1*/          tx2d_ref = xxabsnbr and tx2d_nbr = xxabs_order
 /*121218.1*/          AND tx2d_line = integer(xxabs_line)
                   :
+                      ss - 130320.1 -e */
+                   /* ss - 130320.1 -b */
+                  for each tx2d_det
+                  fields(tx2d_cur_tax_amt tx2d_ref tx2d_tax_amt tx2d_tr_type)
+                     where tx2d_ref     = so_inv_nbr
+                     and   tx2d_tr_type = "16" no-lock
+/*121218.1*/     ,each xxabs_mstr NO-LOCK WHERE
+/*121218.1*/          xxabs_nbr = xxabsnbr AND xxabs_order =  tx2d_nbr  
+/*121218.1*/          AND   integer(xxabs_line) = tx2d_line 
+                  :
+                    /*  ss - 130320.1 -e */
                      assign
                         l_rnd_tax_amt  = l_rnd_tax_amt
                                        + tx2d_cur_tax_amt
                         l_rnd_tax_ramt = l_rnd_tax_ramt
                                        + tx2d_tax_amt.
                   end. /* FOR EACH tx2d_det */
+
+                  
 
                   assign
                      l_tot_amt  = l_tot_amt  - l_rnd_tax_amt
@@ -1494,6 +1553,7 @@ do on error undo, leave:
                     input-output l_tot_amt1,
                     input-output l_tot_ramt1)" }
                   */
+                    
                  {gprun.i ""sssoivp1a.p""
                     "(input        l_consolidate,
                       input        xxabsnbr,
@@ -1501,6 +1561,8 @@ do on error undo, leave:
                       output       vglamt,
                       input-output l_tot_amt1,
                       input-output l_tot_ramt1)" }
+                    
+                      
                   /* SS - 20060524.1 - E */
                                           /* SS - 20060524.2 - E */
 

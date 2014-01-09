@@ -383,9 +383,16 @@ do transaction on error undo, leave:
    /* UPDATE TRANSACTION HISTORY WITH INVOICE NUMBER */
    /* WHEN so_inv_mthd = "y" THEN rcsois.p UPDATES tr_remarks DIRECTLY */
    /* WHEN POSTING INVOICE.                                            */
+   /* ss - 130320.1 -b 
    if substring(so_inv_mthd,2,1) <> "y" or prog_name = "soivpst.p"
       or prog_name = "socnpst.p"
    then do:
+   ss - 130320.1 -e */
+    /* ss - 130320.1 -b */
+   if substring(so_inv_mthd,2,1) <> "y" or prog_name = "soivpst.p"
+      or prog_name = "socnpst.p" OR prog_name = "xxsoivp1.p"
+   then do:
+  /* ss - 130320.1 -e */
 
       /* IN CASE OF SINGLE-DB THE tr_hist BELONGING ONLY TO THE CURRENT
        * DB IS TO BE UPDATED. THERE IS NO NEED TO GO THRU sod_det'S THAT
@@ -393,15 +400,39 @@ do transaction on error undo, leave:
       if global_db = "" then do:
 
          {&SOIVPSTA-P-TAG2}
-
+/* ss - 130225.1 -b 
          for each tr_hist
             where tr_nbr = so_nbr
               and tr_type = "ISS-SO"
               and tr_rmks = ""
+                     
               {&SOIVPSTA-P-TAG3}
          use-index tr_nbr_eff
          exclusive-lock:
+          ss - 130225.1 -e */
+/* ss - 130225.1 -b */
 
+        for each tr_hist
+            where tr_nbr = so_nbr
+              and tr_type = "ISS-SO"
+                 and can-find (first xxabs_mstr no-lock where
+
+                xxabs_nbr = xxabsnbr and
+/*121217.1*/    xxabs_order = tr_nbr and
+/*121217.1*/    integer(xxabs_line) = tr_line
+                and xxabs_par_id = "s" + tr_ship_id
+		/*
+		and xxabs_loc = tr_loc
+		and xxabs_lot = tr_serial
+		and xxabs_ref = tr_ref 
+		*/
+/*121217.1*/    use-index xxabs_shipto
+/*121217.1*/    )
+         
+              {&SOIVPSTA-P-TAG3}
+         use-index tr_nbr_eff
+         exclusive-lock:
+/* ss - 130225.1 -e */
             assign
                tr_rmks    = so_inv_nbr
                v_par_id = "s" + tr_ship_id
@@ -445,7 +476,7 @@ do transaction on error undo, leave:
       else do:
 
          so_db = global_db.
-
+         /* ss - 130320.1 -b
          for each sod_det
             fields (sod_cmtindx sod_fa_nbr sod_fsm_type sod_line
                     sod_lot sod_nbr sod_part sod_price sod_qty_all
@@ -456,7 +487,27 @@ do transaction on error undo, leave:
          no-lock
 /*         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */
          :
+           ss - 130320.1 -e */
+         /* ss - 130320.1 -b */
+         for each sod_det
+            fields (sod_cmtindx sod_fa_nbr sod_fsm_type sod_line
+                    sod_lot sod_nbr sod_part sod_price sod_qty_all
+                    sod_qty_inv sod_site sod_status sod_sched
+                    sod_qty_ord sod_qty_pick sod_qty_ship sod_cum_qty
+                    sod_taxable sod_taxc sod_tax_in sod_type sod_um_conv)
+            where sod_nbr = so_nbr 
+             AND   can-find (first xxabs_mstr no-lock where
 
+                xxabs_nbr = xxabsnbr and
+                xxabs_order = sod_nbr and
+                integer(xxabs_line) = sod_line
+               
+              use-index xxabs_shipto
+                )
+         no-lock
+/*         ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock */
+         :
+          /* ss - 130320.1 -e */
             for first si_mstr
                fields (si_db si_site)
                where si_site = sod_site
@@ -472,8 +523,12 @@ do transaction on error undo, leave:
                sonbr = so_nbr
                soline = sod_line
                soinv = so_inv_nbr.
-
+            /* ss - 130320.1 -b 
             {gprun.i ""soivpstf.p""}
+            ss - 130320.1 -e */
+            /* ss - 130320.1 -b */
+            {gprun.i ""sssoivpstf.p"" "(input xxabsnbr )"}
+           /* ss - 130320.1 -e */
 
             /* RESET THE DB ALIAS TO THE ORIGINAL DATABASE */
             if si_db <> so_db then do:
@@ -628,6 +683,15 @@ do transaction on error undo, leave:
          or (sod_qty_ord - sod_qty_ship = 0
          and substring(sod_fsm_type,1,3) <> "RMA"
          and not sod_sched))
+         /* ss - 130219.1 -b */
+         and can-find (first xxabs_mstr no-lock where
+
+                xxabs_nbr = xxabsnbr and
+/*121217.1*/    xxabs_order = sod_nbr and
+/*121217.1*/    integer(xxabs_line) = sod_line
+/*121217.1*/    use-index xxabs_shipto
+/*121217.1*/    )
+         /* ss - 130219.1 -e */
 /*121213.1   ,each tmpso where tso1_nbr = sod_nbr and tso1_line = sod_line no-lock
 */
 :

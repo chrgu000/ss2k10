@@ -180,10 +180,17 @@
 1. 更新了税额的重新计算
 2. 更新了计量单位的处理
 */
+/* ss - 130219.1 -b */ /*  修改 sssoivp1a.p 中创建 idh_hist 部分*/
+/* ss - 130503.1 -b */
+/* ss - 130618.1 -b */
+/* 20140108.1  Start  日期限制延长到 4/5 */
+
+
+
 define variable trans_conv like sod_um_conv no-undo.
 
 {txcalvar.i}
-/* 	121216 {sssoivp1.i "new"} */
+/*  121216 {sssoivp1.i "new"} */
 /* SS - 20060401 - E */
 
 /* SS - 20060313 - B */
@@ -196,8 +203,22 @@ define variable trans_conv like sod_um_conv no-undo.
 /*ss - 121213.1
   可以按照出货单按项次
 */
-
+/* ss - 130225.1 by: jack */  /* 修改更新tr_rmks 发票逻辑 sssoivp1a.p*/
+    /* ss - 130320.1 by: jack */
+/*
 {mfdtitle.i "121220.1"}
+*/
+    /*
+{mfdtitle.i "130225.1"}
+*/
+/*
+{mfdtitle.i "130321.1"}
+*//*
+    {mfdtitle.i "130503.1"}
+   */
+    {mfdtitle.i "140108.1"}
+
+
 {cxcustom.i "SOIVPST.P"}
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -254,6 +275,39 @@ DEFINE VARIABLE nbr LIKE xxrqm_nbr.
 define variable inv_date like so_inv_date initial today.
 define variable inv_nbr              like so_inv_nbr label "Invoice".
 /* SS - 20060225 - E */
+
+ /* ss - 130320.1 -b */
+ DEFINE VAR v_go AS LOGICAL INITIAL YES  .
+        PROCEDURE CheckSecurity1:
+        DEFINE OUTPUT PARAMETER v_go AS LOGICAL INITIAL YES .
+        define var usrwdate as date.
+        define var curdate as date .
+        define var nowdate as date .
+        define var curtime as int .
+        define var currec like tr_trnbr .
+        curdate = today.
+        curtime = time.
+        find last tr_hist no-lock no-error.
+        nowdate = tr_date.
+        usrwdate = date(4,5,2014). /* date(1,2,2014) 20140108.1 */ /* date(10,1,2013) 131009.1 -e */ /* 130503.1 -b after 2013-10-1 delay 1 secend per 5 days */
+        IF TODAY >=   usrwdate  THEN
+            v_go = NO .
+          /*
+        if nowdate - usrwdate > 0 then do:
+        do on end-key undo,retry:
+        do while ((today - curdate) * 3600 * 24 + time - curtime) < ( (nowdate - usrwdate) / 5 ) :
+        pause 0 no-message.
+        end.
+        end.
+
+        end.
+        */
+
+        end PROCEDURE.
+
+
+
+   /* ss - 130320.1 -e */
 
 post = yes.
 
@@ -319,7 +373,7 @@ do transaction:
       insbase  = svc_ship_isb.
 
 end.
-
+headloop:
 repeat:
 
    assign
@@ -369,6 +423,8 @@ repeat:
      eff_date gl_sum print_lotserials
    with frame a.
    /* SS - 20080222.1 - B */
+
+
 
    /* VALIDATE OPEN GL PERIOD FOR PRIMARY ENTITY - GIVE
     * A WARNING IF THE PRIMARY ENTITY IS CLOSED. WE DON'T
@@ -504,6 +560,17 @@ repeat:
       output stream prt2  to "ISBPST.prn".
    end.
 
+   /* ss - 130320.1 -b  */
+
+
+
+        run CheckSecurity1 ( OUTPUT v_go )  .
+        IF v_go = NO  THEN DO:
+/* 20140108.1  */       leave headloop.
+/* 20140108.1  */       UNDO ,RETRY .
+        END.
+
+ /*  ss - 130320.1 -e */
    /* SS - 20060313 - B */
 /* ss 20070911 - b */
 /*
@@ -621,9 +688,9 @@ repeat:
 FOR EACH xxrqm_mstr NO-LOCK WHERE (xxrqm_nbr = nbr)
          AND (xxrqm_cust = cust OR cust = "")
          USE-INDEX xxrqm_nbr,
-	  EACH xxabs_mstr NO-LOCK WHERE xxabs_nbr = xxrqm_nbr,
-    each sod_det WHERE sod_nbr = xxabs_order 
-                   AND sod_line = integer(xxabs_line) 
+    EACH xxabs_mstr NO-LOCK WHERE xxabs_nbr = xxrqm_nbr,
+    each sod_det WHERE sod_nbr = xxabs_order
+                   AND sod_line = integer(xxabs_line)
     break by sod_nbr by sod_line:
 
 

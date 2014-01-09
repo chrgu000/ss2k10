@@ -62,6 +62,7 @@ define input parameter tax_tr_type  like tx2d_tr_type.
 define input parameter tot_cont_charge as decimal no-undo.
 define input parameter tot_line_charge as decimal no-undo.
 DEFINE INPUT PARAMETER xxabsnbr  as character no-undo.
+
 define shared variable convertmode as character no-undo.
 define shared variable rndmthd          like rnd_rnd_mthd.
 /* {sssoivp1.i} */

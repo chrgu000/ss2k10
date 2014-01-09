@@ -112,6 +112,7 @@ define input parameter tot_cont_charge as decimal no-undo.
 define input parameter tot_line_charge  as decimal no-undo.
 DEFINE INPUT PARAMETER xxabsnbr  as character no-undo.
 
+
 define new shared variable undo_txdetrp like mfc_logical.
 
 /* AND NOT JUST VIEWED IN DR/CR MEMO MAINTENANCE                   */
@@ -267,6 +268,7 @@ do for so_mstr:     /*scope this trans */
    {txcurvar.i}
    {sototfrm.i}
 
+      
    taxloop:
    do on endkey undo, leave:
 
@@ -286,6 +288,7 @@ do for so_mstr:     /*scope this trans */
               input page_break,
               input '',
               input yes)" }
+            
          if undo_txdetrp = true then undo, leave.
       end. /* if not maint */
 
@@ -693,6 +696,11 @@ do for so_mstr:     /*scope this trans */
 /*               taxable_amt                                                  */
 /*               with frame sotot.                                            */
 /*         else                                                               */
+
+          
+         
+         
+          
             display
                "" @ l_nontaxable_lbl
                "" @ nontaxable_amt
@@ -1046,6 +1054,10 @@ do for so_mstr:     /*scope this trans */
 /*zy                  taxable_amt                                            */
 /*zy                  with frame sotot.                                      */
 /*zy            else                                                         */
+
+             
+           
+          
                display
                   "" @ l_nontaxable_lbl
                   "" @ nontaxable_amt
@@ -1078,6 +1090,9 @@ do for so_mstr:     /*scope this trans */
    end. /* TAXLOOP */
 
 end. /*end do for transaction scope */
+
+
+
 
 
 PROCEDURE ip_dispeuro:
@@ -1118,6 +1133,9 @@ PROCEDURE ip_dispeuro:
 /*zy            taxable_amt                                                   */
 /*zy            with frame sototeuro.                                         */
 /*zy      else                                                                */
+       
+      
+          
          display
             "" @ l_nontaxable_lbl
             "" @ nontaxable_amt
