@@ -124,7 +124,7 @@ define variable part_type     like pt_part_type no-undo.
 define variable part_type1    like pt_part_type no-undo.
 define variable cst_date      like tr_effdate   no-undo.
 
-define variable l_msg1 as character format "x(64)" no-undo.
+define variable l_msg1 as character format "x(255)" no-undo.
 define variable l_msg2 as character format "x(64)" no-undo.
 
 define variable loc_ext_std  like ext_std     no-undo.
@@ -170,8 +170,8 @@ define  temp-table tmploc01  /*费用类库位列表*/
 
 /* ss - 130315.1 -e */
 
-/*JJ*/ define variable v_all_qty like trgl_gl_amt label "Qty Total".
-/*JJ*/ define variable v_all_amt like v_all_qty label "Amount Total".
+/*JJ*/ define variable v_all_qty like trgl_gl_amt label "Qty Total" format "->>>,>>>,>>>,>>9.99<<<" .
+/*JJ*/ define variable v_all_amt like v_all_qty label "Amount Total" format "->>>,>>>,>>>,>>9.99<<<".
 
 /* CONSIGNMENT VARIABLES */
 {pocnvars.i}
@@ -346,7 +346,7 @@ part           colon 15
 /*JJ
  SKIP(.4)  /*GUI*/
 */
-with frame a side-labels width 80 /* attr-space NO-BOX THREE-D */ /*GUI*/.
+with frame a side-labels width 80 /* attr-space NO-BOX */ THREE-D  /*GUI*/.
 ss - 130315.1 -e */
 
 /*JJ*/ cost_qty = no.
@@ -668,6 +668,7 @@ repeat on error undo, return error on endkey undo, return :
 
 /* /*GUI*/ end procedure. /* p-report-quote */ */
 
+/*
    {gpselout.i &printType = "printer"
                &printWidth = 132
                &pagedFlag = "false"
@@ -681,31 +682,51 @@ repeat on error undo, return error on endkey undo, return :
                &withEmail = "yes"
                &withWinprint = "yes"
                &defineVariables = "yes"}
-
+*/
+{mfselbpr.i "printer" 132 nopage}
 
 define buffer trhist for tr_hist.
 /* ss - 130315.1 -b */
 
    {mfphead.i}
 
+l_msg1 = "Item Number        Site     Description              Line  Qty On Hand        Std.Cost " .
+l_msg2 = "------------------ -------- ------------------------ ---- ------------ --------------- " + fill("------------ ",10).
+do v_i = 1 to 9:
+l_msg1 = l_msg1 +  fill(" ",12 - 2 - length(string(days[v_i]))) + "<=" + string(days[v_i]) + " ".
+end.
+l_msg1 = l_msg1 +  fill(" ",12 - 2 - length(string(days[9]))) + "> " + string(days[9]) .
+
+disp l_msg1 format 'x(298)' skip
+     l_msg2 format 'x(298)' with frame f_msg no-label no-box width 300.
+
+/*JJ
+
    FORM /*GUI*/
       header
-      l_msg1
+      l_msg1 format 'x(298)' skip
+      l_msg2 format 'x(298)'
 
-   with STREAM-IO /*GUI*/  frame pagefoot page-bottom width 132.
+   with STREAM-IO /*GUI*/  frame pagefoot page-top width 300.
 
    FORM /*GUI*/
+/*
       header
       l_msg2
-
+*/
    with STREAM-IO /*GUI*/  frame pagefoot1 page-bottom width 132.
 
    hide frame pagefoot.
    hide frame pagefoot1.
+   view frame pagefoot.
+*/
+/*
    if net_qty then view frame pagefoot.
    else view frame pagefoot1.
+*/
 
-   display "Start:" today string(time,"hh:mm:ss") with frame f_time no-label no-box.
+/*   display "Start:" today string(time,"hh:mm:ss") with frame f_time no-label no-box. */
+   disp " " with frame f_time no-label no-box.
 
    /*TEMPORARILY RE-CREATE ANY NON-PERMANENT LD_DET RECORDS*/
 
@@ -1372,7 +1393,7 @@ define buffer trhist for tr_hist.
 
 
                    /* ss - 130315.1 -b
-
+/*JJ
                   if parts_printed = 0
                   then do:
                      page.
@@ -1387,7 +1408,7 @@ define buffer trhist for tr_hist.
                      with frame phead1 side-labels STREAM-IO /*GUI*/ .
 
                   end. /* IF PARTS_PRINTED = 0 */
-
+*/
 
 
                   display
@@ -1486,6 +1507,7 @@ define buffer trhist for tr_hist.
             then do:
                if parts_printed >= 1
                then do:
+/*JJ
                   if line-counter > page-size - 4
                   then
                      page.
@@ -1497,6 +1519,7 @@ define buffer trhist for tr_hist.
                          @ t_sct_std_as_of
                      loc_ext_std @ ext_std WITH STREAM-IO /*GUI*/ .
                   down 1.
+*/
 
                   assign
                      site_ext_std = site_ext_std + loc_ext_std
@@ -1511,6 +1534,7 @@ define buffer trhist for tr_hist.
             then do:
                if locations_printed >= 1
                then do:
+/*JJ
                   if line-counter > page-size - 4
                   then
                      page.
@@ -1522,6 +1546,7 @@ define buffer trhist for tr_hist.
                          @ t_sct_std_as_of
                      site_ext_std @ ext_std WITH STREAM-IO /*GUI*/ .
                   down 1.
+*/
 
                   assign
                      tot_ext_std  = tot_ext_std + site_ext_std
@@ -1536,7 +1561,7 @@ define buffer trhist for tr_hist.
 
          /* ss - 130315.1 -e
          if last(in_site) then do:
-
+/*JJ
             if line-counter > page-size - 4 then page.
 
             underline ext_std.
@@ -1546,7 +1571,7 @@ define buffer trhist for tr_hist.
                   format "x(15)" @ t_sct_std_as_of
                tot_ext_std @ ext_std WITH STREAM-IO /*GUI*/ .
             down 1.
-
+*/
             tot_ext_std = 0.
 
          end. /* IF LAST(IN_SITE) */
@@ -1658,6 +1683,10 @@ define buffer trhist for tr_hist.
                 end.
                 assign inti  = i.
 
+                IF tt.t_lddet_lot = "" THEN DO:
+                        inti = 1.
+                END.
+
                    assign
                        xr_qty[inti] = xr_qty[inti] +  tt.t_lddet_qty
                        .
@@ -1668,7 +1697,7 @@ define buffer trhist for tr_hist.
      /* 计算发生日期账龄 */
 
         if opsys <> "unix" and l_excel then do:
-         {gprun.i ""xxptrp06x.p"" "(input fName)"}
+         {gprun.i ""xxptrp06xg.p"" "(input fName)"}
       end.
       else do:
           /* 130321.2  */
@@ -1677,19 +1706,17 @@ define buffer trhist for tr_hist.
           for each x_ret no-lock with width 300:
 		v_all_qty = v_all_qty + xr_qty_oh.
 		v_all_amt = v_all_amt + xr_qty_oh * xr_cst.
-          display x_ret with stream-io.
+          display x_ret with stream-io no-label no-box.
           /*
           FOR EACH tt NO-LOCK WITH WIDTH 300 :
                display tt with stream-io.
                */
 
-/*JJ
-          /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/
-*/
+/*          /*GUI*/ {mfguichk.i } /*Replace mfrpchk*/ */
 	  {mfrpchk.i}
           end.
 	  
-	  disp v_all_qty v_all_amt with frame f_total side-label.
+	  disp v_all_qty v_all_amt "Complete At" today string(time,"hh:mm:ss") with frame f_total side-label width 200.
       end.
         /* ss - 130315.1 -e */
 
@@ -1703,7 +1730,9 @@ define buffer trhist for tr_hist.
 
 	{mfrtrail.i}
 
+
 	{mfgrptrm.i}
+
 end. /* REPEAT */
 
 /*
