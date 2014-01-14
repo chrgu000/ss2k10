@@ -329,9 +329,9 @@ PROCEDURE detail-allocate:
       if qty_to_all < ld_qty_oh - ld_qty_all
       then all_this_loc = qty_to_all.
       else all_this_loc = ld_qty_oh - ld_qty_all.
-/*1   if xxlog then do:                                                      */
-/*1     assign all_this_loc = all_this_loc - all_this_loc mod q_mult.        */
-/*1   end.                                                                   */
+/*1*/ if xxlog then do:
+/*1*/   assign all_this_loc = all_this_loc - all_this_loc mod q_mult.
+/*1*/ end.
 
       if pt_mstr.pt_sngl_lot and all_this_loc < qty_to_all
       and this_lot = ?
