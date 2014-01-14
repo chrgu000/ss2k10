@@ -67,10 +67,10 @@ psid = trim ( userid(sdbname('qaddb')) ).
     else do:
       REPEAT:
 
-	  display skip (16) "** 兵絏硁ン猔 **"				at 48 no-label skip
-			    "そ:" + temp1 	    format "x(32)"   		at 48 no-label skip
-			    "╰参:" + trim ( opsys )  format "x(28)"      	at 48 no-label skip
-			    "摸:" + trim ( dbtype(1) ) + trim ( dbversion(1) )  format "x(28)" at 48 no-label skip
+	  display skip (16) "** 条码软件注册 **"				at 48 no-label skip
+			    "公司:" + temp1 	    format "x(32)"   		at 48 no-label skip
+			    "系统:" + trim ( opsys )  format "x(28)"      	at 48 no-label skip
+			    "类型:" + trim ( dbtype(1) ) + trim ( dbversion(1) )  format "x(28)" at 48 no-label skip
 		  	    with fram registerf no-box .
                            
 			    update license1 at 48 no-label license2 no-label license3 no-label with fram  registerf.
@@ -149,19 +149,19 @@ psid = trim ( userid(sdbname('qaddb')) ).
      /*
      find first usr_mstr where usr_userid = psid and usr_restrict no-lock no-error .
      if not available usr_mstr   then do:
-	display skip "ノめ/盞絏Τ粇"  NO-LABEL with frame loginf no-box no-labels .
+	display skip "用户/密码有误"  NO-LABEL with frame loginf no-box no-labels .
 	pause 2. 
 	quit.
      end.
      */
      if index(summaryusr,psid) = 0 then do:
         display skip(16)
-	             "**BARCODE ノめΤ粇**" at 60 no-label skip
-	             " * 叫块ノめ戈* "  at 60 no-label skip
-		     "硄ノ絏:(.36.2.13)"  at 60 no-label skip
+	             "**BARCODE 用户有误**" at 60 no-label skip
+	             " * 请输入用户资料* "  at 60 no-label skip
+		     "通用代码:(.36.2.13)"  at 60 no-label skip
 		     "Field=BARCODEUSERID"  at 60 no-label skip
 		     "Value=< OS USER ID >"  at 60 no-label skip
-		     "#Θуノめノ " + """" +  "|" + """" + " 筳秨#" format "x(20)" at 60 no-label skip
+		     "#成批用户用 " + """" +  "|" + """" + " 隔开#" format "x(20)" at 60 no-label skip
 	              with frame loginerrorf no-box no-labels .
 	pause 20. 
 	quit.

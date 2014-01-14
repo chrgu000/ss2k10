@@ -112,7 +112,7 @@ REPEAT:
       sectionid = sectionid + 1 .
      /* SECTION ID -- END  */
 
-     /* START  LINE :1002  翴[SITE]  */
+     /* START  LINE :1002  地点[SITE]  */
      V1002L:
      REPEAT:
 
@@ -144,29 +144,29 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
-                L10021 = "翴砞﹚Τ粇" .
+                L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L10022 = "1.⊿Τ砞﹚纐粄翴" .
+                L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L10023 = "2.舦砞﹚Τ粇" .
+                L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L10024 = "  叫琩" .
+                L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 4 - END */ 
 
@@ -222,11 +222,11 @@ REPEAT:
         leave V1002L.
      END.
      PV1002 = V1002.
-     /* END    LINE :1002  翴[SITE]  */
+     /* END    LINE :1002  地点[SITE]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1100  1主菜单  */
+     /* START  LINE :1100  1翋粕等  */
      V1100L:
      REPEAT:
 
@@ -254,41 +254,41 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */ 
-                L11001 = "蹦潦垫虫. . . .1" .
+                L11001 = "采购菜单. . . .1" .
                 display L11001          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11002 = "虫垫虫. . . .3" .
+                L11002 = "工单菜单. . . .3" .
                 display L11002          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11003 = "絃翴垫虫. . . .4" .
+                L11003 = "盘点菜单. . . .4" .
                 display L11003          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11004 = "夹帽垫虫. . . .5" .
+                L11004 = "标签菜单. . . .5" .
                 display L11004          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11005 = "畐垫虫. . . .6" .
+                L11005 = "库存菜单. . . .6" .
                 display L11005          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 5 - END */ 
 
 
                 /* LABEL 6 - START */ 
-                L11006 = "綪扳垫虫. . . .7" .
+                L11006 = "销售菜单. . . .7" .
                 display L11006          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 6 - END */ 
         Update V1100
@@ -327,7 +327,7 @@ REPEAT:
         leave V1100L.
      END.
      PV1100 = V1100.
-     /* END    LINE :1100  1主菜单  */
+     /* END    LINE :1100  1翋粕等  */
 
 
    /* Additional Labels Format */
@@ -336,7 +336,7 @@ REPEAT:
    REPEAT:
    /*Logical Enter Cycle1110    */
    IF NOT (V1100 = "1" ) THEN LEAVE V1110LMAINLOOP.
-     /* START  LINE :1110  1.1 收货菜单  */
+     /* START  LINE :1110  1.1 彶亿粕等  */
      V1110L:
      REPEAT:
 
@@ -364,23 +364,23 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1110 no-box.
 
                 /* LABEL 1 - START */ 
-                L11101 = "POΜ砯[]. .11" .
+                L11101 = "PO收货[一般]. .11" .
                 display L11101          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11102 = "POΜ砯[〆]. .12" .
+                L11102 = "PO收货[委外]. .12" .
                 display L11102          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11103 = "POΜ砯[腨北]. .13" .
+                L11103 = "PO收货[严控]. .13" .
                 display L11103          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 3 - END */ 
 
@@ -439,7 +439,7 @@ REPEAT:
         leave V1110L.
      END.
      PV1110 = V1110.
-     /* END    LINE :1110  1.1 收货菜单  */
+     /* END    LINE :1110  1.1 彶亿粕等  */
 
 
    /* Additional Labels Format */
@@ -454,7 +454,7 @@ REPEAT:
    REPEAT:
    /*Logical Enter Cycle1111    */
    IF NOT (V1110 = "11" OR V1100 = "11" ) THEN LEAVE V1111LMAINLOOP.
-     /* START  LINE :1111  1.1.1 PO收货[一般]  */
+     /* START  LINE :1111  1.1.1 PO彶亿[珨啜]  */
      V1111L:
      REPEAT:
 
@@ -486,7 +486,7 @@ RUN CheckSecurity (INPUT "xspor01.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes then RUN    xspor01.p.
         leave V1111L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1111 no-box.
 
                 /* LABEL 1 - START */ 
@@ -561,7 +561,7 @@ IF OkToRun = yes then RUN    xspor01.p.
         leave V1111L.
      END.
      PV1111 = V1111.
-     /* END    LINE :1111  1.1.1 PO收货[一般]  */
+     /* END    LINE :1111  1.1.1 PO彶亿[珨啜]  */
 
 
    /* Additional Labels Format */
@@ -576,7 +576,7 @@ IF OkToRun = yes then RUN    xspor01.p.
    REPEAT:
    /*Logical Enter Cycle1112    */
    IF NOT (V1110 = "12" OR V1100 = "12" ) THEN LEAVE V1112LMAINLOOP.
-     /* START  LINE :1112  1.1.2 PO收货[委外]  */
+     /* START  LINE :1112  1.1.2 PO彶亿[卺俋]  */
      V1112L:
      REPEAT:
 
@@ -608,7 +608,7 @@ RUN CheckSecurity (INPUT "xspor02.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes then RUN    xspor02.p.
         leave V1112L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1112 no-box.
 
                 /* LABEL 1 - START */ 
@@ -683,7 +683,7 @@ IF OkToRun = yes then RUN    xspor02.p.
         leave V1112L.
      END.
      PV1112 = V1112.
-     /* END    LINE :1112  1.1.2 PO收货[委外]  */
+     /* END    LINE :1112  1.1.2 PO彶亿[卺俋]  */
 
 
    /* Additional Labels Format */
@@ -698,7 +698,7 @@ IF OkToRun = yes then RUN    xspor02.p.
    REPEAT:
    /*Logical Enter Cycle1113    */
    IF NOT (V1110 = "13" OR V1100 = "13" ) THEN LEAVE V1113LMAINLOOP.
-     /* START  LINE :1113  1.1.3 PO收货[严控]  */
+     /* START  LINE :1113  1.1.3 PO彶亿[旆讽]  */
      V1113L:
      REPEAT:
 
@@ -730,7 +730,7 @@ RUN CheckSecurity (INPUT "xspor03.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes then RUN    xspor03.p.
         leave V1113L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1113 no-box.
 
                 /* LABEL 1 - START */ 
@@ -805,7 +805,7 @@ IF OkToRun = yes then RUN    xspor03.p.
         leave V1113L.
      END.
      PV1113 = V1113.
-     /* END    LINE :1113  1.1.3 PO收货[严控]  */
+     /* END    LINE :1113  1.1.3 PO彶亿[旆讽]  */
 
 
    /* Additional Labels Format */
@@ -820,7 +820,7 @@ IF OkToRun = yes then RUN    xspor03.p.
    REPEAT:
    /*Logical Enter Cycle1130    */
    IF NOT (V1100 = "3" ) THEN LEAVE V1130LMAINLOOP.
-     /* START  LINE :1130  1.3 工单菜单  */
+     /* START  LINE :1130  1.3 驮等粕等  */
      V1130L:
      REPEAT:
 
@@ -848,41 +848,41 @@ IF OkToRun = yes then RUN    xspor03.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1130 no-box.
 
                 /* LABEL 1 - START */ 
-                L11301 = "虫祇タ盽. .31" .
+                L11301 = "工单发正常料. .31" .
                 display L11301          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11302 = "虫癶. . . .32" .
+                L11302 = "工单退料. . . .32" .
                 display L11302          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11303 = "Θ珇畐. . . .33" .
+                L11303 = "成品入库. . . .33" .
                 display L11303          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11304 = "珇畐. . .34" .
+                L11304 = "自制品入库. . .34" .
                 display L11304          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11305 = "虫祇筁戳. .35" .
+                L11305 = "工单发过期料. .35" .
                 display L11305          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 5 - END */ 
 
 
                 /* LABEL 6 - START */ 
-                L11306 = "FIFO糵琩高. .36" .
+                L11306 = "FIFO审核查询. .36" .
                 display L11306          format "x(40)" skip with fram F1130 no-box.
                 /* LABEL 6 - END */ 
         Update V1130
@@ -923,7 +923,7 @@ IF OkToRun = yes then RUN    xspor03.p.
         leave V1130L.
      END.
      PV1130 = V1130.
-     /* END    LINE :1130  1.3 工单菜单  */
+     /* END    LINE :1130  1.3 驮等粕等  */
 
 
    /* Additional Labels Format */
@@ -938,7 +938,7 @@ IF OkToRun = yes then RUN    xspor03.p.
    REPEAT:
    /*Logical Enter Cycle1131    */
    IF NOT (V1130 = "31" OR V1100 = "31" ) THEN LEAVE V1131LMAINLOOP.
-     /* START  LINE :1131  1.3.1 工单发正常料  */
+     /* START  LINE :1131  1.3.1 驮等楷淏都蹋  */
      V1131L:
      REPEAT:
 
@@ -970,7 +970,7 @@ RUN CheckSecurity (INPUT "xswoi10.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes then RUN    xswoi10.p.
         leave V1131L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1131 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1045,7 +1045,7 @@ IF OkToRun = yes then RUN    xswoi10.p.
         leave V1131L.
      END.
      PV1131 = V1131.
-     /* END    LINE :1131  1.3.1 工单发正常料  */
+     /* END    LINE :1131  1.3.1 驮等楷淏都蹋  */
 
 
    /* Additional Labels Format */
@@ -1060,7 +1060,7 @@ IF OkToRun = yes then RUN    xswoi10.p.
    REPEAT:
    /*Logical Enter Cycle1132    */
    IF NOT (V1130 = "32" OR V1100 = "32" ) THEN LEAVE V1132LMAINLOOP.
-     /* START  LINE :1132  1.3.2 工单退料  */
+     /* START  LINE :1132  1.3.2 驮等豖蹋  */
      V1132L:
      REPEAT:
 
@@ -1092,7 +1092,7 @@ RUN CheckSecurity (INPUT "xswoi08.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN RUN     xswoi08.p.
         leave V1132L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1132 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1167,7 +1167,7 @@ IF OkToRun = yes THEN RUN     xswoi08.p.
         leave V1132L.
      END.
      PV1132 = V1132.
-     /* END    LINE :1132  1.3.2 工单退料  */
+     /* END    LINE :1132  1.3.2 驮等豖蹋  */
 
 
    /* Additional Labels Format */
@@ -1182,7 +1182,7 @@ IF OkToRun = yes THEN RUN     xswoi08.p.
    REPEAT:
    /*Logical Enter Cycle1133    */
    IF NOT (V1130 = "33" OR V1100 = "33" ) THEN LEAVE V1133LMAINLOOP.
-     /* START  LINE :1133  1.3.3 成品入库  */
+     /* START  LINE :1133  1.3.3 伧??踱  */
      V1133L:
      REPEAT:
 
@@ -1214,7 +1214,7 @@ RUN CheckSecurity (INPUT "xswor01.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN     	RUN  xswor01.p.
         leave V1133L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1133 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1289,7 +1289,7 @@ IF OkToRun = yes THEN     	RUN  xswor01.p.
         leave V1133L.
      END.
      PV1133 = V1133.
-     /* END    LINE :1133  1.3.3 成品入库  */
+     /* END    LINE :1133  1.3.3 伧??踱  */
 
 
    /* Additional Labels Format */
@@ -1304,7 +1304,7 @@ IF OkToRun = yes THEN     	RUN  xswor01.p.
    REPEAT:
    /*Logical Enter Cycle1134    */
    IF NOT (V1130 = "34" OR V1100 = "34" ) THEN LEAVE V1134LMAINLOOP.
-     /* START  LINE :1134  1.3.4 自制品入库  */
+     /* START  LINE :1134  1.3.4 赻秶??踱  */
      V1134L:
      REPEAT:
 
@@ -1336,7 +1336,7 @@ RUN CheckSecurity (INPUT "xswor02.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xswor02.p.
         leave V1134L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1134 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1411,7 +1411,7 @@ IF OkToRun = yes THEN  RUN    xswor02.p.
         leave V1134L.
      END.
      PV1134 = V1134.
-     /* END    LINE :1134  1.3.4 自制品入库  */
+     /* END    LINE :1134  1.3.4 赻秶??踱  */
 
 
    /* Additional Labels Format */
@@ -1426,7 +1426,7 @@ IF OkToRun = yes THEN  RUN    xswor02.p.
    REPEAT:
    /*Logical Enter Cycle1135    */
    IF NOT (V1130 = "35" OR V1100 = "35" ) THEN LEAVE V1135LMAINLOOP.
-     /* START  LINE :1135  1.3.5 工单发过期料  */
+     /* START  LINE :1135  1.3.5 驮等楷彻?蹋  */
      V1135L:
      REPEAT:
 
@@ -1458,7 +1458,7 @@ RUN CheckSecurity (INPUT "xswoi11.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes then RUN    xswoi11.p.
         leave V1135L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1135 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1533,7 +1533,7 @@ IF OkToRun = yes then RUN    xswoi11.p.
         leave V1135L.
      END.
      PV1135 = V1135.
-     /* END    LINE :1135  1.3.5 工单发过期料  */
+     /* END    LINE :1135  1.3.5 驮等楷彻?蹋  */
 
 
    /* Additional Labels Format */
@@ -1548,7 +1548,7 @@ IF OkToRun = yes then RUN    xswoi11.p.
    REPEAT:
    /*Logical Enter Cycle1136    */
    IF NOT (V1130 = "36" OR V1100 = "36" ) THEN LEAVE V1136LMAINLOOP.
-     /* START  LINE :1136  1.3.6 FIFO审核查询  */
+     /* START  LINE :1136  1.3.6 FIFO机瞄脤戙  */
      V1136L:
      REPEAT:
 
@@ -1580,7 +1580,7 @@ RUN CheckSecurity (INPUT "xsinv98.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv98.p.
         leave V1136L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1136 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1655,7 +1655,7 @@ IF OkToRun = yes THEN  RUN    xsinv98.p.
         leave V1136L.
      END.
      PV1136 = V1136.
-     /* END    LINE :1136  1.3.6 FIFO审核查询  */
+     /* END    LINE :1136  1.3.6 FIFO机瞄脤戙  */
 
 
    /* Additional Labels Format */
@@ -1670,7 +1670,7 @@ IF OkToRun = yes THEN  RUN    xsinv98.p.
    REPEAT:
    /*Logical Enter Cycle1140    */
    IF NOT (V1100 = "4" ) THEN LEAVE V1140LMAINLOOP.
-     /* START  LINE :1140  1.4 盘点菜单  */
+     /* START  LINE :1140  1.4 攫萸粕等  */
      V1140L:
      REPEAT:
 
@@ -1698,29 +1698,29 @@ IF OkToRun = yes THEN  RUN    xsinv98.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1140 no-box.
 
                 /* LABEL 1 - START */ 
-                L11401 = "㏄戳絃翴. . . .41" .
+                L11401 = "周期盘点. . . .41" .
                 display L11401          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11402 = "絃(BY ITEM) .42" .
+                L11402 = "初盘(BY ITEM) .42" .
                 display L11402          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11403 = "絃(礚Τ计).43" .
+                L11403 = "初盘(无物有数).43" .
                 display L11403          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11404 = "確絃(BY NBR). .44" .
+                L11404 = "复盘(BY NBR). .44" .
                 display L11404          format "x(40)" skip with fram F1140 no-box.
                 /* LABEL 4 - END */ 
 
@@ -1773,7 +1773,7 @@ IF OkToRun = yes THEN  RUN    xsinv98.p.
         leave V1140L.
      END.
      PV1140 = V1140.
-     /* END    LINE :1140  1.4 盘点菜单  */
+     /* END    LINE :1140  1.4 攫萸粕等  */
 
 
    /* Additional Labels Format */
@@ -1788,7 +1788,7 @@ IF OkToRun = yes THEN  RUN    xsinv98.p.
    REPEAT:
    /*Logical Enter Cycle1141    */
    IF NOT (V1140 = "41" OR V1100 = "41" ) THEN LEAVE V1141LMAINLOOP.
-     /* START  LINE :1141  1.4.1 周期盘点  */
+     /* START  LINE :1141  1.4.1 笚?攫萸  */
      V1141L:
      REPEAT:
 
@@ -1820,7 +1820,7 @@ RUN CheckSecurity (INPUT "xsinv41.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv41.p.
         leave V1141L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1141 no-box.
 
                 /* LABEL 1 - START */ 
@@ -1895,7 +1895,7 @@ IF OkToRun = yes THEN  RUN    xsinv41.p.
         leave V1141L.
      END.
      PV1141 = V1141.
-     /* END    LINE :1141  1.4.1 周期盘点  */
+     /* END    LINE :1141  1.4.1 笚?攫萸  */
 
 
    /* Additional Labels Format */
@@ -1910,7 +1910,7 @@ IF OkToRun = yes THEN  RUN    xsinv41.p.
    REPEAT:
    /*Logical Enter Cycle1142    */
    IF NOT (V1140 = "42" OR V1100 = "42" ) THEN LEAVE V1142LMAINLOOP.
-     /* START  LINE :1142  1.4.2 初盘(BY ITEM)  */
+     /* START  LINE :1142  1.4.2 场攫(BY ITEM)  */
      V1142L:
      REPEAT:
 
@@ -1942,7 +1942,7 @@ RUN CheckSecurity (INPUT "xsinv42.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv42.p.
         leave V1142L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1142 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2017,7 +2017,7 @@ IF OkToRun = yes THEN  RUN    xsinv42.p.
         leave V1142L.
      END.
      PV1142 = V1142.
-     /* END    LINE :1142  1.4.2 初盘(BY ITEM)  */
+     /* END    LINE :1142  1.4.2 场攫(BY ITEM)  */
 
 
    /* Additional Labels Format */
@@ -2032,7 +2032,7 @@ IF OkToRun = yes THEN  RUN    xsinv42.p.
    REPEAT:
    /*Logical Enter Cycle1143    */
    IF NOT (V1140 = "43" OR V1100 = "43" ) THEN LEAVE V1143LMAINLOOP.
-     /* START  LINE :1143  1.4.3 初盘(无物有数)  */
+     /* START  LINE :1143  1.4.3 场攫(拸昜衄杅)  */
      V1143L:
      REPEAT:
 
@@ -2064,7 +2064,7 @@ RUN CheckSecurity (INPUT "xsinv43.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv43.p.
         leave V1143L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1143 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2139,7 +2139,7 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
         leave V1143L.
      END.
      PV1143 = V1143.
-     /* END    LINE :1143  1.4.3 初盘(无物有数)  */
+     /* END    LINE :1143  1.4.3 场攫(拸昜衄杅)  */
 
 
    /* Additional Labels Format */
@@ -2154,7 +2154,7 @@ IF OkToRun = yes THEN  RUN    xsinv43.p.
    REPEAT:
    /*Logical Enter Cycle1144    */
    IF NOT (V1140 = "44" OR V1100 = "44" ) THEN LEAVE V1144LMAINLOOP.
-     /* START  LINE :1144  1.4.4 复盘(BY NBR)  */
+     /* START  LINE :1144  1.4.4 葩攫(BY NBR)  */
      V1144L:
      REPEAT:
 
@@ -2186,7 +2186,7 @@ RUN CheckSecurity (INPUT "xsinv44.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv44.p.
         leave V1144L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1144 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2261,7 +2261,7 @@ IF OkToRun = yes THEN  RUN    xsinv44.p.
         leave V1144L.
      END.
      PV1144 = V1144.
-     /* END    LINE :1144  1.4.4 复盘(BY NBR)  */
+     /* END    LINE :1144  1.4.4 葩攫(BY NBR)  */
 
 
    /* Additional Labels Format */
@@ -2276,7 +2276,7 @@ IF OkToRun = yes THEN  RUN    xsinv44.p.
    REPEAT:
    /*Logical Enter Cycle1150    */
    IF NOT (V1100 = "5" ) THEN LEAVE V1150LMAINLOOP.
-     /* START  LINE :1150  1.5 标签菜单  */
+     /* START  LINE :1150  1.5 梓?粕等  */
      V1150L:
      REPEAT:
 
@@ -2304,41 +2304,41 @@ IF OkToRun = yes THEN  RUN    xsinv44.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1150 no-box.
 
                 /* LABEL 1 - START */ 
-                L11501 = "夹非夹帽ゴ..51" .
+                L11501 = "标准标签打印..51" .
                 display L11501          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11502 = "畐夹帽ゴ..52" .
+                L11502 = "库存标签打印..52" .
                 display L11502          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11503 = "ゴ钉..53" .
+                L11503 = "取消打印列队..53" .
                 display L11503          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11504 = "夹帽干ゴ..54" .
+                L11504 = "自制标签补打..54" .
                 display L11504          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11505 = "夹帽畐..55" .
+                L11505 = "自制标签入库..55" .
                 display L11505          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 5 - END */ 
 
 
                 /* LABEL 6 - START */ 
-                L11506 = "夹帽ゴ..56" .
+                L11506 = "自制标签打印..56" .
                 display L11506          format "x(40)" skip with fram F1150 no-box.
                 /* LABEL 6 - END */ 
         Update V1150
@@ -2379,7 +2379,7 @@ IF OkToRun = yes THEN  RUN    xsinv44.p.
         leave V1150L.
      END.
      PV1150 = V1150.
-     /* END    LINE :1150  1.5 标签菜单  */
+     /* END    LINE :1150  1.5 梓?粕等  */
 
 
    /* Additional Labels Format */
@@ -2394,7 +2394,7 @@ IF OkToRun = yes THEN  RUN    xsinv44.p.
    REPEAT:
    /*Logical Enter Cycle1151    */
    IF NOT (V1150 = "51" OR V1100 = "51" ) THEN LEAVE V1151LMAINLOOP.
-     /* START  LINE :1151  1.5.1 标准标签打印  */
+     /* START  LINE :1151  1.5.1 梓袧梓?湖荂  */
      V1151L:
      REPEAT:
 
@@ -2426,7 +2426,7 @@ RUN CheckSecurity (INPUT "xslap03.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap03.p.
         leave V1151L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1151 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2501,7 +2501,7 @@ IF OkToRun = yes THEN  RUN    xslap03.p.
         leave V1151L.
      END.
      PV1151 = V1151.
-     /* END    LINE :1151  1.5.1 标准标签打印  */
+     /* END    LINE :1151  1.5.1 梓袧梓?湖荂  */
 
 
    /* Additional Labels Format */
@@ -2516,7 +2516,7 @@ IF OkToRun = yes THEN  RUN    xslap03.p.
    REPEAT:
    /*Logical Enter Cycle1152    */
    IF NOT (V1150 = "52" OR V1100 = "52" ) THEN LEAVE V1152LMAINLOOP.
-     /* START  LINE :1152  1.5.2 库存标签打印  */
+     /* START  LINE :1152  1.5.2 踱湔梓?湖荂  */
      V1152L:
      REPEAT:
 
@@ -2548,7 +2548,7 @@ RUN CheckSecurity (INPUT "xslap04.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap04.p.
         leave V1152L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1152 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2623,7 +2623,7 @@ IF OkToRun = yes THEN  RUN    xslap04.p.
         leave V1152L.
      END.
      PV1152 = V1152.
-     /* END    LINE :1152  1.5.2 库存标签打印  */
+     /* END    LINE :1152  1.5.2 踱湔梓?湖荂  */
 
 
    /* Additional Labels Format */
@@ -2638,7 +2638,7 @@ IF OkToRun = yes THEN  RUN    xslap04.p.
    REPEAT:
    /*Logical Enter Cycle1153    */
    IF NOT (V1150 = "53" OR V1100 = "53" ) THEN LEAVE V1153LMAINLOOP.
-     /* START  LINE :1153  1.5.3 取消打印列队  */
+     /* START  LINE :1153  1.5.3 ?秏湖荂蹈剿  */
      V1153L:
      REPEAT:
 
@@ -2670,7 +2670,7 @@ RUN CheckSecurity (INPUT "xslap05.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap05.p.
         leave V1153L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1153 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2745,7 +2745,7 @@ IF OkToRun = yes THEN  RUN    xslap05.p.
         leave V1153L.
      END.
      PV1153 = V1153.
-     /* END    LINE :1153  1.5.3 取消打印列队  */
+     /* END    LINE :1153  1.5.3 ?秏湖荂蹈剿  */
 
 
    /* Additional Labels Format */
@@ -2760,7 +2760,7 @@ IF OkToRun = yes THEN  RUN    xslap05.p.
    REPEAT:
    /*Logical Enter Cycle1154    */
    IF NOT (V1150 = "54" OR V1100 = "54" ) THEN LEAVE V1154LMAINLOOP.
-     /* START  LINE :1154  1.5.4 自制标签补打  */
+     /* START  LINE :1154  1.5.4 赻秶梓?朱湖  */
      V1154L:
      REPEAT:
 
@@ -2792,7 +2792,7 @@ RUN CheckSecurity (INPUT "xslap08.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap08.p.
         leave V1154L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1154 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2867,7 +2867,7 @@ IF OkToRun = yes THEN  RUN    xslap08.p.
         leave V1154L.
      END.
      PV1154 = V1154.
-     /* END    LINE :1154  1.5.4 自制标签补打  */
+     /* END    LINE :1154  1.5.4 赻秶梓?朱湖  */
 
 
    /* Additional Labels Format */
@@ -2882,7 +2882,7 @@ IF OkToRun = yes THEN  RUN    xslap08.p.
    REPEAT:
    /*Logical Enter Cycle1155    */
    IF NOT (V1150 = "55" OR V1100 = "55" ) THEN LEAVE V1155LMAINLOOP.
-     /* START  LINE :1155  1.5.5 自制标签入库  */
+     /* START  LINE :1155  1.5.5 赻秶梓??踱  */
      V1155L:
      REPEAT:
 
@@ -2914,7 +2914,7 @@ RUN CheckSecurity (INPUT "xswor04.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xswor04.p.
         leave V1155L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1155 no-box.
 
                 /* LABEL 1 - START */ 
@@ -2989,7 +2989,7 @@ IF OkToRun = yes THEN  RUN    xswor04.p.
         leave V1155L.
      END.
      PV1155 = V1155.
-     /* END    LINE :1155  1.5.5 自制标签入库  */
+     /* END    LINE :1155  1.5.5 赻秶梓??踱  */
 
 
    /* Additional Labels Format */
@@ -3004,7 +3004,7 @@ IF OkToRun = yes THEN  RUN    xswor04.p.
    REPEAT:
    /*Logical Enter Cycle1156    */
    IF NOT (V1150 = "56" OR V1100 = "56" ) THEN LEAVE V1156LMAINLOOP.
-     /* START  LINE :1156  1.5.6 自制标签打印  */
+     /* START  LINE :1156  1.5.6 赻秶梓?湖荂  */
      V1156L:
      REPEAT:
 
@@ -3036,7 +3036,7 @@ RUN CheckSecurity (INPUT "xslap07.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap07.p.
         leave V1156L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1156 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3111,7 +3111,7 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
         leave V1156L.
      END.
      PV1156 = V1156.
-     /* END    LINE :1156  1.5.6 自制标签打印  */
+     /* END    LINE :1156  1.5.6 赻秶梓?湖荂  */
 
 
    /* Additional Labels Format */
@@ -3126,7 +3126,7 @@ IF OkToRun = yes THEN  RUN    xslap07.p.
    REPEAT:
    /*Logical Enter Cycle1157    */
    IF NOT (V1150 = "57" OR V1100 = "57" ) THEN LEAVE V1157LMAINLOOP.
-     /* START  LINE :1157  1.5.7 VI自制标签打印  */
+     /* START  LINE :1157  1.5.7 VI赻秶梓?湖荂  */
      V1157L:
      REPEAT:
 
@@ -3158,7 +3158,7 @@ RUN CheckSecurity (INPUT "xswor03.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xswor03.p.
         leave V1157L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1157 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3233,7 +3233,7 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
         leave V1157L.
      END.
      PV1157 = V1157.
-     /* END    LINE :1157  1.5.7 VI自制标签打印  */
+     /* END    LINE :1157  1.5.7 VI赻秶梓?湖荂  */
 
 
    /* Additional Labels Format */
@@ -3248,7 +3248,7 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
    REPEAT:
    /*Logical Enter Cycle1160    */
    IF NOT (V1100 = "6" ) THEN LEAVE V1160LMAINLOOP.
-     /* START  LINE :1160  1.6 库存菜单  */
+     /* START  LINE :1160  1.6 踱湔粕等  */
      V1160L:
      REPEAT:
 
@@ -3276,41 +3276,41 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1160 no-box.
 
                 /* LABEL 1 - START */ 
-                L11601 = "璸购畐. . .61" .
+                L11601 = "计划外出库. . .61" .
                 display L11601          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11602 = "璸购畐. . .62" .
+                L11602 = "计划外入库. . .62" .
                 display L11602          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11603 = "畐锣簿. . . .63" .
+                L11603 = "库存转移. . . .63" .
                 display L11603          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11604 = "畐畐琩高. .64" .
+                L11604 = "库位库存查询. .64" .
                 display L11604          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11605 = "у腹畐琩高. .65" .
+                L11605 = "批号库存查询. .65" .
                 display L11605          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 5 - END */ 
 
 
                 /* LABEL 6 - START */ 
-                L11606 = "ユ琩高. . . .66" .
+                L11606 = "交易查询. . . .66" .
                 display L11606          format "x(40)" skip with fram F1160 no-box.
                 /* LABEL 6 - END */ 
         Update V1160
@@ -3351,7 +3351,7 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
         leave V1160L.
      END.
      PV1160 = V1160.
-     /* END    LINE :1160  1.6 库存菜单  */
+     /* END    LINE :1160  1.6 踱湔粕等  */
 
 
    /* Additional Labels Format */
@@ -3366,7 +3366,7 @@ IF OkToRun = yes THEN  RUN    xswor03.p.
    REPEAT:
    /*Logical Enter Cycle1161    */
    IF NOT (V1160 = "61" OR V1100 = "61" ) THEN LEAVE V1161LMAINLOOP.
-     /* START  LINE :1161  1.6.1 计划外出库  */
+     /* START  LINE :1161  1.6.1 数赫俋堤踱  */
      V1161L:
      REPEAT:
 
@@ -3398,7 +3398,7 @@ RUN CheckSecurity (INPUT "xsinv21.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv21.p.
         leave V1161L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1161 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3473,7 +3473,7 @@ IF OkToRun = yes THEN  RUN    xsinv21.p.
         leave V1161L.
      END.
      PV1161 = V1161.
-     /* END    LINE :1161  1.6.1 计划外出库  */
+     /* END    LINE :1161  1.6.1 数赫俋堤踱  */
 
 
    /* Additional Labels Format */
@@ -3488,7 +3488,7 @@ IF OkToRun = yes THEN  RUN    xsinv21.p.
    REPEAT:
    /*Logical Enter Cycle1162    */
    IF NOT (V1160 = "62" OR V1100 = "62" ) THEN LEAVE V1162LMAINLOOP.
-     /* START  LINE :1162  1.6.2 计划外入库  */
+     /* START  LINE :1162  1.6.2 数赫俋?踱  */
      V1162L:
      REPEAT:
 
@@ -3520,7 +3520,7 @@ RUN CheckSecurity (INPUT "xsinv22.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv22.p.
         leave V1162L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1162 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3595,7 +3595,7 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
         leave V1162L.
      END.
      PV1162 = V1162.
-     /* END    LINE :1162  1.6.2 计划外入库  */
+     /* END    LINE :1162  1.6.2 数赫俋?踱  */
 
 
    /* Additional Labels Format */
@@ -3610,7 +3610,7 @@ IF OkToRun = yes THEN  RUN    xsinv22.p.
    REPEAT:
    /*Logical Enter Cycle1163    */
    IF NOT (V1160 = "63" OR V1100 = "63" ) THEN LEAVE V1163LMAINLOOP.
-     /* START  LINE :1163  1.6.3 库存转移  */
+     /* START  LINE :1163  1.6.3 踱湔蛌痄  */
      V1163L:
      REPEAT:
 
@@ -3642,7 +3642,7 @@ RUN CheckSecurity (INPUT "xsinv23.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv23.p.
         leave V1163L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1163 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3717,7 +3717,7 @@ IF OkToRun = yes THEN  RUN    xsinv23.p.
         leave V1163L.
      END.
      PV1163 = V1163.
-     /* END    LINE :1163  1.6.3 库存转移  */
+     /* END    LINE :1163  1.6.3 踱湔蛌痄  */
 
 
    /* Additional Labels Format */
@@ -3732,7 +3732,7 @@ IF OkToRun = yes THEN  RUN    xsinv23.p.
    REPEAT:
    /*Logical Enter Cycle1164    */
    IF NOT (V1160 = "64" OR V1100 = "64" ) THEN LEAVE V1164LMAINLOOP.
-     /* START  LINE :1164  1.6.4 库位库存查询  */
+     /* START  LINE :1164  1.6.4 踱弇踱湔脤戙  */
      V1164L:
      REPEAT:
 
@@ -3764,7 +3764,7 @@ RUN CheckSecurity (INPUT "xsinq01.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinq01.p.
         leave V1164L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1164 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3839,7 +3839,7 @@ IF OkToRun = yes THEN  RUN    xsinq01.p.
         leave V1164L.
      END.
      PV1164 = V1164.
-     /* END    LINE :1164  1.6.4 库位库存查询  */
+     /* END    LINE :1164  1.6.4 踱弇踱湔脤戙  */
 
 
    /* Additional Labels Format */
@@ -3854,7 +3854,7 @@ IF OkToRun = yes THEN  RUN    xsinq01.p.
    REPEAT:
    /*Logical Enter Cycle1165    */
    IF NOT (V1160 = "65" OR V1100 = "65" ) THEN LEAVE V1165LMAINLOOP.
-     /* START  LINE :1165  1.6.5 批号库存查询  */
+     /* START  LINE :1165  1.6.5 蚕疡踱湔脤戙  */
      V1165L:
      REPEAT:
 
@@ -3886,7 +3886,7 @@ RUN CheckSecurity (INPUT "xsinv02.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv02.p.
         leave V1165L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1165 no-box.
 
                 /* LABEL 1 - START */ 
@@ -3961,7 +3961,7 @@ IF OkToRun = yes THEN  RUN    xsinv02.p.
         leave V1165L.
      END.
      PV1165 = V1165.
-     /* END    LINE :1165  1.6.5 批号库存查询  */
+     /* END    LINE :1165  1.6.5 蚕疡踱湔脤戙  */
 
 
    /* Additional Labels Format */
@@ -3976,7 +3976,7 @@ IF OkToRun = yes THEN  RUN    xsinv02.p.
    REPEAT:
    /*Logical Enter Cycle1166    */
    IF NOT (V1160 = "66" OR V1100 = "66" ) THEN LEAVE V1166LMAINLOOP.
-     /* START  LINE :1166  1.6.6 交易查询  */
+     /* START  LINE :1166  1.6.6 蝠眢脤戙  */
      V1166L:
      REPEAT:
 
@@ -4008,7 +4008,7 @@ RUN CheckSecurity (INPUT "xsinv99.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv99.p.
         leave V1166L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1166 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4083,7 +4083,7 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
         leave V1166L.
      END.
      PV1166 = V1166.
-     /* END    LINE :1166  1.6.6 交易查询  */
+     /* END    LINE :1166  1.6.6 蝠眢脤戙  */
 
 
    /* Additional Labels Format */
@@ -4098,7 +4098,7 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
    REPEAT:
    /*Logical Enter Cycle1170    */
    IF NOT (V1100 = "7" ) THEN LEAVE V1170LMAINLOOP.
-     /* START  LINE :1170  1.7 销售菜单  */
+     /* START  LINE :1170  1.7 种忮粕等  */
      V1170L:
      REPEAT:
 
@@ -4126,41 +4126,41 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1170 no-box.
 
                 /* LABEL 1 - START */ 
-                L11701 = "綪扳称[LOT] .71" .
+                L11701 = "销售备料[LOT] .71" .
                 display L11701          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11702 = "綪扳虫夹帽. .72" .
+                L11702 = "销售工单标签. .72" .
                 display L11702          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L11703 = "綪扳Θ珇称. .73" .
+                L11703 = "销售成品备料. .73" .
                 display L11703          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L11704 = "綪扳称琩高. .74" .
+                L11704 = "销售备料查询. .74" .
                 display L11704          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11705 = "綪扳Θ珇浪琩. .75" .
+                L11705 = "销售成品检查. .75" .
                 display L11705          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 5 - END */ 
 
 
                 /* LABEL 6 - START */ 
-                L11706 = "綪扳POST夹帽. .79" .
+                L11706 = "销售POST标签. .79" .
                 display L11706          format "x(40)" skip with fram F1170 no-box.
                 /* LABEL 6 - END */ 
         Update V1170
@@ -4201,7 +4201,7 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
         leave V1170L.
      END.
      PV1170 = V1170.
-     /* END    LINE :1170  1.7 销售菜单  */
+     /* END    LINE :1170  1.7 种忮粕等  */
 
 
    /* Additional Labels Format */
@@ -4216,7 +4216,7 @@ IF OkToRun = yes THEN  RUN    xsinv99.p.
    REPEAT:
    /*Logical Enter Cycle1171    */
    IF NOT (V1170 = "71" OR V1100 = "71" ) THEN LEAVE V1171LMAINLOOP.
-     /* START  LINE :1171  1.7.1 销售备料[LOT]  */
+     /* START  LINE :1171  1.7.1 种忮掘蹋[LOT]  */
      V1171L:
      REPEAT:
 
@@ -4248,7 +4248,7 @@ RUN CheckSecurity (INPUT "xssoa25.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa25.p.
         leave V1171L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1171 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4323,7 +4323,7 @@ IF OkToRun = yes THEN  RUN    xssoa25.p.
         leave V1171L.
      END.
      PV1171 = V1171.
-     /* END    LINE :1171  1.7.1 销售备料[LOT]  */
+     /* END    LINE :1171  1.7.1 种忮掘蹋[LOT]  */
 
 
    /* Additional Labels Format */
@@ -4338,7 +4338,7 @@ IF OkToRun = yes THEN  RUN    xssoa25.p.
    REPEAT:
    /*Logical Enter Cycle1172    */
    IF NOT (V1170 = "72" OR V1100 = "72" ) THEN LEAVE V1172LMAINLOOP.
-     /* START  LINE :1172  1.7.2 销售工单标签  */
+     /* START  LINE :1172  1.7.2 种忮驮等梓?  */
      V1172L:
      REPEAT:
 
@@ -4370,7 +4370,7 @@ RUN CheckSecurity (INPUT "xslap06.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap06.p.
         leave V1172L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1172 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4445,7 +4445,7 @@ IF OkToRun = yes THEN  RUN    xslap06.p.
         leave V1172L.
      END.
      PV1172 = V1172.
-     /* END    LINE :1172  1.7.2 销售工单标签  */
+     /* END    LINE :1172  1.7.2 种忮驮等梓?  */
 
 
    /* Additional Labels Format */
@@ -4460,7 +4460,7 @@ IF OkToRun = yes THEN  RUN    xslap06.p.
    REPEAT:
    /*Logical Enter Cycle1173    */
    IF NOT (V1170 = "73" OR V1100 = "73" ) THEN LEAVE V1173LMAINLOOP.
-     /* START  LINE :1173  1.7.3 销售订单备料  */
+     /* START  LINE :1173  1.7.3 种忮隆等掘蹋  */
      V1173L:
      REPEAT:
 
@@ -4492,7 +4492,7 @@ RUN CheckSecurity (INPUT "xssoa26.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa26.p.
         leave V1173L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1173 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4567,7 +4567,7 @@ IF OkToRun = yes THEN  RUN    xssoa26.p.
         leave V1173L.
      END.
      PV1173 = V1173.
-     /* END    LINE :1173  1.7.3 销售订单备料  */
+     /* END    LINE :1173  1.7.3 种忮隆等掘蹋  */
 
 
    /* Additional Labels Format */
@@ -4582,7 +4582,7 @@ IF OkToRun = yes THEN  RUN    xssoa26.p.
    REPEAT:
    /*Logical Enter Cycle1174    */
    IF NOT (V1170 = "74" OR V1100 = "74" ) THEN LEAVE V1174LMAINLOOP.
-     /* START  LINE :1174  1.7.4 销售备料查询  */
+     /* START  LINE :1174  1.7.4 种忮掘蹋脤戙  */
      V1174L:
      REPEAT:
 
@@ -4614,7 +4614,7 @@ RUN CheckSecurity (INPUT "xssoa21.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa21.p.
         leave V1174L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1174 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4689,7 +4689,7 @@ IF OkToRun = yes THEN  RUN    xssoa21.p.
         leave V1174L.
      END.
      PV1174 = V1174.
-     /* END    LINE :1174  1.7.4 销售备料查询  */
+     /* END    LINE :1174  1.7.4 种忮掘蹋脤戙  */
 
 
    /* Additional Labels Format */
@@ -4704,7 +4704,7 @@ IF OkToRun = yes THEN  RUN    xssoa21.p.
    REPEAT:
    /*Logical Enter Cycle1175    */
    IF NOT (V1170 = "75" OR V1100 = "75" ) THEN LEAVE V1175LMAINLOOP.
-     /* START  LINE :1175  1.7.5 销售出货检查  */
+     /* START  LINE :1175  1.7.5 种忮堤亿溃脤  */
      V1175L:
      REPEAT:
 
@@ -4736,7 +4736,7 @@ RUN CheckSecurity (INPUT "xssoa22.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa22.p.
         leave V1175L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1175 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4811,7 +4811,7 @@ IF OkToRun = yes THEN  RUN    xssoa22.p.
         leave V1175L.
      END.
      PV1175 = V1175.
-     /* END    LINE :1175  1.7.5 销售出货检查  */
+     /* END    LINE :1175  1.7.5 种忮堤亿溃脤  */
 
 
    /* Additional Labels Format */
@@ -4826,7 +4826,7 @@ IF OkToRun = yes THEN  RUN    xssoa22.p.
    REPEAT:
    /*Logical Enter Cycle1176    */
    IF NOT (V1170 = "76" OR V1100 = "76" ) THEN LEAVE V1176LMAINLOOP.
-     /* START  LINE :1176  1.7.6 销售备料返修[LOT]  */
+     /* START  LINE :1176  1.7.6 种忮掘蹋殿党[LOT]  */
      V1176L:
      REPEAT:
 
@@ -4858,7 +4858,7 @@ RUN CheckSecurity (INPUT "xssoa24.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa24.p.
         leave V1176L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1176 no-box.
 
                 /* LABEL 1 - START */ 
@@ -4933,7 +4933,7 @@ IF OkToRun = yes THEN  RUN    xssoa24.p.
         leave V1176L.
      END.
      PV1176 = V1176.
-     /* END    LINE :1176  1.7.6 销售备料返修[LOT]  */
+     /* END    LINE :1176  1.7.6 种忮掘蹋殿党[LOT]  */
 
 
    /* Additional Labels Format */
@@ -4948,7 +4948,7 @@ IF OkToRun = yes THEN  RUN    xssoa24.p.
    REPEAT:
    /*Logical Enter Cycle1177    */
    IF NOT (V1170 = "77" OR V1100 = "77" ) THEN LEAVE V1177LMAINLOOP.
-     /* START  LINE :1177  1.7.7 销售备料[LOT]限定订单  */
+     /* START  LINE :1177  1.7.7 种忮掘蹋[LOT]癹隅隆等  */
      V1177L:
      REPEAT:
 
@@ -4980,7 +4980,7 @@ RUN CheckSecurity (INPUT "xssoa23.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa23.p.
         leave V1177L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1177 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5055,7 +5055,7 @@ IF OkToRun = yes THEN  RUN    xssoa23.p.
         leave V1177L.
      END.
      PV1177 = V1177.
-     /* END    LINE :1177  1.7.7 销售备料[LOT]限定订单  */
+     /* END    LINE :1177  1.7.7 种忮掘蹋[LOT]癹隅隆等  */
 
 
    /* Additional Labels Format */
@@ -5070,7 +5070,7 @@ IF OkToRun = yes THEN  RUN    xssoa23.p.
    REPEAT:
    /*Logical Enter Cycle1178    */
    IF NOT (V1170 = "78" OR V1100 = "78" ) THEN LEAVE V1178LMAINLOOP.
-     /* START  LINE :1178  1.7.8 销售订单备料限定订单  */
+     /* START  LINE :1178  1.7.8 种忮隆等掘蹋癹隅隆等  */
      V1178L:
      REPEAT:
 
@@ -5102,7 +5102,7 @@ RUN CheckSecurity (INPUT "xssoa20.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xssoa20.p.
         leave V1178L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1178 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5177,7 +5177,7 @@ IF OkToRun = yes THEN  RUN    xssoa20.p.
         leave V1178L.
      END.
      PV1178 = V1178.
-     /* END    LINE :1178  1.7.8 销售订单备料限定订单  */
+     /* END    LINE :1178  1.7.8 种忮隆等掘蹋癹隅隆等  */
 
 
    /* Additional Labels Format */
@@ -5192,7 +5192,7 @@ IF OkToRun = yes THEN  RUN    xssoa20.p.
    REPEAT:
    /*Logical Enter Cycle1179    */
    IF NOT (V1170 = "79" OR V1100 = "79" ) THEN LEAVE V1179LMAINLOOP.
-     /* START  LINE :1179  1.7.9 销售POST标签  */
+     /* START  LINE :1179  1.7.9 种忮POST梓?  */
      V1179L:
      REPEAT:
 
@@ -5224,7 +5224,7 @@ RUN CheckSecurity (INPUT "xslap09.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap09.p.
         leave V1179L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1179 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5299,7 +5299,7 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
         leave V1179L.
      END.
      PV1179 = V1179.
-     /* END    LINE :1179  1.7.9 销售POST标签  */
+     /* END    LINE :1179  1.7.9 种忮POST梓?  */
 
 
    /* Additional Labels Format */
@@ -5314,7 +5314,7 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
    REPEAT:
    /*Logical Enter Cycle1180    */
    IF NOT (V1100 = "8" ) THEN LEAVE V1180LMAINLOOP.
-     /* START  LINE :1180  1.8 加强菜单  */
+     /* START  LINE :1180  1.8 楼?粕等  */
      V1180L:
      REPEAT:
 
@@ -5342,17 +5342,17 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1180 no-box.
 
                 /* LABEL 1 - START */ 
-                L11801 = "璸购タ盽.81" .
+                L11801 = "计划外出正常料.81" .
                 display L11801          format "x(40)" skip with fram F1180 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L11802 = "璸购筁戳.82" .
+                L11802 = "计划外出过期料.82" .
                 display L11802          format "x(40)" skip with fram F1180 no-box.
                 /* LABEL 2 - END */ 
 
@@ -5364,13 +5364,13 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
 
 
                 /* LABEL 4 - START */ 
-                L11804 = "璸购癶. . .84" .
+                L11804 = "计划外退料. . .84" .
                 display L11804          format "x(40)" skip with fram F1180 no-box.
                 /* LABEL 4 - END */ 
 
 
                 /* LABEL 5 - START */ 
-                L11805 = "Θ珇夹帽ゴ. .85" .
+                L11805 = "成品标签打印. .85" .
                 display L11805          format "x(40)" skip with fram F1180 no-box.
                 /* LABEL 5 - END */ 
 
@@ -5417,7 +5417,7 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
         leave V1180L.
      END.
      PV1180 = V1180.
-     /* END    LINE :1180  1.8 加强菜单  */
+     /* END    LINE :1180  1.8 楼?粕等  */
 
 
    /* Additional Labels Format */
@@ -5432,7 +5432,7 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
    REPEAT:
    /*Logical Enter Cycle1181    */
    IF NOT (V1180 = "81" OR V1100 = "81" ) THEN LEAVE V1181LMAINLOOP.
-     /* START  LINE :1181  1.8.1 计划外出正常料  */
+     /* START  LINE :1181  1.8.1 数赫俋堤淏都蹋  */
      V1181L:
      REPEAT:
 
@@ -5464,7 +5464,7 @@ RUN CheckSecurity (INPUT "xsinv24.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv24.p.
         leave V1181L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1181 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5539,7 +5539,7 @@ IF OkToRun = yes THEN  RUN    xsinv24.p.
         leave V1181L.
      END.
      PV1181 = V1181.
-     /* END    LINE :1181  1.8.1 计划外出正常料  */
+     /* END    LINE :1181  1.8.1 数赫俋堤淏都蹋  */
 
 
    /* Additional Labels Format */
@@ -5554,7 +5554,7 @@ IF OkToRun = yes THEN  RUN    xsinv24.p.
    REPEAT:
    /*Logical Enter Cycle1182    */
    IF NOT (V1180 = "82" OR V1100 = "82" ) THEN LEAVE V1182LMAINLOOP.
-     /* START  LINE :1182  1.8.2 计划外出过期料  */
+     /* START  LINE :1182  1.8.2 数赫俋堤彻?蹋  */
      V1182L:
      REPEAT:
 
@@ -5586,7 +5586,7 @@ RUN CheckSecurity (INPUT "xsinv25.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv25.p.
         leave V1182L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1182 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5661,7 +5661,7 @@ IF OkToRun = yes THEN  RUN    xsinv25.p.
         leave V1182L.
      END.
      PV1182 = V1182.
-     /* END    LINE :1182  1.8.2 计划外出过期料  */
+     /* END    LINE :1182  1.8.2 数赫俋堤彻?蹋  */
 
 
    /* Additional Labels Format */
@@ -5676,7 +5676,7 @@ IF OkToRun = yes THEN  RUN    xsinv25.p.
    REPEAT:
    /*Logical Enter Cycle1183    */
    IF NOT (V1180 = "83" OR V1100 = "83" ) THEN LEAVE V1183LMAINLOOP.
-     /* START  LINE :1183  1.8.3 转仓CIQ001=>CRV002  */
+     /* START  LINE :1183  1.8.3 蛌累CIQ001=>CRV002  */
      V1183L:
      REPEAT:
 
@@ -5708,7 +5708,7 @@ RUN CheckSecurity (INPUT "xsinv83.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv83.p.
         leave V1183L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1183 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5783,7 +5783,7 @@ IF OkToRun = yes THEN  RUN    xsinv83.p.
         leave V1183L.
      END.
      PV1183 = V1183.
-     /* END    LINE :1183  1.8.3 转仓CIQ001=>CRV002  */
+     /* END    LINE :1183  1.8.3 蛌累CIQ001=>CRV002  */
 
 
    /* Additional Labels Format */
@@ -5798,7 +5798,7 @@ IF OkToRun = yes THEN  RUN    xsinv83.p.
    REPEAT:
    /*Logical Enter Cycle1184    */
    IF NOT (V1180 = "84" OR V1100 = "84" ) THEN LEAVE V1184LMAINLOOP.
-     /* START  LINE :1184  1.8.4 计划外退料  */
+     /* START  LINE :1184  1.8.4 数赫俋豖蹋  */
      V1184L:
      REPEAT:
 
@@ -5830,7 +5830,7 @@ RUN CheckSecurity (INPUT "xsinv26.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xsinv26.p.
         leave V1184L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1184 no-box.
 
                 /* LABEL 1 - START */ 
@@ -5905,7 +5905,7 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
         leave V1184L.
      END.
      PV1184 = V1184.
-     /* END    LINE :1184  1.8.4 计划外退料  */
+     /* END    LINE :1184  1.8.4 数赫俋豖蹋  */
 
 
    /* Additional Labels Format */
@@ -5920,7 +5920,7 @@ IF OkToRun = yes THEN  RUN    xsinv26.p.
    REPEAT:
    /*Logical Enter Cycle1185    */
    IF NOT (V1180 = "85" OR V1100 = "85" ) THEN LEAVE V1185LMAINLOOP.
-     /* START  LINE :1185  1.8.5 成品标签  */
+     /* START  LINE :1185  1.8.5 伧?梓?  */
      V1185L:
      REPEAT:
 
@@ -5952,7 +5952,7 @@ RUN CheckSecurity (INPUT "xslap85.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap85.p.
         leave V1185L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1185 no-box.
 
                 /* LABEL 1 - START */ 
@@ -6027,7 +6027,7 @@ IF OkToRun = yes THEN  RUN    xslap85.p.
         leave V1185L.
      END.
      PV1185 = V1185.
-     /* END    LINE :1185  1.8.5 成品标签  */
+     /* END    LINE :1185  1.8.5 伧?梓?  */
 
 
    /* Additional Labels Format */
@@ -6075,7 +6075,7 @@ RUN CheckSecurity (INPUT "xslap89.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap89.p.
         leave V1189L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1189 no-box.
 
                 /* LABEL 1 - START */ 
@@ -6200,7 +6200,7 @@ RUN CheckSecurity (INPUT "xslap87.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap87.p.
         leave V1186L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1186 no-box.
 
                 /* LABEL 1 - START */ 
@@ -6290,7 +6290,7 @@ IF OkToRun = yes THEN  RUN    xslap87.p.
    REPEAT:
    /*Logical Enter Cycle1188    */
    IF NOT (V1180 = "88" OR V1100 = "88" ) THEN LEAVE V1188LMAINLOOP.
-     /* START  LINE :1188  1.8.8 NEW成品标签打印  */
+     /* START  LINE :1188  1.8.8 NEW伧?梓?湖荂  */
      V1188L:
      REPEAT:
 
@@ -6322,7 +6322,7 @@ RUN CheckSecurity (INPUT "xslap88.p" , INPUT global_userid , OUTPUT okToRun , OU
 IF OkToRun = yes THEN  RUN    xslap88.p.
         leave V1188L.
         /* LOGICAL SKIP END */
-                display "#兵絏# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
                                         + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1188 no-box.
 
                 /* LABEL 1 - START */ 
@@ -6397,7 +6397,7 @@ IF OkToRun = yes THEN  RUN    xslap88.p.
         leave V1188L.
      END.
      PV1188 = V1188.
-     /* END    LINE :1188  1.8.8 NEW成品标签打印  */
+     /* END    LINE :1188  1.8.8 NEW伧?梓?湖荂  */
 
 
    /* Additional Labels Format */

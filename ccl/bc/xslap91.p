@@ -1,7 +1,7 @@
 /* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
 /* FWD LABEL */
 /* Generate date / time  5/29/2008 1:29:05 PM */
-/* jack001 2008/10/19 ノㄓ89э91 */
+/* jack001 2008/10/19 用原来89改为91 */
 /* ss-081126.1 by jack */
 define variable sectionid as integer init 0 .
 define variable WMESSAGE  as char format "x(80)" init "".
@@ -11,8 +11,8 @@ define variable wsection as char format "x(16)".
 define variable i as integer .
 define variable errstr as char .
 
-define variable v_choice as char  . /* jack001 ノ匡拒兵絏よΑ */
-define variable v_print  as char . /* jack001 ノ匡拒ㄣ砰兵絏Α"ABC"*/
+define variable v_choice as char  . /* jack001 用於选择条码列印方式 */
+define variable v_print  as char . /* jack001 用於选择具体列印条码格式"ABC"*/
 
 define variable wtimeout as integer init 99999 .
 find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="wtimeout" no-lock no-error. /*  Timeout - All Level */
@@ -26,7 +26,7 @@ REPEAT:
       sectionid = sectionid + 1 .
      /* SECTION ID -- END  */
 
-     /* START  LINE :1002  翴[SITE]  */
+     /* START  LINE :1002  地点[SITE]  */
      V1002L:
      REPEAT:
 
@@ -61,28 +61,28 @@ REPEAT:
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
-                L10021 = "翴砞﹚Τ粇" .
+                L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L10022 = "1.⊿Τ砞﹚纐粄翴" .
+                L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L10023 = "2.舦砞﹚Τ粇" .
+                L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L10024 = "  叫琩" .
+                L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1002 no-box.
         Update V1002
         WITH  fram F1002 NO-LABEL
@@ -118,11 +118,11 @@ REPEAT:
         leave V1002L.
      END.
      PV1002 = V1002.
-     /* END    LINE :1002  翴[SITE]  */
+     /* END    LINE :1002  地点[SITE]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1100  虫腹絏[WO]  */
+     /* START  LINE :1100  工单号码[WO]  */
      V1100L:
      REPEAT:
 
@@ -154,7 +154,7 @@ REPEAT:
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */ 
-                L11001 = "虫腹絏?" .
+                L11001 = "工单号码?" .
                 display L11001          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 1 - END */ 
 
@@ -175,7 +175,7 @@ REPEAT:
                   L11004 = "" . 
                 display L11004          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1100 no-box.
         Update V1100
         WITH  fram F1100 NO-LABEL
@@ -242,7 +242,7 @@ REPEAT:
         leave V1100L.
      END.
      PV1100 = V1100.
-     /* END    LINE :1100  虫腹絏[WO]  */
+     /* END    LINE :1100  工单号码[WO]  */
 
 
    /* Additional Labels Format */
@@ -283,7 +283,7 @@ If AVAILABLE ( wo_mstr )  and  wo_lot = V1103 then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1103 no-box.
 
                 /* LABEL 1 - START */ 
-                L11031 = "虫ID#" .
+                L11031 = "工单ID#" .
                 display L11031          format "x(40)" skip with fram F1103 no-box.
                 /* LABEL 1 - END */ 
 
@@ -307,7 +307,7 @@ If AVAILABLE ( wo_mstr ) then
                   L11034 = "" . 
                 display L11034          format "x(40)" skip with fram F1103 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1103 no-box.
         Update V1103
         WITH  fram F1103 NO-LABEL
@@ -330,7 +330,7 @@ If AVAILABLE ( wo_mstr ) then
                               wo_nbr = V1100 and wo_site = V1002  
                                no-lock no-error.
                   IF AVAILABLE wo_mstr then display skip 
-            wo_lot @ V1103 "Θ珇: " +  trim (wo_part) @ WMESSAGE NO-LABEL with fram F1103.
+            wo_lot @ V1103 "成品: " +  trim (wo_part) @ WMESSAGE NO-LABEL with fram F1103.
                   else   display skip "" @ WMESSAGE with fram F1103.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -343,7 +343,7 @@ If AVAILABLE ( wo_mstr ) then
                               wo_nbr = V1100 and wo_site = V1002 
                                no-lock no-error.
                   IF AVAILABLE wo_mstr then display skip 
-            wo_lot @ V1103 "Θ珇: " +  trim (wo_part) @ WMESSAGE NO-LABEL with fram F1103.
+            wo_lot @ V1103 "成品: " +  trim (wo_part) @ WMESSAGE NO-LABEL with fram F1103.
                   else   display skip "" @ WMESSAGE with fram F1103.
             END.
             APPLY LASTKEY.
@@ -363,7 +363,7 @@ If AVAILABLE ( wo_mstr ) then
         /* CHECK FOR NUMBER VARIABLE  END */
         find first wo_mstr where wo_lot = V1103 AND wo_site = V1002  no-lock no-error.
         IF NOT AVAILABLE wo_mstr then do:
-                display skip "礚┪砆玛!" @ WMESSAGE NO-LABEL with fram F1103.
+                display skip "无效或被锁!" @ WMESSAGE NO-LABEL with fram F1103.
                 pause 0 before-hide.
                 undo, retry.
         end.
@@ -378,7 +378,7 @@ If AVAILABLE ( wo_mstr ) then
 
 
    /* Additional Labels Format */
-     /* START  LINE :1104  腹[ITEM]  */
+     /* START  LINE :1104  型号[ITEM]  */
      V1104L:
      REPEAT:
 
@@ -412,7 +412,7 @@ If AVAILABLE ( wo_mstr ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1104 no-box.
 
                 /* LABEL 1 - START */ 
-                L11041 = "珇" .
+                L11041 = "料品" .
                 display L11041          format "x(40)" skip with fram F1104 no-box.
                 /* LABEL 1 - END */ 
 
@@ -439,7 +439,7 @@ If AVAILABLE ( pt_mstr ) then
                 else L11044 = "" . 
                 display L11044          format "x(40)" skip with fram F1104 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1104 no-box.
         /* DISPLAY ONLY */
         define variable X1104           as char format "x(40)".
@@ -479,11 +479,11 @@ If AVAILABLE ( pt_mstr ) then
         leave V1104L.
      END.
      PV1104 = V1104.
-     /* END    LINE :1104  腹[ITEM]  */
+     /* END    LINE :1104  型号[ITEM]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1110  ら戳[Date]  */
+     /* START  LINE :1110  日期[Date]  */
      V1110L:
      REPEAT:
 
@@ -521,10 +521,10 @@ If AVAILABLE ( pt_mstr ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1110 no-box.
 
                 /* LABEL 1 - START */ 
-                {xstolap91.i}   /* 91.iい89.i function */
+                {xstolap91.i}   /* 91.i中加入了89.i function */
 		
 IF 1 = 1 then
-                L11101 = "ら戳?" .
+                L11101 = "日期?" .
                 else L11101 = "" . 
                 display L11101          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 1 - END */ 
@@ -546,7 +546,7 @@ IF 1 = 1 then
                   L11104 = "" . 
                 display L11104          format "x(40)" skip with fram F1110 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1110 no-box.
         Update D1110
         WITH  fram F1110 NO-LABEL
@@ -578,10 +578,10 @@ IF 1 = 1 then
         leave V1110L.
      END.
      PV1110 = V1110.
-     /* END    LINE :1110  ら戳[Date]  */
+     /* END    LINE :1110  日期[Date]  */
 
      /* ss-081127.1 -b */
-        /* START  LINE :9011  兵絏よΑ[NO OF LABEL]  */
+        /* START  LINE :9011  条码列印方式[NO OF LABEL]  */
      V9011L:
      REPEAT:
 
@@ -613,7 +613,7 @@ IF 1 = 1 then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9011 no-box.
 
                 /* LABEL 1 - START */ 
-                L90111 = "兵絏よΑ?" .
+                L90111 = "条码列印方式?" .
                 display L90111          format "x(40)" skip with fram F9011 no-box.
                 /* LABEL 1 - END */ 
 
@@ -634,7 +634,7 @@ IF 1 = 1 then
                   L90114 = "1.ELBA Label  2.F&P Label" . 
                 display L90114          format "x(40)" skip with fram F9011 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9011 no-box.
         Update V9011
         WITH  fram F9011 NO-LABEL
@@ -678,7 +678,7 @@ IF 1 = 1 then
      END.
      PV9011 = V9011.
      v_choice = v9011 .
-     /* END    LINE :9011  兵絏よΑ[NO OF LABEL]  */
+     /* END    LINE :9011  条码列印方式[NO OF LABEL]  */
      /* ss-081127.1 -e */
 
 
@@ -746,7 +746,7 @@ IF 1 = 1 then
                   L13104 = "" . 
                 display L13104          format "x(40)" skip with fram F1310 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1310 no-box.
         Update V1310
         WITH  fram F1310 NO-LABEL
@@ -861,7 +861,7 @@ If AVAILABLE ( pt_mstr ) then
                 else L90104 = "" . 
                 display L90104          format "x(40)" skip with fram F9010 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9010 no-box.
         Update V9010
         WITH  fram F9010 NO-LABEL
@@ -897,9 +897,9 @@ If AVAILABLE ( pt_mstr ) then
      /* jack001 begins */
        
              
-      /* 匡拒ゴよΑ秈︽兵絏匡拒 */
+      /* 选择的打印方式进行条码选择 */
      if v_choice = "1" then do :
-        /* START  LINE :9012  兵絏贺摸匡拒[NO OF LABEL]  */
+        /* START  LINE :9012  条码种类选择[NO OF LABEL]  */
      V9012L:
      REPEAT:
 
@@ -931,7 +931,7 @@ If AVAILABLE ( pt_mstr ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9012 no-box.
 
                 /* LABEL 1 - START */ 
-                L90121 = "兵絏Α匡拒?" .
+                L90121 = "条码列印格式选择?" .
                 display L90121          format "x(40)" skip with fram F9012 no-box.
                 /* LABEL 1 - END */ 
 
@@ -952,7 +952,7 @@ If AVAILABLE ( pt_mstr ) then
                   L90124 = "a. Rating label b. Gift box label c. Pallet label" . 
                 display L90124          format "x(40)" skip with fram F9012 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9012 no-box.
         Update V9012
         WITH  fram F9012 NO-LABEL
@@ -996,11 +996,11 @@ If AVAILABLE ( pt_mstr ) then
      END.
      PV9012 = V9012.
      v_print = v9012 .
-     /* END    LINE :9012  兵絏よΑ[NO OF LABEL]  */
+     /* END    LINE :9012  条码列印方式[NO OF LABEL]  */
      end .
      else do :
      
-        /* START  LINE :9013  兵絏贺摸匡拒[NO OF LABEL]  */
+        /* START  LINE :9013  条码种类选择[NO OF LABEL]  */
      V9013L:
      REPEAT:
 
@@ -1032,7 +1032,7 @@ If AVAILABLE ( pt_mstr ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9013 no-box.
 
                 /* LABEL 1 - START */ 
-                L90131 = "兵絏Α匡拒?" .
+                L90131 = "条码列印格式选择?" .
                 display L90131          format "x(40)" skip with fram F9013 no-box.
                 /* LABEL 1 - END */ 
 
@@ -1053,7 +1053,7 @@ If AVAILABLE ( pt_mstr ) then
                   L90134 = "a. Rating label b. Gift box label c. Pallet label ". 
                 display L90134          format "x(40)" skip with fram F9013 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9013 no-box.
         Update V9013
         WITH  fram F9013 NO-LABEL
@@ -1097,7 +1097,7 @@ If AVAILABLE ( pt_mstr ) then
      END.
      PV9013 = V9013.
      v_print = v9013 .
-     /* END    LINE :9013  兵絏よΑ[NO OF LABEL]  */
+     /* END    LINE :9013  条码列印方式[NO OF LABEL]  */
 
      end . /* choice = "2" */
 
@@ -1105,7 +1105,205 @@ If AVAILABLE ( pt_mstr ) then
 
      if v_print = "c" then do :
 
-      /* START  LINE :9018  块跑秖 qty  */
+      /*  /* START  LINE :9014  输入变量 qty  */
+     V9014L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V9014           as char format "x(50)".
+        define variable PV9014          as char format "x(50)".
+        define variable L90141          as char format "x(40)".
+        define variable L90142          as char format "x(40)".
+        define variable L90143          as char format "x(40)".
+        define variable L90144          as char format "x(40)".
+        define variable L90145          as char format "x(40)".
+        define variable L90146          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        V9014 = "89162".
+        V9014 = ENTRY(1,V9014,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V9014 = ENTRY(1,V9014,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+                display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9014 no-box.
+
+                /* LABEL 1 - START */ 
+                L90141 = "aa" .
+                display L90141          format "x(40)" skip with fram F9014 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L90142 = "" . 
+                display L90142          format "x(40)" skip with fram F9014 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L90143 = "" . 
+                display L90143          format "x(40)" skip with fram F9014 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L90144 = "". 
+                display L90144          format "x(40)" skip with fram F9014 no-box.
+                /* LABEL 4 - END */ 
+                display "输入或按E退出 "      format "x(40)" skip
+        skip with fram F9014 no-box.
+        Update V9014
+        WITH  fram F9014 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V9014 = "e" THEN  LEAVE V1310LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F9014.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F9014.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        If V9014 = "" OR V9014 = "-" OR V9014 = "." OR V9014 = ".-" OR V9014 = "-." then do:
+                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F9014.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+        DO i = 1 to length(V9014).
+                If index("1234567890", substring(V9014,i,1)) = 0 then do:
+                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F9014.
+                pause 0 before-hide.
+                undo, retry.
+                end.
+        end.
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F9014.
+        pause 0.
+        leave V9014L.
+     END.
+     PV9014 = V9014.
+         /* END    LINE :9014  变量 qty 输入  */
+     
+
+      /* START  LINE :9015  输入变量 qty  */
+     V9015L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V9015           as char format "x(50)".
+        define variable PV9015          as char format "x(50)".
+        define variable L90151          as char format "x(40)".
+        define variable L90152          as char format "x(40)".
+        define variable L90153          as char format "x(40)".
+        define variable L90154          as char format "x(40)".
+        define variable L90155          as char format "x(40)".
+        define variable L90156          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        V9015 = "GD750S1".
+        V9015 = ENTRY(1,V9015,"@").
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V9015 = ENTRY(1,V9015,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        /* LOGICAL SKIP END */
+                display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9015 no-box.
+
+                /* LABEL 1 - START */ 
+                L90151 = "BB" .
+                display L90151          format "x(40)" skip with fram F9015 no-box.
+                /* LABEL 1 - END */ 
+
+
+                /* LABEL 2 - START */ 
+                  L90152 = "" . 
+                display L90152          format "x(40)" skip with fram F9015 no-box.
+                /* LABEL 2 - END */ 
+
+
+                /* LABEL 3 - START */ 
+                  L90153 = "" . 
+                display L90153          format "x(40)" skip with fram F9015 no-box.
+                /* LABEL 3 - END */ 
+
+
+                /* LABEL 4 - START */ 
+                  L90154 = "". 
+                display L90154          format "x(40)" skip with fram F9015 no-box.
+                /* LABEL 4 - END */ 
+                display "输入或按E退出 "      format "x(40)" skip
+        skip with fram F9015 no-box.
+        Update V9015
+        WITH  fram F9015 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        IF V9015 = "e" THEN  LEAVE V1310LMAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F9015.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F9015.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        If V9015 = "" OR V9015 = "-" OR V9015 = "." OR V9015 = ".-" OR V9015 = "-." then do:
+                display skip "CAN NOT EMPTY  " @ WMESSAGE NO-LABEL with fram F9015.
+                pause 0 before-hide.
+                undo, retry.
+        end.
+      /*  DO i = 1 to length(V9015).
+                If index("1234567890", substring(V9015,i,1)) = 0 then do:
+                display skip "Format  Error  " @ WMESSAGE NO-LABEL with fram F9015.
+                pause 0 before-hide.
+                undo, retry.
+                end.
+        end. */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F9015.
+        pause 0.
+        leave V9015L.
+     END.
+     PV9015 = V9015.
+         /* END    LINE :9015  变量 qty 输入  */
+    */
+
+      /* START  LINE :9018  输入变量 qty  */
      V9018L:
      REPEAT:
 
@@ -1158,7 +1356,7 @@ If AVAILABLE ( pt_mstr ) then
                   L90184 = "". 
                 display L90184          format "x(40)" skip with fram F9018 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9018 no-box.
         Update V9018
         WITH  fram F9018 NO-LABEL
@@ -1201,13 +1399,16 @@ If AVAILABLE ( pt_mstr ) then
         leave V9018L.
      END.
      PV9018 = V9018.
-         /* END    LINE :9018  跑秖 qty 块  */
+         /* END    LINE :9018  变量 qty 输入  */
      end . /* v_print = "c" */
+
+
+
 
      /* ss-081126.1 -e */
 
    /* Additional Labels Format */
-     /* START  LINE :9020  兵絏计[NO OF LABEL]  */
+     /* START  LINE :9020  条码个数[NO OF LABEL]  */
      V9020L:
      REPEAT:
 
@@ -1239,7 +1440,7 @@ If AVAILABLE ( pt_mstr ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9020 no-box.
 
                 /* LABEL 1 - START */ 
-                L90201 = "兵絏眎计?" .
+                L90201 = "条码张数?" .
                 display L90201          format "x(40)" skip with fram F9020 no-box.
                 /* LABEL 1 - END */ 
 
@@ -1260,7 +1461,7 @@ If AVAILABLE ( pt_mstr ) then
                   L90204 = "" . 
                 display L90204          format "x(40)" skip with fram F9020 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9020 no-box.
         Update V9020
         WITH  fram F9020 NO-LABEL
@@ -1303,7 +1504,7 @@ If AVAILABLE ( pt_mstr ) then
         leave V9020L.
      END.
      PV9020 = V9020.
-     /* END    LINE :9020  兵絏计[NO OF LABEL]  */
+     /* END    LINE :9020  条码个数[NO OF LABEL]  */
 
 
    wtm_num = V9020.
@@ -1311,7 +1512,7 @@ If AVAILABLE ( pt_mstr ) then
 
    if v_choice = "2" then do :  /* jack001 */
    /* Additional Labels Format */
-     /* START  LINE :9030  ゴ诀[PRINTER]  */
+     /* START  LINE :9030  打印机[PRINTER]  */
      V9030L:
      REPEAT:
 
@@ -1347,7 +1548,7 @@ If AVAILABLE ( upd_det ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9030 no-box.
 
                 /* LABEL 1 - START */ 
-                L90301 = "ゴ诀?" .
+                L90301 = "打印机?" .
                 display L90301          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 1 - END */ 
 
@@ -1368,7 +1569,7 @@ If AVAILABLE ( upd_det ) then
                   L90304 = "" . 
                 display L90304          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9030 no-box.
         Update V9030
         WITH  fram F9030 NO-LABEL
@@ -1445,11 +1646,11 @@ If AVAILABLE ( upd_det ) then
         leave V9030L.
      END.
      PV9030 = V9030.
-     /* END    LINE :9030  ゴ诀[PRINTER]  */
+     /* END    LINE :9030  打印机[PRINTER]  */
      end . /* choice = "2" */
      else do :
        /* Additional Labels Format */
-     /* START  LINE :90301  ゴ诀[PRINTER]  */
+     /* START  LINE :90301  打印机[PRINTER]  */
      V90301L:
      REPEAT:
 
@@ -1485,7 +1686,7 @@ If AVAILABLE ( upd_det ) then
                 display "[FWD LABEL]"   + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F90301 no-box.
 
                 /* LABEL 1 - START */ 
-                L903011 = "ゴ诀?" .
+                L903011 = "打印机?" .
                 display L903011          format "x(40)" skip with fram F90301 no-box.
                 /* LABEL 1 - END */ 
 
@@ -1506,7 +1707,7 @@ If AVAILABLE ( upd_det ) then
                   L903014 = "" . 
                 display L903014          format "x(40)" skip with fram F90301 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F90301 no-box.
         Update V90301
         WITH  fram F90301 NO-LABEL
@@ -1566,7 +1767,7 @@ If AVAILABLE ( upd_det ) then
                 pause 0 before-hide.
                 undo, retry.
         end.
-	/* ??了?碼的開始和結束，方便存儲 */
+	/* ??賸?徨腔嶱宎睿磐旰ㄛ源曦湔? */
 	/* ss-081127.1 -b */
 	if v_print = "a" or v_print = "b" then do :
 	
@@ -1587,10 +1788,10 @@ If AVAILABLE ( upd_det ) then
         leave V90301L.
      END.
      PV90301 = V90301.
-     /* END    LINE :90301  ゴ诀[PRINTER]  */
+     /* END    LINE :90301  打印机[PRINTER]  */
      end . /* choice = 1 */  
    
-   /* jack001 匡拒兵絏 */
+   /* jack001 选择条码 */
    if v_choice = "2" then do :
    /* Additional Labels Format */
     /* ss-081126.1 - b*/
@@ -1600,7 +1801,7 @@ If AVAILABLE ( upd_det ) then
      /* ss-081126.1 -e */
      /* ss-0826.1 - b */
      Define variable ts9030 AS CHARACTER FORMAT "x(500)".
-     Define variable av9030 AS CHARACTER FORMAT "x(500)". 
+     Define variable av9030 AS CHARACTER FORMAT "x(500)".
      /* ss-0826.1 -e */
      PROCEDURE lap919030l.
         /* Define Labels Path  Start */
@@ -1614,10 +1815,7 @@ If AVAILABLE ( upd_det ) then
 	/* ss-081127.1 -e */
         /* Define Labels Path  END */
 	/* ss-081126.1 -b */
-	/* 匡拒 A  BEGINS */
-	/* ss-081128.1 -b */
-	/* assign ts9030 = "" av9030 = "" . */
-	/* ss-081128.1 -e */
+	/* 选择 A  BEGINS */
       IF v_print = "a" then do :
      INPUT FROM VALUE(LabelsPath + "lap91" + trim ( wtm_fm ) ).
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
@@ -1693,7 +1891,7 @@ If AVAILABLE ( pt_mstr ) then
      End.
      INPUT CLOSE.
      OUTPUT CLOSE.  
-     end .  /* 匡拒 A  END */
+     end .  /* 选择 A  END */
       ELSE IF v_print = "B" then do :
      INPUT FROM VALUE(LabelsPath + "lap94" + trim ( wtm_fm ) ).
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
@@ -1716,33 +1914,55 @@ If AVAILABLE ( pt_mstr ) then
      End.
      INPUT CLOSE.
      OUTPUT CLOSE.  
-     end .  /* 匡拒 B  END */
+     end .  /* 选择 B  END */
      ELSE IF v_print = "C" then do :
      INPUT FROM VALUE(LabelsPath + "lap95" + trim ( wtm_fm ) ).
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
      output to value( trim(wsection) + ".l") .
      Do While True:
               IMPORT UNFORMATTED ts9030.
-       /* ss-081201.1 -b */
-	/* v_add2 = yes . */
-	/* ss-081201.1 -e */
+	v_add2 = yes .
         av9030 = pv9018 .
-	/* repeat while v_add2 : */
+	repeat while v_add2 :
        IF INDEX(ts9030,"$v") <> 0  THEN DO:
-       TS9030 = substring(TS9030, 1, Index(TS9030 , "$v") - 1) + "Pallet Qty:" + av9030 + "PCS" 
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$v") - 1) + "Pallet Qty:" + av9030 
        + SUBSTRING( ts9030 , index(ts9030 ,"$v") + length("$v"), LENGTH(ts9030) - ( index(ts9030 ,"$v" ) + length("$v") - 1 ) ).
        END.
-      /* else do :
+       else do :
        v_add2 = no .
        end .
-       end . */
+       end .
        
-          
+     /*  v_add2 = yes .
+        av9030 = pv9014 .
+	repeat while v_add2 :
+       IF INDEX(ts9030,"$P") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$P") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$P") + length("$P"), LENGTH(ts9030) - ( index(ts9030 ,"$P" ) + length("$P") - 1 ) ).
+       END.
+       else do :
+       v_add2 = no .
+       end .
+       end .
+       
+         v_add2 = yes .
+        av9030 = pv9015 .
+	repeat while v_add2 :
+       IF INDEX(ts9030,"$w") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$w") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$w") + length("$w"), LENGTH(ts9030) - ( index(ts9030 ,"$w" ) + length("$w") - 1 ) ).
+       END.
+       else do :
+       v_add2 = no .
+       end .
+       end .  */
+
+       
        put unformatted ts9030 skip.
      End.
      INPUT CLOSE.
      OUTPUT CLOSE.  
-     end .  /* 匡拒 c  END */
+     end .  /* 选择 c  END */
      
    /* ss-081126.1 - e */
      unix silent value ("chmod 777  " + trim(wsection) + ".l").
@@ -1758,8 +1978,8 @@ If AVAILABLE ( pt_mstr ) then
      End.
      end . /* choice = 2 */
      else do :
-     Define variable ts90301 AS CHARACTER FORMAT "x(500)".
-     Define variable av90301 AS CHARACTER FORMAT "x(500)".
+     Define variable ts90301 AS CHARACTER FORMAT "x(100)".
+     Define variable av90301 AS CHARACTER FORMAT "x(100)".
      
      PROCEDURE lap9190301l.
         /* Define Labels Path  Start */
@@ -1773,86 +1993,81 @@ If AVAILABLE ( pt_mstr ) then
      /* ss-081127.1 -e */
         /* Define Labels Path  END */
 	/* ss-081126.1 - b */
-	/* ss-081128.1 -b */
-	 assign ts90301 = "" av90301 = "" .
-	 /* ss-081128.1 -e */
      IF v_print = "a" then do :
      INPUT FROM VALUE(LabelsPath + "lap91" + trim ( wtm_fm ) ).
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
-   
-     output to value( trim(wsection) + ".l") . 
-   
+     output to value( trim(wsection) + ".l") .
      Do While True:
               IMPORT UNFORMATTED ts90301.
-	 /* v_add1 = yes . */
+	  v_add1 = yes .
 	  
         av90301 = "MODEL "+ CALLBYlap91 (V1104,"","1","").
-	/* repeat while v_add1  : */
+	repeat while v_add1  :
        IF INDEX(ts90301,"$M") <> 0  THEN DO:
        TS90301 = substring(TS90301, 1, Index(TS90301 , "$M") - 1) + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$M") + length("$M"), LENGTH(ts90301) - ( index(ts90301 ,"$M" ) + length("$M") - 1 ) ).
        END.
-       /* else do :
+       	else do :
 	v_add1 = no .
 	end .
 	end .
-	v_add1 = yes . */
+	v_add1 = yes .
 
 	
         av90301 = substring (string ( INTEGER(V1310) - 1 + i , "999" ),3,1)  +  substring (string ( INTEGER(V1310) - 1 + i , "999" ),2,1)  + substring (string ( INTEGER(V1310) - 1 + i , "999" ),1,1) + CALLBYlap91 (V1110,"","5","").
        
-      /* repeat while v_add1 : */
+       repeat while v_add1 :
        IF INDEX(ts90301,"$S") <> 0  THEN DO:
        TS90301 = substring(TS90301, 1, Index(TS90301 , "$S") - 1) + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$S") + length("$S"), LENGTH(ts90301) - ( index(ts90301 ,"$S" ) + length("$S") - 1 ) ).
        END.
-      /* else do :
+       else do :
        v_add1 = no .
        end .
        end .
-       v_add1 = yes . */
+       v_add1 = yes .
 
        
        find first pt_mstr where pt_part  = V1104 no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
         av90301 = CALLBYlap91 (pt_desc1 + pt_desc2,"","2","").
-	/* repeat while v_add1 : */
+	repeat while v_add1 :
        IF INDEX(ts90301,"$D") <> 0  THEN DO:
        TS90301 = substring(TS90301, 1, Index(TS90301 , "$D") - 1) + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$D") + length("$D"), LENGTH(ts90301) - ( index(ts90301 ,"$D" ) + length("$D") - 1 ) ).
        END.
-     /*  else do :
+       else do :
        v_add1 = no .
        end .
        end .
-       v_add1 = yes . */
+       v_add1 = yes .
 
        find first pt_mstr where pt_part  = V1104 no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
         av90301 = CALLBYlap91 (pt_desc1 + pt_desc2,"","3","").
-     /*  repeat while v_add1 : */
+       repeat while v_add1 :
        IF INDEX(ts90301,"$W") <> 0  THEN DO:
        TS90301 = substring(TS90301, 1, Index(TS90301 , "$W") - 1) + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$W") + length("$W"), LENGTH(ts90301) - ( index(ts90301 ,"$W" ) + length("$W") - 1 ) ).
        END.
-      /* else do :
+       else do :
        v_add1 = no .
        end .
        end .
-       v_add1 = yes . */
+       v_add1 = yes .
 
        find first pt_mstr where pt_part  = V1104 no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
         av90301 = CALLBYlap91 (pt_desc1 + pt_desc2,"","4","").
-	/* repeat while v_add1 : */
+	repeat while v_add1 :
        IF INDEX(ts90301,"$P") <> 0  THEN DO:
        TS90301 = substring(TS90301, 1, Index(TS90301 , "$P") - 1) + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$P") + length("$P"), LENGTH(ts90301) - ( index(ts90301 ,"$P" ) + length("$P") - 1 ) ).
        END.
-     /*  else do :
+       else do :
        v_add1 = no .
        end .
-       end . */
+       end .
 
        put unformatted ts90301 skip.
      End.
@@ -1860,15 +2075,12 @@ If AVAILABLE ( pt_mstr ) then
      OUTPUT CLOSE.
      end . /* end "a" */
       IF v_print = "b" then do :
-     
       /* ss-081127.1 -b */
      INPUT FROM VALUE(LabelsPath + "lap92" + trim ( wtm_fm ) ).
      /* ss-081127.1 -e */
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
-    
-     output to value( trim(wsection) + ".l") . 
-
-        Do While True:
+     output to value( trim(wsection) + ".l") .
+     Do While True:
               IMPORT UNFORMATTED ts90301.
 	     
 	 v_add1 = yes .
@@ -1889,52 +2101,63 @@ If AVAILABLE ( pt_mstr ) then
      OUTPUT CLOSE.
      end . /* end "b" */
       IF v_print = "c" then do :
-     
      INPUT FROM VALUE(LabelsPath + "lap93" + trim ( wtm_fm ) ).
      wsection = TRIM ( string(year(TODAY)) + string(MONTH(TODAY)) + string(DAY(TODAY)))  + trim(STRING(TIME)) + trim(string(RANDOM(1,100))) .
-    
-     output to value( trim(wsection) + ".l") . 
-   
-        Do While True:
+     output to value( trim(wsection) + ".l") .
+     Do While True:
               IMPORT UNFORMATTED ts90301.
-	/* v_add1 = yes . */
+	 v_add1 = yes .
         av90301 = pv9018 .
-	/* repeat while v_add1  : */
+	repeat while v_add1  :
        IF INDEX(ts90301,"$v") <> 0  THEN DO:
-       TS90301 = substring(TS90301, 1, Index(TS90301 , "$v") - 1) + "Pallet Qty:" + av90301 + "PCS"
+       TS90301 = substring(TS90301, 1, Index(TS90301 , "$v") - 1) + "Pallet Qty:" + av90301 
        + SUBSTRING( ts90301 , index(ts90301 ,"$v") + length("$v"), LENGTH(ts90301) - ( index(ts90301 ,"$v" ) + length("$v") - 1 ) ).
        END.
-
-    /*  else do :
+      else do :
       v_add1 = no .
       end .
-      end . */
+      end .
 
-   
+    /*   v_add1 = yes .
+        av9030 = pv9014 .
+	repeat while v_add1 :
+       IF INDEX(ts9030,"$P") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$P") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$P") + length("$P"), LENGTH(ts9030) - ( index(ts9030 ,"$P" ) + length("$P") - 1 ) ).
+       END.
+       else do :
+       v_add1 = no .
+       end .
+       end .
+       
+         v_add1 = yes .
+        av9030 = pv9015 .
+	repeat while v_add1 :
+       IF INDEX(ts9030,"$w") <> 0  THEN DO:
+       TS9030 = substring(TS9030, 1, Index(TS9030 , "$w") - 1) + av9030 
+       + SUBSTRING( ts9030 , index(ts9030 ,"$w") + length("$w"), LENGTH(ts9030) - ( index(ts9030 ,"$w" ) + length("$w") - 1 ) ).
+       END.
+       else do :
+       v_add1 = no .
+       end .
+       end . */
 
        put unformatted ts90301 skip.
      End.
      INPUT CLOSE.
      OUTPUT CLOSE.
-      end . /* end "c" */
+     end . /* end "c" */
      
      /* ss-081126.1 - e */
-     
-     unix silent value ("chmod 777  " + trim(wsection) + ".l"). 
-   
-   
-    
+     unix silent value ("chmod 777  " + trim(wsection) + ".l").
      END PROCEDURE.
      do i = 1 to integer(wtm_num):
     
      run lap9190301l.
-    
        find first PRD_DET where PRD_DEV = V90301 no-lock no-error.
        IF AVAILABLE PRD_DET then do:
-       
-          unix silent value (trim(prd_path) + " " + trim(wsection) + ".l").
-         unix silent value ( "clear"). 
-	
+         unix silent value (trim(prd_path) + " " + trim(wsection) + ".l").
+         unix silent value ( "clear").
        end.
      End.
      end . /* choice = 1 */  

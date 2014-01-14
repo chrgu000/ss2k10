@@ -20,7 +20,7 @@ REPEAT:
       sectionid = sectionid + 1 .
      /* SECTION ID -- END  */
 
-     /* START  LINE :1002  翴[SITE]  */
+     /* START  LINE :1002  地点[SITE]  */
      V1002L:
      REPEAT:
 
@@ -52,31 +52,31 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[ゴ钉]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[取消打印列队]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
-                L10021 = "翴砞﹚Τ粇" .
+                L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L10022 = "1.⊿Τ砞﹚纐粄翴" .
+                L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L10023 = "2.舦砞﹚Τ粇" .
+                L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L10024 = "  叫琩" .
+                L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1002 no-box.
         Update V1002
         WITH  fram F1002 NO-LABEL
@@ -112,7 +112,7 @@ REPEAT:
         leave V1002L.
      END.
      PV1002 = V1002.
-     /* END    LINE :1002  翴[SITE]  */
+     /* END    LINE :1002  地点[SITE]  */
 
 
    /* Additional Labels Format */
@@ -152,22 +152,22 @@ If AVAILABLE ( prd_det ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[ゴ钉]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9030 no-box.
+                display "[取消打印列队]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9030 no-box.
 
                 /* LABEL 1 - START */ 
-                L90301 = "UNIX/LINUXゴ诀?" .
+                L90301 = "UNIX/LINUX打印机?" .
                 display L90301          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L90302 = "1)闽超ゴ诀筿方" .
+                L90302 = "1)先关闭打印机电源" .
                 display L90302          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L90303 = "2)иゴ钉" .
+                L90303 = "2)取消自我打印列队" .
                 display L90303          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 3 - END */ 
 
@@ -176,7 +176,7 @@ If AVAILABLE ( prd_det ) then
                   L90304 = "" . 
                 display L90304          format "x(40)" skip with fram F9030 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9030 no-box.
         Update V9030
         WITH  fram F9030 NO-LABEL
@@ -199,7 +199,7 @@ If AVAILABLE ( prd_det ) then
                               PRD_TYPE = "BARCODE"  
                                no-lock no-error.
                   IF AVAILABLE PRD_DET then display skip 
-            PRD_DESC @ V9030 "呸胯ゴ诀 :" + PRD_DEV @ WMESSAGE NO-LABEL with fram F9030.
+            PRD_DESC @ V9030 "逻辑打印机 :" + PRD_DEV @ WMESSAGE NO-LABEL with fram F9030.
                   else   display skip "" @ WMESSAGE with fram F9030.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -212,7 +212,7 @@ If AVAILABLE ( prd_det ) then
                               PRD_TYPE = "BARCODE" 
                                no-lock no-error.
                   IF AVAILABLE PRD_DET then display skip 
-            PRD_DESC @ V9030 "呸胯ゴ诀 :" + PRD_DEV @ WMESSAGE NO-LABEL with fram F9030.
+            PRD_DESC @ V9030 "逻辑打印机 :" + PRD_DEV @ WMESSAGE NO-LABEL with fram F9030.
                   else   display skip "" @ WMESSAGE with fram F9030.
             END.
             APPLY LASTKEY.
@@ -279,7 +279,7 @@ If AVAILABLE ( prd_det ) then
 IF 1 = 1 THEN
         leave V9040L.
         /* LOGICAL SKIP END */
-                display "[ゴ钉]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9040 no-box.
+                display "[取消打印列队]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9040 no-box.
 
                 /* LABEL 1 - START */ 
                   L90401 = "" . 
@@ -303,7 +303,7 @@ IF 1 = 1 THEN
                   L90404 = "" . 
                 display L90404          format "x(40)" skip with fram F9040 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9040 no-box.
         Update V9040
         WITH  fram F9040 NO-LABEL

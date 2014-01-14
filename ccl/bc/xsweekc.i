@@ -14,8 +14,8 @@ AA = DATE ( 1,1,YEAR(Date(V1110))) .
 
 tmp  = (DATE(v1110) - aa - 1 + WEEKDAY(aa) ) / 7 + 1.
 IF INT(tmp) - tmp > 0 THEN
-    WeekResult = STRING ( INT(tmp)  - 1 - 1 ).
-ELSE WeekResult = STRING ( INT (tmp) - 1 ).
+    WeekResult = STRING ( INT(tmp)  - 1 ).
+ELSE WeekResult = STRING ( INT (tmp) ).
 
 /* ss-090105.1 -b */
 if weekday(date(v1110)) = 1 then do :

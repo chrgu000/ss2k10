@@ -26,8 +26,8 @@ tmp  = (DATE(v1115) - aa  + WEEKDAY(aa) ) / 7 + 1.
 /*SS - BY KEN 080903.1 E*/
 
 IF INT(tmp) - tmp > 0 THEN
-    WeekResult = STRING ( INT(tmp)  - 1 - 1 ).
-ELSE WeekResult = STRING ( INT (tmp) - 1 ).
+    WeekResult = STRING ( INT(tmp)  - 1 ).
+ELSE WeekResult = STRING ( INT (tmp) ).
 
 if weekday(date(v1115)) = 1 then do :
  weekresult = string( int(weekresult) - 1 ) .

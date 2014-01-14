@@ -20,7 +20,7 @@ REPEAT:
       sectionid = sectionid + 1 .
      /* SECTION ID -- END  */
 
-     /* START  LINE :1002  翴[SITE]  */
+     /* START  LINE :1002  地点[SITE]  */
      V1002L:
      REPEAT:
 
@@ -52,31 +52,31 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[綪扳称琩高]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[销售备料查询]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
                 /* LABEL 1 - START */ 
-                L10021 = "翴砞﹚Τ粇" .
+                L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L10022 = "1.⊿Τ砞﹚纐粄翴" .
+                L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 2 - END */ 
 
 
                 /* LABEL 3 - START */ 
-                L10023 = "2.舦砞﹚Τ粇" .
+                L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L10024 = "  叫琩" .
+                L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1002 no-box.
         Update V1002
         WITH  fram F1002 NO-LABEL
@@ -112,11 +112,11 @@ REPEAT:
         leave V1002L.
      END.
      PV1002 = V1002.
-     /* END    LINE :1002  翴[SITE]  */
+     /* END    LINE :1002  地点[SITE]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1100  綪扳璹虫[SalesOrder]  */
+     /* START  LINE :1100  销售订单[SalesOrder]  */
      V1100L:
      REPEAT:
 
@@ -145,10 +145,10 @@ REPEAT:
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[綪扳称琩高]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
+                display "[销售备料查询]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
                 /* LABEL 1 - START */ 
-                L11001 = "綪扳璹虫?" .
+                L11001 = "销售订单?" .
                 display L11001          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 1 - END */ 
 
@@ -169,7 +169,7 @@ REPEAT:
                   L11004 = "" . 
                 display L11004          format "x(40)" skip with fram F1100 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1100 no-box.
         Update V1100
         WITH  fram F1100 NO-LABEL
@@ -225,7 +225,7 @@ REPEAT:
         /* CHECK FOR NUMBER VARIABLE  END */
         find first SO_MSTR where SO_NBR = V1100 AND ( SO_SITE = V1002 OR SO_SITE = "" )  NO-ERROR NO-WAIT.
         IF NOT AVAILABLE SO_MSTR then do:
-                display skip "礚┪砆玛!" @ WMESSAGE NO-LABEL with fram F1100.
+                display skip "无效或被锁!" @ WMESSAGE NO-LABEL with fram F1100.
                 pause 0 before-hide.
                 undo, retry.
         end.
@@ -236,11 +236,11 @@ REPEAT:
         leave V1100L.
      END.
      PV1100 = V1100.
-     /* END    LINE :1100  綪扳璹虫[SalesOrder]  */
+     /* END    LINE :1100  销售订单[SalesOrder]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1205  订单项次  */
+     /* START  LINE :1205  隆等砐棒  */
      V1205L:
      REPEAT:
 
@@ -274,10 +274,10 @@ If AVAILABLE (sod_det) and string ( sod_line ) <> V1205 then
 If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
         leave V1205L.
         /* LOGICAL SKIP END */
-                display "[綪扳称琩高]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1205 no-box.
+                display "[销售备料查询]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1205 no-box.
 
                 /* LABEL 1 - START */ 
-                L12051 = "璹虫兜Ω?" .
+                L12051 = "订单项次?" .
                 display L12051          format "x(40)" skip with fram F1205 no-box.
                 /* LABEL 1 - END */ 
 
@@ -298,7 +298,7 @@ If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
                   L12054 = "" . 
                 display L12054          format "x(40)" skip with fram F1205 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1205 no-box.
         Update V1205
         WITH  fram F1205 NO-LABEL
@@ -321,7 +321,7 @@ If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
                               sod_nbr = V1100 and sod_site = V1002  
                                no-lock no-error.
                   IF AVAILABLE SOD_DET then display skip 
-            string ( SOD_LINE ) @ V1205 "戳ら:" + String( SOD_DUE_DATE) @ L12052 trim(SOD_PART) @ WMESSAGE NO-LABEL with fram F1205.
+            string ( SOD_LINE ) @ V1205 "到期日:" + String( SOD_DUE_DATE) @ L12052 trim(SOD_PART) @ WMESSAGE NO-LABEL with fram F1205.
                   else   display skip "" @ WMESSAGE with fram F1205.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -334,7 +334,7 @@ If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
                               sod_nbr = V1100 and sod_site = V1002 
                                no-lock no-error.
                   IF AVAILABLE SOD_DET then display skip 
-            string ( SOD_LINE ) @ V1205 "戳ら:" + String( SOD_DUE_DATE) @ L12052 trim(SOD_PART) @ WMESSAGE NO-LABEL with fram F1205.
+            string ( SOD_LINE ) @ V1205 "到期日:" + String( SOD_DUE_DATE) @ L12052 trim(SOD_PART) @ WMESSAGE NO-LABEL with fram F1205.
                   else   display skip "" @ WMESSAGE with fram F1205.
             END.
             APPLY LASTKEY.
@@ -354,7 +354,7 @@ If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
         /* CHECK FOR NUMBER VARIABLE  END */
         find first SOD_DET where SOD_NBR = V1100 AND string ( sod_line ) = V1205 and SOD_SITE = V1002  no-lock no-error.
         IF NOT AVAILABLE SOD_DET then do:
-                display skip "礚┪砆玛!" @ WMESSAGE NO-LABEL with fram F1205.
+                display skip "无效或被锁!" @ WMESSAGE NO-LABEL with fram F1205.
                 pause 0 before-hide.
                 undo, retry.
         end.
@@ -365,11 +365,11 @@ If AVAILABLE (sod_det) and string ( sod_line ) = V1205 then
         leave V1205L.
      END.
      PV1205 = V1205.
-     /* END    LINE :1205  订单项次  */
+     /* END    LINE :1205  隆等砐棒  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1300  珇[ITEM]  */
+     /* START  LINE :1300  料品[ITEM]  */
      V1300L:
      REPEAT:
 
@@ -400,10 +400,10 @@ If AVAILABLE (sod_det) THEN
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[綪扳称琩高]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+                display "[销售备料查询]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
 
                 /* LABEL 1 - START */ 
-                L13001 = "珇 ┪ 珇+у腹?" .
+                L13001 = "料品 或 料品+批号?" .
                 display L13001          format "x(40)" skip with fram F1300 no-box.
                 /* LABEL 1 - END */ 
 
@@ -427,7 +427,7 @@ If AVAILABLE (sod_det) THEN
                   L13004 = "" . 
                 display L13004          format "x(40)" skip with fram F1300 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1300 no-box.
         /* DISPLAY ONLY */
         define variable X1300           as char format "x(40)".
@@ -462,7 +462,7 @@ If AVAILABLE (sod_det) THEN
         /* CHECK FOR NUMBER VARIABLE  END */
         find first LAD_DET where LAD_PART = ENTRY(1, V1300, "@") AND LAD_NBR = V1100 AND LAD_LINE = V1205  no-lock no-error.
         IF NOT AVAILABLE LAD_DET then do:
-                display skip "岿粇,刚!" @ WMESSAGE NO-LABEL with fram F1300.
+                display skip "错误,重试!" @ WMESSAGE NO-LABEL with fram F1300.
                 pause 0 before-hide.
                 undo, retry.
         end.
@@ -475,11 +475,11 @@ If AVAILABLE (sod_det) THEN
      IF INDEX(V1300,"@" ) = 0 then V1300 = V1300 + "@".
      PV1300 = V1300.
      V1300 = ENTRY(1,V1300,"@").
-     /* END    LINE :1300  珇[ITEM]  */
+     /* END    LINE :1300  料品[ITEM]  */
 
 
    /* Additional Labels Format */
-     /* START  LINE :1510  灿戈[Detail]  */
+     /* START  LINE :1510  明细资料[Detail]  */
      V1510L:
      REPEAT:
 
@@ -506,16 +506,16 @@ If AVAILABLE (sod_det) THEN
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[綪扳称琩高]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
+                display "[销售备料查询]"      + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1510 no-box.
 
                 /* LABEL 1 - START */ 
-                L15101 = "*称獺*" .
+                L15101 = "*备料信息*" .
                 display L15101          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 1 - END */ 
 
 
                 /* LABEL 2 - START */ 
-                L15102 = "璹虫/兜:" + trim ( V1100 ) + "/" + trim (V1205) .
+                L15102 = "订单/项:" + trim ( V1100 ) + "/" + trim (V1205) .
                 display L15102          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 2 - END */ 
 
@@ -523,17 +523,17 @@ If AVAILABLE (sod_det) THEN
                 /* LABEL 3 - START */ 
                 find first sod_det where sod_nbr = V1100 and sod_line = integer ( V1205 ) no-lock no-error.
 If AVAILABLE (sod_det) THEN
-                L15103 = "称/具:" + string ( sod_qty_all ) + "/" + string ( sod_qty_pick ) .
+                L15103 = "已备/捡:" + string ( sod_qty_all ) + "/" + string ( sod_qty_pick ) .
                 else L15103 = "" . 
                 display L15103          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 3 - END */ 
 
 
                 /* LABEL 4 - START */ 
-                L15104 = "珇:" + trim (V1300) .
+                L15104 = "料品:" + trim (V1300) .
                 display L15104          format "x(40)" skip with fram F1510 no-box.
                 /* LABEL 4 - END */ 
-                display "块┪E癶 "      format "x(40)" skip
+                display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1510 no-box.
         Update V1510
         WITH  fram F1510 NO-LABEL
@@ -558,7 +558,7 @@ AND LAD_REF  = V1100 AND
 AND LAD_REF  = V1100  
                                no-lock no-error.
                   IF AVAILABLE LAD_DET then display skip 
-            LAD_LOT @ V1510 "称/具秖:" + trim(string(LAD_QTY_ALL))  + "/" + trim(string(LAD_QTY_PICK)) + "/" + trim (LAD_LOC) @ WMESSAGE NO-LABEL with fram F1510.
+            LAD_LOT @ V1510 "备/捡量:" + trim(string(LAD_QTY_ALL))  + "/" + trim(string(LAD_QTY_PICK)) + "/" + trim (LAD_LOC) @ WMESSAGE NO-LABEL with fram F1510.
                   else   display skip "" @ WMESSAGE with fram F1510.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
@@ -573,7 +573,7 @@ AND LAD_REF  = V1100 AND
 AND LAD_REF  = V1100 
                                no-lock no-error.
                   IF AVAILABLE LAD_DET then display skip 
-            LAD_LOT @ V1510 "称/具秖:" + trim(string(LAD_QTY_ALL))  + "/" + trim(string(LAD_QTY_PICK)) + "/" + trim (LAD_LOC) @ WMESSAGE NO-LABEL with fram F1510.
+            LAD_LOT @ V1510 "备/捡量:" + trim(string(LAD_QTY_ALL))  + "/" + trim(string(LAD_QTY_PICK)) + "/" + trim (LAD_LOC) @ WMESSAGE NO-LABEL with fram F1510.
                   else   display skip "" @ WMESSAGE with fram F1510.
             END.
             APPLY LASTKEY.
@@ -599,7 +599,7 @@ AND LAD_REF  = V1100
      END.
      IF INDEX(V1510,"@" ) <> 0 then V1510 = ENTRY(2,V1510,"@").
      PV1510 = V1510.
-     /* END    LINE :1510  灿戈[Detail]  */
+     /* END    LINE :1510  明细资料[Detail]  */
 
 
    /* Additional Labels Format */

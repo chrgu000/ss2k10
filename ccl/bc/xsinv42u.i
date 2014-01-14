@@ -48,5 +48,5 @@ output close.
 ciminputfile = usection + ".i".
 cimoutputfile = usection + ".o".
 {xserrlg.i}
-unix silent value ( "rm -f "  + Trim(usection) + ".i").
-unix silent value ( "rm -f "  + Trim(usection) + ".o").
+/* unix silent value ( "rm -f "  + Trim(usection) + ".i").
+unix silent value ( "rm -f "  + Trim(usection) + ".o"). */
