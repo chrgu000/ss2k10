@@ -1,11 +1,26 @@
-/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */ 
+/* Generate By Barcode Generator , Copyright by Softspeed - Build By Sam Song  */
 /* UNPLANNED ISSUE [EXPIRED MATERIAL] */
 /* Generate date / time  10/8/2008 4:53:04 PM */
+/** 140109.1  Start  ******************************************************
+1. title 加版本号。
+2. 单据号前面2位 要在 rsn_ref 里的 rsn_code 找到。
+3. 部门在不用在14.1里确认
+4. 单据号前面2位 = rsn_code   部门 = rsn_type  要能找到
+5. 出库的时候
+     rsn_ref与yyrsn_ref 两张表的关联，yyrsn_code=rsn_code;yyrsn_type=rsn_type
+     account 取 yy_ac_code  sub 取 yy_sb_sub
+6. 部门取单号-后面的数据不在录入
+7. 出/入库时的成本中心要填部门代码
+*****************************************************************************/
+
+define variable versionnbr as character format "x(2)" initial ".1".
 define variable sectionid as integer init 0 .
 define variable WMESSAGE  as char format "x(80)" init "".
 define variable wtm_num   as char format "x(20)" init "0".
 define variable wtm_fm    as char format "x(16)".
 define variable wsection as char format "x(16)".
+define variable vdept    as character.
+define variable vrsn     as character.
 define variable i as integer .
 
 define variable wtimeout as integer init 99999 .
@@ -52,30 +67,30 @@ REPEAT:
         IF aPASS = "Y" then
         leave V1002L.
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1002 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L10021 = "地点设定有误" .
                 display L10021          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L10022 = "1.没有设定默认地点" .
                 display L10022          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L10023 = "2.权限设定有误" .
                 display L10023          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L10024 = "  请查核" .
                 display L10024          format "x(40)" skip with fram F1002 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1002 no-box.
         Update V1002
@@ -138,7 +153,7 @@ REPEAT:
 
 
         /* --CYCLE TIME DEFAULT  VALUE -- START  */
-         If sectionid > 1 Then 
+         If sectionid > 1 Then
         V1100 = PV1100 .
         V1100 = ENTRY(1,V1100,"@").
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
@@ -150,72 +165,72 @@ REPEAT:
          if sectionid > 1 then leave V1100L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1100 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L11001 = "单据号码?" .
                 display L11001          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L11002 = "" . 
+                /* LABEL 2 - START */
+                  L11002 = "" .
                 display L11002          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L11003 = "" . 
+                /* LABEL 3 - START */
+                  L11003 = "" .
                 display L11003          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L11004 = "" . 
+                /* LABEL 4 - START */
+                  L11004 = "" .
                 display L11004          format "x(40)" skip with fram F1100 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1100 no-box.
         Update V1100
-        WITH  fram F1100 NO-LABEL
-        /* ROLL BAR START */
-        EDITING:
-        readkey pause wtimeout.
-        if lastkey = -1 then quit.
-        if LASTKEY = 404 Then Do: /* DISABLE F4 */
-           pause 0 before-hide.
-           undo, retry.
-        end.
-        display skip "^" @ WMESSAGE NO-LABEL with fram F1100.
-            IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
-            THEN DO:
-                  IF recid(CODE_MSTR) = ? THEN find first CODE_MSTR where 
-                              CODE_FLDNAME = "ISS-UNPREASON" AND  
-                              CODE_VALUE >=  INPUT V1100
-                               no-lock no-error.
-                  ELSE find next CODE_MSTR where 
-                              CODE_FLDNAME = "ISS-UNPREASON"  
-                               no-lock no-error.
-                  IF AVAILABLE CODE_MSTR then display skip 
-            CODE_VALUE @ V1100 TRIM(CODE_CMMT) @ WMESSAGE NO-LABEL with fram F1100.
-                  else   display skip "" @ WMESSAGE with fram F1100.
-            END.
-            IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
-            THEN DO:
-                  IF recid(CODE_MSTR) = ? THEN find first CODE_MSTR where 
-                              CODE_FLDNAME = "ISS-UNPREASON" AND  
-            CODE_VALUE <=  INPUT V1100
-                               no-lock no-error.
-                  ELSE find prev CODE_MSTR where 
-                              CODE_FLDNAME = "ISS-UNPREASON" 
-                               no-lock no-error.
-                  IF AVAILABLE CODE_MSTR then display skip 
-            CODE_VALUE @ V1100 TRIM(CODE_CMMT) @ WMESSAGE NO-LABEL with fram F1100.
-                  else   display skip "" @ WMESSAGE with fram F1100.
-            END.
-            APPLY LASTKEY.
-        END.
-        /* ROLL BAR END */
+        WITH  fram F1100 NO-LABEL.
+/*      /* ROLL BAR START */                                                         */
+/*      EDITING:                                                                     */
+/*      readkey pause wtimeout.                                                      */
+/*      if lastkey = -1 then quit.                                                   */
+/*      if LASTKEY = 404 Then Do: /* DISABLE F4 */                                   */
+/*         pause 0 before-hide.                                                      */
+/*         undo, retry.                                                              */
+/*      end.                                                                         */
+/*      display skip "^" @ WMESSAGE NO-LABEL with fram F1100.                        */
+/*          IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"      */
+/*          THEN DO:                                                                 */
+/*                IF recid(CODE_MSTR) = ? THEN find first CODE_MSTR where            */
+/*                            CODE_FLDNAME = "ISS-UNPREASON" AND                     */
+/*                            CODE_VALUE >=  INPUT V1100                             */
+/*                             no-lock no-error.                                     */
+/*                ELSE find next CODE_MSTR where                                     */
+/*                            CODE_FLDNAME = "ISS-UNPREASON"                         */
+/*                             no-lock no-error.                                     */
+/*                IF AVAILABLE CODE_MSTR then display skip                           */
+/*          CODE_VALUE @ V1100 TRIM(CODE_CMMT) @ WMESSAGE NO-LABEL with fram F1100.  */
+/*                else   display skip "" @ WMESSAGE with fram F1100.                 */
+/*          END.                                                                     */
+/*          IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"         */
+/*          THEN DO:                                                                 */
+/*                IF recid(CODE_MSTR) = ? THEN find first CODE_MSTR where            */
+/*                            CODE_FLDNAME = "ISS-UNPREASON" AND                     */
+/*          CODE_VALUE <=  INPUT V1100                                               */
+/*                             no-lock no-error.                                     */
+/*                ELSE find prev CODE_MSTR where                                     */
+/*                            CODE_FLDNAME = "ISS-UNPREASON"                         */
+/*                             no-lock no-error.                                     */
+/*                IF AVAILABLE CODE_MSTR then display skip                           */
+/*          CODE_VALUE @ V1100 TRIM(CODE_CMMT) @ WMESSAGE NO-LABEL with fram F1100.  */
+/*                else   display skip "" @ WMESSAGE with fram F1100.                 */
+/*          END.                                                                     */
+/*          APPLY LASTKEY.                                                           */
+/*      END.                                                                         */
+/*      /* ROLL BAR END */                                                           */
 
 
         /* PRESS e EXIST CYCLE */
@@ -228,17 +243,49 @@ REPEAT:
         pause 0.
         /* CHECK FOR NUMBER VARIABLE START  */
         /* CHECK FOR NUMBER VARIABLE  END */
-        find first CODE_MSTR where CODE_FLDNAME = "ISS-UNPREASON" AND index ( V1100,CODE_VALUE ) <> 0  no-lock no-error.
-        IF NOT AVAILABLE CODE_MSTR then do:
-                display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
-                pause 0 before-hide.
-                undo, retry.
+/*      find first CODE_MSTR where CODE_FLDNAME = "ISS-UNPREASON" AND index ( V1100,CODE_VALUE ) <> 0  no-lock no-error. */
+/*      IF NOT AVAILABLE CODE_MSTR then do:                                                                              */
+/*              display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.                                         */
+/*              pause 0 before-hide.                                                                                     */
+/*              undo, retry.                                                                                             */
+/*      end.                                                                                                             */
+        if trim(v1100) = "" then do:
+            display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
+            pause 0 before-hide.
+            undo, retry.
+        end.
+        if index(trim(v1100),"-") = 0 then do:
+            display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
+            pause 0 before-hide.
+            undo, retry.
+        end.
+/* 140109.1  - Start */
+        assign vrsn = substring(V1100,1,2).
+        assign vdept = substring(trim(v1100),R-INDEX(trim(V1100), "-") + 1).
+        find first rsn_ref no-lock where rsn_code = vrsn no-error.
+        if not available rsn_ref then do:
+            display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
+            pause 0 before-hide.
+            undo, retry.
+        end.
+        find first cc_mstr no-lock where cc_ctr = vdept no-error.
+        if not available cc_mstr then do:
+            display skip "成本中心(部门)有误" @ WMESSAGE NO-LABEL with fram F1100.
+            pause 0 before-hide.
+            undo, retry.
+        end.
+        find first rsn_ref no-lock where rsn_type = vdept and rsn_code = vrsn no-error.
+        if not available rsn_ref then do:
+            display skip "部门有误" @ WMESSAGE NO-LABEL with fram F1100.
+            pause 0 before-hide.
+            undo, retry.
         end.
         IF not length( trim ( V1100 ) ) <= 18 THEN DO:
-                display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
-                pause 0 before-hide.
-                undo, retry.
+               display skip "原因代码有误" @ WMESSAGE NO-LABEL with fram F1100.
+               pause 0 before-hide.
+               undo, retry.
         end.
+/* 140109.1  - End */
          /*  ---- Valid Check ---- END */
 
         display  "" @ WMESSAGE NO-LABEL with fram F1100.
@@ -268,57 +315,50 @@ REPEAT:
 
 
         /* --FIRST TIME DEFAULT  VALUE -- START  */
-        find first code_mstr where code_fldname = "ISS-UNPREASON" and V1100 begins code_value no-lock no-error.
-If AVAILABLE ( code_mstr ) then
-        V1200 = ENTRY(1,code_cmmt,":").
-        V1200 = ENTRY(1,V1200,"@").
+        V1200 = vrsn.
+        /* V1200 = ENTRY(1,code_cmmt,":").     */
+        /* V1200 = ENTRY(1,V1200,"@").         */
         /* --FIRST TIME DEFAULT  VALUE -- END  */
 
 
         /* --CYCLE TIME DEFAULT  VALUE -- START  */
-        V1200 = ENTRY(1,V1200,"@").
         /* --CYCLE TIME DEFAULT  VALUE -- END  */
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
 
         /* --FIRST TIME SKIP -- START  */
-         if sectionid = 1 then leave V1200L.
+         if sectionid >= 1 then leave V1200L.
         /* --FIRST TIME SKIP -- END  */
 
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1200 no-box.
 
-        /* --CYCLE TIME SKIP -- START  */
-         if sectionid > 1 then leave V1200L .
-        /* --CYCLE TIME SKIP -- END  */
-
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1200 no-box.
-
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L12001 = "原因代码?" .
                 display L12001          format "x(40)" skip with fram F1200 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L12002 = "" . 
+                /* LABEL 2 - START */
+                  L12002 = "" .
                 display L12002          format "x(40)" skip with fram F1200 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L12003 = "" . 
+                /* LABEL 3 - START */
+                  L12003 = "" .
                 display L12003          format "x(40)" skip with fram F1200 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L12004 = "" . 
+                /* LABEL 4 - START */
+                  L12004 = "" .
                 display L12004          format "x(40)" skip with fram F1200 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1200 no-box.
-        Update V1200
-        WITH  fram F1200 NO-LABEL
+        /*原因代码*/
+        Update V1200 WITH  fram F1200 NO-LABEL
         EDITING:
           readkey pause wtimeout.
           if lastkey = -1 Then quit.
@@ -348,6 +388,106 @@ If AVAILABLE ( code_mstr ) then
      PV1200 = V1200.
      /* END    LINE :1200  原因  */
 
+   /* Additional Labels Format */
+     /* START  LINE :1240  部门[department]  */
+     V1240L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1240           as char format "x(50)".
+        define variable PV1240          as char format "x(50)".
+        define variable L12401          as char format "x(40)".
+        define variable L12402          as char format "x(40)".
+        define variable L12403          as char format "x(40)".
+        define variable L12404          as char format "x(40)".
+        define variable L12405          as char format "x(40)".
+        define variable L12406          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+        /* --FIRST TIME SKIP -- START  */
+        /* if sectionid = 1 then leave V1240L.  */
+        /* --FIRST TIME SKIP -- END  */
+        V1240 = vdept.
+
+        /* --CYCLE TIME SKIP -- START  */
+        if sectionid >= 1 then leave V1240L .
+        /* --CYCLE TIME SKIP -- END  */
+
+                display "[计划外入库]" + versionnbr + "*" + TRIM(V1002)  format "x(40)" skip with fram F1240 no-box.
+
+                /* LABEL 1 - START */
+                L12401 = "原因:" + V1200.
+                display L12401          format "x(40)" skip with fram F1240 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L12402 = "部门?" .
+                display L12402          format "x(40)" skip with fram F1240 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L12403 = "" .
+                display L12403          format "x(40)" skip with fram F1240 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L12404 = "" .
+                display L12404          format "x(40)" skip with fram F1240 no-box.
+                /* LABEL 4 - END */
+                display "输入或按E退出 "      format "x(40)" skip
+        skip with fram F1240 no-box.
+        /*部门*/
+        Update V1240 WITH  fram F1240 NO-LABEL.
+/*  EDITING:                                                                 */
+/*    readkey pause wtimeout.                                                */
+/*    if lastkey = -1 Then quit.                                             */
+/*    if LASTKEY = 404 Then Do: /* DISABLE F4 */                             */
+/*       pause 0 before-hide.                                                */
+/*       undo, retry.                                                        */
+/*    end.                                                                   */
+/*     IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"   */
+/*      THEN DO:                                                             */
+/*            IF recid(dpt_mstr) = ? THEN find first dpt_mstr where          */
+/*                        dpt_dept >=  INPUT V1240                           */
+/*                         no-lock no-error.                                 */
+/*            ELSE find next dpt_mstr where no-lock no-error.                */
+/*            IF AVAILABLE dpt_mstr then display skip                        */
+/*      dpt_dept @ V1240 TRIM(dpt_desc) @ WMESSAGE NO-LABEL with fram F1240. */
+/*            else   display skip "" @ WMESSAGE with fram F1240.             */
+/*      END.                                                                 */
+/*      IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"     */
+/*      THEN DO:                                                             */
+/*            IF recid(dpt_mstr) = ? THEN find first dpt_mstr where          */
+/*                  dpt_dept <=  INPUT v1240 no-lock no-error.               */
+/*            ELSE find prev dpt_mstr no-lock no-error.                      */
+/*            IF AVAILABLE dpt_mstr then display skip                        */
+/*      dpt_dept @ v1240 TRIM(dpt_desc) @ WMESSAGE NO-LABEL with fram F1240. */
+/*            else   display skip "" @ WMESSAGE with fram F1240.             */
+/*      END.                                                                 */
+/*      APPLY LASTKEY.                                                       */
+/*  end.                                                                     */
+
+        /* PRESS e EXIST CYCLE */
+        IF V1240 = "e" THEN  LEAVE MAINLOOP.
+        display  skip WMESSAGE NO-LABEL with fram F1240.
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1240.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1240.
+        pause 0.
+        leave V1240L.
+     END.
+     PV1240 = V1240.
+     /* END    LINE :1240  部门[department]   */
 
    /* Additional Labels Format */
    /* Internal Cycle Input :1300    */
@@ -380,30 +520,30 @@ If AVAILABLE ( code_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1300 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L13001 = "料品 或 料品+批号?" .
                 display L13001          format "x(40)" skip with fram F1300 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L13002 = "" . 
+                /* LABEL 2 - START */
+                  L13002 = "单号:" + trim(v1100) .
                 display L13002          format "x(40)" skip with fram F1300 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L13003 = "" . 
+                /* LABEL 3 - START */
+                  L13003 = "原因代码:" + trim(v1200) .
                 display L13003          format "x(40)" skip with fram F1300 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L13004 = "" . 
+                /* LABEL 4 - START */
+                  L13004 = "部门:" + trim(v1240) .
                 display L13004          format "x(40)" skip with fram F1300 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1300 no-box.
         Update V1300
@@ -419,23 +559,23 @@ If AVAILABLE ( code_mstr ) then
         display skip "^" @ WMESSAGE NO-LABEL with fram F1300.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
-                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where 
+                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where
                               PT_PART >=  INPUT V1300
                                no-lock no-error.
-                  ELSE find next PT_MSTR where 
+                  ELSE find next PT_MSTR where
                                no-lock no-error.
-                  IF AVAILABLE PT_MSTR then display skip 
+                  IF AVAILABLE PT_MSTR then display skip
             PT_PART @ V1300 trim( PT_Desc1 ) @ WMESSAGE NO-LABEL with fram F1300.
                   else   display skip "" @ WMESSAGE with fram F1300.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
             THEN DO:
-                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where 
+                  IF recid(PT_MSTR) = ? THEN find first PT_MSTR where
             PT_PART <=  INPUT V1300
                                no-lock no-error.
-                  ELSE find prev PT_MSTR where 
+                  ELSE find prev PT_MSTR where
                                no-lock no-error.
-                  IF AVAILABLE PT_MSTR then display skip 
+                  IF AVAILABLE PT_MSTR then display skip
             PT_PART @ V1300 trim( PT_Desc1 ) @ WMESSAGE NO-LABEL with fram F1300.
                   else   display skip "" @ WMESSAGE with fram F1300.
             END.
@@ -506,33 +646,33 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1400 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1400 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L14001 = "库位?" .
                 display L14001          format "x(40)" skip with fram F1400 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE (pt_mstr) then
                 L14002 = pt_loc .
-                else L14002 = "" . 
+                else L14002 = "" .
                 display L14002          format "x(40)" skip with fram F1400 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L14003 = "" . 
+                /* LABEL 3 - START */
+                  L14003 = "" .
                 display L14003          format "x(40)" skip with fram F1400 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L14004 = "" . 
+                /* LABEL 4 - START */
+                  L14004 = "" .
                 display L14004          format "x(40)" skip with fram F1400 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1400 no-box.
         Update V1400
@@ -548,27 +688,27 @@ If AVAILABLE (pt_mstr) then
         display skip "^" @ WMESSAGE NO-LABEL with fram F1400.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
-                  IF recid(LOC_MSTR) = ? THEN find first LOC_MSTR where 
-                              LOC_SITE = V1002 AND  
+                  IF recid(LOC_MSTR) = ? THEN find first LOC_MSTR where
+                              LOC_SITE = V1002 AND
                               LOC_LOC >=  INPUT V1400
                                no-lock no-error.
-                  ELSE find next LOC_MSTR where 
-                              LOC_SITE = V1002  
+                  ELSE find next LOC_MSTR where
+                              LOC_SITE = V1002
                                no-lock no-error.
-                  IF AVAILABLE LOC_MSTR then display skip 
+                  IF AVAILABLE LOC_MSTR then display skip
             LOC_LOC @ V1400 LOC_DESC @ WMESSAGE NO-LABEL with fram F1400.
                   else   display skip "" @ WMESSAGE with fram F1400.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
             THEN DO:
-                  IF recid(LOC_MSTR) = ? THEN find first LOC_MSTR where 
-                              LOC_SITE = V1002 AND  
+                  IF recid(LOC_MSTR) = ? THEN find first LOC_MSTR where
+                              LOC_SITE = V1002 AND
             LOC_LOC <=  INPUT V1400
                                no-lock no-error.
-                  ELSE find prev LOC_MSTR where 
-                              LOC_SITE = V1002 
+                  ELSE find prev LOC_MSTR where
+                              LOC_SITE = V1002
                                no-lock no-error.
-                  IF AVAILABLE LOC_MSTR then display skip 
+                  IF AVAILABLE LOC_MSTR then display skip
             LOC_LOC @ V1400 LOC_DESC @ WMESSAGE NO-LABEL with fram F1400.
                   else   display skip "" @ WMESSAGE with fram F1400.
             END.
@@ -645,30 +785,30 @@ If AVAILABLE ( pt_mstr ) then
          if sectionid > 1 then leave V1410L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1410 no-box.
 
-                /* LABEL 1 - START */ 
-                  L14101 = "" . 
+                /* LABEL 1 - START */
+                  L14101 = "" .
                 display L14101          format "x(40)" skip with fram F1410 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L14102 = "" . 
+                /* LABEL 2 - START */
+                  L14102 = "" .
                 display L14102          format "x(40)" skip with fram F1410 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L14103 = "" . 
+                /* LABEL 3 - START */
+                  L14103 = "" .
                 display L14103          format "x(40)" skip with fram F1410 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L14104 = "" . 
+                /* LABEL 4 - START */
+                  L14104 = "" .
                 display L14104          format "x(40)" skip with fram F1410 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1410 no-box.
         /* DISPLAY ONLY */
@@ -744,36 +884,36 @@ If AVAILABLE ( pt_mstr ) then
         IF V1410 <> "L" then
         leave V1500L.
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1500 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L15001 = "批号?" .
                 display L15001          format "x(40)" skip with fram F1500 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 find first ld_det where ld_part = V1300 and ld_loc = V1400 and ld_site = V1002 and ld_ref = "" and ld_qty_oh <> 0 use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                 L15002 = trim(ld_lot) .
-                else L15002 = "" . 
+                else L15002 = "" .
                 display "最小:" + L15002          format "x(40)" skip with fram F1500 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 find first ld_det where ld_part = V1300 and ld_site = V1002 and ld_ref ="" and ld_loc = V1400 and ld_qty_oh <> 0 use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                 L15003 = "库存:" + trim(ld_loc) + "/" + trim(string(ld_qty_oh)) .
-                else L15003 = "" . 
+                else L15003 = "" .
                 display L15003          format "x(40)" skip with fram F1500 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L15004 = "料品:" + trim( V1300 ) .
                 display L15004          format "x(40)" skip with fram F1500 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1500 no-box.
         Update V1500
@@ -789,27 +929,27 @@ If AVAILABLE ( ld_det ) then
         display skip "^" @ WMESSAGE NO-LABEL with fram F1500.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
-                  IF recid(LD_DET) = ? THEN find first LD_DET where 
-                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = "" AND  
+                  IF recid(LD_DET) = ? THEN find first LD_DET where
+                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = "" AND
                               LD_LOT >=  INPUT V1500
                                no-lock no-error.
-                  ELSE find next LD_DET where 
-                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = ""  
+                  ELSE find next LD_DET where
+                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = ""
                                no-lock no-error.
-                  IF AVAILABLE LD_DET then display skip 
+                  IF AVAILABLE LD_DET then display skip
             LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
                   else   display skip "" @ WMESSAGE with fram F1500.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
             THEN DO:
-                  IF recid(LD_DET) = ? THEN find first LD_DET where 
-                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = "" AND  
+                  IF recid(LD_DET) = ? THEN find first LD_DET where
+                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = "" AND
             LD_LOT <=  INPUT V1500
                                no-lock no-error.
-                  ELSE find prev LD_DET where 
-                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = "" 
+                  ELSE find prev LD_DET where
+                              LD_PART = V1300 AND LD_LOC = V1400 AND LD_QTY_OH <> 0 AND LD_SITE = V1002 AND LD_ref = ""
                                no-lock no-error.
-                  IF AVAILABLE LD_DET then display skip 
+                  IF AVAILABLE LD_DET then display skip
             LD_LOT @ V1500 LD_LOT + "/" + trim(string(LD_QTY_OH)) @ WMESSAGE NO-LABEL with fram F1500.
                   else   display skip "" @ WMESSAGE with fram F1500.
             END.
@@ -834,22 +974,22 @@ If AVAILABLE ( ld_det ) then
                 undo, retry.
         end.
         /* SamSong 20121031 Start */
-	Define variable ErrorRetry as logical init no.
-	Define variable wtr__chr04 like tr__chr04.
-	Define variable checklot like ld_lot.
+  Define variable ErrorRetry as logical init no.
+  Define variable wtr__chr04 like tr__chr04.
+  Define variable checklot like ld_lot.
         CheckLot = IF INDEX(V1500,"@" ) <> 0 then ENTRY(2,V1500,"@") else V1500 .
-	Errorretry = no.
-	wtr__chr04 = "".
+  Errorretry = no.
+  wtr__chr04 = "".
         if  checklot <> L15002 then do :
-		run xschkfifo.p ( input checklot ,
-		input  L15002 ,
-		output  ErrorRetry ,
-		output  wtr__chr04 ) .
-		IF Errorretry = yes THEN DO:
-		   display skip "违反FIFO逻辑,重试!" @ WMESSAGE NO-LABEL with fram F1500.
-		   pause 0 before-hide.
-		   undo, retry.
-		end.
+    run xschkfifo.p ( input checklot ,
+    input  L15002 ,
+    output  ErrorRetry ,
+    output  wtr__chr04 ) .
+    IF Errorretry = yes THEN DO:
+       display skip "违反FIFO逻辑,重试!" @ WMESSAGE NO-LABEL with fram F1500.
+       pause 0 before-hide.
+       undo, retry.
+    end.
          end.
         /* SamSong 20121031 Start */
 
@@ -900,33 +1040,33 @@ If AVAILABLE ( ld_det ) then
         IF V1410 <> "L" THEN
         leave V1503L.
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1503 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1503 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L15031 = "**料期信息**" .
                 display L15031          format "x(40)" skip with fram F1503 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L15032 = "批  号:" + trim ( V1500 ) .
                 display L15032          format "x(40)" skip with fram F1503 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
                 L15033 = "保质期:" + ( if pt_avg_int = 0 or pt_avg_int = 90 then " " else string ( pt_avg_int ) ) + "月,通知期" + string ( UNPLANNEDISSUEBUFFERDAY ) + "天" .
-                else L15033 = "" . 
+                else L15033 = "" .
                 display L15033          format "x(40)" skip with fram F1503 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L15034 = "到期日:"  + if expireinv <> ? Then STRING ( expireinv ) else " " .
                 display L15034          format "x(40)" skip with fram F1503 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1503 no-box.
         /* DISPLAY ONLY */
@@ -1002,33 +1142,33 @@ If AVAILABLE ( pt_mstr ) then
         IF V1503 = "N" OR V1410 <> "L" THEN
         leave V1504L.
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1504 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1504 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L15041 = "**物料未过期**" .
                 display L15041          format "x(40)" skip with fram F1504 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L15042 = "批  号:" + trim ( V1500 ) .
                 display L15042          format "x(40)" skip with fram F1504 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
                 L15043 = "保质期:" + ( if pt_avg_int = 0 or pt_avg_int = 90 then " " else string ( pt_avg_int ) ) + "月,通知期" + string ( UNPLANNEDISSUEBUFFERDAY ) + "天" .
-                else L15043 = "" . 
+                else L15043 = "" .
                 display L15043          format "x(40)" skip with fram F1504 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L15044 = "到期日:"  + if expireinv <> ? Then STRING ( expireinv ) else " " .
                 display L15044          format "x(40)" skip with fram F1504 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1504 no-box.
         Update V1504
@@ -1099,33 +1239,33 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1600 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L16001 = "出库数量?" .
                 display L16001          format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L16002 = "料品:" + trim( V1300 ) .
                 display L16002          format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L16003 = "批号:" + Trim(V1500) .
                 display L16003          format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 find first ld_det where ld_part = V1300 and ld_site = V1002 and ld_ref = "" and ld_loc = V1400 and ld_lot = V1500 and ld_qty_oh <> 0 use-index ld_part_lot no-lock no-error.
 If AVAILABLE ( ld_det ) then
                 L16004 = "库存:" + trim(V1400) + "/" + string ( ld_qty_oh ) .
-                else L16004 = "" . 
+                else L16004 = "" .
                 display L16004          format "x(40)" skip with fram F1600 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F1600 no-box.
         Update V1600
@@ -1208,30 +1348,30 @@ If AVAILABLE ( ld_det ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1700 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L17001 = "单号:" + trim(V1100) .
                 display L17001          format "x(40)" skip with fram F1700 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L17002 = "料品:" + trim(V1300) .
                 display L17002          format "x(40)" skip with fram F1700 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L17003 = "批号:" + trim ( V1500 ) .
                 display L17003          format "x(40)" skip with fram F1700 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L17004 = "库位:" + trim ( V1400 ) + "/" + trim( V1600 ) .
                 display L17004          format "x(40)" skip with fram F1700 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "确认过帐[Y],E退出"   format "x(40)" skip
         skip with fram F1700 no-box.
         Update V1700
@@ -1314,30 +1454,30 @@ If AVAILABLE ( tr_hist ) then
          if sectionid > 1 then leave V9000L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9000 no-box.
 
-                /* LABEL 1 - START */ 
-                  L90001 = "" . 
+                /* LABEL 1 - START */
+                  L90001 = "" .
                 display L90001          format "x(40)" skip with fram F9000 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L90002 = "" . 
+                /* LABEL 2 - START */
+                  L90002 = "" .
                 display L90002          format "x(40)" skip with fram F9000 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L90003 = "" . 
+                /* LABEL 3 - START */
+                  L90003 = "" .
                 display L90003          format "x(40)" skip with fram F9000 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L90004 = "" . 
+                /* LABEL 4 - START */
+                  L90004 = "" .
                 display L90004          format "x(40)" skip with fram F9000 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9000 no-box.
         /* DISPLAY ONLY */
@@ -1384,9 +1524,9 @@ If AVAILABLE ( tr_hist ) then
    /* Additional Labels Format */
         display "...PROCESSING...  " NO-LABEL with fram F9000X no-box.
         pause 0.
-     /*  Update MFG/PRO START  */ 
+     /*  Update MFG/PRO START  */
      {xsinv25u.i}
-     /*  Update MFG/PRO END  */ 
+     /*  Update MFG/PRO END  */
         display  "" NO-LABEL with fram F9000X no-box .
         pause 0.
      /* START  LINE :9010  OK  */
@@ -1418,66 +1558,66 @@ If AVAILABLE ( tr_hist ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9010 no-box.
 
-                /* LABEL 1 - START */ 
-                find last tr_hist where 
-tr_date = today     and 
-tr_trnbr > integer ( V9000 ) and 
+                /* LABEL 1 - START */
+                find last tr_hist where
+tr_date = today     and
+tr_trnbr > integer ( V9000 ) and
 tr_nbr  = V1100     and  tr_type = "ISS-UNP"  and
-tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and 
-tr_time  + 15 >= TIME 
+tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and
+tr_time  + 15 >= TIME
 /* SamSong 20121031 - Start */
 use-index tr_date_trn no-error.
 If AVAILABLE ( tr_hist ) then do :
 tr__chr04 = wtr__chr04 .
 /*******************/
         find first ld_det where ld_part = V1300 and ld_site = V1002 and   ld_ref = ""     and  ld_loc = V1400 and ld_qty_oh <> 0 use-index ld_part_lot no-lock no-error.
-	If AVAILABLE ( ld_det ) then do:
-		if ld_lot <> V1500 then
-		tr__chr01 = trim(ld_lot) + fill( " ", 18 - length ( trim ( ld_lot ) ) ) + string( ld_qty_oh ).
-	end.
+  If AVAILABLE ( ld_det ) then do:
+    if ld_lot <> V1500 then
+    tr__chr01 = trim(ld_lot) + fill( " ", 18 - length ( trim ( ld_lot ) ) ) + string( ld_qty_oh ).
+  end.
 
 /*******************/
 
 /* SamSong 20121031 - END */
                 L90101 = "交易已提交" .
                 display L90101          format "x(40)" skip with fram F9010 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 end.
 
-                /* LABEL 2 - START */ 
-                find last tr_hist where 
-tr_date = today     and 
-tr_trnbr > integer ( V9000 ) and 
-tr_nbr  = V1100     and  tr_type = "ISS-UNP"  and  tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and 
-tr_time  + 15 >= TIME 
+                /* LABEL 2 - START */
+                find last tr_hist where
+tr_date = today     and
+tr_trnbr > integer ( V9000 ) and
+tr_nbr  = V1100     and  tr_type = "ISS-UNP"  and  tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and
+tr_time  + 15 >= TIME
 use-index tr_date_trn no-lock no-error.
 If AVAILABLE ( tr_hist ) then
                 L90102 = "交易号 :" + trim(string(tr_trnbr)) .
-                else L90102 = "" . 
+                else L90102 = "" .
                 display L90102          format "x(40)" skip with fram F9010 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                find last tr_hist where 
-tr_date = today     and 
-tr_trnbr > integer ( V9000 ) and 
-tr_nbr  = V1100     and  tr_type = "ISS-UNP"  and  tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and 
-tr_time  + 15 >= TIME 
+                /* LABEL 3 - START */
+                find last tr_hist where
+tr_date = today     and
+tr_trnbr > integer ( V9000 ) and
+tr_nbr  = V1100     and  tr_type = "ISS-UNP"  and  tr_site = V1002     and   tr_part = V1300     and tr_serial = V1500   and
+tr_time  + 15 >= TIME
 use-index tr_date_trn no-lock no-error.
 If NOT AVAILABLE ( tr_hist ) then
                 L90103 = "交易提交失败" .
-                else L90103 = "" . 
+                else L90103 = "" .
                 display L90103          format "x(40)" skip with fram F9010 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
+                /* LABEL 4 - START */
                 L90104 = "按Y打印条码,E退出" .
                 display L90104          format "x(40)" skip with fram F9010 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9010 no-box.
         Update V9010
@@ -1518,9 +1658,9 @@ If NOT AVAILABLE ( tr_hist ) then
 
 
    /* Additional Labels Format */
-   /* Without Condition Exit Cycle Start */ 
+   /* Without Condition Exit Cycle Start */
    LEAVE V1300LMAINLOOP.
-   /* Without Condition Exit Cycle END */ 
+   /* Without Condition Exit Cycle END */
    /* Internal Cycle END :9010    */
    END.
    pause 0 before-hide.
@@ -1558,33 +1698,33 @@ If NOT AVAILABLE ( tr_hist ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9110 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr ) then
                 L91101 = pt_um + " 标签上数量?" .
-                else L91101 = "" . 
+                else L91101 = "" .
                 display L91101          format "x(40)" skip with fram F9110 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L91102 = "料品:" + trim( V1300 ) .
                 display L91102          format "x(40)" skip with fram F9110 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L91103 = "批号:" + Trim(V1500) .
                 display L91103          format "x(40)" skip with fram F9110 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L91104 = "" . 
+                /* LABEL 4 - START */
+                  L91104 = "" .
                 display L91104          format "x(40)" skip with fram F9110 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9110 no-box.
         Update V9110
@@ -1661,30 +1801,30 @@ If AVAILABLE ( pt_mstr ) then
 
         /* LOGICAL SKIP START */
         /* LOGICAL SKIP END */
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9120 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L91201 = "标签个数?" .
                 display L91201          format "x(40)" skip with fram F9120 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
+                /* LABEL 2 - START */
                 L91202 = "料品:" + trim( V1300 ) .
                 display L91202          format "x(40)" skip with fram F9120 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
+                /* LABEL 3 - START */
                 L91203 = "批号:" + Trim(V1500) .
                 display L91203          format "x(40)" skip with fram F9120 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L91204 = "" . 
+                /* LABEL 4 - START */
+                  L91204 = "" .
                 display L91204          format "x(40)" skip with fram F9120 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9120 no-box.
         Update V9120
@@ -1774,30 +1914,30 @@ If AVAILABLE ( upd_det ) then
          if sectionid > 1 then leave V9130L .
         /* --CYCLE TIME SKIP -- END  */
 
-                display "[计划外出过期料]"     + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
+                display "[计划外出过期料]" + versionnbr + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F9130 no-box.
 
-                /* LABEL 1 - START */ 
+                /* LABEL 1 - START */
                 L91301 = "打印机?" .
                 display L91301          format "x(40)" skip with fram F9130 no-box.
-                /* LABEL 1 - END */ 
+                /* LABEL 1 - END */
 
 
-                /* LABEL 2 - START */ 
-                  L91302 = "" . 
+                /* LABEL 2 - START */
+                  L91302 = "" .
                 display L91302          format "x(40)" skip with fram F9130 no-box.
-                /* LABEL 2 - END */ 
+                /* LABEL 2 - END */
 
 
-                /* LABEL 3 - START */ 
-                  L91303 = "" . 
+                /* LABEL 3 - START */
+                  L91303 = "" .
                 display L91303          format "x(40)" skip with fram F9130 no-box.
-                /* LABEL 3 - END */ 
+                /* LABEL 3 - END */
 
 
-                /* LABEL 4 - START */ 
-                  L91304 = "" . 
+                /* LABEL 4 - START */
+                  L91304 = "" .
                 display L91304          format "x(40)" skip with fram F9130 no-box.
-                /* LABEL 4 - END */ 
+                /* LABEL 4 - END */
                 display "输入或按E退出 "      format "x(40)" skip
         skip with fram F9130 no-box.
         Update V9130
@@ -1813,23 +1953,23 @@ If AVAILABLE ( upd_det ) then
         display skip "^" @ WMESSAGE NO-LABEL with fram F9130.
             IF LASTKEY = keycode("F10") or keyfunction(lastkey) = "CURSOR-DOWN"
             THEN DO:
-                  IF recid(PRD_DET) = ? THEN find first PRD_DET where 
+                  IF recid(PRD_DET) = ? THEN find first PRD_DET where
                               PRD_DEV >=  INPUT V9130
                                no-lock no-error.
-                  ELSE find next PRD_DET where 
+                  ELSE find next PRD_DET where
                                no-lock no-error.
-                  IF AVAILABLE PRD_DET then display skip 
+                  IF AVAILABLE PRD_DET then display skip
             PRD_DEV @ V9130 PRD_DESC @ WMESSAGE NO-LABEL with fram F9130.
                   else   display skip "" @ WMESSAGE with fram F9130.
             END.
             IF LASTKEY = keycode("F9") or keyfunction(lastkey) = "CURSOR-UP"
             THEN DO:
-                  IF recid(PRD_DET) = ? THEN find first PRD_DET where 
+                  IF recid(PRD_DET) = ? THEN find first PRD_DET where
             PRD_DEV <=  INPUT V9130
                                no-lock no-error.
-                  ELSE find prev PRD_DET where 
+                  ELSE find prev PRD_DET where
                                no-lock no-error.
-                  IF AVAILABLE PRD_DET then display skip 
+                  IF AVAILABLE PRD_DET then display skip
             PRD_DEV @ V9130 PRD_DESC @ WMESSAGE NO-LABEL with fram F9130.
                   else   display skip "" @ WMESSAGE with fram F9130.
             END.
@@ -1872,7 +2012,7 @@ If AVAILABLE ( upd_det ) then
         Define variable LabelsPath as character format "x(100)" init "/mfgpro/rf/labels/".
         Find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="LabelsPath"no-lock no-error.
         If AVAILABLE(code_mstr) Then LabelsPath = trim ( code_cmmt ).
-        If substring(LabelsPath, length(LabelsPath), 1) <> "/" Then 
+        If substring(LabelsPath, length(LabelsPath), 1) <> "/" Then
         LabelsPath = LabelsPath + "/".
         /* Define Labels Path  END */
      INPUT FROM VALUE(LabelsPath + "inv25" + trim ( wtm_fm ) ).
@@ -1884,70 +2024,70 @@ If AVAILABLE ( upd_det ) then
 If AVAILABLE ( pt_mstr )  then
         av9130 = trim(pt_desc1).
        IF INDEX(ts9130,"$F") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$F") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$F") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$F") + length("$F"), LENGTH(ts9130) - ( index(ts9130 ,"$F" ) + length("$F") - 1 ) ).
        END.
         av9130 = V9110.
        IF INDEX(ts9130,"$Q") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$Q") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$Q") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$Q") + length("$Q"), LENGTH(ts9130) - ( index(ts9130 ,"$Q" ) + length("$Q") - 1 ) ).
        END.
         av9130 = trim(V1300) + "@" + trim(V1500).
        IF INDEX(ts9130,"&B") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "&B") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "&B") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"&B") + length("&B"), LENGTH(ts9130) - ( index(ts9130 ,"&B" ) + length("&B") - 1 ) ).
        END.
         av9130 = V1500.
        IF INDEX(ts9130,"$L") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$L") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$L") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$L") + length("$L"), LENGTH(ts9130) - ( index(ts9130 ,"$L" ) + length("$L") - 1 ) ).
        END.
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9130 = pt_um.
        IF INDEX(ts9130,"$U") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$U") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$U") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$U") + length("$U"), LENGTH(ts9130) - ( index(ts9130 ,"$U" ) + length("$U") - 1 ) ).
        END.
         av9130 = string(today).
        IF INDEX(ts9130,"$D") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$D") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$D") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$D") + length("$D"), LENGTH(ts9130) - ( index(ts9130 ,"$D" ) + length("$D") - 1 ) ).
        END.
         av9130 = V1300.
        IF INDEX(ts9130,"$P") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$P") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$P") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$P") + length("$P"), LENGTH(ts9130) - ( index(ts9130 ,"$P" ) + length("$P") - 1 ) ).
        END.
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9130 = if pt_avg_int <> 0 and pt_avg_int <> 90 then "玂借戳:" + trim ( string ( pt_avg_int ) ) + "る" else "".
        IF INDEX(ts9130,"&D") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "&D") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "&D") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"&D") + length("&D"), LENGTH(ts9130) - ( index(ts9130 ,"&D" ) + length("&D") - 1 ) ).
        END.
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9130 = if pt_drwg_loc <> "" then "ENV DIR:" + trim (pt_drwg_loc) else "".
        IF INDEX(ts9130,"&E") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "&E") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "&E") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"&E") + length("&E"), LENGTH(ts9130) - ( index(ts9130 ,"&E" ) + length("&E") - 1 ) ).
        END.
        find first pt_mstr where pt_part = V1300  no-lock no-error.
 If AVAILABLE ( pt_mstr )  then
         av9130 = trim(pt_desc2).
        IF INDEX(ts9130,"$E") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$E") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$E") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$E") + length("$E"), LENGTH(ts9130) - ( index(ts9130 ,"$E" ) + length("$E") - 1 ) ).
        END.
         av9130 = if length( trim ( V1500 ) ) >= 8 then substring ( trim ( V1500 ),7,2) else "00".
        IF INDEX(ts9130,"&M") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "&M") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "&M") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"&M") + length("&M"), LENGTH(ts9130) - ( index(ts9130 ,"&M" ) + length("&M") - 1 ) ).
        END.
         av9130 = V1100.
        IF INDEX(ts9130,"$O") <> 0  THEN DO:
-       TS9130 = substring(TS9130, 1, Index(TS9130 , "$O") - 1) + av9130 
+       TS9130 = substring(TS9130, 1, Index(TS9130 , "$O") - 1) + av9130
        + SUBSTRING( ts9130 , index(ts9130 ,"$O") + length("$O"), LENGTH(ts9130) - ( index(ts9130 ,"$O" ) + length("$O") - 1 ) ).
        END.
        put unformatted ts9130 skip.

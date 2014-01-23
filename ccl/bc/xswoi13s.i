@@ -1,14 +1,14 @@
-/*  Control Expire date in UNPLANNED ISSUE (Expire Inventory)
+/*  Control Expire date in WO ISSUE
 *   input paramter
 *   1) LOT  NO  V1500
 *   2) PART NO V1300
 *   OUTPUT PARACMTER
-*   1) Expire Date > Today then wPASS= "Y"
-*                          ELSE wPASS= "N"
+*   1) Expire Date < Today then wPASS= "N"
+*                          ELSE wPASS= "Y"
 *   2) wPASS
-*   3) UNPLANNEDISSUEBUFFERDAY
-*   Design By Sam Song April 13 2006
-*   CALL BY XSINV25   Upplanned issue , Only for Expired Material */
+*   3) WOISSUEBUFFERDAY
+*   Design By Sam Song April 13 2004
+*   CALL BY XSWOI10   WO  Over Issue   , Can Issue normal Material but expired material     */
 
 
 define variable wPASS as char format "x(1)" init "". /* */
@@ -23,12 +23,10 @@ define variable w         as integer.
 
 define variable expireinv as date.
 define variable wLotdate  as date.
+define variable WOISSUEBUFFERDAY as integer init 7.
 
-define variable UNPLANNEDISSUEBUFFERDAY as integer init 7.
-
-find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="UNPLANNEDISSUEBUFFERDAY" no-lock no-error. /*  Buffer Days for UNPLANNED ISSUE */
-if AVAILABLE(code_mstr) Then UNPLANNEDISSUEBUFFERDAY = integer(code_cmmt).
-
+find first code_mstr where code_fldname = "BARCODE" AND CODE_value ="WOISSUEBUFFERDAY" no-lock no-error. /*  Buffer Days for WO ISSUE */
+if AVAILABLE(code_mstr) Then WOISSUEBUFFERDAY = integer(code_cmmt).
 
 /*
 DEFINE VARIABLE V1500 AS CHAR FORMAT "x(25)" INIT "000X060303xxxxxx".
@@ -189,7 +187,7 @@ if wPASS = "N" then do :
 
   end.
 
-        if expireinv - UNPLANNEDISSUEBUFFERDAY > today then wPASS = "Y" .
+        if expireinv - WOISSUEBUFFERDAY > today then wPASS = "Y" .
 
 end.
 /************************************************  END ************************************************************/
