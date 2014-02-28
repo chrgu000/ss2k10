@@ -1,4 +1,5 @@
-/* xxpold1.p - check data                                                    */
+/* xxpold1.p - Cim_load data                                                 */
+/* 截至日期写到明细项上                                             140114.1 */
 {mfdeclre.i}
 {xxpold.i}
 define variable vfile as character.
@@ -64,7 +65,7 @@ for each xxpod9 exclusive-lock where x9_chk = "" break by x9_nbr by x9_line:
     end.
     put stream bf unformat x9_qty_ord skip.
     put stream bf unformat '-' skip.  /*成本*/
-    put stream bf unformat '-' skip.  /*明细项*/
+    put stream bf unformat '- - - - - ' x9_due_date skip.  /*明细项*/
     put stream bf unformat '-' skip. /*税*/
     put stream bf unformat x9_qty_fc1 ' ' x9_qty_fc2 skip.  /*预测量1 2*/
 /*  if last-of(x9_nbr) then do:                                        */
