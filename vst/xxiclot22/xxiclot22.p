@@ -111,7 +111,7 @@ define variable v_print as logical format "Y/N" init Yes.
 
 
     define stream s1.
-    v_filename = execname + trim(p_toloc) + string(today,"999999") + string(time,"hh:mm:ss") + "." + trim(p_userid).
+    v_filename = "TMP" + execname + trim(p_toloc) + string(today,"999999") + string(time,"hh:mm:ss") + "." + trim(p_userid) + ".prn".
     output stream s1 to value(v_filename).
 
             v_toloc_name = "" .
