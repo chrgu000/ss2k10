@@ -359,7 +359,7 @@ DO:
               ASSIGN usrw_key1 = GLOBAL_userid
                      usrw_key2 = execname.
           END.
-          usrw_key3 = fifile.
+          assign usrw_key3 = fifile when usrw_key3 <> fifile.
       END.
    end.
    OPEN QUERY brList FOR EACH xxtmppi.

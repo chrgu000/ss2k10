@@ -21,8 +21,8 @@ define variable I as integer.
    bsheet:cells(i,8)  = "单价".
    bsheet:cells(i,9) = "结果".
 /*   bsheet:Range("H1:H1"):Interior:ColorIndex = 6.                          */
-/*   bsheet:Range("H1"):AddComment NO-ERROR.                                 */
-/*   bsheet:Range("H1"):Comment:TEXT('如果是L类型则可以不填') NO-ERROR.      */
+   bsheet:Range("F1"):AddComment NO-ERROR.                                        
+   bsheet:Range("F1"):Comment:TEXT('日期为文本格式(YYYY-MM-DD)') NO-ERROR.             
    i = i + 1.
    for each xxtmppi no-lock:
        bsheet:cells(i,1) = xxpi_list.

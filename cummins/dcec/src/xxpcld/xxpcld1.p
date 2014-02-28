@@ -13,6 +13,10 @@ define variable j as integer.
 
 /* check data */
 for each xxtmppc exclusive-lock:
+    if xxpc_start < today then do:
+       assign xxpc_chk = getMsg(728).
+       next.
+    end.
     find first pt_mstr no-lock where pt_domain = global_domain and
                pt_part = xxpc_part no-error.
     if not available(pt_mstr) then do:
