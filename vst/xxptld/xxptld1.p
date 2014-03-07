@@ -8,9 +8,8 @@
 {xxptld.i}
 define variable vfile as character.
 
-assign vfile = "xxptld.p." + string(today,"99999999") + '.' + string(time).
-
-output to value(vfile + ".bpi").
+assign vfile = "TMP" + execname + string(today,"99999999") + '.' + string(time).
+output to value(vfile + ".bpi.prn").
 for each xxtmppt no-lock where xxpt_chk = "".
     put unformat '"' xxpt_part '"' skip.
     put unformat '-' skip.
@@ -37,8 +36,8 @@ for each xxtmppt exclusive-lock:
 end.
 if cloadfile then do:
    batchrun = yes.
-   input from value(vfile + ".bpi").
-   output to value(vfile + ".bpo") keep-messages.
+   input from value(vfile + ".bpi.prn").
+   output to value(vfile + ".bpo.prn") keep-messages.
    hide message no-pause.
    cimrunprogramloop:
    do on stop undo cimrunprogramloop,leave cimrunprogramloop:
@@ -60,6 +59,6 @@ if cloadfile then do:
           assign xxpt_chk = "FAIL".
        end.
    end.
-   os-delete value(vfile + ".bpi").
-   os-delete value(vfile + ".bpo").
+   os-delete value(vfile + ".bpi.prn").
+   os-delete value(vfile + ".bpo.prn").
 end.
