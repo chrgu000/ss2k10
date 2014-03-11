@@ -7,7 +7,10 @@
    IF INDEX(cp_user2,":") <> 0 THEN
    DISPLAY ENTRY(  2 , cp_user2 , ":") */
 
-{mfdtitle.i "121022.1"}
+/**4311*  2014/1/11 req by wangling                              modify by zy */
+/* 车型从pt_drwg_loc里取不去走pt_promon了.BI报表原本写死了，现在不写死        */
+
+{mfdtitle.i "4311"}
 
 DEFINE VARIABLE buyer LIKE pt_buyer INITIAL "4RSA".
 DEFINE VARIABLE xbuyer LIKE pt_buyer .
@@ -27,7 +30,6 @@ DEFINE VARIABLE i AS INTEGER.
 DEFINE VARIABLE j AS INTEGER.
 DEFINE VARIABLE n AS INTEGER.
 DEFINE VARIABLE vqty LIKE pt_ship_wt.
-
 
 DEFINE TEMP-TABLE tt1
     FIELD tt1_cust LIKE xxsod_cust
@@ -293,32 +295,31 @@ do on error undo, return error on endkey undo, return error:
                          END.
                       END.
 
-                      IF pt_buyer = "4RSA" THEN DO:
-                          IF substring(pt_promo,7,1) = "R"  THEN DO:
-                             tt1_model_zy = "右".
-                          END.
-
-                          IF substring(pt_promo,7,1) = "L" THEN DO:
-                             tt1_model_zy = "左".
-                          END.
-
-
-                          IF substring(pt_promo,6,1) = "F" THEN DO:
-                             tt1_sy = "前".
-                          END.
-
-                          IF substring(pt_promo,6,1) = "R" THEN DO:
-                             tt1_sy = "后".
-                          END.
-
-                          IF tt1_sy = "后" AND tt1_model_zy = "" THEN
-                                tt1_model_zy = "后".
-
-                          IF tt1_model_zy = "" THEN
-                                tt1_model_zy = pt_drwg_loc.
-
-                      END.
-
+ /*4311*             IF pt_buyer = "4RSA" THEN DO:                      *4311*/
+ /*4311*                IF substring(pt_promo,7,1) = "R"  THEN DO:      *4311*/
+ /*4311*                   tt1_model_zy = "右".                         *4311*/
+ /*4311*                END.                                            *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                IF substring(pt_promo,7,1) = "L" THEN DO:       *4311*/
+ /*4311*                   tt1_model_zy = "左".                         *4311*/
+ /*4311*                END.                                            *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                IF substring(pt_promo,6,1) = "F" THEN DO:       *4311*/
+ /*4311*                   tt1_sy = "前".                               *4311*/
+ /*4311*                END.                                            *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                IF substring(pt_promo,6,1) = "R" THEN DO:       *4311*/
+ /*4311*                   tt1_sy = "后".                               *4311*/
+ /*4311*                END.                                            *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                IF tt1_sy = "后" AND tt1_model_zy = "" THEN     *4311*/
+ /*4311*                      tt1_model_zy = "后".                      *4311*/
+ /*4311*                                                                *4311*/
+ /*4311*                IF tt1_model_zy = "" THEN                       *4311*/
+ /*4311*                      tt1_model_zy = pt_drwg_loc.               *4311*/
+ /*4311*           END.                                                 *4311*/
+ /*4311*/          tt1_model_zy = pt_drwg_loc.
 
 
 
@@ -367,9 +368,9 @@ do on error undo, return error on endkey undo, return error:
 
                 END.
                 ELSE DO:
-                		assign vqty = tt1_qty_ord.
-                		do while vqty > 0:
-									     i = i + 1.
+                    assign vqty = tt1_qty_ord.
+                    do while vqty > 0:
+                       i = i + 1.
                        CREATE tt2.
                        ASSIGN tt2_id = i
                            tt2_part = tt1_part
@@ -391,11 +392,11 @@ do on error undo, return error on endkey undo, return error:
                            tt2_plan = tt1_plan
                            tt2_model_zy = tt1_model_zy
                            tt2_sy = tt1_sy
-                           tt2_soil = tt1_soil.  
+                           tt2_soil = tt1_soil.
                        assign vqty = vqty - tt1_per_qty.
-                	  end.
+                    end.
                 END.
-/***********************************************************************               
+/***********************************************************************
                 ELSE DO:
                    IF TRUNCATE(tt1_qty_ord / tt1_per_qty,0) <
                       tt1_qty_ord / tt1_per_qty THEN DO:
@@ -456,7 +457,7 @@ do on error undo, return error on endkey undo, return error:
                        END.
                    END.
                 END.
-*******************************************************************/                
+*******************************************************************/
             END.
 
             IF option_list = "1" THEN DO:

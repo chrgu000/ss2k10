@@ -5,7 +5,7 @@
 /* REVISION END                                                              */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "140218.1"}
+{mfdtitle.i "140304.1"}
 {xxpiptld.i "new"}
 {gpcdget.i "UT"}
 define variable yn as logical.
@@ -104,11 +104,19 @@ repeat:
       else do:
            {pxmsg.i &MSGNUM=12 &ERRORLEVEL=2 &CONFIRM=yn}
            if yn then do:
-              for each b_tag no-lock where b_tag.tag_nbr >= vtag:
-                  buffer-copy b_tag to tag_mstr.
+              for each b_tag no-lock:
+                  find first tag_mstr exclusive-lock where
+                             tag_mstr.tag_nbr = b_tag.tag_nbr no-error.
+                  if available tag_mstr then do:
+                     assign tag_mstr.tag_cnt_qty = b_tag.tag_cnt_qty
+                      tag_mstr.tag_cnt_dt = b_tag.tag_cnt_dt.
+                  end.
+                  else do:
+                       buffer-copy b_tag to tag_mstr.
+                  end.
               end.
            end.
-      end.
+      end.  /*  else  if can-find(first b_tag  do:  */
    end.
 
 end.

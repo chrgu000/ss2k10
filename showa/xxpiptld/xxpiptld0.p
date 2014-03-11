@@ -37,26 +37,35 @@ repeat:
 /*     assign vqty  = trim(entry(8,txt,",")) no-error.                   */
     import delimiter "," vsn vloc txt vpart txt vserial txt vqty.
     if vloc <> "" and vpart <> "" then do:
-       create b_tag.
-       assign b_tag.tag_part = vpart.
-              b_tag.tag_site = vsite.
-              b_tag.tag_loc = vloc.
-              b_tag.tag_serial = vserial.
          assign vchk = yes.
          DO i = 1 to length(vsn).
             If index("0987654321", substring(vsn,i,1)) = 0 then do:
                assign vchk = no.
             end.
          end.
-         if vchk then assign b_tag.tag_sn = integer(vsn).
          assign vchk = yes.
          DO i = 1 to length(vqty).
             If index("0987654321.", substring(vqty,i,1)) = 0 then do:
                assign vchk = no.
             end.
          end.
-         if vchk then assign b_tag.tag_qty_doc = decimal(vqty).
-     end.
+         if vchk then do:
+            find first b_tag exclusive-lock
+                 where b_tag.tag_part = vpart
+                   and b_tag.tag_site = vsite
+                   and b_tag.tag_loc = vloc
+                   and b_tag.tag_lot = vserial no-error.
+            if not available b_tag then do:
+                  create b_tag.
+                  assign b_tag.tag_sn = integer(vsn)
+                         b_tag.tag_part = vpart
+                         b_tag.tag_site = vsite
+                         b_tag.tag_loc = vloc
+                         b_tag.tag_lot = vserial.
+            end.
+            assign b_tag.tag_qty_ld = b_tag.tag_qty_ld + decimal(vqty).
+         end. /* if vchk then do: */
+     end. /* if vloc <> "" and vpart <> "" then do: */
 end.
 input close.
 
@@ -87,10 +96,14 @@ for each b_tag exclusive-lock where tag_chk = "":
                tag_mstr.tag_part = b_tag.tag_part and
                tag_mstr.tag_site = b_tag.tag_site and
                tag_mstr.tag_loc = b_tag.tag_loc and
-               tag_mstr.tag_serial = b_tag.tag_serial and
                tag_mstr.tag_ref = "" no-error.
     if available tag_mstr then do:
-         assign b_tag.tag_nbr = tag_mstr.tag_nbr.
+         assign b_tag.tag_nbr = tag_mstr.tag_nbr
+    b_tag.tag_serial = tag_mstr.tag_serial
+    b_tag.tag_qty_doc = tag_mstr.tag_cnt_qty.
+    end.
+    else do:
+   assign b_tag.tag_serial = b_tag.tag_lot.
     end.
 end.
 
@@ -110,12 +123,5 @@ for each b_tag exclusive-lock:
 end.
 
 for each b_tag exclusive-lock:
-    find first ld_det no-lock where ld_site = b_tag.tag_site and
-                                    ld_loc  = b_tag.tag_loc and
-                                    ld_part = b_tag.tag_part and
-                                    ld_lot = b_tag.tag_serial and
-                                    ld_ref = b_tag.tag_ref no-error.
-    if available ld_det then do:
-       assign b_tag.tag_qty_loc = ld_qty_oh.
-    end.
+    b_tag.tag_cnt_qty = b_tag.tag_qty_ld + b_tag.tag_qty_doc.
 end.

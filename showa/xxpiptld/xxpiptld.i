@@ -14,17 +14,19 @@ define {1} shared temp-table b_tag no-undo
        fields tag_loc like tag_mstr.tag_loc
        fields tag_part like tag_mstr.tag_part
        fields tag_serial like tag_mstr.tag_serial
+       fields tag_lot  as  character format "x(18)"
        fields tag_ref like tag_mstr.tag_ref
        fields tag_type like tag_mstr.tag_type initial "I"
-       fields tag_crt_dt like tag_mstr.tag_crt_dt initial today
+       fields tag_cnt_dt like tag_mstr.tag_cnt_dt initial today
        fields tag_cnt_cnv like tag_mstr.tag_cnt_cnv initial 1
        fields tag_rcnt_cnv like tag_mstr.tag_rcnt_cnv initial 1
-       fields tag_qty_loc like ld_qty_oh
-       fields tag_qty_doc like ld_qty_oh
+       fields tag_cnt_qty like tag_mstr.tag_cnt_qty
+       fields tag_qty_ld  like ld_det.ld_qty_oh /* Loaded qty */
+       fields tag_qty_doc like ld_det.ld_qty_oh /*counted qty */
        fields tag_chk as character format "x(40)"
        index tag_index is unique primary
-             tag_nbr tag_site tag_loc tag_part tag_serial tag_ref
-       index tag_index1 is unique tag_site tag_loc tag_part tag_serial.
+             tag_nbr tag_site tag_loc tag_part tag_lot tag_ref
+       index tag_index1 is unique tag_site tag_loc tag_part tag_lot.
 
 FUNCTION getMsg RETURNS character(inbr as integer):
  /* -----------------------------------------------------------
