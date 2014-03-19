@@ -21,6 +21,7 @@ define variable m0-comp   as character format "x(40)" no-undo.
 define shared variable vtriggers as character format "x(30)" no-undo.
 define shared variable cut_paste   as character format "x(70)" no-undo.
 define shared variable vxref as logical no-undo.
+define shared variable vLISTING as logical initial no no-undo.
 define temp-table t_log
        fields tt_i as integer
        fields tt_j as integer
@@ -94,7 +95,7 @@ repeat:
    view frame m0.
    if substring(proc_name,1,2) = "mf" then assign incmf = yes.
 /*   display stream cmp m0-comp with frame m0. */
-	 proc_ver = "".
+   proc_ver = "".
    if opsys = "UNIX" then do:
       run getVer(input xrcDir + "/" + proc_name,output proc_ver).
    end.
@@ -129,10 +130,20 @@ repeat:
           end.
           assign propath =xrcDir + "," + replace(bpropath,chr(10),",") when bpropath <> "".
           if vxref then do:
-             compile value(proc_name) no-attr-space save into value(".") xref value(proc_name + ".xref").
+             if vLISTING then do:
+                compile value(proc_name) no-attr-space save into value(".") xref value(proc_name + ".xref") LISTING value(proc_name + ".lst").
+             end.
+             else do:
+                compile value(proc_name) no-attr-space save into value(".") xref value(proc_name + ".xref").
+             end.
           end.
           else do:
-             compile value(proc_name) no-attr-space save into value(".").
+             if vLISTING then do:
+                compile value(proc_name) no-attr-space save into value(".")  LISTING value(proc_name + ".lst").
+             end.
+             else do:
+                compile value(proc_name) no-attr-space save into value(".").
+             end.
           end.
           assign propath = v_oldpropath.
    output close.
@@ -366,7 +377,7 @@ procedure getVer:
       if index(txt,'~{') > 0 and
          index(txt,'}') > 0 and
          index(txt,'"') > 0 and
-      	 index(txt,'mfdtitle.i') > 0 and
+         index(txt,'mfdtitle.i') > 0 and
          index(txt,'*') = 0 then do:
          assign over = trim(ENTRY(2,txt,'"')) no-error.
          leave.

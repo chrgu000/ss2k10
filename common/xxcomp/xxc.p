@@ -16,7 +16,7 @@ compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "2CYE"}
+{mfdtitle.i "43YE"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -25,6 +25,8 @@ propath = substring(propath,length(srcDir) + 1).
 &SCOPED-DEFINE xxcomp_p_5 "Language Code"
 &SCOPED-DEFINE xxcomp_p_6 "xref"
 &SCOPED-DEFINE xxcomp_p_7 "Destination Directory"
+&SCOPED-DEFINE xxcomp_p_8 "LISTING"
+&SCOPED-DEFINE xxcomp_p_9 "PAUSE"
 
 define variable vFileName  as character extent 3.
 define variable qadkey1    as character initial "xxcomp.p.parameter" no-undo.
@@ -35,6 +37,7 @@ define variable del-yn     as logical.
 define variable vClientDir as character no-undo.
 define variable vchkPath   as logical   no-undo.
 define new shared variable vxref as logical initial no no-undo.
+define new shared variable vLISTING as logical initial no no-undo.
 define new shared variable vtriggers as character format "x(30)"
                   initial "triggers" no-undo.
 define temp-table tmpfile
@@ -58,8 +61,9 @@ form
    bproPath colon 22 label {&xxcomp_p_4}
    skip(1)
    lng      colon 22 label {&xxcomp_p_5}
-   kbc_display_pause colon 50
-   vxref colon 60 label {&xxcomp_p_6}
+   kbc_display_pause colon 40 label {&xxcomp_p_9}
+   vxref colon 52 label {&xxcomp_p_6}
+   vLISTING colon 69 label {&xxcomp_p_8}
    skip(1)
    destDir  colon 22 view-as fill-in size 50 by 1 label {&xxcomp_p_7}
 with Frame z side-labels width 80.
@@ -215,15 +219,15 @@ end.
 
 assign c-comp-pgms = getTermLabel("CAPS_COMPILE_PROGRAMS",20).
 display c-comp-pgms with frame tx.
-display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause vxref
+display xrcDir filef filet bproPath lower(lng) @ lng kbc_display_pause vxref vLISTING
        destdir with Frame z.
-ENABLE  xrcDir filef filet bproPath lng kbc_display_pause vxref destdir
+ENABLE  xrcDir filef filet bproPath lng kbc_display_pause vxref vLISTING destdir
         WITH Frame z.
 {xxchklv.i 'MODEL-CAN-RUN' 10}
 mainLoop:
 repeat:
 do on error undo, retry:
-   update destDir xrcDir fileF fileT bpropath lng kbc_display_pause vxref destdir
+   update destDir xrcDir fileF fileT bpropath lng kbc_display_pause vxref vLISTING destdir
    go-on("F5" "CTRL-D") with Frame z.
    if not can-find (first lng_mstr no-lock where lng_lang = lng) then do:
       {mfmsg.i 7656 3}
@@ -350,14 +354,15 @@ PROCEDURE iniForm:
                filef = trim(usrw_charfld[6])
                filet = trim(usrw_charfld[7])
                kbc_display_pause = usrw_intfld[1]
-               vxref = usrw_logfld[1].
+               vxref = usrw_logfld[1]
+               vLISTING = usrw_logfld[2].
         if opsys = "msdos" or opsys = "win32" then do:
            assign xrcdir = usrw_charfld[11]
                   bpropath = usrw_charfld[13]
                   destDir = trim(usrw_charfld[15]).
         end.
     end.
-    assign xrcDir DestDir fileF filet kbc_display_pause vxref.
+    assign xrcDir DestDir fileF filet kbc_display_pause vxref vLISTING.
     assign lng = lower(global_user_lang).
     if bpropath = "" then do:
        assign bpropath = replace(v_oldpropath,",",chr(10)).
@@ -440,14 +445,15 @@ procedure checkBpropath:
 end procedure.
 
 procedure recordUsrwWkfl:
-/*  assign filef filet kbc_display_pause vxref bpropath destDir in frame z. */
+/*  assign filef filet kbc_display_pause vxref vLISTING bpropath destDir in frame z. */
   if not locked(usrw_wkfl) then do:
       assign usrw_key5 = string(today,"9999-99-99") + " "
                        + string(time,"HH:MM:SS")
              usrw_charfld[6] = filef
              usrw_charfld[7] = replace(filet,"hi_char","")
              usrw_intfld[1] = kbc_display_pause
-             usrw_logfld[1] = vxref.
+             usrw_logfld[1] = vxref
+             usrw_logfld[2] = vLISTING.
       if opsys = "msdos" or opsys = "win32" then do:
          assign usrw_charfld[11] = xrcdir
                 usrw_charfld[12] = trim(destDir) when destDir <> ""
