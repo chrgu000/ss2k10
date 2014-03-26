@@ -73,7 +73,7 @@
 /* CAN BE COMPLETELY SHIPPED IF PARTIAL OK FLAG IS SET TO NO            */
 
 /* DISPLAY TITLE */
-{mfdtitle.i "131014.1"}
+{mfdtitle.i "318"}
 /* 13821.1  **************************************************
  * 当考虑批序号=Yes的时候，将不考虑批序号为空的库存。
  * 只有当”考虑批序号=No的时候，才会首先考虑为空的批序号，再考虑先进先出的批序号库存

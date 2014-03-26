@@ -13,7 +13,7 @@ define variable vchk as character no-undo.
 define stream bf.
 for each xxtmppc where xxpc_chk = "" break by xxpc_sn by xxpc_sn1:
     if first-of(xxpc_sn) then do:
-      assign vfile = execname + "." + string(xxpc_sn,"999999").
+      assign vfile = "TMP_" + execname + "." + string(xxpc_sn,"999999").
       output stream bf to value(vfile + ".bpi").
       put stream bf unformat '"' xxpc_list '" "' xxpc_curr '" - "'
           xxpc_part '" "' xxpc_um '" ' xxpc_start skip.
@@ -27,7 +27,7 @@ for each xxtmppc where xxpc_chk = "" break by xxpc_sn by xxpc_sn1:
       end.
       put stream bf unformat trim(string(xxpc_amt)).
     if last-of(xxpc_sn) then do:
-      put stream bf skip.
+      put stream bf skip "-" skip "." skip "." skip.
       output stream bf close.
       cimrunprogramloop:
       do transaction:
@@ -40,8 +40,10 @@ for each xxtmppc where xxpc_chk = "" break by xxpc_sn by xxpc_sn1:
          hide message no-pause.
          output close.
          input close.
+         /*
          os-delete value(vfile + ".bpi").
          os-delete value(vfile + ".bpo").
+         */
       end.
    end.
 end.

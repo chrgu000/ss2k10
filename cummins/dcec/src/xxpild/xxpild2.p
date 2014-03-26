@@ -21,8 +21,8 @@ define variable I as integer.
    bsheet:cells(i,8)  = "单价".
    bsheet:cells(i,9) = "结果".
 /*   bsheet:Range("H1:H1"):Interior:ColorIndex = 6.                          */
-   bsheet:Range("F1"):AddComment NO-ERROR.                                        
-   bsheet:Range("F1"):Comment:TEXT('日期为文本格式(YYYY-MM-DD)') NO-ERROR.             
+   bsheet:Range("F1"):AddComment NO-ERROR.
+   bsheet:Range("F1"):Comment:TEXT('日期为文本格式(DD-MM-YY)') NO-ERROR.
    i = i + 1.
    for each xxtmppi no-lock:
        bsheet:cells(i,1) = xxpi_list.
@@ -30,12 +30,12 @@ define variable I as integer.
        bsheet:cells(i,3) = xxpi_part.
        bsheet:cells(i,4) = xxpi_curr.
        bsheet:cells(i,5) = xxpi_um.
-       bsheet:cells(i,6) = string(year(xxpi_start),"9999")
-                         + "-" + string(month(xxpi_start),"99")
-                         + "-" + string(day(xxpi_start),"99") .
-       bsheet:cells(i,7) = string(year(xxpi_expir),"9999") + "-"
-                         + string(month(xxpi_expir),"99") + "-"
-                         + string(day(xxpi_expir),"99") .
+       bsheet:cells(i,6) = "'" + string(day(xxpi_start),"99")
+                         + "/" + string(month(xxpi_start),"99")
+                         + "/" + substring(string(year(xxpi_start),"9999"),3,2).
+       bsheet:cells(i,7) = "'" + string(day(xxpi_expir),"99")
+                         + "/" + string(month(xxpi_expir),"99")
+                         + "/" + substring(string(year(xxpi_expir),"9999"),3,2).
        bsheet:cells(i,8) = xxpi_amt.
        bsheet:cells(i,9) = "'" + xxpi_chk.
        i = i + 1.

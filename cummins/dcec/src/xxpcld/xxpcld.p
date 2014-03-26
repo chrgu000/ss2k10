@@ -252,7 +252,7 @@ DO:
   /* This ADM code must be left here in order for the SmartWindow
      and its descendents to terminate properly on exit. */
   APPLY "CLOSE":U TO THIS-PROCEDURE.
-  RETURN NO-APPLY.
+  RETURN /*NO-APPLY*/.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -292,12 +292,10 @@ DO:
   SESSION:SET-WAIT-STATE("GENERAL").
   if not can-find(first xxtmppc) then do:
      message "无需要装入的资料，请确认资料" view-as alert-box error title "资料错误".
-     undo,retry.
   end.
   find first xxtmppc no-lock where xxpc_chk <> "" no-error.
   if available xxtmppc then do:
        message "资料检查发现错误，请确认资料" view-as alert-box error title "资料错误".
-       undo,retry.
   end.
   {gprun.i ""xxpcld3.p""}
   OPEN QUERY brList FOR EACH xxtmppc.

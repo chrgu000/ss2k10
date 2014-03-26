@@ -202,7 +202,7 @@ define buffer gltdet for glt_det.
 				        ap_domain = global_domain AND 
 				        ap_batch = glt_batch and ap_type = "VO"
           ,EACH vo_mstr NO-LOCK WHERE vo_domain = ap_domain AND
-                vo_ref = ap_ref and (vo__user1 = conf or conf = ""):      
+                vo_ref = ap_ref and (vo_user1 = conf or conf = "")      
 				    break by glt_ref
 				    with width 132 NO-ATTR-SPACE STREAM-IO:
 		if type <> "" and substring(glt_ref, 1, 2) <> type then next.
@@ -339,4 +339,4 @@ if available usr_mstr then put usr_name.
 	  end.
 
 /*GUI*/ end procedure. /*p-report*/
-/*GUI*/ {mfguirpb.i &flds="  entity entity1 ref ref1 dt dt1 effdt effdt1 btch type unb "} /*Drive the Report*/
+/*GUI*/ {mfguirpb.i &flds="  entity entity1 ref ref1 dt dt1 effdt effdt1 btch conf type unb "} /*Drive the Report*/

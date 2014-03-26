@@ -27,8 +27,8 @@ else do:
                    xxpi_part = TRIM(bsheet:cells(intI,3):FormulaR1C1)
                    xxpi_curr = TRIM(bsheet:cells(intI,4):FormulaR1C1)
                    xxpi_um = TRIM(bsheet:cells(intI,5):FormulaR1C1)
-                   xxpi_start = str2Date(TRIM(string(bsheet:cells(intI,6):value)),"ymd")
-                   xxpi_expir = str2Date(TRIM(string(bsheet:cells(intI,7):value)),"ymd")
+                   xxpi_start = str2Date(TRIM(string(bsheet:cells(intI,6):value)),"dmy")
+                   xxpi_expir = str2Date(TRIM(string(bsheet:cells(intI,7):value)),"dmy")
                    xxpi_amt = decimal(TRIM(bsheet:cells(intI,8):FormulaR1C1))
                    no-error.
          end.

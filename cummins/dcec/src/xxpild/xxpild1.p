@@ -1,5 +1,6 @@
 /* xxpold0.p - import from xls                                            */
 {mfdeclre.i}
+{xxloaddata.i}
 {xxpild.i}
 DEFINE VARIABLE i AS INTEGER.
 assign i  = 0.

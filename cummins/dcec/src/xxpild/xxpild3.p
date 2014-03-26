@@ -1,8 +1,8 @@
-/* xxpild3.p - xxpppimt.p cim load                                           */
-/*V8:ConvertMode=Report                                                      */
-/* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
-/* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy                          */
-/* REVISION END                                                              */
+/* xxpild3.p - xxpppimt.p cim load                            */
+/*V8:ConvertMode=Report                                       */
+/* Environment: Progress:10.1B QAD:eb21sp7 Interface:Character*/
+/* REVISION: 120706.1 LAST MODIFIED: 07/06/12 BY:Zy           */
+/* REVISION END                                               */
 /**** 需求
 1）金额类型：报价（List）
 2）数量类型：数量
@@ -17,7 +17,7 @@ define variable cfile as character.
 define variable vchk as character no-undo.
 define stream bf.
 for each xxtmppi where xxpi_chk = "" by xxpi_sn:
-    assign vfile = execname + "." + string(xxpi_sn,"999999").
+    assign vfile = "TMP_" + execname + "." + string(xxpi_sn,"999999").
     output stream bf to value(vfile + ".bpi").
     put stream bf unformat '"' xxpi_list '" "' xxpi_cs '" "'
         xxpi_part '" "' xxpi_curr '" "' xxpi_um '" ' xxpi_start skip.

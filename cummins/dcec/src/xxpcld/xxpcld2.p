@@ -25,19 +25,19 @@ define variable I as integer.
    bsheet:Range("H1"):AddComment NO-ERROR.
    bsheet:Range("H1"):Comment:TEXT('如果是L类型则可以不填') NO-ERROR.
    bsheet:Range("F1"):AddComment NO-ERROR.                                        
-   bsheet:Range("F1"):Comment:TEXT('日期为文本格式(YYYY-MM-DD)') NO-ERROR. 
+   bsheet:Range("F1"):Comment:TEXT('日期为文本格式(DD-MM-YY)') NO-ERROR. 
    i = i + 1.
    for each xxtmppc no-lock:
        bsheet:cells(i,1) = xxpc_list.
        bsheet:cells(i,2) = xxpc_part.
        bsheet:cells(i,3) = xxpc_curr.
        bsheet:cells(i,4) = xxpc_um.
-       bsheet:cells(i,5) = string(year(xxpc_start),"9999")
-                         + "-" + string(month(xxpc_start),"99")
-                         + "-" + string(day(xxpc_start),"99") .
-       bsheet:cells(i,6) = string(year(xxpc_expir),"9999") + "-"
-                         + string(month(xxpc_expir),"99") + "-"
-                         + string(day(xxpc_expir),"99") .
+       bsheet:cells(i,5) = "'" + string(day(xxpc_start),"99")
+                         + "/" + string(month(xxpc_start),"99")
+                         + "/" + substring(string(year(xxpc_start),"9999"),3,2) .
+       bsheet:cells(i,6) = "'" + string(day(xxpc_expir),"99")         
+                         + "/" + string(month(xxpc_expir),"99")         
+                         + "/" + substring(string(year(xxpc_expir),"9999"),3,2) .
        bsheet:cells(i,7) = xxpc_type.
        bsheet:cells(i,8) = xxpc_min_qty.
        bsheet:cells(i,9) = xxpc_amt.

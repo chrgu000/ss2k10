@@ -543,7 +543,8 @@ do on error undo mainblock, leave mainblock:
             /* ADDED FIFTH INPUT PARAMETER                    */
             /* (sod_qty_ord - sod_qty_ship)                   */
 
-            {gprun.i ""soskit01.p""
+/* 140319.1  - RMKS */
+     {gprun.i ""soskit01.p""
                "(input recid(so_mstr),
                  input recid(sod_det),
                  input kit_all,
