@@ -12,7 +12,8 @@ define variable yn as logical.
 
 form
    skip(1)
-   flhload colon 14  view-as fill-in size 40 by 1 skip(1)
+   flhload colon 14 view-as fill-in size 40 by 1
+   effdate colon 14 skip(1)
    cloadfile colon 14 skip(2)
 with frame a side-labels width 80.
 
@@ -34,9 +35,9 @@ display flhload with frame a.
 repeat:
 
    if c-application-mode <> 'web' then
-   update flhload cloadfile with frame a.
+   update flhload effdate cloadfile with frame a.
 
-   {wbrp06.i &command = update &fields = " flhload cloadfile "
+   {wbrp06.i &command = update &fields = " flhload effdate cloadfile "
       &frm = "a"}
 
      IF SEARCH(flhload) = ? THEN DO:

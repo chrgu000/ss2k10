@@ -63,7 +63,8 @@ repeat:
                          b_tag.tag_loc = vloc
                          b_tag.tag_lot = vserial.
             end.
-            assign b_tag.tag_qty_ld = b_tag.tag_qty_ld + decimal(vqty).
+            assign b_tag.tag_cnt_dt = effdate
+                   b_tag.tag_qty_ld = b_tag.tag_qty_ld + decimal(vqty).
          end. /* if vchk then do: */
      end. /* if vloc <> "" and vpart <> "" then do: */
 end.

@@ -6,6 +6,7 @@
 
 define {1} shared variable flhload as character format "x(70)".
 define {1} shared variable cloadfile as logical initial "no".
+define {1} shared variable effdate like tag_mstr.tag_cnt_dt initial today.
 define {1} shared variable vtag like tag_mstr.tag_nbr.
 define {1} shared temp-table b_tag no-undo
        fields tag_sn as integer column-label "Serial"
