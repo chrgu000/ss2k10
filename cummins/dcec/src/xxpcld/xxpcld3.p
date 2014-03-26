@@ -40,10 +40,8 @@ for each xxtmppc where xxpc_chk = "" break by xxpc_sn by xxpc_sn1:
          hide message no-pause.
          output close.
          input close.
-         /*
          os-delete value(vfile + ".bpi").
          os-delete value(vfile + ".bpo").
-         */
       end.
    end.
 end.
