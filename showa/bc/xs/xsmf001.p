@@ -27,7 +27,11 @@
     Parameters:
     Notes:
 ------------------------------------------------------------------------------*/
-
+/*- SS - 110720.1 --------------------------------------------*41Y1*-----------
+    Purpose:新增95从ZZ调拨到EMG库位的
+    Parameters:
+    Notes:
+------------------------------------------------------------------------------*/
 define variable sectionid as integer init 0 .
 define variable WMESSAGE as char format "x(80)" init "".
 define variable wtm_num as char format "x(20)" init "0".
@@ -5863,19 +5867,19 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
 
 
                 /* LABEL 4 - START */
-                  L11904 = "保税转移.94" .
+                  L11904 = "保税转移.....94" .
                 display L11904          format "x(40)" skip with fram F1190 no-box.
                 /* LABEL 4 - END */
 
 
                 /* LABEL 5 - START */
-                  L11905 = "" .
+                  L11905 = "ZZ转仓到EMG..95" .
                 display L11905          format "x(40)" skip with fram F1190 no-box.
                 /* LABEL 5 - END */
 
 
                 /* LABEL 6 - START */
-                  L11906 = "" .
+                  L11906 = "ZZ转仓到ETS..96" .
                 display L11906          format "x(40)" skip with fram F1190 no-box.
                 /* LABEL 6 - END */
         Update V1190
@@ -6407,7 +6411,254 @@ IF OkToRun = yes THEN  RUN    xsinv81.p.
    LEAVE V1194LMAINLOOP.
    /* Without Condition Exit Cycle END */
    /* Internal Cycle END :1194    */
+
    END.
+      /**41Y1**************START****************************************************/
+   V1195LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle1195    */
+   IF NOT (V1190 = "95" OR V1100 = "95" ) THEN LEAVE V1195LMAINLOOP.
+     /* START  LINE :1195  1.9.4 库存转移  */
+     V1195L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1195           as char format "x(50)".
+        define variable PV1195          as char format "x(50)".
+        define variable L11951          as char format "x(40)".
+        define variable L11952          as char format "x(40)".
+        define variable L11953          as char format "x(40)".
+        define variable L11954          as char format "x(40)".
+        define variable L11955          as char format "x(40)".
+        define variable L11956          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1195 = " ".
+        V1195 = ENTRY(1,V1195,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1160 = "".
+RUN CheckSecurity (INPUT "xsictr95.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN  xsictr95.p.
+        leave V1195L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1195 no-box.
+
+                /* LABEL 1 - START */
+                  L11951 = "" .
+                display L11951          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L11952 = "" .
+                display L11952          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L11953 = "" .
+                display L11953          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L11954 = "" .
+                display L11954          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L11955 = "" .
+                display L11955          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L11956 = "" .
+                display L11956          format "x(40)" skip with fram F1195 no-box.
+                /* LABEL 6 - END */
+        Update V1195
+        WITH  fram F1195 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V1195 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V1195 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V1195 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1195 ).
+        /* **CHANGE Default Site END ** */
+        IF V1195 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F1195.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1195.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1195.
+        pause 0.
+        leave V1195L.
+     END.
+     PV1195 = V1195.
+     /* END    LINE :1195  1.9.4 库存转移  */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V1195LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :1195    */
+
+   END.
+
+/**41Y1**************END****************************************************/
+      /**41Y2**************START****************************************************/
+   V1196LMAINLOOP:
+   REPEAT:
+   /*Logical Enter Cycle1196    */
+   IF NOT (V1190 = "96" OR V1100 = "96" ) THEN LEAVE V1196LMAINLOOP.
+     /* START  LINE :1196  1.9.4 库存转移  */
+     V1196L:
+     REPEAT:
+
+        /* --DEFINE VARIABLE -- START */
+        hide all.
+        define variable V1196           as char format "x(50)".
+        define variable PV1196          as char format "x(50)".
+        define variable L11961          as char format "x(40)".
+        define variable L11962          as char format "x(40)".
+        define variable L11963          as char format "x(40)".
+        define variable L11964          as char format "x(40)".
+        define variable L11965          as char format "x(40)".
+        define variable L11966          as char format "x(40)".
+        /* --DEFINE VARIABLE -- END */
+
+
+        /* --FIRST TIME DEFAULT  VALUE -- START  */
+        /* --FIRST TIME DEFAULT  VALUE -- END  */
+
+
+        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+        V1196 = " ".
+        V1196 = ENTRY(1,V1196,"@").
+        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+
+        /* LOGICAL SKIP START */
+        V1160 = "".
+RUN CheckSecurity (INPUT "xsictr96.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+IF OkToRun = yes THEN  RUN  xsictr96.p.
+        leave V1196L.
+        /* LOGICAL SKIP END */
+                display "#条码# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1196 no-box.
+
+                /* LABEL 1 - START */
+                  L11961 = "" .
+                display L11961          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 1 - END */
+
+
+                /* LABEL 2 - START */
+                  L11962 = "" .
+                display L11962          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 2 - END */
+
+
+                /* LABEL 3 - START */
+                  L11963 = "" .
+                display L11963          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 3 - END */
+
+
+                /* LABEL 4 - START */
+                  L11964 = "" .
+                display L11964          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 4 - END */
+
+
+                /* LABEL 5 - START */
+                  L11965 = "" .
+                display L11965          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 5 - END */
+
+
+                /* LABEL 6 - START */
+                  L11966 = "" .
+                display L11966          format "x(40)" skip with fram F1196 no-box.
+                /* LABEL 6 - END */
+        Update V1196
+        WITH  fram F1196 NO-LABEL
+        EDITING:
+          readkey pause wtimeout.
+          if lastkey = -1 Then quit.
+        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+           pause 0 before-hide.
+           undo, retry.
+        end.
+           apply lastkey.
+        end.
+
+        /* PRESS e EXIST CYCLE */
+        /* **SKIP TO MAIN LOOP START** */
+        IF V1196 = "e" THEN  LEAVE MAINLOOP.
+        /* **SKIP TO MAIN LOOP END** */
+        /* **LOAD MENU START** */
+        IF V1196 = "$LOADMENU" THEN  RUN LOADMENU.
+        /* **LOAD MENU END ** */
+        IF INDEX ( V1196 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1196 ).
+        /* **CHANGE Default Site END ** */
+        IF V1196 = "S" THEN  RUN xsmdf01.p.
+        /* **CHANGE DEFAULT SITE END ** */
+        display  skip WMESSAGE NO-LABEL with fram F1196.
+
+         /*  ---- Valid Check ---- START */
+
+        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1196.
+        pause 0.
+        /* CHECK FOR NUMBER VARIABLE START  */
+        /* CHECK FOR NUMBER VARIABLE  END */
+         /*  ---- Valid Check ---- END */
+
+        display  "" @ WMESSAGE NO-LABEL with fram F1196.
+        pause 0.
+        leave V1196L.
+     END.
+     PV1196 = V1196.
+     /* END    LINE :1196  1.9.4 库存转移  */
+
+
+   /* Without Condition Exit Cycle Start */
+   LEAVE V1196LMAINLOOP.
+   /* Without Condition Exit Cycle END */
+   /* Internal Cycle END :1196    */
+
+   END.
+
+/**41Y2**************END****************************************************/
    pause 0 before-hide.
 
 
