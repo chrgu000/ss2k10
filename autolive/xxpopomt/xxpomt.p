@@ -159,14 +159,14 @@
 /* Revision: 1.13.2.55     BY: Yizhou Mao          DATE: 07/20/09 ECO: *R1M6* */
 /* $Revision: 1.13.2.56 $  BY: Chandrakant Ingale  DATE: 02/02/10 ECO: *Q3T3* */
 /*-Revision end---------------------------------------------------------------*/
- 
+
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
- 
+
 /* ************************************************************************** */
 /* Note: This code has been modified to run when called inside an MFG/PRO API */
 /* method as well as from the MFG/PRO menu, using the global variable         */
@@ -175,20 +175,20 @@
 /* in the QAD Development Standards for specific API coding standards and     */
 /* guidelines.                                                                */
 /* ************************************************************************** */
- 
+
 /* DISPLAY TITLE */
 {us/mf/mfdtitle.i}
 /* Clear anything displayed by mftitle if api mode.*/
 {us/mf/mfaititl.i}
 {us/px/pxmaint.i}
- 
+
 /* Include 'getnbr' */
 {us/gp/gpnbrgen.i}
 {us/ap/apconsdf.i}   /* PRE-PROCESSOR CONSTANTS FOR LOGISTICS ACCOUNTING */
- 
+
 /* ************************* INPUT-OUTPUT PARAMETERS ************************ */
 define input parameter pBlanket as logical no-undo.
- 
+
 /* **************************** SHARED VARIABLES **************************** */
 define new shared variable rndmthd  like rnd_rnd_mthd.
 define new shared variable oldcurr  like po_curr.
@@ -222,13 +222,13 @@ define new shared variable impexp      like mfc_logical no-undo.
 define new shared variable blanket as logical.
 define new shared variable l_include_retain like mfc_logical
    initial yes no-undo.
- 
+
 /* NEW SHARED FRAMES */
 define new shared frame a.
 define new shared frame b.
 define new shared frame vend.
 define new shared frame ship_to.
- 
+
 /* ******************************** VARIABLES ******************************* */
 define variable zone_to        like txe_zone_to.
 define variable zone_from      like txe_zone_from.
@@ -246,13 +246,13 @@ define variable l_leave        like mfc_logical            no-undo.
 define variable imp-okay as logical no-undo.
 define variable hBlockedTransactionlibrary as handle       no-undo.
 define variable use-log-acctg   as logical    no-undo.
- 
+
 /* Global Shipping: Use Seq ID to generate PO nbr */
 define variable l_errorst  like mfc_logical        no-undo.
 define variable c_ponrm    like po_nrm             no-undo.
 define variable i_errornum as   integer            no-undo.
 define variable use_nrmseq as   logical initial no no-undo.
- 
+
 define variable lLegacyAPI as logical no-undo.
 define variable l_api_undo as logical initial no no-undo.
 
@@ -261,39 +261,39 @@ define temp-table tt_nrm
    field tt_seqid   like nr_seqid
    field tt_nbrtype as   character
 index idx_seqid_pk is unique primary tt_seqid.
- 
+
 form
    tt_seqid
 with frame frame_seqid side-labels overlay row 2 columns 12.
- 
+
 setFrameLabels(frame frame_seqid:handle).
- 
+
 /* COMMON API CONSTANTS AND VARIABLES */
 {us/mf/mfaimfg.i}
- 
+
 /* PURCHASE ORDER API TEMP-TABLE, NAMED USING THE "Api" PREFIX */
 {us/po/popoit01.i}
- 
+
 {us/ic/icieit01.i}
 {us/mf/mfctit01.i}
- 
+
 {us/po/pocnvars.i} /* Variables for consignment inventory */
 {us/po/pocnpo.i}  /* Consignment procedures */
 /*CHECK IF USER IS IN VIEWER MODE */
 {us/gp/gpvwckhd.i}
- 
+
 /* PURCHASE ORDER MAINTENANCE API dataset definition */
 {us/po/podsmt.i "reference-only"}
 if c-application-mode = "API" then do on error undo, return:
- 
+
    /* Get handle of API Controller */
    {us/bbi/gprun.i ""gpaigach.p"" "(output ApiMethodHandle)"}
- 
+
    if valid-handle(ApiMethodHandle) then do:
       /* Get the PURCHASE ORDER MAINTENANCE API dataset from the controller */
       run getRequestDataset in ApiMethodHandle (
          output dataset dsPurchaseOrder bind).
- 
+
       lLegacyAPI = false.
    end.
    else do:
@@ -303,12 +303,12 @@ if c-application-mode = "API" then do on error undo, return:
                  output ApiProgramName,
                  output ApiMethodName,
                  output apiContextString)"}
- 
+
       /* GET LOCAL PO MASTER TEMP-TABLE */
       create ttPurchaseOrder.
       run getPurchaseOrderRecord in ApiMethodHandle
          (buffer ttPurchaseOrder).
- 
+
       run getpoTrans in ApiMethodHandle
          (output poTrans).
 
@@ -318,11 +318,11 @@ if c-application-mode = "API" then do on error undo, return:
    end.
 
 end.  /* If c-application-mode = "API" */
- 
+
 /*============================================================================*/
 /* ****************************** Main Block ******************************** */
 /*============================================================================*/
- 
+
 /* DETERMINE IF SUPPLIER CONSIGNMENT IS ACTIVE */
 {us/bbi/gprun.i ""gpmfc01.p""
          "(input  ENABLE_SUPPLIER_CONSIGNMENT,
@@ -330,53 +330,53 @@ end.  /* If c-application-mode = "API" */
            input  ADG,
            input  SUPPLIER_CONSIGN_CTRL_TABLE,
            output using_supplier_consignment)"}
- 
+
 assign
    blanket = pBlanket
    old_db = global_db.
- 
+
 /* DEFINE ROUND VARIABLES REQUIRED FOR PURCHASE ORDERS & RTS */
 {us/po/pocurvar.i "NEW"}
 /* DEFINE ROUND VARIABLES REQUIRED FOR TAX CALCULATIONS */
 {us/tx/txcurvar.i "NEW"}
- 
+
 /* DEFINE TRAILER VARS AS NEW, SO THAT CORRECT _OLD FORMATS */
 /* CAN BE ASSIGNED BASED ON INITIAL DEFINE                  */
 {us/po/potrldef.i "NEW"}
- 
+
 {us/px/pxrun.i &PROC='initialize-variables'}
- 
+
 l_include_retain = no.
- 
+
 /* VALIDATE IF LOGISTICS ACCOUNTING IS TURNED ON */
 {us/bbi/gprun.i ""lactrl.p"" "(output use-log-acctg)"}
- 
+
 mainloop:
 repeat:
- 
+
    if c-application-mode = "API" and retry then
       return error.
- 
+
    if c-application-mode = "API" and not lLegacyAPI then do:
       run getNextRecord in ApiMethodHandle (input "ttPurchaseOrderMaintenance").
       if return-value = {&RECORD-NOT-FOUND} then return.
    end.
 
    for first gl_ctrl where gl_domain = global_domain no-lock: end.
- 
+
    assign
       so_job = ""
       disc = 0
       comment_type = global_type.
- 
+
    {us/po/popomt02.i}  /* Shared frames a and b */
- 
+
    /* ADDRESS FORMS */
    /* VENDOR ADDRESS */
    {us/mf/mfadform.i "vend" 1 SUPPLIER}
    /* SHIP TO ADDRESS */
    {us/mf/mfadform.i "ship_to" 41 SHIP_TO}
- 
+
    if c-application-mode <> "API" then do:
       view frame dtitle.
       view frame a.
@@ -384,98 +384,98 @@ repeat:
       view frame ship_to.
       view frame b.
    end.
- 
+
    if c-application-mode = "API" and lLegacyAPI then do:
       if poTrans = "GETPONUM" then do:
          {us/px/pxrun.i &PROC='get-input'}
- 
+
          assign ttPurchaseOrder.nbr = ponbr.
- 
+
          run setPurchaseOrderRecord in ApiMethodHandle
             (buffer ttPurchaseOrder).
- 
+
          return.
       end.
       else
          assign ponbr = ttPurchaseOrder.nbr.
    end. /* if c-application-mode = "API" */
- 
+
    if c-application-mode <> "API" or
       (c-application-mode = "API" and not lLegacyAPI) then do:
       l_leave = yes.
- 
+
       /* Check is any NRM sequences defined for Numbering */
       use_nrmseq = can-find(first nr_mstr
                             where nr_domain  = global_domain
                             and   nr_dataset begins "po_nbr."
                             and   nr_effdate <= today
                             and   (nr_exp_date = ? or nr_exp_date >=today)).
- 
+
       c_ponrm = "".
- 
+
       {us/px/pxrun.i &PROC='get-input'}
- 
+
       if (c-application-mode <> "API" and keyfunction(lastkey) = "end-error")
          or (c-application-mode = "API" and l_api_undo) then
          undo mainloop, leave mainloop.
    end.
- 
+
    do transaction on error undo, retry:
- 
+
       if c-application-mode = "API" and retry then
          return error.
- 
+
       for first poc_ctrl where poc_domain = global_domain no-lock: end.
       if not available poc_ctrl then do:
          create poc_ctrl.
          poc_domain = global_domain.
       end.
- 
+
       assign
          sngl_ln = poc_ln_fmt
          pocmmts = poc_hcmmts.
- 
+
       {us/px/pxrun.i &PROC='processRead' &PROGRAM='popoxr.p'
                &PARAM="(input ponbr,
                         buffer po_mstr,
                         input yes,
                         input yes)"
                &NOAPPERROR=true &CATCHERROR=true}
- 
+
       if return-value = {&RECORD-NOT-FOUND} then do:
          clear frame vend.
          clear frame ship_to.
          clear frame b.
- 
+
          /** For Qxtend to provide order number as part of message
           *  and then to made available with context for response
           *  In case of auto generated, response qdoc is void of
           *  context
           **/
- 
- 
+
+
          /* ADDING NEW RECORD */
          if {us/gp/gpisapi.i} then
             {us/bbi/pxmsg.i &MSGNUM=1 &ERRORLEVEL={&INFORMATION-RESULT} &MSGARG1=ponbr}
          else
             {us/bbi/pxmsg.i &MSGNUM=1 &ERRORLEVEL={&INFORMATION-RESULT}}
          .
- 
+
          new_po = yes.
- 
+
          {us/px/pxrun.i &PROC='createPurchaseOrder' &PROGRAM='popoxr.p'
                   &PARAM="(input ponbr,
                            input c_ponrm,
                            buffer po_mstr)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          {us/px/pxrun.i &PROC='initializeBlanketPO' &PROGRAM='popoxr.p'
                   &PARAM="(input blanket,
                            buffer po_mstr)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if recid(poc_ctrl) = -1 then.
- 
+
          if c-application-mode = "API" and lLegacyAPI then do:
             {us/bbi/gprun.i ""gpxrcrln.p""
                      "(input po_nbr,
@@ -488,7 +488,7 @@ repeat:
                        input '',
                        input '')"}
           end.
- 
+
       end.  /* IF NOT AVAILABLE PO_MSTR */
       else do:
          /* CHECK IF SCHEDULED ORDER */
@@ -496,7 +496,7 @@ repeat:
                   &PARAM="(input po_sched,
                            input {&APP-ERROR-NO-REENTER-RESULT})"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then do:
                next-prompt po_nbr.
@@ -505,36 +505,36 @@ repeat:
             else
                undo mainloop, return error.
          end.
- 
+
          if po_stat = "c" then do:
             /* PURCHASE ORDER CLOSED */
             {us/bbi/pxmsg.i &MSGNUM=326 &ERRORLEVEL={&INFORMATION-RESULT}}
          end.
- 
+
          if po_stat = "x" then do:
             /* PURCHASE ORDER CANCELLED */
             {us/bbi/pxmsg.i &MSGNUM=395 &ERRORLEVEL={&INFORMATION-RESULT}}
          end.
- 
+
          {us/px/pxrun.i &PROC='validatePODataBase' &PROGRAM='popoxr1.p'
                   &PARAM="(input po_nbr)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then
                undo mainloop, retry mainloop.
             else
                undo mainloop, return error.
          end.
- 
+
          new_po = no.
- 
+
          /* SUPPRESS THIS CODE IF INVOKED IN VIEWER MODE */
          if not isViewer then do:
             /* MODIFYING EXISTING RECORD */
             {us/bbi/pxmsg.i &MSGNUM=10 &ERRORLEVEL={&INFORMATION-RESULT}}
          end.
- 
+
          if c-application-mode <> "API" then do:
            /* DISPLAY VENDOR ADDRESS */
            {us/mf/mfaddisp.i po_vend vend}
@@ -545,32 +545,32 @@ repeat:
                   &PARAM="(input po_type,
                            input blanket)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then
                undo mainloop, retry mainloop.
             else
                undo mainloop, return error.
          end.
- 
+
          if c-application-mode <> "API" then
             {us/mf/mfaddisp.i po_ship ship_to}
- 
+
          disc = po_disc_pct.
- 
+
          {us/px/pxrun.i &PROC='getFirstPOLine' &PROGRAM='popoxr1.p'
                   &PARAM="(input po_nbr,
                            buffer pod_det)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if available pod_det then
             so_job = pod_so_job.
- 
+
          {us/px/pxrun.i &PROC='validateSiteSecurity' &PROGRAM='icsixr.p'
                   &PARAM="(input po_site,
                            input '')"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then do:
                display
@@ -578,7 +578,7 @@ repeat:
                   po_vend
                   po_ship
                with frame a.
- 
+
                display
                   po_ord_date
                   po_due_date
@@ -608,7 +608,7 @@ repeat:
                   po_req_id
                   pocmmts
                with frame b.
- 
+
                pause.
                undo mainloop, retry.
             end.
@@ -616,27 +616,27 @@ repeat:
                undo mainloop, return error.
          end.
       end.   /* ELSE DO (available po_mstr) */
- 
+
       if c-application-mode = "API" and lLegacyAPI then
          assign {us/mf/mfaiset.i po_app_owner ttPurchaseOrder.appOwner}.
- 
+
       assign
          recno = recid(po_mstr).
- 
+
       if po_cmtindx <> 0
       then
          pocmmts = yes.
       else if not new_po
       then
          pocmmts = no.
- 
+
       if c-application-mode <> "API" then do:
          display
             po_nbr
             po_vend
             po_ship
          with frame a.
- 
+
          display
             po_ord_date
             po_due_date
@@ -667,30 +667,30 @@ repeat:
             pocmmts
          with frame b.
       end.  /* If c-application-mode <> "API" */
- 
+
       assign
          old_vend = po_vend
          old_ship = po_ship.
- 
+
       vendblk:
       do on error undo, retry:
          if retry and c-application-mode = "API" then
             return error.
- 
+
          if c-application-mode <> "API" then do:
             prompt-for po_mstr.po_vend with frame a
             editing:
- 
+
                /* FIND NEXT/PREVIOUS  RECORD */
                {us/mf/mfnp.i vd_mstr po_vend  " vd_mstr.vd_domain = global_domain and
                     vd_addr "  po_vend vd_addr vd_addr}
- 
+
                if recno <> ? then do:
                   po_vend = vd_addr.
                   display
                      po_vend
                   with frame a.
- 
+
                   for first ad_mstr
                      where ad_domain = global_domain
                      and   ad_addr = vd_addr
@@ -704,12 +704,12 @@ repeat:
                assign
                   vend = po_vend
                   {us/mf/mfaiset.i vend ttPurchaseOrder.vend}.
- 
+
                for first vd_mstr
                   where vd_domain = global_domain
                   and   vd_addr = vend
                no-lock: end.
- 
+
                if not available vd_mstr then do:
                   /* Not a valid supplier */
                   {us/bbi/pxmsg.i &MSGNUM = 2 &ERRORLEVEL = 3}
@@ -722,7 +722,7 @@ repeat:
                .
             end.
          end.
- 
+
          /* DO NOT ALLOW MOD TO VENDOR IF ANY RECEIPTS */
          if (not new_po and po_vend <> old_vend) or
             (not new_po and po_vend entered)
@@ -731,7 +731,7 @@ repeat:
                      &PARAM="(input old_vend,
                               input po_nbr)"
                      &NOAPPERROR=true &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT} then do:
                if c-application-mode <> "API" then do:
                   display old_vend @ po_vend with frame a.
@@ -745,18 +745,18 @@ repeat:
             else
                l_rebook_lines = yes.
          end.
- 
+
          if c-application-mode <> "API" then
             /* DISPLAY VENDOR ADDRESS */
             {us/mf/mfaddisp.i "input po_vend" vend}
- 
+
          if not new_po and input po_vend <> old_vend
          then do:
             {us/px/pxrun.i &PROC='validateScheduledOrder' &PROGRAM='popoxr.p'
                      &PARAM="(input po_sched,
                               input {&APP-ERROR-RESULT})"
                      &NOAPPERROR=true &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT} then do:
                if c-application-mode <> "API" then do:
                   clear frame vend.
@@ -767,15 +767,15 @@ repeat:
                   undo, return error.
             end.
          end.
- 
+
          /* start blocked transaction library to run persistently */
          run mfairunh.p
             (input "mgbltrpl.p",
              input  ?,
              output hBlockedTransactionlibrary).
- 
+
          {us/mg/mgbltrpl.i "hBlockedTransactionlibrary"}
- 
+
          /* Check to see if blanket order or not */
          if pBlanket = true then do:
             /* Blanket order */
@@ -789,7 +789,7 @@ repeat:
             end.
          end. /* End if pBlanket */
          else do:
- 
+
             /* Normal PO */
             /* Check to see if Supplier has any blocked transactions */
             if blockedSupplier(input input po_vend,
@@ -800,11 +800,11 @@ repeat:
                undo vendblk, retry.
             end.
          end.
- 
+
          delete PROCEDURE hBlockedTransactionlibrary.
- 
+
       end. /* vendblk */
- 
+
       if c-application-mode <> "API" then do:
          {us/px/pxrun.i &PROC='validateSupplier' &PROGRAM='popoxr.p'
                   &PARAM="(input po_vend:screen-value)"
@@ -821,12 +821,12 @@ repeat:
                vend = po_vend
                .
          end.
- 
+
          {us/px/pxrun.i &PROC='validateSupplier' &PROGRAM='popoxr.p'
                   &PARAM="(input vend)"
                   &NOAPPERROR=true &CATCHERROR=true}
       end.
- 
+
       if return-value <> {&SUCCESS-RESULT} then do:
          if c-application-mode <> "API" then do:
             next-prompt po_vend with frame a.
@@ -835,7 +835,7 @@ repeat:
          else
             undo, return error.
       end.
- 
+
       if not available vd_mstr then do:
          /* USER ENTERED A SPECIFIC SUPPLIER NUMBER,         */
          /* WE NEED THE RECORD FOR THE RECID FUNCTION BELOW. */
@@ -857,7 +857,7 @@ repeat:
                      &CATCHERROR=true}
          end.
       end.
- 
+
       if new_po then do:
          if c-application-mode <> "API" then do:
             {us/px/pxrun.i &PROC='setSupplierDefaults' &PROGRAM='popoxr.p'
@@ -869,13 +869,13 @@ repeat:
                      &PARAM="(input vend,
                               buffer po_mstr)"}
          end.
- 
+
          if po_cr_terms <> "" then do:
             {us/px/pxrun.i &PROC='getCreditTermsInterest' &PROGRAM='adcrxr.p'
                      &PARAM="(input  po_cr_terms,
                               output po_crt_int)"}
          end.
- 
+
          if c-application-mode <> "API" then do:
             {us/px/pxrun.i &PROC='getTaxDataSupplier' &PROGRAM='adadxr.p'
                      &PARAM="(input input po_vend,
@@ -896,7 +896,7 @@ repeat:
                               output po_tax_usage,
                               output dummyCharValue)"} /* Zone From */
          end.
- 
+
          /* IF USING SUPPLIER CONSIGNMENT THEN INITIALIZE */
          /* CONSIGNMENT FIELDS.   */
          if using_supplier_consignment then do:
@@ -905,7 +905,7 @@ repeat:
                               output po_consignment,
                               output po_max_aging_days,
                               output po_consign_cost_point)"}
- 
+
             if return-value <> {&SUCCESS-RESULT} then do:
                if return-value = "3388" then do:
                   {us/bbi/pxmsg.i &MSGNUM=return-value &ERRORLEVEL=3
@@ -914,7 +914,7 @@ repeat:
                else do:
                   {us/bbi/pxmsg.i &MSGNUM=return-value &ERRORLEVEL=2}
                end.
- 
+
                if c-application-mode <> "API" then do:
                   next-prompt po_vend with frame a.
                   undo, retry.
@@ -922,12 +922,12 @@ repeat:
                else
                   undo mainloop, return error.
             end. /* if return-value <> */
- 
+
             if c-application-mode <> "API" then
                display po_consignment with frame b.
          end. /* IF using_supplier_consignment */
       end. /* If new_po */
- 
+
       if (c-application-mode <>  "API" or (c-application-mode = "API"
          and not lLegacyAPI)) then do:
          if ((not new_po) and (old_vend <> input po_vend))
@@ -936,7 +936,7 @@ repeat:
                      &PARAM="(input po_curr,
                               input input po_vend)"
                      &NOAPPERROR=true &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT} then do:
                if c-application-mode <> "API" then
                next-prompt po_vend.
@@ -949,18 +949,18 @@ repeat:
             (ttPurchaseOrder.vend <> ?) and
             (old_vend <> ttPurchaseOrder.vend))
          then do:
- 
+
             {us/px/pxrun.i &PROC='validateSupplierCurrency' &PROGRAM='popoxr.p'
                      &PARAM="(input po_curr,
                               input ttPurchaseOrder.vend)"
                      &NOAPPERROR=true &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT} then do:
                undo mainloop, return error.
             end.
          end.
       end.
- 
+
       if c-application-mode <> "API" then
          assign
             po_vend = input po_vend.
@@ -972,13 +972,13 @@ repeat:
             assign
                {us/mf/mfaiset.i po_vend ttPurchaseOrderMaintenance.poVend}.
       end.
- 
+
       vd_recno = recid(vd_mstr).
- 
+
       do on error undo, retry:
          if retry and c-application-mode = "API" then
             return error.
- 
+
          if c-application-mode <> "API" then do:
             prompt-for po_mstr.po_ship with frame a
             editing:
@@ -992,17 +992,17 @@ repeat:
                   {us/mf/mfaddisp.i po_ship ship_to}
                end.
             end.
- 
+
             {us/px/pxrun.i &PROC='validateShipTo' &PROGRAM='popoxr.p'
                      &PARAM="(input input po_ship)"
                      &NOAPPERROR=true &CATCHERROR=true}
- 
+
          end.     /*if c-application-mode <> "API"*/
          else do:
             if lLegacyAPI then do:
                assign
                {us/mf/mfaiset.i po_ship ttPurchaseOrder.ship}.
- 
+
                {us/px/pxrun.i &PROC='validateShipTo' &PROGRAM='popoxr.p'
                         &PARAM="(input po_ship)"
                         &NOAPPERROR=true &CATCHERROR=true}
@@ -1016,14 +1016,14 @@ repeat:
                         &NOAPPERROR=true &CATCHERROR=true}
             end.
          end.
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then
                undo, retry.
             else
                undo mainloop, return error.
          end.
- 
+
          if c-application-mode <> "API" then do:
             assign
                po_ship = input po_ship.
@@ -1037,25 +1037,25 @@ repeat:
                where ad_domain = global_domain
                and   ad_addr = po_ship
             no-lock: end.
- 
+
             if not available ad_mstr then do:
                /* Not a valid choice */
                {us/bbi/pxmsg.i &MSGNUM = 13 &ERRORLEVEL = 3}
             end.
          end.
       end.   /* DO ON ERROR */
- 
+
       /* SET GLOBAL REFERENCE VARIABLE FOR COMMENTS TO VENDOR */
       assign
          global_ref = po_vend
          po_recno   = recid(po_mstr)
          continue   = no
          del-yn     = no.
- 
+
       /* PURCHASE ORDER MAINTENANCE -- ORDER HEADER subroutine */
 
-      {us/bbi/gprun.i ""xxpomtb.p"" "(input using_supplier_consignment)"}
- 
+/*324*/ {us/bbi/gprun.i ""xxpomtb.p"" "(input using_supplier_consignment)"}
+
       if c-application-mode <> "API" then do:
          if del-yn then
             next mainloop.
@@ -1068,94 +1068,94 @@ repeat:
          if continue = no then
             undo mainloop, return error.
       end.
- 
+
       if (oldcurr <> po_curr) or oldcurr = "" then do:
          /* SET CURRENCY DEPENDENT FORMATS */
          {us/po/pocurfmt.i}
          oldcurr = po_curr.
       end.
- 
+
       {us/px/pxrun.i &PROC='getTaxDate' &PROGRAM='popoxr.p'
                &PARAM="(input po_tax_date,
                         input po_due_date,
                         input po_ord_date,
                         output tax_date)"
                &NOAPPERROR=true &CATCHERROR=true}
- 
+
       /* DO NOT REBOOK LINES IF INVOKED IN VIEWER MODE */
       if isViewer then l_rebook_lines = false .
- 
+
       if l_rebook_lines and
          not pBlanket
       then do:
          {us/bbi/gprun.i ""pomtrb.p"" "(input old_vend)"}.
          l_rebook_lines = no.
       end.
- 
+
       /* FIND LAST LINE */
       line = 0.
- 
+
       {us/px/pxrun.i &PROC='getLastPOLine' &PROGRAM='popoxr1.p'
                &PARAM="(input po_nbr,
                         output line)"
                &NOAPPERROR=true &CATCHERROR=true}
- 
+
       po_recno = recid(po_mstr).
- 
+
       /* IF BLANKET PO THEN BRING UP EXTRA SCREEN */
       if pBlanket then do:
          hide frame b no-pause.
          {us/bbi/gprun.i ""poblmt1.p""}
       end.
- 
+
       hide frame a no-pause.
       hide frame vend no-pause.
       hide frame ship_to no-pause.
       hide frame b no-pause.
- 
+
       /*COMMENTS */
       assign
          global_type = ""
          global_lang = po_lang.
- 
+
       if pocmmts = yes then do on error undo mainloop, retry:
          if c-application-mode = "API" and lLegacyAPI then do:
             {us/gp/gpttcp.i ttPurchaseOrderCmt
                       ttTransComment
                      "ttPurchaseOrderCmt.apiExternalKey =
                       ttPurchaseOrder.apiExternalKey"}
- 
+
             run setTransComment in ApiMethodHandle
                (input table ttTransComment).
          end.
- 
+
          assign
             global_ref = po_vend
             cmtindx = po_cmtindx.
- 
+
          if c-application-mode = "API" and not lLegacyAPI then do:
             run setCommonDataBuffer in ApiMethodHandle
                (input "ttPurchaseOrderComments").
          end.
 
          {us/bbi/gprun.i ""gpcmmt01.p"" "(input ""po_mstr"")"}
- 
+
          if c-application-mode = "API" and not lLegacyAPI then do:
             run setCommonDataBuffer in ApiMethodHandle
                (input "").
          end.
 
          po_cmtindx = cmtindx.
- 
+
       end.
    end.
- 
+
    due_date = po_due_date.
- 
+
 
    /* LINE ITEMS */
    {us/bbi/gprun.i ""popomta.p""}
- 
+
    if use-log-acctg = TRUE and
       can-find (first lacd_det
                 where lacd_domain            = global_domain
@@ -1187,14 +1187,14 @@ repeat:
       view frame dtitle.
       view frame a.
    end.
- 
+
    if c-application-mode = "API" and not lLegacyAPI then do:
       run setCommonDataBuffer in ApiMethodHandle
          (input "ttPurchaseOrderTrailer").
    end.
 
    {us/bbi/gprun.i ""popomtf.p""}
- 
+
 
    if c-application-mode = "API" and not lLegacyAPI then do:
       run setCommonDataBuffer in ApiMethodHandle
@@ -1204,7 +1204,7 @@ repeat:
    /* IF IMPORT EXPORT FLAG IS SET TO YES CALL THE IMPORT EXPORT   */
    /* CREATE ROUTINE TO CREATE ie_mstr ied_det AND UPDATE  ie_mstr */
    if c-application-mode = "API" and not lLegacyAPI then do:
-      run setCommonDataBuffer in ApiMethodHandle 
+      run setCommonDataBuffer in ApiMethodHandle
          (input "ttImportExportMaster").
    end.
 
@@ -1216,24 +1216,24 @@ repeat:
                  input recid(po_mstr),
                  input-output imp-okay)"}
    end.
- 
+
    if c-application-mode = "API" and not lLegacyAPI then do:
-      run setCommonDataBuffer in ApiMethodHandle 
+      run setCommonDataBuffer in ApiMethodHandle
          (input "").
    end.
 
    /* IMPORT EXPORT UPDATE */
    if c-application-mode = "API" and not lLegacyAPI then do:
-      run setCommonDataBuffer in ApiMethodHandle 
+      run setCommonDataBuffer in ApiMethodHandle
          (input "ttImportExportDetail").
    end.
 
    if not batchrun and impexp then do:
       {us/px/pxrun.i &PROC='import-export-update'}
    end.
- 
+
    if c-application-mode = "API" and not lLegacyAPI then do:
-      run setCommonDataBuffer in ApiMethodHandle 
+      run setCommonDataBuffer in ApiMethodHandle
          (input "").
    end.
 
@@ -1242,7 +1242,7 @@ repeat:
       if c-application-mode <> "API" then
          view frame dtitle.
    end.
- 
+
    /*DO NOT COPY IF INVOKED IN VIEWER MODE */
    if not isViewer  then do:
       {us/px/pxrun.i &PROC='copyPOToOtherDBs' &PROGRAM='popoxr.p'
@@ -1250,24 +1250,24 @@ repeat:
                         input false /* NOT BLANKET PO MAINT */ )"
                &NOAPPERROR=true &CATCHERROR=true}
    end.
- 
+
    release po_mstr no-error.
- 
+
    if c-application-mode = "API" then
       leave mainloop.
- 
+
 end.
- 
+
 status input.
- 
+
 /* RETURN SUCCESS STATUS TO API CALLER */
 if c-application-mode = "API" then
    return {&SUCCESS-RESULT}.
- 
+
 /* ========================================================================== */
 /* *************************** INTERNAL PROCEDURES ************************** */
 /* ========================================================================== */
- 
+
 PROCEDURE get-input:
 /*----------------------------------------------------------------------------
  * Purpose:     Prompt for po_nbr.
@@ -1279,11 +1279,11 @@ PROCEDURE get-input:
    then do:
       prompt-for po_nbr with frame a
       editing:
- 
+
          /* Allow last PO number refresh */
          if keyfunction(lastkey) = "RECALL" or lastkey = 307 then
             display ponbr @ po_nbr with frame a.
- 
+
          /* FIND NEXT/PREVIOUS  RECORD */
          if blanket = false then do:
             /* Do not scroll thru RTS for PO or PO for RTS */
@@ -1299,22 +1299,22 @@ PROCEDURE get-input:
             {us/mf/mfnp01.i po_mstr po_nbr po_nbr po_type  " po_mstr.po_domain =
                  global_domain and ""B"" "  po_type}
          end.
- 
+
          if recno <> ? then do:
- 
+
             disc = po_disc_pct.
- 
+
             /* DISPLAY VENDOR ADDRESS */
             {us/mf/mfaddisp.i po_vend vend}
             /* DISPLAY SHIP TO ADDRESS */
             {us/mf/mfaddisp.i po_ship ship_to}
- 
+
             display
                po_nbr
                po_vend
                po_ship
             with frame a.
- 
+
             display
                po_ord_date
                po_due_date
@@ -1344,7 +1344,7 @@ PROCEDURE get-input:
                pocmmts
                po_consignment
             with frame b.
- 
+
          end.  /* IF RECNO <> ? */
       end. /* PROMPT-FOR...EDITING */
    end.   /*if c-application-mode <> "API"*/
@@ -1366,7 +1366,7 @@ PROCEDURE get-input:
          and   po_nbr = ttPurchaseOrder.nbr:
       end.
    end.
- 
+
    if available po_mstr
    then do:
       if not isViewer
@@ -1374,7 +1374,7 @@ PROCEDURE get-input:
          {us/px/pxrun.i &PROC='validatePurchaseOrder' &PROGRAM='popoxr.p'
                   &PARAM="(buffer po_mstr)"
                   &NOAPPERROR=true &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT} then do:
             if c-application-mode <> "API" then do:
                next-prompt po_nbr with frame a.
@@ -1387,7 +1387,7 @@ PROCEDURE get-input:
          end.
       end. /* IF not isViewer */
    end. /* IF available po_mstr */
- 
+
    if (c-application-mode <> "API" and input po_nbr <> "")
       or (c-application-mode = "API" and not lLegacyAPI) then
       ponbr = input po_nbr.
@@ -1395,9 +1395,9 @@ PROCEDURE get-input:
       if (c-application-mode = "API" and ttPurchaseOrder.nbr <> "") then
          ponbr = ttPurchaseOrder.nbr.
    end.
- 
+
    do transaction on error undo,retry:
- 
+
       if c-application-mode = "API" and retry then do:
          l_api_undo = yes.
          return error.
@@ -1408,51 +1408,51 @@ PROCEDURE get-input:
          (ttPurchaseOrder.nbr = "" or ttPurchaseOrder.nbr = ?)) or
          (c-application-mode = "API" and not lLegacyAPI and input po_nbr = "")
       then do:
- 
+
          /* Global Shipping: Identify PO type using NRM */
          if use_nrmseq then do:
- 
+
             /* Fill temp table for display */
             empty temp-table tt_nrm no-error.
- 
+
             for each nr_mstr
                where nr_domain = global_domain
                and nr_dataset begins "po_nbr."
                and nr_effdate <= today
                and (nr_exp_date = ? or nr_exp_date >= today)
             no-lock:
- 
+
                if can-find (first lngd_det
                             where lngd_lang = global_user_lang
                             and   lngd_dataset = "po_seq_id"
                             and   lngd_field = "seq_type"
                             and   lngd_key2  = substring(nr_dataset,8))
                then do:
- 
+
                   create tt_nrm.
                   assign
                      tt_dataset = nr_dataset
                      tt_seqid   = nr_seqid
                      tt_nbrtype = substring(nr_dataset,8).
- 
+
                   if recid(tt_nrm) = -1 then.
- 
+
                end.
- 
+
             end.
- 
+
             /* Display empty as default Seq ID */
             if c-application-mode <> "API" then
             display
                "" @ tt_seqid
             with frame frame_seqid.
- 
+
          end. /* if use_nrmseq */
- 
+
          /* Set the Seq ID and return the value */
          settype:
          do on error undo, retry on endkey undo, leave:
- 
+
             if use_nrmseq then do:
                if c-application-mode <> "API" then do:
                   prompt-for tt_seqid with frame frame_seqid editing:
@@ -1460,13 +1460,13 @@ PROCEDURE get-input:
                         " true "
                         tt_seqid
                         " input tt_seqid"}
- 
+
                      if recno <> ? then do:
                         display
                            tt_seqid
                         with frame frame_seqid.
                      end.
- 
+
                   end. /* prompt-for tt_seqid */
                end. /* c-application-mode <> "API" */
                else do:
@@ -1478,7 +1478,7 @@ PROCEDURE get-input:
 
                for first tt_nrm where tt_seqid = input tt_seqid
                no-lock: end.
- 
+
                if not available tt_nrm and input tt_seqid <> ""
                then do:
                   /* Invalid Sequence */
@@ -1488,43 +1488,43 @@ PROCEDURE get-input:
                      next-prompt tt_seqid.
                   undo, retry.
                end.
- 
+
                else if input tt_seqid <> "" then
                   c_ponrm = tt_nbrtype.
- 
+
             end. /* if use_nrmseq */
- 
+
             GetPoNbr:
             repeat:
- 
+
                if input tt_seqid <> "" and use_nrmseq
                then do:
- 
+
                   run getnbr
                       (input tt_seqid,
                        input today,
                        output ponbr,
                        output l_errorst,
                        output i_errornum).
- 
+
                end. /* If input tt_seqid <> "" */
- 
+
                else do:
                   {us/px/pxrun.i &PROC='getNextPONumber' &PROGRAM='popoxr.p'
                            &PARAM="(output ponbr)"
                            &NOAPPERROR=true
                            &CATCHERROR=true}
                end.
- 
+
                if not can-find(first po_mstr
                                where po_domain = global_domain
                                and   po_nbr    = ponbr no-lock)
                then do:
                   leave GetPoNbr.
                end.
- 
+
             end. /* GetPoNbr */
- 
+
             /* PO number length is 8 */
             if length(ponbr) > 8
             then do:
@@ -1532,22 +1532,22 @@ PROCEDURE get-input:
                {us/bbi/pxmsg.i &MSGNUM=7982 &ERRORLEVEL=3}
                undo, retry settype.
             end.
- 
+
          end. /* settype */
- 
+
       end. /* if (c-application-mode <> "API" and input po_nbr = "") */
- 
+
    end. /* DO TRANSACTION ON ERROR UNDO.. */
- 
+
    {us/gp/gpbrparm.i &browse=gplu908.p &parm=c-brparm1 &val=poNbr}
- 
+
 END PROCEDURE.
- 
+
 PROCEDURE import-export-update:
    assign
       impexp_edit = no
       upd_okay = no.
- 
+
    if c-application-mode <> "API" then do:
    /* VIEW/EDIT IMPORT/EXPORT DATA ? */
    {us/bbi/pxmsg.i &MSGNUM=271 &ERRORLEVEL={&INFORMATION-RESULT}
@@ -1565,15 +1565,15 @@ PROCEDURE import-export-update:
          view frame dtitle.
          view frame a.
       end.
- 
+
       {us/bbi/gprun.i ""iedmta.p""
                "(input ""2"",
                  input po_mstr.po_nbr,
                  input-output upd_okay )" }
    end.
- 
+
 END PROCEDURE.
- 
+
 PROCEDURE initialize-variables:
    assign
       nontax_old         = nontaxable_amt:format in frame potot
@@ -1583,7 +1583,7 @@ PROCEDURE initialize-variables:
       order_amt_old      = order_amt:format
       prepaid_old        = po_prepaid:format in frame pomtd
       oldcurr = "".
- 
+
    do transaction on error undo, retry:
       /* SET UP PRICING BY LINE VALUES */
       for first mfc_ctrl
@@ -1593,5 +1593,5 @@ PROCEDURE initialize-variables:
          poc_pc_line = mfc_logical.
       end.
    end.
- 
+
 END PROCEDURE.

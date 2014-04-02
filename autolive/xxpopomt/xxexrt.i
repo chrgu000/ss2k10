@@ -1,3 +1,5 @@
+/* ExchaeRate calc      by zy 2014/3/28 12:22:09              */
+
 FUNCTION getExchangeRateTypeID return int
   (input iExchangeRateTypeCode as char):
 for first exchangeratetype no-lock where
@@ -29,10 +31,22 @@ FUNCTION getexrate2usd returns decimal
    exchangerate.ExchangeRateValidDateFrom <= idate and
    ExchangeRateValidDateTill >= idate:
    end.
-   return
-   if avail exchangerate then
-      ExchangeRate.ExchangeRate
-   else 1.
+   if avail exchangerate then do:
+      return ExchangeRate.ExchangeRate / ExchangeRate.ExchangeRateScale.
+   end.
+   else do:
+      for first exchangerate no-lock where
+           exchangerate.exchangeRateType_id = itype_id and
+           exchangerate.FromCurrency_ID = ito_Currency_ID and
+           exchangerate.ToCurrency_ID = ifrom_Currency_ID and
+           exchangerate.ExchangeRateValidDateFrom <= idate and
+           ExchangeRateValidDateTill >= idate:
+      end.
+       if avail exchangerate then do:
+          return ExchangeRate.ExchangeRateScale / ExchangeRate.ExchangeRate.
+       end.
+       else return 1.
+   end.
 END FUNCTION.
 
 FUNCTION getexratebycurr returns decimal

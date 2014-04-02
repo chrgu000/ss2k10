@@ -176,6 +176,12 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
+/*324******************************************By zy***********/
+/* when have code_fldname = "Standard Cost Exchange Rate Type"*/
+/* Standard PO , Supplier Scheduled Order & recive            */
+/* use code_value as exchange rate type                       */
+/* other wise use system standard exchange rate type          */
+
 {us/mf/mfdtitle.i}
 {us/gp/gpuid.i}
 {us/mf/mfaititl.i}

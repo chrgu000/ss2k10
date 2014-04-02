@@ -84,14 +84,14 @@
 /* Revision: 1.15.3.47     BY: Neil Curzon        DATE: 05/01/09  ECO: *R1HB* */
 /* Revision: 1.15.3.48     BY: Shridhar Mangalore DATE: 08/08/09  ECO: *R1P8* */
 /*-Revision end---------------------------------------------------------------*/
- 
+
 /******************************************************************************/
 /* All patch markers and commented out code have been removed from the source */
 /* code below. For all future modifications to this file, any code which is   */
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
- 
+
 /* ************************************************************************** */
 /* Note: This code has been modified to run when called inside an MFG/PRO API */
 /* method as well as from the MFG/PRO menu, using the global variable         */
@@ -100,7 +100,7 @@
 /* in the QAD Development Standards for specific API coding standards and     */
 /* guidelines.                                                                */
 /* ************************************************************************** */
- 
+
 {us/bbi/mfdeclre.i}
 {us/bbi/gplabel.i}  /* EXTERNAL LABEL INCLUDE */
 {us/px/pxmaint.i}
@@ -109,18 +109,18 @@
 {us/pp/ppprlst.i}   /* PRICE LIST CONSTANTS */
 {us/ed/eddsdef.i}
 {us/tx/txusgdef.i}  /* PRE-PROCESSOR CONSTANTS FOR I19 */
- 
+
 /*============================================================================*/
 /* ****************************** Definitions ******************************* */
 /*============================================================================*/
- 
+
 define input parameter p_consignment like mfc_logical no-undo.
- 
+
 /* NEW SHARED VARIABLES */
 define new shared variable tax_nbr     like tx2d_nbr initial "".
 define new shared variable tax_tr_type like tx2d_tr_type initial "20".
 define new shared variable undo_all    like mfc_logical.
- 
+
 /* SHARED VARIABLES */
 define shared variable blanket     as logical.
 define shared variable line_opened as logical.
@@ -143,13 +143,13 @@ define shared variable new_site    like si_site.
 define shared variable old_site    like si_site.
 define shared variable continue    like mfc_logical no-undo.
 define shared variable impexp      like mfc_logical no-undo.
- 
+
 /* SHARED FRAMES */
 define shared frame a.
 define shared frame b.
 define shared frame vend.
 define shared frame ship_to.
- 
+
 /* LOCAL VARIABLES */
 define variable con-yn            like mfc_logical.
 define variable poc_pt_req        like mfc_logical.
@@ -174,20 +174,20 @@ define variable cr_terms          like po_cr_terms        no-undo.
 /* VARIABLES FOR CONSIGNMENT INVENTORY */
 {us/po/pocnvars.i}
 {us/po/pocnpo.i} /* Consignment procedures */
- 
+
 using_supplier_consignment = p_consignment.
- 
+
 {us/gp/gptxcdec.i}  /* DECLARATIONS FOR gptxcval.i */
- 
+
 /* COMMON API CONSTANTS AND VARIABLES */
 {us/mf/mfaimfg.i}
- 
+
 /* Purchase Order API TEMP-TABLE, NAMED USING THE "Api" PREFIX */
 {us/po/popoit01.i}
- 
+
 /*Import Export api temp table*/
 {us/ic/icieit01.i}
- 
+
 /* PURCHASE ORDER MAINTENANCE API dataset definition */
 {us/po/podsmt.i "reference-only"}
 
@@ -199,27 +199,27 @@ define variable lLegacyAPI            as logical no-undo.
 
 /* DAYBOOKSET VALIDATION LIBRARY PROTOTYPES */
 {us/dy/dybvalpl.i hDaybooksetValidation}
- 
+
 /* INITIALIZE PERSISTENT PROCEDURES */
 run mfairunh.p
    (input "dybvalpl.p",
     input ?,
     output hDaybooksetValidation).
- 
+
 run setvalidMode in hDaybooksetValidation
                (input  true).
- 
+
 if c-application-mode = "API"
 then do on error undo, return:
- 
+
    /* Get handle of API Controller */
    {us/bbi/gprun.i ""gpaigach.p"" "(output ApiMethodHandle)"}
- 
+
    if valid-handle(ApiMethodHandle) then do:
       /* Get the PURCHASE ORDER MAINTENANCE API dataset from the controller */
       run getRequestDataset in ApiMethodHandle (
          output dataset dsPurchaseOrder bind).
- 
+
       lLegacyAPI = false.
    end.
    else do:
@@ -229,12 +229,12 @@ then do on error undo, return:
                           output ApiProgramName,
                           output ApiMethodName,
                           output apiContextString)"}
-    
+
       /* GET LOCAL PO MASTER TEMP-TABLE */
       create ttPurchaseOrder.
       run getPurchaseOrderRecord in ApiMethodHandle
          (buffer ttPurchaseOrder).
-    
+
       if ttPurchaseOrder.impexp = yes
       then do:
          create ttImportExport.
@@ -245,11 +245,11 @@ then do on error undo, return:
       end. /* IF ttPurchaseOrder.impexp = yes */
       lLegacyAPI = true.
    end.
- 
+
 end.  /* If c-application-mode = "API" */
 /* FRAMES AND FORMS */
 {us/po/popomt02.i}  /* Shared frames a and b */
- 
+
 /* TAX MANAGEMENT FORM */
 form
    po_tax_usage colon 25
@@ -259,17 +259,17 @@ form
    po_taxable   colon 25
    po_tax_in    colon 25
 with frame set_tax row 8 centered overlay side-labels.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame set_tax:handle).
- 
+
 {us/mf/mfadform.i "vend" 1 SUPPLIER}
 {us/mf/mfadform.i "ship_to" 41 SHIP_TO}
- 
+
 /*============================================================================*/
 /* ****************************** Main Block ******************************** */
 /*============================================================================*/
- 
+
 /* SETUP */
 for first po_mstr exclusive-lock
    where recid(po_mstr) = po_recno:
@@ -277,7 +277,7 @@ end.
 for first vd_mstr no-lock
     where vd_mstr.vd_domain = global_domain and  vd_addr = po_vend:
 end.
- 
+
 /* GET CONTROL RECORDS */
 for first poc_ctrl  where poc_ctrl.poc_domain = global_domain no-lock:
 end.
@@ -285,22 +285,22 @@ for first gl_ctrl   where gl_ctrl.gl_domain = global_domain no-lock:
 end.
 for first iec_ctrl  where iec_ctrl.iec_domain = global_domain no-lock:
 end.
- 
+
 assign daybookSetBySiteInstalled = poc_dybkset_by_site.
- 
- 
+
+
 /* VALIDATE IF LOGISTICS ACCOUNTING IS TURNED ON */
 {us/bbi/gprun.i ""lactrl.p"" "(output use-log-acctg)"}
- 
+
 /* GET DISCOUNT TABLE SETTING */
 {us/po/popcdisc.i}
- 
- 
+
+
 order-header:
 do on error undo, retry on endkey undo, leave with frame b:
    if retry and c-application-mode = "API" then
       return error.
- 
+
    if c-application-mode = "API" and not lLegacyAPI then do:
       run getNextRecord in ApiMethodHandle (input "ttPurchaseOrderHeader").
       if return-value = {&RECORD-NOT-FOUND} then leave order-header.
@@ -310,7 +310,7 @@ do on error undo, retry on endkey undo, leave with frame b:
    status input ststatus.
    assign del-yn = no
       disc = po_disc_pct.
- 
+
    if not new_po
    then do:
       {us/px/pxrun.i &PROC='validateNotPrinted' &PROGRAM='popoxr.p'
@@ -318,13 +318,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          &NOAPPERROR=true
          &CATCHERROR=true}
    end.
- 
+
    impexp = no.
- 
+
    /* SET THE DEFAULT VALUE BASED ON IEC_CTRL FILE */
    if available iec_ctrl and iec_impexp = yes then
       impexp = yes.
- 
+
    assign
       old_po_stat = po_stat
       line_opened = false
@@ -342,26 +342,26 @@ do on error undo, retry on endkey undo, leave with frame b:
       {us/bbi/gprun.i ""ieckcty2.p""
          "(input po_vend, input po_ship, input '2', output impexp)"}
    end.
- 
+
    if new_po then
       assign po_site = vd_site.
- 
+
    if po_daybookset = ""
    then do:
-      if daybookSetBySiteInstalled then do:          
+      if daybookSetBySiteInstalled then do:
          for first dybs_mstr where dybs_domain = global_domain
                                and dybs_type = '2'
                                and dybs_site = po_site
                                and dybs_code = vd_daybookset
          no-lock:
-            assign  po_daybookset = dybs_code.            
+            assign  po_daybookset = dybs_code.
          end.
-         if po_daybookset = "" then do:            
+         if po_daybookset = "" then do:
            for first dybs_mstr where dybs_domain = global_domain
                                  and dybs_type = '2'
                                  and dybs_site = ''
            no-lock:
-            assign  po_daybookset = dybs_code.            
+            assign  po_daybookset = dybs_code.
            end.
          end.
          if po_daybookset = "" then
@@ -372,8 +372,8 @@ do on error undo, retry on endkey undo, leave with frame b:
       assign
          po_daybookset = getDefaultDaybookSetBySite( input po_vend).
    end.
- 
- 
+
+
    if c-application-mode <> "API" then
       display
          po_ord_date po_due_date po_buyer po_bill
@@ -388,19 +388,19 @@ do on error undo, retry on endkey undo, leave with frame b:
          po_req_id pocmmts
          impexp
       with frame b.
- 
+
    setb:
    do on error undo, retry:
       if retry and c-application-mode = "API" then
          return error.
- 
+
       assign
          old_ord_date     = po_ord_date
          old_pr_list2     = po_pr_list2
          old_curr         = po_curr
          old_fix_pr       = po_fix_pr
          deleteRequested  = no.
- 
+
       /* Rearranged frame b */
       if c-application-mode <> "API"
       then do:
@@ -430,19 +430,19 @@ do on error undo, retry on endkey undo, leave with frame b:
                      &HANDLE=ph_adcrxr
                      &PARAM="(input po_cr_terms:screen-value,
                               output po_crt_int)"}
- 
+
                   display po_crt_int.
                end.
             end. /* if frame-field = "po_cr_terms" */
             apply lastkey.
          end. /* Editing */
- 
+
          if available iec_ctrl
          and iec_ctrl.iec_use_instat = yes
          then do:
-            for each pod_det 
+            for each pod_det
                where pod_det.pod_domain = global_domain
-               and   pod_det.pod_nbr    = po_nbr 
+               and   pod_det.pod_nbr    = po_nbr
                and   pod_det.pod_line   > 0
             no-lock:
                if pod_um = ""
@@ -452,8 +452,8 @@ do on error undo, retry on endkey undo, leave with frame b:
                   leave.
                end.
             end.
- 
-            if l_avail and impexp 
+
+            if l_avail and impexp
             then do:
                {us/bbi/pxmsg.i
                 &MSGNUM=12791
@@ -525,13 +525,13 @@ do on error undo, retry on endkey undo, leave with frame b:
             {us/mf/mfaiset.i po_req_id ttPurchaseOrderHeader.poReqId}
             {us/mf/mfaiset.i pocmmts ttPurchaseOrderHeader.pocmmts}
             .
- 
+
          if not({gpsite.v &field=po_site &blank_ok=yes})
          then do:
             {us/bbi/pxmsg.i &MSGNUM=2797 &ERRORLEVEL=3 &MSGARG1=po_site}
             undo, return error.
          end. /* end of if valid site*/
- 
+
          {us/px/pxrun.i &PROC  = 'validateGeneralizedCodes' &PROGRAM = 'gpcodxr.p'
                         &HANDLE=ph_gpcodxr
                         &PARAM="(input 'po_buyer',
@@ -546,12 +546,12 @@ do on error undo, retry on endkey undo, leave with frame b:
             undo, return error.
          end.
       end. /*end if C-APPLICATION-MODE = API */
- 
+
       /* SAVE IF USER REQUESTED TO DELETE PO */
       if lastkey = keycode("F5") or lastkey = keycode("CTRL-D")
          then deleteRequested = yes.
- 
- 
+
+
       /* IF NOT A CONSIGNED PO, THEN RESET COST POINT TO BLANK */
       /* (DEFAULTING OF CONSIGNMENT FIELDS OCCURS BEFORE USER  */
       /* HAS UPDATED THE CONSIGNMENT FLAG.)                    */
@@ -562,7 +562,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                                  and   pod_consignment = yes))
       then
          po_consign_cost_point = "".
- 
+
       /* CHECKS FOR ACCESS ON PO ORDER DATE */
       if po_ord_date <> old_ord_date
       then do:
@@ -571,7 +571,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                   &PARAM="(input po_ord_date)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             if c-application-mode <> "API"
@@ -583,13 +583,13 @@ do on error undo, retry on endkey undo, leave with frame b:
                undo, return error.
          end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
       end. /* IF po_ord_date <> old_ord_date */
- 
+
       /* Validate daybook set code */
- 
+
       daybookDate = today.
       if po_due_date <> ? and po_due_date > today then
          daybookDate = po_due_date.
- 
+
       if daybookSetBySiteInstalled
       then do:
          /* VALIDATE DAYBOOK SET BY SITE */
@@ -599,7 +599,7 @@ do on error undo, retry on endkey undo, leave with frame b:
               input  daybookDate,
               output iErrorNumber,
               output cErrorArgs).
- 
+
          if iErrorNumber > 0
          then do:
             run displayPxMsg in hDaybooksetValidation
@@ -609,7 +609,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             undo, retry.
          end.
       end.
- 
+
       else do:
          /* IS IT A ACTIVE DAYBOOKSET CODE? */
          run validateDaybookSet in hDaybooksetValidation
@@ -618,7 +618,7 @@ do on error undo, retry on endkey undo, leave with frame b:
               input  daybookDate,
               output iErrorNumber,
               output cErrorArgs).
- 
+
          if iErrorNumber > 0
          then do:
             run displayPxMsg in hDaybooksetValidation
@@ -628,7 +628,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             undo, retry.
          end.
       end.
- 
+
       /* VALIDATES PO CREDIT TERMS */
       {us/px/pxrun.i &PROC='validateCreditTerms' &PROGRAM='adcrxr.p'
                      &HANDLE=ph_adcrxr
@@ -654,7 +654,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                &PARAM="(input po_buyer)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -665,7 +665,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.
- 
+
       /* CHECKS FOR ACCESS ON PO PRICE TABLE */
       if po_pr_list2 <> old_pr_list2
       then do:
@@ -673,7 +673,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                   &PARAM="(input po_pr_list2)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             if c-application-mode <> "API"
@@ -685,13 +685,13 @@ do on error undo, retry on endkey undo, leave with frame b:
                undo, return error.
          end.  /*return-value <> {&SUCCESS-RESULT}*/
       end. /* IF po_pr_list2 <> old_pr_list2 */
- 
+
       /* VALIDATES ON PO SITE */
       {us/px/pxrun.i &PROC='validatePOSite' &PROGRAM='popoxr.p'
                &PARAM="(input po_site)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -702,15 +702,15 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.
- 
+
       /* VALIDATION ON PO SITE FOR EDI PO'S */
- 
+
       for first edtpparm_mstr
          where edtpparm_domain = ecom_domain
          and   edtpparm_addr   = po_vend
          and   po_site         = ""
       no-lock:
- 
+
          empty temp-table ttTradingPartnerParameters.
          create ttTradingPartnerParameters.
          assign
@@ -721,7 +721,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             ttTradingPartnerParameters.ParameterType = "CHARACTER"
             ttTradingPartnerParameters.ParameterName = "PO Doc Name"
             ttTradingPartnerParameters.ParameterFound = no.
- 
+
          create ttTradingPartnerParameters.
          assign
             ttTradingPartnerParameters.domain = edtpparm_domain
@@ -731,14 +731,14 @@ do on error undo, retry on endkey undo, leave with frame b:
             ttTradingPartnerParameters.ParameterType = "INTEGER"
             ttTradingPartnerParameters.ParameterName = "PO Doc Vers"
             ttTradingPartnerParameters.ParameterFound = no.
- 
+
          {us/px/pxrun.i &proc = 'GetParameterValues'
                         &program = 'edparams.p'
                         &handle  = h_edparams
                         &param   = "(input-output dataset TpParam-dset by-reference)"
                         &catcherror = true
                         &noaperror = true}
- 
+
          for first ttTradingPartnerParameters where
             ttTradingPartnerParameters.Sequence = 1 and
             ttTradingPartnerParameters.ParameterFound = yes:
@@ -749,14 +749,14 @@ do on error undo, retry on endkey undo, leave with frame b:
             ttTradingPartnerParameters.ParameterFound = yes:
             l_doc_version = integer(ttTradingPartnerParameters.ParameterValue) no-error.
          end.
- 
+
          if l_doc_name        <> ""
             and l_doc_version <> 0
          then do:
             {us/bbi/pxmsg.i &MSGNUM=6450 &ERRORLEVEL=2 &PAUSEAFTER=TRUE}
          end.  /* IF l_doc_name */
       end.   /* FOR FIRST edtpparm_mstr */
- 
+
       /* CHECK IF USER IS AUTHORIZED TO ACCESS */
       /* PURCHASE ORDER HEADER SITE            */
       {us/px/pxrun.i &PROC='validateSiteSecurity' &PROGRAM='icsixr.p'
@@ -764,7 +764,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                         input '')"
                &NOAPPERROR=True
                &CATCHERROR=True}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -779,13 +779,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          then
             undo, return error.
       end. /* IF return-value <> {&SUCCESS-RESULT} */
- 
+
       /* VALIDATES ON PO PROJECT */
       {us/px/pxrun.i &PROC='validatePOProject' &PROGRAM='popoxr.p'
                &PARAM="(input po_project)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -796,7 +796,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.
- 
+
       /* CHECKS FOR ACCESS ON PO CURRENCY */
       if po_curr <> old_curr
       then do:
@@ -804,7 +804,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                   &PARAM="(input po_curr)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             if c-application-mode <> "API"
@@ -816,13 +816,13 @@ do on error undo, retry on endkey undo, leave with frame b:
                undo, return error.
          end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
       end. /* IF po_curr <> old_curr */
- 
+
       /* VALIDATES ON PO LANGUAGE */
       {us/px/pxrun.i &PROC='validatePOLanguage' &PROGRAM='popoxr.p'
                &PARAM="(input po_lang)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -833,14 +833,14 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* CHECKS FOR ACCESS ON PO FIXED PRICE */
       if po_fix_pr <> old_fix_pr then do:
          {us/px/pxrun.i &PROC='validatePOFixedPrice' &PROGRAM='popoxr.p'
                   &PARAM="(input po_fix_pr)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             if c-application-mode <> "API"
@@ -852,13 +852,13 @@ do on error undo, retry on endkey undo, leave with frame b:
                undo, return error.
          end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
       end. /* IF po_fix_pr <> old_fix_pr */
-  
+
       /*CHECK FOR VALID BILL-TO ADDRESS */
       {us/px/pxrun.i &PROC='validateBillToAddress' &PROGRAM='popoxr.p'
                &PARAM="(input po_bill)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -869,13 +869,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* DELETE */
       if c-application-mode <> "API"
       then do:
          if deleteRequested
          then do:
- 
+
             {us/px/pxrun.i &PROC='deletePurchaseOrder' &PROGRAM='popoxr.p'
                      &PARAM="(input po_nbr,
                               input blanket,
@@ -888,7 +888,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             end.
             else
                del-yn = yes.
- 
+
             clear frame a.
             clear frame vend.
             clear frame ship_to.
@@ -898,7 +898,7 @@ do on error undo, retry on endkey undo, leave with frame b:
             leave order-header.
          end.
       end.  /* if c-application-mode <> "API" then do: */
- 
+
    /* Delete */
       else  /* if c-application-mode == "API" */
       do:
@@ -918,12 +918,12 @@ do on error undo, retry on endkey undo, leave with frame b:
             end.
             else
                del-yn = yes.
- 
+
             continue = no.
             leave order-header.
          end.  /* if ttPurchaseOrder.operation = {&REMOVE} then do: */
       end.  /*else [if c-application-mode == "API"]  */
- 
+
 /*jpm*/ /*Temporarily remove PRM */
 /*
       if {pxfunct.i &FUNCTION='isPRMEnabled' &PROGRAM='pjprmxr.p'}
@@ -951,12 +951,12 @@ do on error undo, retry on endkey undo, leave with frame b:
                &PARAM="(buffer poc_ctrl)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       {us/px/pxrun.i &PROC='getPriceListRequired' &PROGRAM='popoxr.p'
                &PARAM="(output poc_pt_req)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       /* MOVED PRICE TABLE VALIDATION TO us/ad/adprclst.i */
       /* ADDED TWO ARGUMENTS &DISP-MSG AND &WARNING */
       {us/ad/adprclst.i
@@ -968,7 +968,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          &with-frame     = "with frame b"
          &disp-msg       = "yes"
          &warning        = "yes"}
- 
+
       /* DISCOUNT TABLE VALIDATION */
       {us/ad/addsclst.i
          &disc-list      = "po_pr_list"
@@ -979,13 +979,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          &with-frame     = "with frame b"
          &disp-msg       = "yes"
          &warning        = "yes"}
- 
+
       /* VALIDATE P.O. Site */
       {us/px/pxrun.i &PROC='validatePoSite' &PROGRAM='popoxr.p'
                &PARAM="(input po_site)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -996,7 +996,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* VALIDATE PURCHASE ORDER CURRENCY */
       {us/px/pxrun.i &PROC='validateCurrency' &PROGRAM='mcexxr.p'
                &PARAM="(input po_curr)"
@@ -1012,12 +1012,12 @@ do on error undo, retry on endkey undo, leave with frame b:
          else   /*if c-application-mode = "API"*/
             undo, return error.
       end.  /*   if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* EXCHANGE RATE VALIDATION */
       assign undo_all = yes
          po_recno = recid(po_mstr).
- 
-      {us/bbi/gprun.i ""xxpomtb1.p""}
+
+/*324*/  {us/bbi/gprun.i ""xxpomtb1.p""}
 
       if undo_all
       then do:
@@ -1029,13 +1029,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          else /*  if c-application-mode = "API" */
             undo, return error.
       end.  /*  if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       {us/px/pxrun.i &PROC='getRoundingMethod' &PROGRAM='mcexxr.p'
                &PARAM="(input po_curr,
                         output rndmthd)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -1046,13 +1046,13 @@ do on error undo, retry on endkey undo, leave with frame b:
          else /*  if c-application-mode = "API" */
             undo, return error.
       end.  /*  if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* VALIDATE TAX CODE AND TAXABLE BY TAX DATE OR DUE DATE */
       {us/px/pxrun.i &PROC='validateTaxClass' &PROGRAM='txenvxr.p'
                &PARAM="(input po_taxc)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
       then do:
          if c-application-mode <> "API"
@@ -1063,7 +1063,7 @@ do on error undo, retry on endkey undo, leave with frame b:
           else /*  if c-application-mode = "API" */
             undo, return error.
       end.  /*  if return-value <> {&SUCCESS-RESULT} then do: */
- 
+
       /* UPDATE THE PO LINES PO Site WITH THE CHANGED HEADER Site FOR */
       /* EXISTING PO                                                  */
       if old_posite <> po_site
@@ -1080,19 +1080,19 @@ do on error undo, retry on endkey undo, leave with frame b:
                      &NOAPPERROR=True &CATCHERROR=True}
          end. /* FOR EACH pod_det */
       end. /* IF old_posite <> po_site */
- 
+
       /* Move code up into correct sequence per new frame b. */
       assign po_disc_pct = disc
              ststatus = stline[1].
- 
+
       status input ststatus.
- 
+
       set_tax:
       do on error undo, retry:
          if retry and c-application-mode = "API" then
             return error.
- 
- 
+
+
          if po_tax_env = ""
          then do:
             {us/px/pxrun.i &PROC='getTaxEnvironment' &PROGRAM='popoxr.p'
@@ -1102,7 +1102,7 @@ do on error undo, retry on endkey undo, leave with frame b:
                               input  po_taxc,
                               output po_tax_env)"}
          end. /* IF po_tax_env = "" */
- 
+
          set_tax1:
          do on error undo, retry:
             if c-application-mode <> "API" then
@@ -1129,14 +1129,14 @@ do on error undo, retry on endkey undo, leave with frame b:
                   {us/mf/mfaistvl.i po_taxable ttPurchaseOrderHeader.poTaxable1}
                   {us/mf/mfaistvl.i po_tax_in ttPurchaseOrderHeader.taxIn}
                   .
- 
+
             /* VALIDATES ON PO TAX USAGE */
             {us/px/pxrun.i &PROC='validateTaxUsage'
                      &PROGRAM='txenvxr.p'
                      &PARAM="(input po_tax_usage)"
                      &NOAPPERROR=true
                      &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT}
             then do:
                if c-application-mode <> "API"
@@ -1148,12 +1148,12 @@ do on error undo, retry on endkey undo, leave with frame b:
                   undo, return error.
             end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
          end. /* set_tax1 */
- 
+
          {us/px/pxrun.i &PROC='validateTaxEnvironment' &PROGRAM='txenvxr.p'
                   &PARAM="(input po_tax_env)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             if c-application-mode <> "API"
@@ -1164,26 +1164,26 @@ do on error undo, retry on endkey undo, leave with frame b:
             else /*  if c-application-mode = "API" */
                undo, return error.
          end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
- 
-         /*I19 TAX USAGE VALIDATION */     
+
+         /*I19 TAX USAGE VALIDATION */
          {us/bbi/gprun.i ""txusgval.p""
             "(input  "{&TU_PO_MSTR}",
               input  oid_po_mstr,
               input  po_tax_usage,
               output is-valid)"}
- 
+
          if not is-valid then do:
             next-prompt po_tax_usage with frame set_tax.
             undo, retry set_tax.
          end.
       end.  /* SET_TAX Loop */
       hide frame set_tax.
- 
+
       /* UPDATE ORDER HEADER TERMS INTEREST PERCENTAGE */
       if po_crt_int <> 0  and po_cr_terms <> "" and
          (new_po or po_crt_int <> l_pocrt_int)
       then do:
- 
+
          if po_crt_int <> l_pocrt_int
          then do:
             {us/px/pxrun.i &PROC='validatePOCreditTermsInt' &PROGRAM='popoxr.p'
@@ -1201,13 +1201,13 @@ do on error undo, retry on endkey undo, leave with frame b:
                   undo, return error.
              end.
          end.
- 
+
          {us/px/pxrun.i &PROC='validateCreditTermsInterest' &PROGRAM='popoxr.p'
                   &PARAM="(input po_cr_terms,
                            input po_crt_int)"
                   &NOAPPERROR=true
                   &CATCHERROR=true}
- 
+
          if return-value <> {&SUCCESS-RESULT}
          then do:
             /* Entered terms interest # does not match ct interest # */
@@ -1231,18 +1231,18 @@ do on error undo, retry on endkey undo, leave with frame b:
          end.  /* if return-value <> {&SUCCESS-RESULT} then do: */
       end.  /* if po_crt_int <> 0  and po_cr_terms <> "" and */
             /*(new_po or po_crt_int <> l_pocrt_int) then do: */
- 
-      if use-log-acctg 
+
+      if use-log-acctg
       then do:
          if c-application-mode <> "API" then
             hide frame b.
          la-okay = no.
-         
+
          if c-application-mode = "API" and not lLegacyAPI then do:
             run setCommonDataBuffer in ApiMethodHandle
                (input "ttLogisticsAccountData").
          end.
- 
+
          /* UPDATE LOGISTICS ACCOUNTING TERMS OF TRADE FIELD */
          {us/gp/gprunmo.i &module = "LA" &program = "lapomt.p"
             &param  = """(input po_recno,
@@ -1252,12 +1252,12 @@ do on error undo, retry on endkey undo, leave with frame b:
             run setCommonDataBuffer in ApiMethodHandle
                (input "").
          end.
- 
+
          if la-okay = no then
             undo setb, retry.
- 
+
       end.
- 
+
       for first poc_ctrl  where poc_ctrl.poc_domain = global_domain no-lock:
       end.
       if available poc_ctrl and poc_ers_proc
@@ -1270,18 +1270,18 @@ do on error undo, retry on endkey undo, leave with frame b:
             with frame ers overlay side-labels centered
             row(frame-row(a) + 11)
             width 30.
- 
+
          /* SET EXTERNAL LABELS */
          setFrameLabels(frame ers:handle).
- 
+
          /* PO CONTROL ERS IS ON AND ERS OPTION IS ON */
          if new_po then
             po_ers_opt = poc_ers_opt.
- 
+
          /* UPDATE ERS FIELDS */
          if c-application-mode <> "API" then
             display po_ers_opt po_pr_lst_tp with frame ers.
- 
+
          ers-loop:
          do with frame ers on error undo, retry:
             if c-application-mode <> "API" then
@@ -1298,12 +1298,12 @@ do on error undo, retry on endkey undo, leave with frame b:
                   {us/mf/mfaiset.i po_pr_lst_tp ttPurchaseOrderHeader.poPrLstTp}
                   .
             end.
- 
+
             {us/px/pxrun.i &PROC='validateERSOption' &PROGRAM='popoxr.p'
                      &PARAM="(input po_ers_opt)"
                      &NOAPPERROR=true
                      &CATCHERROR=true}
- 
+
             if return-value <> {&SUCCESS-RESULT}
             then do:
                if c-application-mode <> "API"
@@ -1317,7 +1317,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          end. /* DO WITH FRAME ERS */
          hide frame ers.
       end. /* IF AVAILABLE poc_ctrl */
- 
+
       if using_supplier_consignment
          and (po_consignment or
              (not po_consignment
@@ -1337,22 +1337,22 @@ do on error undo, retry on endkey undo, leave with frame b:
                                      else if not can-find(first cnsix_mstr
                                         where cnsix_po_nbr = po_nbr) then yes
                                      else no))"}
-    
+
             if keyfunction(lastkey) = "END-ERROR" then do:
                next-prompt
                   po_ord_date
                with frame b.
                undo setb, retry setb.
             end.
-    
+
             hide frame aging.
          end. /* c-application-mode <> "API" */
          else do:
             if not lLegacyAPI then do:
- 
+
             {us/gp/gplngn2a.i
                &file  = ""cns_ctrl""
-               &field = "cost_point" 
+               &field = "cost_point"
                &code  = po_consign_cost_point
                &mnemonic = cost_point
                &label = cost_point_label}
@@ -1394,15 +1394,15 @@ do on error undo, retry on endkey undo, leave with frame b:
          end.
       end.   /* using_supplier_consignment */
    end.  /* Setb Loop */
- 
+
    continue = yes.
 end.  /* Order-header Loop */
- 
+
 /* Reset the validation mode to AR in case the procedure library */
 /* is still in memory when another user runs a program requiring */
 /* AR validation.                                                */
 run setvalidMode in hDaybooksetValidation
                (input  false).
- 
+
 delete procedure hDaybooksetValidation no-error.
 if valid-handle(h_edparams) then delete procedure h_edparams no-error.

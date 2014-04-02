@@ -44,7 +44,7 @@
 /* Remove mc-chk-member-curr - output is "" and no */
 /* Remove mc-chk-union-transparency - output is no */
 
-/***324****************************************By zy***********/
+/*324******************************************By zy***********/
 /* when have code_fldname = "Standard Cost Exchange Rate Type"*/
 /* Standard PO , Supplier Scheduled Order & recive            */
 /* use code_value as exchange rate type                       */
@@ -711,25 +711,25 @@ PROCEDURE ip-get-direct-rate:
    define buffer b_exr_rate for exr_rate.
 
    /* Look for a direct exchange rate between the currencies */
-   for first b_exr_rate no-lock where b_exr_rate.exr_domain = global_domain and
+   for first b_exr_rate exclusive-lock where b_exr_rate.exr_domain = global_domain and
       exr_curr1      =  i_curr1 and
       exr_curr2      =  i_curr2 and
       exr_ratetype   =  i_type  and
       exr_start_date <= i_date  and
       exr_end_date   >= i_date:
 
+/*324*/  for first code_mstr no-lock where
+/*324*/            code_domain = global_domain and
+/*324*/            code_fldname = "Standard Cost Exchange Rate Type":
+/*324*/     assign exr_rate2 = getexratebycurr(input i_curr2,
+/*324*/            input i_curr1, input code_value,
+/*324*/            input i_date).
+/*324*/  end.
+
    assign
       o_rate  = exr_rate
       o_rate2 = exr_rate2
       o_found = true.
-
-/*324*/  for first code_mstr no-lock where
-/*324*/            code_domain = global_domain and
-/*324*/            code_fldname = "Standard Cost Exchange Rate Type":
-/*324*/       assign o_rate2 = getexratebycurr(input i_curr1,
-/*324*/              input i_curr2, input code_value,
-/*324*/              input i_date).
-/*324*/  end.
 
    /* Track that the direct rate was found */
    if i_track then do:

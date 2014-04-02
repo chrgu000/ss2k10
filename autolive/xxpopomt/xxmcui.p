@@ -42,7 +42,7 @@
 {us/bbi/gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {us/px/pxsevcon.i}
 {us/px/pxpgmmgr.i}
-{xxexrt.i}
+/*324*/ {xxexrt.i}
 /*
  * We need to define the API constants and variables as well as
  * include the temp table definition for the exchange rate temp-table.
@@ -303,12 +303,12 @@ History:
 /*324*/  for first code_mstr no-lock where
 /*324*/            code_domain = global_domain and
 /*324*/            code_fldname = "Standard Cost Exchange Rate Type":
-/*324*/       assign v_rate[1] = getexratebycurr(input i_curr2,
-/*324*/              input i_curr1, input code_value,
+/*324*/       assign v_rate[1] = getexratebycurr(input i_curr1,
+/*324*/              input i_curr2, input code_value,
 /*324*/              input i_date).
 /*324*/       display v_rate[1] with frame a-exch.
 /*324*/  end.
-/*324 display getcurrencyid("CNY") vexchangeratetype v_rate[1] i_curr1 i_curr2 i_date v_rate[2] with frame a-exch. */
+
          if c-application-mode <> "API" then do:
             /* Update only those rates which are displayed */
             update

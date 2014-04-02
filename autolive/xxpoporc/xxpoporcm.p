@@ -161,7 +161,7 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
- 
+
 /******************************************************************************/
 /* THIS PROGRAM WAS CLONED TO kbporcm.p 05/16/02, REMOVING UI.                */
 /* CHANGES TO THIS PROGRAM MAY ALSO NEED TO BE APPLIED TO kbporcm.p           */
@@ -181,27 +181,27 @@
 {us/pp/ppprlst.i}   /* PRICE LIST CONSTANTS */
 {us/ap/apconsdf.i}   /* PRE-PROCESSOR CONSTANTS FOR LOGISTICS ACCOUNTING */
 {us/px/pxphdef.i soldxr}
- 
+
 /* COMMON VARIABLES, FRAMES & BUFFERS FOR RECEIPTS & RETURNS */
 {us/po/porcdef.i "new"}
- 
+
 {us/gp/gpglefdf.i}
 
 /* Define Handles for the programs. */
 {us/px/pxphdef.i porcxr}
-{xxexrt.i}
+/*324*/ {xxexrt.i}
 define input parameter p_int_ref_type   like lacd_internal_ref_type   no-undo.
 define variable        l_poc_seq_rcv    like mfc_logical initial yes  no-undo.
 /*@MODULE PRM BEGIN*/
 /* DEFINE SHARED TEMP-TABLES FOR PRM */
 {us/pj/pjportt.i "new"}
 /*@MODULE PRM END*/
- 
+
 define temp-table tt_po_tax
    field tt_po   like po_nbr
    field tt_line like pod_line
    index tt_po_line_indx tt_po tt_line.
- 
+
 /* NEW SHARED VARIABLES, BUFFERS AND FRAMES */
 define new shared variable h_wiplottrace_procs as   handle            no-undo.
 define new shared variable h_wiplottrace_funcs as   handle            no-undo.
@@ -223,7 +223,7 @@ define new shared variable kbtransnbr          as integer             no-undo.
 define new shared variable msg                 as character format "x(60)".
 define new shared variable l_include_retain    like mfc_logical initial yes no-undo.
 define variable poRctId                    as character format "x(60)" no-undo.
- 
+
 define new shared frame b.
 define new shared workfile tax_wkfl
    field tax_nbr     like pod_nbr
@@ -234,7 +234,7 @@ define new shared workfile tax_wkfl
    field tax_in      like pod_tax_in
    field tax_taxable like pod_taxable
    field tax_price   like prh_pur_cost.
- 
+
 /*WORKFILE FOR POD RECEIPT ATTRIBUTES*/
 define new shared workfile attr_wkfl no-undo
    field chg_line    like sr_lineid
@@ -246,7 +246,7 @@ define new shared workfile attr_wkfl no-undo
    field grade_actv  as   logical
    field expire_actv as   logical
    field status_actv as   logical.
- 
+
 /* LOGISTICS CHARGE - PENDING VOUCHER MASTER TEMP TABLE DEFINITION */
 define new shared temp-table tt-pvocharge no-undo
    field tt-lc_charge           like lc_charge
@@ -254,7 +254,7 @@ define new shared temp-table tt-pvocharge no-undo
    index tt-index
    tt-lc_charge
    tt-pvo_id.
- 
+
 /* LOGISTICS CHARGE EXCHANGE RATES - ONE FOR EACH CURRENCY - USED
  * TO POPULATE LACOD_DET FROM LACD_DET */
 define new shared temp-table tt_lac_exrate no-undo
@@ -262,7 +262,7 @@ define new shared temp-table tt_lac_exrate no-undo
    field tt_lac_exrate  like exr_rate
    field tt_lac_exrate2 like exr_rate2
    field tt_lac_fixed   like po_fix_rate
-   index tt_lac_curr 
+   index tt_lac_curr
          tt_lac_curr.
 
 /* LOCAL VARIABLES, BUFFERS AND FRAMES */
@@ -309,65 +309,65 @@ define variable lblPONbr        as   character                          no-undo.
 
 /* Variables used by AIM. */
 define variable LVQty like pod_qty_chg no-undo.
- 
+
 {us/mg/mgbltrpl.i "hBlockedTransactionlibrary"}
- 
+
 {us/px/pxmaint.i}
- 
+
 /*MAIN-BEGIN*/
- 
+
 /*@MODULE WIPLOTTRACE BEGIN*/
 {us/wl/wlfnc.i} /*FUNCTION FORWARD DECLARATIONS*/
 /*@MODULE WIPLOTTRACE END*/
 {us/gp/gprunpdf.i "mcpl" "p"}
- 
+
 /* DEFINE & INITIALIZE CURRENCY DEPENDENT ROUNDING FORMAT VARS */
 {us/po/pocurvar.i "NEW"}
 {us/tx/txcurvar.i "NEW"}
- 
+
 /* DEFINE TRAILER VARS AS NEW, SO THAT CORRECT _OLD FORMATS */
 /* CAN BE ASSIGNED BASED ON INITIAL DEFINE                  */
 {us/po/potrldef.i "NEW"}
- 
+
 {us/tx/txcalvar.i}
- 
+
 {us/mf/mfaimfg.i} /* COMMON API CONSTANTS AND VARIABLES */
- 
+
 {us/po/popoit01.i} /* DEFINE API PURCHASE ORDER TEMP TABLES  */
 {us/mc/mctrit01.i} /* DEFINE API TRANSACTION EXCHANGE RATES TEMP TABLE */
 {us/ic/icicit01.i} /* DEFINE API INVENTORY CONTROL TEMP TABLES   */
 {us/mf/mfctit01.i} /* DEFINE API TRANSACTION COMMENTS TEMP TABLES */
 
 {us/gp/gpldform.i} /* Legal Document Record Form */
- 
+
 if c-application-mode = "API" then do:
- 
+
    /* GET HANDLE OF API CONTROLLER */
    {us/bbi/gprun.i ""gpaigh.p""
       "(output ApiMethodHandle,
         output ApiProgramName,
         output ApiMethodName,
         output ApiContextString)"}
- 
+
    /* GET PURCHASE ORDER TRANSACTION TEMP-TABLE */
    run getPurchaseOrderTrans in ApiMethodHandle
       (output table ttPurchaseOrderTrans).
- 
+
    /* GET PURCHASE ORDER TRANSACTION COMMENT TEMP-TABLE */
    run getPurchaseOrderTransCmt in ApiMethodHandle
       (output table ttPurchaseOrderTransCmt).
- 
+
    /* GET PURCHASE ORDER TRANSACTION DETAIL TEMP-TABLE */
    run getPurchaseOrderTransDet in ApiMethodHandle
       (output table ttPurchaseOrderTransDet).
- 
+
    /* GET PURCHASE ORDER TRANSACTION DETAIL COMMENT TEMP-TABLE */
    run getPurchaseOrderTransDetCmt in ApiMethodHandle
       (output table ttPurchaseOrderTransDetCmt).
- 
+
 end. /* if c-application-mode = "API" */
- 
- 
+
+
 /* THIS PATCH IS NECESSARY WHEN SHORTAGE CLEARANCE FUNCTIONALITY IS   */
 /* RUN. IN THAT CASE SOME PICK-SO PROGRAMS (WHICH POPULATED THAT      */
 /* TABLES) ARE LAUNCHED TOO.                                          */
@@ -383,25 +383,25 @@ assign
    order_amt_old = order_amt:format
    prepaid_old   = po_prepaid:format
    lblPONbr      = getTermLabel("PO_NUMBER",12).
- 
+
 issueld = no.
- 
+
 form
    po_nbr         colon 12   label "Order"
    po_vend
    po_stat
    ps_nbr         format "x(12)" to 78
 with frame b side-labels width 80.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame b:handle).
- 
- 
+
+
 assign
    cmmt-prefix = "RCPT:"
    transtype   = "RCT-PO"
    convertmode = "MAINT".
- 
+
 form
    ordernum       colon 15       label "Order"
    po_vend
@@ -416,10 +416,10 @@ form
    cmmt_yn        colon 68
    ship_date      colon 68       label "Ship Date"
 with frame a1 side-labels width 80.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a1:handle).
- 
+
 /* IN THE HEADER OF THE RTS SHIPMENT THE receivernbr WILL NOW */
 /* BE DISPLAYED WITH THE LABEL "Receiver/RTS Shipper"         */
 form
@@ -435,15 +435,15 @@ form
    cmmt_yn        colon 68
    rma_bol        colon 15       label "BOL"
 with frame a2 side-labels width 80.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame a2:handle).
- 
+
 /* Hide the variable "move" from the frame if porec = false */
 /* To avoid the value of move getting displayed */
 if not porec and c-application-mode <> "API" then
    move:hidden in frame a2 = true.
- 
+
 /* HIDE BOL UNLESS IT IS RTS */
 if (porec or (ports <> "RTS")) then do:
    rma_bol:hidden in frame a1 = true.
@@ -455,16 +455,16 @@ if dynamic-function('getTranslateFramesFlag' in h-label) then
 assign
    receivernbr:label = getTermLabel("RECEIVER/RTS_SHIPPER",26)
    fill-all:label    = getTermLabel("SHIP_ALL",11).
- 
+
 form
    ent_exch colon 15
    space(2)
 with frame seta1_sub overlay side-labels
    centered row frame-row(a) + 4.
- 
+
 /* SET EXTERNAL LABELS */
 setFrameLabels(frame seta1_sub:handle).
- 
+
 /*@MODULE WIPLOTTRACE BEGIN*/
 if is_wiplottrace_enabled() then do:
    run activate_wiplot_trace.
@@ -475,55 +475,55 @@ if is_wiplottrace_enabled() then do:
    /*END*/
 end. /* IF IS_WIPLOTTRACE_ENABLED() */
 /*@MODULE WIPLOTTRACE END*/
- 
+
 for first poc_ctrl
    where poc_domain = global_domain no-lock:
 end.
- 
+
 assign
    rcv_type  = poc_rcv_type
    ers-proc  = poc_ers_proc.
- 
+
 assign
    maint       = true
    shipper_rec = false
    fiscal_rec  = false.
- 
- 
+
+
 {us/bbi/gprun.i ""socrshc.p""}
- 
+
 for first shc_ctrl
    where shc_domain = global_domain
 no-lock: end.
- 
+
 /*@MODULE PRM BEGIN*/
 /* CHECK IF PRM IS INSTALLED */
 {us/pj/pjchkprm.i}
- 
+
 /* PRM-ENABLED VARIABLE DEFINED IN PJCHKPRM.I */
 prm-avail = prm-enabled.
 /*@MODULE PRM END*/
- 
+
 /* VALIDATE IF LOGISTICS ACCOUNTING IS TURNED ON */
 {us/bbi/gprun.i ""lactrl.p"" "(output use-log-acctg)"}
- 
+
 /*DELETE SUBSHIPPER WORK TEMP TABLE RECORDS*/
 empty temp-table tt_shipper_scroll no-error.
- 
+
 main-loop:
 repeat:
- 
+
    for first poc_ctrl
       where poc_domain = global_domain no-lock:
    end.
- 
+
    /* RESET RECEIVE ALL FLAG TO DEFAULT FROM CONTROL FILE */
    /*@MODULE RCV-ALL BEGIN*/
    fill-all  = poc_rcv_all.
    /*@MODULE RCV-ALL END*/
- 
+
    transtype   = "RCT-PO".
- 
+
    /* DELETE qad_wkfl RECORDS */
    {us/px/pxrun.i &PROC='DeleteQadwkfl'
       &PROGRAM='porcxr.p'
@@ -533,24 +533,24 @@ repeat:
         input global_userid)"
       &NOAPPERROR=true
       &CATCHERROR=true}
- 
+
    if c-application-mode = "API" and retry
       then return error return-value.
- 
+
    if c-application-mode = "API" then do:
       find next ttPurchaseOrderTrans
       no-lock no-error.
       if not available ttPurchaseOrderTrans then return.
    end.
- 
+
    /* SPLIT THE ORIGINAL DO TRANSACTION BLOCK INTO TWO DO TRANSACTION */
    /* BLOCKS TO TAKE CARE OF ORACLE TRANSACTION SCOPING PROBLEM  .    */
    /* us/po/poporcm.i MOVED IN THE FIRST DO TRANSACTION BLOCK. COMMENTED    */
    /* CODE RELATED TO FOREIGN CURRENCY AND TRANSACTION COMMENTS FROM  */
    /* us/po/poporcm.i AND COPIED IT IN THIS PROGRAM                         */
- 
+
    {us/gp/gprunp.i "soldxr" "p" "clearWorkTableOfLGAndGL"}
- 
+
    do transaction:
       if porec
       then do:
@@ -580,8 +580,8 @@ repeat:
                   &CATCHERROR = true
                   &NOAPPERROR = true}
 
-         if (   rcv_type    <> 2 
-            and receivernbr = "" 
+         if (   rcv_type    <> 2
+            and receivernbr = ""
             and not l_poc_seq_rcv)
          then
             run getNextReceiverNbr (output receivernbr).
@@ -589,24 +589,24 @@ repeat:
       end. /* NOT IF EXECNAME = "fsrtvis.p" */
 
    end. /* DO TRANSACTION */
- 
+
    skipBlock:
    do:
       updateBlock:
       do on stop undo, leave:
-   
+
          TRANSDO-BLOCK:
          do transaction:
-       
+
             empty temp-table tt_lac_exrate .
-       
+
             if base_curr <> po_curr
             then do:
                if not po_fix_rate
                then do:
                   seta1_sub:
                   do on error undo, retry:
-       
+
                      if c-application-mode = "API"
                      then do:
                         {us/gp/gpttcp.i
@@ -617,9 +617,9 @@ repeat:
                         run setTransExchangeRates in apiMethodHandle
                            (input table ttTransExchangeRates).
                      end.  /* IF c-application-mode .. */
-       
+
                      pause 0 before-hide.
-                     {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
+/*324*/         {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
                         "(input po_curr,
                           input base_curr,
                           input eff_date,
@@ -630,15 +630,15 @@ repeat:
                           input-output exch_rate2,
                           input-output po_fix_rate)"}
                      pause 0 before-hide.
-       
+
                     /* CAPTURE EXCHANGE RATES */
-                    for first lacd_det where 
+                    for first lacd_det where
                        lacd_domain = global_domain and
                        lacd_internal_ref = po_nbr and
                        lacd_shipfrom     = po_vend and
                        lacd_internal_ref_type = {&TYPE_PO} and
                        lacd_curr = po_curr exclusive-lock:
-           
+
                        create tt_lac_exrate .
                        assign tt_lac_exrate.tt_lac_curr    = lacd_curr
                               tt_lac_exrate.tt_lac_exrate  = exch_rate
@@ -655,14 +655,14 @@ repeat:
             end. /* IF base_curr <> po_curr */
 
             /* GET LOGISTIC CHARGES IF THE CURRENCY DOES NOT MATCH BASE CURR */
-            if can-find (first lacd_det where 
-                               lacd_domain = global_domain and 
+            if can-find (first lacd_det where
+                               lacd_domain = global_domain and
                                lacd_internal_ref = po_nbr and
                                lacd_shipfrom     = po_vend and
                                lacd_internal_ref_type = {&TYPE_PO}) then do:
-       
+
                /* CAPTURE EXCHANGE RATES */
-               for each lacd_det where 
+               for each lacd_det where
                         lacd_domain = global_domain   and
                         lacd_internal_ref = po_nbr and
                         lacd_shipfrom     = po_vend and
@@ -694,7 +694,7 @@ repeat:
                    exclusive-lock:
 
                    pause 0 before-hide.
-                   {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
+/*324*/         {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
                       "(input tt_lac_exrate.tt_lac_curr,
                         input base_curr,
                         input eff_date,
@@ -712,8 +712,8 @@ repeat:
 
                for each tt_lac_exrate no-lock:
 
-                  for each lacd_det where 
-                           lacd_domain = global_domain and 
+                  for each lacd_det where
+                           lacd_domain = global_domain and
                            lacd_internal_ref = po_nbr and
                            lacd_shipfrom     = po_vend and
                            lacd_internal_ref_type = {&TYPE_PO} and
@@ -741,12 +741,12 @@ repeat:
                   else
                      hide frame a2 no-pause.
                end.
-       
+
                /*@TO-DO - NEED TO CHECK HOW THESE DEFAULTS GET INTO COMMENTS IN XUI*/
                assign
                   cmtindx    = po_cmtindx
                   global_ref = cmmt-prefix + " " + po_nbr.
-       
+
                if c-application-mode = "API"
                then do:
                   {us/gp/gpttcp.i
@@ -758,22 +758,22 @@ repeat:
                   run setTransComment in apiMethodHandle
                      (input table ttTransComment).
                end. /* IF c-application-mode = .. */
-       
+
                do on error undo, return error return-value:
                   {us/bbi/gprun.i ""gpcmmt01.p"" "(input ""po_mstr"")"}
                end. /* do on error undo, return .. */
-       
+
                po_cmtindx = cmtindx.
             end. /* IF cmmt_yn */
-       
-       
+
+
             if porec
             then do:
-       
+
                /* POP-UP TO COLLECT SHIPMENT INFORMATION */
                if shc_ship_rcpt
                then do:
-       
+
                   if c-application-mode = "API" then do:
                      {us/gp/gpttcp.i
                         ttPurchaseOrderTrans
@@ -785,7 +785,7 @@ repeat:
                         (input table ttInventoryTrans).
                      run setInventoryTransRow in apiMethodHandle (input ?).
                   end.
-       
+
                   do on error undo, return error return-value:
                      {us/bbi/gprun.i ""icshup.p""
                         "(input-output shipnbr,
@@ -795,27 +795,27 @@ repeat:
                           input 10, input 20)"}
                   end.
                end. /* IF shc_ship_rcpt */
-       
+
                run proc-sup-perf.
-       
+
             end. /* IF porec */
-       
+
             {us/gp/gpbrparm.i &browse=gplu908.p &parm=c-brparm1 &val=po_nbr}
-       
-       
+
+
             {us/px/pxrun.i
                &PROC='clearPOReceiptDetails'
                &PROGRAM='porcxr2.p'
                &NOAPPERROR=true
                &CATCHERROR=true}
-       
+
             /* Transaction */
-       
-       
+
+
             run initialize_lines
                (input po_nbr, input po_vend, input po_curr).
-       
-       
+
+
             if c-application-mode <> "API" then do:
                if porec
                   then
@@ -823,14 +823,14 @@ repeat:
                else
                   hide frame a2 no-pause.
             end.
-       
+
             /* PRM FUNCTIONALITY ONLY APPLIES WHEN PO BEING RECEIVED */
             /* NOT WHEN RETURN TO SUPPLIER AND WHEN PRM INSTALLED    */
             /* CLEAR PREVIOUS TEMP TABLE DATA IF ANY EXISTS          */
             /*@MODULE PRM BEGIN*/
       /*jpm*/ /*Temporarily remove PRM */
       /*
-       
+
             if porec
                and prm-avail
             then do:
@@ -843,24 +843,24 @@ repeat:
             for each tt-pvocharge exclusive-lock:
                delete tt-pvocharge.
             end.
-       
+
             /* DISPLAY WARNING MESSAGE WHEN RECEIVE ALL IS YES */
             /* FOR LOT/SERIAL CONTROLLED ITEMS                 */
             if fill-all = yes
             then do:
-       
+
                for each pod_det
                      where pod_domain = global_domain
                      and   pod_nbr    = po_nbr
                      and   pod_status = ""
                   no-lock use-index pod_nbrln:
-       
+
                   for first pt_mstr
                      where pt_domain = global_domain
                      and   pt_part   = pod_part
                   no-lock:
                   end. /* FOR FIRST pt_mstr */
-       
+
                   if available pt_mstr then do:
                      {us/px/pxrun.i &PROC  = 'getFieldDefault' &PROGRAM = 'ppitxr.p'
                               &HANDLE = ph_ppitxr
@@ -871,33 +871,33 @@ repeat:
                               &NOAPPERROR = true
                               &CATCHERROR = true}
                   end.
-       
+
                   if available pt_mstr
                      and l_pt_lot_ser <> ""
                   then do:
-       
+
                      /* LOT/SERIAL-CONTROLLED ITEMS EXIST. PLEASE CHECK QUANTITIES. */
                      {us/bbi/pxmsg.i &MSGNUM     = 6380
                         &ERRORLEVEL = 2}
                      leave.
                   end. /* IF AVAILABLE pt_mstr */
-       
+
                end. /* FOR EACH pod_det */
-       
+
             end. /* IF fill-all */
-       
-       
+
+
             /* RUN poporca.p TO SELECT EDIT ITEMS TO BE RECEIVED */
             assign
                lotserial = ""
                po_recno  = recid(po_mstr)
                proceed   = no.
-       
+
             do on error undo, return error return-value:
-       
+
                /* PASSES THE TEMP-TABLE AS AN OUTPUT PARAMETER THROUGH */
                /* POPORCA.P WHICH HAS TO BE USED IN POTAXDT.P          */
-             
+
                {us/bbi/gprun.i ""poporca.p""
                   "(input p_int_ref_type,
                     input-output table tt_shipper_scroll,
@@ -906,7 +906,7 @@ repeat:
                     input-output inv_mov,
                     output table tt_po_tax)"}
             end.
-       
+
             if (receivernbr <> "")
             and ( can-find(first prh_hist
                              where prh_domain   = global_domain
@@ -919,7 +919,7 @@ repeat:
                hide frame b no-pause.
                undo main-loop, retry main-loop.
             end. /* IF (receivernbr <> "") */
-       
+
             /* UPDATE RMA BOL */
             if (not porec and ports = "RTS") then do:
                find first rma_mstr where
@@ -931,7 +931,7 @@ repeat:
                   assign rma_rts_bol = rma_bol.
                release rma_mstr.
             end.
-       
+
             for each pod_det
                where pod_nbr     = po_nbr
            and pod_domain    = global_domain:
@@ -949,15 +949,15 @@ repeat:
                      end. /*if not available tt_po_tax*/
                   end. /*if pod_qty_chg <> 0*/
             end. /*for each pod_det*/
-       
+
             /*********************************************************/
             /* If this is a return to supplier then reverse the sign */
             /*********************************************************/
             if not porec
                then
-       
+
             run proc-rts (input po_nbr).
-       
+
             run create_update_trans
                (input proceed,
                input shipnbr,
@@ -969,10 +969,10 @@ repeat:
                input table tt_shipper_scroll,
                input manual_update,
                input p_int_ref_type).
-       
-       
+
+
          end. /* DO TRANSACTION */
- 
+
          leave skipBlock.
       end. /* UPDATEBLOCK */
 
@@ -980,33 +980,33 @@ repeat:
       run clearEmptyLD(input lgdkey, yes).
       stop.
    end. /* SKIPBLOCK */
- 
+
    /* CALCULATE AND EDIT TAXES */
    if proceed = yes
    then do:
       undo_trl2 = true.
       {us/bbi/gprun.i ""porctrl2.p""}
       if undo_trl2 then undo.
- 
+
       /* PASSED THE SECOND PARAMETER AS TEMP-TABLE CONTAINING THE */
       /* RECEIVED LINES SO THAT POTAXDT.P WILL EDIT ONLY RECEIVED */
       /* LINES WHEN ALL TAX TYPES HAVE TAX BY LINE AS YES         */
       {us/bbi/gprun.i ""potaxdt.p""
          "(input po_recno,
            input table tt_po_tax)"}.
- 
+
    end. /* IF PROCEED = YES AND .. */
- 
+
    for each tt_po_tax
       exclusive-lock:
       delete tt_po_tax.
    end. /* FOR EACH tt_po_tax */
- 
+
    if c-application-mode <> "API" then
       hide frame b no-pause.
-  
+
    release po_mstr.
- 
+
    do transaction:
       find qad_wkfl
          where qad_wkfl.qad_domain = global_domain
@@ -1015,30 +1015,30 @@ repeat:
       exclusive-lock no-error.
       if available qad_wkfl then delete qad_wkfl.
    end.
- 
+
    /* Do Fiscal Confirm */
    run clearEmptyLD(input lgdkey, yes).
- 
+
    {us/gp/gprunp.i "soldxr" "p" "updateLegalNumToUnpostedGL"}
- 
+
 end. /* REPEAT: */
- 
+
 status input.
- 
+
 /*@MODULE WIPLOTTRACE BEGIN*/
 if is_wiplottrace_enabled() then
    delete PROCEDURE h_wiplottrace_procs no-error.
- 
+
 if is_wiplottrace_enabled() then
    delete PROCEDURE h_wiplottrace_funcs no-error.
 /*@MODULE WIPLOTTRACE END*/
- 
+
 /*MAIN-END*/
- 
+
 /* ========================================================================== */
 /* *************************** INTERNAL PROCEDURES ************************** */
 /* ========================================================================== */
- 
+
 /*============================================================================*/
 PROCEDURE activate_wiplot_trace:
 /*------------------------------------------------------------------------------
@@ -1049,11 +1049,11 @@ activate_wiplot_trace (
 </Comment1>
 ------------------------------------------------------------------------------*/
    {us/bbi/gprun.i ""wlpl.p"" "persistent set h_wiplottrace_procs"}
- 
+
    {us/bbi/gprun.i ""wlfl.p"" "persistent set h_wiplottrace_funcs"}
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE create_update_trans:
 /*------------------------------------------------------------------------------
@@ -1085,18 +1085,18 @@ create_update_trans (
            input p_int_ref_type)"
          &NOAPPERROR=true
          &CATCHERROR=true}
- 
+
       {us/bbi/gprun.i ""poporcd.p""}
- 
+
       if manual_update then do:
          {us/bbi/gprun.i ""porcshpu.p""
             "(input table tt_shipper_scroll)"}
       end.
- 
+
    end. /* IF PROCEED = YES */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE del-sr-wkfl:
 /*------------------------------------------------------------------------------
@@ -1109,9 +1109,9 @@ del-sr-wkfl (
    {us/px/pxrun.i &PROC='clearPOReceiptDetails' &PROGRAM='porcxr2.p'
             &NOAPPERROR=true
             &CATCHERROR=true}
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE delete-sr-wkfl:
 /*------------------------------------------------------------------------------
@@ -1126,9 +1126,9 @@ delete-sr-wkfl (
       exclusive-lock:
       delete sr_wkfl.
    end. /* FOR EACH SR_WKFL */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE find-rmd-det:
 /*------------------------------------------------------------------------------
@@ -1143,14 +1143,14 @@ find-rmd-det (
    define input parameter inpar_site like pod_site     no-undo.
    define input parameter inpar_loc  like pod_loc      no-undo.
    define input parameter inpar_type like pod_rma_type no-undo.
- 
+
    for first rmd_det
       where rmd_domain = global_domain
       and   rmd_nbr    = inpar_nbr
       and   rmd_prefix = "V"
       and   rmd_line   = inpar_line
    no-lock: end.
- 
+
    /* Set up RTS Issues */
    if inpar_type = "O" then
    assign
@@ -1159,7 +1159,7 @@ find-rmd-det (
       fromloc   = inpar_loc
       tosite    = rmd_site
       toloc     = rmd_loc.
- 
+
    /* Set up RTS Receipts */
    if inpar_type = "I" then
    assign
@@ -1167,9 +1167,9 @@ find-rmd-det (
       fromloc  = rmd_loc
       tosite   = inpar_site
       toloc    = inpar_loc.
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE find-vp-mstr:
 /*------------------------------------------------------------------------------
@@ -1184,9 +1184,9 @@ find-vp-mstr (
    define input parameter inpar_um      like pod_um    no-undo.
    define input parameter inpar_curr    like po_curr   no-undo.
    define input parameter l_inpar_vpart like pod_vpart no-undo.
- 
+
    set_flag = no.
- 
+
    /* ADDED VP_VEND_VPART IN THE FIELD LIST BELOW */
    {us/px/pxrun.i &PROC='processRead' &PROGRAM='ppsuxr.p'
       &PARAM="(input inpar_part,
@@ -1197,7 +1197,7 @@ find-vp-mstr (
         input {&NO_WAIT_FLAG})"
       &NOAPPERROR=true
       &CATCHERROR=true}
- 
+
    if return-value = {&SUCCESS-RESULT} and
       qopen      >= vp_q_qty and
       inpar_um   =  vp_um    and
@@ -1206,9 +1206,9 @@ find-vp-mstr (
    assign
       set_flag = yes
       pur_cost = vp_q_price.
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE if_porec_or_is_return:
 /*------------------------------------------------------------------------------
@@ -1218,13 +1218,13 @@ if_porec_or_is_return (
 )
 </Comment1>
 ------------------------------------------------------------------------------*/
- 
+
    define input parameter site       like pod_site               no-undo.
    define input parameter loc        like pod_loc                no-undo.
    define input parameter part       like pod_part               no-undo.
    define input parameter serial     like pod_serial             no-undo.
    define output parameter undo_loop like mfc_logical initial no no-undo.
- 
+
    if porec or is-return then do:
       /* CHECK FOR SINGLE ITEM / SINGLE LOT/SERIAL LOCATION */
       for first loc_mstr
@@ -1233,13 +1233,13 @@ if_porec_or_is_return (
          and   loc_loc    = loc
       no-lock:
       end. /*FOR FIRST loc_mstr*/
- 
+
       if available loc_mstr and loc_single = yes then do:
          recno_sr_wkfl = recid(sr_wkfl).
          run proc-gploc02 (input loc__qad01).
- 
+
          error_flag = err.
- 
+
          if error_flag = 0 and loc__qad01 = yes then do:
             /* CHECK PRIOR RECEIPT TRANSACTIONS (ld_det's) FOR
             DIFFERENT ITEMS OR LOT/SERIALS IN SAME LOCATION */
@@ -1251,7 +1251,7 @@ if_porec_or_is_return (
                  "" "",
                  loc__qad01,
                  output error_flag)"}
- 
+
             if error_flag <> 0
                /* ADJUSTING QTY ON A PREVIOUS VIOLATION (CREATED
                BEFORE THIS PATCH) OF SINGLE ITEM/LOT/SERIAL
@@ -1264,18 +1264,18 @@ if_porec_or_is_return (
                and ld_lot = serial and ld_ref = "") then
                error_flag = 0.
          end. /* IF ERROR_FLAG = 0 AND LOC__QAD01 = YES */
- 
+
          if error_flag <> 0 then do:
             run proc-mfmsg.
- 
+
             /* TRANSACTION CONFLICTS WITH SINGLE ITEM/LOT LOC */
             undo_loop = yes.
          end. /* IF ERROR_FLAG <> 0 */
       end.  /* IF AVAILABLE LOC_MSTR AND LOC_SINGLE = YES */
    end. /* IF POREC OR IS-RETURN */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE initialize_lines:
 /*------------------------------------------------------------------------------
@@ -1288,22 +1288,22 @@ initialize_lines (
    define input parameter ip_po_nbr  as character no-undo.
    define input parameter ip_po_vend as character no-undo.
    define input parameter ip_po_curr as character no-undo.
- 
+
    define variable l_si_db like si_db no-undo.
    define variable vCancelBackOrder like mfc_logic no-undo.
    define variable vSiteId as character no-undo.
    define variable l_ordqty      like pod_qty_ord  no-undo.
 
    define buffer    b_pod_det    for pod_det.
-   define buffer buff_pod_det for pod_det. 
- 
+   define buffer buff_pod_det for pod_det.
+
    /* DETAIL FRAME C AND SINGLE LINE PROCESSING FRAME D */
    preppoddet:
    for each pod_det
          where pod_det.pod_domain = global_domain and  pod_nbr = ip_po_nbr
          and pod_status <> "c"
          and pod_status <> "x":
- 
+
       /********************************************************/
       /*  If this is an rtv po then we need to check the type */
       /*  For normal receipts, the field will be blank.       */
@@ -1320,17 +1320,17 @@ initialize_lines (
             pod_rma_type <> ""   then next preppoddet.
       end. /* IF POREC */
       else if pod_rma_type <> "O" then next preppoddet.
- 
+
       {us/px/pxrun.i &PROC='getSiteDatabase' &PROGRAM='icsixr.p'
          &PARAM="(input  pod_site,
            output l_si_db)"
          &NOAPPERROR=true
          &CATCHERROR=true}
- 
+
       if return-value <> {&SUCCESS-RESULT}
          or l_si_db <> global_db then
             next preppoddet.
- 
+
       /*@MODULE RCV-ALL BEGIN*/
       {us/px/pxrun.i &PROC='processRead' &PROGRAM='ppitxr.p'
          &PARAM="(input  pod_part,
@@ -1339,14 +1339,14 @@ initialize_lines (
            input  {&NO_WAIT_FLAG})"
          &NOAPPERROR=true
          &CATCHERROR=true}
- 
+
       run proc-attr-wkfl
          (input pod_line,           input pod_assay,
          input pod_grade,          input pod_expire,
          input pod_rctstat,        input pod_rctstat_active,
          input pod_part,           input pod_site,
          input pod_loc,            input recid(pod_det)).
- 
+
       if fill-all = yes
       then do:
          rejected  = no.
@@ -1369,7 +1369,7 @@ initialize_lines (
                         and l_pt_lot_ser = ""
                         and pod_type <> "S"))
          then do:
- 
+
             if pod_type = ""
                and pod_fsm_type = ""
             then do:
@@ -1441,7 +1441,7 @@ initialize_lines (
                run find-rmd-det
                   (input pod_nbr, input pod_line, input pod_site,
                    input pod_loc, input pod_rma_type).
- 
+
                /* RTS's receipts that have been previously  */
                /* issued from inventory do not need to test */
                /* the from site.                            */
@@ -1459,7 +1459,7 @@ initialize_lines (
                        input """",
                        output reject1)"}
                end. /* IF FROMSITE <> "" */
- 
+
                /* RTS issues from inventory do not need to */
                /* test the tosite.                         */
                if tosite <> "" then do:
@@ -1476,7 +1476,7 @@ initialize_lines (
                        input """",
                        output reject2)"}
                end. /* IF TOSITE <> "" */
- 
+
                if reject1 or reject2 then rejected = yes.
             end. /* ELSE IF POD_FSM_TYPE <> "" */
             /*@MODULE RTS END*/
@@ -1488,11 +1488,11 @@ initialize_lines (
             then
                rejected = yes.
             if rejected then do on endkey undo, retry:
- 
+
                run proc-mfmsg02 (input pod_part).
- 
+
                pod_qty_chg = 0.
- 
+
                run p-assign
                   (input  pod_sched,
                   input  pod_qty_ord,
@@ -1502,7 +1502,7 @@ initialize_lines (
             end. /* IF REJECTED */
             else do:
                pod_bo_chg = 0.
- 
+
                run p-assign
                   (input  pod_sched,
                   input  pod_qty_ord,
@@ -1513,7 +1513,7 @@ initialize_lines (
          end. /* IF NOT ERR_FLAG */
          else do:
             pod_qty_chg = 0.
- 
+
             if not pod_sched then
                pod_bo_chg = pod_qty_ord - pod_qty_rcvd.
             else do:
@@ -1524,7 +1524,7 @@ initialize_lines (
                pod_bo_chg = qopen.
             end. /* ELSE DO: */
          end. /* ELSE DO: */
- 
+
          /*! CHECK PRICE LIST FOR SCHEDULED ITEMS */
          if pod_sched and not pod_fix_pr then do:
             {us/bbi/gprun.i ""gpsct05.p""
@@ -1533,9 +1533,9 @@ initialize_lines (
                        input       2,
                        output      glxcst,
                        output      curcst)"}
- 
+
             glxcst = glxcst * pod_um_conv.
- 
+
             if ip_po_curr <> base_curr then do:
                {us/px/pxrun.i &PROC='mc-curr-conv'
                         &PROGRAM='mcpl.p'
@@ -1548,22 +1548,22 @@ initialize_lines (
                                  input true,
                                  output glxcst,
                                  output mc-error-number)"}
- 
+
                if mc-error-number <> 0 then do:
                   {us/bbi/pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=2}
                end.
             end. /* IF po_curr <> base_curr */
- 
+
             if use-log-acctg then do:
- 
+
                po_recno  = recid(po_mstr).
- 
+
                if po_tot_terms_code <> "" then
- 
+
                glxcst = pod_pur_cost.
- 
+
             end. /* if use-log-acctg */
- 
+
             dummy_disc = 0.
             {us/bbi/gprun.i ""gppccal.p""
                      "(input        pod_part,
@@ -1581,24 +1581,24 @@ initialize_lines (
                        output       dummy_disc,
                        input-output newprice,
                        output       pc_recno)" }
- 
+
             /* IF NO LIST PRICE WAS FOUND LETS TRY TO CHECK FOR   */
             /* A VP_Q_PRICE FOR THE ITEM.  IF WE CANT FIND ONE,   */
             /* POD_PRICE WILL REMAIN AS IT WAS ORIGINALLY.        */
- 
+
             if pc_recno = 0 or newprice = 0 then do:
- 
+
                run find-vp-mstr
                   (input pod_part, input ip_po_vend,
                    input pod_um,   input ip_po_curr,
                    input pod_vpart).
- 
+
                if set_flag then pod_pur_cost = pur_cost.
- 
+
             end. /* IF PC_RECNO = 0 OR NEWPRICE = 0 */
             else pod_pur_cost = newprice.
          end. /* IF POD_SCHED */
- 
+
          if not porec then
          assign
             pod_qty_chg = - pod_qty_chg
@@ -1626,27 +1626,27 @@ initialize_lines (
             if {us/wh/whgpwhon.i} then do:
                assign LVQty = pod_qty_chg
                       pod_qty_chg = 0.
- 
+
                assign pod_qty_chg = LVQty
                     sr_user2 = pod_part.
             end.
          end. /* IF POD_QTY_CHG <> 0 */
- 
+
          run if_porec_or_is_return
             (input pod_site,   input  pod_loc, input pod_part,
              input pod_serial, output undo_loop).
- 
+
          if undo_loop then undo preppoddet, next preppoddet.
- 
+
          {us/bbi/gprun.i ""gpsiver.p""
             "(input pod_site,
               input ?,
               output return_int)"}
- 
+
       end. /* IF FILL-ALL = YES */
       /*@MODULE RCV-ALL END*/
- 
- 
+
+
       {us/px/pxrun.i &PROC='assignDefaultsForNewLine' &PROGRAM='porcxr1.p'
                &PARAM="(buffer pod_det,
                         input  fill-all,
@@ -1654,12 +1654,12 @@ initialize_lines (
                         output vSiteId)"
                &NOAPPERROR=true
                &CATCHERROR=true}
- 
- 
+
+
    end. /* FOR EACH POD_DET */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE p-assign:
 /*------------------------------------------------------------------------------
@@ -1669,13 +1669,13 @@ p-assign (
 )
 </Comment1>
 ------------------------------------------------------------------------------*/
- 
+
    define input  parameter l_pod_sched    like pod_sched    no-undo.
    define input  parameter l_qty_ord      like pod_qty_ord  no-undo.
    define input  parameter l_qty_rcvd     like pod_qty_rcvd no-undo.
    define input  parameter l_recid        as   recid        no-undo.
    define output parameter l_qty_chg      like pod_qty_chg  no-undo.
- 
+
    if not l_pod_sched then
       assign l_qty_chg  = l_qty_ord - l_qty_rcvd.
    else do:
@@ -1685,9 +1685,9 @@ p-assign (
            output qopen)"}
       assign l_qty_chg  = qopen.
    end. /* ELSE DO */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-attr-wkfl:
 /*------------------------------------------------------------------------------
@@ -1697,7 +1697,7 @@ proc-attr-wkfl (
 )
 </Comment1>
 ------------------------------------------------------------------------------*/
- 
+
    define input parameter inpar_line           like pod_line           no-undo.
    define input parameter inpar_assay          like pod_assay          no-undo.
    define input parameter inpar_grade          like pod_grade          no-undo.
@@ -1708,7 +1708,7 @@ proc-attr-wkfl (
    define input parameter inpar_site           like pod_site           no-undo.
    define input parameter inpar_loc            like pod_loc            no-undo.
    define input parameter inpar_recid          as   recid              no-undo.
- 
+
    /*INITIALIZE ATTRIBUTE VARIABLES WITH CURRENT SETTINGS*/
    find first attr_wkfl
       where chg_line = string(inpar_line) exclusive-lock no-error.
@@ -1716,7 +1716,7 @@ proc-attr-wkfl (
       create attr_wkfl.
       chg_line = string(inpar_line).
    end. /* IF NOT AVAILABLE ATTR_WKFL */
- 
+
    {us/px/pxrun.i &PROC='initializeAttributes' &PROGRAM='porcxr1.p'
       &PARAM="(buffer pod_det,
         input  eff_date,
@@ -1731,9 +1731,9 @@ proc-attr-wkfl (
         output err_flag)"
       &NOAPPERROR=true
       &CATCHERROR=true}
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-gploc02:
 /*------------------------------------------------------------------------------
@@ -1743,20 +1743,20 @@ proc-gploc02 (
 )
 </Comment1>
 ------------------------------------------------------------------------------*/
- 
+
    define input parameter loc__qad01 like loc__qad01 no-undo.
- 
+
    for first sr_wkfl
       where recid(sr_wkfl) = recno_sr_wkfl:
    end. /* FOR FIRST SR_WKFL */
- 
+
    {us/gp/gploc02.i  "buff1.pod_domain = global_domain and " pod_det pod_nbr
       pod_line pod_part}
- 
+
    err = error_flag.
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-mfmsg:
 /*------------------------------------------------------------------------------
@@ -1766,14 +1766,14 @@ proc-mfmsg (
 )
 </Comment1>
 ------------------------------------------------------------------------------*/
- 
+
    /* MESSAGE #596 - TRANSACTION CONFLICTS WITH SINGLE ITEM/LOT LOCATION */
    {us/bbi/pxmsg.i
       &MSGNUM=596
       &ERRORLEVEL={&WARNING-RESULT}}
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-mfmsg02:
 /*------------------------------------------------------------------------------
@@ -1784,13 +1784,13 @@ proc-mfmsg02 (
 </Comment1>
 ------------------------------------------------------------------------------*/
    define input parameter inpar_part like pod_part no-undo.
- 
+
    /* UNABLE TO ISSUE OR RECEIVE FOR ITEM */
    {us/bbi/pxmsg.i &MSGNUM=161 &ERRORLEVEL={&WARNING-RESULT}
             &MSGARG1=inpar_part}
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-rts:
 /*------------------------------------------------------------------------------
@@ -1801,29 +1801,29 @@ proc-rts (
 </Comment1>
 ------------------------------------------------------------------------------*/
    define input parameter inpar_nbr like po_nbr no-undo.
- 
+
    for each pod_det
          where pod_det.pod_domain = global_domain and  pod_nbr      =
          inpar_nbr
          and pod_rma_type =  "O"
          and pod_status   <> "c"
          and pod_status   <> "x" exclusive-lock:
- 
+
       if pod_qty_chg <> 0 then
       assign
          pod_qty_chg = - pod_qty_chg
          pod_bo_chg  = - pod_bo_chg
          pod_ps_chg  = - pod_ps_chg.
- 
+
       for each sr_wkfl exclusive-lock
             where sr_wkfl.sr_domain = global_domain and  sr_userid = SessionUniqueID
             and sr_lineid = string(pod_line):
          sr_qty = - sr_qty.
       end. /* FOR EACH SR_WKFL */
    end. /* FOR EACH POD_DET */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc-sup-perf:
 /*------------------------------------------------------------------------------
@@ -1840,9 +1840,9 @@ proc-sup-perf (
       {us/bbi/gprun.i ""popove.p""
                "(input recid(po_mstr))"}
    end. /* IF ENABLE SUPPLIER PERFORMANCE */
- 
+
 END PROCEDURE.
- 
+
 /*============================================================================*/
 PROCEDURE proc1-mfmsg02:
 /*------------------------------------------------------------------------------
@@ -1853,25 +1853,25 @@ proc1-mfmsg02 (
 </Comment1>
 ------------------------------------------------------------------------------*/
    define input parameter inpar_status like pt_status no-undo.
- 
+
    /* MESSAGE #373 - RESTRICTED TRANSACTION FOR STATUS CODE: */
    {us/bbi/pxmsg.i
       &MSGNUM=373
       &ERRORLEVEL={&APP-ERROR-RESULT}
       &MSGARG1="inpar_status"}
- 
+
 END PROCEDURE.
- 
+
 PROCEDURE p_validateTransaction:
- 
+
    define input parameter p_transtype like tr_type.
    define input parameter p_site      like tr_site.
    define input parameter p_location  like tr_loc.
    define input parameter p_part      like tr_part.
    define output parameter p_undotran like mfc_logical no-undo.
- 
+
    define variable l_status  like si_status initial "" no-undo.
- 
+
       for first loc_mstr
          where loc_mstr.loc_domain = global_domain
          and   loc_site            = p_site
@@ -1879,17 +1879,17 @@ PROCEDURE p_validateTransaction:
       no-lock:
          l_status = loc_status.
       end. /* FOR FIRST loc_mstr */
- 
+
       if not available loc_mstr
       then do:
- 
+
          for first si_mstr
             where si_mstr.si_domain = global_domain
             and   si_site           = p_site
          no-lock:
             l_status = si_status.
          end. /* FOR FIRST si_mstr */
- 
+
          if not si_auto_loc
          then do:
             p_undotran = Yes.
@@ -1899,28 +1899,28 @@ PROCEDURE p_validateTransaction:
             undo, retry.
          end. /*IF NOT si_auto_loc*/
       end. /* IF NOT AVALIABLE loc_mstr */
- 
+
    /* MAKE SURE STATUS CODE EXISTS AND TRANSTYPE ALLOWED */
    for first is_mstr
       where is_mstr.is_domain = global_domain
       and   is_status         = l_status
    no-lock:
    end. /* FOR FIRST is_mstr */
- 
+
    if not available is_mstr
    then do:
       /* INVENTORY STATUS IS NOT DEFINED */
       {us/bbi/pxmsg.i &MSGNUM=361 &ERRORLEVEL=3}
       undo, retry.
    end.
- 
+
    for first isd_det
       where isd_det.isd_domain = global_domain
       and   isd_tr_type        = p_transtype
       and   isd_status         = is_status
    no-lock:
    end. /* FOR FIRST isd_det */
- 
+
    if available isd_det
    then do:
       if (batchrun            =  yes
@@ -1936,7 +1936,7 @@ PROCEDURE p_validateTransaction:
          undo, retry.
       end. /* IF batchrun = yes */
    end. /* IF AVAILABLE isd_det */
- 
+
 END PROCEDURE. /* p_validateTransaction */
 
 PROCEDURE getNextReceiverNbr:

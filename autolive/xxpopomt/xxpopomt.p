@@ -18,8 +18,13 @@
 /* no longer required should be deleted and no in-line patch markers should   */
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
-
+/*324******************************************By zy***********/
+/* when have code_fldname = "Standard Cost Exchange Rate Type"*/
+/* Standard PO , Supplier Scheduled Order & recive            */
+/* use code_value as exchange rate type                       */
+/* other wise use system standard exchange rate type          */
+/* call:xxpopomt.p->xxpomt.p->xxpomtb.p->xxpomtb1.p->xxmcui.p */
 {mfdeclre.i}
 
 /* INPUT OF FALSE MEANS THIS IS NOT A BLANKET PURCHASE ORDER */
-{gprun.i ""xxpomt.p"" "(input false)"}
+/*324*/ {gprun.i ""xxpomt.p"" "(input false)"}

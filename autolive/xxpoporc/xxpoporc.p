@@ -68,9 +68,14 @@
 /* Revision: 1.8.4.7     BY: Dorota Hohol      DATE: 10/02/03 ECO: *P112* */
 /* $Revision: 1.8.4.8 $   BY: Dan Herman    DATE: 11/04/04 ECO: *M1V1* */
 /*                                                                            */
- 
+
 /* poporc.p  moved to poporcm.p with F211*/
- 
+/*324******************************************By zy***********/
+/* when have code_fldname = "Standard Cost Exchange Rate Type"*/
+/* Standard PO , Supplier Scheduled Order & recive            */
+/* use code_value as exchange rate type                       */
+/* other wise use system standard exchange rate type          */
+
 {us/mf/mfdtitle.i}
 {us/mf/mfaititl.i} /* SUPPRESS DISPLAY OF SCREEN TITLE IN API MODE */
 {us/gl/gldydef.i new}
@@ -87,11 +92,11 @@ assign
    ports     = ""
    porec     = yes
    is-return = no.
- 
+
 pause 0.
 
 l_int_ref_type = {&TYPE_PO}.
 do on error undo, return error return-value:
-   {us/bbi/gprun.i ""xxpoporcm.p""
+/*324*/   {us/bbi/gprun.i ""xxpoporcm.p""
       "(input l_int_ref_type)"}
 end.

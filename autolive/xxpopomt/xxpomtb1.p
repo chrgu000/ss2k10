@@ -32,6 +32,11 @@
 {us/bbi/mfdeclre.i}
 {us/bbi/gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {us/px/pxmaint.i}
+/*324******************************************By zy***********/
+/* when have code_fldname = "Standard Cost Exchange Rate Type"*/
+/* Standard PO , Supplier Scheduled Order & recive            */
+/* use code_value as exchange rate type                       */
+/* other wise use system standard exchange rate type          */
 
 
 /* SHARED VARIABLES */
@@ -178,7 +183,7 @@ do on error undo, retry:
       /*       Read/Write                                                  */
 
 
-      {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
+/*324*/   {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
          "(input po_curr,
            input base_curr,
            input po_ord_date,
