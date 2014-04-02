@@ -300,15 +300,19 @@ History:
             run getNextRecord in ApiMethodHandle (input "ttExchangeRateInfo").
             if return-value = {&RECORD-NOT-FOUND} then leave.
          end.
-/*324*/  for first code_mstr no-lock where
+/*324*/  define variable vrate201404 like v_rate[1].
+/*324*   display i_curr1 i_curr2 with frame a-exch.  */
+/*324*/  find first code_mstr no-lock where
 /*324*/            code_domain = global_domain and
-/*324*/            code_fldname = "Standard Cost Exchange Rate Type":
-/*324*/       assign v_rate[1] = getexratebycurr(input i_curr1,
-/*324*/              input i_curr2, input code_value,
-/*324*/              input i_date).
-/*324*/       display v_rate[1] with frame a-exch.
+/*324*/            code_fldname = "Standard Cost Exchange Rate Type" no-error.
+/*324*/  if available code_mstr then do:
+/*324*/       assign vrate201404 = getexratebycurr(input i_curr1,
+/*324*/              input i_curr2, input code_value,input i_date).
 /*324*/  end.
-
+/*324*/  if vrate201404 <> -65535 then do: 
+/*324*/        assign v_rate[1] = vrate201404.
+/*324*/        display v_rate[1] with frame a-exch. 
+/*324*/  end.
          if c-application-mode <> "API" then do:
             /* Update only those rates which are displayed */
             update

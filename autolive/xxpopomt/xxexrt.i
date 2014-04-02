@@ -32,7 +32,7 @@ FUNCTION getexrate2usd returns decimal
    ExchangeRateValidDateTill >= idate:
    end.
    if avail exchangerate then do:
-      return ExchangeRate.ExchangeRate / ExchangeRate.ExchangeRateScale.
+      return ExchangeRate.ExchangeRateScale / ExchangeRate.ExchangeRate.
    end.
    else do:
       for first exchangerate no-lock where
@@ -43,9 +43,11 @@ FUNCTION getexrate2usd returns decimal
            ExchangeRateValidDateTill >= idate:
       end.
        if avail exchangerate then do:
-          return ExchangeRate.ExchangeRateScale / ExchangeRate.ExchangeRate.
+          return ExchangeRate.ExchangeRate / ExchangeRate.ExchangeRateScale.
        end.
-       else return 1.
+       else do:
+          return -65535.
+       end.
    end.
 END FUNCTION.
 

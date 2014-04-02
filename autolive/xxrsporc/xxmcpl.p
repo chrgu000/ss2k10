@@ -709,7 +709,7 @@ PROCEDURE ip-get-direct-rate:
       initial false.
 
    define buffer b_exr_rate for exr_rate.
-
+/*324*/  define variable vrate201404 like exr_rate2.
    /* Look for a direct exchange rate between the currencies */
    for first b_exr_rate exclusive-lock where b_exr_rate.exr_domain = global_domain and
       exr_curr1      =  i_curr1 and
@@ -718,12 +718,15 @@ PROCEDURE ip-get-direct-rate:
       exr_start_date <= i_date  and
       exr_end_date   >= i_date:
 
-/*324*/  for first code_mstr no-lock where
+/*324*/  find first code_mstr no-lock where
 /*324*/            code_domain = global_domain and
-/*324*/            code_fldname = "Standard Cost Exchange Rate Type":
-/*324*/     assign exr_rate2 = getexratebycurr(input i_curr2,
-/*324*/            input i_curr1, input code_value,
-/*324*/            input i_date).
+/*324*/            code_fldname = "Standard Cost Exchange Rate Type" no-error.
+/*324*/  if available code_mstr then do:
+/*324*/       assign vrate201404 = getexratebycurr(input i_curr2,
+/*324*/              input i_curr1, input code_value,input i_date).
+/*324*/  end.
+/*324*/  if vrate201404 <> -65535 then do:
+/*324*/        assign exr_rate2 = vrate201404.
 /*324*/  end.
 
    assign
