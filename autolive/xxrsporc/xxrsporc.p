@@ -446,6 +446,8 @@ define new shared workfile tax_wkfl
    field tax_in                like pod_tax_in
    field tax_taxable           like pod_taxable
    field tax_price             like prh_pur_cost.
+/*324*/ {xxexrt.i}
+/*324*/ define variable vdrate      as decimal.
 
 {us/gp/gpglefdf.i}
 
@@ -1042,7 +1044,6 @@ repeat:
        break by pod_nbr by pod_line
              on endkey undo mainloop, retry mainloop
              on error  undo mainloop, retry mainloop:
-
          if pod_status <> "" then do:
             l_cn = no.
 
@@ -1063,8 +1064,15 @@ repeat:
             end.
             else
                undo mainloop, retry mainloop.
-
          end. /* IF pod_status <> "" */
+
+/*324*/    if first-of(pod_nbr) and po_curr <> base_curr then do:
+/*324*/        vdrate = getExratefromcodemstr(input po_curr,input base_curr,input eff_date).
+/*324*/        if vdrate = -65535 then do:
+/*324*/            {us/bbi/pxmsg.i &MSGNUM=81 &ERRORLEVEL={&APP-ERROR-RESULT}}
+/*324*/            undo mainloop, retry mainloop.
+/*324*/        end.
+/*324*/    end.
 
          /*For Scheduled Orders, check if the system date is */
          /*within the scheduled order effective date range   */

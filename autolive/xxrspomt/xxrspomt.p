@@ -96,7 +96,7 @@
 {us/px/pxmaint.i}
 {us/px/pxphdef.i mcpl}
 {us/tx/txusgdef.i}   /*PRE-PROCESSOR CONSTANTS FOR I19 */
-
+/*324*/ {xxexrt.i}
 define new shared variable cmtindx like cmt_indx.
 define new shared variable tax_recno as recid.
 define new shared variable impexp   like mfc_logical no-undo.
@@ -142,7 +142,7 @@ define variable edi_po                   as   logical            no-undo.
 define variable cErrorArgs               as   character          no-undo.
 define buffer scxref for scx_ref.
 define variable is-valid                 as   logical            no-undo.
-
+/*324*/ define variable vdrate      as decimal.
 {us/po/pocnvars.i} /* Consignment variables */
 {us/po/pocnpo.i}  /* consignment procedures and frames */
 
@@ -826,6 +826,14 @@ repeat:
                              output impexp)"}
                end.
             end.
+/*324*/     if new_po then do:
+/*324*/        vdrate = getExratefromcodemstr(input po_curr,input base_curr,input po_ord_date).
+/*324*/        if vdrate = -65535 then do:
+/*324*/            {us/bbi/pxmsg.i &MSGNUM=81 &ERRORLEVEL={&APP-ERROR-RESULT}}
+/*324*/            next-prompt po_curr.
+/*324*/            undo,retry setb.
+/*324*/        end.
+/*324*/     end.
             update impexp.
          end.
          else do:

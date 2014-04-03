@@ -32,6 +32,7 @@
 {us/bbi/mfdeclre.i}
 {us/bbi/gplabel.i} /* EXTERNAL LABEL INCLUDE */
 {us/px/pxmaint.i}
+/*324*/ {xxexrt.i}
 /*324******************************************By zy***********/
 /* when have code_fldname = "Standard Cost Exchange Rate Type"*/
 /* Standard PO , Supplier Scheduled Order & recive            */
@@ -54,7 +55,7 @@ define shared frame a.
 define shared frame b.
 
 define variable lLegacyAPI  as logical no-undo.
-
+/*324*/ define variable vdrate      as decimal.
 {us/mf/mfaimfg.i} /* Common API constants and variables */
 
 {us/po/popoit01.i} /* Purchase Order Temp Table Definition */
@@ -181,8 +182,11 @@ do on error undo, retry:
       /*TO DO: Leave this for CHUI mode since this method displays a frame.*/
       /*       For API Mode, Call the Exchange Rate ROP as Apporriate for  */
       /*       Read/Write                                                  */
-
-
+/*324*/ vdrate = getExratefromcodemstr(input po_curr,input base_curr,input po_ord_date).
+/*324*/ if vdrate = -65535 then do:
+/*324*/     {us/bbi/pxmsg.i &MSGNUM=81 &ERRORLEVEL={&APP-ERROR-RESULT}}
+/*324*/     undo,leave setb_sub.
+/*324*/ end.
 /*324*/   {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
          "(input po_curr,
            input base_curr,

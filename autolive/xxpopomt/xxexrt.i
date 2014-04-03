@@ -65,3 +65,18 @@ FUNCTION getexratebycurr returns decimal
    assign iType_id = getExchangeRateTypeID(iType).
    return getexrate2usd(ifrom_currency_id,ito_Currency_ID,iType_id,idate).
 END FUNCTION.
+
+FUNCTION getExratefromcodemstr returns decimal
+    (input ifrom_currency as character,
+     input ito_Currency as character,
+     input idate as date):
+     define variable orate like ExchangeRate.ExchangeRate.
+     find first code_mstr no-lock where
+               code_domain = global_domain and
+               code_fldname = "Standard Cost Exchange Rate Type" no-error.
+     if available code_mstr then do:
+          assign orate = getexratebycurr(input ifrom_currency,
+              input ito_Currency, input code_value,input idate).
+     end.
+     return orate.
+end.

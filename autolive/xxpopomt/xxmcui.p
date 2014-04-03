@@ -167,9 +167,8 @@ History:
    define variable tempUnion as   logical no-undo.
 
    define variable lLegacyAPI     as   logical     no-undo.
-
+/*324*/  define variable vrate201404 like v_rate[1].
    define buffer b_exru_usage for exru_usage.
-
    /*Multi-currency Exchange rate form definition*/
    form
       v_curr1[1] label "Exch Rate" colon 20
@@ -192,6 +191,12 @@ History:
 
    /* Set Frame Labels */
    setFrameLabels(frame a-exch:handle).
+/*324*/  vrate201404 = getExratefromcodemstr(input i_curr1,
+/*324*/              input i_curr2,input i_date).
+/*324*/  if vrate201404 = -65535 then do:
+/*324*/   /* pause Message "ERROR: Exchange rate does not exist.  Please re-enter.".*/
+/*324*/     return error.
+/*324*/  end.
 
    if c-application-mode = "API" then do:
 
@@ -290,7 +295,7 @@ History:
       end. /* c-application-mode <> "API" */
 
       up-blk:
-      do on error  undo up-blk,   retry up-blk
+      do on error  undo up-blk, retry up-blk
             on endkey undo main-blk, leave main-blk:
 
          if retry and c-application-mode = "API" then
@@ -300,19 +305,12 @@ History:
             run getNextRecord in ApiMethodHandle (input "ttExchangeRateInfo").
             if return-value = {&RECORD-NOT-FOUND} then leave.
          end.
-/*324*/  define variable vrate201404 like v_rate[1].
-/*324*   display i_curr1 i_curr2 with frame a-exch.  */
-/*324*/  find first code_mstr no-lock where
-/*324*/            code_domain = global_domain and
-/*324*/            code_fldname = "Standard Cost Exchange Rate Type" no-error.
-/*324*/  if available code_mstr then do:
-/*324*/       assign vrate201404 = getexratebycurr(input i_curr1,
-/*324*/              input i_curr2, input code_value,input i_date).
-/*324*/  end.
-/*324*/  if vrate201404 <> -65535 then do: 
+
+/*324*/  if vrate201404 <> -65535 then do:
 /*324*/        assign v_rate[1] = vrate201404.
-/*324*/        display v_rate[1] with frame a-exch. 
+/*324*/        display v_rate[1].
 /*324*/  end.
+
          if c-application-mode <> "API" then do:
             /* Update only those rates which are displayed */
             update
@@ -372,6 +370,7 @@ History:
                &PARAM="(input tempRate1,
                  input tempRate2,
                  input tempUnion)" &NOAPPERROR=true}
+
             if return-value = {&APP-ERROR-RESULT} then do:
                if c-application-mode <> "API" then do:
                   if v_rate2[v_cnt] = 0 then
@@ -400,7 +399,6 @@ History:
 
    if c-application-mode <> "API" then
       hide frame a-exch.
-
 END PROCEDURE.
 
 /*============================================================================*/

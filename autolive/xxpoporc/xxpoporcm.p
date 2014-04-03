@@ -223,7 +223,7 @@ define new shared variable kbtransnbr          as integer             no-undo.
 define new shared variable msg                 as character format "x(60)".
 define new shared variable l_include_retain    like mfc_logical initial yes no-undo.
 define variable poRctId                    as character format "x(60)" no-undo.
-
+/*324*/ define variable vdrate      as decimal.
 define new shared frame b.
 define new shared workfile tax_wkfl
    field tax_nbr     like pod_nbr
@@ -590,6 +590,14 @@ repeat:
 
    end. /* DO TRANSACTION */
 
+/*324*/ if base_curr <> po_curr then do:
+/*324*/    vdrate = getExratefromcodemstr(input po_curr,input base_curr,input eff_date).
+/*324*/    if vdrate = -65535 then do:
+/*324*/        {us/bbi/pxmsg.i &MSGNUM=81 &ERRORLEVEL={&APP-ERROR-RESULT}}
+/*324*/        undo,retry.
+/*324*/    end.
+/*324*/ end.
+
    skipBlock:
    do:
       updateBlock:
@@ -606,7 +614,6 @@ repeat:
                then do:
                   seta1_sub:
                   do on error undo, retry:
-
                      if c-application-mode = "API"
                      then do:
                         {us/gp/gpttcp.i
