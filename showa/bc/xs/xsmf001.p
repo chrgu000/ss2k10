@@ -5879,7 +5879,7 @@ IF OkToRun = yes THEN  RUN    xslap09.p.
 
 
                 /* LABEL 6 - START */
-                  L11906 = "ZZ×ª²Öµ½ETS..96" .
+                  L11906 = "" .
                 display L11906          format "x(40)" skip with fram F1190 no-box.
                 /* LABEL 6 - END */
         Update V1190
@@ -6205,7 +6205,7 @@ IF OkToRun = yes THEN  RUN    xsinv72.p.
         /* LOGICAL SKIP START */
         V1190 = "".
 RUN CheckSecurity (INPUT "xsinv73.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN    xsinv73.p.
+IF OkToRun = yes THEN  RUN xsinv73.p.
         leave V1193L.
         /* LOGICAL SKIP END */
                 display "#ÌõÂë# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
@@ -6536,129 +6536,129 @@ IF OkToRun = yes THEN  RUN  xsictr95.p.
    END.
 
 /**41Y1**************END****************************************************/
-      /**41Y2**************START****************************************************/
-   V1196LMAINLOOP:
-   REPEAT:
-   /*Logical Enter Cycle1196    */
-   IF NOT (V1190 = "96" OR V1100 = "96" ) THEN LEAVE V1196LMAINLOOP.
-     /* START  LINE :1196  1.9.4 ¿â´æ×ªÒÆ  */
-     V1196L:
-     REPEAT:
-
-        /* --DEFINE VARIABLE -- START */
-        hide all.
-        define variable V1196           as char format "x(50)".
-        define variable PV1196          as char format "x(50)".
-        define variable L11961          as char format "x(40)".
-        define variable L11962          as char format "x(40)".
-        define variable L11963          as char format "x(40)".
-        define variable L11964          as char format "x(40)".
-        define variable L11965          as char format "x(40)".
-        define variable L11966          as char format "x(40)".
-        /* --DEFINE VARIABLE -- END */
-
-
-        /* --FIRST TIME DEFAULT  VALUE -- START  */
-        /* --FIRST TIME DEFAULT  VALUE -- END  */
-
-
-        /* --CYCLE TIME DEFAULT  VALUE -- START  */
-        V1196 = " ".
-        V1196 = ENTRY(1,V1196,"@").
-        /* --CYCLE TIME DEFAULT  VALUE -- END  */
-
-        /* LOGICAL SKIP START */
-        V1160 = "".
-RUN CheckSecurity (INPUT "xsictr96.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
-IF OkToRun = yes THEN  RUN  xsictr96.p.
-        leave V1196L.
-        /* LOGICAL SKIP END */
-                display "#ÌõÂë# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
-                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1196 no-box.
-
-                /* LABEL 1 - START */
-                  L11961 = "" .
-                display L11961          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 1 - END */
-
-
-                /* LABEL 2 - START */
-                  L11962 = "" .
-                display L11962          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 2 - END */
-
-
-                /* LABEL 3 - START */
-                  L11963 = "" .
-                display L11963          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 3 - END */
-
-
-                /* LABEL 4 - START */
-                  L11964 = "" .
-                display L11964          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 4 - END */
-
-
-                /* LABEL 5 - START */
-                  L11965 = "" .
-                display L11965          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 5 - END */
-
-
-                /* LABEL 6 - START */
-                  L11966 = "" .
-                display L11966          format "x(40)" skip with fram F1196 no-box.
-                /* LABEL 6 - END */
-        Update V1196
-        WITH  fram F1196 NO-LABEL
-        EDITING:
-          readkey pause wtimeout.
-          if lastkey = -1 Then quit.
-        if LASTKEY = 404 Then Do: /* DISABLE F4 */
-           pause 0 before-hide.
-           undo, retry.
-        end.
-           apply lastkey.
-        end.
-
-        /* PRESS e EXIST CYCLE */
-        /* **SKIP TO MAIN LOOP START** */
-        IF V1196 = "e" THEN  LEAVE MAINLOOP.
-        /* **SKIP TO MAIN LOOP END** */
-        /* **LOAD MENU START** */
-        IF V1196 = "$LOADMENU" THEN  RUN LOADMENU.
-        /* **LOAD MENU END ** */
-        IF INDEX ( V1196 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1196 ).
-        /* **CHANGE Default Site END ** */
-        IF V1196 = "S" THEN  RUN xsmdf01.p.
-        /* **CHANGE DEFAULT SITE END ** */
-        display  skip WMESSAGE NO-LABEL with fram F1196.
-
-         /*  ---- Valid Check ---- START */
-
-        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1196.
-        pause 0.
-        /* CHECK FOR NUMBER VARIABLE START  */
-        /* CHECK FOR NUMBER VARIABLE  END */
-         /*  ---- Valid Check ---- END */
-
-        display  "" @ WMESSAGE NO-LABEL with fram F1196.
-        pause 0.
-        leave V1196L.
-     END.
-     PV1196 = V1196.
-     /* END    LINE :1196  1.9.4 ¿â´æ×ªÒÆ  */
-
-
-   /* Without Condition Exit Cycle Start */
-   LEAVE V1196LMAINLOOP.
-   /* Without Condition Exit Cycle END */
-   /* Internal Cycle END :1196    */
-
-   END.
-
-/**41Y2**************END****************************************************/
+/**41Y2**************START****************************************************
+ *   V1196LMAINLOOP:
+ *   REPEAT:
+ *   /*Logical Enter Cycle1196    */
+ *   IF NOT (V1190 = "96" OR V1100 = "96" ) THEN LEAVE V1196LMAINLOOP.
+ *     /* START  LINE :1196  1.9.4 ¿â´æ×ªÒÆ  */
+ *     V1196L:
+ *     REPEAT:
+ *
+ *        /* --DEFINE VARIABLE -- START */
+ *        hide all.
+ *        define variable V1196           as char format "x(50)".
+ *        define variable PV1196          as char format "x(50)".
+ *        define variable L11961          as char format "x(40)".
+ *        define variable L11962          as char format "x(40)".
+ *        define variable L11963          as char format "x(40)".
+ *        define variable L11964          as char format "x(40)".
+ *        define variable L11965          as char format "x(40)".
+ *        define variable L11966          as char format "x(40)".
+ *        /* --DEFINE VARIABLE -- END */
+ *
+ *
+ *        /* --FIRST TIME DEFAULT  VALUE -- START  */
+ *        /* --FIRST TIME DEFAULT  VALUE -- END  */
+ *
+ *
+ *        /* --CYCLE TIME DEFAULT  VALUE -- START  */
+ *        V1196 = " ".
+ *        V1196 = ENTRY(1,V1196,"@").
+ *        /* --CYCLE TIME DEFAULT  VALUE -- END  */
+ *
+ *        /* LOGICAL SKIP START */
+ *        V1160 = "".
+ * RUN CheckSecurity (INPUT "xsictr96.p" , INPUT global_userid , OUTPUT okToRun , OUTPUT Execname ).
+ * IF OkToRun = yes THEN  RUN  xsictr96.p.
+ *        leave V1196L.
+ *        /* LOGICAL SKIP END */
+ *                display "#ÌõÂë# *" + ( if length(DBNAME) < 5 then trim( DBNAME ) else trim(substring(DBNAME,length(DBNAME) - 4,5)) )
+ *                                        + "*" + TRIM ( V1002 )  format "x(40)" skip with fram F1196 no-box.
+ *
+ *                /* LABEL 1 - START */
+ *                  L11961 = "" .
+ *                display L11961          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 1 - END */
+ *
+ *
+ *                /* LABEL 2 - START */
+ *                  L11962 = "" .
+ *                display L11962          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 2 - END */
+ *
+ *
+ *                /* LABEL 3 - START */
+ *                  L11963 = "" .
+ *                display L11963          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 3 - END */
+ *
+ *
+ *                /* LABEL 4 - START */
+ *                  L11964 = "" .
+ *                display L11964          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 4 - END */
+ *
+ *
+ *                /* LABEL 5 - START */
+ *                  L11965 = "" .
+ *                display L11965          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 5 - END */
+ *
+ *
+ *                /* LABEL 6 - START */
+ *                  L11966 = "" .
+ *                display L11966          format "x(40)" skip with fram F1196 no-box.
+ *                /* LABEL 6 - END */
+ *        Update V1196
+ *        WITH  fram F1196 NO-LABEL
+ *        EDITING:
+ *          readkey pause wtimeout.
+ *          if lastkey = -1 Then quit.
+ *        if LASTKEY = 404 Then Do: /* DISABLE F4 */
+ *           pause 0 before-hide.
+ *           undo, retry.
+ *        end.
+ *           apply lastkey.
+ *        end.
+ *
+ *        /* PRESS e EXIST CYCLE */
+ *        /* **SKIP TO MAIN LOOP START** */
+ *        IF V1196 = "e" THEN  LEAVE MAINLOOP.
+ *        /* **SKIP TO MAIN LOOP END** */
+ *        /* **LOAD MENU START** */
+ *        IF V1196 = "$LOADMENU" THEN  RUN LOADMENU.
+ *        /* **LOAD MENU END ** */
+ *        IF INDEX ( V1196 ,".") <> 0 THEN  RUN RUNMFGPROPROGRAM ( INPUT V1196 ).
+ *        /* **CHANGE Default Site END ** */
+ *        IF V1196 = "S" THEN  RUN xsmdf01.p.
+ *        /* **CHANGE DEFAULT SITE END ** */
+ *        display  skip WMESSAGE NO-LABEL with fram F1196.
+ *
+ *         /*  ---- Valid Check ---- START */
+ *
+ *        display "...PROCESSING...  " @ WMESSAGE NO-LABEL with fram F1196.
+ *        pause 0.
+ *        /* CHECK FOR NUMBER VARIABLE START  */
+ *        /* CHECK FOR NUMBER VARIABLE  END */
+ *         /*  ---- Valid Check ---- END */
+ *
+ *        display  "" @ WMESSAGE NO-LABEL with fram F1196.
+ *        pause 0.
+ *        leave V1196L.
+ *     END.
+ *     PV1196 = V1196.
+ *     /* END    LINE :1196  1.9.4 ¿â´æ×ªÒÆ  */
+ *
+ *
+ *   /* Without Condition Exit Cycle Start */
+ *   LEAVE V1196LMAINLOOP.
+ *   /* Without Condition Exit Cycle END */
+ *   /* Internal Cycle END :1196    */
+ *
+ *   END.
+ *
+**41Y2**************END****************************************************/
    pause 0 before-hide.
 
 
