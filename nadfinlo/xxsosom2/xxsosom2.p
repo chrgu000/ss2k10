@@ -157,7 +157,8 @@
 /*-Revision end---------------------------------------------------------------*/
 
 /* 140108 增加日期限制 修改程序 xxsosomta12.p     /*140108.1*/ */
-{mfdtitle.i "111021.1"}
+/* 140410 取消日期限制 修改程序 xxsosomta12.p     /*140108.1*/ */
+{mfdtitle.i "140410.1"}
 
 /* CHANGES MADE TO THIS PROGRAM MAY ALSO NEED TO BE */
 /* MADE TO PROGRAM fseomt.p.                        */
@@ -185,5 +186,3 @@ pause 0.
 /* SS - 110121.1 - B */
 {gprun.i  ""xxsosomt12.p""  "(input no)"} 
 /* SS - 110121.1 - E */
-
-

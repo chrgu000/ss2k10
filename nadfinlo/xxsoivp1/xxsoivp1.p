@@ -216,8 +216,10 @@ define variable trans_conv like sod_um_conv no-undo.
 *//*
     {mfdtitle.i "130503.1"}
    */
+   /*
     {mfdtitle.i "140108.1"}
-
+    */
+    {mfdtitle.i "140409.1"}
 
 {cxcustom.i "SOIVPST.P"}
 /* ********** Begin Translatable Strings Definitions ********* */
@@ -278,7 +280,7 @@ define variable inv_nbr              like so_inv_nbr label "Invoice".
 
  /* ss - 130320.1 -b */
  DEFINE VAR v_go AS LOGICAL INITIAL YES  .
-        PROCEDURE CheckSecurity1:
+ /*       PROCEDURE CheckSecurity1:
         DEFINE OUTPUT PARAMETER v_go AS LOGICAL INITIAL YES .
         define var usrwdate as date.
         define var curdate as date .
@@ -303,7 +305,7 @@ define variable inv_nbr              like so_inv_nbr label "Invoice".
         end.
         */
 
-        end PROCEDURE.
+        end PROCEDURE. */
 
 
 

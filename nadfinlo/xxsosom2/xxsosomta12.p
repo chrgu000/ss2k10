@@ -467,10 +467,10 @@ do transaction on error undo, leave on endkey undo, return:
 
 end.  /* DO TRANSACTION ON ERROR UNDO.. */
 
-/*140108.1*/ if today > date(4,7,2014) or today < date(10,1,2013) then do:
-/*140108.1*/   {mfmsg.i 641 3}
-/*140108.1*/    undo,retry.
-/*140108.1*/ end.
+/*140108.1 if today > date(4,7,2014) or today < date(10,1,2013) then do: */
+/*140108.1   {mfmsg.i 641 3}                                             */
+/*140108.1    undo,retry.                                                */
+/*140108.1 end.                                                          */
 
 if sonbr = " " then
    return.
