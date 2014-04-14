@@ -8,11 +8,10 @@ define shared variable execname as character.
 if old_usr_mstr.usr_passwd <> usr_mstr.usr_passwd then do:
 create qad_wkfl .
 assign qad_key1 = "usr_mstr password change record"
-       qad_key2 = string(today,"9999-99-99") + " " + string(time,"HH:MM:SS")
+       qad_key2 = global_userid + " " + mfguser + " " + string(today,"9999-99-99") + " " + string(time,"HH:MM:SS")
        qad_key3 = "usr_userid:" + usr_mstr.usr_userid
-       qad_key4 = "Trigger_type:M"
-       qad_key5 = "usr_passwd change From:[" + old_usr_mstr.usr_passwd +
-                  "] To:[" + usr_mstr.usr_passwd + "]"
+       qad_key4 = "usr_passwd Change From:[" + old_usr_mstr.usr_passwd + "]"
+       qad_key5 = "Change To:[" + usr_mstr.usr_passwd + "]"
        qad_key6 = "RECID(usr_mstr)" + string(recid(usr_mstr))
        qad_user1 = "usr_userid:" + usr_mstr.usr_userid
        qad_user2 = "usr_usrname:" + usr_mstr.usr_name
@@ -22,7 +21,7 @@ assign qad_key1 = "usr_mstr password change record"
        qad_charfld[1] = "MFGPRO Operater:" + global_userid.
 
 FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
-    EACH Demonstration._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
+    EACH qaddb._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
   assign qad_charfld[2] = "OS Operater:" + _connect-name
          qad_charfld[3] = "connect Device:" + _connect-device
          qad_charfld[4] = "connect Device:" + _connect-device
@@ -38,12 +37,15 @@ FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
          qad_datefld[3] = mon_login_date
          qad_intfld[2]  = mon_login_time.
 END.
-vlvl = 3.
-REPEAT WHILE (PROGRAM-NAME(vlvl) <> ?)
-         AND INDEX(PROGRAM-NAME(vlvl), "gpwinrun") = 0:
-  qad_charfld[13] = qad_charfld[13] + string(vlvl - 2, "99")
-            + ":" + program-name(vlvl) + "; ".
+ 
+vlvl = 2.
+REPEAT WHILE (PROGRAM-NAME(vlvl) <> ?):
+  qad_charfld[13] = qad_charfld[13] + string(vlvl - 1, "99")
+                  + ":" + program-name(vlvl) + "; ".
   vlvl = vlvl + 1.
+  if index(PROGRAM-NAME(vlvl),"mfnewa3.p") > 0 then leave.
 END.
+
+
 qad_charfld[13] = "call:" + qad_charfld[13].
 end. /*if old_usr_mstr.usr_passwd <> usr_mstr.usr_passwd then do:*/
