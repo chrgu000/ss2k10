@@ -1,0 +1,176 @@
+ADD TABLE "ckdl_tran"
+  DESCRIPTION "Down Load HK & OEM P/O Receipts Transaction Data"
+  DUMP-NAME "ckdl_tra"
+
+ADD FIELD "ckdl_part" OF "ckdl_tran" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Part Number"
+  ORDER 10
+
+ADD FIELD "ckdl_date" OF "ckdl_tran" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Tran Date"
+  ORDER 20
+
+ADD FIELD "ckdl_type" OF "ckdl_tran" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Type"
+  ORDER 30
+
+ADD FIELD "ckdl_loc" OF "ckdl_tran" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Location"
+  ORDER 40
+
+ADD FIELD "ckdl_qty" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Tran Qty"
+  DECIMALS 4
+  ORDER 50
+
+ADD FIELD "ckdl_um" OF "ckdl_tran" AS character 
+  FORMAT "x(2)"
+  INITIAL ""
+  LABEL "UM"
+  ORDER 60
+
+ADD FIELD "ckdl_order" OF "ckdl_tran" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Order"
+  ORDER 70
+
+ADD FIELD "ckdl_addr" OF "ckdl_tran" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Vendor"
+  ORDER 80
+
+ADD FIELD "ckdl_trnbr" OF "ckdl_tran" AS integer 
+  FORMAT ">>>>>>>>"
+  INITIAL "0"
+  LABEL "Tran nbr"
+  ORDER 90
+
+ADD FIELD "ckdl_effdate" OF "ckdl_tran" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "effdate"
+  ORDER 100
+
+ADD FIELD "ckdl_line" OF "ckdl_tran" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Line"
+  ORDER 110
+
+ADD FIELD "ckdl_site" OF "ckdl_tran" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Site"
+  ORDER 120
+
+ADD FIELD "ckdl_dele" OF "ckdl_tran" AS logical 
+  FORMAT "yes/no"
+  INITIAL "no"
+  LABEL "Delete"
+  ORDER 130
+
+ADD FIELD "ckdl_nyqty" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 1"
+  COLUMN-LABEL "Contract 1"
+  DECIMALS 4
+  ORDER 140
+
+ADD FIELD "ckdl_receiver" OF "ckdl_tran" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Receiver"
+  ORDER 150
+
+ADD FIELD "ckdl_invoice" OF "ckdl_tran" AS character 
+  FORMAT "x(12)"
+  INITIAL ""
+  LABEL "Invoice"
+  ORDER 160
+
+ADD FIELD "ckdl_box" OF "ckdl_tran" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Box"
+  COLUMN-LABEL "Box"
+  ORDER 170
+
+ADD FIELD "ckdl_desc" OF "ckdl_tran" AS character 
+  FORMAT "x(24)"
+  INITIAL ""
+  LABEL "Description"
+  COLUMN-LABEL "Description"
+  ORDER 180
+
+ADD FIELD "ckdl_vend" OF "ckdl_tran" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  LABEL "Name"
+  COLUMN-LABEL "Name"
+  ORDER 190
+
+ADD FIELD "ckdl_nyqty1" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 2"
+  COLUMN-LABEL "Contract 2"
+  DECIMALS 4
+  ORDER 200
+
+ADD FIELD "ckdl_stype" OF "ckdl_tran" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  LABEL "Sale Type"
+  COLUMN-LABEL "Sale Type"
+  ORDER 210
+
+ADD FIELD "ckdl_nyqty3" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 4"
+  COLUMN-LABEL "Contract 4"
+  DECIMALS 4
+  ORDER 220
+
+ADD FIELD "ckdl_nyqty2" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 3"
+  COLUMN-LABEL "Contract 3"
+  DECIMALS 4
+  ORDER 230
+
+ADD FIELD "ckdl_nyqty4" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 5"
+  COLUMN-LABEL "Contract 5"
+  DECIMALS 4
+  ORDER 240
+
+ADD FIELD "ckdl_nyqty5" OF "ckdl_tran" AS decimal 
+  FORMAT "->,>>>,>>9.9<<<"
+  INITIAL "0"
+  LABEL "Contract 6"
+  COLUMN-LABEL "Contract 6"
+  DECIMALS 4
+  ORDER 250
+
+.
+PSC
+codepage=GB2312
+.
+0000003337

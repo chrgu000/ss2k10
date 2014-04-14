@@ -1,0 +1,201 @@
+ADD TABLE "ckseq_mstr"
+  LABEL "Daily Schedule"
+  DESCRIPTION "Create by Michael
+
+"
+  DUMP-NAME "ckseq_ms"
+
+ADD FIELD "ckseq_site" OF "ckseq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "VSM"
+  COLUMN-LABEL "VSM"
+  ORDER 10
+
+ADD FIELD "ckseq_line" OF "ckseq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  COLUMN-LABEL "Line"
+  ORDER 20
+
+ADD FIELD "ckseq_part" OF "ckseq_mstr" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  COLUMN-LABEL "Item Number"
+  VALEXP "can-find(pt_mstr where pt_part = ckseq_part)"
+  VALMSG "Item Number Must Exist. Please re-enter."
+  ORDER 30
+
+ADD FIELD "ckseq_due_date" OF "ckseq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  COLUMN-LABEL "Due Date"
+  ORDER 40
+
+ADD FIELD "ckseq_qty_comp" OF "ckseq_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty Complete"
+  COLUMN-LABEL "Qty Complete"
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "ckseq_qty_req" OF "ckseq_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Schedule Qty"
+  COLUMN-LABEL "Schedule Qty"
+  VALEXP "{gppswd.v &field = ""ckseq_qty_req""}"
+  VALMSG "ERROR: USER DOES NOT HAVE ACCESS TO THIS FIELD.Please re-enter."
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "ckseq_qty_act" OF "ckseq_mstr" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Actual Complete"
+  COLUMN-LABEL "Actual Complete"
+  VALEXP "{gppswd.v &field = ""ckseq_qty_act""}"
+  VALMSG "ERROR: USER DOES NOT HAVE ACCESS TO THIS FIELD. Please re-enter"
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "ckseq_release" OF "ckseq_mstr" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Release Date"
+  COLUMN-LABEL "Release Date"
+  ORDER 90
+
+ADD FIELD "ckseq_userid" OF "ckseq_mstr" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  COLUMN-LABEL "User ID"
+  ORDER 100
+
+ADD INDEX "ckseq_site" ON "ckseq_mstr" 
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "ckseq_site" ASCENDING 
+  INDEX-FIELD "ckseq_line" ASCENDING 
+  INDEX-FIELD "ckseq_due_date" ASCENDING 
+  INDEX-FIELD "ckseq_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "ckseq_due_date" ON "ckseq_mstr" 
+  INDEX-FIELD "ckseq_due_date" ASCENDING 
+  INDEX-FIELD "ckseq_line" ASCENDING 
+  INDEX-FIELD "ckseq_part" ASCENDING ABBREVIATED 
+
+ADD INDEX "ckseq_line" ON "ckseq_mstr" 
+  INDEX-FIELD "ckseq_line" ASCENDING 
+  INDEX-FIELD "ckseq_part" ASCENDING 
+  INDEX-FIELD "ckseq_due_date" ASCENDING 
+
+ADD INDEX "ckseq_part" ON "ckseq_mstr" 
+  INDEX-FIELD "ckseq_part" ASCENDING 
+  INDEX-FIELD "ckseq_due_date" ASCENDING 
+
+ADD TABLE "ckseq_hist"
+  LABEL "Daily Schedule History"
+  DUMP-NAME "ckseq_hi"
+  FILE-MISC26 "Daily Schedule History"
+
+ADD FIELD "ckseqh_due_date" OF "ckseq_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Due Date"
+  COLUMN-LABEL "Due Date"
+  ORDER 40
+
+ADD FIELD "ckseqh_line" OF "ckseq_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Line"
+  COLUMN-LABEL "Line"
+  ORDER 20
+
+ADD FIELD "ckseqh_part" OF "ckseq_hist" AS character 
+  FORMAT "x(18)"
+  INITIAL ""
+  LABEL "Item Number"
+  COLUMN-LABEL "Item Number"
+  VALEXP "can-find(pt_mstr where pt_part = ckseq_part)"
+  VALMSG "Item Number Must Exist. Please re-enter."
+  ORDER 30
+
+ADD FIELD "ckseqh_qty_act" OF "ckseq_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Actual Complete"
+  COLUMN-LABEL "Actual Complete"
+  DECIMALS 2
+  ORDER 70
+
+ADD FIELD "ckseqh_qty_comp" OF "ckseq_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Qty Complete"
+  COLUMN-LABEL "Qty Complete"
+  DECIMALS 2
+  ORDER 50
+
+ADD FIELD "ckseqh_qty_req" OF "ckseq_hist" AS decimal 
+  FORMAT "->>,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Schedule Qty"
+  COLUMN-LABEL "Schedule Qty"
+  DECIMALS 2
+  ORDER 80
+
+ADD FIELD "ckseqh_release" OF "ckseq_hist" AS date 
+  FORMAT "99/99/99"
+  INITIAL ?
+  LABEL "Release Date"
+  COLUMN-LABEL "Release Date"
+  ORDER 90
+
+ADD FIELD "ckseqh_site" OF "ckseq_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "VSM"
+  COLUMN-LABEL "VSM"
+  ORDER 10
+
+ADD FIELD "ckseqh_userid" OF "ckseq_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "User ID"
+  COLUMN-LABEL "User ID"
+  ORDER 100
+
+ADD FIELD "ckseqh_rel_time" OF "ckseq_hist" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Release Time"
+  COLUMN-LABEL "Release Time"
+  ORDER 110
+
+ADD INDEX "ckseqh_site" ON "ckseq_hist" 
+  PRIMARY
+  INDEX-FIELD "ckseqh_site" ASCENDING 
+  INDEX-FIELD "ckseqh_line" ASCENDING 
+  INDEX-FIELD "ckseqh_due_date" ASCENDING 
+  INDEX-FIELD "ckseqh_part" ASCENDING 
+  INDEX-FIELD "ckseqh_release" ASCENDING 
+  INDEX-FIELD "ckseqh_rel_time" ASCENDING ABBREVIATED 
+
+ADD INDEX "ckseqh_part" ON "ckseq_hist" 
+  INDEX-FIELD "ckseqh_part" ASCENDING 
+  INDEX-FIELD "ckseqh_due_date" ASCENDING 
+  INDEX-FIELD "ckseqh_release" ASCENDING 
+  INDEX-FIELD "ckseqh_rel_time" ASCENDING ABBREVIATED 
+
+.
+PSC
+codepage=GB2312
+.
+0000004784
