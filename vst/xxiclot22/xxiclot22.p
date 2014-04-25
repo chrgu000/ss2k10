@@ -21,7 +21,7 @@
 
 
 /*{mfdtitle.i "A0710"}*/
-{mfdtitle.i "20130329.2"} /* ss - 20130329 */
+{mfdtitle.i "140424.1"} /* ss - 20130329 */
 
 {pxmaint.i}
 
@@ -111,7 +111,7 @@ define variable v_print as logical format "Y/N" init Yes.
 
 
     define stream s1.
-    v_filename = "TMP" + execname + trim(p_toloc) + string(today,"999999") + string(time,"hh:mm:ss") + "." + trim(p_userid) + ".prn".
+    v_filename = "TMP_" + execname + trim(p_toloc) + string(today,"999999") + string(time,"hh:mm:ss") + "." + trim(p_userid).
     output stream s1 to value(v_filename).
 
             v_toloc_name = "" .

@@ -64,6 +64,7 @@
 /* ADM                LAST MODIFIED: 03/25/04   BY: *ADM*  He Shi Yu         */
 /* REVISION: ADM      LAST MODIFIED: 04/23/04   BY: *Derek Chu               */
 /*              - set default yes for "Status Conflict"                      */
+/* REVISION  EBSP4   BY: MEL ZHAO DATE 13/03/29 ECO SS-20130329.1           */
 /*****************************************************************************/
 
          /* DISPLAY TITLE */
@@ -157,12 +158,12 @@
             &persistent="""persistent set h_wiplottrace_funcs"""}
 /*N002*/ end.
 
-/*ADM  define shared temp-table prttbl  
-           field p_nbr     like tr_trnbr 
+/*ADM  define shared temp-table prttbl
+           field p_nbr     like tr_trnbr
            field p_part     like tr_part
-           field p_desc    like pt_desc1 
-           field p_chg     like tr_qty_chg 
-           field p_type     like tr_type 
+           field p_desc    like pt_desc1
+           field p_chg     like tr_qty_chg
+           field p_type     like tr_type
            field p_toloc    like tr_loc
            field p_effdate    like tr_effdate
 ADM2   field p_lot      like tr_lot.          */
@@ -237,7 +238,7 @@ ADM2   field p_lot      like tr_lot.          */
 
 /*F701*/    clear frame a all no-pause.
 /*N0W6*/    {&ICLOTR-P-TAG5}
-/*ADM    loc_to = "".*/ 
+/*ADM    loc_to = "".*/
 /*FM01*/    nbr = "".
 /*FM01*/    so_job = "".
 /*FM01*/    rmks = "".
@@ -264,7 +265,10 @@ ADM2   field p_lot      like tr_lot.          */
 /*J3KH*/    prompt-for part with frame a editing:
 /*J3KH*/       /* FIND NEXT/PREVIOUS RECORD */
 /*J3KH*/       {mfnp.i pt_mstr part pt_part part pt_part pt_part}
-/*J3KH*/       if recno <> ? then
+
+              /* ss - 20130329 - b */
+
+/*J3KH*/      /* if recno <> ? then
 /*J3KH*/          display
 /*J3KH*/             pt_part @ part
 /*J3KH*/             pt_desc1
@@ -274,7 +278,27 @@ ADM2   field p_lot      like tr_lot.          */
 /*F701*              pt_site @ site_to  */
                      pt_loc @ loc_from
 /*F701*              pt_loc @ loc_to    */
+                  with frame a.  */
+
+                 if recno <> ? then do :
+                 /*select loc_status*/
+                 find first loc_mstr
+                    where loc_site = pt_site
+                      and loc_loc = pt_loc no-lock no-error.
+
+                  display
+                     pt_part @ part
+                     pt_desc1
+                     pt_desc2
+                     pt_um
+                     pt_site @ site_from
+                     pt_loc @ loc_from
+                     loc_status @  status_from
                   with frame a.
+                  /*message loc_status.*/
+                 end.
+                /* ss - 20130329 - e */
+
 /*N0W6*/    {&ICLOTR-P-TAG7}
             end.
             status input.
@@ -297,12 +321,18 @@ ADM2   field p_lot      like tr_lot.          */
 /*FR46*/    end.
 /*N0W6*/          {&ICLOTR-P-TAG12}
 
+            /* ss 20130329 */
+            find first loc_mstr
+                    where loc_site = pt_site
+                      and loc_loc = pt_loc no-lock no-error.
+
             display pt_desc1 pt_desc2 pt_um
 /*F701*/            pt_site @ site_from
 /*F701*/            pt_loc @ loc_from
 /*F701*/            lotserial_qty
 /*FS18*/            "" @ lotser_from
 /*FS18*/            "" @ lotref_from
+                    loc_status @  status_from /* ss 20130329 */
             with frame a.
 /*F701*           display                                   */
 /*F701*           pt_site @ site_from pt_site @ site_to     */
@@ -338,13 +368,15 @@ ADM2   field p_lot      like tr_lot.          */
 /*G1FP*/       from-loop:
 /*G1FP*/       do on error undo:
 
-               set site_from loc_from
+              /* ss - 20130329 - b */
+             /*  set site_from loc_from
 /*F701*/       lotser_from
                lotref_from
 /*F190*        site_to loc_to lotref_to  */
 /*F701*        lotserial lotserial_qty   */
                with frame a
                editing:
+
 /*J034*/          assign
 /*N0W6*/          {&ICLOTR-P-TAG19}
                   global_site = input site_from
@@ -354,7 +386,22 @@ ADM2   field p_lot      like tr_lot.          */
 /*N16N*/          {&ICLOTR-P-TAG25}
                   readkey.
                   apply lastkey.
+               end. */
+
+               set site_from
+/*F190*        site_to loc_to lotref_to  */
+/*F701*        lotserial lotserial_qty   */
+               with frame a
+               editing:
+
+/*J034*/          assign
+/*N0W6*/          {&ICLOTR-P-TAG19}
+                   global_site = input site_from.
+/*N16N*/          {&ICLOTR-P-TAG25}
+                  readkey.
+                  apply lastkey.
                end.
+
 
 /*J034*/          find si_mstr where si_site = site_from no-lock no-error.
 /*J034*/          if not available si_mstr then do:
@@ -371,6 +418,48 @@ ADM2   field p_lot      like tr_lot.          */
 /*J034*/             next-prompt site_from with frame a.
 /*J034*/             undo from-loop, retry from-loop.
 /*J034*/          end.
+                  assign site_to = site_from.
+              from-loc:
+              do on error undo:
+               set loc_from
+               with frame a
+               editing:
+
+/*J034*/          assign
+                  {&ICLOTR-P-TAG20}
+                  global_loc = input loc_from.
+                  readkey.
+                  apply lastkey.
+               end.
+
+
+/*J034*/          find loc_mstr where loc_site = input site_from
+                       and loc_loc = input loc_from  no-lock no-error.
+/*J034*/          if available loc_mstr then do:
+/*J034*/             display loc_status @ status_from with frame a.
+/*J034*/          end.
+                  else do:
+                     message "庫位不存在". /*踱弇祥湔婓*/
+                     next-prompt site_from with frame a.
+                     undo from-loc, retry from-loc.
+                  end.
+              set
+/*F701*/       lotser_from
+               lotref_from
+/*F190*        site_to loc_to lotref_to  */
+/*F701*        lotserial lotserial_qty   */
+               with frame a
+               editing:
+/*J034*/          assign
+                  global_loc = input loc_from
+                  global_lot = input lotser_from.
+/*N16N*/          {&ICLOTR-P-TAG25}
+                  readkey.
+                  apply lastkey.
+               end.
+             end. /* do on error undo:*/
+              /* ss - 20130329 - e */
+
 
 /*J2JV*/          /* OPEN PERIOD VALIDATION FOR THE ENTITY OF FROM SITE */
 /*J2JV*/          {gpglef02.i &module = ""IC""
@@ -381,7 +470,7 @@ ADM2   field p_lot      like tr_lot.          */
                               &loop   = "from-loop"}
 /*ADM*/          if trim(loc_to) = "" then loc_to = pt_loc.
 /*G1D2*/         assign
-/*G1D2*/         site_to   = pt_site
+/*G1D2*/ /*        site_to   = pt_site     */
 /*G1D2*/   /*ADM      loc_to    = pt_loc*/
 /*G1D2*/         lotser_to = lotser_from
 /*G1D2*/         lotref_to = lotref_from.
@@ -399,11 +488,13 @@ ADM2   field p_lot      like tr_lot.          */
 /*G1D2*/           and ld_det.ld_ref = lotref_from no-lock no-error.
 
 /*G1D2*  /*F0D2*/      if not available ld_det then do transaction: */
+/*message ".." +   site_from + " / " + input loc_from.*/
 /*G1D2*/       if not available ld_det then do:
-/*F0D2*/          find si_mstr where si_site = site_from no-lock no-error.
-/*F0D2*/          find loc_mstr where loc_site = site_from
-/*F0D2*/                          and loc_loc = loc_from no-lock no-error.
+/*F0D2*/          find si_mstr where si_site = input site_from no-lock no-error.
+/*F0D2*/         find loc_mstr where loc_site = input site_from
+                       and loc_loc = input loc_from  no-lock no-error.
 
+                  /* message "1".*/
 /*F0D2*/          if not available si_mstr then do:
 /*F0D2*/             /* site does not exist */
 /*F0D2*/             {mfmsg.i 708 3}
@@ -497,10 +588,10 @@ ADM2   field p_lot      like tr_lot.          */
 /*FO32*/       then do:
 /*G1D2*  /*F0RN*/         status_from = ld_status. */
 /*G1D2*/            status_from = ld_det.ld_status.
-/*F0RN*/          display status_from with frame a.
+/*F0RN*/          /*display status_from with frame a.*/  /* ss - 20130329 */
 /*FO32*/          yn = yes.
 /*FO32*/          /*message "Allocated inventory must be transferred
-/*FO32*/                     to do this. Are you sure" */
+/*FO32*/                     to do this. Are you sure */ /*to do this. Are you sure "*/ /*20130329*/
 /*FO32*/          {mfmsg01.i 434 2 yn}
 /*FO32*/          if not yn then undo, retry.
 /*FO32*/       end.
@@ -509,7 +600,7 @@ ADM2   field p_lot      like tr_lot.          */
 /*G1D2*/            status_from = ld_det.ld_status.
 /*G1ZM*  /*F190*/         display status_from with frame a. */
 /*F190*/       end.
-/*G1ZM*/              display status_from with frame a.
+/*G1ZM*/              /*display status_from with frame a.*/ /* ss - 20130329 */
 
 /*J1W2*/       ld_recid_from = recid(ld_det).
 
@@ -531,6 +622,11 @@ ADM2   field p_lot      like tr_lot.          */
 
 /*G1FP*/       end. /* from-loop */
 
+           assign loc_to    = pt_loc
+                  lotser_to = lotser_from
+                  lotref_to = lotref_from.
+
+
 /*G1D2* * BEGIN COMMENT OUT *
  * /*F190*/       assign
  * /*FR46*        site_to   = site_from */
@@ -549,43 +645,206 @@ ADM2   field p_lot      like tr_lot.          */
 /*J2YJ** /*G1FP*/ do on error undo , retry : */
 /*J2YJ*/          do on error undo toloop, retry toloop:
 
-/*F701*/          display site_to loc_to lotser_to lotref_to.
+                  /* ss - 20130329 */
+                  find first loc_mstr
+                    where loc_site = site_to
+                      and loc_loc = loc_to no-lock no-error.
+
+/*F701*/         /* display site_to loc_to lotser_to lotref_to. */
+                     display site_from @ site_to  loc_to lotser_to lotref_to input status_from @ ld_status. /* ss - 20130329 */
+
+                  /* ss -20130329 -b */
 /*F701*/          if trtype = "LOT/SER" then do:
-/*F190*/             set site_to loc_to
-/*F701*/             lotser_to
-/*F190*/             lotref_to with frame a editing:
-/*N0W6*/                {&ICLOTR-P-TAG21}
-/*F190*/                global_site = input site_to.
-/*N0W6*/                {&ICLOTR-P-TAG22}
-/*F190*/                global_loc = input loc_to.
-/*F190*/                global_lot = input lotser_to.
-/*N16N*/                {&ICLOTR-P-TAG26}
-/*F190*/                readkey.
-/*F190*/                apply lastkey.
-/*F190*/             end.
-/*F701*/          end.
+/* /*F190*/             /*set site_to loc_to                                    */
+/* /*F701*/             lotser_to                                               */
+/* /*F190*/             lotref_to with frame a editing:                         */
+/* /*N0W6*/                {&ICLOTR-P-TAG21}                                    */
+/* /*F190*/               /* global_site = input site_to.*/ /* ss - 20130407 */ */
+/*                          global_site =  input site_from.                     */
+/* /*N0W6*/                {&ICLOTR-P-TAG22}                                    */
+/* /*F190*/                global_loc = input loc_to.                           */
+/* /*F190*/                global_lot = input lotser_to.                        */
+/* /*N16N*/                {&ICLOTR-P-TAG26}                                    */
+/* /*F190*/                readkey.                                             */
+/* /*F190*/                apply lastkey.                                       */
+/* /*F190*/             end.*/                                                  */
+/*******************************************************************************
+                    from-siteto:
+                    do on error undo:
+                     set site_to
+        /*F190*        site_to loc_to lotref_to  */
+        /*F701*        lotserial lotserial_qty   */
+                       with frame a
+                       editing:
+
+        /*J034*/          assign
+        /*N0W6*/          {&ICLOTR-P-TAG19}
+                          /* global_site = input site_to.*/ /* ss - 20130407 */
+                          global_site =  input site_from .
+        /*N16N*/          {&ICLOTR-P-TAG25}
+                          readkey.
+                          apply lastkey.
+                       end.
+
+/*                      /*                                                                 */
+/*                 /*J034*/         find si_mstr where si_site = site_to no-lock no-error. */
+/*                 /*J034*/          if not available si_mstr then do:                     */
+/*                 /*J034*/             {mfmsg.i 708 3}  /* SITE DOES NOT EXIST */         */
+/*                 /*J034*/             next-prompt site_to with frame a.                  */
+/*                 /*G1FP*/             undo from-siteto, retry from-siteto.               */
+/*                 /*J034*/          end. */ /* ss - 20130407 */                           */
+
+        /*J034*/          {gprun.i ""gpsiver.p""
+                           "(input si_site, input recid(si_mstr), output return_int)"}
+        /*J034*/          if return_int = 0 then do:
+        /*J034*/             {mfmsg.i 725 3}    /* USER DOES NOT HAVE */
+        /*J034*/                                /* ACCESS TO THIS SITE*/
+        /*J034*/             next-prompt site_from with frame a.
+        /*J034*/             undo from-siteto, retry from-siteto.
+        /*J034*/          end.
+                       end. /*do on error undo:*/
+******************************************************************************************/
+
+                      from-locto:
+                      do on error undo:
+                       set loc_to
+                       with frame a
+                       editing:
+
+        /*J034*/          assign
+                          {&ICLOTR-P-TAG20}
+                          global_loc = input loc_to.
+                          readkey.
+                          apply lastkey.
+                       end.
+
+
+/*                 /*J034*/         /* find loc_mstr where loc_site = input site_to                             */
+/*                                                              and loc_loc = input loc_to  no-lock no-error.*/ */
+                         find loc_mstr where loc_site = input site_from
+                               and loc_loc = input loc_to  no-lock no-error.
+        /*J034*/          if available loc_mstr then do:
+        /*J034*/             display loc_status @ ld_status with frame a.
+        /*J034*/          end.
+                          else do:
+                             {mfmsg.i 709 3}
+                             next-prompt loc_to with frame a.
+                             undo  from-locto, retry  from-locto.
+                          end.
+                      end. /*do on error undo:*/
+
+
+                      set
+        /*F701*/       lotser_to
+                       lotref_to
+        /*F190*        site_to loc_to lotref_to  */
+        /*F701*        lotserial lotserial_qty   */
+                       with frame a
+                       editing:
+        /*J034*/          assign
+/*F190*/                  global_loc = input loc_to.
+/*F190*/                  global_lot = input lotser_to.
+        /*N16N*/          {&ICLOTR-P-TAG25}
+                          readkey.
+                          apply lastkey.
+                       end.
+
+/*F701*/          end. /*if trtype = "LOT/SER" then do:*/
 /*F701*/          else do:
-/*F701*/             set site_to loc_to with frame a editing:
-/*GC07*/                /*added "input" to global_site asnd global_loc below*/
-/*N0W6*/                {&ICLOTR-P-TAG23}
-/*F701*/                global_site = input site_to.
-/*N0W6*/                {&ICLOTR-P-TAG24}
-/*F701*/                global_loc = input loc_to.
-/*N16N*/                {&ICLOTR-P-TAG27}
-/*F701*/                readkey.
-/*F701*/                apply lastkey.
-/*F701*/             end.
-/*F701*/          end.
+/*                                         /*                                     */
+/* /*F701*/             set site_to loc_to with frame a editing:                  */
+/* /*GC07*/                /*added "input" to global_site asnd global_loc below*/ */
+/* /*N0W6*/                {&ICLOTR-P-TAG23}                                      */
+/* /*F701*/                global_site = input site_to.                           */
+/* /*N0W6*/                {&ICLOTR-P-TAG24}                                      */
+/* /*F701*/                global_loc = input loc_to.                             */
+/* /*N16N*/                {&ICLOTR-P-TAG27}                                      */
+/* /*F701*/                readkey.                                               */
+/* /*F701*/                apply lastkey.                                         */
+/* /*F701*/             end. */                                                   */
 
-/*J034*/          find si_mstr where si_site = site_to no-lock no-error.
-/*J034*/          if not available si_mstr then do:
-/*J034*/             {mfmsg.i 708 3}  /* SITE DOES NOT EXIST */
-/*J034*/             next-prompt site_to with frame a.
-/*J034*/             undo toloop, retry.
-/*J034*/          end.
+                      from-siteto:
+                      do on error undo:
+/*                      /* set site_to                                                        */
+/*                 /*F190*        site_to loc_to lotref_to  */                                */
+/*                 /*F701*        lotserial lotserial_qty   */                                */
+/*                                              with frame a                                  */
+/*                                              editing:                                      */
+/*                                                                                            */
+/*                 /*J034*/          assign                                                   */
+/*                 /*N0W6*/          {&ICLOTR-P-TAG19}                                        */
+/*                                                      global_site = input site_to.          */
+/*                 /*N16N*/          {&ICLOTR-P-TAG25}                                        */
+/*                                                     readkey.                               */
+/*                                                     apply lastkey.                         */
+/*                                              end. */ /* ss - 20130407 */                   */
+/*                                                                                            */
+/*                                                                                            */
+/*                 /*J034*/          /*find si_mstr where si_site = site_to no-lock no-error. */
+/*                 /*J034*/          if not available si_mstr then do:                        */
+/*                 /*J034*/             {mfmsg.i 708 3}  /* SITE DOES NOT EXIST */            */
+/*                 /*J034*/             next-prompt site_to with frame a.                     */
+/*                 /*G1FP*/             undo from-siteto, retry from-siteto.                  */
+/*                 /*J034*/          end. */                                                  */
+/*                                                                                            */
 
+        /*J034*/          {gprun.i ""gpsiver.p""
+                           "(input si_site, input recid(si_mstr), output return_int)"}
+        /*J034*/          if return_int = 0 then do:
+        /*J034*/             {mfmsg.i 725 3}    /* USER DOES NOT HAVE */
+        /*J034*/                                /* ACCESS TO THIS SITE*/
+        /*J034*/             next-prompt site_from with frame a.
+        /*J034*/             undo from-siteto, retry from-siteto.
+        /*J034*/          end.
+                       end. /*do on error undo:*/
+
+                      from-locto:
+                      do on error undo:
+                       set loc_to
+                       with frame a
+                       editing:
+
+        /*J034*/          assign
+                          {&ICLOTR-P-TAG20}
+                          global_loc = input loc_to.
+                          readkey.
+                          apply lastkey.
+                       end.
+
+        /*J034*/         /* find loc_mstr where loc_site = input site_to */ /* ss - 20130407 */
+                          find loc_mstr where loc_site = site_to
+                               and loc_loc = loc_to  no-lock no-error.
+        /*J034*/          if available loc_mstr then do:
+        /*J034*/             display loc_status @ ld_status with frame a.
+        /*J034*/          end.
+                          else do:
+                             /* Location does not exist*/
+                             {mfmsg.i 709 3}
+                             next-prompt loc_to with frame a.
+                             undo  from-locto, retry  from-locto.
+                          end.
+
+                          if input loc_from = input loc_to  then do:
+                              message "調撥庫位相同".
+                              next-prompt loc_to with frame a.
+                             undo  from-locto, retry  from-locto.
+                          end. /* ss - 20130407 */
+
+                      end. /*do on error undo:*/
+
+/*F701*/          end. /* if trtype <> "LOT/SER" then do:*/
+                  /* ss - 20130329 - e */
+/*                /*                                                        */
+/* /*J034*/          find si_mstr where si_site = site_to no-lock no-error. */
+/* /*J034*/          if not available si_mstr then do:                      */
+/* /*J034*/             {mfmsg.i 708 3}  /* SITE DOES NOT EXIST */          */
+/* /*J034*/             next-prompt site_to with frame a.                   */
+/* /*J034*/             undo toloop, retry.                                 */
+/* /*J034*/          end. */ /* ss - 20130407 */                            */
+
+/* "(input site_to, input ?, output return_int)"}*/ /* ss - 20130407 */
 /*J034*/          {gprun.i ""gpsiver.p""
-                  "(input site_to, input ?, output return_int)"}
+                 "(input site_from, input recid(si_mstr), output return_int)"}
 /*J034*/          if return_int = 0 then do:
 /*J034*/             {mfmsg.i 725 3}    /* USER DOES NOT HAVE */
 /*J034*/                                /* ACCESS TO THIS SITE*/
@@ -643,7 +902,7 @@ ADM2   field p_lot      like tr_lot.          */
 /*F701***************** REPLACED FOLLOWING SECTION **************************
 /*F190*/          if available lddet and ld_qty_oh <> 0 then do:
 /*F190*/             status_to = lddet.ld_status.
-/*F190*/             display status_to with frame a.
+/*F190*/            /* display status_to with frame a.*/ /* ss - 20130329 */
 
 /*F190*/             if lddet.ld_grade  <> ld_det.ld_grade
 /*F190*/             or lddet.ld_expire <> ld_det.ld_expire
@@ -677,7 +936,7 @@ ADM2   field p_lot      like tr_lot.          */
 /*F190*/             find loc_mstr where loc_site = site_to
 /*F190*/             and loc_loc = loc_to.
 /*F190*/             status_to = loc_status.
-/*F190*/             display status_to with frame a.
+/*F190*/           /*  display status_to with frame a. */ /* ss - 20130329 */
 /*F190*/             {mfmsg.i 1911 1}  /*Status may be changed*/
 /*F190*/             bell.
 /*F190*/             statusloop: do on error undo, retry:
@@ -720,7 +979,7 @@ ADM2   field p_lot      like tr_lot.          */
 /*F701*/             ld_recid = recid(lddet).
 /*F701*/          end.
 
-/*F701*/          display lddet.ld_status with frame a.
+/*F701*/         /* display lddet.ld_status with frame a.*/ /* ss - 20130329 */
 
 /*F701*/          /*ERROR CONDITIONS*/
 /*F701*/          if  ld_det.ld_site = lddet.ld_site
@@ -810,7 +1069,9 @@ ADM2   field p_lot      like tr_lot.          */
 /*ADM*/                    yn = yes.
 /*F701*/                   bell.
 /*F701*/                   /*Status conflict.  Use "to" status?*/
-/*F701*/                   {mfmsg01.i 1917 1 yn}
+/*F701*/                /*  {mfmsg01.i 1917 1 yn} */ /* ss - 20130329 */
+                            message "狀態為爭端,是否採用to欄位之狀態? yes". /* ss - 20130329 */
+                            lddet.ld_status = input lddet.ld_status. /* ss - 20130329 */
 /*F701*/                   if not yn then do:
 /*F701*/                      yn = yes.
 /*F701*/                      /*Status conflict.  Use "from" status?*/
@@ -840,7 +1101,7 @@ ADM2   field p_lot      like tr_lot.          */
 /*F701*/                      else do:
 /*F701*/                         undo, retry.
 /*F701*/                      end.
-/*F701*/                   end.
+/*F701*/                   end. /*if not yn then do:*/
 /*F701*/                end. /*ld_qty_oh = 0 and trtype <> "LOT/SER"*/
 /*F701*/             end. /*ld_qty_oh = 0*/
 
@@ -850,7 +1111,9 @@ ADM2   field p_lot      like tr_lot.          */
 /*F701*/                /*Status conflict.  Use "to" status?*/
 /*F701*/                yn = yes.
 /*F701*/                bell.
-/*F701*/                {mfmsg01.i 1917 1 yn}
+/*F701*/               /* {mfmsg01.i 1917 1 yn} */ /* ss - 20130329 */
+                      message "狀態為爭端,是否採用to欄位之狀態? yes". /* ss - 20130329 */
+                    lddet.ld_status = input lddet.ld_status. /* ss - 20130329 */
 /*F701*/                if not yn then undo, retry.
 /*F701*/             end. /*ld_qty_oh <> 0 & LOT/SER*/
 /*J17R*     ** BEGIN DELETE SECTION **
@@ -1109,3 +1372,4 @@ ADM2   field p_lot      like tr_lot.          */
 /*N002*/ if is_wiplottrace_enabled() then
 /*N002*/    delete procedure h_wiplottrace_funcs no-error.
 /*N0W6*/    {&ICLOTR-P-TAG18}
+
