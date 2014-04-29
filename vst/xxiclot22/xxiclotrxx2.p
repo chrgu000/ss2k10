@@ -704,7 +704,12 @@ ADM2   field p_lot      like tr_lot.          */
         /*J034*/          end.
                        end. /*do on error undo:*/
 ******************************************************************************************/
-
+/*428*/               find first usrw_wkfl no-lock where usrw_key1 = "xxiclot22.p"
+/*428*/                          and usrw_key2 = global_userid no-error.
+/*428*/               if available usrw_wkfl then do:
+/*428*/                  assign loc_to = usrw_key3.
+/*428*/                  display loc_to with frame a.
+/*428*/               end.
                       from-locto:
                       do on error undo:
                        set loc_to
@@ -732,8 +737,14 @@ ADM2   field p_lot      like tr_lot.          */
                              undo  from-locto, retry  from-locto.
                           end.
                       end. /*do on error undo:*/
-
-
+/*428*/               find first usrw_wkfl exclusive-lock where usrw_key1 = "xxiclot22.p"
+/*428*/                          and usrw_key2 = global_userid no-error.
+/*428*/               if not available usrw_wkfl then do:
+/*428*/                  create usrw_wkfl.
+/*428*/                  assign usrw_key1 = "xxiclot22.p"
+/*428*/                         usrw_key2 = global_userid.
+/*428*/               end.
+/*428*/               if not locked(usrw_wkfl) then assign usrw_key3 = loc_to.
                       set
         /*F701*/       lotser_to
                        lotref_to
@@ -797,7 +808,12 @@ ADM2   field p_lot      like tr_lot.          */
         /*J034*/             undo from-siteto, retry from-siteto.
         /*J034*/          end.
                        end. /*do on error undo:*/
-
+/*428*/               find first usrw_wkfl no-lock where usrw_key1 = "xxiclot22.p"
+/*428*/                          and usrw_key2 = global_userid no-error.
+/*428*/               if available usrw_wkfl then do:
+/*428*/                  assign loc_to = usrw_key3.
+/*428*/                  display loc_to with frame a.
+/*428*/               end.
                       from-locto:
                       do on error undo:
                        set loc_to
@@ -831,7 +847,14 @@ ADM2   field p_lot      like tr_lot.          */
                           end. /* ss - 20130407 */
 
                       end. /*do on error undo:*/
-
+/*428*/               find first usrw_wkfl exclusive-lock where usrw_key1 = "xxiclot22.p"
+/*428*/                          and usrw_key2 = global_userid no-error.
+/*428*/               if not available usrw_wkfl then do:
+/*428*/                  create usrw_wkfl.
+/*428*/                  assign usrw_key1 = "xxiclot22.p"
+/*428*/                         usrw_key2 = global_userid.
+/*428*/               end.
+/*428*/               if not locked(usrw_wkfl) then assign usrw_key3 = loc_to.
 /*F701*/          end. /* if trtype <> "LOT/SER" then do:*/
                   /* ss - 20130329 - e */
 /*                /*                                                        */
