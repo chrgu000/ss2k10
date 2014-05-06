@@ -426,7 +426,7 @@ repeat:
         for each ld_det where ld_site = site and ld_qty_oh > 0 and
                   ld_part = pp_part no-lock use-index ld_part_loc,
            first loc_mstr where loc_loc = ld_loc and loc_site = site
-/*4y4*/                     and loc_type = "Main Stk"
+/*4y4*/                     and (loc_type = "Main Stk" or loc_type = "RCV Stk")
              no-lock /*,
            first is_mstr where is_status = loc_status and
                         is_nettable no-lock*/ :
@@ -440,7 +440,7 @@ repeat:
           /* add beging at 2013.07.18 */
           if ld_loc = pp_line then ord_qty = ord_qty + ld_qty_oh.
           /* add end at 2013.07.18 */
-          if  loc_type = "Main Stk" /*4y4 or loc_type = "RCV Stk" */ then
+          if  loc_type = "Main Stk" or loc_type = "RCV Stk" then
           do:
             find first tblld where tmpld_part = pp_part and
                       tmpld_loc  = ld_loc

@@ -2,7 +2,7 @@
 
  {mfdtitle.i "test.1"}
 
-define variable site  like ld_site init "10000".
+define variable site  like ld_site init "PRC".
 define variable pklnbr like xxpkld_nbr.
 define variable wkctr like xxpklm_wkctr.
 define variable rknbr as char format "x(8)".
@@ -29,9 +29,9 @@ form
   tt1_seq          column-label "项次"
   tt1_part         column-label "物料"
   tt1_loc_to       column-label "库位"
-  tt1_qty1      column-label "报废量"
+  tt1_qty1         column-label "报废量"
   tt1_qty_oh       column-label "库存量"
-  tt1_qty_req         column-label "调入量"
+  tt1_qty_iss      column-label "调入量"
 with frame c width 80 no-attr-space 12 down scroll 1.
 /* DISPLAY SELECTION FORM */
 form
@@ -52,7 +52,8 @@ if avail icc_ctrl then site = icc_site.
 /*日期限制*/
 {xxcmfun.i}
 run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
-
+find first icc_ctrl no-lock no-error.
+if available icc_ctrl then assign site = icc_site.
 mainloop:
 repeat with frame a:
   /* clear frame a all no-pause. */
@@ -79,6 +80,7 @@ repeat with frame a:
   find xxpklm_mstr where xxpklm_nbr = pklnbr no-lock no-error.
   if available xxpklm_mstr then do:
      display xxpklm_nbr @ pklnbr xxpklm_wkctr @ wkctr.
+     assign pklnbr wkctr.
   end.
   else do:
       message "领料单不存在,请重新输入!" .
@@ -101,7 +103,33 @@ repeat with frame a:
          undo,retry.
       end.
    end.
-   for each xxpkld_det where xxpkld_nbr = pklnbr no-lock by xxpkld_line:
+/*   for each xxpkld_det where xxpkld_nbr = pklnbr no-lock by xxpkld_line:                                      */
+/*       lddetlabel:                                                                                            */
+/*       for each ld_det no-lock use-index ld_part_lot where                                                    */
+/*                ld_part = xxpkld_part and ld_site = site and                                                  */
+/*                ld_loc = wkctr and ld_qty_oh > 0:                                                             */
+/*              create tt1.                                                                                     */
+/*              assign tt1_sel = "*" when sl                                                                    */
+/*                     tt1_seq = xxpkld_line                                                                    */
+/*                     tt1_pkl = xxpkld_nbr                                                                     */
+/*                     tt1_rknbr = rknbr                                                                        */
+/*                     tt1_part = xxpkld_part                                                                   */
+/*                     tt1_desc1 = xxpkld_desc                                                                  */
+/*                     tt1_qty1 = max(0,xxpkld_qty_iss - xxpkld_qty_req - xxpkld_qty_ret)                       */
+/*                     tt1_qty_oh = ld_qty_oh                                                                   */
+/*                     tt1_qty_req = max(0,xxpkld_qty_iss - xxpkld_qty_req - xxpkld_qty_ret)   /*需求量*/       */
+/*                     tt1_loc_to = xxpkld_loc_from                                                             */
+/*                     tt1_loc_from = ld_loc                                                                    */
+/*                     tt1_site = ld_site                                                                       */
+/*                     tt1_lot = ld_lot                                                                         */
+/*                     tt1_ref = ld_ref                                                                         */
+/*                     tt1_stat = ld_stat                                                                       */
+/*                     tt1_recid =  recid(xxpkld_det).                                                          */
+/*       end. /* for each ld_det */                                                                             */
+/*   end. /* for each xxpkld_det */                                                                             */
+   for each xxpkld_det where xxpkld_nbr = pklnbr and xxpkld__chr01 = "ISS" no-lock by xxpkld_line:
+   		 assign vqty = xxpkld_qty_iss.
+   		 if vqty = 0 then next.
        lddetlabel:
        for each ld_det no-lock use-index ld_part_lot where
                 ld_part = xxpkld_part and ld_site = site and
@@ -113,18 +141,22 @@ repeat with frame a:
                      tt1_rknbr = rknbr
                      tt1_part = xxpkld_part
                      tt1_desc1 = xxpkld_desc
-                     tt1_qty1 = max(0,xxpkld_qty_iss - xxpkld_qty_req - xxpkld_qty_ret)
+                     tt1_qty1 = 0 /* min(vqty,ld_qty_oh,xxpkld_qty_iss - xxpkld_qty_rej) */ /*默认退料拨量*/
                      tt1_qty_oh = ld_qty_oh
-                     tt1_qty_req = max(0,xxpkld_qty_iss - xxpkld_qty_req - xxpkld_qty_ret)   /*需求量*/
+                     tt1_qty_req = vqty /*最大需求量*/
                      tt1_loc_to = xxpkld_loc_from
+                     tt1_qty_iss = xxpkld_qty_iss
                      tt1_loc_from = ld_loc
                      tt1_site = ld_site
                      tt1_lot = ld_lot
                      tt1_ref = ld_ref
                      tt1_stat = ld_stat
                      tt1_recid =  recid(xxpkld_det).
+            if vqty >= min(vqty,ld_qty_oh,xxpkld_qty_iss - xxpkld_qty_rej)
+                   then assign vqty = vqty - min(vqty,ld_qty_oh,xxpkld_qty_iss - xxpkld_qty_rej).
+            			 else assign vqty = 0.
        end. /* for each ld_det */
-   end. /* for each xxpkld_det */
+   end. /* for each xxpkld_det */   
    view frame c.
     scroll_loopb:
     do on error undo,retry:
@@ -142,7 +174,7 @@ repeat with frame a:
          &display4  = tt1_loc_to
          &display5  = tt1_qty1
          &display6  = tt1_qty_oh
-         &display7  = tt1_qty_req
+         &display7  = tt1_qty_iss
          &include2  = "{xxpkltr20.i}"
          &exitlabel = scroll_loopb
          &exit-flag = "true"
@@ -162,12 +194,12 @@ repeat with frame a:
    {mfmsg01.i 12 2 yn}
    if yn then do:
       assign i = 0.
-      for each tt1 exclusive-lock where tt1_sel = "*":
+      for each tt1 exclusive-lock where tt1_sel = "*" and tt1_qty1 > 0:
           i = i + 1.
-          assign fn = execname + pklnbr + "." + string(i,"99999999").
+          assign fn = "TMP_" + execname + pklnbr + "." + string(i,"99999999").
           output stream bf to value(fn + ".bpi").
           put stream bf unformat '"' tt1_part '"' skip.
-          put stream bf unformat trim(string(tt1_qty1)) ' - - - "' tt1_site '"  "' tt1_loc_from '" "' tt1_lot '" "' tt1_ref '"' skip.
+          put stream bf unformat trim(string(tt1_qty1)) ' - - "' tt1_site '" "' tt1_loc_from '" "' tt1_lot '" "' tt1_ref '"' skip.
           put stream bf unformat '"' tt1_pkl '" - "' rknbr '"'  skip.
           put stream bf unformat 'y' skip.
           put stream bf unformat '.' skip.
@@ -178,8 +210,8 @@ repeat with frame a:
           output to value(fn + ".bpo") keep-messages.
           hide message no-pause.
           assign trrecid = current-value(tr_sq01).
-          cimrunprogramloop:
-          do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
+/*          cimrunprogramloop:                                                       */
+/*          do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:   */
              {gprun.i ""icunis.p""}
               yn = no.
               FIND FIRST tr_hist NO-LOCK WHERE tr_trnbr > integer(trrecid)
@@ -204,8 +236,8 @@ repeat with frame a:
                    assign yn = yes.
                END.
                */
-               if not yn then undo,leave cimrunprogramloop.
-          end.
+/*               if not yn then undo,leave cimrunprogramloop.      */
+/*          end.                                                   */
           if yn then tt1_chk = "ok". else tt1_chk = "err".
           hide message no-pause.
           output close.
@@ -228,13 +260,13 @@ repeat with frame a:
              end.
           end.
       end.
-      for each tt1 no-lock where with frame d:
+      for each tt1 no-lock where tt1_sel = "*" and tt1_qty1 > 0 with frame d:
           display tt1_seq
                   tt1_part
                   tt1_loc_to
-                  tt1_qty_iss
-                  tt1_qty_oh
                   tt1_qty1
+                  tt1_qty_oh
+                  tt1_qty_iss
                   tt1_chk.
                   down.
       end.

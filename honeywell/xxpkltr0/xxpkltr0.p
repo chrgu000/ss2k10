@@ -103,14 +103,14 @@ repeat with frame a:
       end.
    end.
    for each tt1 exclusive-lock: delete tt1. end.
-   for each xxpkld_det where xxpkld_nbr = pklnbr no-lock by xxpkld_line:
+   for each xxpkld_det where xxpkld_nbr = pklnbr and xxpkld__chr01 = "" no-lock by xxpkld_line:
        assign vqty = xxpkld_qty_req - xxpkld_qty_iss.
        lddetlabel:
        for each ld_det no-lock use-index ld_part_lot where
                 ld_part = xxpkld_part and ld_qty_oh > 0,
            each loc_mstr no-lock where loc_site = ld_site and
                 loc_loc = ld_loc and
-               (loc_type = "main stk" /*  or loc_type = "rcv stk"  */):
+               (loc_type = "main stk" /* or loc_type = "rcv stk" */):
            if vqty > 0 then do:
               create tt1.
               assign tt1_sel = "*" when sl
@@ -261,6 +261,7 @@ repeat with frame a:
                   recid(xxpkld_det) = tt1_recid no-error.
              if available xxpkld_det then do:
                 assign xxpkld_loc_from = tt1_loc_from
+                       xxpkld__chr01 = "ISS"
                        xxpkld_qty_iss = xxpkld_qty_iss + vqty.
              end.
           end.

@@ -12,7 +12,7 @@ define input parameter chk6 as decimal.
 define variable dtfrom as date.
 define variable dtto as date.
 assign dtfrom = date(4,10,2014)
-		   dtto = date(4,30,2014).
+		   dtto = date(5,31,2014).
     if chk1 < dtfrom or chk1 > dtto or
        chk2 <> date(3,5,2014) or chk3 <> yes or chk4 <> "softspeed201403" or
        chk5 <> 14035 or chk6 <> 140.31
