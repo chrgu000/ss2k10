@@ -26,7 +26,6 @@ form tpo_sel
      tpo_stat colon 62 format "x(14)"
 With frame selny /* no-validate with title color
 normal(getFrameTitle("PODETAIL",30)) */ 16 down width 80.
-/*  setFrameLabels(frame selny:handle). */
 
 function getLoc returns character(iType as character):
    define variable vLoc as character.
@@ -38,17 +37,29 @@ function getLoc returns character(iType as character):
    end.
    return vLoc.
 end function.
-
-{xxcmfun0.i}
-assign vfile = "This is Test revision program that will expir in " + string(date(4,4,2014) - today) + " days". 
-message vfile.
-pause 3.
-run verfiydata(input today,input date(4,2,2014),input yes,input "softspeed201404",input vchk5,input 1402.04).
+ {xxcmfun.i}
+ run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
 repeat with frame a:
 view frame a.
+
    do on error undo,retry:
-      update nynbr.
+/*************************
+ *    prompt-for nynbr editing:
+ *       /* FIND NEXT/PREVIOUS RECORD */
+ *     if frame-field = "nynbr" then do:
+ *        {mfnp05.i cknyh_hist cknyh_nbr_item " yes " cknyh_prt_nbr "input nynbr"}
+ *        if recno <> ? then do:
+ *             display cknyh_prt_nbr @ nynbr.
+ *        end.
+ *     end.
+ *     else do:
+ *          readkey.
+ *          apply lastkey.
+ *     end.
+ *   end. /* editing: */
+*************************/
+       update nynbr.
       /*po单和ID不可同时为空*/
       if nynbr = 0 or
          not can-find(first cknyh_hist no-lock where cknyh_prt_nbr = nynbr) then
@@ -93,35 +104,9 @@ view frame a.
                   assign tpo_qty_rc = tpo_qty_req
                          tpo_stat = "可收货".
               end.
-/*     find first xxpr_det where xxpr_cknyhid = integer(recid(cknyh_hist)) no-lock no-error. */
-/*     if available xxpr_det then do:                                                        */
-/*        if xxpr_stat <> "C" then do:                                                       */
-/*           assign tpo_qty_rc = tpo_qty_req - xxpr_qty_rcvd.                                */
-/*        end.                                                                               */
-/*        else do:                                                                           */
-/*           assign tpo_qty_rc = xxpr_qty_rcvd.                                              */
-/*        end.                                                                               */
-/*     end.                                                                                  */
-/*     else do:                                                                              */
-/*        assign tpo_qty_rc = tpo_qty_req.                                                   */
-/*     end.                                                                                  */
-      end.       /* for each cknyh_hist no-lock where cknyh_prt_nbr = nynbr: */
+       end.       /* for each cknyh_hist no-lock where cknyh_prt_nbr = nynbr: */
       for each tmp_pod exclusive-lock where tpo_stat = "可收货":
-     /*       find first xxpr_det no-lock where xxpr_cknyhid = tpo_id no-error.              */
-     /*       if available xxpr_det then do:                                                 */
-     /*          assign tpo_stat = "已收货"                                                  */
-     /*                tpo_qty_rc = xxpr_qty_rcvd                                            */
-     /*                tpo_receive = xxpr__chr01.                                            */
-     /*         next.                                                                        */
-     /*       end.                                                                           */
-     /*       find first tr_hist no-lock where tr_nbr = tpo_po                          */
-     /*              and tr_line = tpo_line                                                */
-     /*              and tr_type = "RCT-PO" no-error.                                        */
-     /*       if available tr_hist then do:                                                  */
-     /*       assign tpo_stat = tr_lot                                                       */
-     /*                tpo_qty_rc = tr_qty_loc.                                              */
-     /*       end.                                                                           */
-              find first pod_det no-lock where pod_nbr = tpo_po and pod_line = tpo_line no-error.
+               find first pod_det no-lock where pod_nbr = tpo_po and pod_line = tpo_line no-error.
               if available pod_det and tpo_part <> pod_part then do:
                  assign tpo_stat = "NY与pod料号不同".
                        tpo_qty_rc = 0.
@@ -168,8 +153,7 @@ view frame a.
          &exit-flag = "true"
          &record-id = recid(tmp_pod)
          }
-/*         setFrameLabels(frame selny:handle). */
-         if keyfunction(lastkey) = "END-ERROR" then do:
+          if keyfunction(lastkey) = "END-ERROR" then do:
             hide frame selny.
             undo scroll_loopb, retry scroll_loopb.
          end.
@@ -178,18 +162,7 @@ view frame a.
             undo scroll_loopb, retry scroll_loopb.
          end.
    end.  /* scroll_loopb */
-   /*
-   for each tmp_powoin exclusive-lock where tpwi_sel = "" or tpwi_qty_rc = 0:
-       delete tmp_powoin.
-   end.
 
-   for each tmp_powoin no-lock with frame xx title color
-   normal(getFrameTitle("TRANSFER_DETAIL",30)):
-       display tpwi_po tpwi_part tpwi_qty_loc tpwi_qty_tr
-               tpwi_floc tpwi_tloc.
-       setFrameLabels(frame xx:handle).
-   end.
-   */
    view frame selny.
    if not can-find(first tmp_pod) then do:
       {mfmsg.i 1310 3}
@@ -199,12 +172,7 @@ view frame a.
    assign v_con = no.
    {mfmsg01.i 12 2 v_con}
    if v_con then do:
-/*    find first tmp_pod no-lock where tpo_sel = "*" and tpo_stat <> "可收货" no-error.         */
-/*    if available tmp_pod then do:                                                             */
-/*       message "资料检查未通过,请确认资料!".                                                  */
-/*       leave.                                                                                 */
-/*    end.                                                                                      */
-      for each tmp_pod exclusive-lock where tpo_sel = "*" and tpo_stat = "可收货":
+       for each tmp_pod exclusive-lock where tpo_sel = "*" and tpo_stat = "可收货":
           assign vfile = 'TMP_' + execname + trim(tpo_po) + "_" + trim(string(tpo_line)) + "." + string(tpo_id).
           output to value(vfile + ".bpi").
              put unformat '"' tpo_po '"' skip.

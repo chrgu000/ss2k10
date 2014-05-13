@@ -121,16 +121,6 @@ type:reference  F-11 / S-12 / U-13 / P-14
           field tmpld_locator like ckloc_locator
           index tmpld_part is primary tmpld_part tmpld_locator descending tmpld_loc.
 
-/* /*mic*/ define temp-table tblln                                           */
-/*           field pln_vsm     like pt_site label "W/C"                      */
-/*           field pln_line  like ln_line label "W/C"                        */
-/*           field pln_part    like pt_part                                  */
-/*           field pln_qty_iss like ld_qty_oh                                */
-/*           field pln_loc     like loc_loc                                  */
-/*           field pln_locator like ckloc_locator                            */
-/*           index pln_line is primary pln_line pln_locator pln_loc pln_part */
-/*           index pln_part pln_part pln_vsm pln_line pln_loc pln_locator.   */
-
       define new shared variable comp like ps_comp.
 /*GH69*/ define new shared variable eff_date as date label {&bmpkrpa_p_1}.
          define variable level as integer no-undo.
@@ -210,21 +200,6 @@ DEFINE VARIABLE m_error    as integer.
 define variable loc       like loc_loc.
 define variable droplimit like sct_cst_tot initial 6.
 define variable droprate like pt_yield_pct initial 1.05.
-
-
-/*
-/* DEFINE new shared TEMP-TABLE temp-seqmstr       */
-/* FIELD tmp_vsm     LIKE seq_site                 */
-/* field tmp_line    like seq_line                 */
-/* field tmp_date       like seq_due_date          */
-/* FIELD tmp_part      LIKE pt_mstr.pt_part        */
-/* FIELD tmp_qty_req   LIKE seq_qty_req            */
-/* field tmp_code      as character format "x(20)" */
-/* INDEX tmp_part is primary  tmp_part.            */
-*/
-/*
-define buffer tblln1 for tblln.
-*/
 
 
 define buffer tblld1 for tblld.
@@ -321,11 +296,11 @@ repeat:
 
                bcdparm = "".
 /*G234*/       {mfquoter.i site   }
-/*
+
 /*           {mfquoter.i loc    }      */
-/*                {mfquoter.i line   } */
+/*           {mfquoter.i line   }      */
 /*           {mfquoter.i vsm    }      */
-                                       */
+
           {mfquoter.i duedate}
           {mfquoter.i duedate1}
           {mfquoter.i line}
@@ -406,16 +381,7 @@ repeat:
                            input No)"}
 
     end.  /* for each ckseq_mstr */
-/*     /*                        */
-/*     for each tblpp no-lock:   */
-/*       disp                    */
-/*         pp_part               */
-/*         pp_parent @ pp_desc1  */
-/*         pp_op    @ pp_qty_iss */
-/*         pp_qty with frame b.  */
-/*       down 1 with frame b.    */
-/*     end.                      */
-/*     */                        */
+
     for each tblpp where pp_qty <> 0 use-index pp_part break by pp_part:
       if first-of ( pp_part ) then
       do:
@@ -497,241 +463,8 @@ repeat:
           pp_qty_line = ord_qty
           pp_qty_rcv  = qty_rcv.
       end.
-/*       /*                                                                  */
-/*       /* michael marked at 2013.08.21 */                                  */
-/*       for each tblpp where pp_qty <> 0 use-index pp_part:                 */
-/*         find first tblld where tmpld_part = pp_part and                   */
-/*           tmpld_qty_oh > tmpld_qty_iss no-lock no-error.                  */
-/*         if not available tblld then                                       */
-/*         do:                                                               */
-/*           find first tblln where pln_part = pp_part and                   */
-/*                       pln_line = pp_line and pln_vsm = pp_vsm             */
-/*                       use-index pln_part no-lock no-error.                */
-/*           if not available tblln then                                     */
-/*           do:                                                             */
-/*             find first tblld where tmpld_part = pp_part and               */
-/*               tmpld_qty_oh = tmpld_qty_iss no-lock no-error.              */
-/*             if available tblld then                                       */
-/*             do:                                                           */
-/*               Find first ckloc_mstr where ckloc_part = pp_part            */
-/*                     and ckloc_location = tmpld_loc no-lock no-error.      */
-/*               create tblln.                                               */
-/*               assign                                                      */
-/*                 pln_part  = pp_part                                       */
-/*                 pln_loc     = tmpld_loc                                   */
-/*                 pln_line    = pp_line                                     */
-/*                 pln_vsm     = pp_vsm                                      */
-/*                 pln_locator = if available ckloc_mstr then                */
-/*                         ckloc_locator else "".                            */
-/*             end.                                                          */
-/*           end.                                                            */
-/*         end.    /* not available tblld */                                 */
-/*         else                                                              */
-/*         do:                                                               */
-/*           for each tblld where tmpld_part = pp_part and                   */
-/*             tmpld_qty_oh > tmpld_qty_iss:                                 */
-/*             qty = min(pp_qty - pp_qty_iss, tmpld_qty_oh - tmpld_qty_iss). */
-/*             find first tblln where pln_part = pp_part and                 */
-/*                       pln_loc  = tmpld_loc and                            */
-/*                       pln_line = pp_line and                              */
-/*                       pln_vsm  = pp_vsm use-index pln_part                */
-/*                       no-lock no-error.                                   */
-/*             if not available tblln then                                   */
-/*             do:                                                           */
-/*               create tblln.                                               */
-/*               assign                                                      */
-/*                 pln_part  = pp_part                                       */
-/*                 pln_loc     = tmpld_loc                                   */
-/*                 pln_line    = pp_line                                     */
-/*                 pln_vsm   = pp_vsm                                        */
-/*                 pln_locator = tmpld_locator.                              */
-/*             end.                                                          */
-/*             assign                                                        */
-/*               pln_qty_iss = qty                                           */
-/*               tmpld_qty_iss = tmpld_qty_iss + qty                         */
-/*               pp_qty_iss  = pp_qty_iss + qty.                             */
-/*             if pp_qty_main = pp_qty_iss then leave.                       */
-/*           end. /* for each tblld */                                       */
-/*         end. /* available tblld */                                        */
-/*       end. /* for each tblpp */                                           */
-/*       /*michael liu end marked at 2013.08.21 */                           */
-/*     */                                                                    */
-      /*michael liu 2013.05.20*/
 
- /************************************************************************
-  *    for each tblln no-lock use-index pln_line,
-  *         each tblld where tmpld_part = pln_part and tmpld_loc = pln_loc
-  *        no-lock,
-  *       each tblpp where pp_part = tmpld_part and pp_qty <> 0
-  *        and pp_line = pln_line and pp_vsm = pln_vsm and
-  *        /* michael liu */
-  *        ( pp_op = op or pp_op = op1 ) and
-  *        /* michael liu */
-  *        ((( pp_promo = "stk" or pp_promo = "vmi" ) and type <> "p" ) or
-  *         ( pp_promo = "pou" and type = "p" ) or type = "u") and pp_iss_pol
-  *        use-index pp_part
-  *        break by pln_line by pln_locator by pln_part with frame b:
-  *      if pp_qty = 0 or
-  *        ( pp_promo <> "stk" and pp_promo <> "vmi" and
-  *          index("PU",type) = 0 ) or
-  *        ( pp_promo <> "pou" and type = "P" ) or
-  *        not pp_iss_pol then next.
-  *      if first-of ( pln_line) and type <> "P"  then
-  *      do:
-  *
-  *        /* date £¬type , line */
-  *        assign totqty = 0.
-  *        assign itype = 11.
-  *        find first xxpklm_mstr no-lock where xxpklm_type = itype and xxpklm_date = duedate
-  *        and xxpklm_wkctr = pp_line  ** ((xxpklm_Par = pp_parent and type <> "S") or type = "S") no-error.
-  *        if available xxpklm_mstr then do:
-  *           assign v_number = xxpklm_nbr.
-  *           assign newpk = no.
-  *        end.
-  *        else do:
-  *            ASSIGN v_number = "".
-  * /*GN*/      {gprun.i ""gpnrmgv.p"" "(xx,input-output v_number, output errorst
-  * /*GN*/                                 ,output errornum)" }
-  *            assign newpk = yes
-  *                   ii = 0.
-  *        end.
-  *        put skip(1).
-  *        put "Line: " + pp_line  format "x(40)"  "PKLISTNUMBER:" at 54 v_number skip.
-  *        /*
-  *        put " Line: " + pln_line format "x(40)" skip.
-  *        put "  VSM: " + pp_vsm   format "x(40)" skip.
-  *        */
-  *      end.
-  *      accumulate pp_qty ( total by pln_part ).
-  *      if last-of( pln_part ) then
-  *      do:
-  *      /*
-  *        qty = accu pp_qty total by pp_op.
-  *        */
-  *        totqty = ( accumu total by pln_part pp_qty ).
-  *        if newpk then do:
-  *           assign ii = ii + 1.
-  *           {gprun.i ""xxpklnew.p"" "(
-  *                    input v_number,
-  *                    input itype,
-  *                    input duedate,
-  *                    input pp_line,
-  *                    input pp_line,
-  *                    input """",
-  *                    input 0,
-  *
-  *                    input ii,
-  *                    input pp_part,
-  *                    input pp_desc1,
-  *                    input totqty,
-  *                    input """",
-  *                    input """",
-  *                    input pp_qty_line,
-  *                    input tmpld_qty_oh,
-  *                    input """",
-  *                    input 0,
-  *                    input 0,
-  *                    input tmpld_loc,
-  *                    input pln_locator,
-  *                    input site
-  *                  )"}
-  *        end.
-  *        find first xxpkld_det no-lock where xxpkld_nbr = v_number
-  *          and xxpkld_type = itype and xxpkld_date = duedate
-  *          and xxpkld_wkctr = pp_line and xxpkld_part = pp_part no-error.
-  *        if available xxpkld_det then do:
-  *           display xxpkld_wkctr @ pp_line
-  *                   xxpkld_part  @ pp_part
-  *                   xxpkld_desc  @ pp_desc1
-  *                   xxpkld_line_stk @ pp_qty_line
-  *                   xxpkld_qty_req  @ pp_qty
-  *                   xxpkld_location @ ckloc_location
-  *                   xxpkld_locator  @ ckloc_locator
-  *                   xxpkld_main_stk @ pp_qty_main with frame b.
-  *      for each tblln1 where tblln1.pln_part = xxpkld_part
-  *            and tblln1.pln_line = xxpkld_wkctr
-  *            and tblln.pln_loc <> tblln1.pln_loc
-  *            and tblln.pln_vsm = tblln1.pln_vsm no-lock,
-  *          each tblld1 where tmpld_part = tblln1.pln_part
-  *            and tmpld_loc = tblln1.pln_loc
-  *            no-lock with frame b down:
-  *          down 1 with frame b.
-  *          disp
-  *            tblln1.pln_loc  @ ckloc_location
-  *            tblln1.pln_locator @ ckloc_locator
-  *            tmpld_qty_oh @ pp_qty_main.
-  *          down 1 with frame b.
-  *        end.   /*if available xxpkld_det then do:*/
-  * /************************************
-  * *      display
-  * *        pp_line
-  * *        pp_part
-  * *        pp_desc1
-  * *        pp_qty_line
-  * *        ( accumu total by pln_part pp_qty ) @ pp_qty
-  * *        tmpld_loc    @ ckloc_location
-  * *        pln_locator  @ ckloc_locator
-  * *        tmpld_qty_oh @ pp_qty_main
-  * *        /*
-  * *        pp_promo
-  * *        */
-  * *        /*
-  * *        pln_qty_iss @ pp_qty_iss
-  * *            */
-  * *        with frame b.
-  * *      for each tblln1 where tblln1.pln_part = pp_part
-  * *          and tblln1.pln_line = pp_line
-  * *          and tblln.pln_loc <> tblln1.pln_loc
-  * *          and tblln.pln_vsm = tblln1.pln_vsm no-lock,
-  * *        each tblld1 where tmpld_part = tblln1.pln_part
-  * *          and tmpld_loc = tblln1.pln_loc
-  * *          no-lock with frame b down:
-  * *        down 1 with frame b.
-  * *        disp
-  * *          tblln1.pln_loc  @ ckloc_location
-  * *          tblln1.pln_locator @ ckloc_locator
-  * *          tmpld_qty_oh @ pp_qty_main
-  * *            /*
-  * *            pln_qty_iss @ pp_qty_iss
-  * *            */
-  * *            .
-  * *        down 1 with frame b.
-  * *********************************/
-  *          if page-size - line-counter < 2 then
-  *          do:
-  *            page.
-  *            if type <> "P" then
-  *            do:
-  *                put skip(1).
-  *              put "   Line: " + pp_line   format "x(40)" "PKLISTNUMBER:" at 54 v_number skip.
-  *            end.
-  *            /*
-  *            put "Stock: " + tblln.pln_loc  format "x(40)" skip.
-  *            put "  VSM: " + pp_vsm   format "x(40)" skip.
-  *            */
-  *          end.
-  *        end. /* for each tblln1 */
-  *      end. /* if last-of( pp_op ) */
-  *        /**/
-  *        pp_qty = 0.
-  *        /**/
-  *        if ( ( last-of( pln_line ) and type <> "p" )
-  *          or page-size - line-counter < 2 )
-  *          and not last ( pln_line ) then
-  *        do:
-  *          page.
-  *          if not last-of( pln_line ) and type <> "P" then
-  *            do:
-  *            put skip(1).
-  *            put "   Line: " + pp_line   format "x(40)" "PKLISTNUMBER:" at 54 v_number skip.
-  *          end.
-  *        end.
-  *        else
-  *          put fill("-", 116) format "x(116)" skip.
-  *        {mfrpexit.i "false"}
-  *      end. /*for each tblpp*/
-  **************************************************************/
-    if index("Ss", type) = 0 then do:
+      if index("Ss", type) = 0 then do:
     for each tblld /* where tmpld_part = pln_part and tmpld_loc = pln_loc */
         no-lock,
        each tblpp where pp_part = tmpld_part and pp_qty <> 0
@@ -836,37 +569,7 @@ repeat:
           down 1 with frame b.
           put unformat fill("-", 129) skip.
         end.   /*if available xxpkld_det then do:*/
-/******************************************
-/*         display                                           */
-/*           pp_line                                         */
-/*           pp_part                                         */
-/*           pp_desc1                                        */
-/*           pp_qty_line                                     */
-/*           ( accumu total by pp_part pp_qty ) @ pp_qty     */
-/*           tmpld_loc @ ckloc_location                      */
-/*           tmpld_locator @ ckloc_locator                   */
-/*           tmpld_qty_oh @ pp_qty_main                      */
-/*           /*                                              */
-/*           pp_promo                                        */
-/*           */                                              */
-/*           /*                                              */
-/*           pln_qty_iss @ pp_qty_iss                        */
-/*               */                                          */
-/*           with frame b.                                   */
-/*         for each tblld1 where tblld1.tmpld_part = pp_part */
-/*             and tblld1.tmpld_loc <> tblld.tmpld_loc       */
-/*             no-lock with frame b down:                    */
-/*           down 1 with frame b.                            */
-/*           disp                                            */
-/*             tblld1.tmpld_loc  @ ckloc_location            */
-/*             tblld1.tmpld_locator @ ckloc_locator          */
-/*             tmpld_qty_oh @ pp_qty_main                    */
-/*               /*                                          */
-/*               pln_qty_iss @ pp_qty_iss                    */
-/*               */                                          */
-/*               .                                           */
-/*           down 1 with frame b.                            */
-******************************************/
+
           if page-size - line-counter < 2 then
           do:
             page.
@@ -1023,35 +726,6 @@ repeat:
           down 1 with frame c.
           put unformat fill("-", 129) skip.
         end.   /*if available xxpkld_det then do:*/
-
-/*       display                                             */
-/*         pp_part                                           */
-/*             pp_desc1                                      */
-/*         pp_qty_line                                       */
-/*         ord_qty     @ pp_qty                              */
-/*         tmpld_loc   @ ckloc_location                      */
-/*         tmpld_locator @ ckloc_locator                     */
-/*         tmpld_qty_oh  @ pp_qty_main                       */
-/*         pp_desc2                                          */
-/*         /*                                                */
-/*         pln_qty_iss @ pp_qty_iss                          */
-/*             */                                            */
-/*         with frame c.                                     */
-/*                                                           */
-/*          pp_qty  = 0.                                     */
-/*         for each tblld1 where tblld1.tmpld_part = pp_part */
-/*             and tblld1.tmpld_loc <> tblld.tmpld_loc       */
-/*             no-lock with frame c down:                    */
-/*           down 1 with frame c.                            */
-/*           disp                                            */
-/*             tblld1.tmpld_loc  @ ckloc_location            */
-/*             tblld1.tmpld_locator @ ckloc_locator          */
-/*             tmpld_qty_oh @ pp_qty_main                    */
-/*               /*                                          */
-/*               pln_qty_iss @ pp_qty_iss                    */
-/*               */                                          */
-/*               .                                           */
-/*           down 1 with frame c.                            */
 
         if page-size - line-counter < 2 then
           do:

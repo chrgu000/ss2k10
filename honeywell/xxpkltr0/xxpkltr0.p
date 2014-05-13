@@ -1,4 +1,4 @@
-/* REVISION: 9.0 LAST MODIFIED: 11/14/13        BY: jordan Lin *SS-20131114.1 */
+/* REVISION: 9.0 LAST MODIFIED: 11/14/13       BY: jordan Lin *SS-20131114.1 */
 
 {mfdtitle.i "test.1"}
 
@@ -85,7 +85,7 @@ repeat with frame a:
       message "领料单不存在,请重新输入!" .
       undo,retry  mainloop.
   end.
-  if trim(xxpklm_status) <> "" then do:
+  if trim(xxpklm_status) <> "" and trim(xxpklm_status) <> "I" then do:
       message "领料单状态 " trim(xxpklm_status) ", 不能发料!" .
       undo,retry  mainloop.
   end.
@@ -103,7 +103,7 @@ repeat with frame a:
       end.
    end.
    for each tt1 exclusive-lock: delete tt1. end.
-   for each xxpkld_det where xxpkld_nbr = pklnbr and xxpkld__chr01 = "" no-lock by xxpkld_line:
+   for each xxpkld_det where xxpkld_nbr = pklnbr and (xxpkld__chr01 = "" or (xxpkld__chr01 = "I" and xxpkld_qty_iss < xxpkld_qty_req)) no-lock by xxpkld_line:
        assign vqty = xxpkld_qty_req - xxpkld_qty_iss.
        lddetlabel:
        for each ld_det no-lock use-index ld_part_lot where
@@ -180,7 +180,7 @@ repeat with frame a:
       undo,retry.
    end.
    else do:
-      for each tt1 no-lock where tt1_sel = '*' with frame datadet with width 80:
+      for each tt1 no-lock where tt1_sel = '*' and tt1_qty_iss > 0 with frame datadet with width 80:
           display tt1_seq
                   tt1_part
                   tt1_loc_from
@@ -188,13 +188,13 @@ repeat with frame a:
                   tt1_qty_iss
                   tt1_qty1.
                   down.
-      end.   
+      end.
    end.
    assign yn = yes.
    {mfmsg01.i 12 2 yn}
    if yn then do:
       assign i = 0.
-      for each tt1 exclusive-lock where tt1_sel = "*":
+      for each tt1 exclusive-lock where tt1_sel = "*" and tt1_qty_iss > 0:
           i = i + 1.
           assign fn = "TMP_" + execname + "." + string(today,"9999-99-99") + string(time,"hh:mm:ss") + pklnbr + "." + string(i,"99999999").
           output stream bf to value(fn + ".bpi").
@@ -212,13 +212,9 @@ repeat with frame a:
           input from value(fn + ".bpi").
           output to value(fn + ".bpo") keep-messages.
           hide message no-pause.
-          /*
-          cimrunprogramloop:
-          do transaction on stop undo cimrunprogramloop,leave cimrunprogramloop:
-          */
              {gprun.i ""iclotr04.p""}
               assign trrecid = current-value(tr_sq01).
-              FIND FIRST tr_hist NO-LOCK use-index tr_part_eff WHERE tr_part = tt1_part 
+              FIND FIRST tr_hist NO-LOCK use-index tr_part_eff WHERE tr_part = tt1_part
                     and tr_effdate = today AND tr_nbr = tt1_pkl and tr_so_job = tt1_rknbr
                      AND tr_type = "ISS-TR" AND tr_site = tt1_site
                      AND tr_loc = tt1_loc_from AND tr_serial = tt1_lot
@@ -228,21 +224,6 @@ repeat with frame a:
                    os-delete value(fn + ".bpi").
                    os-delete value(fn + ".bpo").
                END.
-               /*
-               FIND FIRST tr_hist NO-LOCK WHERE tr_trnbr >= integer(trrecid)
-                      AND tr_nbr = tt1_pkl AND tr_part = tt1_part
-                      AND tr_loc = tt1_loc_to AND tr_type = "RCT-TR"
-                      AND tr_qty_loc = tt1_qty_iss NO-ERROR.
-               IF AVAILABLE tr_hist THEN DO:
-                   ASSIGN tt1_chk = tt1_chk + " / RCT-TR:[" + trim(string(tr_trnbr,">>>>>>>>>>>>>9")) + "]".
-                   assign yn = yes.
-               END.
-               */
-               /*
-               if not yn then undo,leave cimrunprogramloop.
-          end.
-          if yn then tt1_chk = "ok". else tt1_chk = "err".
-          */
           hide message no-pause.
           output close.
           input close.
@@ -261,12 +242,20 @@ repeat with frame a:
                   recid(xxpkld_det) = tt1_recid no-error.
              if available xxpkld_det then do:
                 assign xxpkld_loc_from = tt1_loc_from
-                       xxpkld__chr01 = "ISS"
+                       xxpkld__chr01 = "I"
                        xxpkld_qty_iss = xxpkld_qty_iss + vqty.
+                 find first xxpklm_mstr exclusive-lock
+                      where xxpklm_nbr = xxpkld_nbr no-error.
+                 if available xxpklm_mstr then do:
+                        assign xxpklm_stat = "I".
+                 end.
+             end.
+             else do:
+                message tt1_recid " not found " view-as alert-box.
              end.
           end.
       end.
-      for each tt1 no-lock where tt1_sel = "*" with frame d:
+      for each tt1 no-lock where tt1_sel = "*" and tt1_qty_iss > 0 with frame d:
           display tt1_seq
                   tt1_part
                   tt1_loc_from

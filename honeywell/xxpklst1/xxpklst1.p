@@ -8,11 +8,13 @@ define variable del-yn as logical initial no.
 form
    pklnbr colon 20 skip(1)
    stat   colon 20 skip
-   "空白:未结状态,可发料,退料." at 20 skip
-   "R:  已退料,可报废出库." at 20 skip
-   "C:  已结." at 20 skip
-   "X:  手工取消." at 20 skip
-   "D:  删除." at 20 skip
+   "空白: 可发料" at 20 skip
+   "I:    发料,可退料报废出库." at 20 skip
+   "R     退料." at 20 skip
+   "U     报废." at 20 skip
+   "C:    已结." at 20 skip
+   "X:    取消." at 20 skip
+   "D:    删除." at 20 skip
 with frame a side-labels width 80 attr-space.
 /*日期限制*/
  {xxcmfun.i}
@@ -71,6 +73,9 @@ repeat with frame a:
            find first xxpklm_mstr exclusive-lock where xxpklm_nbr = pklnbr no-error.
            if available xxpklm_mstr then do:
               assign xxpklm_stat = stat.
+              for each xxpkld_det exclusive-lock where xxpkld_nbr = pklnbr:
+              	  assign xxpkld__chr01 = stat.
+              end.
            end.
          end.
          leave.
