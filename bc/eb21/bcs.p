@@ -37,17 +37,18 @@ assign cprt = "Copyright " + string(year(today) , "9999" ) + " Softspeed CO,LTD.
 
 form
    skip
-   c-welcome colon 1 format "x(36)" no-label
+   c-welcome colon 3 format "x(30)" no-label
    "SoftSpeed Barcode System" colon 4 skip(1)
    cprt colon 2 no-label
    " (8620) 8552 1040" colon 16
    " 400 538 3200"  colon 20
    "http:~/~/www.softspeed.com.cn~/" colon 6
-   c-allrightsreserved colon 16 format "x(20)" no-label skip
+   c-allrightsreserved colon 16 format "x(20)" no-label skip(1)
+   global_userid colon 12 label "User"
    lv_domain     colon 12 dom_name format "x(16)" no-label
 with frame welcome side-labels width 40 no-attr-space.
 
-display c-welcome cprt c-allrightsreserved with frame welcome.
+display c-welcome cprt global_userid c-allrightsreserved with frame welcome.
 
 loopdomain:
 do on endkey undo, leave:
