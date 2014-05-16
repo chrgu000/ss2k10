@@ -279,7 +279,7 @@ END.
 ON CHOOSE OF bChk IN FRAME fMain /* 检查 */
 DO:
     DEFINE VARIABLE i AS INTEGER.
-    define variable qty_cn like tr_qty_loc.
+    define variable qty_cn like cncix_qty_stock.
     EMPTY TEMP-TABLE xsc_d NO-ERROR.
     EMPTY TEMP-TABLE xsa_r NO-ERROR.
     SESSION:SET-WAIT-STAT("general").
@@ -294,9 +294,18 @@ DO:
                {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
             */
             for each cncix_mstr no-lock where cncix_domain = global_domain
-                 and cncix_shipto = xsm_ship and cncix_part = xsm_part
-                 and cncix_qty_stock > 0:
-
+                 and cncix_shipto = xsm_ship and cncix_part = xsm_part:
+                 find first xsa_r exclusive-lock 
+                      where xsr_ship = cncix_shipto
+                        and xsr_cust = cncix_cust
+                        and xsr_so = cncix_so_nbr
+                        and xsr_line = cncix_sod_line
+                        and xsr_part = cncix_part
+                        and xsr_site = cncix_site
+                        and xsr_loc = cncix_current_loc
+                        and xsr_lot = cncix_lotser
+                        and xsr_ref = cncix_ref no-error.
+                 if not available xsa_r then do:
                  create xsa_r.
                  assign xsr_ship = cncix_shipto
                         xsr_cust = cncix_cust
@@ -308,9 +317,9 @@ DO:
                         xsr_lot = cncix_lotser
                         xsr_ref = cncix_ref
                         xsr_eff = ?
-                        xsr_oh = cncix_qty_stock
                         xsr_um = cncix_stock_um.
-
+                 end.
+                 assign xsr_oh = xsr_oh + cncix_qty_stock.
 
  /*             create xsa_r1.                        */
  /*             assign xsr1_ship = cncix_shipto       */
@@ -327,16 +336,35 @@ DO:
             end.
             END.
         END.
-/*13827    删除有负数批号的资料*/        
-/*13827*/  for each xsa_r exclusive-lock:
-/*13827*/      find first cncix_mstr no-lock where cncix_domain = global_domain
-/*13827*/             and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line
-/*13827*/             and cncix_lot = xsr_lot and  xsr_oh = cncix_qty_stock * -1 no-error.
-/*13827*/      if available cncix_mstr then do:
-/*13827*/         delete xsa_r.
-/*13827*/      end.
-/*13827*/  end.
-/*        {xxsocnimp02.i} */
+/*13827 删除有负数批号的资料                                                            */
+/*13827*/ for each xsa_r exclusive-lock:                                                      
+/*13827*/     find first cncix_mstr no-lock where cncix_domain = global_domain                
+/*13827*/            and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line                  
+/*13827*/            and cncix_lot = xsr_lot and xsr_oh <= 0 no-error.     
+/*13827*/     if available cncix_mstr then do:                                                
+/*13827*/        delete xsa_r.                                                                
+/*13827*/     end.                                                                            
+/*13827*/ end.                                                                                
+/*        {xxsocnimp02.i}                                                               */
+    /*删除可用库存为0的项次*/
+/*        for each xsa_r exclusive-lock                                                 */
+/*            break by xsr_part by xsr_cust by xsr_ship by xsr_so                       */
+/*                  by xsr_line by xsr_loc by xsr_lot:                                  */
+/*            if first-of(xsr_lot) then do:                                             */
+/*                assign qty_cn = 0.                                                    */
+/*                for each cncix_mstr no-lock where cncix_domain = global_domain        */
+/*                     and cncix_part = xsr_part and cncix_shipto = xsr_ship            */
+/*                     and cncix_cust = xsr_cust and cncix_so_nbr = xsr_so              */
+/*                     and cncix_sod_line = xsr_line and cncix_site = xsr_site          */
+/*                     and cncix_current_loc = xsr_loc and cncix_lotser = xsr_lot       */
+/*                     and cncix_ref = xsr_ref:                                         */
+/*                  assign qty_cn = qty_cn + cncix_qty_stock.                           */
+/*                END.                                                                  */
+/*            end.                                                                      */
+/*            if qty_cn <= 0 then do:                                                   */
+/*               delete xsa_r.                                                          */
+/*            end.                                                                      */
+/*        end.                                                                          */
         {xxsocnimp01a.i}
     END.
 
@@ -383,20 +411,20 @@ DO:
     DEFINE VARIABLE gfret AS LOGICAL NO-UNDO.
 
   ASSIGN vfile.
-/*  ASSIGN GFILE = vfile.                                                    */
-/*    SYSTEM-DIALOG GET-FILE gfile                                           */
-/*        TITLE      "另存为..."                                             */
-/*        FILTERS    "EXCEL工作簿(*.xls)"   "*.xls"                          */
-/*        MUST-EXIST                                                         */
-/*        ASK-OVERWRITE                                                      */
-/*        INITIAL-DIR "."                                                    */
-/*        DEFAULT-EXTENSION ".xls"                                           */
-/*        SAVE-AS                                                            */
-/*        USE-FILENAME                                                       */
-/*        UPDATE gfret.                                                      */
-/*        if gfret then do:                                                  */
- /*        {gprun.i ""xxsocnimp02.p"" "(input gfile)"}                       */
-/*        end.                                                               */
+/*  ASSIGN GFILE = vfile.                                   */
+/*    SYSTEM-DIALOG GET-FILE gfile                          */
+/*        TITLE      "另存为..."                            */
+/*        FILTERS    "EXCEL工作簿(*.xls)"   "*.xls"         */
+/*        MUST-EXIST                                        */
+/*        ASK-OVERWRITE                                     */
+/*        INITIAL-DIR "."                                   */
+/*        DEFAULT-EXTENSION ".xls"                          */
+/*        SAVE-AS                                           */
+/*        USE-FILENAME                                      */
+/*        UPDATE gfret.                                     */
+/*        if gfret then do:                                 */
+ /*        {gprun.i ""xxsocnimp02.p"" "(input gfile)"}      */
+/*        end.                                              */
        {gprun.i ""xxsocnimp02.p""}
 END.
 
@@ -419,7 +447,7 @@ define variable lChoice like mfc_logical.
   END.
   if not can-find(first xsc_d no-lock where xsd_chk = "PASS") then do:
      MESSAGE "未找到可装入的数据,请先检查数据." VIEW-AS ALERT-BOX INFORMATION.
-     UNDO,LEAVE. 
+     UNDO,LEAVE.
   end.
 /* ELSE IF CAN-FIND(FIRST xsc_d NO-LOCK WHERE xsd_chk <> "PASS") THEN DO:   */
 /*    MESSAGE "数据检查发现错误.请先确认数据。" VIEW-AS ALERT-BOX ERROR.    */
@@ -438,7 +466,7 @@ define variable lChoice like mfc_logical.
   SESSION:SET-WAIT-STAT("GENERAL").
   {gprun.i ""xxsocnimp03.p""}
 
-  OPEN QUERY brDet FOR EACH xsc_d by xsd_serial  by xsd_so descendin.
+  OPEN QUERY brDet FOR EACH xsc_d by xsd_serial by xsd_so descendin.
   IF CAN-FIND(FIRST xsc_d) THEN DO:
        brdet:REFRESH().
   END.
@@ -472,7 +500,9 @@ DO:
 /*    EMPTY TEMP-TABLE xsc_m NO-ERROR. */
   IF vfile <> "" THEN DO:
      do transaction:
-        FIND FIRST usrw_wkfl EXCLUSIVE-LOCK WHERE usrw_domain = global_domain AND usrw_key1 = execname
+        FIND FIRST usrw_wkfl EXCLUSIVE-LOCK
+             WHERE usrw_domain = global_domain
+               AND usrw_key1 = execname
                AND usrw_key2 = global_userid NO-ERROR.
         IF NOT AVAILABLE usrw_wkfl THEN DO:
            CREATE Usrw_wkfl. usrw_domain = global_domain.
@@ -490,6 +520,9 @@ DO:
    EMPTY TEMP-TABLE xsc_d NO-ERROR.
    IF vfile <> "" THEN DO:
       {gprun.i ""xxsocnimp01.p"" "(input vfile)"}
+      for each xsc_m exclusive-lock where xsm_newpc = ?:
+        assign xsm_newpc = no.
+      end.
    end.
        APPLY "CHOOSE" TO bChk.
     OPEN QUERY brDet FOR EACH xsc_d by xsd_serial  by xsd_so descendin.
@@ -589,4 +622,3 @@ END PROCEDURE.
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
-
