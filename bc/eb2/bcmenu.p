@@ -84,8 +84,8 @@
 {mf1.i}
 {bccomm.i}
 
-/*140516.1  
- define output parameter rstatus as character no-undo. 
+/*140516.1
+ define output parameter rstatus as character no-undo.
 */
 
 define shared variable menu as character.
@@ -148,7 +148,7 @@ assign
 /* Keep hackers out of expired demos */
 /*140516.1 if  menu_log <> 55702683.14 then quit. */
 {bcmenufm.i}
-/*140516.1*/ find first code_mstr no-lock where code_fldnam = "BC_MENUROOT" 
+/*140516.1*/ find first code_mstr no-lock where code_fldnam = "BC_MENUROOT"
 /*140516.1*/        and code_value <> "" no-error.
 /*140516.1*/ if available code_mstr then do:
 /*140516.1*/    for first mnd_det fields(mnd_nbr mnd_select)
@@ -307,8 +307,8 @@ repeat:
          else
             assign name = company_name + " : " + sdbname("qaddb").
 
-         assign       
-/*140516.1*/ bctitle = "barcode".         
+         assign
+/*140516.1*/ bctitle = "barcode".
 /*140516.1  bctitle = "mfmenu"                                               */
 /*140516.1  + fill(" ",integer (max (1,39                                    */
 /*140516.1  - {gprawlen.i &strng="menu_title[j - 1]"} / 2) - 6))             */
@@ -410,7 +410,7 @@ repeat:
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display normal proclabel[i]
                            with frame dd.
                         end.
@@ -433,12 +433,12 @@ repeat:
                         end.
 
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display messages proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display messages proclabel[i]
                            with frame dd.
                         end.
@@ -452,12 +452,12 @@ repeat:
                         keyfunction(lastkey) = "tab"
                      then do:
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display normal proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display normal proclabel[i]
                            with frame dd.
                         end.
@@ -478,16 +478,16 @@ repeat:
                         if lr_ok = no then i = 1.
 
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display messages proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display messages proclabel[i]
                            with frame dd.
-                        end.   
-                           
+                        end.
+
                         assign cselection = string(i).
                         display cselection with frame bb.
 
@@ -496,12 +496,12 @@ repeat:
                      else if keyfunction(lastkey) = "cursor-right"
                      then do:
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display normal proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display normal proclabel[i]
                            with frame dd.
                         end.
@@ -511,12 +511,12 @@ repeat:
                         if i < menu_entries - 12 + 1 then assign i = i + 12.
 
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display messages proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display messages proclabel[i]
                            with frame dd.
                         end.
@@ -529,12 +529,12 @@ repeat:
                      if keyfunction(lastkey) = "cursor-left"
                      then do:
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display normal proclabel[i]
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display normal proclabel[i]
                            with frame dd.
                         end.
@@ -543,7 +543,7 @@ repeat:
                         if i > 12 then assign i = i - 12.
 
                         if j = 2 then do:
-/*140516.1*/               hide frame dd.                        
+/*140516.1*/               hide frame dd.
                            color display messages proclabel[i]
                            with frame ee.
                         end.
@@ -573,7 +573,7 @@ repeat:
                            with frame ee.
                         end.
                         else do:
-/*140516.1*/               hide frame ee.                        
+/*140516.1*/               hide frame ee.
                            color display normal proclabel[i]
                            with frame dd.
                         end.
@@ -614,9 +614,8 @@ repeat:
                end.
 
             end. /* setbb: do on error undo */
-
-            if cselection = "" 
-/*140516.1*/    or cselection = "E" 
+            if cselection = ""
+/*140516.1*/    or cselection = "E"
             then leave.
 
             i = index(cselection,",").
@@ -641,6 +640,13 @@ repeat:
                {pxmsg.i &MSGNUM=13 &ERRORLEVEL=3} /* NOT A VALID CHOICE */
                undo , retry mselect.
             end.
+
+/*140516.1*/  DO i = 1 to length(cselection).
+/*140516.1*/     If index("0987654321.", substring(cselection,i,1)) = 0 then do:
+/*140516.1*/        {pxmsg.i &MSGNUM=13 &ERRORLEVEL=3} /* NOT A VALID CHOICE */
+/*140516.1*/         undo , retry mselect.
+/*140516.1*/     end.
+/*140516.1*/  end.
 
             assign
                numericselection = yes
@@ -686,7 +692,6 @@ repeat:
                      3,lastperiod - 3,"raw").
 
                end.
-
                else
                   assign
                      thismenu = substring(menuselection,1,
