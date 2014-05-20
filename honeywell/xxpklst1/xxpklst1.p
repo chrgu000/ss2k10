@@ -10,8 +10,7 @@ form
    stat   colon 20 skip
    "空白: 可发料" at 20 skip
    "I:    发料,可退料报废出库." at 20 skip
-   "R     退料." at 20 skip
-   "U     报废." at 20 skip
+   "R:    退料." at 20 skip
    "C:    已结." at 20 skip
    "X:    取消." at 20 skip
    "D:    删除." at 20 skip
@@ -47,6 +46,10 @@ repeat with frame a:
   end.
      repeat :
          update stat with frame a.
+         if index("IRCXD" , stat) = 0 and stat <> "" then do:
+         		message "状态错误!".
+         		undo,retry.
+         end.
          if stat = "D" then do:
                find first xxpklm_mstr exclusive-lock where xxpklm_nbr = pklnbr
                        no-error.
@@ -74,7 +77,12 @@ repeat with frame a:
            if available xxpklm_mstr then do:
               assign xxpklm_stat = stat.
               for each xxpkld_det exclusive-lock where xxpkld_nbr = pklnbr:
-              	  assign xxpkld__chr01 = stat.
+                  if stat = "I" and xxpkld_qty_iss <> 0 then do:
+              	      assign xxpkld__chr01 = stat.
+              	  end.
+              	  if stat = "R" and xxpkld_qty_ret <> 0 then do:
+              	     assign xxpkld__chr01 = stat.
+              	  end.
               end.
            end.
          end.

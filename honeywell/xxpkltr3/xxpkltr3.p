@@ -1,5 +1,12 @@
-/* REVISION: 9.0       LAST MODIFIED: 11/14/13      BY: jordan Lin *SS-20131114.1 */
-
+/* xxpkltr3.p - Unplan issue from assembline                                 */
+/* REVISION: 9.0 LAST MODIFIED: 05/14/14               BY: zy *SS-20140514.1 */
+/*****************************************************************************
+ * 转仓,退仓,报废的流程如下：
+ * 1.转仓(只能在状态是空时才能做,做完转仓后状态为I,只能做退仓)
+ * 2.退仓(只能在转仓之后状态为I时才能做,做完退仓后状态为R,只能做报废)
+ * 3.报废(只能在退仓之后状态为R时才能做,做完报废后,这张单的状态变为C,
+ *           不能再做转仓;退仓;报废中的任何动作.)
+*****************************************************************************/
 {mfdtitle.i "test.1"}
 
 define variable site  like ld_site init "PRC".
@@ -86,7 +93,7 @@ repeat with frame a:
       message "领料单不存在,请重新输入!" .
       undo,retry  mainloop.
   end.
-  if  trim(xxpklm_status) <> "I" and trim(xxpklm_status) <> "U" and trim(xxpklm_status) <> "R" then do:
+  if trim(xxpklm_status) <> "R" then do:
       message "领料单状态 " trim(xxpklm_status) ", 不能报废!" .
       undo,retry  mainloop.
   end.
@@ -103,7 +110,7 @@ repeat with frame a:
          undo,retry.
       end.
    end.
-    for each xxpkld_det where xxpkld_nbr = pklnbr and (xxpkld__chr01 = "I" or xxpkld__chr01 = "R" or xxpkld__chr01 = "U") no-lock by xxpkld_line:
+    for each xxpkld_det where xxpkld_nbr = pklnbr and xxpkld__chr01 = "R" no-lock by xxpkld_line:
        assign vqty = xxpkld_qty_iss.
        if vqty = 0 then next.
        lddetlabel:
@@ -182,11 +189,11 @@ repeat with frame a:
                   recid(xxpkld_det) = tt1_recid no-error.
              if available xxpkld_det then do:
                 assign xxpkld_qty_rej = xxpkld_qty_rej + vqty
-                       xxpkld__chr01 = "U".
+                       xxpkld__chr01 = "C".
                 find first xxpklm_mstr exclusive-lock
                      where xxpklm_nbr = xxpkld_nbr no-error.
                 if available xxpklm_mstr then do:
-                       assign xxpklm_stat = "U".
+                       assign xxpklm_stat = "C".
                 end.
              end.
           end.
