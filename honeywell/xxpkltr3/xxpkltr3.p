@@ -9,23 +9,29 @@
 *****************************************************************************/
 {mfdtitle.i "test.1"}
 
-define variable site  like ld_site init "PRC".
-define variable pklnbr like xxpkld_nbr.
-define variable wkctr like xxpklm_wkctr.
-define variable rknbr as char format "x(8)".
+define variable site  like ld_site init "PRC" no-undo.
+define variable pklnbr like xxpkld_nbr no-undo.
+define variable wkctr like xxpklm_wkctr no-undo.
+define variable rknbr as char format "x(8)" no-undo.
 define variable vqty  like xxpkld_qty_req no-undo.
-define variable i  as integer.
-define variable fn as character.
-define variable yn AS logical.
-define variable sl as logical.
+define variable stat  as character format "x(1)" no-undo.
+define variable i  as integer no-undo.
+define variable fn as character no-undo.
+define variable yn AS logical no-undo.
+define variable sl as logical no-undo.
+define variable acct LIKE pl_flr_acct no-undo.
+define variable cc   LIKE pl_flr_CC no-undo.
 define variable trrecid as recid no-undo.
 define stream bf.
 {xxpkltr0.i "new"}
 
 form
   pklnbr colon 8 label "领料单" format "x(16)"
-  wkctr  colon 34 label "生产线"
-  rknbr  colon 54 label "报废单号"
+  stat   label "状态"
+  wkctr  no-label
+  rknbr  label "报废单"
+  acct   colon 8 label "ACCT"
+  cc     colon 32 label "CC"
   sl     colon 72 label "全选"
 with frame a side-labels width 80 attr-space.
 
@@ -50,9 +56,13 @@ form
   tt1_qty_iss  column-label "调入量"
   tt1_chk      column-label "结果"
 with frame d width 80 no-attr-space 12 down scroll 1.
-
+find first pl_mstr no-lock no-error.
+if available pl_mstr then do:
+   assign acct = pl_flr_acct
+            cc = pl_flr_cc.
+end.
 view frame a.
-display pklnbr wkctr rknbr sl with frame a.
+display pklnbr stat wkctr rknbr acct cc sl with frame a.
 
 find first icc_ctrl where no-lock no-error.
 if avail icc_ctrl then site = icc_site.
@@ -72,8 +82,26 @@ repeat with frame a:
             clear frame c.
             hide frame c.
             if recno <> ? then do:
-                 assign wkctr = xxpklm_wkctr.
-                 display xxpklm_nbr @ pklnbr wkctr.
+                 assign wkctr = xxpklm_wkctr
+                        stat = xxpklm_stat.
+                 display stat xxpklm_nbr @ pklnbr wkctr.
+                   find first xxpkld_det no-lock where xxpkld_nbr = pklnbr no-error.
+                 if available xxpkld_det then do:
+                    find pt_mstr no-lock where pt_part = xxpkld_part no-error.
+                    if available pt_mstr  then do:
+                       find first pl_mstr no-lock where pl_prod_line = pt_prod_line no-error.
+                       if available pl_mstr then do:
+                          if pt_iss_pol = no then do:
+                             assign acct = pl_flr_acct
+                                      cc = pl_flr_cc.
+                          end.
+                          else do:
+                             assign acct = pl_cop_acct
+                                      cc = pl_cop_cc.
+                          end.
+                       end. /* if available pl_mstr then do: */
+                    end.    /* if available pt_mstr  then do: */
+                 end.
             end.
          end.
          else do:
@@ -100,14 +128,43 @@ repeat with frame a:
    clear frame c.
    hide frame c.
 
+
+  display rknbr acct cc sl with frame a.
+
    ststatus = stline[2].
    status input ststatus.
    do on error undo,retry:
-      update rknbr sl.
+      update rknbr acct cc sl.
       if rknbr = "" then do:
          message "报废单号不允许为空".
          next-prompt rknbr.
          undo,retry.
+      end.
+      if acct = "" then do:
+         message "账户不允许为空".
+         next-prompt acct.
+         undo,retry.
+      end.
+      else do:
+         find first ac_mstr no-lock where ac_code = acct no-error.
+         if not available ac_mstr then do:
+            message "账户不存在".
+            next-prompt acct.
+            undo,retry.
+         end.
+      end.
+      if cc = "" then do:
+         message "成本中心不允许为空".
+         next-prompt cc.
+         undo,retry.
+      end.
+      else do:
+           find first cc_mstr no-lock where cc_ctr = cc no-error.
+           if not available cc_mstr then do:
+              message "成本中心不存在".
+              next-prompt cc.
+              undo,retry.
+           end.
       end.
    end.
     for each xxpkld_det where xxpkld_nbr = pklnbr and xxpkld__chr01 = "R" no-lock by xxpkld_line:
