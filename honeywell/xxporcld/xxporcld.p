@@ -2,7 +2,7 @@
 /* Copyright 2013 SoftSpeed GZ  create by:zy                                 */
 /* REVISION END                                                              */
 /* If cknyh_part <> pod_part, don¡¯t allow to receive this line.  **t.140310.1*/
-{mfdtitle.i "t.140404"}
+{mfdtitle.i "140530.1"}
 
 {xxporcld.i "new"}
 define variable nynbr  like cknyh_prt_nbr.
@@ -37,8 +37,6 @@ function getLoc returns character(iType as character):
    end.
    return vLoc.
 end function.
- {xxcmfun.i}
- run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
 repeat with frame a:
 view frame a.

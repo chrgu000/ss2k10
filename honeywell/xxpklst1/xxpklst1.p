@@ -1,6 +1,6 @@
 /*REVISION: 9.0                  LAST MODIFIED: 09/25/13 BY: ZY *SS-20130925.1*/
 
-{mfdtitle.i "test.1"}
+{mfdtitle.i "140530.1"}
 
 define variable pklnbr like xxpklm_nbr.
 define variable stat   as   character format "x(1)".
@@ -15,9 +15,6 @@ form
    "X:    取消." at 20 skip
    "D:    删除." at 20 skip
 with frame a side-labels width 80 attr-space.
-/*日期限制*/
- {xxcmfun.i}
- run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
 mainloop:
 repeat with frame a:
@@ -47,8 +44,8 @@ repeat with frame a:
      repeat :
          update stat with frame a.
          if index("IRCXD" , stat) = 0 and stat <> "" then do:
-         		message "状态错误!".
-         		undo,retry.
+            message "状态错误!".
+            undo,retry.
          end.
          if stat = "D" then do:
                find first xxpklm_mstr exclusive-lock where xxpklm_nbr = pklnbr
@@ -78,11 +75,11 @@ repeat with frame a:
               assign xxpklm_stat = stat.
               for each xxpkld_det exclusive-lock where xxpkld_nbr = pklnbr:
                   if stat = "I" and xxpkld_qty_iss <> 0 then do:
-              	      assign xxpkld__chr01 = stat.
-              	  end.
-              	  if stat = "R" and xxpkld_qty_ret <> 0 then do:
-              	     assign xxpkld__chr01 = stat.
-              	  end.
+                      assign xxpkld__chr01 = stat.
+                  end.
+                  if stat = "R" and xxpkld_qty_ret <> 0 then do:
+                     assign xxpkld__chr01 = stat.
+                  end.
               end.
            end.
          end.

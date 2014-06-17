@@ -7,7 +7,7 @@
  * 3.报废(只能在退仓之后状态为R时才能做,做完报废后,这张单的状态变为C,
  *           不能再做转仓;退仓;报废中的任何动作.)
 *****************************************************************************/
-{mfdtitle.i "test.1"}
+{mfdtitle.i "140530.1"}
 
 define variable site  like ld_site init "PRC".
 define variable pklnbr like xxpkld_nbr.
@@ -28,7 +28,6 @@ form
   rknbr  colon 54 label "退仓单号"
   sl     colon 72 label "全选"
 with frame a side-labels width 80 attr-space.
-
 
 /* DISPLAY SELECTION FORM */
 form
@@ -56,9 +55,6 @@ display pklnbr wkctr rknbr sl with frame a.
 
 find first icc_ctrl where no-lock no-error.
 if avail icc_ctrl then site = icc_site.
-/*日期限制*/
-{xxcmfun.i}
-run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 find first icc_ctrl where no-lock no-error.
      if available icc_ctrl then assign site = icc_site.
 mainloop:

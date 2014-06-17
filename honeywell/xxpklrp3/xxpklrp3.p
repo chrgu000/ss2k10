@@ -1,6 +1,6 @@
 /*REVISION: 9.0       LAST MODIFIED: 11/14/13    BY: jordan Lin *SS-20131114.1*/
 
- {mfdtitle.i "test.1"}
+ {mfdtitle.i "140530.1"}
 
 define variable date          as date.
 define variable date1         as date.
@@ -24,9 +24,6 @@ form
 with frame a side-labels width 80 attr-space.
 date = today.
 date1 = today.
-/*日期限制*/
- {xxcmfun.i}
- run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
 repeat with frame a:
 
@@ -59,7 +56,3 @@ lack = 0.
    /* REPORT TRAILER  */
    {mfrtrail.i}
 end. /* REPEAT: */
-
-
-
-

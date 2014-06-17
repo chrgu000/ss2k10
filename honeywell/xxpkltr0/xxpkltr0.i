@@ -20,14 +20,3 @@ define {1} shared temp-table tt1
   field tt1_chk as character format "x(4)"
   field tt1_recid as integer
   index tt1_index1 tt1_seq.
-
-/*
-define {1} shared temp-table tt2
-     field tt2_part like ld_part
-     field tt2_site like ld_site
-     field tt2_loc  like ld_loc
-     field tt2_lot  like ld_lot
-     field tt2_ref  like ld_ref
-     field tt2_stat like ld_stat
-     field tt2_qty_oh like ld_qty_oh.
-*/

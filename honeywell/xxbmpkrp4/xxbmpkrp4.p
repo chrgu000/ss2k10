@@ -59,7 +59,7 @@
 ©¦   2 INT      0001,9999,0001,0001                                             ©¦
 ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 *******************************************************************************/
-{mfdtitle.i "test.2"}
+{mfdtitle.i "140530.1"}
 
 /* ********** Begin Translatable Strings Definitions ********* */
 
@@ -278,9 +278,6 @@ end function.
             part2    label {t001.i} colon 45 skip(1)
         eff_date  colon 20
          with frame a side-labels width 80 attr-space.
-
-{xxcmfun.i}
-run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
 repeat:
   for each tblld:
