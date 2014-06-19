@@ -60,7 +60,7 @@ do on endkey undo, leave:
       no-lock no-error.
       if available udd_det then lv_domain = udd_domain.
       update lv_domain with frame welcome.
-      {gprunp.i "mgdompl" "p" "ppUserDomDbValidate"
+      {us/gp/gprunp.i "mgdompl" "p" "ppUserDomDbValidate"
                 "(input lv_domain, input global_userid, output l_error)"}
       if l_error > 0 then undo loopdomain, retry.
    end.
@@ -75,7 +75,7 @@ do on endkey undo, leave:
    end.
    find dom_mstr where dom_domain = lv_domain no-lock no-error.
         display dom_name with frame welcome.
-   {gprun.i ""gpmdas.p"" "(input lv_domain, output l_error)"}
+   {us/bbi/gprun.i ""gpmdas.p"" "(input lv_domain, output l_error)"}
 end.
 hide frame welcome.
-{gprun.i ""bcmenu0.p""}
+{us/bbi/gprun.i ""bcmenu0.p""}
