@@ -1244,7 +1244,7 @@ do on error undo, retry on endkey undo, leave with frame b:
          end.
 
          /* UPDATE LOGISTICS ACCOUNTING TERMS OF TRADE FIELD */
-         {us/gp/gprunmo.i &module = "LA" &program = "lapomt.p"
+/*324*/   {us/gp/gprunmo.i &module = "LA" &program = "xxlapomt.p"
             &param  = """(input po_recno,
                           input no,
                           input-output la-okay)"""}
