@@ -282,12 +282,12 @@ REPEAT:
       if available tmpb_ym then do:
           assign i = tby_sn.
       end.
-      assign tcr_qty[i + 3] = tad_qty - vqty * 3.
+      assign tcr_qty[i + 3] = tad_qty - vqty * 3 when i + 3 <= 52.
       j = i.
       repeat:
          assign tcr_qty[j] = vqty.
          j = j + 1.
-         if j = i + 3 then leave.
+         if j = i + 3 or j > 52 then leave.
       end.
   end.
 
