@@ -290,81 +290,18 @@ DO:
         FOR EACH xsc_m EXCLUSIVE-LOCK BREAK BY xsm_ship by xsm_part:
             assign xsm_stat = "".
             IF FIRST-OF(xsm_part) THEN DO:
-            /*
-               {gprun.i ""xxsocnuacz1.p"" "(input xsm_ship)"}
-            */
-            for each cncix_mstr no-lock where cncix_domain = global_domain
-                 and cncix_shipto = xsm_ship and cncix_part = xsm_part:
-                 find first xsa_r exclusive-lock 
-                      where xsr_ship = cncix_shipto
-                        and xsr_cust = cncix_cust
-                        and xsr_so = cncix_so_nbr
-                        and xsr_line = cncix_sod_line
-                        and xsr_part = cncix_part
-                        and xsr_site = cncix_site
-                        and xsr_loc = cncix_current_loc
-                        and xsr_lot = cncix_lotser
-                        and xsr_ref = cncix_ref no-error.
-                 if not available xsa_r then do:
-                 create xsa_r.
-                 assign xsr_ship = cncix_shipto
-                        xsr_cust = cncix_cust
-                        xsr_so = cncix_so_nbr
-                        xsr_line = cncix_sod_line
-                        xsr_part = cncix_part
-                        xsr_site = cncix_site
-                        xsr_loc = cncix_current_loc
-                        xsr_lot = cncix_lotser
-                        xsr_ref = cncix_ref
-                        xsr_eff = ?
-                        xsr_um = cncix_stock_um.
-                 end.
-                 assign xsr_oh = xsr_oh + cncix_qty_stock.
-
- /*             create xsa_r1.                        */
- /*             assign xsr1_ship = cncix_shipto       */
- /*                    xsr1_so = cncix_so_nbr         */
- /*                    xsr1_line = cncix_sod_line     */
- /*                    xsr1_part = cncix_part         */
- /*                    xsr1_site = cncix_site         */
- /*                    xsr1_loc = cncix_current_loc   */
- /*                    xsr1_lot = cncix_lotser        */
- /*                    xsr1_ref = cncix_ref           */
- /*                    xsr1_eff = cncix_ship_date     */
- /*                    xsr1_oh = cncix_qty_stock      */
- /*                    xsr1_um = cncix_stock_um.      */
-            end.
+              {xxsocnimpcr.i}
             END.
         END.
-/*13827 删除有负数批号的资料                                                            */
-/*13827*/ for each xsa_r exclusive-lock:                                                      
-/*13827*/     find first cncix_mstr no-lock where cncix_domain = global_domain                
-/*13827*/            and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line                  
-/*13827*/            and cncix_lot = xsr_lot and xsr_oh <= 0 no-error.     
-/*13827*/     if available cncix_mstr then do:                                                
-/*13827*/        delete xsa_r.                                                                
-/*13827*/     end.                                                                            
-/*13827*/ end.                                                                                
-/*        {xxsocnimp02.i}                                                               */
-    /*删除可用库存为0的项次*/
-/*        for each xsa_r exclusive-lock                                                 */
-/*            break by xsr_part by xsr_cust by xsr_ship by xsr_so                       */
-/*                  by xsr_line by xsr_loc by xsr_lot:                                  */
-/*            if first-of(xsr_lot) then do:                                             */
-/*                assign qty_cn = 0.                                                    */
-/*                for each cncix_mstr no-lock where cncix_domain = global_domain        */
-/*                     and cncix_part = xsr_part and cncix_shipto = xsr_ship            */
-/*                     and cncix_cust = xsr_cust and cncix_so_nbr = xsr_so              */
-/*                     and cncix_sod_line = xsr_line and cncix_site = xsr_site          */
-/*                     and cncix_current_loc = xsr_loc and cncix_lotser = xsr_lot       */
-/*                     and cncix_ref = xsr_ref:                                         */
-/*                  assign qty_cn = qty_cn + cncix_qty_stock.                           */
-/*                END.                                                                  */
-/*            end.                                                                      */
-/*            if qty_cn <= 0 then do:                                                   */
-/*               delete xsa_r.                                                          */
-/*            end.                                                                      */
-/*        end.                                                                          */
+/*13827 删除有负数批号的资料                                                 */
+/*13827 for each xsa_r exclusive-lock:                                       */
+/*13827     find first cncix_mstr no-lock where cncix_domain = global_domain */
+/*13827            and cncix_so_nbr = xsr_so and cncix_sod_line = xsr_line   */
+/*13827            and cncix_lot = xsr_lot and xsr_oh <= 0 no-error.         */
+/*13827     if available cncix_mstr then do:                                 */
+/*13827        delete xsa_r.                                                 */
+/*13827     end.                                                             */
+/*13827 end.                                                                 */
         {xxsocnimp01a.i}
     END.
 
