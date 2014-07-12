@@ -67,9 +67,11 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     put unformat "Desc" at i.
     assign i = i + 200 + 1.
     put unformat "Valexp" at i.
-    assign i = i + 120 + 1.
-    put unformat "Valmsg" at i skip.
-
+    if dev = "printer" then do:
+       assign i = i + 120 + 1.
+       put unformat "Valmsg" at i.
+    end.
+    put skip.
     put unformat fill("-",5) " ".
     put unformat fill("-",32) " ".
     put unformat fill("-",9) " ".
@@ -80,8 +82,9 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
     put unformat fill("-",30) " ".
     put unformat fill("-",200) " ".
     put unformat fill("-",120) " ".
-    put unformat fill("-",72) skip.
-
+    if dev = "printer" then
+       put unformat fill("-",72).
+    put skip.
     FOR EACH _FIELD OF _FILE BY _ORDER:
         assign i = 1.
         put unformat _ORDER at i.
@@ -103,8 +106,11 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
         put unformat replace(_field._desc,chr(10),"") at i.
         assign i = i + 200 + 1.
         put unformat _Valexp at i.
-        assign i = i + 120 + 1.
-        put unformat _FIELD._Valmsg at i skip.
+        if dev = "printer" then do:
+           assign i = i + 120 + 1.
+           put unformat _FIELD._Valmsg at i.
+        end.
+        put skip.
     END.
 
     FOR EACH _index WHERE _index._file-recid = RECID(_file):
@@ -125,36 +131,36 @@ for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
 end.
 
 if genprg then do:
-	 if opsys = "unix" then do:
-	 		assign fname = fname + "/".
-	 end.
-	 else if opsys = "win" or opsys = "dos" then do:
-	 		assign fname = fname + "~\".
-	 end.
-	 output stream eo to value(fname + "xx" + sfile + "o.p").
+   if opsys = "unix" then do:
+      assign fname = fname + "/".
+   end.
+   else if opsys = "win" or opsys = "dos" then do:
+      assign fname = fname + "~\".
+   end.
+   output stream eo to value(fname + "xx" + sfile + "o.p").
    put stream eo unformat 'SESSION:DATE-FORMAT = "' + dtefmt + '".' skip.
    put stream eo unformat 'OUTPUT TO "' + fname + sfile + '.d".' skip.
    put stream eo unformat 'for each ' sfile ' no-lock:' skip.
    put stream eo unformat '    EXPORT DELIMITER ","' skip.
-   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):  
+   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
        FOR EACH _FIELD OF _FILE BY _ORDER:
-   		     put stream eo unformat fill(' ',11) _FIELD-NAME skip.
-   		 END.
+           put stream eo unformat fill(' ',11) _FIELD-NAME skip.
+       END.
    end.
    put stream eo unformat fill(' ',11) '.' skip.
    put stream eo 'END.' skip.
    output stream eo close.
-   
+
    output stream ei to value(fname + "xx" + sfile + "i.p").
    put stream ei unformat 'SESSION:DATE-FORMAT = "' + dtefmt + '".' skip.
    put stream ei unformat 'INPUT FROM "' + fname + sfile + '.d".' skip.
    put stream ei unformat 'repeat:' skip.
    put stream ei unformat '    create ' sfile ' .' skip.
    put stream ei unformat '    IMPORT DELIMITER ","' skip.
-   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):  
+   for each dictdb._File no-lock where (_FILE-NAME = {2} or {2} = ""):
        FOR EACH _FIELD OF _FILE BY _ORDER:
-   		     put stream ei unformat fill(' ',11) _FIELD-NAME skip.
-   		 END.
+           put stream ei unformat fill(' ',11) _FIELD-NAME skip.
+       END.
    end.
    put stream ei unformat fill(' ',11) '.' skip.
    put stream ei 'END.' skip.
