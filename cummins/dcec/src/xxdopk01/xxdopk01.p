@@ -355,29 +355,14 @@ PROCEDURE p_picklist:
          end. /* FOR EACH LAD_DET */
          qty_to_all = max(ds_qty_conf - max(ds_qty_ship, 0)
                     - max(totallqty, 0) - max(totpkqty, 0), 0).
-/*324*/ if vmult then do:
-/*324*/    assign q_mult = 1.
-/*324*/    find first ptp_det no-lock where ptp_domain = global_domain
-/*324*/           and ptp_part = ds_part
-/*324*/           and ptp_site = "SV-0710" no-error.
-/*324*/    if available ptp_det and ptp_ord_mult <> 0 then do:
-/*324*/       assign q_mult = ptp_ord_mult.
-/*324*/    end.
-/*324*/    else do:
-/*324*/         find first pt_mstr no-lock where pt_domain = global_domain
-/*324*/                and pt_part = ds_part no-error.
-/*324*/         if available pt_mstr and pt_ord_mult <> 0 then do:
-/*324*/            assign q_mult = pt_ord_mult.
-/*324*/         end.
-/*324*/    end.
-/*324*/      assign qty_to_all = qty_to_all - qty_to_all mod q_mult.
-/*324*/ end.
          if qty_to_all > 0
          then do:
             ds_recno = recid(ds_det).
-            {gprun.i ""dspkall.p""
-                "(input update_yn,
-                  output l_totalqty)"}
+/*324            {gprun.i ""dspkall.p""       */
+/*324                "(input update_yn,       */
+/*324                  output l_totalqty)"}   */
+/*324*/            {gprun.i ""xxdspkall.p""
+                      "(input update_yn, input vmult, output l_totalqty)"}
          end. /* IF QTY_TO_ALL > 0 */
 
          if (ds_qty_all <> 0 or
