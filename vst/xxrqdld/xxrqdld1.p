@@ -31,7 +31,7 @@ assign vfile = "xxrqdld.p." + xxrqd_nbr + "-" + string(xxrqd_line).
     put unformat "n" skip.
     output close.
     if cloadfile then do:
-    	 assign global_userid = xxrqd_rqby.
+       assign global_userid = xxrqd_rqby.
        batchrun = yes.
        input from value(vfile + ".bpi").
        output to value(vfile + ".bpo") keep-messages.
@@ -44,22 +44,22 @@ assign vfile = "xxrqdld.p." + xxrqd_nbr + "-" + string(xxrqd_line).
        output close.
        input close.
        batchrun = no.
-		 end.
+     end.
 end.
 assign global_userid = oldglobaluserid.
-if cloadfile then do:		 
+if cloadfile then do:
    for each xxrqd exclusive-lock where xxrqd_chk = "":
-       find first rqd_det no-lock where rqd_nbr = xxrqd_nbr 
-       				and rqd_line = xxrqd_line no-error.
+       find first rqd_det no-lock where rqd_nbr = xxrqd_nbr
+              and rqd_line = xxrqd_line no-error.
        if available rqd_det and rqd_due_date = xxrqd_due_date and
                     rqd_status = xxrqd_stat
        then do:
           assign xxrqd_chk = "OK".
+          os-delete value(vfile + ".bpi").
+          os-delete value(vfile + ".bpo").
        end.
        else do:
           assign xxrqd_chk = "FAIL".
        end.
    end.
-/* os-delete value(vfile + ".bpi").     */
-/* os-delete value(vfile + ".bpo").     */
 end.
