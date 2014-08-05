@@ -49,9 +49,14 @@
 /* be added.  The ECO marker should only be included in the Revision History. */
 /******************************************************************************/
 
-/* 140123.1  - Start * 
+/* 140123.1  - Start *
  * 需求描述：1.新开价格单将旧的价格单失效掉
  *           2.所有域都失效掉旧的价格单
+ *    teamview-740394626
+ *    *147258
+ *    123456
+ *    mfg
+ *    mis@268
  * 140123.1  - End */
 
 
@@ -95,7 +100,7 @@ define variable msg-arg2 as character format "x(16)" no-undo.
  * Only when the value of this variable is set to "X" */
 define variable batchdelete as   character format "x(1)" no-undo.
 define variable l_yn        like mfc_logical             no-undo.
-
+define variable domsync     like mfc_logical             no-undo.
 /*VARIABLE DEFINITIONS FOR GPFIELD.I*/
 {gpfieldv.i}
 
@@ -107,7 +112,7 @@ form
    pc_part        colon 29   pt_desc1 at 52 no-label
    pc_um          colon 29
    pc_start       colon 29   batchdelete at 52 no-label
-   pc_expire      colon 29
+   pc_expire      colon 29   domsync colon 50
    pc_amt_type    colon 29
    disp-price-discount-markup no-label
 with frame a side-labels width 80 attr-space.
@@ -283,7 +288,7 @@ repeat with frame a:
             pc_um
             pc_start
             pc_expire
-            pc_amt_type
+            pc_amt_type domsync
          with frame a.
 
          if      pc_amt_type = "P" then amt_label = price.
@@ -526,6 +531,7 @@ find first pc_mstr using pc_list and pc_curr
       update
          pc_expire
          pc_amt_type
+         domsync
       go-on ("F5" "CTRL-D").
 
       if pc_expire <> ? and pc_start <> ? and
@@ -535,23 +541,23 @@ find first pc_mstr using pc_list and pc_curr
          {pxmsg.i &MSGNUM=6221 &ERRORLEVEL=2}
       end. /* and pc_expire < pc_start then do: */
 /* 140123.1  - Start */
-      assign vdte = pc_mstr.pc_start - 1.      
+      assign vdte = pc_mstr.pc_start - 1.
       for each pc exclusive-lock where pc.pc_domain <> ""
-           and pc.pc_list = pc_mstr.pc_list      
-           and pc.pc_curr = pc_mstr.pc_curr      
-           and pc.pc_prod_line = pc_mstr.pc_prod_line 
-           and pc.pc_part = pc_mstr.pc_part      
+           and pc.pc_list = pc_mstr.pc_list
+           and pc.pc_curr = pc_mstr.pc_curr
+           and pc.pc_prod_line = pc_mstr.pc_prod_line
+           and pc.pc_part = pc_mstr.pc_part
            and pc.pc_um = pc_mstr.pc_um
            and pc.pc_amt_type = pc_mstr.pc_amt_type
            and pc.pc_start < pc_mstr.pc_start
            break by pc.pc_domain by pc.pc_list by pc.pc_start descending:
            if first-of(pc.pc_domain) then do:
-              assign vdte = pc_mstr.pc_start - 1. 
+              assign vdte = pc_mstr.pc_start - 1.
            end.
-           if (pc.pc_expir = ? or pc.pc_expir > vdte) and vdte >= pc.pc_start then 
+           if (pc.pc_expir = ? or pc.pc_expir > vdte) and vdte >= pc.pc_start then
               assign pc.pc_expir = vdte.
            assign vdte = pc.pc_start - 1.
-       end.         
+       end.
 /* 140123.1  - End */
       /* DELETE */
       if lastkey = keycode("F5")
@@ -576,7 +582,9 @@ find first pc_mstr using pc_list and pc_curr
    end. /* do on error undo, retry with frame a no-validate: */
 
    if del-yn then do:
-      {xxpcmtd.i}
+      if domsync then do:
+         {xxpcmtd.i}
+      end.
       delete pc_mstr.
 
       clear frame a.
@@ -706,7 +714,9 @@ find first pc_mstr using pc_list and pc_curr
                pc_min_qty[15] pc_amt[15]
             go-on ("F5" "CTRL-D")
             with frame b width 80.
-	    {xxpcmtm.i}
+            if domsync then do:
+	             {xxpcmtm.i}
+	          end.
             /* DELETE */
             if lastkey = keycode("F5")
             or lastkey = keycode("CTRL-D")
@@ -717,7 +727,9 @@ find first pc_mstr using pc_list and pc_curr
                {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
 
                if del-yn = no then undo, retry.
-	       {xxpcmtd.i}
+               if domsync then do:
+	               {xxpcmtd.i}
+	             end.
                delete pc_mstr.
 
                clear frame a.
@@ -847,8 +859,9 @@ find first pc_mstr using pc_list and pc_curr
 
             pc_mstr.pc_max_price[1] = truncate(temp_max_price,2).
             pc_mstr.pc_max_price[2] = (temp_max_price - pc_mstr.pc_max_price[1]) * 100000.
-	    {xxpcmtm.i}
-
+            if domsync then do:
+      	      {xxpcmtm.i}
+            end.
             /* DELETE */
             if lastkey = keycode("F5")
             or lastkey = keycode("CTRL-D")
@@ -857,7 +870,9 @@ find first pc_mstr using pc_list and pc_curr
                /* Please confirm delete */
                {pxmsg.i &MSGNUM=11 &ERRORLEVEL=1 &CONFIRM=del-yn}
                if del-yn = no then undo, retry.
-	       {xxpcmtd.i}
+               if domsync then do:
+	                {xxpcmtd.i}
+	             end.
                delete pc_mstr.
                clear frame a.
                display base_curr @ pc_mstr.pc_curr "" @ pt_desc1.

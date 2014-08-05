@@ -3,10 +3,10 @@
 for each dom_mstr no-lock where dom_domain <> global_domain and dom_active:
 /* 140123.1  - Start */
       for each pc exclusive-lock where pc.pc_domain = dom_domain
-           and pc.pc_list = pc_mstr.pc_list      
-           and pc.pc_curr = pc_mstr.pc_curr      
-           and pc.pc_prod_line = pc_mstr.pc_prod_line 
-           and pc.pc_part = pc_mstr.pc_part      
+           and pc.pc_list = pc_mstr.pc_list
+           and pc.pc_curr = pc_mstr.pc_curr
+           and pc.pc_prod_line = pc_mstr.pc_prod_line
+           and pc.pc_part = pc_mstr.pc_part
            and pc.pc_um = pc_mstr.pc_um
            and pc.pc_amt_type = pc_mstr.pc_amt_type
            and pc.pc_start < pc_mstr.pc_start
@@ -14,10 +14,10 @@ for each dom_mstr no-lock where dom_domain <> global_domain and dom_active:
            if first-of(pc.pc_domain) then do:
               assign vdte = pc_mstr.pc_start - 1.
            end.
-           if (pc.pc_expir = ? or pc.pc_expir > vdte) and vdte >= pc.pc_start then 
+           if (pc.pc_expir = ? or pc.pc_expir > vdte) and vdte >= pc.pc_start then
               assign pc.pc_expir = vdte.
            assign vdte = pc.pc_start - 1.
-       end.         
+       end.
 /* 140123.1  - End */
     if can-find(first vd_mstr no-lock where vd_domain = dom_domain
                   and vd_addr = pc_mstr.pc_list ) and
