@@ -427,6 +427,7 @@ END PROCEDURE. /* PROCEDURE iniVar*/
 
 procedure checkBpropath:
     define output parameter oresult as logical.
+    define variable yn as logical.
     assign oresult = yes.
     define variable vpath as character.
     define variable vbpath as character.
@@ -436,9 +437,21 @@ procedure checkBpropath:
        vbpath = substring(vbpath,index(vbpath,chr(10)) + 1).
        FILE-INFO:FILE-NAME = vpath.
        if FILE-INFO:FILE-TYPE = ? then do:
-          message "Propath [" + vpath "]settings error!" skip(1) vpath
-                  view-as alert-box.
+          message "Propath [" + vpath "]settings error!" skip(1) vpath skip(2)
+                  "delete it?"
+                  view-as alert-box question buttons yes-no UPDATE lChoice AS LOGICAL.
           oresult = no.
+          if lChoice then do:
+             if index(bpropath, vpath + chr(10)) > 0 then do:
+                bpropath = replace (bpropath,vpath + chr(10) , "").
+             end.
+             else if index(bpropath,chr(10) + vpath) > 0 then
+                bpropath = replace (bpropath, chr(10) + vpath , "").
+             else
+                bpropath = replace (bpropath, vpath , "").
+            oresult = yes.
+          end.
+          
           leave.
        end.
     end.

@@ -57,7 +57,6 @@ form
     lang         colon 22 label "Language Code" skip
     destpath     colon 22 label "Destination Directory"
 with frame a side-labels width 80 title "Compile Program".
-setFrameLabels(frame a:handle).
 view frame a.
 
 on value-changed of lang in frame a do:
@@ -134,7 +133,10 @@ end.
 /*    assign lang   = entry(5,compcfg,"@").                                  */
 /*    assign destpath   = entry(6,compcfg,"@").                              */
 /*  end.                                                                     */
+assign vsysusr="mfg" vdevice = "Unix".
+/*
 run getUserInfo(output vsysusr,output vdevice).
+*/
 assign lang = lc(global_user_lang).
 find first qad_wkfl where
 /*EB       qad_domain = "xxcomp_param" and                                   */
@@ -156,6 +158,9 @@ end.
 else do:
    run getQADPath(output destpath).
 end.
+{xxcmfunc.i}
+run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
+
 main-loop:
 repeat with frame a :
   display filepath
@@ -545,7 +550,7 @@ procedure getQADPath:
     ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
   END.
 end procedure.
-
+/*
 procedure getUserInfo:
     define output parameter osysusr as character.
     define output parameter odevice as character.
@@ -555,3 +560,4 @@ procedure getUserInfo:
              odevice = _connect-device.
     END.
 end procedure.
+*/
