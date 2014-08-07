@@ -16,7 +16,7 @@ compile value(src) save into value(destDir).
 propath = substring(propath,length(srcDir) + 1).
 *****************************************************************************/
 
-{mfdtitle.i "43YE"}
+{mfdtitle.i "48Y7"}
 {xxcompile.i "new"}
 &SCOPED-DEFINE xxcomp_p_1 "SRC/XRC Directory"
 &SCOPED-DEFINE xxcomp_p_2 "Compile File"
@@ -270,8 +270,7 @@ do on error undo, retry:
       {pxmsg.i &MSGNUM=11 &ERRORLEVEL=2 &CONFIRM=del-yn}
       if del-yn then do:
           clear frame z.
-          os-delete value(vWorkLog) no-error.
-          os-delete value(vWorkFile) no-error.
+          {xxcdellog.i}
           for each usrw_wkfl exclusive-lock where {xxusrwdom.i} {xxand.i}
                    usrw_key1 = qadkey1 and usrw_key2 = global_userid:
             delete usrw_wkfl.
@@ -336,8 +335,7 @@ output to value(vWorkFile).
 output close.
 assign bpropath.
 {gprun.i ""xxc001.p""}
-os-delete value(vWorkLog) no-error.
-os-delete value(vworkfile) no-error.
+{xxcdellog.i}
 leave.
 end. /*mainLoop*/
 
@@ -451,7 +449,7 @@ procedure checkBpropath:
                 bpropath = replace (bpropath, vpath , "").
             oresult = yes.
           end.
-          
+
           leave.
        end.
     end.

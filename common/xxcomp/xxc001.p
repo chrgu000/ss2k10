@@ -18,6 +18,8 @@ define variable yn        as logical.
 define variable okProg    as character.
 define variable c-comp    as character format "x(12)" no-undo.
 define variable m0-comp   as character format "x(40)" no-undo.
+define variable vlog      as character format "x(200)" no-undo.
+define variable vtxt      as character.
 define shared variable vtriggers as character format "x(30)" no-undo.
 define shared variable cut_paste   as character format "x(70)" no-undo.
 define shared variable vxref as logical no-undo.
@@ -63,7 +65,7 @@ view stream cmp frame m0.
 display c-comp-pgms with frame tt.
 
 /*create .r dir*/
-os-delete value(vWorkLog) no-error.
+{xxcdellog.i "log"}
 output to value(vWorkLog) append.
 input from value(vWorkFile) no-echo no-map.
 repeat:
@@ -212,10 +214,21 @@ empty temp-table t_log no-error.
 input from value(vWorkLog).
 i = 1.
 repeat:
-  create t_log.
-  import delimiter "|" tt_log.
-  assign tt_i = i.
-  i = i + 1.
+  import delimiter "|" vlog.
+  REPEAT WHILE length(vlog) > 0:
+      IF LENGTH(vlog) > 78 THEN DO:
+          vtxt = SUBSTRING(vlog,1,78).
+          vtxt = SUBSTRING(vtxt,1,R-INDEX(vtxt," ")).
+      END.
+      ELSE DO:
+          vtxt = vlog.
+      END.
+      create t_log.
+      assign tt_log = vtxt
+             tt_i = i.
+      i = i + 1.
+      vlog = SUBSTRING(vlog,LENGTH(vtxt) + 1).
+  END.
 end.
 input close.
 
@@ -301,9 +314,7 @@ end.
       end.
    end.
    hide all no-pause.
-   os-delete value(vWorkLog) no-error.
-   os-delete value(vworkfile) no-error.
-
+   {xxcdellog.i}
 procedure createDestDir:
   define input parameter iDestDir as character.
   define input parameter ilng as character.
