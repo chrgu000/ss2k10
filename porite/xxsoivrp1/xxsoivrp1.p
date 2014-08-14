@@ -1,9 +1,5 @@
 /* xxsoivrp1.p -  salse order invoice report                                  */
 /*-Revision end---------------------------------------------------------------*/
-/*
-propath = '/app/mfgpro/eb21/bbi,/app/mfgpro/eb21/xrc,' + propath.
-compile /home/mfg/xrc/xxsoivrp1.p save into /app/mfgpro/eb21/test/ch/xx.
-*/
 
 {mfdtitle.i "1485"}
 
@@ -149,7 +145,9 @@ repeat:
 ***********************/
      find last tr_hist no-lock use-index tr_serial 
          where tr_domain = global_domain
-           and tr_serial = lot and tr_part = idh_part no-error.
+           and tr_serial = lot and tr_part = idh_part
+           and tr_loc = "201"  /* 201是包装二级库也就是产品的包装时间 */
+           and (tr_type = "rct-wo" or tr_type = "rct-tr") no-error.
      if available tr_hist then do:
         assign dte = tr_effdate.
      end.
