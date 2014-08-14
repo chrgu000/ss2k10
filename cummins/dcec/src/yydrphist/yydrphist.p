@@ -40,6 +40,8 @@ define variable newpage as logic initial no.
 
 define variable pageno as integer initial 1.
 DEFINE VARIABLE copyd  LIKE tr_qty_loc.
+define variable summ  like tr_qty_loc.
+
 define var    isCopy   as char.
 DEFINE VAR    flag1    AS LOGICAL.
 DEFINE VAR    flag2    AS LOGICAL.
@@ -133,10 +135,10 @@ with overlay frame a width 80 side-labels NO-BOX THREE-D /*GUI*/.
    if nbr1 = hi_char then nbr1 = "".
    if trdate = low_date then trdate = ?.
    if trdate1 = hi_date then trdate1 = ?.
-  if part1 = hi_char then part1 = "".
-  if site1 = hi_char then site1 = "".
-  if site3 = hi_char then site3 = "".
-  if keeper1 = hi_char then keeper1 = "".
+   if part1 = hi_char then part1 = "".
+   if site1 = hi_char then site1 = "".
+   if site3 = hi_char then site3 = "".
+   if keeper1 = hi_char then keeper1 = "".
 
 run p-action-fields (input "display").
 run p-action-fields (input "enable").
@@ -200,7 +202,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
    and in_part = tr_hist.tr_part
    and (in__qadc01 >= keeper and in__qadc01 <= keeper1)
    no-lock
-   break by tr_hist.tr_nbr BY IN__qadc01 by integer(tr_hist.tr_lot)
+   break by tr_hist.tr_nbr BY IN__qadc01 by integer(tr_hist.tr_lot) by tr_hist.tr_part
    with frame b down width 132:
 
       IF flag2 THEN do:
@@ -210,6 +212,9 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
               assign ttr_id = recid(tr_hist).
          end.
       end.
+     if first-of(tr_hist.tr_part) then do:
+        assign summ = 0.
+     end.
   /*     find first
      tr_hist no-lock where
      tr_hist.tr_type = "RCT-TR"
@@ -261,6 +266,7 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
                pt_part = tr_hist.tr_part no-lock no-error.
 /*    find first in_mstr where in_site = tr_hist.tr_site and in_part = tr_hist.tr_part no-lock no-error. 2004-09-07 09:36 lb01*/
             copyd = tr_qty_loc * (-1).
+    assign summ = summ + copyd.
     display
       tr_hist.tr_lot
       tr_hist.tr_part
@@ -273,7 +279,12 @@ end procedure. /* p-enable-ui, replacement of Data-Entry GUI*/
     with frame c.
     down 1 with frame c.
     put "---------------------------------------------------------------------------------------------------" at 4.
-
+    if last-of(tr_hist.tr_part) and not first-of(tr_hist.tr_part) then do:
+       display "合计" @ tr_hist.tr_part
+                summ @ copyd with frame c.
+       down 1 with frame c.
+       put "---------------------------------------------------------------------------------------------" at 4.
+    end.
     if last-of(tr_hist.tr_nbr) or last-of(IN__qadc01)  then do:
       put
         skip(1)
@@ -310,7 +321,7 @@ ELSE DO:
    and (in__qadc01 >= keeper and in__qadc01 <= keeper1)
    no-lock
 
-   break by tr_hist.tr_nbr  BY IN__qadc01 by integer(tr_hist.tr_lot) with frame b down width 132:
+   break by tr_hist.tr_nbr  BY IN__qadc01 by integer(tr_hist.tr_lot)  by tr_hist.tr_part with frame b down width 132:
 
       IF flag2 THEN do:
          if dev = "printer" or dev="print-sm" or dev="PRNT88" or
@@ -319,6 +330,9 @@ ELSE DO:
               assign ttr_id = recid(tr_hist).
          end.
       end.
+     if first-of(tr_hist.tr_part) then do:
+        assign summ = 0.
+     end.
   /*     find first
      tr_hist no-lock where
      tr_hist.tr_type = "RCT-TR"
@@ -370,6 +384,7 @@ ELSE DO:
               pt_part = tr_hist.tr_part no-lock no-error.
 /*    find first in_mstr where in_site = tr_hist.tr_site and in_part = tr_hist.tr_part no-lock no-error. 2004-09-07 09:36 lb01*/
            copyd = tr_qty_loc * (-1).
+      assign summ = summ + copyd.
         display
       tr_hist.tr_lot
       tr_hist.tr_part
@@ -382,7 +397,12 @@ ELSE DO:
     with frame c.
     down 1 with frame c.
     put "---------------------------------------------------------------------------------------------" at 4.
-
+    if last-of(tr_hist.tr_part) and not first-of(tr_hist.tr_part) then do:
+       display "合计" @ tr_hist.tr_part
+                summ @ copyd with frame c.
+       down 1 with frame c.
+       put "---------------------------------------------------------------------------------------------" at 4.
+    end.
     if last-of(tr_hist.tr_nbr) or last-of(IN__qadc01)  then do:
       put
         skip(1)

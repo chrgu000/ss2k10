@@ -3,8 +3,9 @@
 /* V1                 Developped: 07/19/01      BY: Kang Jian                */
 /* Rev: eb2+ sp7      Last Modified: 05/07/07      BY: judy Liu              */
 /* zy 4/26/13                                                                */
-/* 1.显示CN-SHIP对应的交易(注:数量是与之相对应的ISS-TR的数量)               */
-/* 2.如果做了CN-USE的交易类型则不打印相应的ISS-SO记录                        */
+/* 1.显示CN-SHIP对应的交易(注:数量是与之相对应的ISS-TR的数量)                */
+/* 2.如果做了寄售使用的交易类型则不打印相应的ISS-SO记录                      */
+/* 3.如果明细项有多行则显示合计                                              */
 /* 8/27/13 fix bug:ih_hist找不到资料报错                                     */
 
 {mfdtitle.i "121002.1"}
@@ -17,8 +18,8 @@ DEFINE VARIABLE part_to like tr_part.
 DEFINE VARIABLE line_from like tr_line.
 DEFINE VARIABLE line_to like tr_line INITIAL 999.
 DEFINE VARIABLE soddet as CHARACTER.
-DEFINE VARIABLE sonbr_from as CHARACTER.
-DEFINE VARIABLE sonbr_to   as CHARACTER.
+DEFINE VARIABLE sonbr_from as CHARACTER /* INITIAL "JEP11082" */.
+DEFINE VARIABLE sonbr_to   as CHARACTER /* INITIAL "JEP11082" */.
 DEFINE VARIABLE duedate_from as date.
 DEFINE VARIABLE duedate_to   as date.
 DEFINE VARIABLE ship like abs_id.
@@ -37,6 +38,7 @@ DEFINE VARIABLE qty like tr_qty_chg.
 DEFINE VARIABLE qty_cri like tr_qty_chg label "应发数量".
 DEFINE VARIABLE SOAV AS LOGICAL.
 DEFINE VARIABLE sum as integer initial 0.
+DEFINE VARIABLE sumn like tr_qty_loc.
 DEFINE VARIABLE loc LIKE tr_loc.
 DEFINE VARIABLE serial LIKE tr_serial.
 
@@ -44,6 +46,24 @@ define buffer trhist for tr_hist.
 define buffer tr1 for tr_hist.
 define variable rec_id as recid.
 /*end of define the value*/
+
+/*******************************************
+define temp-table tmp_data0
+  fields td0_pgno as integer
+  fields td0_dup  as character
+  fields td0_cust like so_cust
+  fields td0_zip  like ad_zip
+  fields td0_nbr   like so_nbr
+  fields td0_cons  as  character
+  fields td0_name  like ad_name
+  fields td0_ord_date like so_ord_date
+  fields td0_attn  like ad_attn
+  fields td0_phone like ad_phone
+  fields td_pdate  as   date
+  fields td_line1  like ad_line1
+  fields td_rmks   like so_rmks
+  fields td_ship_id like tr_ship_id
+*******************************************/
 
 /*start report title*/
 form "出库单"      at 33
@@ -54,7 +74,7 @@ form "出库单"      at 33
      so_nbr     label "订 单 号:  "   at 70  consignment NO-LABEL at 86
      "客户全称:" at 1  ad_name       no-labels  at 10
      so_ord_date  label "订单日期: "   at 72
-      ad_attn  label "联 系 人:  " at 1
+     ad_attn  label "联 系 人:  " at 1
      ad_phone    label "联系电话:  "    at 35
      pdate         label "打印日期:  "   at 70
     /* "客户地址:"*/      ad_line1 label "客户地址:  "   at  1
@@ -186,20 +206,25 @@ procedure p-report:
                    and (tr_hist.tr_line >= line_from)
                    and (tr_hist.tr_line <= line_to)
                    and (tr_hist.tr_site = site or site = "")
-                   and ((tr_hist.tr_type = "ISS-SO" and
-                         not can-find (tr1 use-index tr_part_eff no-lock
-                                where tr1.tr_domain = global_domain
-                                  and tr1.tr_part = tr_hist.tr_part
-                                  and tr1.tr_effdate = tr_hist.tr_effdate
-                                  and tr1.tr_type = "CN-USE"
-                                  and tr1.tr_nbr = tr_hist.tr_nbr
-                                  and tr1.tr_line = tr_hist.tr_line)
+                   and (
+                        (tr_hist.tr_type = "ISS-SO"
+                       and not(can-find(first cncu_mstr where
+                               cncu_mstr.cncu_domain = global_domain and
+                               cncu_mstr.cncu_trnbr = tr_hist.tr_trnbr))
+/*8.7                 (tr_hist.tr_type = "ISS-SO" and                        */
+/*8.7                   not can-find (tr1 use-index tr_part_eff no-lock      */
+/*8.7                          where tr1.tr_domain = global_domain           */
+/*8.7                            and tr1.tr_part = tr_hist.tr_part           */
+/*8.7                            and tr1.tr_effdate = tr_hist.tr_effdate     */
+/*8.7                            and tr1.tr_type = "CN-USE"                  */
+/*8.7                            and tr1.tr_nbr = tr_hist.tr_nbr             */
+/*8.7                            and tr1.tr_line = tr_hist.tr_line)          */
                          )
-                      or tr_hist.tr_type = "iss-fas"
-                      or tr_hist.tr_type = "cn-ship"
+                      or tr_hist.tr_type = "ISS-FSA"
+                      or tr_hist.tr_type = "CN-SHIP"
                        )
                    and ((not flag1) or tr_hist.tr__log02 = no)
-                   no-lock ,
+                   no-lock,
        each in_mstr NO-LOCK where in_domain = global_domain
                          and (in_part = tr_hist.tr_part)
                          and in_site = tr_hist.tr_site
@@ -283,7 +308,10 @@ procedure p-report:
                           serial = trhist.tr_serial.
                 end.
          end.
-         if SOAV = yes and soddet="Y" THEN
+         if first-of(tr_hist.tr_part) then do:
+            assign sumn = 0.
+         end.
+         if SOAV = yes and soddet="Y" THEN do:
              disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " "
                   serial @ tr_hist.tr_serial format "x(8)"
                   tr_hist.tr_line format ">>>" sod_qty_ord format "->>>>>>"
@@ -291,8 +319,24 @@ procedure p-report:
                   IN_user1 FORMAT "x(8)" /*pt_article*/
                   in__qadc01 FORMAT "x(4)" /* AT 104 */
              with no-box no-labels width 132 frame c down.
+             sumn = sumn + qty.
+             if last-of(tr_hist.tr_part) and not first-of(tr_hist.tr_part) then do:
+                PUT UNFORMAT FILL("-",120) SKIP.
+                    display "" @ tr_hist.tr_part
+                            "实发合计" @ pt_desc2
+                            "" @ tr_hist.tr_effdate
+                            sumn @ qty
+                            "" @ tr_hist.tr_serial
+                            "" @ tr_hist.tr_line
+                            "" @ sod_qty_ord
+                            "" @ sod_qty_ship
+                            "" @ IN_user1
+                            "" @ in__qadc01
+                            with no-box no-labels width 132 frame c down.
+             end.
+         end.
          else
-             if available(idh_hist) then
+             if available(idh_hist) then do:
                 disp tr_hist.tr_part pt_desc2 tr_hist.tr_effdate qty " "
                      serial @ tr_hist.tr_serial format "x(8)"
                      tr_hist.tr_line format ">>>"
@@ -301,6 +345,22 @@ procedure p-report:
                      IN_user1  FORMAT "x(8)"  /*pt_article*/
                      in__qadc01 FORMAT "x(4)" /* AT 104 */
                 with no-box no-labels width 132 frame c down.
+                sumn = sumn + qty.
+                if last-of(tr_hist.tr_part) and not first-of(tr_hist.tr_part) then do:
+                    PUT UNFORMAT FILL("-",120) SKIP.
+                    display "" @ tr_hist.tr_part
+                            "实发合计" @ pt_desc2
+                            "" @ tr_hist.tr_effdate
+                            sumn @ qty
+                            "" @ tr_hist.tr_serial
+                            "" @ tr_hist.tr_line
+                            "" @ sod_qty_ord
+                            "" @ sod_qty_ship
+                            "" @ IN_user1
+                            "" @ in__qadc01
+                            with no-box no-labels width 132 frame c down.
+                end.
+             end.
              else
                 disp tr_hist.tr_part  pt_desc2 tr_hist.tr_effdate qty " "
                      serial @ tr_hist.tr_serial format "x(8)"
@@ -378,5 +438,6 @@ procedure p-report:
 end procedure.
 /* end report out put */
 /* cycle drive the query output */
-{mfguirpb.i &flds="sonbr_from sonbr_to ship ship1 part_from part_to line_from line_to  duedate_from duedate_to site flag1 "}
+{mfguirpb.i &flds="sonbr_from sonbr_to ship ship1 part_from part_to
+                   line_from line_to  duedate_from duedate_to site flag1 "}
 /* reset variable */
