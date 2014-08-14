@@ -140,7 +140,8 @@ assign fn = execname + "." + tso_nbr + "." + trim(string(tsod_line,">>>>9")).
         assign vtmp = fn + ".bpo"
                verr = "ERROR.".
         {gprun.i ""xxgetcimerr.p"" "(input vtmp,output verr)"}
-        undo,leave.
+        if verr = "" then verr = 'OK'.
+        /* undo,leave. */
      end.
      else do:
         assign verr = "OK!".
