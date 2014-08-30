@@ -125,24 +125,63 @@ do on error undo, retry:
    and  prh_nbr = po_nbr)
       and po_curr <> base_curr
    then do:
-
       /* DEFAULT EXRATE IF NEW PO FROM EXCHANGE RATE TABLE */
       if new_po then do:
-         {us/px/pxrun.i &PROC='getExchangeRate' &PROGRAM='mcexxr.p'
-                  &PROGRAM='mcexxr.p'
-                  &PARAM="(input po_curr,
-                           input base_curr,
-                           input po_ex_ratetype,
-                           input po_ord_date,
-                           output po_ex_rate,
-                           output po_ex_rate2)"
-                  &NOAPPERROR=TRUE &CATCHERROR=TRUE
-         }
+      /***813
+       *  {us/px/pxrun.i &PROC='getExchangeRate' &PROGRAM='mcexxr.p'
+       *           &PROGRAM='mcexxr.p'
+       *           &PARAM="(input po_curr,
+       *                    input base_curr,
+       *                    input po_ex_ratetype,
+       *                    input po_ord_date,
+       *                    output po_ex_rate,
+       *                    output po_ex_rate2)"
+       *           &NOAPPERROR=TRUE &CATCHERROR=TRUE
+       *  }
+       *  message po_ex_ratetype po_ex_rate po_ex_rate2 view-as alert-box.
+       **/
+      find first code_mstr no-lock where
+                 code_domain = global_domain and
+                 code_fldname = "Standard Cost Exchange Rate Type" no-error.
+     if available code_mstr then do:
+     /****813
+      *  {us/gp/gprunp.i "mcpl" "p" "mc-get-ex-rate"
+      *    "(input po_curr,
+      *      input base_curr,
+      *      input 'cash',
+      *      input po_ord_date,
+      *      output po_ex_rate,
+      *      output po_ex_rate2,
+      *      output mc-error-number)"}
+      ****/
+           {us/px/pxrun.i &PROC='getExrate'
+                          &PARAM="(input po_curr,
+                                 input base_curr,
+                                 input code_value,
+                                 input po_ord_date,
+                                 output po_ex_rate,
+                                 output po_ex_rate2,
+                                 output mc-error-number)"}
 
-         if return-value <> {&SUCCESS-RESULT}
-         then do:
-            undo setb_sub, return.
-         end.
+            if mc-error-number <> 0 then do:
+              {us/bbi/pxmsg.i
+                  &MSGNUM=mc-error-number
+                  &ERRORLEVEL={&WARNING-RESULT}}
+              return {&WARNING-RESULT}.
+           end.
+     end.
+     else do:
+            {us/bbi/pxmsg.i
+               &MSGTEXT=""Standard Cost Exchange Rate Type Not Found""
+                &ERRORLEVEL=3}
+           undo setb_sub, return.
+     end.
+/*813
+ *        if return-value <> {&SUCCESS-RESULT}
+ *        then do:
+ *           undo setb_sub, return.
+ *        end.
+**/
       end. /* IF new_po */
 
       if c-application-mode  = "API" and lLegacyAPI and
@@ -182,12 +221,8 @@ do on error undo, retry:
       /*TO DO: Leave this for CHUI mode since this method displays a frame.*/
       /*       For API Mode, Call the Exchange Rate ROP as Apporriate for  */
       /*       Read/Write                                                  */
-/*324*/ vdrate = getExratefromcodemstr(input po_curr,input base_curr,input po_ord_date).
-/*324*/ if vdrate = -65535 then do:
-/*324*/     {us/bbi/pxmsg.i &MSGNUM=81 &ERRORLEVEL={&APP-ERROR-RESULT}}
-/*324*/     undo,leave setb_sub.
-/*324*/ end.
-/*324*/   {us/gp/gprunp.i "xxmcui" "p" "mc-ex-rate-input"
+
+     {us/gp/gprunp.i "mcui" "p" "mc-ex-rate-input"
          "(input po_curr,
            input base_curr,
            input po_ord_date,

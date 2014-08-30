@@ -1,4 +1,4 @@
-/* ExchaeRate calc      by zy 2014/3/28 12:22:09              */
+/* ExchaeRate calc      by zy 2014/3/28 12:22:09                              */
 
 FUNCTION getExchangeRateTypeID return int
   (input iExchangeRateTypeCode as char):
@@ -80,3 +80,55 @@ FUNCTION getExratefromcodemstr returns decimal
      end.
      return orate.
 end.
+
+
+procedure getExrate:
+   define input parameter ifrom_currency as character.
+   define input parameter ito_Currency   as character.
+   define input parameter iType as character.
+   define input parameter idate as date.
+   define output parameter oexr1 as decimal.
+   define output parameter oexr2 as decimal.
+   define output parameter oret as decimal.
+
+
+   define variable ifrom_currency_ID as integer.
+   define variable ito_Currency_ID as integer.
+   define variable iType_ID as integer.
+
+   ifrom_currency_ID = getcurrencyid(ifrom_Currency).
+   ito_Currency_ID = getcurrencyid(ito_Currency).
+   itype_ID = getExchangeRateTypeID(itype).
+
+   for first exchangerate no-lock where
+       exchangerate.exchangeRateType_id = iType_id and
+       exchangerate.FromCurrency_ID = ifrom_Currency_ID and
+       exchangerate.ToCurrency_ID = ito_Currency_ID and
+       exchangerate.ExchangeRateValidDateFrom <= idate and
+       ExchangeRateValidDateTill >= idate:
+   end.
+   if avail exchangerate then do:
+      oExr1 = ExchangeRate.ExchangeRateScale.
+      oexr2 = ExchangeRate.ExchangeRate.
+      oret = 0.
+   end.
+   else do:
+      for first exchangerate no-lock where
+           exchangerate.exchangeRateType_id = itype_ID and
+           exchangerate.FromCurrency_ID = ito_Currency_ID and
+           exchangerate.ToCurrency_ID = ifrom_Currency_ID and
+           exchangerate.ExchangeRateValidDateFrom <= idate and
+           ExchangeRateValidDateTill >= idate:
+      end.
+       if avail exchangerate then do:
+          oexr1 = ExchangeRate.ExchangeRate.
+          oexr2 = ExchangeRate.ExchangeRateScale.
+          oret = 0.
+       end.
+       else do:
+          oexr1 = 1.
+          oexr2 = 1.
+          oret = 81.
+       end.
+   end.
+end procedure.

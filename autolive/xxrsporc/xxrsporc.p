@@ -1065,7 +1065,7 @@ repeat:
             else
                undo mainloop, retry mainloop.
          end. /* IF pod_status <> "" */
-
+/*813*****
 /*324*/    if first-of(pod_nbr) and po_curr <> base_curr then do:
 /*324*/        vdrate = getExratefromcodemstr(input po_curr,input base_curr,input eff_date).
 /*324*/        if vdrate = -65535 then do:
@@ -1073,7 +1073,7 @@ repeat:
 /*324*/            undo mainloop, retry mainloop.
 /*324*/        end.
 /*324*/    end.
-
+******/
          /*For Scheduled Orders, check if the system date is */
          /*within the scheduled order effective date range   */
          if pod_sched then do:
@@ -1165,18 +1165,33 @@ repeat:
 
             if po_fix_rate = no then do:
                /* GET EXCHANGE RATE */
-               {us/gp/gprunp.i "xxmcpl" "p" "mc-get-ex-rate"
-                         "(input  po_curr,
-                           input  base_curr,
-                           input  exch_ratetype,
-                           input  eff_date,
-                           output exch_rate,
-                           output exch_rate2,
-                           output mc-error-number)"}
+/*813               {us/gp/gprunp.i "xxmcpl" "p" "mc-get-ex-rate"          */
+/*813                         "(input  po_curr,                            */
+/*813                           input  base_curr,                          */
+/*813                           input  exch_ratetype,                      */
+/*813                           input  eff_date,                           */
+/*813                           output exch_rate,                          */
+/*813                           output exch_rate2,                         */
+/*813                           output mc-error-number)"}                  */
+        find first code_mstr no-lock where
+                   code_domain = global_domain and
+                   code_fldname = "Standard Cost Exchange Rate Type" no-error.
+      if available code_mstr then do:
+           {us/px/pxrun.i &PROC='getExrate'
+                          &PARAM="(input po_curr,
+                                 input base_curr,
+                                 input code_value,
+                                 input eff_date,
+                                 output exch_rate,
+                                 output exch_rate2,
+                                 output mc-error-number)"}
+
+
                if mc-error-number <> 0 then do:
                   {us/bbi/pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=3}
                   undo mainloop, retry mainloop.
                end.
+              end.  /*  if available code_mstr then do: */
             end.
             else
                assign
@@ -1198,15 +1213,15 @@ repeat:
                base_amt = pod_pur_cost.
 
             if po_curr <> base_curr then do:
-               {us/gp/gprunp.i "xxmcpl" "p" "mc-curr-conv"
-                         "(input  po_curr,
-                           input  base_curr,
-                           input  exch_rate,
-                           input  exch_rate2,
-                           input  base_amt,
-                           input  false, /* DO NOT ROUND */
-                           output base_amt,
-                           output mc-error-number)"}
+                 {us/gp/gprunp.i "mcpl" "p" "mc-curr-conv"
+                           "(input  po_curr,
+                             input  base_curr,
+                             input  exch_rate,
+                             input  exch_rate2,
+                             input  base_amt,
+                             input  false, /* DO NOT ROUND */
+                             output base_amt,
+                             output mc-error-number)"}
             end.
 
             if pod_sched or
@@ -1251,7 +1266,7 @@ repeat:
                newprice = 0.
 
             if po_curr <> base_curr then do:
-               {us/gp/gprunp.i "xxmcpl" "p" "mc-curr-conv"
+               {us/gp/gprunp.i "mcpl" "p" "mc-curr-conv"
                          "(input  base_curr,
                            input  po_curr,
                            input  exch_rate2,
@@ -2689,7 +2704,7 @@ PROCEDURE dotrans1:
 
             if (oldcurr <> po_curr) or (oldcurr = "") then do:
                /* GET ROUNDING METHOD FROM CURRENCY MASTER */
-               {us/gp/gprunp.i "xxmcpl" "p" "mc-get-rnd-mthd"
+               {us/gp/gprunp.i "mcpl" "p" "mc-get-rnd-mthd"
                          "(input  po_curr,
                            output rndmthd,
                            output mc-error-number)"}
@@ -2707,19 +2722,32 @@ PROCEDURE dotrans1:
 
             if po_fix_rate = no then do:
                /* GET EXCHANGE RATE */
-               {us/gp/gprunp.i "xxmcpl" "p" "mc-get-ex-rate"
-                         "(input  po_curr,
-                           input  base_curr,
-                           input  exch_ratetype,
-                           input  eff_date,
-                           output exch_rate,
-                           output exch_rate2,
-                           output mc-error-number)"}
+/*814            {us/gp/gprunp.i "xxmcpl" "p" "mc-get-ex-rate"               */
+/*814                      "(input  po_curr,                                 */
+/*814                        input  base_curr,                               */
+/*814                        input  exch_ratetype,                           */
+/*814                        input  eff_date,                                */
+/*814                        output exch_rate,                               */
+/*814                        output exch_rate2,                              */
+/*814                        output mc-error-number)"}                       */
+        find first code_mstr no-lock where
+                   code_domain = global_domain and
+                   code_fldname = "Standard Cost Exchange Rate Type" no-error.
+      if available code_mstr then do:
+                 {us/px/pxrun.i &PROC='getExrate'
+                                &PARAM="(input po_curr,
+                                         input base_curr,
+                                         input code_value,
+                                         input eff_date,
+                                         output exch_rate,
+                                         output exch_rate2,
+                                         output mc-error-number)"}
                if mc-error-number <> 0 then do:
                   {us/bbi/pxmsg.i &MSGNUM=mc-error-number &ERRORLEVEL=3}
                   undo-loop = yes.
                   return.
                end.
+      end.     /* if available code_mstr then do: */
             end.
             else
                assign

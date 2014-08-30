@@ -59,7 +59,7 @@
 /* Some definitions required by us/gp/gprunp.i can't be declared in an internal     */
 /* Procedure, so they're declared here.                                       */
 
-{us/gp/gprunpdf.i "mcpl" "p"}
+{us/gp/gprunpdf.i "xxmcpl" "p"}
 
 /* ----------------------------------------------------------------------------
    Both input and output routines are currently limited to dealing with
@@ -167,7 +167,9 @@ History:
    define variable tempUnion as   logical no-undo.
 
    define variable lLegacyAPI     as   logical     no-undo.
-/*324*/  define variable vrate201404 like v_rate[1].
+/*324*/  define variable vrate2014041 like v_rate[1].
+/*324*/  define variable vrate2014042 like v_rate[1].
+/*324*/  define variable vrateret as integer.
    define buffer b_exru_usage for exru_usage.
    /*Multi-currency Exchange rate form definition*/
    form
@@ -191,12 +193,42 @@ History:
 
    /* Set Frame Labels */
    setFrameLabels(frame a-exch:handle).
+/***************************
 /*324*/  vrate201404 = getExratefromcodemstr(input i_curr1,
 /*324*/              input i_curr2,input i_date).
 /*324*/  if vrate201404 = -65535 then do:
 /*324*/   /* pause Message "ERROR: Exchange rate does not exist.  Please re-enter.".*/
 /*324*/     return error.
 /*324*/  end.
+*****************************/
+
+      find first code_mstr no-lock where
+                 code_domain = global_domain and
+                 code_fldname = "Standard Cost Exchange Rate Type" no-error.
+     if available code_mstr then do:
+           {us/px/pxrun.i &PROC='getExrate'
+                          &PARAM="(input i_curr1,
+                                 input i_curr2,
+                                 input code_value,
+                                 input i_date,
+                                 output vrate2014041,
+                                 output vrate2014042,
+                                 output vrateret)"}
+
+            if vrateret <> 0 then do:
+              {us/bbi/pxmsg.i
+                  &MSGNUM=vrateret
+                  &ERRORLEVEL={&WARNING-RESULT}}
+              return {&WARNING-RESULT}.
+           end.
+     end.
+     else do:
+            {us/bbi/pxmsg.i
+               &MSGTEXT=""Standard Cost Exchange Rate Type Not Found""
+                &ERRORLEVEL=3}
+           return error.
+     end.
+
 
    if c-application-mode = "API" then do:
 
@@ -306,9 +338,9 @@ History:
             if return-value = {&RECORD-NOT-FOUND} then leave.
          end.
 
-/*324*/  if vrate201404 <> -65535 then do:
-/*324*/        assign v_rate[1] = vrate201404.
-/*324*/        display v_rate[1].
+/*324*/  if vrateret = 0 then do:
+/*324*/        assign v_rate[1] = vrate2014041.
+/*324*/        assign v_rate2[1] = vrate2014042.
 /*324*/  end.
 
          if c-application-mode <> "API" then do:
@@ -671,7 +703,7 @@ History:
       if i > 1 then do:
 
          /* Changed proc name below from ip-combine-rates */
-         {us/gp/gprunp.i "mcpl" "p" "mc-combine-ex-rates"
+         {us/gp/gprunp.i "xxmcpl" "p" "mc-combine-ex-rates"
                    "(input  pConvertedRate1,
                      input  pConvertedRate2,
                      input  exru_ex_rate,

@@ -309,7 +309,7 @@ PROCEDURE mc-create-ex-rate-usage:
    define variable v_found as logical   no-undo.
 
    define buffer b_exru_usage for exru_usage.
-
+   message i_type "OK!" view-as alert-box.
    /* Make sure temp tables are empty */
    run ip-cleanup-temps.
 
