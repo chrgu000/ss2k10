@@ -1,563 +1,401 @@
-/* xxcomp.p - compile procedure                                              */
+/* xxcompile.p - compile procedure - replaced by xxc.p                       */
+/* REVISION: 0BYI LAST MODIFIED: 11/18/10   BY: zy 防止重复编译           *bi*/
+/* REVISION: 0BYO LAST MODIFIED: 11/24/10   BY: zy 防止重复编译默认cancel *bo*/
 /*V8:ConvertMode=Maintenance                                                 */
-/* REVISION: 14YB LAST MODIFIED: 04/11/11 BY:zy Add EB common             *EB*/
-/* REVISION: 17YB LAST MODIFIED: 07/19/11 BY:zy prompt ctrl+] operator    *7B*/
 /* Environment: Progress:10.1B   QAD:eb21sp7    Interface:Character          */
 /* REVISION END                                                              */
 
-{mfdtitle.i "17YB"}
-define variable filepath as character format "x(54)".
-define variable destpath as character format "x(54)".
-define variable filefrom as character format "x(24)".
-define variable fileto   as character format "x(24)".
-define variable lang     as character format "x(2)".
-define variable v_tmp    as character format "x(40)".
-define variable v_tmp2   as character format "x(40)".
-define variable compcfg  as character format "x(80)".
-define variable ii as integer.
-define variable v_format as character.
-define variable vdevice  as character.
-define variable vsysusr  as character.
-define variable compilepath  as character format "x(60)" extent 5
-       label "Compile Propath".
-define variable compilepath1 as character format "x(60)".
-define variable compilepath2 as character format "x(60)".
-define variable compilepath3 as character format "x(60)".
-define variable compilepath4 as character format "x(60)".
-define variable compilepath5 as character format "x(60)".
-define variable compilepathlength as integer initial 60.
-define variable tmp_compilepath1  as character.
-define variable tmp_compilepath2  as character.
-define variable tmp_compilepath3  as character.
-define variable tmp_compilepath4  as character.
-define variable tmp_compilepath5  as character.
-define variable jj as integer.
-define variable old_propath as character.
-define variable old_compilepath as character.
-DEFINE VARIABLE delParam AS LOGICAL NO-UNDO initial no.
-if old_compilepath = "" then do:
-      run getQADPath(output old_compilepath).
-      assign old_compilepath = ".," + old_compilepath + ","
-                             + old_compilepath + "/bbi,"
-                             + old_compilepath + "/xrc".
-end.
-define temp-table tt
-       field tt_file as char.
+{mfdtitle.i "0BYO"}
+/*bi*/ define variable icomptimes as integer.
+define temp-table tmp_fl
+  fields fl_type as character
+  fields fl_file as character.
 
+/* INITIAL PARAMETER */
+DEFINE VARIABLE vpropath AS CHARACTER
+       FORMAT "x(40)" LABEL "Compile Propath" NO-UNDO.
+DEFINE VARIABLE vIniFile AS CHARACTER
+       FORMAT "x(40)" LABEL "Initial Parameter" NO-UNDO.
+DEFINE VARIABLE vDatabaseSet  AS CHARACTER
+       FORMAT "X(20)" LABEL "Database Set" NO-UNDO.
+DEFINE VARIABLE vDestDir AS CHARACTER
+       FORMAT "X(40)" LABEL "Destination Directory" NO-UNDO.
+DEFINE VARIABLE vLANGUAGE AS CHARACTER
+       FORMAT "X(4)":U  LABEL "Language Code"
+       VIEW-AS COMBO-BOX INNER-LINES 5
+       LIST-ITEMS "ch","us"
+       DROP-DOWN
+       SIZE 6 BY 1 NO-UNDO.
+DEFINE VARIABLE vSourceDir AS CHARACTER
+       FORMAT "X(40)" LABEL "Source Directory"
+       VIEW-AS FILL-IN SIZE 40 by 1 NO-UNDO.
+      /* VIEW-AS FILL-IN SIZE 40 by 10 */
+DEFINE VARIABLE vWorkFile     AS CHARACTER
+       FORMAT "X(40)" LABEL "Compile List File"
+       VIEW-AS FILL-IN SIZE 40 by 1 NO-UNDO.
+/*bi DEFINE VARIABLE vClientDir    AS CHARACTER NO-UNDO.                     */
+/*bi*/ DEFINE VARIABLE vClientDir AS CHARACTER NO-UNDO FORMAT "x(40)".
+
+DEFINE BUTTON bComp    LABEL "Compile".
+DEFINE BUTTON bmfgutil LABEL "Mfgutil".
+DEFINE BUTTON bCLose   LABEL "Close".
+DEFINE BUTTON bView    LABEL "View".
+DEFINE BUTTON bGen     LABEL "Generate".
+DEFINE BUTTON bEdit    LABEL "Edit".
+
+DEFINE VARIABLE bproPath AS CHARACTER label "Compile ProPath"
+       VIEW-AS EDITOR NO-BOX SIZE 54 BY 6 NO-UNDO.
+define variable vproc  as character.
+define variable vrfile as character.
+define variable vdir   as character.
+define variable verr   as character.
+
+DEFINE VARIABLE logSdir AS LOGICAL INITIAL no
+     LABEL ": Compile to --> "
+     VIEW-AS TOGGLE-BOX
+     SIZE 50 BY .83 NO-UNDO.
+
+define stream crt.
+RUN iniVar.
+bProPath = replace(propath,",",chr(10)).
+/* DISPLAY SELECTION FORM */
 form
-    filepath     colon 22 label "Source Directory" skip(1)
-    filefrom     colon 16 label "File"
-    fileto       colon 49 label {t001.i} skip(1)
-    compilepath1 colon 16 label "Compile Propath"
-    compilepath2 colon 16 no-label
-    compilepath3 colon 16 no-label
-    compilepath4 colon 16 no-label
-    compilepath5 colon 16 no-label
-    skip(1)
-    lang         colon 22 label "Language Code" skip
-    destpath     colon 22 label "Destination Directory"
-with frame a side-labels width 80 title "Compile Program".
-view frame a.
+   vIniFile     COLON 22
+   vSourceDir   COLON 22 bGen SKIP(1)
+   vWorkFile    COLON 22 bView bEdit skip
+   bpropath     COLON 22 SKIP(1)
+   vLANGUAGE    COLON 22
+   vDatabaseSet COLON 54
+   vDestDir     COLON 22 SKIP(1)
+   logSdir      COLON 17 SKIP(2)
+   bcomp        COLON 12
+   bMfgutil     COLON 34
+   bCLose       COLON 58
+   with frame a side-labels width 80 attr-space.
+ENABLE bcomp bmfgutil bCLose bGen bView bEdit bProPath vLANGUAGE logSdir
+       WITH FRAME a.
+run loadLang.
+ASSIGN bpropath:READ-ONLY IN FRAME a = TRUE.
+/*bi ASSIGN logSdir:label in frame a = trim(logSdir:label) + " " + vClientDir.*/
+/*bi*/ ASSIGN logSdir:label in frame a = trim(logSdir:label) + " "
+/*bi*/        + substring(vclientDir,1,length(trim(vClientDir)) - 1).
 
-on value-changed of lang in frame a do:
-   IF LASTKEY = KEYCODE("u") OR LASTKEY = KEYCODE("U") then do:
-      assign lang:screen-value in frame a = "us".
-      assign lang.
-   end.
-   IF LASTKEY = KEYCODE("c") OR LASTKEY = KEYCODE("C") then do:
-      assign lang:screen-value in frame a = "ch".
-      assign lang.
-   end.
-   IF LASTKEY = KEYCODE("t") OR LASTKEY = KEYCODE("T") then do:
-      assign lang:screen-value in frame a = "tw".
-      assign lang.
-   end.
+DISPLAY vinifile vSourceDir vWorkFile bpropath vLANGUAGE vDatabaseSet
+        vDestDir logSdir WITH FRAM A.
+on CTRL-H of bGen in frame a do:
+  message "Generate Compile File List" skip
+          "[Generate] This command for Generate compile file list" skip
+          "from compile File List content and Source Directory."
+          view-as alert-box title "Help".
 end.
-ON "CTRL-D" OF destpath IN FRAME a DO:
-   {mfmsg01.i 11 2 delParam}
-   if delParam then do:
-      for each qad_wkfl where
-/*EB           qad_domain = "xxcomp_param" and                               */
-               qad_key1 = "xxcomp_param" exclusive-lock:
-          delete qad_wkf.
-      end.
-      return.
-   end.
+on CTRL-H of bpropath in frame a do:
+  message "Compile Propath:setting in mfgutil.ini" skip
+          "[Compile] ProPath,You can use mfgutil setting this property."
+          view-as alert-box title "Help".
 end.
-on Entry of destpath in frame a do:
-   status input "Ctrl-] to change default Destination Directory value.".
-   {pxmsg.i &MSGTEXT='"Ctrl-D to delete saved param."' &ERRORLEVEL=1}
+on CTRL-H of logSdir in frame a do:
+  message "You can to compile procedure to qad ClientWorkingDirectory" skip
+          "This propties setting in mfgutil.ini" skip
+          "[ClientSetup] ClientWorkingDirectory,"
+          "You can use mfgutil setting this property."
+          view-as alert-box title "Help".
 end.
-on Leave of destpath in frame a do:
-   status input "".
+on CTRL-H of bMfgutil in frame a do:
+  message "You can to enjoy mfgutil tools but before you use this tools" skip
+          "the propath must include path $workdir/xmfgusrc" skip
+          view-as alert-box title "Help".
 end.
-ON "CTRL-]" OF destpath IN FRAME a DO:
-   define variable qadpath as character.
-   run getQADPath(output qadpath).
-   if destpath <> qadpath then do:
-      assign destpath:screen-value = qadpath.
-      assign destpath.
-   end.
-   else do:
-       find first qad_wkfl where
-/*EB         qad_domain = "xxcomp_param" and                                 */
-             qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
-             qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
-             exclusive-lock no-error.
-       if available qad_wkfl then do:
-          assign destpath:screen-value = qad_charfld[6].
-          assign destpath.
+on CTRL-H of bView in frame a do:
+  message "You can to show compile procedure list." skip
+          view-as alert-box title "Help".
+end.
+on CTRL-H of bEdit in frame a do:
+  message "You can to edit compile procedure list with vi or" skip
+          "to generate it use mfgutil tool"
+          view-as alert-box title "Help".
+end.
+
+/*bi*/ on Leave of bcomp in frame a do:
+/*bi*/    assign icomptimes = 0.
+/*bi*/ end.
+
+ON 'Choose':U OF bcomp
+DO:
+    define variable ret as logical.
+    session:set-wait-stat("genreal").
+    assign logsdir vlanguage.
+/*bi*/ assign ret = ?.
+/*bi*/ if icomptimes > 0 then do:
+/*bi*/    message "Compile General Question!" fill(" ",16) skip(1)
+/*bi*/        "You alerdy compiled" trim(string(icomptimes,">9")) "times."
+/*bi          fill(" ",12) skip                                              */
+/*bo*/        fill(" ",12) skip(1)
+/*bo          "Compile it again?" fill(" ",24)                               */
+/*bo           VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO                     */
+/*bo*/        "Compile it again(yes/no)" fill(" ",16) skip
+/*bo*/        "or quit This procedure(cancel)?" fill(" ",10)
+/*bo*/         VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO-CANCEL
+/*bi*/         title "Compile Repeat" UPDATE ret.
+/*bo      if not ret then return.                                            */
+/*bo*/    case ret:
+/*bo*/         when false then return.
+/*bo*/         when true  then.
+/*bo*/         otherwise  apply "window-close" to frame a.
+/*bo*/    end case.
+/*bi*/ end.
+/*bi*/ icomptimes = icomptimes + 1.
+    if search(vworkfile) <> ? then do:
+    input from value(vworkfile).
+    repeat:
+        unix silent cd /var/tmp.
+        import vproc.
+        assign vproc = lower(vproc).
+        if index(vproc,"/") = 0 then
+           vproc  = vsourcedir + "/" + vproc.
+           vrfile = vproc.
+        do while index(vrfile,"/") > 0:
+           assign vrfile = substring(vrfile,index(vrfile,"/") + 1).
+        end.
+        assign vrfile = substring(vrfile,1,index(vrfile,".")) + "r".
+        assign vdir = vDestDir + "/" + vLANGUAGE + "/" + substring(vrfile,1,2).
+        status input "Compile:" + vproc + "...".
+        if search(vproc) <> ? then do:
+            unix silent value("rm -f " + vdir + "/" + vrfile).
+            compile value(vproc) save into "/var/tmp".
+        end.
+        else do:
+            message "procedure " + vproc + ' not fond!' view-as alert-box.
+        end.
+        status input "Compile:" + vproc + ".....".
+        if search("/var/tmp/" + vrfile) <> ? then do:
+            if logSdir then do:
+               assign vdir = vClientDir + "/"
+                           + vLANGUAGE + "/" + substring(vrfile,1,2).
+            end.
+            unix silent mkdir -p value(vdir).
+            unix silent value("mv /var/tmp/" + vrfile + " " + vdir).
+        end.
+        status input "Compile:" + vproc + "......".
+    end. /* repeat: input from wkfl */
+    input close.
+    session:set-wait-stat("").
+    status input "Compile Complete! Last compile:" + vproc.
+    end. /* if search(vworkfile) <> ? then do: */
+    else do:
+/*bi*/ assign icomptimes = 0.
+       assign ret = yes.
+/*bi   message "Compile General Error                " skip(1)               */
+/*bi*/ message "Compile General Error!" fill(" ",14) skip(1)
+               "Generate Compile File List not found." skip
+/*bi           "Generate it?                          "                      */
+/*bi*/         "Generate it?" fill(" ",25)
+                VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
+                title "Compile Error" UPDATE ret.
+       if ret then do:
+          Apply "choose":U to bgen.
        end.
-   end.
-end.
-  /*提起参数文档*/
-  unix silent value ( "cd" ).
-  unix silent value ( "rm -f comp.tmp").
-  unix silent value ( "pwd > comp.tmp").
-  input from comp.tmp.
-        import unformatted v_tmp2.
+    end.
+END.
+
+ON 'Choose':U of bGen do:
+  define variable vfn as character.
+  define variable vfd as character.
+  define variable vft as character.
+  assign vSourceDir vWorkFile.
+  empty temp-table tmp_fl no-error.
+  if search(vworkfile) <> ? then do:
+    input from value(vWorkFile).
+    repeat:
+      create tmp_fl.
+      import fl_file.
+      assign fl_type = "F".
+    end.
+    input close.
+  end.
+  input from os-dir(vSourceDir).
+  repeat:
+    import vfn vfd vft.
+    if vft = "F" and index(".p.w.t",substring(vfn,length(vfn) - 1,2)) > 0 then
+    DO:
+      if not can-find(first tmp_fl no-lock where vfn = fl_file) then do:
+        create tmp_fl.
+        assign fl_type = "D"
+               fl_file = vfn.
+      end.
+    END.
+  end.
   input close.
-    compcfg = "".
-/*  FILE-INFO:FILE-NAME = v_tmp2 + "/comp.txt".                              */
-/*  if FILE-INFO:FILE-TYPE <> ? then do:                                     */
-/*    /*读参数文件*/                                                         */
-/*    input from value(v_tmp2 + "/comp.txt" ) NO-CONVERT.                    */
-/*                     import unformatted compcfg.                           */
-/*    input close.                                                           */
-/*                                                                           */
-/*    /*message entry(1,compcfg,"@") VIEW-AS ALERT-BOX. */                   */
-/*    assign filepath   = entry(1,compcfg,"@").                              */
-/*    assign filefrom   = entry(2,compcfg,"@").                              */
-/*    assign fileto   = entry(3,compcfg,"@").                                */
-/*    assign old_compilepath  = entry(4,compcfg,"@").                        */
-/*    assign lang   = entry(5,compcfg,"@").                                  */
-/*    assign destpath   = entry(6,compcfg,"@").                              */
-/*  end.                                                                     */
-assign vsysusr="mfg" vdevice = "Unix".
-/*
-run getUserInfo(output vsysusr,output vdevice).
-*/
-assign lang = lc(global_user_lang).
-find first qad_wkfl where
-/*EB       qad_domain = "xxcomp_param" and                                   */
-           qad_key1 = "xxcomp_param" and qad_key2= trim(vdevice) and
-           qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
-           no-lock no-error.
-if available qad_wkfl then do:
-   assign filePath = qad_charfld[1]
-          filefrom = qad_charfld[2]
-          fileto   = qad_charfld[3]
-          old_compilepath = qad_charfld[4]
-          lang = qad_charfld[5].
-          if qad_charfld[6] <> "" then
-             destpath = qad_charfld[6].
-          else do:
-             run getQADPath(output destpath).
-          end.
+  output to value(vWorkFile).
+     for each tmp_fl no-lock where fl_file <> ""
+         break by fl_file by fl_type descend:
+         if first-of(fl_file) then do:
+            if index(".p.w.t",substring(fl_file,length(fl_file) - 1,2)) > 0
+            then do:
+              if search(fl_file) <> ? or
+                 search(vSourceDir + "/" + fl_file) <> ?  then do:
+                 put unformat fl_file skip.
+              end.
+            end.
+         end.
+     end.
+  output close.
+  Apply "choose":U to bView.
 end.
-else do:
-   run getQADPath(output destpath).
+
+on 'Choose':U of bEdit do:
+  unix "vi " + value(vWorkFile).
 end.
-{xxcmfunc.i}
-run verfiydata(input today,input date(3,5,2014),input yes,input "softspeed201403",input vchk5,input 140.31).
 
-main-loop:
-repeat with frame a :
-  display filepath
-          filefrom
-          fileto
-          lang
-          destpath
-  with frame a.
-  if fileto = filefrom then assign fileto = fileto + CHR(255).
-  DO jj = 1 to 5:
-    compilepath[jj] = substring(old_compilepath,
-                                (jj - 1) * compilepathlength + 1,
-                                compilepathlength ).
-  END.  /* END DO */
-  compilepath1 = compilepath[1].
-  compilepath2 = compilepath[2].
-  compilepath3 = compilepath[3].
-  compilepath4 = compilepath[4].
-  compilepath5 = compilepath[5].
+ON 'Choose':U OF bCLose DO:
+     APPLY "WINDOW-CLOSE":U TO current-window.
+     return.
+END.
 
-  display compilepath1
-          compilepath2
-          compilepath3
-          compilepath4
-          compilepath5
-    with frame a.
+ON 'Choose':U OF bmfgutil DO:
+    define variable vdir as character.
+    assign vdir = propath.
+    hide frame a.
+    hide frame dtitle.
+    unix silent cd value(VClientDir).
+    do while length(vdir) > 1:
+       if search(substring(vdir,1,index(vdir,",") - 1) + "/xmfgusrc/mfgutil.p")
+          <> ? then do:
+          assign vdir = substring(vdir,1,index(vdir,",") - 1)
+                      + "/xmfgusrc/mfgutil.p".
+          leave.
+       end.
+       if index(vdir,",") > 0 then
+          assign vdir = substring(vdir,index(vdir,",") + 1).
+       else
+          assign vdir = "".
+    end.
+    if search(vdir) <> ? then do:
+       assign vdir = search(vdir).
+       run value(vdir).
+    end.
+    hide frame dtitle.
+    view frame a.
+END.
 
-  old_propath =  propath.
-    update filepath.
-    FILE-INFO:FILE-NAME = filepath.
-    if FILE-INFO:FILE-TYPE = ? then do:
-        message "No such direction ,Please input it again !".
-        next.
+ON 'Choose':U of bView do:
+    define variable vtxt as character.
+    define variable msg  as character.
+    define variable v1   as character.
+    define variable i    as integer.
+    i = 0.
+    assign msg = ""
+           verr = "".
+    if search(vworkfile) <> ? then do:
+    input from value(vWorkFile).
+    repeat:
+       import v1.
+       if verr = v1 or index(msg,v1) > 0 then next.
+       assign verr = v1.
+       if length(trim(v1)) > 14 then
+          assign v1 = substring(v1,1,11) + "*." + substring(v1,length(v1),1).
+          assign vTxt = vTxt + trim(substring(v1,1,14))
+                      + substring("              ",1,14 - length(v1)).
+       i = i + 1.
+       if i = 5  then do:
+          msg = msg + vtxt + chr(10).
+          vtxt = "".
+          i = 0.
+       end.
+    end.
+    input close.
+    if vtxt <> "" then do:
+       assign v1 = "".
+       do i = 1 to 80:
+          v1 = v1 + " ".
+       end.
+       msg = msg + trim(vtxt) + substring(v1, 1 , 70 - length(trim(vtxt))).
+    end.
+    if length(trim(msg)) > 1274  then do:
+/*bi     assign msg = substring(msg,1,1263) + "......        " .             */
+/*bi*/   assign msg = substring(msg,1,1263) + "......" + fill(" ",8).
+    end.
+    if length(trim(msg)) <= 70 then do:
+        assign msg = trim(msg).
+    end.
+        message msg View-as alert-box info title "Compile File List".
     end.
     else do:
-        assign filepath = FILE-INFO:FULL-PATHNAME.
-        disp filepath.
-        if index(old_compilepath,filepath) = 0 then do:
-           run getQADPath(output old_compilepath).
-           assign old_compilepath = ".," + filepath + "," + old_compilepath
-                                  + ","  + old_compilepath + "/bbi,"
-                                  + old_compilepath + "/xrc".
-        end.
-        if fileto = CHR(255) then fileto = "".
-        update filefrom fileto.
-        if fileto = "" then fileto = CHR(255).
-        if fileto = filefrom then fileto = fileto + CHR(255).
-
- /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath */
-  comppath:
-  repeat on endkey  undo main-loop , retry main-loop:
-    if old_compilepath = "" then old_compilepath = filepath.
-    DO jj = 1 to 5:
-      compilepath[jj] = substring(old_compilepath,
-                                  (jj - 1) * compilepathlength + 1,
-                                  compilepathlength).
-    END.  /* END DO */
-    compilepath1 = compilepath[1].
-    compilepath2 = compilepath[2].
-    compilepath3 = compilepath[3].
-    compilepath4 = compilepath[4].
-    compilepath5 = compilepath[5].
-    jj = 1.
-    update
-      compilepath1
-      compilepath2
-      compilepath3
-      compilepath4
-      compilepath5
-      with frame a editing:
-      if jj = 1 then do:  apply chr(20).  jj = 2.   end.
-      if frame-field = "compilepath1" then do:
-        status input.
-        readkey.
-        if ( lastkey >= 40 and lastkey <= 123 )
-           then do:
-          if length(input compilepath1) >= 60 then do:
-            tmp_compilepath1 = input compilepath1.
-            if length(input compilepath2) >= 60 then do:
-            tmp_compilepath2 = compilepath2.
-            compilepath2 =
-                substr(substring(tmp_compilepath1,60) + compilepath2,1,60).
-            if length(input compilepath3) >= 60 then do:
-            tmp_compilepath3 = compilepath3.
-            compilepath3 =
-                substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
-            if length(input compilepath4) >= 60 then do:
-            tmp_compilepath4 = compilepath4.
-            compilepath4 =
-                substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
-            if length(input compilepath5) >= 60 then do:
-            tmp_compilepath5 = compilepath5.
-            compilepath5 =
-                substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
-            END.
-            else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
-            END.
-            else compilepath4 = substring(tmp_compilepath3,60) + compilepath4.
-            END.
-            else compilepath3 = substring(tmp_compilepath2,60) + compilepath3.
-            END.
-            else compilepath2 = substring(tmp_compilepath1,60) + compilepath2.
-
-          end.
-          display compilepath2 compilepath3 compilepath4 compilepath5
-          with frame a.
-        end.  /*if ( chr(lastkey) >= "a" and ch*/
-        apply lastkey.
-      end.
-      else if frame-field = "compilepath2" then do:
-        status input.
-        readkey.
-        if ( lastkey >= 40 and lastkey <= 123 )
-           then do:
-            if length(input compilepath2) >= 60 then do:
-               tmp_compilepath2 = input compilepath2.
-            if length(input compilepath3) >= 60 then do:
-               tmp_compilepath3 = compilepath3.
-               compilepath3 =
-                   substr(substring(tmp_compilepath2,60) + compilepath3 ,1,60).
-            if length(input compilepath4) >= 60 then do:
-               tmp_compilepath4 = compilepath4.
-               compilepath4 =
-                   substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
-            if length(input compilepath5) >= 60 then do:
-               tmp_compilepath5 = compilepath5.
-               compilepath5 =
-                  substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
-            END.
-            else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
-            END.
-            else compilepath4 = substring(tmp_compilepath3,60) + compilepath4.
-            END.
-            else compilepath3 = substring(tmp_compilepath2,60) + compilepath3.
-            END.
-
-          display  compilepath3 compilepath4 compilepath5 with frame a.
-        end.  /*if ( chr(lastkey) >= "a" and ch*/
-        apply lastkey.
-      end.
-      else if frame-field = "compilepath3" then do:
-        status input.
-        readkey.
-        if ( lastkey >= 40 and lastkey <= 123 )
-           then do:
-
-            if length(input compilepath3) >= 60 then do:
-            tmp_compilepath3 = input compilepath3.
-
-            if length(input compilepath4) >= 60 then do:
-               tmp_compilepath4 = compilepath4.
-               compilepath4 =
-                  substr(substring(tmp_compilepath3,60) + compilepath4 ,1,60).
-            if length(input compilepath5) >= 60 then do:
-               tmp_compilepath5 = compilepath5.
-               compilepath5 =
-                  substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
-            END.
-            else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
-            END.
-            else compilepath4 = substring(tmp_compilepath3,60) + compilepath4.
-            END.
-
-          display  compilepath4 compilepath5 with frame a.
-        end.  /*if ( chr(lastkey) >= "a" and ch*/
-        apply lastkey.
-      end.
-      else if frame-field = "compilepath4" then do:
-        status input.
-        readkey.
-        if ( lastkey >= 40 and lastkey <= 123 )
-           then do:
-
-            if length(input compilepath4) >= 60 then do:
-              tmp_compilepath4 = input compilepath4.
-
-              if length(input compilepath5) >= 60 then do:
-                 tmp_compilepath5 = compilepath5.
-                 compilepath5 =
-                    substr(substring(tmp_compilepath4,60) + compilepath5 ,1,60).
-              END.
-              else compilepath5 = substring(tmp_compilepath4,60) + compilepath5.
-            END.
-
-          display   compilepath5 with frame a.
-        end.  /*if ( chr(lastkey) >= "a" and ch*/
-        apply lastkey.
-      end.
-      else if frame-field = "compilepath5" then do:
-        status input.
-        readkey.
-        if ( lastkey >= 40 and lastkey <= 123 ) then do:
-             .
-        end.  /*if ( chr(lastkey) >= "a" and ch*/
-        apply lastkey.
-      end.
-      else do:
-        status input.
-        readkey.
-        apply lastkey.
-      end.
+        message "Compile List File not found." view-as alert-box error.
     end.
+END.
+WAIT-FOR WINDOW-CLOSE OF CURRENT-WINDOW.
 
-    old_compilepath = "".
+/*原{xxcomp.i} */
+/* 读取属性值 */
+FUNCTION getKey RETURNS CHARACTER(ikey AS CHARACTER,iSource AS CHARACTER):
+    DEFINE VARIABLE ret AS CHARACTER NO-UNDO.
+    IF index(isource,ikey)>0 THEN DO:
+        ASSIGN ret = substring(isource,INDEX(isource,"=") + 1).
+    END.
+    RETURN ret.
+END.
 
-      old_compilepath = old_compilepath
-        + trim(compilepath1)
-        + trim(compilepath2)
-        + trim(compilepath3)
-        + trim(compilepath4)
-        + trim(compilepath5).
-    /*判断输入的路径是否有效--BEGIN*/
-    if old_compilepath = "" then do:
-      message "You must input valid directory." view-as alert-box.
-      next comppath.
-    end.
-    ii = 0.
-    /*去掉最少一个逗号*/
-    if substring(old_compilepath,length(old_compilepath),1) = "," then
-      assign old_compilepath =
-             substring(old_compilepath,1,length(old_compilepath) - 1).
-    DO jj = 1 to length(old_compilepath):
-      if substring(old_compilepath,jj,1) = "," then ii = ii + 1.
-    END.  /* END DO */
-    DO jj = 1 to ii + 1 :
-      FILE-INFO:FILE-NAME = entry(jj,old_compilepath,",").
-      if FILE-INFO:FILE-TYPE = ? and entry(jj,old_compilepath,",") <> "."
-      then do:
-        message "No such direction , " + entry(jj,old_compilepath,",")
-              + " Please try again!" VIEW-AS ALERT-BOX.
-        next comppath.
-      end.
-    END.  /* END DO */
-    /*判断输入的路径是否有效--END*/
-    assign propath = old_compilepath + "," + propath.
-    leave comppath.
-  end.
- /*Update 编译路径，默认是 Filepath + 参数文件值 ，如果参数值为空则取propath-*/
-        /*input from comp.tmp.
-             import unformatted v_tmp.
-        input close.*/
-        for each tt :   delete tt.  end.
-        unix silent value ( "ls -1 " + filepath + " > " + v_tmp2 + "/comp.lst").
-        input from value(v_tmp2 + "/comp.lst").
-             repeat:
-                 create tt.
-                 import tt.
-             end.
-        input close.
-        output to value(v_tmp2 + "/comp.lst").
-        for each tt where tt_file <> "" and tt_file >= filefrom
-             and tt_file <= fileto :
-             tt_file = trim(tt_file).
-             if (index(tt_file,".p") = 0 and index(tt_file,".w") = 0 and
-                index(tt_file,".P") = 0 and index(tt_file,".W") = 0) or (
-                substring(tt_file,length(tt_file) - 1 ,2) <> ".p" and
-                substring(tt_file,length(tt_file) - 1 ,2) <> ".P" and
-                substring(tt_file,length(tt_file) - 1 ,2) <> ".w" and
-                substring(tt_file,length(tt_file) - 1 ,2) <> ".W")
-                then do:
-                     delete tt.
-             end.
-             else do:
-                 if substr(filepath,length(filepath),1) = "/" then
-                      assign tt_file = filepath + tt_file.
-                 else assign tt_file = filepath + "/" + tt_file.
-                 FILE-INFO:FILE-NAME = tt_file.
-                 if substr(FILE-INFO:FILE-TYPE,1,1) = "D"
-                        then do:    /*是目录就不取*/
-                     delete tt.
-                 end.
-                 else do:
-                     ii = length(tt_file).
-                     v_format = "x("  + string(ii) + ")".
-                     put tt_file format v_format at 1.
-                 end.
-             end.
-        end.
-        output close.
-  /*开始逐个编译--BEGIN*/
-  repeat on endkey  undo main-loop , retry main-loop with frame a :
-    update lang destpath.
-    FILE-INFO:FILE-NAME = destpath.
-    if FILE-INFO:FILE-TYPE = ? then do:
-      message "No such direction ,Please input it again !".
-      next.
-    end.
-    else do:
-      assign destpath = FILE-INFO:FULL-PATHNAME.
-      disp destpath.
-      ii = length(filepath).
-      for each tt where tt_file <> "" and tt_file >= filepath + "/" + filefrom
-           and tt_file <= filepath + "/" + fileto:
-        v_tmp = destpath + "/" + lc(lang).
-        FILE-INFO:FILE-NAME = v_tmp.
-        if FILE-INFO:FILE-TYPE = ? then do:
-          unix silent value ( "mkdir " + v_tmp).
-        end.
-        v_tmp = destpath + "/" + lc(lang) + "/" + substring(tt_file,ii + 2 ,2).
+/* 从mfgutil.ini读取系统参数 */
+PROCEDURE iniVar:
+DEFINE VARIABLE vincomp AS LOGICAL.
+DEFINE VARIABLE vfile   AS CHARACTER NO-UNDO.
+DEFINE VARIABLE vdir    AS CHARACTER NO-UNDO.
+DEFINE VARIABLE vinput  AS CHARACTER NO-UNDO.
 
-        status input "Compiling " + tt_file.
-        FILE-INFO:FILE-NAME = v_tmp.
-        if FILE-INFO:FILE-TYPE = ? then do:
-          unix silent value ( "mkdir " + v_tmp).
-        end.
-        compile value(tt_file) save into value(v_tmp) /*no-error*/.
-
-        /*message string(error-status:error ).
-            pause.
-            IF ERROR-STATUS:ERROR AND ERROR-STATUS:NUM-MESSAGES > 0 THEN
-            DO:
-              MESSAGE ERROR-STATUS:NUM-MESSAGES
-               " errors occurred during compile program." SKIP
-               "Do you want to view them?"
-               VIEW-AS ALERT-BOX QUESTION BUTTONS YES-NO
-               UPDATE view-errs AS LOGICAL.
-
-              IF view-errs THEN
-              DO jj = 1 TO ERROR-STATUS:NUM-MESSAGES:
-          MESSAGE ERROR-STATUS:GET-NUMBER(jj)
-            ERROR-STATUS:GET-MESSAGE(jj).
-              END.
-            END.*/
-        /*if compiler:error THEN DO:
-          MESSAGE "Compilation error in" COMPILER:FILENAME "at line"
-                        COMPILER:ERROR-ROW "column" COMPILER:ERROR-COL.
-            pause.
-        END.*/  /* THEN DO */
-
-
-      end.
-      leave.
-    end.
-  end.
-  /*开始逐个编译--END*/
-    end.
-    assign propath = old_propath.
-end.
-os-delete comp.tmp.
-os-delete comp.lst.
-
-if not delParam then do:
-   run gen_comp.  /*重新生成参数文件*/
-end.
-
-procedure gen_comp:
-  define variable vdestpath as character.
-  find first qad_wkfl where
-/*EB         qad_domain = "xxcomp_param" and                                 */
-             qad_key1 = "xxcomp_param" and qad_key2 = trim(vdevice) and
-             qad_key3 = trim(vsysusr) and qad_key4 = trim(global_userid)
-             exclusive-lock no-error.
-  if not available qad_wkfl then do:
-     create qad_wkfl.
-     assign
-/*EB        qad_domain = "xxcomp_param"                                      */
-            qad_key1 = "xxcomp_param"
-            qad_key2 = trim(vdevice)
-            qad_key3 = trim(vsysusr)
-            qad_key4 = trim(global_userid).
-  end.
-   assign qad_key5 = mfguser
-          qad_charfld[1] = filePath
-          qad_charfld[2] = filefrom
-          qad_charfld[3] = if fileto = "" then CHR(255) else fileto
-          qad_charfld[4] = old_compilepath
-          qad_charfld[5] = lang.
-   run getQADPath(output vdestpath).
-   if vdestpath <> destpath then qad_charfld[6] = destpath.
-end procedure.
-
-procedure getQADPath:
-  define output parameter vpropath as character.
-  define variable vdir as character.
-  define variable vfile as character.
-  assign vpropath = propath.
-  DO WHILE index(vpropath,",") > 0:
+ASSIGN vfile = ""
+       vpropath = PROPATH.
+/* 找mfgutil.ini档 */
+DO WHILE index(vpropath,",") > 0:
     ASSIGN vdir = substring(vpropath,1,INDEX(vpropath,",") - 1).
-    if index(vdir,"bbi") > 0 or index(vdir,"xrc") > 0 or index(vdir,"src") > 0
+    if index(vdir,"src") > 0 or index(vdir,"bbi") > 0 or index(vdir,"xrc") > 0
     then do:
        assign vfile = substring(vdir,1,length(vdir) - 3) + "mfgutil.ini".
        IF SEARCH(vfile) <> ? and substring(vfile,1,1) <> "." THEN DO:
-          ASSIGN vpropath = SUBSTRING(vpropath,1,INDEX(vpropath,",") - 5).
           leave.
        END.
-    end.
-    ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
-  END.
-end procedure.
-/*
-procedure getUserInfo:
-    define output parameter osysusr as character.
-    define output parameter odevice as character.
-    FOR EACH mon_mstr NO-LOCK WHERE mon_sid = mfguser,
-        EACH qaddb._connect NO-LOCK WHERE mon__qadi01 = _Connect-Usr:
-      assign osysusr = _connect-name
-             odevice = _connect-device.
     END.
-end procedure.
-*/
+    ASSIGN vpropath = SUBSTRING(vpropath,INDEX(vpropath,",") + 1).
+END.
+IF SEARCH(vfile) <> ? THEN DO:
+    ASSIGN vIniFile = vFile.
+    INPUT FROM VALUE(vfile).
+    REPEAT:
+        IMPORT vinput.
+        IF INDEX(vinput,"[") > 0 THEN DO:
+            IF vinput = "[Compile]" or vinput= "[ClientSetup]" THEN DO:
+                ASSIGN vincomp = YES.
+            END.
+            ELSE DO:
+                ASSIGN vincomp = NO.
+            END.
+        END.
+        IF vincomp THEN DO:
+           IF vdatabaseset = "" THEN
+              vDatabaseSet = getKey(INPUT "Databaseset",INPUT vinput).
+           IF vDestDir   = "" THEN
+              vDestDir   = getKey(INPUT "DestDir",INPUT vinput).
+           IF vLANGUAGE  = "" THEN
+              vLANGUAGE  = getKey(INPUT "LANGUAGE",INPUT vinput).
+           IF vSourceDir = "" THEN
+              vSourceDir = getKey(INPUT "SourceDir",INPUT vinput).
+           IF vWorkFile  = "" THEN
+              vWorkFile  = getKey(INPUT "WorkFile",INPUT vinput).
+           IF VClientDir = "" THEN
+              vClientDir = substring(vfile,1,index(vfile,"mfgutil.ini") - 1).
+              /* getKey(INPUT "ClientWorkingDirectory",INPUT vinput). */
+        END.
+    END.
+    INPUT CLOSE.
+    ASSIGN vpropath = PROPATH.
+END.
+END PROCEDURE.
+
+PROCEDURE loadLang:
+do with frame a:
+  assign vLANGUAGE:List-Items = "".
+/*bi FOR EACH LNG_MSTR NO-LOCK:                                              */
+/*bi*/ FOR EACH LNG_MSTR NO-LOCK WHERE lng_lang <> "":
+      vLANGUAGE:ADD-LAST(lng_lang).
+  END.
+end.
+END PROCEDURE.
